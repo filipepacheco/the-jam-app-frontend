@@ -1,4 +1,5 @@
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
+import {SpeedInsights} from '@vercel/speed-insights/react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Features from './components/Features'
@@ -189,6 +190,7 @@ function App() {
         <AppContent />
         <OnboardingWrapper />
       </AuthProvider>
+      <SpeedInsights />
     </BrowserRouter>
   )
 }
