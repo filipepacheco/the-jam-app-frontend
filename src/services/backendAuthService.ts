@@ -4,7 +4,7 @@
  */
 
 import {getApiUrl} from '../lib/api/config'
-import type {AuthUser} from '../types/auth.types'
+import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import type {BackendAuthResponseDto} from '../types/api.types'
 import type {Session, User} from '@supabase/supabase-js'
 
@@ -18,6 +18,11 @@ export interface SyncResult {
   isNewUser: boolean
   error?: string
 }
+
+/**
+ * Alias for SyncResult for backward compatibility
+ */
+export type BackendSyncResponse = SyncResult
 
 /**
  * Sync Supabase user to backend

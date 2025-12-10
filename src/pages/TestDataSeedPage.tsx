@@ -3,17 +3,12 @@
  * This page helps populate the database with test data for development
  */
 
-import { useState } from 'react'
-import { musicService } from '../services/musicService'
-import { musicianService } from '../services/musicianService'
-import { registrationService } from '../services/registrationService'
-import { scheduleService } from '../services/scheduleService'
-import type {
-  CreateMusicDto,
-  CreateMusicianDto,
-  CreateRegistrationDto,
-  CreateScheduleDto,
-} from '../types/api.types'
+import {useState} from 'react'
+import {musicService} from '../services/musicService'
+import {musicianService} from '../services/musicianService'
+import {registrationService} from '../services/registrationService'
+import {scheduleService} from '../services/scheduleService'
+import type {CreateMusicDto, CreateMusicianDto, CreateRegistrationDto, CreateScheduleDto,} from '../types/api.types'
 
 interface SeedResult {
   type: 'success' | 'error'
@@ -113,19 +108,19 @@ export function TestDataSeedPage() {
         registrationService.create({
           musicianId: musicians[0].data.id,
           jamMusicId: (linkedMusics[0].data as Record<string, unknown>)?.id as string,
-        } as CreateRegistrationDto),
+        } as unknown as CreateRegistrationDto),
         registrationService.create({
           musicianId: musicians[1].data.id,
           jamMusicId: (linkedMusics[1].data as Record<string, unknown>)?.id as string,
-        } as CreateRegistrationDto),
+        } as unknown as CreateRegistrationDto),
         registrationService.create({
           musicianId: musicians[2].data.id,
           jamMusicId: (linkedMusics[2].data as Record<string, unknown>)?.id as string,
-        } as CreateRegistrationDto),
+        } as unknown as CreateRegistrationDto),
         registrationService.create({
           musicianId: musicians[3].data.id,
           jamMusicId: (linkedMusics[0].data as Record<string, unknown>)?.id as string,
-        } as CreateRegistrationDto),
+        } as unknown as CreateRegistrationDto),
       ])
 
       newResults.push({

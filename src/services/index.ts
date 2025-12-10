@@ -13,10 +13,10 @@ export {
 } from './backendAuthService'
 
 export * as jamService from './jamService'
-export * as musicianService from './musicianService'
-export * as musicService from './musicService'
-export * as registrationService from './registrationService'
-export * as scheduleService from './scheduleService'
+export { musicianService } from './musicianService'
+export { musicService } from './musicService'
+export { registrationService } from './registrationService'
+export { scheduleService } from './scheduleService'
 
 export type { JamDetails } from './jamService'
 

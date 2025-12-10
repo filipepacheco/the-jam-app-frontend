@@ -3,9 +3,9 @@
  * Custom hook for fetching jam data
  */
 
-import { useQuery, type UseQueryResult } from './useQuery'
-import { jamService } from '../services'
-import type { JamResponseDto } from '../types/api.types'
+import {useQuery, type UseQueryResult} from './useQuery'
+import {jamService} from '../services'
+import type {JamResponseDto} from '../types/api.types'
 
 /**
  * Fetch single jam by ID

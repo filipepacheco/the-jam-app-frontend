@@ -314,10 +314,9 @@ export async function update(id: string, jamData: Partial<JamResponseDto>): Prom
  */
 export async function deleteFn(id: string): Promise<ApiResponse<{ success: boolean }>> {
   const token = getToken()
-  const apiUrl = getApiUrl()
 
   try {
-    const response = await fetch(`${apiUrl}/jams/${id}`, {
+    const response = await fetch(getApiUrl(`/jams/${id}`), {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

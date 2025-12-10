@@ -3,9 +3,9 @@
  * Custom hook for fetching music data
  */
 
-import { useQuery, type UseQueryResult } from './useQuery'
-import { musicService } from '../services'
-import type { MusicResponseDto } from '../types/api.types'
+import {useQuery, type UseQueryResult} from './useQuery'
+import {musicService} from '../services'
+import type {ApiResponse, MusicResponseDto} from '../types/api.types'
 
 /**
  * Fetch single music by ID
@@ -18,7 +18,7 @@ export function useMusic(id: string): UseQueryResult<MusicResponseDto> {
       if (!id || id.trim() === '') {
         return Promise.resolve(null as unknown as MusicResponseDto)
       }
-      return musicService.findOne(id).then((res) => res.data)
+      return musicService.findOne(id).then((res: ApiResponse<MusicResponseDto>) => res.data)
     },
     [id]
   )
@@ -30,7 +30,7 @@ export function useMusic(id: string): UseQueryResult<MusicResponseDto> {
  */
 export function useAllMusic(): UseQueryResult<MusicResponseDto[]> {
   return useQuery(
-    () => musicService.findAll().then((res) => res.data ?? []),
+    () => musicService.findAll().then((res: ApiResponse<MusicResponseDto[]>) => res.data ?? []),
     []
   )
 }
@@ -46,7 +46,7 @@ export function useMusicByJam(jamId: string): UseQueryResult<MusicResponseDto[]>
       if (!jamId || jamId.trim() === '') {
         return Promise.resolve([])
       }
-      return musicService.findByJam(jamId).then((res) => res.data ?? [])
+      return musicService.findByJam(jamId).then((res: ApiResponse<MusicResponseDto[]>) => res.data ?? [])
     },
     [jamId]
   )

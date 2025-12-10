@@ -320,7 +320,7 @@ export function JamDetailPage() {
                                                             </p>
                                                         </div>
                                                         <span
-                                                            className="badge badge-outline badge-sm flex-shrink-0">{(getStatusIcon(reg.status))}  {(getStatusLabel(reg.status))}</span>
+                                                            className="badge badge-outline badge-sm flex-shrink-0">{(getStatusIcon(reg.status, false))}  {(getStatusLabel(reg.status, false))}</span>
                                                     </div>
                                                 </div>)
                                         })}

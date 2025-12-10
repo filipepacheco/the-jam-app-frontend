@@ -3,9 +3,9 @@
  * Custom hook for fetching musician data
  */
 
-import { useQuery, type UseQueryResult } from './useQuery'
-import { musicianService } from '../services'
-import type { MusicianResponseDto } from '../types/api.types'
+import {useQuery, type UseQueryResult} from './useQuery'
+import {musicianService} from '../services'
+import type {ApiResponse, MusicianResponseDto} from '../types/api.types'
 
 /**
  * Fetch single musician by ID
@@ -18,7 +18,7 @@ export function useMusician(id: string): UseQueryResult<MusicianResponseDto> {
       if (!id || id.trim() === '') {
         return Promise.resolve(null as unknown as MusicianResponseDto)
       }
-      return musicianService.findOne(id).then((res) => res.data)
+      return musicianService.findOne(id).then((res: ApiResponse<MusicianResponseDto>) => res.data)
     },
     [id]
   )
@@ -30,7 +30,7 @@ export function useMusician(id: string): UseQueryResult<MusicianResponseDto> {
  */
 export function useMusicians(): UseQueryResult<MusicianResponseDto[]> {
   return useQuery(
-    () => musicianService.findAll().then((res) => res.data ?? []),
+    () => musicianService.findAll().then((res: ApiResponse<MusicianResponseDto[]>) => res.data ?? []),
     []
   )
 }

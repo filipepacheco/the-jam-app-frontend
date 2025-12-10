@@ -1,11 +1,6 @@
- /**
- * Schedule Hook
- * Custom hook for fetching schedule data
- */
-
-import { useQuery, type UseQueryResult } from './useQuery'
-import { scheduleService } from '../services'
-import type { ScheduleResponseDto } from '../types/api.types'
+import {useQuery, type UseQueryResult} from './useQuery'
+import {scheduleService} from '../services'
+import type {ApiResponse, ScheduleResponseDto} from '../types/api.types'
 
 /**
  * Fetch schedules for a specific jam
@@ -18,7 +13,7 @@ export function useScheduleByJam(jamId: string): UseQueryResult<ScheduleResponse
       if (!jamId || jamId.trim() === '') {
         return Promise.resolve([])
       }
-      return scheduleService.findByJam(jamId).then((res) => res.data ?? [])
+      return scheduleService.findByJam(jamId).then((res: ApiResponse<ScheduleResponseDto[]>) => res.data ?? [])
     },
     [jamId]
   )
@@ -35,7 +30,7 @@ export function useScheduleByMusician(musicianId: string): UseQueryResult<Schedu
       if (!musicianId || musicianId.trim() === '') {
         return Promise.resolve([])
       }
-      return scheduleService.findByMusician(musicianId).then((res) => res.data ?? [])
+      return scheduleService.findByMusician(musicianId).then((res: ApiResponse<ScheduleResponseDto[]>) => res.data ?? [])
     },
     [musicianId]
   )

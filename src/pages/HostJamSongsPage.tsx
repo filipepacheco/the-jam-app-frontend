@@ -4,12 +4,12 @@
  * Route: /host/jams/:id/songs
  */
 
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { musicService } from '../services/musicService'
+import {useEffect, useState} from 'react'
+import {useNavigate, useParams} from 'react-router-dom'
+import {musicService} from '../services/musicService'
 import * as jamService from '../services/jamService'
-import type { MusicResponseDto } from '../types/api.types'
-import { ErrorAlert, SuccessAlert } from '../components'
+import type {MusicResponseDto} from '../types/api.types'
+import {ErrorAlert, SuccessAlert} from '../components'
 
 interface JamSong extends MusicResponseDto {
   linkedAt?: string
@@ -55,9 +55,9 @@ export function HostJamSongsPage() {
         setJamName((jamDetails.data).name || 'Jam')
 
         // Extract jamsmusics from jam object
-        const jamMusics = ((jamDetails.data) as Record<string, unknown>)?.jamsmusics as Array<Record<string, unknown>> || []
-        // Map JamMusicaResponseDto to MusicaResponseDto format
-        const jamSongs = jamMusics.map((jm: Record<string, unknown>) => jm.musica as MusicaResponseDto)
+        const jamMusics = ((jamDetails.data as unknown) as Record<string, unknown>)?.jamsmusics as Array<Record<string, unknown>> || []
+        // Map JamMusicResponseDto to MusicResponseDto format
+        const jamSongs = jamMusics.map((jm: Record<string, unknown>) => jm.musica as MusicResponseDto)
         setSongs(jamSongs)
       }
 

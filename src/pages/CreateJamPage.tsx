@@ -17,6 +17,8 @@ interface FormData {
   time: string
   location: string
   hostMusicianId: string
+  hostName?: string
+  hostContact?: string
   status: 'ACTIVE' | 'INACTIVE' | 'FINISHED'
 }
 

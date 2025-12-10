@@ -4,15 +4,9 @@
  * Useful for quick manual testing without console scripts
  */
 
-import { useState } from 'react'
-import {
-  jamService,
-  musicianService,
-  musicService,
-  registrationService,
-  scheduleService,
-} from '../services'
-import type { ApiError } from '../types/api.types'
+import React, {useState} from 'react'
+import {jamService, musicianService, musicService,} from '../services'
+import type {ApiError} from '../types/api.types'
 
 interface TestResult {
   name: string
@@ -26,7 +20,7 @@ interface TestResult {
  * Service Testing Component
  * Provides UI for testing all service operations
  */
-export function ServiceTestComponent(): JSX.Element {
+export function ServiceTestComponent(): React.ReactElement {
   const [results, setResults] = useState<TestResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -47,13 +41,11 @@ export function ServiceTestComponent(): JSX.Element {
       // Create
       const createResult = await jamService.create({
         name: `Test Jam ${new Date().getTime()}`,
-        location: 'Test Location',
-        hostName: 'Test Host',
-        hostContact: 'test@example.com',
+        description: 'Test jam description',
         status: 'ACTIVE',
       })
 
-      if (!createResult.success || !createResult.data) {
+      if (!createResult.data) {
         throw new Error('Failed to create jam')
       }
 
@@ -98,7 +90,7 @@ export function ServiceTestComponent(): JSX.Element {
         level: 'INTERMEDIATE',
       })
 
-      if (!createResult.success || !createResult.data) {
+      if (!createResult.data) {
         throw new Error('Failed to create musician')
       }
 
@@ -137,7 +129,7 @@ export function ServiceTestComponent(): JSX.Element {
         duration: 180,
       })
 
-      if (!createResult.success || !createResult.data) {
+      if (!createResult.data) {
         throw new Error('Failed to create music')
       }
 
@@ -240,16 +232,16 @@ export function ServiceTestComponent(): JSX.Element {
                 {result.error && (
                   <p className="text-sm text-error mt-2">Error: {result.error}</p>
                 )}
-                {result.data && (
+                {result.data ? (
                   <details className="mt-2">
                     <summary className="cursor-pointer font-semibold">
                       View Details
                     </summary>
                     <pre className="mt-2 p-2 bg-black bg-opacity-20 rounded text-xs overflow-auto">
-                      {JSON.stringify(result.data, null, 2)}
+                      {JSON.stringify(result.data as unknown, null, 2)}
                     </pre>
                   </details>
-                )}
+                ) : null}
               </div>
             </div>
           ))

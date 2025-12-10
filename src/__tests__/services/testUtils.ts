@@ -5,8 +5,8 @@
 
 import type {
   CreateJamDto,
-  CreateMusicianDto,
   CreateMusicDto,
+  CreateMusicianDto,
   CreateRegistrationDto,
   CreateScheduleDto,
 } from '../../types/api.types'
@@ -54,7 +54,7 @@ export const mockData = {
   createRegistrationData: {
     musicianId: 'test-musician-id',
     jamMusicId: 'test-jam-music-id',
-  } as CreateRegistrationDto,
+  } as unknown as CreateRegistrationDto,
 
   /**
    * Mock schedule creation data

@@ -3,14 +3,14 @@
  * Page for registering to a specific jam with jam context
  */
 
-import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks'
-import { jamService } from '../services'
-import type { JamDetails } from '../services'
-import { JamContextDisplay } from '../components/JamContextDisplay'
-import { JamRegistrationForm } from '../components/forms/JamRegistrationForm'
-import { ErrorAlert } from '../components'
+import {useEffect, useState} from 'react'
+import {useNavigate, useParams} from 'react-router-dom'
+import {useAuth} from '../hooks'
+import type {JamDetails} from '../services'
+import {jamService} from '../services'
+import {JamContextDisplay} from '../components/JamContextDisplay'
+import {JamRegistrationForm} from '../components/forms/JamRegistrationForm'
+import {ErrorAlert} from '../components'
 
 export function JamRegisterPage() {
   const { jamId } = useParams<{ jamId: string }>()
@@ -105,7 +105,7 @@ export function JamRegisterPage() {
       <div className="container mx-auto max-w-2xl px-4 py-8">
         <div className="space-y-6">
           {/* Jam Context */}
-          <JamContextDisplay jam={jam} />
+          <JamContextDisplay jam={jam as any} />
 
           {/* User Info */}
           <div className="card bg-base-200">

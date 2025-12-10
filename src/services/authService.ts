@@ -3,9 +3,9 @@
  * Handles login/auto-register with email or phone
  */
 
-import { setToken, getToken } from '../lib/auth'
-import { getApiUrl } from '../lib/api/config'
-import type { AuthUser } from '../types/auth.types'
+import {getToken, setToken} from '../lib/auth'
+import {getApiUrl} from '../lib/api/config'
+import type {AuthUser} from '../types/auth.types'
 
 interface LoginRequest {
   email?: string
@@ -85,6 +85,7 @@ export async function loginOrRegister(
       email: data.email,
       phone: data.phone,
       role: 'user',
+      isHost: false,
     }
 
     return {

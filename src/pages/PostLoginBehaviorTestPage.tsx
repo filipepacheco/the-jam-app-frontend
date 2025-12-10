@@ -3,10 +3,9 @@
  * Tests and demonstrates post-login redirect behavior, state storage, and role management
  */
 
-import { useEffect, useState } from 'react'
-import { useAuth } from '../hooks'
-import { useNavigate, useLocation } from 'react-router-dom'
-import { SuccessAlert, ErrorAlert, InfoAlert } from '../components/index'
+import {useEffect, useState} from 'react'
+import {useAuth} from '../hooks'
+import {useLocation, useNavigate} from 'react-router-dom'
 
 interface PostLoginBehaviorTest {
   name: string
@@ -76,7 +75,7 @@ export function PostLoginBehaviorTestPage() {
         return
       }
 
-      const hasRequiredFields = user.id && user.name && user.email && user.role
+      const hasRequiredFields = !!(user.id && user.name && user.email && user.role)
       console.log('Test: User structure - Has required fields:', hasRequiredFields)
       console.log('User object:', user)
       resolve(hasRequiredFields)
@@ -175,6 +174,7 @@ export function PostLoginBehaviorTestPage() {
       email: 'test@example.com',
       phone: '1234567890',
       role: 'user' as const,
+      isHost: false,
     }
 
     login(mockUser, 'mock-token-' + Date.now())

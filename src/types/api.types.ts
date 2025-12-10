@@ -228,7 +228,8 @@ export interface UpdateMusicDto {
  */
 export interface CreateRegistrationDto {
   musicianId: string
-  scheduleId: string
+  jamMusicId: string
+  scheduleId?: string
   instrument?: string
 }
 

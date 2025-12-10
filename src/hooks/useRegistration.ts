@@ -3,9 +3,9 @@
  * Custom hook for fetching registration data
  */
 
-import { useQuery, type UseQueryResult } from './useQuery'
-import { registrationService } from '../services'
-import type { RegistrationResponseDto } from '../types/api.types'
+import {useQuery, type UseQueryResult} from './useQuery'
+import {registrationService} from '../services'
+import type {ApiResponse, RegistrationResponseDto} from '../types/api.types'
 
 /**
  * Fetch registrations for a specific jam
@@ -18,7 +18,7 @@ export function useRegistrationsByJam(jamId: string): UseQueryResult<Registratio
       if (!jamId || jamId.trim() === '') {
         return Promise.resolve([])
       }
-      return registrationService.findByJam(jamId).then((res) => res.data ?? [])
+      return registrationService.findByJam(jamId).then((res: ApiResponse<RegistrationResponseDto[]>) => res.data ?? [])
     },
     [jamId]
   )
@@ -37,7 +37,7 @@ export function useRegistrationsByMusician(
       if (!musicianId || musicianId.trim() === '') {
         return Promise.resolve([])
       }
-      return registrationService.findByMusician(musicianId).then((res) => res.data ?? [])
+      return registrationService.findByMusician(musicianId).then((res: ApiResponse<RegistrationResponseDto[]>) => res.data ?? [])
     },
     [musicianId]
   )
