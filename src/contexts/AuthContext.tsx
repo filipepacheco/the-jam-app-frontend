@@ -3,13 +3,14 @@
  * React Context for managing role-based authentication state with Supabase
  */
 
-import {createContext, type ReactNode, useCallback, useEffect, useState} from 'react'
+import {createContext, type ReactNode, useCallback, useEffect, useRef, useState} from 'react'
 import type {AuthContextType, AuthUser, UpdateProfileDto, UserRole} from '../types/auth.types'
 import type {OAuthProvider} from '../lib/supabase'
 import {
   getCurrentSession,
   isSupabaseConfigured,
   onAuthStateChange,
+  refreshSupabaseSession,
   resetPassword as supabaseResetPassword,
   signInWithEmail as supabaseSignIn,
   signInWithOAuth as supabaseOAuth,
@@ -40,13 +41,75 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<UserRole>('viewer')
   const [isNewUser, setIsNewUser] = useState(false)
 
+  // Track sync attempts to prevent duplicate calls
+  const syncTimeoutRef = useRef<number | null>(null)
+  const lastSyncTimeRef = useRef<number>(0)
+  const isSyncingRef = useRef(false)
+
+  // ...existing code...
+
   /**
-   * Handle successful authentication - sync with backend
+   * Sync with backend with token refresh and deduplication
+   * Prevents duplicate sync calls and ensures token is fresh before syncing
    */
-  const handleAuthSuccess = useCallback(async (session: { access_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown>; phone?: string } }) => {
+  const syncWithBackendSafe = useCallback(async (session?: { access_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown>; phone?: string } }) => {
+    // Prevent concurrent syncs
+    if (isSyncingRef.current) {
+      if (import.meta.env.DEV) {
+        console.log('⏳ Sync already in progress, skipping duplicate call')
+      }
+      return { success: true, error: 'Sync already in progress' }
+    }
+
+    // Prevent duplicate syncs within 1 second
+    const now = Date.now()
+    if (now - lastSyncTimeRef.current < 1000) {
+      if (import.meta.env.DEV) {
+        console.log('⏳ Sync called too recently, skipping duplicate call')
+      }
+      return { success: true, error: 'Sync called too recently' }
+    }
+
+    // Clear any pending retry
+    if (syncTimeoutRef.current) {
+      clearTimeout(syncTimeoutRef.current)
+      syncTimeoutRef.current = null
+    }
+
+    isSyncingRef.current = true
+    lastSyncTimeRef.current = now
+
     try {
-      // Sync Supabase user to backend
-      const syncResult = await syncSupabaseUserToBackend(session as Parameters<typeof syncSupabaseUserToBackend>[0])
+      let sessionToSync = session
+
+      // If no session provided, refresh from Supabase to get fresh token
+      if (!sessionToSync && isSupabaseConfigured()) {
+        if (import.meta.env.DEV) {
+          console.log('🔄 Refreshing Supabase session before sync...')
+        }
+        const refreshedToken = await refreshSupabaseSession()
+        if (!refreshedToken) {
+          throw new Error('Failed to refresh token')
+        }
+
+        // Get fresh session
+        const freshSession = await getCurrentSession()
+        if (!freshSession) {
+          throw new Error('No session after refresh')
+        }
+        sessionToSync = freshSession
+      }
+
+      if (!sessionToSync) {
+        throw new Error('No session available for sync')
+      }
+
+      if (import.meta.env.DEV) {
+        console.log('✅ Syncing with fresh token')
+      }
+
+      // Now perform the sync
+      const syncResult = await syncSupabaseUserToBackend(sessionToSync as Parameters<typeof syncSupabaseUserToBackend>[0])
 
       if (syncResult.error) {
         console.warn('Backend sync warning:', syncResult.error)
@@ -57,8 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('auth_user', JSON.stringify(syncResult.user))
 
       if (import.meta.env.DEV) {
-        console.log('✅ Token stored successfully:', syncResult.token ? `${syncResult.token.substring(0, 20)}...` : 'NO TOKEN')
-        console.log('✅ User authenticated:', syncResult.user.email)
+        console.log('✅ Sync completed successfully')
       }
 
       // Update state
@@ -69,10 +131,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       return { success: true, isNewUser: syncResult.isNewUser }
     } catch (err) {
-      console.error('Auth success handler error:', err)
-      return { success: false, error: 'Failed to sync user' }
+      console.error('Sync error:', err)
+
+      // Retry after 2 seconds
+      syncTimeoutRef.current = window.setTimeout(() => {
+        if (import.meta.env.DEV) {
+          console.log('🔄 Retrying sync...')
+        }
+        syncWithBackendSafe()
+      }, 2000)
+
+      return { success: false, error: 'Sync failed' }
+    } finally {
+      isSyncingRef.current = false
     }
   }, [])
+
+  /**
+   * Handle successful authentication - sync with backend
+   */
+  const handleAuthSuccess = useCallback(async (session: { access_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown>; phone?: string } }) => {
+    return await syncWithBackendSafe(session)
+  }, [syncWithBackendSafe])
 
   /**
    * Initialize auth state from Supabase session on mount
@@ -344,7 +424,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Complete onboarding - update instrument/genre preferences
    */
-  const completeOnboarding = useCallback(async (instrument: string, genre: string): Promise<{ success: boolean; error?: string }> => {
+  const completeOnboarding = useCallback(async (instrument: string, genre: string, profileData?: { name?: string; phone?: string }): Promise<{ success: boolean; error?: string }> => {
     if (!user) {
       return { success: false, error: 'Not authenticated' }
     }
@@ -355,11 +435,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const result = await updateMusicianProfile(user.id, token, { instrument, genre })
+      // Prepare update object with instrument, genre, and optional name/phone
+      const updatePayload: any = { instrument, genre }
+      if (profileData?.name) updatePayload.name = profileData.name
+      if (profileData?.phone) updatePayload.phone = profileData.phone
+
+      const result = await updateMusicianProfile(user.id, token, updatePayload)
 
       if (result.success) {
         // Update local user state
         const updatedUser = { ...user, instrument, genre }
+        if (profileData?.name) updatedUser.name = profileData.name
+        if (profileData?.phone) updatedUser.phone = profileData.phone
+
         localStorage.setItem('auth_user', JSON.stringify(updatedUser))
         setUser(updatedUser)
         setIsNewUser(false)

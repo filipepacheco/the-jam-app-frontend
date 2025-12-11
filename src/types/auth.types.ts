@@ -60,7 +60,7 @@ export interface AuthContextType {
   setRole: (role: UserRole) => void
   updateUser: (fields: Partial<AuthUser>) => void
   updateProfile: (updates: UpdateProfileDto) => Promise<{ success: boolean; error?: string }>
-  completeOnboarding: (instrument: string, genre: string) => Promise<{ success: boolean; error?: string }>
+  completeOnboarding: (instrument: string, genre: string, profileData?: { name?: string; phone?: string }) => Promise<{ success: boolean; error?: string }>
   clearNewUserFlag: () => void
 
   // Helper methods

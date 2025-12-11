@@ -15,24 +15,55 @@ interface OnboardingModalProps {
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const { user, completeOnboarding, clearNewUserFlag } = useAuth()
+  const [name, setName] = useState(user?.name || '')
+  const [phone, setPhone] = useState(user?.phone || '')
   const [instrument, setInstrument] = useState('')
   const [genre, setGenre] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  /**
+   * Format phone number with Brazilian mask: (XX) XXXXX-XXXX
+   * @param value - Raw phone number string
+   * @returns Formatted phone number
+   */
+  const formatBrazilianPhone = (value: string): string => {
+    // Remove all non-digit characters
+    const digits = value.replace(/\D/g, '')
+
+    // Apply mask: (XX) XXXXX-XXXX
+    if (digits.length === 0) return ''
+    if (digits.length <= 2) return `(${digits}`
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7, 11)}`
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatBrazilianPhone(e.target.value)
+    setPhone(formatted)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
 
-    if (!instrument || !genre) {
-      setError('Please select both an instrument and a genre')
+    // Name is required
+    if (!name.trim()) {
+      setError('Name is required')
+      return
+    }
+
+    // At least instrument or genre should be provided
+    if (!instrument && !genre) {
+      setError('Please select at least an instrument or a genre')
       return
     }
 
     setIsLoading(true)
 
     try {
-      const result = await completeOnboarding(instrument, genre)
+      // Update profile with name and phone first
+      const result = await completeOnboarding(instrument, genre, { name: name.trim(), phone })
 
       if (result.success) {
         onClose()
@@ -58,13 +89,45 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       <div className="modal-box">
         {/* Header */}
         <h3 className="font-bold text-lg mb-2">
-          🎉 Welcome to Jam Session{user?.name ? `, ${user.name}` : ''}!
+          🎉 Welcome and Let's Jam!
         </h3>
         <p className="text-base-content/70 mb-6">
           Tell us a bit about yourself so we can match you with the right jams.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Name Field - Required */}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">Your Name *</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Enter your name"
+              className="input input-bordered w-full"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isLoading}
+              required
+            />
+          </div>
+
+          {/* Phone Field - Optional */}
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold  ">Phone</span>
+            </label>
+            <input
+              type="tel"
+              placeholder="(XX) XXXXX-XXXX"
+              className="input input-bordered  w-full"
+              value={phone}
+              onChange={handlePhoneChange}
+              disabled={isLoading}
+              maxLength={15}
+            />
+          </div>
+
           {/* Instrument Selection */}
           <div className="form-control">
             <label className="label">
@@ -117,18 +180,18 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
           {/* Actions */}
           <div className="modal-action">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={handleSkip}
-              disabled={isLoading}
-            >
-              Skip for now
-            </button>
+          {/*  <button*/}
+          {/*    type="button"*/}
+          {/*    className="btn btn-ghost"*/}
+          {/*    onClick={handleSkip}*/}
+          {/*    disabled={isLoading}*/}
+          {/*  >*/}
+          {/*    Skip for now*/}
+          {/*  </button>*/}
             <button
               type="submit"
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
-              disabled={isLoading || !instrument || !genre}
+              disabled={isLoading || !name.trim() || (!instrument && !genre)}
             >
               {isLoading ? 'Saving...' : 'Get Started'}
             </button>

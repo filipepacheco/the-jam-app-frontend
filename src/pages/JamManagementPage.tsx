@@ -7,9 +7,7 @@
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useAuth} from '../hooks'
-import {jamService} from '../services'
-import {scheduleService} from '../services/scheduleService'
-import {registrationService} from '../services/registrationService'
+import {jamService, registrationService, scheduleService} from '../services'
 import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from '../types/api.types'
 import {ErrorAlert, ScheduleCard, SuccessAlert} from '../components'
 import {HostMusicianRegistrationModal} from '../components/schedule'
@@ -140,9 +138,9 @@ export function JamManagementPage() {
     const tabs: { id: TabType; label: string; icon: string }[] = [
         {id: 'overview', label: 'Overview', icon: '📊'},
         {id: 'schedule', label: 'Schedule', icon: '📋'},
-        {id: 'dashboard', label: 'Dashboard', icon: '📺'},
-        {id: 'analytics', label: 'Analytics', icon: '📈'},
-        {id: 'registrations', label: 'Registrations', icon: '👥'},
+        // {id: 'dashboard', label: 'Dashboard', icon: '📺'},
+        // {id: 'analytics', label: 'Analytics', icon: '📈'},
+        // {id: 'registrations', label: 'Registrations', icon: '👥'},
     ]
 
     return (
@@ -499,11 +497,24 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
         }
     }
 
-    // Handle approve registration (placeholder - backend may need PATCH endpoint)
+    // Handle approve registration - update registration status to APPROVED
     const handleApproveRegistration = async (registrationId: string) => {
-        // Note: The swagger doesn't show a PATCH endpoint for registrations
-        // For now we'll show an alert. In production, this would call an API
-        alert(`Registration ${registrationId} approved! (Backend PATCH endpoint may be needed)`)
+        if (!jam?.id) return
+
+        setLoading(true)
+        setError(null)
+
+        try {
+            console.log('✅ Approving registration:', registrationId)
+            await registrationService.update(registrationId, { status: 'APPROVED' })
+            onReload()
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Failed to approve registration'
+            console.error('❌ Error approving registration:', err)
+            setError(errorMessage)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleAddMusician = (schedule: ScheduleResponseDto) => {

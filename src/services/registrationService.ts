@@ -3,12 +3,8 @@
  * Handles all API operations related to Registrations (Inscrições)
  */
 
-import { apiClient, API_ENDPOINTS } from '../lib/api'
-import type {
-  RegistrationResponseDto,
-  CreateRegistrationDto,
-  ApiResponse,
-} from '../types/api.types'
+import {API_ENDPOINTS, apiClient} from '../lib/api'
+import type {ApiResponse, CreateRegistrationDto, RegistrationResponseDto,} from '../types/api.types'
 
 /**
  * Registration Service
@@ -40,6 +36,16 @@ export const registrationService = {
    */
   async findByMusician(musicianId: string): Promise<ApiResponse<RegistrationResponseDto[]>> {
     return apiClient.get<RegistrationResponseDto[]>(API_ENDPOINTS.registrationsByMusician(musicianId))
+  },
+
+  /**
+   * Update a registration
+   * @param id - Registration ID
+   * @param data - Registration data to update
+   * @returns Promise with updated registration
+   */
+  async update(id: string, data: Partial<RegistrationResponseDto>): Promise<ApiResponse<RegistrationResponseDto>> {
+    return apiClient.patch<RegistrationResponseDto>(API_ENDPOINTS.registrationById(id), data)
   },
 
   /**

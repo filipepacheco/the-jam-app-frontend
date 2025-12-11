@@ -20,7 +20,6 @@ import {PostLoginBehaviorTestPage} from './pages/PostLoginBehaviorTestPage'
 
 // Phase 5: Auth Flow Pages
 import {LoginPage} from './pages/LoginPage'
-import {RegisterPage} from './pages/RegisterPage'
 import {BrowseJamsPage} from './pages/BrowseJamsPage'
 import {JamDetailPage} from './pages/JamDetailPage'
 import {JamRegisterPage} from './pages/JamRegisterPage'
@@ -88,8 +87,8 @@ function AppContent() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
       {/* Jam Routes */}

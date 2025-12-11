@@ -15,6 +15,7 @@ export function AuthCallbackPage() {
   useEffect(() => {
     // Get redirect path from session storage (set before OAuth redirect)
     const getRedirectPath = () => {
+      // If new user, redirect to login page to show ProfileSetupModal
       const storedRedirect = sessionStorage.getItem('auth_redirect')
       if (storedRedirect) {
         sessionStorage.removeItem('auth_redirect')

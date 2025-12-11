@@ -47,11 +47,13 @@ export function LoginPage() {
 
   // If user is already authenticated, redirect to appropriate location
   useEffect(() => {
-    if (isAuthenticated && isNewUser && user?.name === null) {
-      // Show profile setup modal for new users with no name
-      setShowProfileSetup(true)
-    } else if (isAuthenticated && !isNewUser) {
-      // Existing user, redirect immediately
+    if (isAuthenticated) {
+      // Check if new user without name - show profile setup modal
+      if (isNewUser && user?.name === null) {
+        setShowProfileSetup(true)
+        return // Don't redirect yet, let user complete profile
+      }
+      // For existing users or users with complete profile, redirect
       navigate(getRedirectPath(), { replace: true })
     }
   }, [isAuthenticated, isNewUser, user?.name, navigate])
@@ -64,7 +66,8 @@ export function LoginPage() {
     )
   }
 
-  if (isAuthenticated) {
+  // If authenticated and not showing profile setup modal, redirect or return null
+  if (isAuthenticated && !showProfileSetup) {
     return null
   }
 
