@@ -49,7 +49,7 @@ export default function ThemeSwitcher() {
     <select
       onChange={e => setTheme(e.target.value)}
       defaultValue={localStorage.getItem("theme") || themes[0]}
-      className="select select-bordered"
+      className="select select-bordered select-xs sm:select-sm text-xs sm:text-sm"
       aria-label="Select Theme"
     >
       {themes.map(theme => (

@@ -26,7 +26,7 @@ function Navbar() {
   }
 
   return (
-    <div className="navbar bg-base-100 shadow-lg">
+    <div className="navbar bg-base-100 shadow-lg px-2 sm:px-4 py-2 sm:py-3 gap-1 sm:gap-2 md:gap-3">
       {/* Navbar Start - Logo and Mobile Menu */}
       <div className="navbar-start">
         <div className="dropdown">
@@ -46,7 +46,7 @@ function Navbar() {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-48 sm:w-52 p-2 shadow text-xs sm:text-sm">
             {/* Mobile Menu Items */}
             <li><a href="/">Home</a></li>
             <li><a href="/jams">Browse Jams</a></li>
@@ -64,10 +64,10 @@ function Navbar() {
             )}
           </ul>
         </div>
-        <a href="/" className="btn btn-ghost text-xl">
+        <a href="/" className="btn btn-ghost text-base sm:text-lg md:text-xl">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
+            className="h-5 w-5 sm:h-6 sm:w-6"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor">
@@ -99,11 +99,11 @@ function Navbar() {
       </div>
 
       {/* Navbar End - Auth Actions */}
-      <div className="navbar-end gap-2">
+      <div className="navbar-end gap-1 sm:gap-2 md:gap-3 flex-wrap md:flex-nowrap justify-end">
         {/* Theme Switcher */}
         <ThemeSwitcher />
         {/* Role Badge */}
-        <div className="badge badge-outline">
+        <div className="badge badge-outline hidden sm:inline-flex text-xs sm:text-sm">
           {getRoleLabel(role)}
         </div>
 
@@ -112,18 +112,18 @@ function Navbar() {
           <div
             tabIndex={0}
             role="button"
-            className="btn btn-ghost btn-circle avatar placeholder">
-            <div className="bg-primary text-primary-content rounded-full w-10 flex items-center justify-center">
+            className="btn btn-ghost btn-circle avatar placeholder w-8 sm:w-10">
+            <div className="bg-primary text-primary-content rounded-full w-8 sm:w-10 flex items-center justify-center text-xs sm:text-sm">
               {isAuthenticated && user ? (user.name || 'U').charAt(0).toUpperCase() : 'G'}
             </div>
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content z-1 menu p-2 shadow bg-base-100 rounded-box w-52">
+            className="dropdown-content z-1 menu p-2 shadow bg-base-100 rounded-box w-48 sm:w-52 text-xs sm:text-sm">
             {isAuthenticated && user && (
               <>
                 <li className="menu-title">
-                  <span>{user.name || 'Complete your profile'}</span>
+                  <span className="text-xs sm:text-sm">{user.name || 'Complete your profile'}</span>
                 </li>
                 <li><a href="/profile">My Profile</a></li>
                 {user?.isHost && (
@@ -160,14 +160,14 @@ function Navbar() {
 
         {/* Create Jam Button - Host Only */}
         {user?.isHost && (
-          <a href="/host/create-jam" className="btn btn-primary btn-sm">
+          <a href="/host/create-jam" className="btn btn-primary btn-xs sm:btn-sm whitespace-nowrap">
             Create Jam
           </a>
         )}
 
         {/* Register Button - Viewer/Anonymous Only */}
         {isViewer() && !isAuthenticated && (
-          <a href="/register" className="btn btn-primary btn-sm">
+          <a href="/register" className="btn btn-primary btn-xs sm:btn-sm whitespace-nowrap">
             Join
           </a>
         )}

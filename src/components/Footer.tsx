@@ -1,19 +1,19 @@
 function Footer() {
   return (
-    <footer className="footer footer-center bg-base-300 text-base-content p-10">
-      <nav className="grid grid-flow-col gap-4">
-        <a className="link link-hover">About</a>
-        <a className="link link-hover">Features</a>
-        <a className="link link-hover">Pricing</a>
-        <a className="link link-hover">Contact</a>
+    <footer className="footer footer-center bg-base-300 text-base-content p-4 sm:p-8 lg:p-10">
+      <nav className="grid grid-flow-col gap-2 sm:gap-4">
+        <a className="link link-hover text-xs sm:text-sm">About</a>
+        <a className="link link-hover text-xs sm:text-sm">Features</a>
+        <a className="link link-hover text-xs sm:text-sm">Pricing</a>
+        <a className="link link-hover text-xs sm:text-sm">Contact</a>
       </nav>
-      <nav>
-        <div className="grid grid-flow-col gap-4">
+      <nav className="hidden sm:block">
+        <div className="grid grid-flow-col gap-2 sm:gap-4">
           <a className="link link-hover">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="currentColor"
               className="fill-current">
@@ -23,8 +23,8 @@ function Footer() {
           <a className="link link-hover">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="currentColor"
               className="fill-current">
@@ -34,8 +34,8 @@ function Footer() {
           <a className="link link-hover">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               viewBox="0 0 24 24"
               fill="currentColor"
               className="fill-current">
@@ -45,7 +45,7 @@ function Footer() {
         </div>
       </nav>
       <aside>
-        <p>
+        <p className="text-xs sm:text-sm">
           Copyright © {new Date().getFullYear()} - Jam Session App. All rights reserved.
         </p>
       </aside>
