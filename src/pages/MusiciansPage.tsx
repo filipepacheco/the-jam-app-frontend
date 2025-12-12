@@ -66,7 +66,7 @@ export function MusiciansPage() {
         (m) =>
           m.name.toLowerCase().includes(query) ||
           m.instrument.toLowerCase().includes(query) ||
-          m.contact.toLowerCase().includes(query)
+          (m.contact?.toLowerCase().includes(query) ?? false)
       )
     }
 
@@ -197,56 +197,45 @@ export function MusiciansPage() {
             </div>
           </div>
         ) : (
-          /* Musicians Grid */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredMusicians.map((musician) => (
-              <div key={musician.id} className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow">
-                <div className="card-body">
-                  {/* Header */}
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex-1">
-                      <h2 className="card-title text-lg">{musician.name}</h2>
-                      <p className="text-sm text-base-content/70">
-                        {musician.instrument}
-                      </p>
-                    </div>
-                    <div className="badge badge-primary">
-                      {musician.level}
-                    </div>
-                  </div>
-
-                  {/* Info */}
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">Contact:</span>
-                      <span className="text-base-content/70">{musician.contact}</span>
-                    </div>
-                    {musician.phone && (
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold">Phone:</span>
-                        <span className="text-base-content/70">{musician.phone}</span>
+          /* Musicians Table */
+          <div className="overflow-x-auto">
+            <table className="table table-zebra w-full bg-base-200">
+              <thead>
+                <tr className="bg-base-300">
+                  <th>Name</th>
+                  <th>Instrument</th>
+                  <th>Level</th>
+                  <th>Contact</th>
+                  <th>Phone</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredMusicians.map((musician) => (
+                  <tr key={musician.id} className="hover">
+                    <td className="font-semibold">{musician.name}</td>
+                    <td>{musician.instrument}</td>
+                    <td>
+                      <div className="badge badge-primary">
+                        {musician.level}
                       </div>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">Joined:</span>
-                      <span className="text-base-content/70">
-                        {new Date(musician.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="card-actions justify-end mt-4">
-                    <button
-                      className="btn btn-primary btn-sm"
-                      onClick={() => handleEditMusician(musician)}
-                    >
-                      Edit
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+                    </td>
+                    <td>{musician.contact}</td>
+                    <td>{musician.phone || '—'}</td>
+                    <td>{new Date(musician.createdAt).toLocaleDateString()}</td>
+                    <td>
+                      <button
+                        className="btn btn-primary btn-xs"
+                        onClick={() => handleEditMusician(musician)}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>

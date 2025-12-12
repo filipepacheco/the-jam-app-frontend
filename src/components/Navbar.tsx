@@ -7,10 +7,11 @@ import {useAuth} from '../hooks'
 import {getRoleLabel} from '../lib/auth'
 import {useNavigate} from 'react-router-dom'
 import {useState} from 'react'
+import ThemeSwitcher from './ThemeSwitcher'
 
 function Navbar() {
   const navigate = useNavigate()
-  const { isAuthenticated, user, role, logout, isUser, isViewer } = useAuth()
+  const { isAuthenticated, user, role, logout, isViewer } = useAuth()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const handleLogout = async () => {
@@ -45,7 +46,7 @@ function Navbar() {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
             {/* Mobile Menu Items */}
             <li><a href="/">Home</a></li>
             <li><a href="/jams">Browse Jams</a></li>
@@ -99,6 +100,8 @@ function Navbar() {
 
       {/* Navbar End - Auth Actions */}
       <div className="navbar-end gap-2">
+        {/* Theme Switcher */}
+        <ThemeSwitcher />
         {/* Role Badge */}
         <div className="badge badge-outline">
           {getRoleLabel(role)}
@@ -116,7 +119,7 @@ function Navbar() {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+            className="dropdown-content z-1 menu p-2 shadow bg-base-100 rounded-box w-52">
             {isAuthenticated && user && (
               <>
                 <li className="menu-title">
@@ -174,6 +177,3 @@ function Navbar() {
 }
 
 export default Navbar
-
-
-

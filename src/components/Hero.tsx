@@ -1,4 +1,3 @@
-import heroImage from '../assets/Untitled.jpg'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../hooks'
 
@@ -24,19 +23,9 @@ function Hero() {
     }
   }
   return (
-    <div
-      className="hero min-h-screen relative overflow-hidden"
-      style={{
-        backgroundImage: `url(${heroImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
-      {/* Overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/50"></div>
-
+    <div className="hero min-h-screen bg-gradient-to-br from-primary to-secondary">
       {/* Hero Content */}
-      <div className="hero-content relative z-10 text-center lg:text-left">
+      <div className="hero-content text-center lg:text-left">
         <div className="max-w-3xl">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
             Organize Live Jam Sessions in Real-Time

@@ -139,7 +139,7 @@ export function JamDetailPage() {
         </div>)
     }
 
-    return (<div className="min-h-screen bg-base-100">
+    return (<div className="min-h-screen bg-gradient-to-br from-base-100 to-base-200">
         {/* Success Alert at Top - for Suggest */}
         {suggestSuccess && (
             <div className="bg-success text-success-content sticky top-0 z-50">
@@ -163,7 +163,7 @@ export function JamDetailPage() {
         )}
 
         {/* Header */}
-        <div className="bg-base-200 border-b border-base-300">
+        <div className="bg-gradient-to-r from-base-200 to-base-300 border-b border-base-300">
             <div className="container mx-auto max-w-4xl px-4 py-6">
                 <button
                     onClick={() => navigate('/jams')}
@@ -173,67 +173,77 @@ export function JamDetailPage() {
                 </button>
                 <h1 className="text-4xl font-bold">{jam.name}</h1>
                 <p className="text-base-content/70 mt-2">{jam.description}</p>
+
+                {/* Jam Info Stats */}
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-6">
+                    <div className="flex items-center gap-2 p-2 bg-base-100/50 rounded">
+                        <span className="text-lg">📍</span>
+                        <div className="min-w-0">
+                            <p className="text-xs text-base-content/60">Location</p>
+                            <p className="font-semibold text-sm truncate">{jam.location || 'TBA'}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-base-100/50 rounded">
+                        <span className="text-lg">📅</span>
+                        <div className="min-w-0">
+                            <p className="text-xs text-base-content/60">Date</p>
+                            <p className="font-semibold text-sm">{jam.date ? new Date(jam.date).toLocaleDateString('en-US', {
+                                month: 'short', day: 'numeric', year: 'numeric',
+                            }) : 'TBA'}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-base-100/50 rounded">
+                        <span className="text-lg">🎭</span>
+                        <div className="min-w-0">
+                            <p className="text-xs text-base-content/60">Status</p>
+                            <span
+                                className={`badge badge-sm ${jam.status === 'ACTIVE' ? 'badge-success' : jam.status === 'INACTIVE' ? 'badge-warning' : 'badge-error'}`}>
+                                    {jam.status || 'Unknown'}
+                                </span>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-base-100/50 rounded">
+                        <span className="text-lg">🎵</span>
+                        <div className="min-w-0">
+                            <p className="text-xs text-base-content/60">Performances</p>
+                            <p className="font-semibold text-sm">{(jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.length || 0)}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-base-100/50 rounded">
+                        <span className="text-lg">⏱️</span>
+                        <div className="min-w-0">
+                            <p className="text-xs text-base-content/60">Duration</p>
+                            <p className="font-semibold text-sm">{(() => {
+                                const totalSeconds = (jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.reduce((acc, s) => acc + (s.music?.duration || 0), 0) || 0)
+                                const minutes = Math.floor(totalSeconds / 60)
+                                const seconds = totalSeconds % 60
+                                return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`
+                            })()}</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-2 p-2 bg-base-100/50 rounded">
+                        <span className="text-lg">👥</span>
+                        <div className="min-w-0">
+                            <p className="text-xs text-base-content/60">Musicians</p>
+                            <p className="font-semibold text-sm">{new Set(jam.registrations?.map(reg => reg.musician?.id || reg.musician?.contact)).size}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         {/* Content */}
         <div className="container mx-auto px-4 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-4 gap-6">
                 {/* Main Content */}
-                <div className="md:col-span-2 space-y-6">
-                    {/* Jam Info Card */}
-                    <div className="card bg-base-200">
-                        <div className="card-body">
-                            <h2 className="card-title text-lg">🎵 Jam Information</h2>
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-3 p-3 bg-base-100 rounded">
-                                    <span className="text-xl">📅</span>
-                                    <div>
-                                        <p className="text-xs text-base-content/60">Date</p>
-                                        <p className="font-semibold">{jam.date ? new Date(jam.date).toLocaleDateString('en-US', {
-                                            month: 'short', day: 'numeric', year: 'numeric',
-                                        }) : 'TBA'}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-base-100 rounded">
-                                    <span className="text-xl">🎭</span>
-                                    <div>
-                                        <p className="text-xs text-base-content/60">Status</p>
-                                        <span
-                                            className={`badge badge-lg ${jam.status === 'ACTIVE' ? 'badge-success' : jam.status === 'INACTIVE' ? 'badge-warning' : 'badge-error'}`}>
-                                                {jam.status || 'Unknown'}
-                                            </span>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-base-100 rounded">
-                                    <span className="text-xl">🎵</span>
-                                    <div>
-                                        <p className="text-xs text-base-content/60">Performances</p>
-                                        <p className="font-semibold text-lg">{(jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.length || 0)} {(jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.length || 0) === 1 ? 'Song' : 'Songs'}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-3 p-3 bg-base-100 rounded">
-                                    <span className="text-xl">⏱️</span>
-                                    <div>
-                                        <p className="text-xs text-base-content/60">Total Duration</p>
-                                        <p className="font-semibold text-lg">{(() => {
-                                            const totalSeconds = (jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.reduce((acc, s) => acc + (s.music?.duration || 0), 0) || 0)
-                                            const minutes = Math.floor(totalSeconds / 60)
-                                            const seconds = totalSeconds % 60
-                                            return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`
-                                        })()}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div className="col-span-3 space-y-6">
 
                     {/* Performance Schedule Card - with nested Musicians */}
                     {jam.schedules && jam.schedules.length > 0 ? (<div className="space-y-6">
                         {/* Non-Suggested Schedules */}
                         {(() => {
                             const nonSuggestedSchedules = jam.schedules.filter(s => s.status !== 'SUGGESTED')
-                            return nonSuggestedSchedules.length > 0 ? (<div className="card bg-base-200">
+                            return nonSuggestedSchedules.length > 0 ? (<div className="card bg-gradient-to-br from-base-200 to-base-300">
                                 <div className="card-body">
                                     <h2 className="card-title text-lg">📋 Performance Schedule</h2>
                                     <div className="space-y-4">
@@ -256,7 +266,7 @@ export function JamDetailPage() {
                         {(() => {
                             const suggestedSchedules = jam.schedules.filter(s => s.status === 'SUGGESTED')
                             return suggestedSchedules.length > 0 ? (
-                                <div className="card bg-base-200 border-t-2 border-info/30">
+                                <div className="card bg-gradient-to-br from-base-200 to-base-300 border-t-2 border-info/30">
                                     <div className="card-body">
                                         <h2 className="card-title text-lg flex items-center gap-2">
                                             <span className="text-xl">✨</span>
@@ -277,7 +287,7 @@ export function JamDetailPage() {
                                     </div>
                                 </div>) : null
                         })()}
-                    </div>) : (<div className="card bg-base-200">
+                    </div>) : (<div className="card bg-gradient-to-br from-base-200 to-base-300">
                         <div className="card-body text-center py-8">
                             <div className="text-4xl mb-3">📋</div>
                             <h3 className="font-semibold mb-2">No Performance Schedule Yet</h3>
@@ -290,10 +300,10 @@ export function JamDetailPage() {
                 </div>
 
                 {/* Sidebar - QR Code and Registration */}
-                <div className="md:col-span-1 space-y-4">
+                <div className="col-span-1 space-y-4">
 
                     {/* How This Jam Works Card */}
-                    <div className="card bg-primary text-primary-content">
+                    <div className="card bg-gradient-to-br from-primary to-primary-focus text-primary-content">
                         <div className="card-body">
                             <h2 className="card-title text-lg">🎭 How This Jam Works</h2>
                             <div
@@ -302,19 +312,38 @@ export function JamDetailPage() {
                             {/* Jam Description */}
                             <div className="space-y-3 text-sm opacity-95 mb-4">
                                 <div className="flex gap-2">
-                                    <span className="text-lg min-w-fit">🎵</span>
+                                    <span className="text-lg min-w-fit">📋</span>
                                     <div>
-                                        <p className="font-semibold">Performance Schedule</p>
-                                        <p className="text-xs opacity-75">Songs are performed in order. Each
-                                            song has specific musician roles needed.</p>
+                                        <p className="font-semibold">View Schedule</p>
+                                        <p className="text-xs opacity-75">Check the performance schedule to see all songs and available musician roles needed for each performance.</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="text-lg min-w-fit">📝</span>
+                                    <div>
+                                        <p className="font-semibold">Register for Songs</p>
+                                        <p className="text-xs opacity-75">Click "Sign Up" on any song to register for your preferred instrument role.</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
                                     <span className="text-lg min-w-fit">✨</span>
                                     <div>
-                                        <p className="font-semibold">Suggest Songs</p>
-                                        <p className="text-xs opacity-75">Want to add a new song? Suggest it and
-                                            a new schedule slot will be created.</p>
+                                        <p className="font-semibold">Suggest New Songs</p>
+                                        <p className="text-xs opacity-75">Want to add a song? Suggest it from the library and a new schedule slot will be created for host approval.</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="text-lg min-w-fit">👥</span>
+                                    <div>
+                                        <p className="font-semibold">Collaborate</p>
+                                        <p className="text-xs opacity-75">Multiple musicians can perform the same song. Each role (vocals, guitar, bass, etc.) can have dedicated performers.</p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span className="text-lg min-w-fit">🎵</span>
+                                    <div>
+                                        <p className="font-semibold">Performance Time</p>
+                                        <p className="text-xs opacity-75">Perform in the scheduled order. Be ready with your instrument and know your part!</p>
                                     </div>
                                 </div>
                             </div>
@@ -332,7 +361,7 @@ export function JamDetailPage() {
                     </div>
 
                     {/* QR Code Card */}
-                    {jam.qrCode && (<div className="card bg-base-200">
+                    {jam.qrCode && (<div className="card bg-gradient-to-br from-base-200 to-base-300">
                         <div className="card-body">
                             <h2 className="card-title text-lg text-center">📱 QR Code</h2>
                             <div className="flex justify-center my-4">
@@ -349,7 +378,7 @@ export function JamDetailPage() {
                     </div>)}
 
                     {/* Current Registrations Card */}
-                    {userRegistration && (<div className="card bg-info text-info-content">
+                    {userRegistration && (<div className="card bg-info  text-info-content">
                             <div className="card-body">
                                 <h2 className="card-title text-lg">{user?.name}, songs you applied to:</h2>
                                 <div

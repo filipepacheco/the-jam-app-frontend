@@ -127,6 +127,7 @@ export interface JamMusicResponseDto {
  * Jam session response from API
  */
 export interface JamResponseDto {
+    location: string;
   id: string
   name: string
   hostName: string
