@@ -8,6 +8,7 @@ import {getRoleLabel} from '../lib/auth'
 import {useNavigate} from 'react-router-dom'
 import {useState} from 'react'
 import ThemeSwitcher from './ThemeSwitcher'
+import {ConnectionStatus} from "./ConnectionStatus.tsx";
 
 function Navbar() {
   const navigate = useNavigate()
@@ -100,6 +101,8 @@ function Navbar() {
 
       {/* Navbar End - Auth Actions */}
       <div className="navbar-end gap-1 sm:gap-2 md:gap-3 flex-wrap md:flex-nowrap justify-end">
+        {/* Connection Status */}
+        <ConnectionStatus />
         {/* Theme Switcher */}
         <ThemeSwitcher />
         {/* Role Badge */}

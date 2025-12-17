@@ -5,6 +5,7 @@
 
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {RegistrationList} from './RegistrationList'
+import {formatDuration} from '../../lib/formatters'
 
 interface ScheduleDisplayItemProps {
     schedule: ScheduleResponseDto
@@ -105,7 +106,7 @@ export function ScheduleDisplayItem({
 
                 <div className="flex flex-wrap gap-1 mt-1">
                     {duration && (<span
-                        className="badge badge-sm"> ⏱️ {Math.floor(duration / 60)}:{String(duration % 60).padStart(2, '0')} </span>)}
+                        className="badge badge-sm"> ⏱️ {formatDuration(duration)} </span>)}
                     {neededDrums > 0 && (<span className="badge badge-sm">🥁 {neededDrums}</span>)}
                     {neededGuitars > 0 && (<span className="badge badge-sm">🎸 {neededGuitars}</span>)}
                     {neededVocals > 0 && (<span className="badge badge-sm">🎤 {neededVocals}</span>)}

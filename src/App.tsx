@@ -32,11 +32,13 @@ import {JamManagementPage} from './pages/JamManagementPage'
 import {MusicPage} from './pages/MusicPage'
 import {MusiciansPage} from './pages/MusiciansPage'
 import {ProfilePage} from './pages/ProfilePage'
+import {PublicDashboardPage} from './pages/PublicDashboardPage'
 
-import {AuthProvider} from './contexts/AuthContext'
+import {AuthProvider, JamProvider} from './contexts'
 import {OnboardingModal} from "./components";
 import AuthCallbackPage from "./pages/AuthCallbackPage.tsx";
 import {useAuth} from "./hooks";
+import {SocketTestPage} from "./pages/SocketTestPage.tsx";
 
 /**
  * Home Page Component
@@ -70,6 +72,7 @@ function AppContent() {
   const isLocalStorageTestMode = searchParams.get('localStorage') === 'true'
   const isAuthFlowTestMode = searchParams.get('authFlow') === 'true'
   const isPostLoginTestMode = searchParams.get('postLoginTest') === 'true'
+  const isSocketTestMode = searchParams.get('socket') === 'true'
 
   // Return test pages if in test mode
   if (isTestMode) return <TestPage />
@@ -77,6 +80,7 @@ function AppContent() {
   if (isErrorTestMode) return <ErrorHandlingTestPage />
   if (isAuthTestMode) return <AuthTestPage />
   if (isAuthContextTestMode) return <AuthContextTestPage />
+  if (isSocketTestMode) return <SocketTestPage />
   if (isRouteGuardsTestMode) return <RouteGuardsExamplePage />
   if (isLocalStorageTestMode) return <LocalStoragePersistenceTestPage />
   if (isAuthFlowTestMode) return <AuthFlowTestPage />
@@ -109,6 +113,9 @@ function AppContent() {
           <Navbar />
           <JamRegisterPage />
         </>
+      } />
+      <Route path="/jams/:jamId/dashboard" element={
+        <PublicDashboardPage />
       } />
       <Route path="/music" element={
         <>
@@ -201,8 +208,10 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <AppContent />
-        <OnboardingWrapper />
+        <JamProvider>
+          <AppContent />
+          <OnboardingWrapper />
+        </JamProvider>
       </AuthProvider>
       <SpeedInsights />
         <Analytics/>

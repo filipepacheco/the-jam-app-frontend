@@ -7,6 +7,4 @@ export { NeededMusiciansDisplay } from './NeededMusiciansDisplay'
 export { ScheduleDisplayItem } from './ScheduleDisplayItem'
 export { ScheduleEnrollmentModal } from './ScheduleEnrollmentModal'
 export { HostMusicianRegistrationModal } from './HostMusicianRegistrationModal'
-
-
-
+export { LiveJamControlPanel } from './LiveJamControlPanel'

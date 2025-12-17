@@ -24,3 +24,23 @@ export { useRegistrationsByJam, useRegistrationsByMusician } from './useRegistra
 // Schedule hooks
 export { useScheduleByJam, useScheduleByMusician } from './useSchedule'
 
+// Live Jam Socket hook
+export { useLiveJamSocket } from './useLiveJamSocket'
+
+// Socket hooks
+export { useSocket, type UseSocketReturn } from './useSocket'
+export { useSocketListeners } from './useSocketListeners'
+export { useSocketEmitter } from './useSocketEmitter'
+export { useSocketStatus, type SocketStatus } from './useSocketStatus'
+export { useSocketError, type SocketErrorState } from './useSocketError'
+
+// Jam state hook
+export { useJamState } from './useJamState'
+
+// Offline queue hook
+export { useOfflineQueue, type OfflineQueueState } from './useOfflineQueue'
+
+// Connection status hook
+export { useConnectionStatus, type ConnectionStatusState } from './useConnectionStatus'
+
+

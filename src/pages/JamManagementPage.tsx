@@ -10,9 +10,9 @@ import {useAuth} from '../hooks'
 import {jamService, registrationService, scheduleService} from '../services'
 import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from '../types/api.types'
 import {ErrorAlert, ScheduleCardManagement, SuccessAlert} from '../components'
-import {HostMusicianRegistrationModal} from '../components/schedule'
+import {HostMusicianRegistrationModal, LiveJamControlPanel} from '../components/schedule'
 
-type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics'
+type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live'
 
 export function JamManagementPage() {
     const navigate = useNavigate()
@@ -144,6 +144,7 @@ export function JamManagementPage() {
     const tabs: { id: TabType; label: string; icon: string }[] = [
         {id: 'overview', label: 'Overview', icon: '📊'},
         {id: 'schedule', label: 'Schedule', icon: '📋'},
+        ...(jam?.status === 'ACTIVE' ? [{id: 'live' as const, label: 'Live Control', icon: '🎙️'}] : []),
         // {id: 'dashboard', label: 'Dashboard', icon: '📺'},
         // {id: 'analytics', label: 'Analytics', icon: '📈'},
         // {id: 'registrations', label: 'Registrations', icon: '👥'},
@@ -210,6 +211,13 @@ export function JamManagementPage() {
                 )}
                 {activeTab === 'schedule' && (
                     <ScheduleTab jam={jam} onReload={() => loadJamData(jamId!)}/>
+                )}
+                {activeTab === 'live' && (
+                    <LiveJamControlPanel
+                        jam={jam}
+                        onActionSuccess={(msg) => setSuccess(msg)}
+                        onActionError={(err) => setError(err)}
+                    />
                 )}
                 {activeTab === 'dashboard' && <DashboardTab jam={jam}/>}
                 {activeTab === 'analytics' && <AnalyticsTab jam={jam}/>}
