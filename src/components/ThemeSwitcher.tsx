@@ -42,13 +42,15 @@ export default function ThemeSwitcher() {
     const saved = localStorage.getItem("theme");
     if (saved && themes.includes(saved)) {
       setTheme(saved);
+    } else {
+      setTheme("dark");
     }
   }, []);
 
   return (
     <select
       onChange={e => setTheme(e.target.value)}
-      defaultValue={localStorage.getItem("theme") || themes[0]}
+      defaultValue={localStorage.getItem("theme") || "dark"}
       className="select select-bordered select-xs sm:select-sm text-xs sm:text-sm"
       aria-label="Select Theme"
     >
