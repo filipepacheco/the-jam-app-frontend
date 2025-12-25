@@ -32,17 +32,47 @@ function missingKeyHandler(lngs: readonly string[], ns: string, key: string, _fa
   }
 }
 
-i18n
-  // detect user language
-  // learn more: https://github.com/i18next/i18next-browser-languageDetector
-  .use(LanguageDetector)
-  // pass the i18n instance to react-i18next.
-  .use(initReactI18next)
+// Determine if the user already selected a language and stored it in localStorage.
+// If so, initialize i18n with that language so the LanguageDetector doesn't override it on reload.
+let initialLang: string | undefined = undefined;
+try {
+  if (typeof localStorage !== 'undefined') {
+    const raw = localStorage.getItem('i18nextLng');
+    if (raw) {
+      const trimmed = raw.trim();
+      if (trimmed.startsWith('[')) {
+        try {
+          const arr = JSON.parse(trimmed);
+          if (Array.isArray(arr) && arr.length > 0) initialLang = String(arr[0]);
+        } catch (e) {
+          // ignore parse error and fall back to raw
+          initialLang = trimmed;
+        }
+      } else if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+        initialLang = trimmed.slice(1, -1);
+      } else {
+        initialLang = trimmed;
+      }
+      // normalize to use hyphenated form where appropriate (e.g., pt-BR)
+      if (initialLang) initialLang = initialLang.replace('_', '-');
+    }
+  }
+} catch (e) {
+  // ignore storage access errors
+}
+
+// Only use the language detector if we don't have a persisted language
+const i18nBuilder = initialLang ? i18n : i18n.use(LanguageDetector);
+
+// pass the i18n instance to react-i18next.
+i18nBuilder.use(initReactI18next)
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
     fallbackLng: 'pt',
-    lng: 'pt',
+    // If an initial language was found in localStorage, use it to initialize i18n.
+    // Otherwise, leave i18n to detect the language via LanguageDetector.
+    lng: initialLang,
     debug: import.meta.env.DEV,
 
     ns: ['translation'],
@@ -75,7 +105,10 @@ i18n
         translation: {
           ...pt
         }
-      }
+      },
+      // ensure common Portuguese dialects are available
+      'pt-BR': { translation: { ...pt } },
+      'pt-PT': { translation: { ...pt } },
     },
     // attach the missing key handler so QA can collect unresolved keys
     missingKeyHandler: missingKeyHandler,
