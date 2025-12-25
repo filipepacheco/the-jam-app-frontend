@@ -10,17 +10,16 @@ import {motion} from 'framer-motion'
 import Confetti from 'react-confetti'
 import type {RegistrationResponseDto} from '../types/api.types'
 import {getInstrumentIcon} from '../components/schedule/RegistrationList'
-import {ConnectionStatus, ErrorAlert} from '../components'
 import {QRCodeSVG} from "qrcode.react"
-import {useJamState, useOfflineQueue, useSocketError} from '../hooks'
+import {useJamState, useOfflineQueue} from '../hooks'
 import {formatDuration} from '../lib/formatters'
+import {ErrorAlert} from "../components";
 
 export function PublicDashboardPage() {
   const { jamId } = useParams<{ jamId: string }>()
 
   // Use global jam state via JamContext
   const { jam, currentPerformance, schedule, joinJam, leaveJam, isLoading, error } = useJamState()
-  const { userMessage, recoveryAction, clearError, hasError } = useSocketError('PublicDashboard')
   const { isOfflineMode } = useOfflineQueue()
 
   // State
@@ -112,26 +111,6 @@ export function PublicDashboardPage() {
   }
 
   // Show error state
-  if (hasError) {
-    return (
-      <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
-        <div className="card bg-error text-error-content w-full max-w-md">
-          <div className="card-body">
-            <h2 className="card-title">Connection Error</h2>
-            <p className="text-sm">{userMessage}</p>
-            {recoveryAction === 'retry' && (
-              <div className="card-actions justify-end">
-                <button className="btn btn-sm btn-primary" onClick={clearError}>
-                  Retry Connection
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   if (error) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
@@ -185,7 +164,6 @@ export function PublicDashboardPage() {
 
         {/* Connection Status and Fullscreen Button */}
         <div className="flex items-center gap-2">
-          <ConnectionStatus />
           <button
             onClick={toggleFullscreen}
             className="btn btn-sm btn-ghost text-white"

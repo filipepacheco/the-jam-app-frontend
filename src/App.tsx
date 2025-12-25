@@ -38,7 +38,6 @@ import {AuthProvider, JamProvider} from './contexts'
 import {OnboardingModal} from "./components";
 import AuthCallbackPage from "./pages/AuthCallbackPage.tsx";
 import {useAuth} from "./hooks";
-import {SocketTestPage} from "./pages/SocketTestPage.tsx";
 
 /**
  * Home Page Component
@@ -72,7 +71,6 @@ function AppContent() {
   const isLocalStorageTestMode = searchParams.get('localStorage') === 'true'
   const isAuthFlowTestMode = searchParams.get('authFlow') === 'true'
   const isPostLoginTestMode = searchParams.get('postLoginTest') === 'true'
-  const isSocketTestMode = searchParams.get('socket') === 'true'
 
   // Return test pages if in test mode
   if (isTestMode) return <TestPage />
@@ -80,7 +78,6 @@ function AppContent() {
   if (isErrorTestMode) return <ErrorHandlingTestPage />
   if (isAuthTestMode) return <AuthTestPage />
   if (isAuthContextTestMode) return <AuthContextTestPage />
-  if (isSocketTestMode) return <SocketTestPage />
   if (isRouteGuardsTestMode) return <RouteGuardsExamplePage />
   if (isLocalStorageTestMode) return <LocalStoragePersistenceTestPage />
   if (isAuthFlowTestMode) return <AuthFlowTestPage />

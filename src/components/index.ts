@@ -47,5 +47,4 @@ export { OAuthButton } from './forms/OAuthButton'
 export { JamRegistrationForm } from './forms/JamRegistrationForm'
 export { OnboardingModal } from './OnboardingModal'
 export { ProfileSetupModal } from './ProfileSetupModal'
-export { ConnectionStatus } from './ConnectionStatus'
 
