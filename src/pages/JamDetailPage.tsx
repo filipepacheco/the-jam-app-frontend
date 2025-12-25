@@ -21,8 +21,8 @@ import {getInstrumentIcon} from "../components/schedule/RegistrationList.tsx";
 import {useTranslation} from 'react-i18next'
 
 export function JamDetailPage() {
-    const { t } = useTranslation()
-    const {jamId} = useParams<{ jamId: string }>()
+     const { t } = useTranslation()
+     const {jamId} = useParams<{ jamId: string }>()
     const navigate = useNavigate()
     const {isAuthenticated, user} = useAuth()
     const [jam, setJam] = useState<JamResponseDto | null>(null)
@@ -53,7 +53,7 @@ export function JamDetailPage() {
             const result = await jamService.findOne(id)
             setJam(result.data)
         } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : 'Failed to load jam'
+            const errorMessage = err instanceof Error ? err.message : t('jams.loading_failed')
             setError(errorMessage)
         } finally {
             setLoading(false)
@@ -67,7 +67,7 @@ export function JamDetailPage() {
         setSelectedScheduleForEnroll(null)
 
         // Show success toast briefly
-        setEnrollSuccess('✅ Successfully enrolled!')
+        setEnrollSuccess(t('jams.enroll_success'))
 
         // Reload jam data from API to get the latest state
         if (jamId) {
@@ -103,7 +103,7 @@ export function JamDetailPage() {
                 const songs = await musicService.findAll()
                 setAllSongs(songs.data || [])
             } catch (err) {
-                setSuggestError('Failed to load songs')
+                setSuggestError(t('jams.loading_songs_failed'))
             } finally {
                 setSuggestLoading(false)
             }
@@ -112,7 +112,7 @@ export function JamDetailPage() {
 
     const handleSuggestSong = async () => {
         if (!selectedSongId || !jamId) {
-            setSuggestError('Please select a song')
+            setSuggestError(t('jams.select_song_error'))
             return
         }
 
@@ -124,7 +124,7 @@ export function JamDetailPage() {
                 jamId, musicId: selectedSongId, order: 0, status: 'SUGGESTED',
             } as any)
 
-            setSuggestSuccess('Song suggested successfully! Host will review it.')
+            setSuggestSuccess(t('jams.suggest_success'))
             setSelectedSongId('')
             setShowSuggestModal(false)
 
@@ -146,7 +146,7 @@ export function JamDetailPage() {
                 <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-6 sm:py-8">
                     <div className="flex justify-center items-center gap-3 mb-8">
                         <span className="loading loading-spinner loading-md sm:loading-lg"></span>
-                        <span className="font-semibold text-sm sm:text-base text-base-content/70">Loading jam details...</span>
+                        <span className="font-semibold text-sm sm:text-base text-base-content/70">{t('jams.loading_jam_details')}</span>
                     </div>
 
                     {/* Main Content Skeleton */}
@@ -172,9 +172,9 @@ export function JamDetailPage() {
     if (error || !jam) {
         return (<div className="min-h-screen bg-base-100 p-4">
             <div className="container mx-auto max-w-4xl">
-                <ErrorAlert message={error || 'Jam not found'} title="Error Loading Jam"/>
+                <ErrorAlert message={error || t('jams.not_found')} title={t('jams.error_loading_jam')}/>
                 <button onClick={() => navigate('/jams')} className="btn btn-primary mt-4">
-                    ← Back to Jams
+                    {t('jams.back_to_jams')}
                 </button>
             </div>
         </div>)
@@ -220,14 +220,14 @@ export function JamDetailPage() {
                     <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
                         <span className="text-base sm:text-lg">📍</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">Location</p>
-                            <p className="font-semibold text-xs sm:text-sm truncate">{jam.location || 'TBA'}</p>
+                            <p className="text-xs text-base-content/60">{t('jams.info.location')}</p>
+                            <p className="font-semibold text-xs sm:text-sm truncate">{jam.location || t('jams.info.tba')}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
                         <span className="text-base sm:text-lg">📅</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">Date</p>
+                            <p className="text-xs text-base-content/60">{t('jams.info.date')}</p>
                             <p className="font-semibold text-xs sm:text-sm">{jam.date ? new Date(jam.date).toLocaleDateString('en-US', {
                                 month: 'short', day: 'numeric', year: 'numeric',
                             }) : 'TBA'}</p>
@@ -236,7 +236,7 @@ export function JamDetailPage() {
                     <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
                         <span className="text-base sm:text-lg">🎭</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">Status</p>
+                            <p className="text-xs text-base-content/60">{t('jams.info.status')}</p>
                             <span
                                 className={`badge badge-xs sm:badge-sm ${jam.status === 'ACTIVE' ? 'badge-success' : jam.status === 'INACTIVE' ? 'badge-warning' : 'badge-error'}`}>
                                     {jam.status || 'Unknown'}
@@ -246,14 +246,14 @@ export function JamDetailPage() {
                     <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
                         <span className="text-base sm:text-lg">🎵</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">Performances</p>
+                            <p className="text-xs text-base-content/60">{t('jams.info.performances')}</p>
                             <p className="font-semibold text-xs sm:text-sm">{(jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.length || 0)}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
                         <span className="text-base sm:text-lg">⏱️</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">Duration</p>
+                            <p className="text-xs text-base-content/60">{t('jams.info.duration')}</p>
                             <p className="font-semibold text-xs sm:text-sm">{(() => {
                                 const totalSeconds = (jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.reduce((acc, s) => acc + (s.music?.duration || 0), 0) || 0)
                                 const minutes = Math.floor(totalSeconds / 60)
@@ -265,7 +265,7 @@ export function JamDetailPage() {
                     <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
                         <span className="text-base sm:text-lg">👥</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">Musicians</p>
+                            <p className="text-xs text-base-content/60">{t('jams.info.musicians')}</p>
                             <p className="font-semibold text-xs sm:text-sm">{new Set(jam.registrations?.map(reg => reg.musician?.id || reg.musician?.contact)).size}</p>
                         </div>
                     </div>
@@ -286,7 +286,7 @@ export function JamDetailPage() {
                             const nonSuggestedSchedules = jam.schedules.filter(s => s.status !== 'SUGGESTED')
                             return nonSuggestedSchedules.length > 0 ? (<div className="card bg-gradient-to-br from-base-200 to-base-300">
                                 <div className="card-body p-3 sm:p-6">
-                                    <h2 className="card-title text-base sm:text-lg">📋 Performance Schedule</h2>
+                                    <h2 className="card-title text-base sm:text-lg">{t('jams.performance_schedule_title')}</h2>
                                     <div className="space-y-4">
                                         {nonSuggestedSchedules.map((schedule: ScheduleResponseDto) => {
                                             const userEnrolledInSchedule = schedule.registrations?.some((reg) => reg.musician?.contact === user?.contact || reg.musician?.id === user?.id)
@@ -311,7 +311,7 @@ export function JamDetailPage() {
                                     <div className="card-body p-3 sm:p-6">
                                         <h2 className="card-title text-base sm:text-lg flex items-center gap-2">
                                             <span className="text-xl">✨</span>
-                                            Suggested Songs (Pending Approval)
+                                            {t('jams.suggested_songs_title')}
                                         </h2>
                                         <div className="space-y-4">
                                             {suggestedSchedules.map((schedule: ScheduleResponseDto) => {
@@ -331,9 +331,9 @@ export function JamDetailPage() {
                     </div>) : (<div className="card bg-gradient-to-br from-base-200 to-base-300">
                         <div className="card-body text-center py-6 sm:py-8 px-3 sm:px-6">
                             <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">📋</div>
-                            <h3 className="font-semibold text-base sm:text-lg mb-2">No Performance Schedule Yet</h3>
+                            <h3 className="font-semibold text-base sm:text-lg mb-2">{t('jams.no_performance_schedule_title')}</h3>
                             <p className="text-xs sm:text-sm text-base-content/70">
-                                Schedule will be organized once musicians are registered.
+                                {t('jams.no_performance_schedule_desc')}
                             </p>
                         </div>
                     </div>)}
@@ -518,32 +518,32 @@ export function JamDetailPage() {
 
                 <div className="modal-action">
                     <button
-                        onClick={() => {
-                            setShowSuggestModal(false)
-                            setSelectedSongId('')
-                            setSuggestError(null)
-                        }}
-                        className="btn btn-ghost"
-                        disabled={suggestLoading}
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSuggestSong}
-                        className="btn btn-primary"
-                        disabled={suggestLoading || !selectedSongId}
-                    >
+                         onClick={() => {
+                             setShowSuggestModal(false)
+                             setSelectedSongId('')
+                             setSuggestError(null)
+                         }}
+                         className="btn btn-ghost"
+                         disabled={suggestLoading}
+                     >
+                        {t('jams.actions.cancel')}
+                     </button>
+                     <button
+                         onClick={handleSuggestSong}
+                         className="btn btn-primary"
+                         disabled={suggestLoading || !selectedSongId}
+                     >
                         {suggestLoading ? (<>
                             <span className="loading loading-spinner loading-sm"></span>
-                            Suggesting...
-                        </>) : ('Suggest Song')}
-                    </button>
-                </div>
-            </div>
-            <div className="modal-backdrop" onClick={() => setShowSuggestModal(false)}></div>
-        </div>)}
-    </div>)
-}
+                            {t('jams.actions.suggesting')}
+                        </>) : (t('jams.actions.suggest_song'))}
+                     </button>
+                 </div>
+             </div>
+             <div className="modal-backdrop" onClick={() => setShowSuggestModal(false)}></div>
+         </div>)}
+     </div>)
+ }
 
-export default JamDetailPage
+ export default JamDetailPage
 

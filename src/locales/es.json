@@ -31,6 +31,7 @@
     "complete": "Completar",
     "unknown": "Desconocido",
     "select_theme": "Seleccionar tema",
+    "select_language": "Seleccionar idioma",
     "about": "Acerca de",
     "features_label": "Características",
     "pricing": "Precios",
@@ -185,7 +186,59 @@
       "contact_placeholder": "Teléfono o info de contacto adicional",
       "save_btn": "Guardar Perfil",
       "instrument_level_error": "Por favor selecciona al menos un instrumento o nivel de experiencia"
-    }
+    },
+    "browse": {
+      "title": "Explorar sesiones de Jam",
+      "subtitle": "Descubre y únete a emocionantes sesiones de jam en tu zona",
+      "search_label": "Buscar",
+      "search_placeholder": "Buscar jams por nombre o descripción...",
+      "sort_label": "Ordenar por",
+      "sort": {
+        "newest": "Más recientes",
+        "oldest": "Más antiguos",
+        "upcoming": "Próximos eventos"
+      },
+      "filter_label": "Filtrar por estado",
+      "tabs": {
+        "all": "Todos",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "finished": "Finalizado"
+      },
+      "results": {
+        "one": "{{count}} sesión",
+        "other": "{{count}} sesiones"
+      },
+      "clear_filters": "Limpiar filtros",
+      "loading": "Cargando sesiones de jam...",
+      "error_title": "Error al cargar los jams",
+      "empty_title": "No se encontraron sesiones",
+      "empty_try_filters": "Intenta ajustar tus filtros para ver más resultados",
+      "empty_no_jams": "¡Sé el primero en crear una sesión de jam!"
+    },
+    "loading_failed": "Error al cargar el jam",
+    "enroll_success": "✅ ¡Inscripción exitosa!",
+    "suggest_success": "¡Canción sugerida con éxito! El anfitrión la revisará.",
+    "loading_songs_failed": "Fallo al cargar canciones",
+    "select_song_error": "Por favor selecciona una canción",
+    "loading_jam_details": "Cargando detalles del jam...",
+    "not_found": "Jam no encontrado",
+    "error_loading_jam": "Error al cargar el Jam",
+    "back_to_jams": "← Volver a Jams",
+    "info": {
+      "location": "Ubicación",
+      "tba": "Por anunciar",
+      "date": "Fecha",
+      "status": "Estado",
+      "performances": "Actuaciones",
+      "duration": "Duración",
+      "musicians": "Músicos"
+    },
+    "performance_schedule_title": "📋 Programación de Actuaciones",
+    "suggested_songs_title": "Canciones Sugeridas (Pendientes de Aprobación)",
+    "no_performance_schedule_title": "Aún no hay programación",
+    "no_performance_schedule_desc": "La programación se organizará una vez que los músicos estén inscritos."
+
   },
   "schedule": {
     "add_musician_title": "👥 Agregar Músico",
@@ -245,7 +298,11 @@
       "beginner": "Principiante",
       "intermediate": "Intermedio",
       "advanced": "Avanzado",
-      "professional": "Profesional"
+      "professional": "Profesional",
+      "BEGINNER": "Principiante",
+      "INTERMEDIATE": "Intermedio",
+      "ADVANCED": "Avanzado",
+      "PROFESSIONAL": "Profesional"
     },
     "registration_pending_agreement": "Entiendo que mi participación está sujeta a aprobación"
   },
@@ -364,6 +421,66 @@
     "name_required": "El nombre es obligatorio",
     "phone_required": "El teléfono es obligatorio"
   },
+  "music_library": {
+    "title": "Biblioteca de Música",
+    "add_song": "+ Agregar Canción",
+    "suggest_song": "Sugerir Canción",
+    "search_placeholder": "Buscar por título o artista...",
+    "all_genres": "Todos los Géneros",
+    "sort_title": "Ordenar por Título",
+    "sort_artist": "Ordenar por Artista",
+    "sort_date": "Ordenar por Fecha",
+    "clear_filters": "Limpiar Filtros",
+    "filters": {
+      "approved": "Aprobadas",
+      "suggested": "Sugeridas",
+      "all": "Todas las Canciones"
+    },
+    "table": {
+      "title": "Título",
+      "artist": "Artista",
+      "genre": "Género",
+      "duration": "Duración",
+      "link": "Enlace",
+      "status": "Estado",
+      "musicians_needed": "Músicos Necesarios",
+      "actions": "Acciones"
+    },
+    "modals": {
+      "add_title": "Agregar Nueva Canción",
+      "suggest_title": "Sugerir una Nueva Canción",
+      "edit_title": "Editar \"{{title}}\"",
+      "adding": "Agregando...",
+      "suggesting": "Sugiriendo...",
+      "updating": "Actualizando...",
+      "add_btn": "Agregar a la Biblioteca",
+      "suggest_btn": "Sugerir Canción",
+      "update_btn": "Actualizar Canción"
+    },
+    "feedback": {
+      "approve_confirm": "¿Aprobar \"{{title}}\" de {{artist}}?",
+      "approve_success": "¡Canción \"{{title}}\" aprobada!",
+      "reject_confirm": "¿Rechazar \"{{title}}\" de {{artist}}? Esto la eliminará.",
+      "reject_success": "¡Canción \"{{title}}\" rechazada!",
+      "delete_confirm": "¿Estás seguro de que quieres eliminar \"{{title}}\" de {{artist}}?",
+      "delete_confirm_usage": "\n\nEsta canción ha sido interpretada {{count}} veces.",
+      "delete_success": "¡Canción \"{{title}}\" eliminada con éxito!",
+      "add_success": "¡Canción \"{{title}}\" agregada con éxito!",
+      "suggest_success": "¡Canción \"{{title}}\" sugerida! Esperando aprobación del anfitrión.",
+      "update_success": "¡Canción \"{{title}}\" actualizada con éxito!",
+      "duplicate_error": "La canción \"{{title}}\" de {{artist}}\" ya existe en la biblioteca",
+      "invalid_duration": "Formato de duración inválido. Usa mm:ss (ej., 4:30)"
+    },
+    "errors": {
+      "failed_to_load": "Error al cargar música",
+      "failed_to_approve": "Error al aprobar canción",
+      "failed_to_reject": "Error al rechazar canción",
+      "failed_to_delete": "Error al eliminar canción",
+      "failed_to_add": "Error al agregar canción",
+      "failed_to_suggest": "Error al sugerir canción",
+      "failed_to_update": "Error al actualizar canción"
+    }
+  },
   "jam_management": {
     "loading_jam": "Cargando detalles del jam...",
     "error_loading": "Error al cargar Jam",
@@ -431,95 +548,68 @@
     },
     "host_dashboard": {
       "title": "Panel del Anfitrión",
-      "subtitle": "Gestiona tus sesiones de jam y registros de músicos",
       "create_jam_btn": "+ Crear Nuevo Jam",
-      "your_jams": "Tus Sesiones de Jam",
-      "active_jams": "Activos Ahora",
-      "upcoming_jams": "Próximos",
-      "past_jams": "Jams Pasados",
-      "no_jams_title": "No se encontraron jams",
-      "no_jams_desc": "No has creado ninguna sesión de jam aún. ¡Comienza creando la primera!",
-      "failed_to_load": "Error al cargar tus jams",
-      "manage_btn": "Gestionar",
-      "edit_btn": "✏️ Editar",
-      "view_public": "Ver",
-      "delete_btn": "Eliminar",
-      "confirm_delete": "¿Estás seguro de que quieres eliminar este jam? Esta acción no se puede deshacer.",
+      "failed_to_load": "Error al cargar los jams del anfitrión",
+      "confirm_delete": "¿Estás seguro de que deseas eliminar este jam?",
       "delete_success": "Jam eliminado con éxito",
-      "delete_failed": "Error al eliminar jam",
+      "delete_failed": "Error al eliminar el jam",
+      "loading_jams": "Cargando tus jams...",
+      "no_jams_desc": "Aún no tienes sesiones de jam. Crea tu primer jam para comenzar.",
       "stats": {
         "total_jams": "Total de Jams",
         "musicians": "Músicos",
-        "songs": "Canciones",
+        "songs": "Músicas",
         "upcoming": "Próximos"
       },
       "categories": {
-        "planned": "📅 Jams Planeados",
-        "in_progress": "🎵 En Progreso",
-        "past": "✅ Jams Pasados"
+        "planned": "Planeados",
+        "in_progress": "En Curso",
+        "past": "Pasados"
+      },
+      "statuses": {
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "finished": "Finalizado"
       },
       "songs_count": "{{count}} canciones",
       "musicians_count": "{{count}} músicos",
-      "loading_jams": "Cargando jams..."
+      "view_public": "Ver Público",
+      "manage_btn": "Gestionar",
+      "delete_btn": "Eliminar"
     },
-    "music_library": {
-      "title": "Biblioteca de Música",
-      "add_song": "+ Agregar Canción",
-      "suggest_song": "Sugerir Canción",
-      "search_placeholder": "Buscar por título o artista...",
-      "all_genres": "Todos los Géneros",
-      "sort_title": "Ordenar por Título",
-      "sort_artist": "Ordenar por Artista",
-      "sort_date": "Ordenar por Fecha",
-      "clear_filters": "Limpiar Filtros",
-      "filters": {
-        "approved": "Aprobadas",
-        "suggested": "Sugeridas",
-        "all": "Todas las Canciones"
+    "musicians": {
+      "title": "Directorio de Músicos",
+      "subtitle": "Gestiona y visualiza todos los músicos en tu sistema",
+      "failed_to_load": "Error al cargar músicos",
+      "update_success": "Músico actualizado con éxito",
+      "update_failed": "Error al actualizar músico",
+      "search_label": "Buscar Músicos",
+      "search_placeholder": "Buscar por nombre, instrumento o contacto...",
+      "filter_label": "Filtrar por Nivel",
+      "options": {
+        "all_levels": "Todos los niveles"
       },
+      "results_count": "Mostrando {{shown}} de {{total}} músicos",
+      "no_musicians": "No se encontraron músicos. Los músicos aparecerán aquí una vez que se registren.",
+      "no_match": "Ningún músico coincide con tus criterios de búsqueda.",
       "table": {
-        "title": "Título",
-        "artist": "Artista",
-        "genre": "Género",
-        "duration": "Duración",
-        "link": "Enlace",
-        "status": "Estado",
-        "musicians_needed": "Músicos Necesarios",
+        "name": "Nombre",
+        "instrument": "Instrumento",
+        "level": "Nivel",
+        "contact": "Contacto",
+        "phone": "Teléfono",
+        "joined": "Registrado",
         "actions": "Acciones"
       },
-      "modals": {
-        "add_title": "Agregar Nueva Canción",
-        "suggest_title": "Sugerir una Nueva Canción",
-        "edit_title": "Editar \"{{title}}\"",
-        "adding": "Agregando...",
-        "suggesting": "Sugiriendo...",
-        "updating": "Actualizando...",
-        "add_btn": "Agregar a la Biblioteca",
-        "suggest_btn": "Sugerir Canción",
-        "update_btn": "Actualizar Canción"
+      "actions": {
+        "edit": "Editar"
       },
-      "feedback": {
-        "approve_confirm": "¿Aprobar \"{{title}}\" de {{artist}}?",
-        "approve_success": "¡Canción \"{{title}}\" aprobada!",
-        "reject_confirm": "¿Rechazar \"{{title}}\" de {{artist}}? Esto la eliminará.",
-        "reject_success": "¡Canción \"{{title}}\" rechazada!",
-        "delete_confirm": "¿Estás seguro de que quieres eliminar \"{{title}}\" de {{artist}}?",
-        "delete_confirm_usage": "\n\nEsta canción ha sido interpretada {{count}} veces.",
-        "delete_success": "¡Canción \"{{title}}\" eliminada con éxito!",
-        "add_success": "¡Canción \"{{title}}\" agregada con éxito!",
-        "suggest_success": "¡Canción \"{{title}}\" sugerida! Esperando aprobación del anfitrión.",
-        "update_success": "¡Canción \"{{title}}\" actualizada con éxito!",
-        "duplicate_error": "La canción \"{{title}}\" de {{artist}}\" ya existe en la biblioteca",
-        "invalid_duration": "Formato de duración inválido. Usa mm:ss (ej., 4:30)"
-      },
-      "errors": {
-        "failed_to_load": "Error al cargar música",
-        "failed_to_approve": "Error al aprobar canción",
-        "failed_to_reject": "Error al rechazar canción",
-        "failed_to_delete": "Error al eliminar canción",
-        "failed_to_add": "Error al agregar canción",
-        "failed_to_suggest": "Error al sugerir canción",
-        "failed_to_update": "Error al actualizar canción"
+      "detail": {
+        "actions": {
+          "cancel": "Cancelar",
+          "suggesting": "Sugerir...",
+          "suggest_song": "Sugerir Canción"
+        }
       }
     }
   }
