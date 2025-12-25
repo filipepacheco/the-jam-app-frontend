@@ -4,7 +4,7 @@
  */
 
 import {useMemo, useState} from 'react'
-import {useAuth, useJams} from '../hooks'
+import {useJams} from '../hooks'
 import {ErrorAlert, JamCard, JamCardSkeleton} from '../components'
 import type {JamStatus} from '../types/api.types'
 
@@ -12,7 +12,6 @@ type DateSortOption = 'newest' | 'oldest' | 'upcoming'
 
 export function BrowseJamsPage() {
   const { data: jams, loading, error } = useJams()
-  const { isAuthenticated } = useAuth()
 
 
   // Filter state
@@ -212,7 +211,6 @@ export function BrowseJamsPage() {
               <JamCard
                 key={jam.id}
                 jam={jam}
-                isAuthenticated={isAuthenticated}
               />
             ))}
           </div>
@@ -239,6 +237,3 @@ export function BrowseJamsPage() {
     </div>
   )
 }
-
-export default BrowseJamsPage
-
