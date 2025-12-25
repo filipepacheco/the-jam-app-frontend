@@ -3,10 +3,11 @@
  * Form for registering to a jam with specialty and level selection
  */
 
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { ErrorAlert, SuccessAlert } from '../index'
-import type { JamDetails } from '../../services'
+import {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+import {ErrorAlert, SuccessAlert} from '../index'
+import type {JamDetails} from '../../services'
+import {useTranslation} from 'react-i18next'
 
 export const MUSIC_LEVELS = ['beginner', 'intermediate', 'advanced', 'professional'] as const
 
@@ -21,6 +22,7 @@ export function JamRegistrationForm({
   onSubmit,
   defaultSpecialty,
 }: JamRegistrationFormProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [specialty, setSpecialty] = useState<string>(defaultSpecialty || '')
   const [level, setLevel] = useState<string>('')
@@ -40,12 +42,12 @@ export function JamRegistrationForm({
 
     // Validation
     if (!specialty) {
-      setError('Please select a specialty/instrument')
+      setError(t('errors.please_select_instrument'))
       return
     }
 
     if (!agreeToTerms) {
-      setError('You must agree to the terms before registering')
+      setError(t('errors.must_agree_terms'))
       return
     }
 
@@ -62,7 +64,7 @@ export function JamRegistrationForm({
         navigate(`/jams/${jam.id}/my-status`)
       }, 2000)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Registration failed. Please try again.'
+      const message = err instanceof Error ? err.message : t('errors.generic_error')
       setError(message)
     } finally {
       setIsLoading(false)
@@ -74,10 +76,10 @@ export function JamRegistrationForm({
       <div className="card bg-base-200">
         <div className="card-body">
           <SuccessAlert
-            message="Your registration is pending host approval"
-            title="Registration Successful!"
+            message={t('jams.registration_pending_approval')}
+            title={t('jams.registration_successful_title')}
           />
-          <p className="text-sm text-base-content/70 mt-4">Redirecting...</p>
+          <p className="text-sm text-base-content/70 mt-4">{t('jams.redirecting')}</p>
         </div>
       </div>
     )
@@ -86,13 +88,13 @@ export function JamRegistrationForm({
   return (
     <div className="card bg-base-200">
       <div className="card-body">
-        <h2 className="card-title text-lg mb-4">🎭 Register for This Jam</h2>
+        <h2 className="card-title text-lg mb-4">{t('jams.register_for_jam_title')}</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Specialty Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Specialty/Instrument *</span>
+              <span className="label-text font-semibold">{t('schedule.select_instrument')}</span>
             </label>
             {availableSpecialties.length > 0 ? (
               <select
@@ -101,16 +103,16 @@ export function JamRegistrationForm({
                 onChange={(e) => setSpecialty(e.target.value)}
                 disabled={isLoading}
               >
-                <option value="">Choose a specialty...</option>
+                <option value="">{t('schedule.choose_instrument')}</option>
                 {availableSpecialties.map((slot) => (
                   <option key={slot.specialty} value={slot.specialty}>
-                    {slot.specialty} ({Math.max(0, slot.required - slot.registered)} slots available)
+                    {slot.specialty} ({t('schedule.slots_available_dynamic', { count: Math.max(0, slot.required - slot.registered) })})
                   </option>
                 ))}
               </select>
             ) : (
               <div className="alert alert-warning">
-                <span>No specialties available at the moment</span>
+                <span>{t('jams.no_specialties_available')}</span>
               </div>
             )}
           </div>
@@ -118,8 +120,8 @@ export function JamRegistrationForm({
           {/* Level Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Experience Level</span>
-              <span className="label-text-alt text-xs text-base-content/60">Optional</span>
+              <span className="label-text font-semibold">{t('schedule.levels.experience_level')}</span>
+              <span className="label-text-alt text-xs text-base-content/60">{t('common.optional')}</span>
             </label>
             <select
               className="select select-bordered"
@@ -127,10 +129,10 @@ export function JamRegistrationForm({
               onChange={(e) => setLevel(e.target.value)}
               disabled={isLoading}
             >
-              <option value="">Select a level...</option>
+              <option value="">{t('schedule.choose_level')}</option>
               {MUSIC_LEVELS.map((lv) => (
                 <option key={lv} value={lv}>
-                  {lv.charAt(0).toUpperCase() + lv.slice(1)}
+                  {t(`schedule.levels.${lv}`)}
                 </option>
               ))}
             </select>
@@ -147,14 +149,14 @@ export function JamRegistrationForm({
                 disabled={isLoading}
               />
               <span className="label-text ml-3 text-sm">
-                I understand my registration is pending host approval
+                {t('schedule.registration_pending_agreement')}
               </span>
             </label>
           </div>
 
           {/* Error Alert */}
           {error && (
-            <ErrorAlert message={error} title="Registration Error" />
+            <ErrorAlert message={error} title={t('errors.registration_error_title')} />
           )}
 
           {/* Buttons */}
@@ -165,20 +167,20 @@ export function JamRegistrationForm({
               onClick={() => navigate(`/jams/${jam.id}`)}
               disabled={isLoading}
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               className={`btn btn-primary flex-1 ${isLoading ? 'loading' : ''}`}
               disabled={isLoading || !specialty || !agreeToTerms || availableSpecialties.length === 0}
             >
-              {isLoading ? 'Registering...' : 'Join This Jam'}
+              {isLoading ? t('jams.registering') : t('jams.join_this_jam')}
             </button>
           </div>
 
           {/* Info */}
           <p className="text-xs text-base-content/60 text-center mt-4">
-            You can manage your registrations from your dashboard
+            {t('jams.manage_registrations_hint')}
           </p>
         </form>
       </div>

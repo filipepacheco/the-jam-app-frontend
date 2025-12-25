@@ -3,6 +3,8 @@
  * Renders appropriate action buttons based on schedule status
  */
 
+import {useTranslation} from 'react-i18next'
+
 interface ScheduleActionButtonsProps {
     status: string | undefined
     loading?: boolean
@@ -14,6 +16,7 @@ interface ScheduleActionButtonsProps {
 export function ScheduleActionButtons({
                                           status, loading = false, isSuggested = false, onStatusChange, onDelete,
                                       }: ScheduleActionButtonsProps) {
+    const { t } = useTranslation()
     return (<div className="flex flex-col gap-1">
             {/* Suggested action buttons */}
             {isSuggested && (<>
@@ -22,14 +25,14 @@ export function ScheduleActionButtons({
                         className="btn btn-sm btn-success"
                         disabled={loading}
                     >
-                        ✓ Approve
+                        ✓ {t('common.approve')}
                     </button>
                     <button
                         onClick={onDelete}
                         className="btn btn-sm btn-error"
                         disabled={loading}
                     >
-                        ✕ Reject
+                        ✕ {t('common.reject')}
                     </button>
                 </>)}
 
@@ -40,7 +43,7 @@ export function ScheduleActionButtons({
                             className="btn btn-sm btn-warning"
                             disabled={loading}
                         >
-                            ▶️ Start
+                            {t('schedule.actions.start')}
                         </button>)}
                     {status === 'IN_PROGRESS' && (<>
                             <button
@@ -48,14 +51,14 @@ export function ScheduleActionButtons({
                                 className="btn btn-sm btn-success"
                                 disabled={loading}
                             >
-                                ✓ Complete
+                                ✓ {t('common.complete')}
                             </button>
                             <button
                                 onClick={() => onStatusChange?.('CANCELED')}
                                 className="btn btn-sm btn-error btn-outline"
                                 disabled={loading}
                             >
-                                ✕ Cancel
+                                ✕ {t('common.cancel')}
                             </button>
                         </>)}
                     {status === 'CANCELED' && (<button
@@ -63,15 +66,15 @@ export function ScheduleActionButtons({
                             className="btn btn-sm btn-outline"
                             disabled={loading}
                         >
-                            🔄 Reschedule
+                            {t('schedule.actions.reschedule')}
                         </button>)}
-                    {status === 'COMPLETED' && (<span className="text-xs text-success">✓ Performance completed</span>)}
+                    {status === 'COMPLETED' && (<span className="text-xs text-success">{t('schedule.performance_completed')}</span>)}
                     <button
                         onClick={onDelete}
                         className="btn btn-sm btn-error btn-outline"
                         disabled={loading}
                     >
-                        🗑️ Delete
+                        🗑️ {t('common.delete')}
                     </button>
                 </>)}
         </div>)

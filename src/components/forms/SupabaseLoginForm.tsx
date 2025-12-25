@@ -9,12 +9,14 @@ import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import type {OAuthProvider} from '../../lib/supabase'
 import OAuthButton from "./OAuthButton.tsx";
+import {useTranslation} from 'react-i18next'
 
 interface SupabaseLoginFormProps {
   onSuccess?: () => void
 }
 
 export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { loginWithEmail, signUpWithEmail, loginWithOAuth, isLoading: authLoading } = useAuth()
 
@@ -64,10 +66,10 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
           navigate(getRedirectPath())
         }
       } else {
-        setError(result.error || 'Authentication failed')
+        setError(result.error || t('auth.auth_failed'))
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Authentication failed')
+      setError(err instanceof Error ? err.message : t('auth.auth_failed'))
     } finally {
       setIsLoading(false)
     }
@@ -89,7 +91,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
       }
       // If successful, user will be redirected to OAuth provider
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'OAuth login failed')
+      setError(err instanceof Error ? err.message : t('auth.oauth_failed'))
       setIsLoading(false)
     }
   }
@@ -101,18 +103,18 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
       <div className="max-w-sm mx-auto">
 
       <fieldset className="fieldset border-base-300 rounded-box w-sm border p-4">
-        <legend className="fieldset-legend  font-bold">{isSignUp ? 'Create Account' : 'Sign In'}</legend>
+        <legend className="fieldset-legend  font-bold">{isSignUp ? t('auth.create_account') : t('auth.sign_in')}</legend>
         {/* Email/Password Form */}
         <form onSubmit={handleEmailAuth} className="space-y-4">
           {/* Name field (only for signup) */}
         {isSignUp && (
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Name</span>
+              <span className="label-text font-semibold">{t('common.name')}</span>
             </label>
             <input
               type="text"
-              placeholder="Your name"
+              placeholder={t('auth.name_placeholder')}
               className="input input-bordered w-full"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -124,11 +126,11 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
         {/* Email Input */}
         <div >
           <label className="label">
-            Email
+            {t('common.email')}
           </label>
           <input
             type="email"
-            placeholder="user@example.com"
+            placeholder={t('auth.email_placeholder')}
             className="input input-bordered w-full"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -140,11 +142,11 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
         {/* Password Input */}
           <div>
             <label className='label'>
-          Password
+          {t('common.password')}
             </label>
             <input
                 type="password"
-                placeholder="••••••••"
+                placeholder={t('auth.password_placeholder')}
                 className="input input-bordered w-full"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -155,7 +157,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
             {isSignUp && (
                 <label className="label">
               <span className="label-text-alt text-xs text-base-content/60">
-                Minimum 6 characters
+                {t('auth.password_hint')}
               </span>
                 </label>
             )}
@@ -190,14 +192,14 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
           {isFormLoading ? (
             <>
               <span className="loading loading-spinner loading-sm"></span>
-              {isSignUp ? 'Creating account...' : 'Signing in...'}
+              {isSignUp ? t('auth.creating_account') : t('auth.signing_in')}
             </>
           ) : (
-            isSignUp ? 'Create Account' : 'Sign In'
+            isSignUp ? t('auth.create_account') : t('auth.sign_in')
           )}
         </button>
 
-          <div className="divider ">or</div>
+          <div className="divider ">{t('common.or')}</div>
 
           {/* OAuth Buttons */}
           <div className="space-y-2">
@@ -230,7 +232,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
           }}
           disabled={isFormLoading}
         >
-          {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+          {isSignUp ? t('auth.already_have_account') : t('auth.dont_have_account')}
         </button>
       </div>
 

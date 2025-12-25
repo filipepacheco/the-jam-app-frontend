@@ -20,11 +20,13 @@ import {
 } from '../components'
 import {filterAndSortMusic, formatDuration, isDuplicate as checkDuplicate, parseDuration} from '../lib/musicUtils'
 import {GENRES} from '../lib/musicConstants'
+import {useTranslation} from 'react-i18next'
 
 type SortBy = 'title' | 'artist' | 'date'
 type StatusFilter = 'all' | 'approved' | 'suggested'
 
 export function MusicPage() {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const {user, isAuthenticated} = useAuth()
     const [musicList, setMusicList] = useState<MusicResponseDto[]>([])

@@ -5,10 +5,11 @@
 
 import {Link} from 'react-router-dom'
 import type {JamResponseDto, JamStatus} from '../types/api.types'
+import {useTranslation} from 'react-i18next'
+import {safeT} from '../lib/i18nUtils'
 
 interface JamCardProps {
   jam: JamResponseDto
-  isAuthenticated: boolean
 }
 
 /**
@@ -50,23 +51,24 @@ function getStatusBadgeClass(status: JamStatus): string {
 /**
  * Get friendly status label with emoji
  */
-function getStatusLabel(status: JamStatus): string {
+function getStatusLabel(status: JamStatus, t: (key: string) => string): string {
   switch (status) {
     case 'ACTIVE':
-      return '🎉 Live Now'
+      return t('jams.statuses.active')
     case 'INACTIVE':
-      return '⏸️ Coming Soon'
+      return t('jams.statuses.inactive')
     case 'FINISHED':
-      return '✅ Completed'
+      return t('jams.statuses.finished')
     default:
-      return '❓ Unknown'
+      return `❓ ${t('common.unknown')}`
   }
 }
 
 /**
  * JamCard Component
  */
-export function JamCard({ jam, isAuthenticated }: JamCardProps) {
+export function JamCard({ jam }: JamCardProps) {
+  const { t } = useTranslation()
   // Use schedules count as it represents actual performances
   // Fall back to jamMusics count if schedules not available
   const songCount = jam.schedules?.length || jam.jamMusics?.length || 0
@@ -77,9 +79,9 @@ export function JamCard({ jam, isAuthenticated }: JamCardProps) {
       <div className="card-body p-3 sm:p-6">
         {/* Header: Name + Status Badge */}
         <div className="flex justify-between items-start gap-2">
-          <h3 className="card-title text-base sm:text-lg">{jam.name || 'No name'}</h3>
+          <h3 className="card-title text-base sm:text-lg">{jam.name || t('jams.no_name')}</h3>
           <div className={`badge badge-md sm:badge-lg ${getStatusBadgeClass(jam.status)}`}>
-            {getStatusLabel(jam.status)}
+            {getStatusLabel(jam.status, t)}
           </div>
         </div>
 
@@ -100,14 +102,14 @@ export function JamCard({ jam, isAuthenticated }: JamCardProps) {
         {/* Song Count */}
         <div className="flex items-center gap-2 mt-2">
           <div className="text-xs sm:text-sm text-base-content/60">
-            🎵 {songCount} {songCount === 1 ? 'song' : 'songs'}
+            🎵 {safeT(t, 'jams.songs_count', { count: songCount })}
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="card-actions justify-end mt-3 sm:mt-4">
           <Link to={`/jams/${jam.id}`} className="btn btn-primary btn-xs sm:btn-sm text-xs sm:text-sm">
-            View Details
+            {t('common.details')}
           </Link>
         </div>
       </div>
@@ -116,4 +118,3 @@ export function JamCard({ jam, isAuthenticated }: JamCardProps) {
 }
 
 export default JamCard
-

@@ -10,6 +10,7 @@ import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from 
 import {formatDuration} from '../../lib/formatters'
 import {getToken} from '../../lib/auth'
 import {getInstrumentIcon} from './RegistrationList'
+import {useTranslation} from 'react-i18next'
 
 interface LiveJamControlPanelProps {
   jam: JamResponseDto
@@ -76,6 +77,7 @@ export function LiveJamControlPanel({
   onActionSuccess,
   onActionError,
 }: LiveJamControlPanelProps) {
+  const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
   const [localQueue, setLocalQueue] = useState<ScheduleResponseDto[]>(
     jam.schedules?.filter((s) => s.status === 'SCHEDULED').sort((a, b) => (a.order || 0) - (b.order || 0)) || []
@@ -93,7 +95,7 @@ export function LiveJamControlPanel({
       const token = getToken()
 
       if (!token) {
-        throw new Error('No authentication token found. Please log in again.')
+        throw new Error(t('errors.no_token_found'))
       }
 
       const response = await fetch(`/api/jams/${jam.id}/live/control`, {
@@ -107,22 +109,22 @@ export function LiveJamControlPanel({
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Action failed')
+        throw new Error(errorData.error || t('errors.action_failed'))
       }
 
       const result = await response.json()
 
       // Success feedback
       const actionLabels: Record<string, string> = {
-        play: 'Song playing',
-        pause: 'Song paused',
-        skip: 'Skipped to next song',
-        reorder: 'Queue reordered',
+        play: t('live_control.song_playing_feedback'),
+        pause: t('live_control.song_paused_feedback'),
+        skip: t('live_control.skipped_feedback'),
+        reorder: t('live_control.reordered_feedback'),
       }
 
-      onActionSuccess?.(actionLabels[action.action] || 'Action completed')
+      onActionSuccess?.(actionLabels[action.action] || t('errors.generic_error'))
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to execute action'
+      const errorMessage = err instanceof Error ? err.message : t('errors.failed_to_execute_action')
       onActionError?.(errorMessage)
       console.error('❌ Control action error:', err)
     } finally {
@@ -133,7 +135,7 @@ export function LiveJamControlPanel({
   // Handle play button
   const handlePlay = () => {
     if (!currentSong) {
-      onActionError?.('No song currently playing')
+      onActionError?.(t('errors.no_song_playing'))
       return
     }
     sendControlAction({ action: 'play' })
@@ -142,7 +144,7 @@ export function LiveJamControlPanel({
   // Handle pause button
   const handlePause = () => {
     if (!currentSong) {
-      onActionError?.('No song currently playing')
+      onActionError?.(t('errors.no_song_playing'))
       return
     }
     sendControlAction({ action: 'pause' })
@@ -151,7 +153,7 @@ export function LiveJamControlPanel({
   // Handle skip button
   const handleSkip = () => {
     if (!currentSong) {
-      onActionError?.('No song currently playing')
+      onActionError?.(t('errors.no_song_playing'))
       return
     }
     sendControlAction({ action: 'skip' })
@@ -207,9 +209,9 @@ export function LiveJamControlPanel({
         <div className="bg-gradient-to-br from-primary to-primary-focus rounded-xl p-6 text-white shadow-lg">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <p className="text-sm font-semibold text-white/80 mb-1">Now Playing</p>
-              <h2 className="text-3xl font-bold">{currentSong.music?.title || 'TBA'}</h2>
-              <p className="text-xl text-white/90 mt-1">{currentSong.music?.artist || 'Artist TBA'}</p>
+              <p className="text-sm font-semibold text-white/80 mb-1">{t('live_control.now_playing')}</p>
+              <h2 className="text-3xl font-bold">{currentSong.music?.title || t('schedule.song_tba')}</h2>
+              <p className="text-xl text-white/90 mt-1">{currentSong.music?.artist || t('schedule.artist_tba')}</p>
             </div>
             <Music className="w-12 h-12 text-white/60" />
           </div>
@@ -224,7 +226,7 @@ export function LiveJamControlPanel({
           {/* Musicians Section */}
           {currentSong.registrations && currentSong.registrations.length > 0 && (
             <div className="mb-6 bg-white/10 rounded-lg p-4">
-              <p className="text-sm font-semibold text-white/90 mb-3">Musicians</p>
+              <p className="text-sm font-semibold text-white/90 mb-3">{t('nav.musicians')}</p>
               <div className="flex flex-wrap gap-2">
                 {Array.from(groupRegistrationsByInstrument(currentSong.registrations).entries())
                   .sort(([a], [b]) => getInstrumentOrder(a) - getInstrumentOrder(b))
@@ -250,7 +252,7 @@ export function LiveJamControlPanel({
               className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
             >
               <Play className="w-4 h-4" />
-              Play
+              {t('common.play')}
             </button>
             <button
               onClick={handlePause}
@@ -258,7 +260,7 @@ export function LiveJamControlPanel({
               className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
             >
               <Pause className="w-4 h-4" />
-              Pause
+              {t('common.pause')}
             </button>
             <button
               onClick={handleSkip}
@@ -266,14 +268,14 @@ export function LiveJamControlPanel({
               className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
             >
               <SkipForward className="w-4 h-4" />
-              Skip
+              {t('common.skip')}
             </button>
           </div>
         </div>
       ) : (
         <div className="bg-base-200 rounded-xl p-6 text-center">
-          <p className="text-base-content/60">No song currently playing</p>
-          <p className="text-sm text-base-content/50 mt-1">Start the first song to begin</p>
+          <p className="text-base-content/60">{t('live_control.no_song_playing')}</p>
+          <p className="text-sm text-base-content/50 mt-1">{t('live_control.start_to_begin')}</p>
         </div>
       )}
 
@@ -281,7 +283,7 @@ export function LiveJamControlPanel({
       <div className="bg-base-100 rounded-xl p-6 border border-base-300">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
           <Music className="w-5 h-5" />
-          Up Next (Reorderable)
+          {t('live_control.up_next')}
         </h3>
 
         {nextThreeSongs.length > 0 ? (
@@ -304,10 +306,10 @@ export function LiveJamControlPanel({
                 {/* Song Info */}
                 <div className="flex-1 min-w-0">
                   <p className="font-bold text-base-content">
-                    {index + 1}. {schedule.music?.title || 'Song TBA'}
+                    {index + 1}. {schedule.music?.title || t('schedule.song_tba')}
                   </p>
                   <p className="text-sm text-base-content/70">
-                    {schedule.music?.artist || 'Artist TBA'}
+                    {schedule.music?.artist || t('schedule.artist_tba')}
                   </p>
                   {schedule.music?.duration && (
                     <p className="text-xs text-base-content/60 mt-1">
@@ -319,14 +321,14 @@ export function LiveJamControlPanel({
                 {/* Musicians Count */}
                 {schedule.registrations && schedule.registrations.length > 0 && (
                   <div className="badge badge-outline text-xs">
-                    {schedule.registrations.length} musicians
+                    {t('schedule.musicians_count', { count: schedule.registrations.length })}
                   </div>
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-center text-base-content/60 py-4">No more songs scheduled</p>
+          <p className="text-center text-base-content/60 py-4">{t('live_control.no_more_songs')}</p>
         )}
       </div>
 
@@ -334,7 +336,7 @@ export function LiveJamControlPanel({
       {isLoading && (
         <div className="flex items-center justify-center gap-2 text-sm text-base-content/60">
           <span className="loading loading-spinner loading-sm"></span>
-          Executing action...
+          {t('live_control.executing_action')}
         </div>
       )}
     </div>

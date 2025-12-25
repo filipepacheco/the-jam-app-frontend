@@ -1,11 +1,14 @@
+import {useTranslation} from 'react-i18next'
+
 function Footer() {
+  const { t } = useTranslation()
   return (
     <footer className="footer footer-center bg-base-300 text-base-content p-4 sm:p-8 lg:p-10">
       <nav className="grid grid-flow-col gap-2 sm:gap-4">
-        <a className="link link-hover text-xs sm:text-sm">About</a>
-        <a className="link link-hover text-xs sm:text-sm">Features</a>
-        <a className="link link-hover text-xs sm:text-sm">Pricing</a>
-        <a className="link link-hover text-xs sm:text-sm">Contact</a>
+        <a className="link link-hover text-xs sm:text-sm">{t('common.about')}</a>
+        <a className="link link-hover text-xs sm:text-sm">{t('common.features_label')}</a>
+        <a className="link link-hover text-xs sm:text-sm">{t('common.pricing')}</a>
+        <a className="link link-hover text-xs sm:text-sm">{t('common.contact')}</a>
       </nav>
       <nav className="hidden sm:block">
         <div className="grid grid-flow-col gap-2 sm:gap-4">
@@ -46,7 +49,7 @@ function Footer() {
       </nav>
       <aside>
         <p className="text-xs sm:text-sm">
-          Copyright © {new Date().getFullYear()} - Jam Session App. All rights reserved.
+          {t('common.copyright')} © {new Date().getFullYear()} - {t('common.app_name')}. {t('common.all_rights_reserved')}
         </p>
       </aside>
     </footer>

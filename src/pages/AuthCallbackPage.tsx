@@ -6,8 +6,10 @@
 import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../hooks'
+import {useTranslation} from 'react-i18next'
 
 export function AuthCallbackPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { isAuthenticated, isLoading, isNewUser } = useAuth()
   const [error, setError] = useState<string | null>(null)

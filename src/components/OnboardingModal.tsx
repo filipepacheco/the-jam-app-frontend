@@ -7,6 +7,7 @@ import {useState} from 'react'
 import {useAuth} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
 import {GENRES} from '../lib/musicConstants'
+import {useTranslation} from 'react-i18next'
 
 interface OnboardingModalProps {
   isOpen: boolean
@@ -14,6 +15,7 @@ interface OnboardingModalProps {
 }
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
+  const { t } = useTranslation()
   const { user, completeOnboarding, clearNewUserFlag } = useAuth()
   const [name, setName] = useState(user?.name || '')
   const [phone, setPhone] = useState(user?.phone || '')
@@ -49,13 +51,13 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
     // Name is required
     if (!name.trim()) {
-      setError('Name is required')
+      setError(t('profile.name_required'))
       return
     }
 
     // At least instrument or genre should be provided
     if (!instrument && !genre) {
-      setError('Please select at least an instrument or a genre')
+      setError(t('jams.onboarding.instrument_genre_error'))
       return
     }
 
@@ -68,10 +70,10 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       if (result.success) {
         onClose()
       } else {
-        setError(result.error || 'Failed to save preferences')
+        setError(result.error || t('profile.update_failed'))
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(err instanceof Error ? err.message : t('errors.generic_error'))
     } finally {
       setIsLoading(false)
     }
@@ -89,21 +91,21 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       <div className="modal-box">
         {/* Header */}
         <h3 className="font-bold text-lg mb-2">
-          🎉 Welcome and Let's Jam!
+          {t('jams.onboarding.welcome_title')}
         </h3>
         <p className="text-base-content/70 mb-6">
-          Tell us a bit about yourself so we can match you with the right jams.
+          {t('jams.onboarding.welcome_desc')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name Field - Required */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Your Name *</span>
+              <span className="label-text font-semibold">{t('jams.onboarding.name_label')}</span>
             </label>
             <input
               type="text"
-              placeholder="Enter your name"
+              placeholder={t('jams.onboarding.name_placeholder')}
               className="input input-bordered w-full"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -115,7 +117,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {/* Phone Field - Optional */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold  ">Phone</span>
+              <span className="label-text font-semibold  ">{t('jams.onboarding.phone_label')}</span>
             </label>
             <input
               type="tel"
@@ -131,7 +133,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {/* Instrument Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">What's your main instrument?</span>
+              <span className="label-text font-semibold">{t('jams.onboarding.instrument_q')}</span>
             </label>
             <select
               className="select select-bordered w-full"
@@ -139,7 +141,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
               onChange={(e) => setInstrument(e.target.value)}
               disabled={isLoading}
             >
-              <option value="">Select an instrument...</option>
+              <option value="">{t('jams.onboarding.instrument_choose')}</option>
               {INSTRUMENTS.map((inst) => (
                 <option key={inst} value={inst}>
                   {inst}
@@ -151,7 +153,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {/* Genre Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">What's your favorite genre?</span>
+              <span className="label-text font-semibold">{t('jams.onboarding.genre_q')}</span>
             </label>
             <select
               className="select select-bordered w-full"
@@ -159,7 +161,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
               onChange={(e) => setGenre(e.target.value)}
               disabled={isLoading}
             >
-              <option value="">Select a genre...</option>
+              <option value="">{t('jams.onboarding.genre_choose')}</option>
               {GENRES.map((g) => (
                 <option key={g} value={g}>
                   {g}
@@ -193,7 +195,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
               disabled={isLoading || !name.trim() || (!instrument && !genre)}
             >
-              {isLoading ? 'Saving...' : 'Get Started'}
+              {isLoading ? t('musician_form.saving') : t('jams.onboarding.get_started')}
             </button>
           </div>
         </form>
@@ -201,7 +203,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
       {/* Backdrop - clicking dismisses modal */}
       <form method="dialog" className="modal-backdrop">
-        <button onClick={handleSkip}>close</button>
+        <button onClick={handleSkip}>{t('common.close')}</button>
       </form>
     </dialog>
   )

@@ -5,6 +5,7 @@
 
 import type {RegistrationResponseDto} from '../../types/api.types'
 import {CheckCircle, Clock, Music, Users, XCircle} from 'lucide-react'
+import {useTranslation} from 'react-i18next'
 
 export const getInstrumentIcon = (instrument?: string): React.ReactNode => {
     if (!instrument) return <Music className="w-4 h-4" />
@@ -34,28 +35,28 @@ export const getInstrumentIcon = (instrument?: string): React.ReactNode => {
     }
 }
 
-const getInstrumentDisplayName = (instrument: string): string => {
+const getInstrumentDisplayName = (instrument: string, t: (key: string) => string): string => {
     const lower = instrument.toLowerCase()
     switch (lower) {
         case 'drums':
         case 'bateria':
-            return 'Drums'
+            return t('schedule.instruments.drums')
         case 'guitar':
         case 'guitars':
         case 'guitarra':
-            return 'Guitars'
+            return t('schedule.instruments.guitars')
         case 'bass':
         case 'baixo':
-            return 'Bass'
+            return t('schedule.instruments.bass')
         case 'vocals':
         case 'vocal':
         case 'vozes':
         case 'voz':
-            return 'Vocals'
+            return t('schedule.instruments.vocals')
         case 'keys':
         case 'keyboard':
         case 'teclado':
-            return 'Keys'
+            return t('schedule.instruments.keys')
         default:
             return instrument
     }
@@ -134,6 +135,7 @@ export function RegistrationList({
                                      neededVocals,
                                      neededKeys,
                                  }: RegistrationListProps) {
+    const { t } = useTranslation()
     const neededInstruments = getNeededInstruments(neededDrums, neededGuitars, neededBass, neededVocals, neededKeys)
     const groupedRegistrations = groupRegistrationsByInstrument(registrations)
     const hasRegistrations = registrations && registrations.length > 0
@@ -143,15 +145,15 @@ export function RegistrationList({
             <div className="flex items-center justify-between mb-4">
                 <p className="text-xs font-semibold text-base-content/70 flex items-center gap-2">
                     <Users className="w-4 h-4" />
-                    Musicians Registered
+                    {t('schedule.musicians_registered')}
                 </p>
                 {showActions && onAddMusician && (
                     <button
                         onClick={onAddMusician}
                         className="btn btn-xs btn-outline"
-                        title="Add musician manually"
+                        title={t('schedule.add_musician_btn')}
                     >
-                        + Add Musician
+                        {t('schedule.add_musician')}
                     </button>
                 )}
             </div>
@@ -167,7 +169,7 @@ export function RegistrationList({
                                 {/* Column Header */}
                                 <div className="mb-3 pb-3 border-b-2 border-primary/20">
                                     <p className="text-xs font-bold text-primary flex items-center gap-2">
-                                        {getInstrumentIcon(instrument)} {getInstrumentDisplayName(instrument)}
+                                        {getInstrumentIcon(instrument)} {getInstrumentDisplayName(instrument, t)}
                                     </p>
                                 </div>
 
@@ -182,7 +184,7 @@ export function RegistrationList({
                                             <div className="space-y-1 flex-1 min-w-0">
                                                 {/* Musician Name */}
                                                 <p className="text-xs font-bold truncate text-base-content">
-                                                    {registration.musician?.name || 'Unknown'}
+                                                    {registration.musician?.name || t('schedule.unknown')}
                                                     {registration.musician?.instrument && (
                                                         // <span className="text-xs font-normal text-base-content/60 flex items-center gap-1 mt-0.5">
                                                             <>{' '}({getInstrumentIcon(registration.musician.instrument)})</>
@@ -195,19 +197,19 @@ export function RegistrationList({
                                                     {registration.status === 'APPROVED' && (
                                                         <div className="flex items-center gap-1 badge badge-sm text-success-content" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', borderColor: 'rgb(34, 197, 94)' }}>
                                                             <CheckCircle className="w-3 h-3" />
-                                                            <span>Approved</span>
+                                                            <span>{t('schedule.statuses.approved')}</span>
                                                         </div>
                                                     )}
                                                     {registration.status === 'REJECTED' && (
                                                         <div className="flex items-center gap-1 badge badge-sm badge-error text-error-content" >
                                                             <XCircle className="w-3 h-3" />
-                                                            <span>Rejected</span>
+                                                            <span>{t('schedule.statuses.canceled')}</span>
                                                         </div>
                                                     )}
                                                     {!registration.status || (registration.status !== 'APPROVED' && registration.status !== 'REJECTED') && (
                                                         <div className="flex items-center gap-1 badge badge-sm text-warning-content" style={{ backgroundColor: 'rgba(251, 191, 36, 0.1)', borderColor: 'rgb(251, 191, 36)' }}>
                                                             <Clock className="w-3 h-3" />
-                                                            <span>Pending</span>
+                                                            <span>{t('schedule.statuses.pending')}</span>
                                                         </div>
                                                     )}
                                                 </div>
@@ -222,7 +224,7 @@ export function RegistrationList({
                                                         )}
                                                         {registration.musician?.level && (
                                                             <p className="text-xs text-base-content/50 badge badge-xs badge-ghost">
-                                                                {registration.musician.level}
+                                                                {t(`schedule.levels.${registration.musician.level}`)}
                                                             </p>
                                                         )}
                                                     </div>
@@ -236,7 +238,7 @@ export function RegistrationList({
                                                         onClick={() => onApprove?.(registration.id)}
                                                         className="btn btn-xs btn-success btn-outline"
                                                         disabled={loading}
-                                                        title="Approve"
+                                                        title={t('common.approve')}
                                                     >
                                                         ✓
                                                     </button>
@@ -244,7 +246,7 @@ export function RegistrationList({
                                                         onClick={() => onReject?.(registration.id)}
                                                         className="btn btn-xs btn-error btn-outline"
                                                         disabled={loading}
-                                                        title="Reject"
+                                                        title={t('common.reject')}
                                                     >
                                                         ✕
                                                     </button>
@@ -256,7 +258,7 @@ export function RegistrationList({
                                     {/* Empty Column Message */}
                                     {(!groupedRegistrations.get(instrument) || groupedRegistrations.get(instrument)!.length === 0) && (
                                         <p className="text-xs text-base-content/40 italic text-center py-4 bg-base-100/50 rounded">
-                                            No musicians yet
+                                            {t('schedule.no_musicians_yet')}
                                         </p>
                                     )}
                                 </div>
@@ -266,7 +268,7 @@ export function RegistrationList({
                 </div>
             ) : (
                 <div className="text-sm text-base-content/50 italic py-6 text-center bg-base-200/30 rounded-lg">
-                    No musicians registered for this performance yet
+                    {t('schedule.no_musicians_registered')}
                 </div>
             )}
         </div>

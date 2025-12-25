@@ -6,6 +6,7 @@
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {RegistrationList} from './RegistrationList'
 import {formatDuration} from '../../lib/formatters'
+import {useTranslation} from 'react-i18next'
 
 interface ScheduleDisplayItemProps {
     schedule: ScheduleResponseDto
@@ -31,21 +32,21 @@ const getStatusColor = (status: string | undefined, isSuggested: boolean): strin
     }
 }
 
-export const getStatusLabel = (status: string | undefined, isSuggested: boolean): string => {
-    if (isSuggested) return 'Suggested'
+export const getStatusLabel = (status: string | undefined, isSuggested: boolean, t: (key: string) => string): string => {
+    if (isSuggested) return t('schedule.statuses.suggested')
     switch (status) {
         case 'APPROVED':
-            return 'Approved'
+            return t('schedule.statuses.approved')
         case 'SCHEDULED':
-            return 'Scheduled'
+            return t('schedule.statuses.scheduled')
         case 'IN_PROGRESS':
-            return 'In Progress'
+            return t('schedule.statuses.in_progress')
         case 'COMPLETED':
-            return 'Completed'
+            return t('schedule.statuses.completed')
         case 'CANCELED':
-            return 'Canceled'
+            return t('schedule.statuses.canceled')
         default:
-            return 'Pending'
+            return t('schedule.statuses.pending')
     }
 }
 
@@ -71,6 +72,7 @@ export const getStatusIcon = (status: string | undefined, isSuggested: boolean):
 export function ScheduleDisplayItem({
                                         schedule, isSuggested = false, userRegisteredForSchedule = false, onEnrollClick,
                                     }: ScheduleDisplayItemProps) {
+    const { t } = useTranslation()
 
     const {
         music
@@ -99,9 +101,9 @@ export function ScheduleDisplayItem({
             {/* Song Info */}
             <div className="flex-1 min-w-0 truncate">
                 <p>
-                    <span className="font-semibold text-xl">{schedule.music?.title || 'Song TBA'}</span>
+                    <span className="font-semibold text-xl">{schedule.music?.title || t('schedule.song_tba')}</span>
                     <span
-                        className="text-sm text-base-content/70 ml-1">by {schedule.music?.artist || 'Artist TBA'}</span>
+                        className="text-sm text-base-content/70 ml-1">{t('common.by')} {schedule.music?.artist || t('schedule.artist_tba')}</span>
                 </p>
 
                 <div className="flex flex-wrap gap-1 mt-1">
@@ -122,14 +124,14 @@ export function ScheduleDisplayItem({
                 className={`badge badge-md ${getStatusColor(schedule.status, isSuggested)}`}
             >
               {getStatusIcon(schedule.status, isSuggested) && `${getStatusIcon(schedule.status, isSuggested)} `}
-                {getStatusLabel(schedule.status, isSuggested)}
+                {getStatusLabel(schedule.status, isSuggested, t)}
             </span>
                 <button
                     onClick={onEnrollClick}
                     className={`btn btn-sm ${userRegisteredForSchedule ? 'btn-success btn-disabled' : 'btn-primary'}`}
                     disabled={userRegisteredForSchedule}
                 >
-                    {userRegisteredForSchedule ? '✓ Already Enrolled' : '🎵 Enroll'}
+                    {userRegisteredForSchedule ? t('schedule.already_enrolled') : t('schedule.enroll_btn')}
                 </button>
             </div>
         </div>

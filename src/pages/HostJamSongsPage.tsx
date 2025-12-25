@@ -6,16 +6,17 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {musicService} from '../services/musicService'
-import * as jamService from '../services/jamService'
+import {jamService, musicService} from '../services'
 import type {MusicResponseDto} from '../types/api.types'
 import {ErrorAlert, SuccessAlert} from '../components'
+import {useTranslation} from 'react-i18next'
 
 interface JamSong extends MusicResponseDto {
   linkedAt?: string
 }
 
 export function HostJamSongsPage() {
+  const { t } = useTranslation()
   const { id: jamId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const [songs, setSongs] = useState<JamSong[]>([])
@@ -52,7 +53,7 @@ export function HostJamSongsPage() {
       // Load jam details
       const jamDetails = await jamService.findOne(jamId)
       if (jamDetails.data) {
-        setJamName((jamDetails.data).name || 'Jam')
+        setJamName((jamDetails.data).name || t('common.app_name'))
 
         // Extract jamsmusics from jam object
         const jamMusics = ((jamDetails.data as unknown) as Record<string, unknown>)?.jamsmusics as Array<Record<string, unknown>> || []
@@ -65,7 +66,7 @@ export function HostJamSongsPage() {
       const allSongsData = await musicService.findAll()
       setAllSongs(allSongsData.data || [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load jam songs')
+      setError(err instanceof Error ? err.message : t('host_songs.failed_to_load'))
     } finally {
       setLoading(false)
     }
@@ -73,7 +74,7 @@ export function HostJamSongsPage() {
 
   const handleCreateSong = async () => {
     if (!newSong.title || !newSong.artist) {
-      setError('Title and artist are required')
+      setError(t('host_songs.title_artist_required'))
       return
     }
 
@@ -105,11 +106,11 @@ export function HostJamSongsPage() {
         })
         setShowAddSong(false)
 
-        setSuccess(`Song "${newSong.title}" created and added to jam`)
+        setSuccess(t('host_songs.song_created_success', { title: newSong.title }))
         await loadJamData()
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create song')
+      setError(err instanceof Error ? err.message : t('host_songs.failed_to_create'))
     } finally {
       setLoading(false)
     }
@@ -117,7 +118,7 @@ export function HostJamSongsPage() {
 
   const handleAddExistingSong = async () => {
     if (!selectedSongId || !jamId) {
-      setError('Please select a song')
+      setError(t('host_songs.select_song_error'))
       return
     }
 
@@ -128,19 +129,19 @@ export function HostJamSongsPage() {
       await musicService.linkToJam(selectedSongId, jamId)
 
       const song = allSongs.find((s) => s.id === selectedSongId)
-      setSuccess(`Song "${song?.title}" added to jam`)
+      setSuccess(t('host_songs.song_added_success', { title: song?.title }))
       setSelectedSongId('')
       setShowAddSong(false)
       await loadJamData()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add song to jam')
+      setError(err instanceof Error ? err.message : t('host_songs.failed_to_add'))
     } finally {
       setLoading(false)
     }
   }
 
   const handleRemoveSong = async (songId: string) => {
-    if (!confirm('Remove this song from the jam?')) return
+    if (!confirm(t('host_songs.remove_confirm'))) return
 
     setLoading(true)
     setError(null)
@@ -148,10 +149,10 @@ export function HostJamSongsPage() {
     try {
       // Note: If backend doesn't have a remove endpoint, we'll just reload
       const song = songs.find((s) => s.id === songId)
-      setSuccess(`Song "${song?.title}" removed from jam`)
+      setSuccess(t('host_songs.song_removed_success', { title: song?.title }))
       await loadJamData()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to remove song')
+      setError(err instanceof Error ? err.message : t('host_songs.failed_to_remove'))
     } finally {
       setLoading(false)
     }
@@ -164,7 +165,7 @@ export function HostJamSongsPage() {
     setSongs(newSongs)
 
     // TODO: Call backend to save reordered songs
-    setSuccess('Song order updated')
+    setSuccess(t('host_songs.order_updated'))
   }
 
   const getAvailableSongs = () => {
@@ -181,12 +182,12 @@ export function HostJamSongsPage() {
             onClick={() => navigate(`/host/jams/${jamId}/manage`)}
             className="btn btn-ghost btn-sm mb-4"
           >
-            ← Back to Jam Management
+            {t('host_songs.back_to_manage')}
           </button>
 
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold">🎵 Songs Management</h1>
+              <h1 className="text-4xl font-bold">{t('host_songs.title')}</h1>
               <p className="text-base-content/70 mt-2">{jamName}</p>
             </div>
             <button
@@ -194,7 +195,7 @@ export function HostJamSongsPage() {
               className="btn btn-primary"
               disabled={loading}
             >
-              + Add Song
+              {t('host_songs.add_song')}
             </button>
           </div>
         </div>
@@ -207,19 +208,19 @@ export function HostJamSongsPage() {
         {showAddSong && (
           <div className="modal modal-open">
             <div className="modal-box w-11/12 max-w-md">
-              <h3 className="font-bold text-lg mb-4">Add Song to Jam</h3>
+              <h3 className="font-bold text-lg mb-4">{t('host_songs.add_song_modal')}</h3>
 
               <div className="space-y-4">
                 {/* Option 1: Create New Song */}
-                <div className="divider">Create New Song</div>
+                <div className="divider">{t('host_songs.create_new')}</div>
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Title</span>
+                    <span className="label-text">{t('host_songs.title_label')}</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="Song title"
+                    placeholder={t('music_form.title')}
                     value={newSong.title}
                     onChange={(e) => setNewSong({ ...newSong, title: e.target.value })}
                     className="input input-bordered"
@@ -228,11 +229,11 @@ export function HostJamSongsPage() {
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">Artist</span>
+                    <span className="label-text">{t('host_songs.artist_label')}</span>
                   </label>
                   <input
                     type="text"
-                    placeholder="Artist name"
+                    placeholder={t('music_form.artist')}
                     value={newSong.artist}
                     onChange={(e) => setNewSong({ ...newSong, artist: e.target.value })}
                     className="input input-bordered"
@@ -242,7 +243,7 @@ export function HostJamSongsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text">Genre</span>
+                      <span className="label-text">{t('host_songs.genre_label')}</span>
                     </label>
                     <select
                       value={newSong.genre}
@@ -261,7 +262,7 @@ export function HostJamSongsPage() {
 
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text">Duration (sec)</span>
+                      <span className="label-text">{t('host_songs.duration_sec')}</span>
                     </label>
                     <input
                       type="number"
@@ -279,24 +280,24 @@ export function HostJamSongsPage() {
                   className="btn btn-primary w-full"
                   disabled={loading}
                 >
-                  {loading ? 'Creating...' : 'Create & Add Song'}
+                  {loading ? t('host_songs.creating') : t('host_songs.create_btn')}
                 </button>
 
                 {/* Option 2: Add Existing Song */}
-                <div className="divider">Or Add Existing Song</div>
+                <div className="divider">{t('host_songs.or_add_existing')}</div>
 
                 {getAvailableSongs().length > 0 ? (
                   <>
                     <div className="form-control">
                       <label className="label">
-                        <span className="label-text">Select Song</span>
+                        <span className="label-text">{t('jams.select_song')}</span>
                       </label>
                       <select
                         value={selectedSongId}
                         onChange={(e) => setSelectedSongId(e.target.value)}
                         className="select select-bordered"
                       >
-                        <option value="">Choose a song...</option>
+                        <option value="">{t('jams.choose_song')}</option>
                         {getAvailableSongs().map((song) => (
                           <option key={song.id} value={song.id}>
                             {song.title} - {song.artist}
@@ -310,12 +311,12 @@ export function HostJamSongsPage() {
                       className="btn btn-secondary w-full"
                       disabled={loading || !selectedSongId}
                     >
-                      {loading ? 'Adding...' : 'Add Song'}
+                      {loading ? t('host_songs.adding') : t('host_songs.add_btn')}
                     </button>
                   </>
                 ) : (
                   <div className="alert alert-info">
-                    <p>No other songs available. Create a new one above.</p>
+                    <p>{t('host_songs.no_songs_available')}</p>
                   </div>
                 )}
               </div>
@@ -334,7 +335,7 @@ export function HostJamSongsPage() {
                   }}
                   className="btn btn-ghost"
                 >
-                  Close
+                  {t('common.close')}
                 </button>
               </div>
             </div>
@@ -349,7 +350,7 @@ export function HostJamSongsPage() {
           </div>
         ) : songs.length === 0 ? (
           <div className="alert alert-warning">
-            <p>No songs added to this jam yet. Click "Add Song" to get started.</p>
+            <p>{t('jams.no_songs_yet')}</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -377,7 +378,7 @@ export function HostJamSongsPage() {
                       <button
                         onClick={() => handleReorder(index, index - 1)}
                         className="btn btn-sm btn-ghost"
-                        title="Move up"
+                        title={t('host_songs.move_up')}
                       >
                         ↑
                       </button>
@@ -386,7 +387,7 @@ export function HostJamSongsPage() {
                       <button
                         onClick={() => handleReorder(index, index + 1)}
                         className="btn btn-sm btn-ghost"
-                        title="Move down"
+                        title={t('host_songs.move_down')}
                       >
                         ↓
                       </button>
@@ -396,7 +397,7 @@ export function HostJamSongsPage() {
                       className="btn btn-sm btn-error btn-outline"
                       disabled={loading}
                     >
-                      Remove
+                      {t('host_songs.remove')}
                     </button>
                   </div>
                 </div>
@@ -409,17 +410,17 @@ export function HostJamSongsPage() {
         {songs.length > 0 && (
           <div className="mt-8 stats shadow w-full">
             <div className="stat">
-              <div className="stat-title">Total Songs</div>
+              <div className="stat-title">{t('jams.total_songs')}</div>
               <div className="stat-value text-primary">{songs.length}</div>
             </div>
             <div className="stat">
-              <div className="stat-title">Total Duration</div>
+              <div className="stat-title">{t('jams.total_duration')}</div>
               <div className="stat-value text-primary">
                 {Math.floor(songs.reduce((sum, s) => sum + (s.duration || 0), 0) / 60)}m
               </div>
             </div>
             <div className="stat">
-              <div className="stat-title">Average Song</div>
+              <div className="stat-title">{t('jams.average_song')}</div>
               <div className="stat-value text-primary">
                 {Math.round(songs.reduce((sum, s) => sum + (s.duration || 0), 0) / songs.length / 60)}m
               </div>

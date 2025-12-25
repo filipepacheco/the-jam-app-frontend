@@ -4,8 +4,10 @@
  */
 
 import {useSocketStatus} from '../hooks'
+import {useTranslation} from 'react-i18next'
 
 export function ConnectionStatus() {
+  const { t } = useTranslation()
   const { isConnected, state, hasError } = useSocketStatus()
 
   // Determine color and icon based on state
@@ -16,7 +18,7 @@ export function ConnectionStatus() {
           color: 'text-green-500',
           bgColor: 'bg-green-50',
           badge: 'badge-success',
-          label: 'Connected',
+          label: t('common.connection.connected'),
           icon: '●',
         }
       case 'connecting':
@@ -24,7 +26,7 @@ export function ConnectionStatus() {
           color: 'text-yellow-500',
           bgColor: 'bg-yellow-50',
           badge: 'badge-warning',
-          label: 'Connecting...',
+          label: t('common.connection.connecting'),
           icon: '◆',
         }
       case 'disconnected':
@@ -32,7 +34,7 @@ export function ConnectionStatus() {
           color: 'text-gray-500',
           bgColor: 'bg-gray-50',
           badge: 'badge-ghost',
-          label: 'Offline',
+          label: t('common.connection.offline'),
           icon: '○',
         }
       case 'error':
@@ -40,7 +42,7 @@ export function ConnectionStatus() {
           color: 'text-red-500',
           bgColor: 'bg-red-50',
           badge: 'badge-error',
-          label: 'Error',
+          label: t('common.connection.error'),
           icon: '✕',
         }
       default:
@@ -48,7 +50,7 @@ export function ConnectionStatus() {
           color: 'text-gray-400',
           bgColor: 'bg-gray-50',
           badge: 'badge-ghost',
-          label: 'Idle',
+          label: t('common.connection.idle'),
           icon: '○',
         }
     }

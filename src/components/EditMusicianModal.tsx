@@ -6,6 +6,8 @@
 import {useState} from 'react'
 import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
 
+import {useTranslation} from 'react-i18next'
+
 interface EditMusicianModalProps {
   musician: MusicianResponseDto
   onSave: (musician: MusicianResponseDto) => void
@@ -13,6 +15,7 @@ interface EditMusicianModalProps {
 }
 
 export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianModalProps) {
+  const { t } = useTranslation()
   const [formData, setFormData] = useState({
     name: musician.name,
     instrument: musician.instrument,
@@ -39,17 +42,17 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
 
     // Validate required fields
     if (!formData.name.trim()) {
-      setError('Name is required')
+      setError(t('musician_form.name_required'))
       return
     }
 
     if (!formData.instrument.trim()) {
-      setError('Instrument is required')
+      setError(t('musician_form.instrument_required'))
       return
     }
 
     if (!formData.contact.trim()) {
-      setError('Contact is required')
+      setError(t('musician_form.contact_required'))
       return
     }
 
@@ -63,7 +66,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
 
       onSave(updatedMusician)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update musician')
+      setError(err instanceof Error ? err.message : t('musician_form.failed_to_update'))
       setIsLoading(false)
     }
   }
@@ -72,14 +75,14 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
     <div className="modal modal-open">
       <div className="modal-box max-w-md">
         {/* Header */}
-        <h3 className="font-bold text-lg mb-4">Edit Musician</h3>
+        <h3 className="font-bold text-lg mb-4">{t('musician_form.edit_title')}</h3>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Musician ID (read-only) */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Musician ID</span>
+              <span className="label-text font-semibold">{t('musician_form.musician_id')}</span>
             </label>
             <input
               type="text"
@@ -92,7 +95,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
           {/* Name */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Name</span>
+              <span className="label-text font-semibold">{t('musician_form.name_label')}</span>
             </label>
             <input
               type="text"
@@ -100,7 +103,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
               value={formData.name}
               onChange={handleInputChange}
               className="input input-bordered"
-              placeholder="Enter musician name"
+              placeholder={t('musician_form.name_placeholder')}
               disabled={isLoading}
             />
           </div>
@@ -108,7 +111,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
           {/* Instrument */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Instrument</span>
+              <span className="label-text font-semibold">{t('musician_form.instrument_label')}</span>
             </label>
             <input
               type="text"
@@ -116,7 +119,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
               value={formData.instrument}
               onChange={handleInputChange}
               className="input input-bordered"
-              placeholder="e.g., Guitar, Drums, Bass"
+              placeholder={t('musician_form.instrument_placeholder')}
               disabled={isLoading}
             />
           </div>
@@ -124,7 +127,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
           {/* Level */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Level</span>
+              <span className="label-text font-semibold">{t('schedule.levels.experience_level')}</span>
             </label>
             <select
               name="level"
@@ -133,17 +136,17 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
               className="select select-bordered"
               disabled={isLoading}
             >
-              <option value="BEGINNER">Beginner</option>
-              <option value="INTERMEDIATE">Intermediate</option>
-              <option value="ADVANCED">Advanced</option>
-              <option value="PROFESSIONAL">Professional</option>
+              <option value="BEGINNER">{t('schedule.levels.beginner')}</option>
+              <option value="INTERMEDIATE">{t('schedule.levels.intermediate')}</option>
+              <option value="ADVANCED">{t('schedule.levels.advanced')}</option>
+              <option value="PROFESSIONAL">{t('schedule.levels.professional')}</option>
             </select>
           </div>
 
           {/* Contact */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Contact (Email/Primary)</span>
+              <span className="label-text font-semibold">{t('musician_form.contact_label')}</span>
             </label>
             <input
               type="text"
@@ -151,7 +154,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
               value={formData.contact}
               onChange={handleInputChange}
               className="input input-bordered"
-              placeholder="e.g., email@example.com"
+              placeholder={t('musician_form.contact_placeholder')}
               disabled={isLoading}
             />
           </div>
@@ -159,7 +162,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
           {/* Phone */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Phone</span>
+              <span className="label-text font-semibold">{t('musician_form.phone_label')}</span>
             </label>
             <input
               type="tel"
@@ -167,7 +170,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
               value={formData.phone}
               onChange={handleInputChange}
               className="input input-bordered"
-              placeholder="e.g., (555) 123-4567"
+              placeholder={t('musician_form.phone_placeholder')}
               disabled={isLoading}
             />
           </div>
@@ -187,14 +190,14 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
               onClick={onClose}
               disabled={isLoading}
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="submit"
               className="btn btn-primary"
               disabled={isLoading}
             >
-              {isLoading ? 'Saving...' : 'Save Changes'}
+              {isLoading ? t('musician_form.saving') : t('musician_form.save_changes')}
             </button>
           </div>
         </form>
@@ -202,7 +205,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
 
       {/* Modal Backdrop */}
       <form method="dialog" className="modal-backdrop">
-        <button onClick={onClose}>close</button>
+        <button onClick={onClose}>{t('common.close')}</button>
       </form>
     </div>
   )

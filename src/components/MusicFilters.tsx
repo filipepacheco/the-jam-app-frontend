@@ -3,6 +3,8 @@
  * Search, genre filter, sort, and clear controls
  */
 
+import {useTranslation} from 'react-i18next'
+
 interface MusicFiltersProps {
   searchTerm: string
   onSearchChange: (term: string) => void
@@ -24,6 +26,7 @@ export function MusicFilters({
   onClearFilters,
   genres,
 }: MusicFiltersProps) {
+  const { t } = useTranslation()
   return (
     <div className="card bg-base-200 shadow">
       <div className="card-body p-4">
@@ -32,7 +35,7 @@ export function MusicFilters({
           <div className="form-control flex-1 min-w-[200px]">
             <input
               type="text"
-              placeholder="Search by title or artist..."
+              placeholder={t('music_library.search_placeholder')}
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
               className="input input-bordered"
@@ -46,7 +49,7 @@ export function MusicFilters({
               onChange={(e) => onGenreChange(e.target.value)}
               className="select select-bordered"
             >
-              <option value="">All Genres</option>
+              <option value="">{t('music_library.all_genres')}</option>
               {genres.map((genre) => (
                 <option key={genre} value={genre}>
                   {genre}
@@ -62,15 +65,15 @@ export function MusicFilters({
               onChange={(e) => onSortChange(e.target.value as 'title' | 'artist' | 'date')}
               className="select select-bordered"
             >
-              <option value="title">Sort by Title</option>
-              <option value="artist">Sort by Artist</option>
-              <option value="date">Sort by Date Added</option>
+              <option value="title">{t('music_library.sort_title')}</option>
+              <option value="artist">{t('music_library.sort_artist')}</option>
+              <option value="date">{t('music_library.sort_date')}</option>
             </select>
           </div>
 
           {/* Clear Filters */}
           <button onClick={onClearFilters} className="btn btn-ghost">
-            Clear Filters
+            {t('music_library.clear_filters')}
           </button>
         </div>
       </div>

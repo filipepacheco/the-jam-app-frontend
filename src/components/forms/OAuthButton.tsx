@@ -5,6 +5,7 @@
 
 import type {OAuthProvider} from '../../lib/supabase'
 import {providerIcons, providerLabels} from '../../lib/musicUtils'
+import {useTranslation} from 'react-i18next'
 
 interface OAuthButtonProps {
   provider: OAuthProvider
@@ -21,6 +22,7 @@ export function OAuthButton({
   loading = false,
   fullWidth = true,
 }: OAuthButtonProps) {
+  const { t } = useTranslation()
   return (
     <button
       type="button"
@@ -31,12 +33,12 @@ export function OAuthButton({
       {loading ? (
         <>
           <span className="loading loading-spinner loading-sm"></span>
-          Connecting...
+          {t('common.loading')}
         </>
       ) : (
         <>
           {providerIcons[provider]}
-          Continue with {providerLabels[provider]}
+          {t('auth.continue_with', { provider: providerLabels[provider] })}
         </>
       )}
     </button>

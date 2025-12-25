@@ -11,7 +11,10 @@ import {isSupabaseConfigured} from '../lib/supabase'
 import SimpleLoginForm from '../components/forms/SimpleLoginForm'
 import {ProfileSetupModal} from "../components";
 
+import {useTranslation} from 'react-i18next'
+
 export function LoginPage() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { isAuthenticated, isLoading, user, isNewUser } = useAuth()
   const [showProfileSetup, setShowProfileSetup] = useState(false)
@@ -63,7 +66,7 @@ export function LoginPage() {
       <div className="min-h-screen flex items-center justify-center bg-base-100">
         <div className="flex flex-col items-center gap-3">
           <span className="loading loading-spinner loading-lg"></span>
-          <span className="text-sm sm:text-base font-semibold text-base-content/70">Loading...</span>
+          <span className="text-sm sm:text-base font-semibold text-base-content/70">{t('common.loading')}</span>
         </div>
       </div>
     )
@@ -87,9 +90,9 @@ export function LoginPage() {
       <div className="w-full max-w-sm sm:max-w-md">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3">The Jam App 🎸</h1>
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3">{t('auth.login_page_title')}</h1>
           <p className="text-xs sm:text-sm lg:text-base text-base-content/70">
-            {useSupabase ? 'Sign in to your account with your email or social account' : 'Login or create your musician account'}
+            {useSupabase ? t('auth.login_page_supabase_desc') : t('auth.login_page_simple_desc')}
           </p>
         </div>
 
@@ -99,7 +102,7 @@ export function LoginPage() {
         {/* Footer Links */}
         <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
           <a href="/" className="link link-hover text-primary">
-            ← Back to Home
+            {t('auth.back_to_home')}
           </a>
         </div>
       </div>

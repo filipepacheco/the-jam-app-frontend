@@ -18,8 +18,10 @@ import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto} from "../typ
 import {useEffect, useState} from "react";
 import {getStatusIcon, getStatusLabel} from "../components/schedule/ScheduleDisplayItem.tsx";
 import {getInstrumentIcon} from "../components/schedule/RegistrationList.tsx";
+import {useTranslation} from 'react-i18next'
 
 export function JamDetailPage() {
+    const { t } = useTranslation()
     const {jamId} = useParams<{ jamId: string }>()
     const navigate = useNavigate()
     const {isAuthenticated, user} = useAuth()
@@ -344,7 +346,7 @@ export function JamDetailPage() {
                     {/* How This Jam Works Card */}
                     <div className="card bg-gradient-to-br from-primary to-primary-focus text-primary-content">
                         <div className="card-body p-3 sm:p-6">
-                            <h2 className="card-title text-base sm:text-lg">🎭 How This Jam Works</h2>
+                            <h2 className="card-title text-base sm:text-lg">{t('jams.how_it_works.title')}</h2>
                             <div
                                 className="divider my-2 before:bg-primary-content/20 after:bg-primary-content/20"></div>
 
@@ -353,36 +355,36 @@ export function JamDetailPage() {
                                 <div className="flex gap-1 sm:gap-2">
                                     <span className="text-base sm:text-lg min-w-fit">📋</span>
                                     <div className="min-w-0">
-                                        <p className="font-semibold text-xs sm:text-sm">View Schedule</p>
-                                        <p className="text-xs opacity-75">Check the performance schedule to see all songs and available musician roles needed for each performance.</p>
+                                        <p className="font-semibold text-xs sm:text-sm">{t('jams.how_it_works.view_schedule')}</p>
+                                        <p className="text-xs opacity-75">{t('jams.how_it_works.view_schedule_desc')}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-1 sm:gap-2">
                                     <span className="text-base sm:text-lg min-w-fit">📝</span>
                                     <div className="min-w-0">
-                                        <p className="font-semibold text-xs sm:text-sm">Register for Songs</p>
-                                        <p className="text-xs opacity-75">Click "Sign Up" on any song to register for your preferred instrument role.</p>
+                                        <p className="font-semibold text-xs sm:text-sm">{t('jams.how_it_works.register_songs')}</p>
+                                        <p className="text-xs opacity-75">{t('jams.how_it_works.register_songs_desc')}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-1 sm:gap-2">
                                     <span className="text-base sm:text-lg min-w-fit">✨</span>
                                     <div className="min-w-0">
-                                        <p className="font-semibold text-xs sm:text-sm">Suggest New Songs</p>
-                                        <p className="text-xs opacity-75">Want to add a song? Suggest it from the library and a new schedule slot will be created for host approval.</p>
+                                        <p className="font-semibold text-xs sm:text-sm">{t('jams.how_it_works.suggest_songs')}</p>
+                                        <p className="text-xs opacity-75">{t('jams.how_it_works.suggest_songs_desc')}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-1 sm:gap-2">
                                     <span className="text-base sm:text-lg min-w-fit">👥</span>
                                     <div className="min-w-0">
-                                        <p className="font-semibold text-xs sm:text-sm">Collaborate</p>
-                                        <p className="text-xs opacity-75">Multiple musicians can perform the same song. Each role (vocals, guitar, bass, etc.) can have dedicated performers.</p>
+                                        <p className="font-semibold text-xs sm:text-sm">{t('jams.how_it_works.collaborate')}</p>
+                                        <p className="text-xs opacity-75">{t('jams.how_it_works.collaborate_desc')}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-1 sm:gap-2">
                                     <span className="text-base sm:text-lg min-w-fit">🎵</span>
                                     <div className="min-w-0">
-                                        <p className="font-semibold text-xs sm:text-sm">Performance Time</p>
-                                        <p className="text-xs opacity-75">Perform in the scheduled order. Be ready with your instrument and know your part!</p>
+                                        <p className="font-semibold text-xs sm:text-sm">{t('jams.how_it_works.performance_time')}</p>
+                                        <p className="text-xs opacity-75">{t('jams.how_it_works.performance_time_desc')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -393,7 +395,7 @@ export function JamDetailPage() {
                                     onClick={handleSuggestClick}
                                     className="btn btn-secondary w-full font-bold"
                                 >
-                                    🎵 Suggest a Song
+                                    {t('jams.how_it_works.suggest_btn')}
                                 </button>
                             </div>
                         </div>
@@ -402,7 +404,7 @@ export function JamDetailPage() {
                     {/* QR Code Card */}
                     {jam.qrCode && (<div className="card bg-gradient-to-br from-base-200 to-base-300">
                         <div className="card-body p-3 sm:p-6">
-                            <h2 className="card-title text-base sm:text-lg text-center">📱 QR Code</h2>
+                            <h2 className="card-title text-base sm:text-lg text-center">{t('jams.qr_code')}</h2>
                             <div className="flex justify-center my-4">
                                 <img
                                     src={jam.qrCode}
@@ -411,7 +413,7 @@ export function JamDetailPage() {
                                 />
                             </div>
                             <p className="text-xs text-center text-base-content/70">
-                                Scan to share or join this jam
+                                {t('jams.scan_to_share')}
                             </p>
                         </div>
                     </div>)}
@@ -419,7 +421,7 @@ export function JamDetailPage() {
                     {/* Current Registrations Card */}
                     {userRegistration && (<div className="card bg-info  text-info-content">
                             <div className="card-body p-3 sm:p-6">
-                                <h2 className="card-title text-sm sm:text-lg">{user?.name}, songs you applied to:</h2>
+                                <h2 className="card-title text-sm sm:text-lg">{t('jams.applied_to_title', { name: user?.name })}</h2>
                                 <div
                                     className="divider my-2 before:bg-info-content/20 after:bg-info-content/20"></div>
                                 <div className="space-y-3">
@@ -437,7 +439,7 @@ export function JamDetailPage() {
                                                             </p>
                                                         </div>
                                                         <span
-                                                            className="badge badge-outline badge-sm flex-shrink-0">{(getStatusIcon(reg.status, false))}  {(getStatusLabel(reg.status, false))}</span>
+                                                            className="badge badge-outline badge-sm flex-shrink-0">{(getStatusIcon(reg.status, false))}  {(getStatusLabel(reg.status, false, t))}</span>
                                                     </div>
                                                 </div>)
                                         })}
@@ -464,7 +466,7 @@ export function JamDetailPage() {
         {/* Suggest Song Modal */}
         {showSuggestModal && (<div className="modal modal-open">
             <div className="modal-box w-11/12 max-w-sm">
-                <h3 className="font-bold text-base sm:text-lg mb-4">🎵 Suggest a Song</h3>
+                <h3 className="font-bold text-base sm:text-lg mb-4">{t('jams.suggest_modal_title')}</h3>
 
                 {suggestError && (<div className="alert alert-error mb-4 animate-in fade-in duration-300">
                     <p>{suggestError}</p>
@@ -474,11 +476,11 @@ export function JamDetailPage() {
                     <div className="mb-4">
                         <div className="flex items-center gap-2 mb-3">
                             <span className="loading loading-spinner loading-sm"></span>
-                            <span className="text-sm text-base-content/70 font-semibold">Loading songs...</span>
+                            <span className="text-sm text-base-content/70 font-semibold">{t('jams.loading_songs')}</span>
                         </div>
                         <div className="form-control">
                             <label className="label">
-                                <span className="label-text">Select Song *</span>
+                                <span className="label-text">{t('jams.select_song')}</span>
                             </label>
                             <div className="skeleton h-12 w-full rounded"></div>
                         </div>
@@ -488,7 +490,7 @@ export function JamDetailPage() {
                 {!suggestLoading && (
                     <div className="form-control mb-4">
                         <label className="label">
-                            <span className="label-text">Select Song *</span>
+                            <span className="label-text">{t('jams.select_song')}</span>
                         </label>
                         <select
                             value={selectedSongId}
@@ -496,7 +498,7 @@ export function JamDetailPage() {
                             className="select select-bordered"
                             disabled={suggestLoading}
                         >
-                            <option value="">Choose a song...</option>
+                            <option value="">{t('jams.choose_song')}</option>
                             {allSongs.map((song) => (<option key={song.id} value={song.id}>
                                 {song.title} - {song.artist}
                             </option>))}
@@ -505,12 +507,12 @@ export function JamDetailPage() {
                 )}
 
                 <div className="text-sm text-base-content/70 mb-4 p-3 bg-base-200 rounded">
-                    <p className="font-semibold mb-2">How it works:</p>
+                    <p className="font-semibold mb-2">{t('jams.how_it_works_short')}</p>
                     <ul className="list-disc list-inside space-y-1 text-xs">
-                        <li>Select a song from the library</li>
-                        <li>A new slot will be added to the schedule</li>
-                        <li>The host will review and approve it</li>
-                        <li>You can then register to perform</li>
+                        <li>{t('jams.how_it_works_list.select')}</li>
+                        <li>{t('jams.how_it_works_list.slot')}</li>
+                        <li>{t('jams.how_it_works_list.review')}</li>
+                        <li>{t('jams.how_it_works_list.register')}</li>
                     </ul>
                 </div>
 

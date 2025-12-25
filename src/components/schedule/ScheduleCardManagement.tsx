@@ -8,6 +8,7 @@ import {ScheduleStatusBadge} from './ScheduleStatusBadge'
 import {SongInfo} from './SongInfo'
 import {ScheduleActionButtons} from './ScheduleActionButtons'
 import {RegistrationList} from './RegistrationList'
+import {useTranslation} from 'react-i18next'
 
 interface ScheduleCardProps {
   schedule: ScheduleResponseDto
@@ -38,6 +39,7 @@ export function ScheduleCardManagement({
   onRejectRegistration,
   onAddMusician,
 }: ScheduleCardProps) {
+    const { t } = useTranslation()
     return (
         <div
             className={`card shadow ${
@@ -59,7 +61,7 @@ export function ScheduleCardManagement({
                                     onClick={() => onMoveUp?.(index)}
                                     disabled={index === 0 || loading}
                                     className="btn btn-xs btn-ghost text-xs"
-                                    title="Move up"
+                                    title={t('schedule.actions.move_up')}
                                 >
                                     ▲
                                 </button>
@@ -67,7 +69,7 @@ export function ScheduleCardManagement({
                                     onClick={() => onMoveDown?.(index)}
                                     disabled={index === maxIndex || loading}
                                     className="btn btn-xs btn-ghost text-xs"
-                                    title="Move down"
+                                    title={t('schedule.actions.move_down')}
                                 >
                                     ▼
                                 </button>

@@ -8,8 +8,10 @@ import {useAuth} from '../../hooks'
 import {loginOrRegister} from '../../services'
 import {ErrorAlert} from '../index'
 import {useLocation, useNavigate} from 'react-router-dom'
+import {useTranslation} from 'react-i18next'
 
 export function SimpleLoginForm() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
   const { login } = useAuth()
@@ -61,7 +63,7 @@ export function SimpleLoginForm() {
     const isPhone = /^\d/.test(trimmedInput.replace(/\D/g, ''))
 
     if (!isEmail && !isPhone) {
-      setError('Please enter a valid email or phone number')
+      setError(t('errors.invalid_email_phone'))
       return
     }
 
@@ -77,7 +79,7 @@ export function SimpleLoginForm() {
       const redirectPath = getRedirectPath()
       navigate(redirectPath)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Login failed. Please try again.'
+      const message = err instanceof Error ? err.message : t('auth.auth_failed')
       setError(message)
     } finally {
       setIsLoading(false)
@@ -91,11 +93,11 @@ export function SimpleLoginForm() {
           {/* Email/Phone Input */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Email or Phone Number</span>
+              <span className="label-text font-semibold">{t('auth.email_phone_label')}</span>
             </label>
             <input
               type="text"
-              placeholder="user@example.com or 1234567890"
+              placeholder={t('auth.email_phone_placeholder')}
               className="input input-bordered"
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -104,7 +106,7 @@ export function SimpleLoginForm() {
             />
             <label className="label">
               <span className="label-text-alt text-xs text-base-content/60">
-                Phone numbers should have at least 10 digits
+                {t('auth.phone_hint')}
               </span>
             </label>
           </div>
@@ -113,7 +115,7 @@ export function SimpleLoginForm() {
           {error && (
             <ErrorAlert
               message={error}
-              title="Login Error"
+              title={t('auth.login_error_title')}
             />
           )}
 
@@ -126,10 +128,10 @@ export function SimpleLoginForm() {
             {isLoading ? (
               <>
                 <span className="loading loading-spinner loading-sm"></span>
-                Logging in...
+                {t('auth.logging_in')}
               </>
             ) : (
-              'Continue'
+              t('common.continue')
             )}
           </button>
         </form>
@@ -137,7 +139,7 @@ export function SimpleLoginForm() {
         {/* Info */}
         <div className="divider my-2"></div>
         <p className="text-xs text-base-content/60 text-center">
-          By continuing, you agree to create or access your musician account
+          {t('auth.terms_agreement')}
         </p>
       </div>
     </div>

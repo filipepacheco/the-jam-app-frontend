@@ -5,6 +5,8 @@
 
 import {GENRES} from '../lib/musicConstants'
 
+import {useTranslation} from 'react-i18next'
+
 interface FormData {
   title: string
   artist: string
@@ -28,13 +30,14 @@ export function MusicModalFormFields({
   formData,
   onChange,
 }: MusicModalFormFieldsProps) {
+  const { t } = useTranslation()
   return (
     <>
       {/* Title */}
       <div className="form-control">
         <label className="label">
           <span className="label-text">
-            Title <span className="text-error">*</span>
+            {t('music_form.title')} <span className="text-error">*</span>
           </span>
         </label>
         <input
@@ -51,7 +54,7 @@ export function MusicModalFormFields({
       <div className="form-control">
         <label className="label">
           <span className="label-text">
-            Artist <span className="text-error">*</span>
+            {t('music_form.artist')} <span className="text-error">*</span>
           </span>
         </label>
         <input
@@ -67,34 +70,34 @@ export function MusicModalFormFields({
       {/* Description */}
       <div className="form-control">
         <label className="label">
-          <span className="label-text">Description</span>
+          <span className="label-text">{t('common.description')}</span>
         </label>
         <textarea
           value={formData.description}
           onChange={(e) => onChange('description', e.target.value)}
           className="textarea textarea-bordered"
-          placeholder="Optional. Add notes about this song (e.g., style, tempo, mood)"
+          placeholder={t('music_form.description_placeholder')}
           rows={3}
         />
         <label className="label">
-          <span className="label-text-alt">Optional. A brief description of the song.</span>
+          <span className="label-text-alt">{t('music_form.description_hint')}</span>
         </label>
       </div>
 
       {/* Link */}
       <div className="form-control">
         <label className="label">
-          <span className="label-text">Link</span>
+          <span className="label-text">{t('common.link')}</span>
         </label>
         <input
           type="url"
           value={formData.link}
           onChange={(e) => onChange('link', e.target.value)}
           className="input input-bordered"
-          placeholder="e.g., https://www.youtube.com/watch?v=..."
+          placeholder={t('music_form.link_placeholder')}
         />
         <label className="label">
-          <span className="label-text-alt">Optional. Link to the song (e.g., YouTube, Spotify)</span>
+          <span className="label-text-alt">{t('music_form.link_hint')}</span>
         </label>
       </div>
 
@@ -102,7 +105,7 @@ export function MusicModalFormFields({
       <div className="form-control">
         <label className="label">
           <span className="label-text">
-            Genre <span className="text-error">*</span>
+            {t('music_form.genre')} <span className="text-error">*</span>
           </span>
         </label>
         <select
@@ -111,7 +114,7 @@ export function MusicModalFormFields({
           className="select select-bordered"
           required
         >
-          <option value="">Select a genre...</option>
+          <option value="">{t('music_form.select_genre')}</option>
           {GENRES.map((genre) => (
             <option key={genre} value={genre}>
               {genre}
@@ -123,29 +126,29 @@ export function MusicModalFormFields({
       {/* Duration */}
       <div className="form-control">
         <label className="label">
-          <span className="label-text">Duration (mm:ss)</span>
+          <span className="label-text">{t('music_form.duration_label')}</span>
         </label>
         <input
           type="text"
           value={formData.duration}
           onChange={(e) => onChange('duration', e.target.value)}
           className="input input-bordered"
-          placeholder="e.g., 4:30"
+          placeholder={t('music_form.duration_placeholder')}
           pattern="[0-9]+:[0-5][0-9]"
         />
         <label className="label">
-          <span className="label-text-alt">Optional. Format: minutes:seconds (e.g., 4:30)</span>
+          <span className="label-text-alt">{t('music_form.duration_hint')}</span>
         </label>
       </div>
 
       {/* Needed Instruments Section */}
-      <div className="divider my-2">Musicians Needed</div>
+      <div className="divider my-2">{t('music_form.musicians_needed')}</div>
 
       <div className="grid grid-cols-2 gap-3">
         {/* Drums */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-sm">🥁 Drummers</span>
+            <span className="label-text text-sm">🥁 {t('music_form.drummers')}</span>
           </label>
           <input
             type="number"
@@ -160,7 +163,7 @@ export function MusicModalFormFields({
         {/* Guitars */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-sm">🎸 Guitarists</span>
+            <span className="label-text text-sm">🎸 {t('music_form.guitarists')}</span>
           </label>
           <input
             type="number"
@@ -175,7 +178,7 @@ export function MusicModalFormFields({
         {/* Vocals */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-sm">🎤 Vocalists</span>
+            <span className="label-text text-sm">🎤 {t('music_form.vocalists')}</span>
           </label>
           <input
             type="number"
@@ -190,7 +193,7 @@ export function MusicModalFormFields({
         {/* Bass */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-sm">🎸 Bassists</span>
+            <span className="label-text text-sm">🎸 {t('music_form.bassists')}</span>
           </label>
           <input
             type="number"
@@ -205,7 +208,7 @@ export function MusicModalFormFields({
         {/* Keys */}
         <div className="form-control">
           <label className="label">
-            <span className="label-text text-sm">🎹 Keyboardists</span>
+            <span className="label-text text-sm">🎹 {t('music_form.keyboardists')}</span>
           </label>
           <input
             type="number"

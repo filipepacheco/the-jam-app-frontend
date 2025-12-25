@@ -11,10 +11,12 @@ import {jamService, registrationService, scheduleService} from '../services'
 import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from '../types/api.types'
 import {ErrorAlert, ScheduleCardManagement, SuccessAlert} from '../components'
 import {HostMusicianRegistrationModal, LiveJamControlPanel} from '../components/schedule'
+import {useTranslation} from 'react-i18next'
 
 type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live'
 
 export function JamManagementPage() {
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const {id: jamId} = useParams<{ id: string }>()
     const {isAuthenticated, isLoading: authLoading} = useAuth()
@@ -50,7 +52,7 @@ export function JamManagementPage() {
             console.log('✅ Jam data loaded:', result.data)
             setJam(result.data)
         } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : 'Failed to load jam'
+            const errorMessage = err instanceof Error ? err.message : t('jam_management.error_loading')
             console.error('❌ Error loading jam:', err)
             setError(errorMessage)
         } finally {
@@ -63,10 +65,10 @@ export function JamManagementPage() {
 
         const confirmMessage =
             newStatus === 'ACTIVE'
-                ? 'Are you sure you want to start this jam session?'
+                ? t('jam_management.overview.confirm_start')
                 : newStatus === 'FINISHED'
-                    ? 'Are you sure you want to end this jam session? This action cannot be undone.'
-                    : 'Are you sure you want to change the jam status?'
+                    ? t('jam_management.overview.confirm_end')
+                    : t('jam_management.overview.confirm_status_change')
 
         if (!confirm(confirmMessage)) {
             return
@@ -77,10 +79,10 @@ export function JamManagementPage() {
 
         try {
             await jamService.update(jamId, {status: newStatus})
-            setSuccess(`Jam status updated to ${newStatus}`)
+            setSuccess(t('jam_management.overview.status_updated', { status: newStatus }))
             await loadJamData(jamId)
         } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : 'Failed to update jam status'
+            const errorMessage = err instanceof Error ? err.message : t('errors.failed_to_execute_action')
             console.error('❌ Error updating jam status:', err)
             setError(errorMessage)
         } finally {
@@ -94,7 +96,7 @@ export function JamManagementPage() {
             <div className="min-h-screen flex items-center justify-center bg-base-100">
                 <div className="flex flex-col items-center gap-3">
                     <span className="loading loading-spinner loading-lg"></span>
-                    <span className="text-sm sm:text-base font-semibold text-base-content/70">Loading...</span>
+                    <span className="text-sm sm:text-base font-semibold text-base-content/70">{t('common.loading')}</span>
                 </div>
             </div>
         )
@@ -105,7 +107,7 @@ export function JamManagementPage() {
             <div className="min-h-screen flex items-center justify-center bg-base-100">
                 <div className="flex flex-col items-center gap-3">
                     <span className="loading loading-spinner loading-lg"></span>
-                    <span className="text-sm sm:text-base font-semibold text-base-content/70">Loading jam details...</span>
+                    <span className="text-sm sm:text-base font-semibold text-base-content/70">{t('jam_management.loading_jam')}</span>
                 </div>
             </div>
         )
@@ -115,9 +117,9 @@ export function JamManagementPage() {
         return (
             <div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
                 <div className="container mx-auto max-w-6xl">
-                    <ErrorAlert message={error} title="Error Loading Jam"/>
+                    <ErrorAlert message={error} title={t('jam_management.error_loading')}/>
                     <button onClick={() => navigate('/host/dashboard')} className="btn btn-primary mt-4">
-                        ← Back to Dashboard
+                        {t('jam_management.back_to_dashboard')}
                     </button>
                 </div>
             </div>
@@ -142,12 +144,12 @@ export function JamManagementPage() {
     }
 
     const tabs: { id: TabType; label: string; icon: string }[] = [
-        {id: 'overview', label: 'Overview', icon: '📊'},
-        {id: 'schedule', label: 'Schedule', icon: '📋'},
-        ...(jam?.status === 'ACTIVE' ? [{id: 'live' as const, label: 'Live Control', icon: '🎙️'}] : []),
-        // {id: 'dashboard', label: 'Dashboard', icon: '📺'},
-        // {id: 'analytics', label: 'Analytics', icon: '📈'},
-        // {id: 'registrations', label: 'Registrations', icon: '👥'},
+        {id: 'overview', label: t('jam_management.tabs.overview'), icon: '📊'},
+        {id: 'schedule', label: t('jam_management.tabs.schedule'), icon: '📋'},
+        ...(jam?.status === 'ACTIVE' ? [{id: 'live' as const, label: t('jam_management.tabs.live_control'), icon: '🎙️'}] : []),
+        // {id: 'dashboard', label: t('jam_management.tabs.dashboard'), icon: '📺'},
+        // {id: 'analytics', label: t('jam_management.tabs.analytics'), icon: '📈'},
+        // {id: 'registrations', label: t('jam_management.tabs.registrations'), icon: '👥'},
     ]
 
     return (
@@ -160,11 +162,11 @@ export function JamManagementPage() {
                         <ul>
                             <li>
                                 <button onClick={() => navigate('/host/dashboard')} className="link link-hover">
-                                    Dashboard
+                                    {t('nav.dashboard')}
                                 </button>
                             </li>
                             <li className="truncate">{jam.name}</li>
-                            <li>Manage</li>
+                            <li>{t('jam_management.manage_title')}</li>
                         </ul>
                     </div>
 
@@ -240,6 +242,7 @@ function OverviewTab({
     onStatusChange: (status: 'ACTIVE' | 'INACTIVE' | 'FINISHED') => void
     loading: boolean
 }) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     const uniqueMusicians = new Set<string>()
@@ -251,7 +254,7 @@ function OverviewTab({
             {/* Quick Actions & Status Controls - Merged */}
             <div className="card bg-base-200 shadow-lg">
                 <div className="card-body p-3 sm:p-6">
-                    <h2 className="card-title text-base sm:text-lg">Actions & Controls</h2>
+                    <h2 className="card-title text-base sm:text-lg">{t('jam_management.overview.actions_controls')}</h2>
 
                     {/* Quick Actions Section */}
                         <div className="flex flex-wrap gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -259,10 +262,10 @@ function OverviewTab({
                                 onClick={() => navigate(`/host/jams/${jam.id}/edit`)}
                                 className="btn btn-primary btn-xs sm:btn-sm"
                             >
-                                ✏️ Edit Jam
+                                ✏️ {t('jam_management.overview.edit_jam')}
                             </button>
                             <button onClick={() => navigate(`/jams/${jam.id}`)} className="btn btn-secondary btn-xs sm:btn-sm">
-                                👁️ View Public Page
+                                👁️ {t('jam_management.overview.view_public')}
                             </button>
                             {jam.status === 'INACTIVE' && (
                                 <button
@@ -270,7 +273,7 @@ function OverviewTab({
                                     className="btn btn-success btn-xs sm:btn-sm"
                                     disabled={loading}
                                 >
-                                    ▶️ Start Jam
+                                    ▶️ {t('jam_management.overview.start_jam')}
                                 </button>
                             )}
                             {jam.status === 'ACTIVE' && (
@@ -279,7 +282,7 @@ function OverviewTab({
                                     className="btn btn-error btn-xs sm:btn-sm"
                                     disabled={loading}
                                 >
-                                    ⏹️ End Jam
+                                    ⏹️ {t('jam_management.overview.end_jam')}
                                 </button>
                             )}
                             {jam.status === 'FINISHED' && (
@@ -288,7 +291,7 @@ function OverviewTab({
                                     className="btn btn-warning btn-xs sm:btn-sm"
                                     disabled={loading}
                                 >
-                                    🔄 Reactivate Jam
+                                    🔄 {t('jam_management.overview.reactivate_jam')}
                                 </button>
                             )}
                         </div>
@@ -299,19 +302,19 @@ function OverviewTab({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                 <div className="stats shadow bg-base-200 p-3 sm:p-6">
                     <div className="stat">
-                        <div className="stat-title text-xs sm:text-sm">Performances</div>
+                        <div className="stat-title text-xs sm:text-sm">{t('jam_management.overview.stats.performances')}</div>
                         <div className="stat-value text-success text-xl sm:text-2xl lg:text-3xl">{jam.schedules?.length || 0}</div>
                     </div>
                 </div>
                 <div className="stats shadow bg-base-200 p-3 sm:p-6">
                     <div className="stat">
-                        <div className="stat-title text-xs sm:text-sm">Registrations</div>
+                        <div className="stat-title text-xs sm:text-sm">{t('jam_management.overview.stats.registrations')}</div>
                         <div className="stat-value text-accent text-xl sm:text-2xl lg:text-3xl">{jam.registrations?.length || 0}</div>
                     </div>
                 </div>
                 <div className="stats shadow bg-base-200 p-3 sm:p-6">
                     <div className="stat">
-                        <div className="stat-title text-xs sm:text-sm">Musicians</div>
+                        <div className="stat-title text-xs sm:text-sm">{t('jam_management.overview.stats.musicians')}</div>
                         <div className="stat-value text-secondary text-xl sm:text-2xl lg:text-3xl">{uniqueMusicians.size}</div>
                     </div>
                 </div>
@@ -320,20 +323,20 @@ function OverviewTab({
             {/* Jam Info Card */}
             <div className="card bg-base-200 shadow-lg">
                 <div className="card-body p-3 sm:p-6">
-                    <h2 className="card-title text-base sm:text-lg">Details</h2>
+                    <h2 className="card-title text-base sm:text-lg">{t('common.details')}</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div className="sm:col-span-2">
-                            <p className="text-xs sm:text-sm text-base-content/70">Description</p>
-                            <p className="font-semibold text-sm sm:text-base">{jam.description || 'No description'}</p>
+                            <p className="text-xs sm:text-sm text-base-content/70">{t('common.description')}</p>
+                            <p className="font-semibold text-sm sm:text-base">{jam.description || t('jam_management.overview.no_description')}</p>
                         </div>
                         <div>
-                            <p className="text-xs sm:text-sm text-base-content/70">Date</p>
+                            <p className="text-xs sm:text-sm text-base-content/70">{t('common.date')}</p>
                             <p className="font-semibold text-sm sm:text-base">
-                                {jam.date ? new Date(jam.date).toLocaleString() : 'Not set'}
+                                {jam.date ? new Date(jam.date).toLocaleString() : t('jam_management.overview.date_not_set')}
                             </p>
                         </div>
                         <div>
-                            <p className="text-xs sm:text-sm text-base-content/70">Host</p>
+                            <p className="text-xs sm:text-sm text-base-content/70">{t('common.host')}</p>
                             <p className="font-semibold text-sm sm:text-base">{jam.hostName}</p>
                         </div>
                     </div>
@@ -348,9 +351,10 @@ function OverviewTab({
  * Registrations Tab Component
  */
 function RegistrationsTab({jam}: { jam: JamResponseDto }) {
+    const { t } = useTranslation()
     return (
         <div className="space-y-3 sm:space-y-4">
-            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold">👥 Registrations Management</h2>
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold">👥 {t('jam_management.registrations.title')}</h2>
 
             {jam.registrations && jam.registrations.length > 0 ? (
                 <div className="space-y-2 sm:space-y-3">
@@ -372,7 +376,7 @@ function RegistrationsTab({jam}: { jam: JamResponseDto }) {
                 </div>
             ) : (
                 <div className="alert">
-                    <p className="text-sm">No registrations yet.</p>
+                    <p className="text-sm">{t('jam_management.registrations.no_registrations')}</p>
                 </div>
             )}
         </div>
@@ -384,6 +388,7 @@ function RegistrationsTab({jam}: { jam: JamResponseDto }) {
  * Matches JamDetailPage view but with management controls
  */
 function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => void }) {
+    const { t } = useTranslation()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [showAddModal, setShowAddModal] = useState(false)
@@ -413,7 +418,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
             await scheduleService.update(scheduleId, updatePayload as any)
             onReload()
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to update status')
+            setError(err instanceof Error ? err.message : t('errors.failed_to_execute_action'))
         } finally {
             setLoading(false)
         }
@@ -421,14 +426,14 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
 
     // Handle schedule deletion
     const handleDeleteSchedule = async (scheduleId: string) => {
-        if (!confirm('Are you sure you want to delete this schedule entry?')) return
+        if (!confirm(t('jam_management.schedule.confirm_delete'))) return
         setLoading(true)
         setError(null)
         try {
             await scheduleService.remove(scheduleId)
             onReload()
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to delete schedule')
+            setError(err instanceof Error ? err.message : t('errors.failed_to_remove'))
         } finally {
             setLoading(false)
         }
@@ -445,7 +450,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
             await scheduleService.reorder(jam.id, newOrder)
             onReload()
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to reorder')
+            setError(err instanceof Error ? err.message : t('errors.failed_to_execute_action'))
         } finally {
             setLoading(false)
         }
@@ -462,7 +467,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
             await scheduleService.reorder(jam.id, newOrder)
             onReload()
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to reorder')
+            setError(err instanceof Error ? err.message : t('errors.failed_to_execute_action'))
         } finally {
             setLoading(false)
         }
@@ -471,7 +476,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
     // Handle add schedule
     const handleAddSchedule = async () => {
         if (!selectedMusicId) {
-            setError('Please select a song')
+            setError(t('host_songs.select_song_error'))
             return
         }
         setLoading(true)
@@ -490,7 +495,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
             setSelectedMusicId('')
             onReload()
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to create schedule')
+            setError(err instanceof Error ? err.message : t('errors.failed_to_execute_action'))
         } finally {
             setLoading(false)
         }
@@ -498,13 +503,13 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
 
     // Handle reject registration (delete)
     const handleRejectRegistration = async (registrationId: string) => {
-        if (!confirm('Are you sure you want to reject this registration?')) return
+        if (!confirm(t('jam_management.schedule.confirm_reject_reg'))) return
         setLoading(true)
         try {
             await registrationService.remove(registrationId)
             onReload()
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to reject registration')
+            setError(err instanceof Error ? err.message : t('errors.failed_to_execute_action'))
         } finally {
             setLoading(false)
         }
@@ -522,7 +527,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
             await registrationService.update(registrationId, { status: 'APPROVED' })
             onReload()
         } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : 'Failed to approve registration'
+            const errorMessage = err instanceof Error ? err.message : t('errors.failed_to_execute_action')
             console.error('❌ Error approving registration:', err)
             setError(errorMessage)
         } finally {
@@ -539,13 +544,13 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
         <div className="space-y-4">
             {/* Header */}
             <div className="flex justify-between items-center">
-                <p className="text-3xl font-bold">📋 Song Setlist</p>
+                <p className="text-3xl font-bold">📋 {t('jam_management.schedule.title')}</p>
                 <button
                     onClick={() => setShowAddModal(true)}
                     className="btn btn-primary"
                     disabled={loading}
                 >
-                    + Add New Song
+                    {t('jam_management.schedule.add_new_song')}
                 </button>
             </div>
 
@@ -592,7 +597,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
                         return suggestedSchedules.length > 0 ? (
                             <div className="space-y-4 mt-6 pt-6 border-t-2 border-info/30">
                                 <h3 className="text-3xl font-semibold flex items-center gap-2">
-                                    ✨ Suggested Songs (Pending Approval)
+                                    ✨ {t('jam_management.schedule.suggested_songs')}
                                 </h3>
                                 {suggestedSchedules.map((schedule) => (
                                     <ScheduleCardManagement
@@ -615,11 +620,11 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
                 <div className="card bg-base-200">
                     <div className="card-body text-center py-8">
                         <div className="text-4xl mb-3">📋</div>
-                        <h3 className="font-semibold mb-2">No Performance Schedule Yet</h3>
+                        <h3 className="font-semibold mb-2">{t('jam_management.schedule.no_schedule_yet')}</h3>
                         <p className="text-sm text-base-content/70">
                             {jam.jamMusics?.length
-                                ? 'Click "Add Entry" to create your first schedule.'
-                                : 'Add songs to your jam first, then create your schedule.'}
+                                ? t('jam_management.schedule.add_entry_hint')
+                                : t('jam_management.schedule.add_songs_first')}
 
                         </p>
                     </div>
@@ -647,21 +652,21 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
             {showAddModal && (
                 <div className="modal modal-open">
                     <div className="modal-box">
-                        <h3 className="font-bold text-lg mb-4">Add Performance Entry</h3>
+                        <h3 className="font-bold text-lg mb-4">{t('jam_management.schedule.add_entry_modal')}</h3>
 
                         <div className="form-control mb-4">
                             <label className="label">
-                                <span className="label-text">Song *</span>
+                                <span className="label-text">{t('jam_management.schedule.song_label')}</span>
                             </label>
                             <select
                                 value={selectedMusicId}
                                 onChange={(e) => setSelectedMusicId(e.target.value)}
                                 className="select select-bordered"
                             >
-                                <option value="">Select a song...</option>
+                                <option value="">{t('jam_management.schedule.select_song')}</option>
                                 {jam.jamMusics?.map((jm: JamMusicResponseDto) => (
                                     <option key={jm.id} value={jm.music?.id || jm.musicId}>
-                                        {jm.music?.title || 'Unknown'} - {jm.music?.artist || 'Unknown'}
+                                        {jm.music?.title || t('common.unknown')} - {jm.music?.artist || t('common.unknown')}
                                     </option>
                                 ))}
                             </select>
@@ -669,11 +674,11 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
 
                         <div className="form-control mb-4">
                             <label className="label">
-                                <span className="label-text">Order</span>
+                                <span className="label-text">{t('jam_management.schedule.order_label')}</span>
                             </label>
                             <input
                                 type="text"
-                                value={`#${sortedSchedules.length + 1} (auto-assigned)`}
+                                value={t('jam_management.schedule.order_auto', { count: sortedSchedules.length + 1 })}
                                 className="input input-bordered"
                                 disabled
                             />
@@ -694,7 +699,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
                                 }}
                                 className="btn btn-ghost"
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 onClick={handleAddSchedule}
@@ -702,7 +707,7 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
                                 disabled={loading || !selectedMusicId}
                             >
                                 {loading ?
-                                    <span className="loading loading-spinner loading-sm"></span> : 'Add to Schedule'}
+                                    <span className="loading loading-spinner loading-sm"></span> : t('jam_management.schedule.add_to_schedule')}
                             </button>
                         </div>
                     </div>
@@ -717,19 +722,20 @@ function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => voi
  * Dashboard Tab Component
  */
 function DashboardTab({jam}: { jam: JamResponseDto }) {
+    const { t } = useTranslation()
     const navigate = useNavigate()
 
     return (
         <div className="space-y-4">
-            <h2 className="text-2xl font-bold">📺 Public Dashboard View</h2>
+            <h2 className="text-2xl font-bold">📺 {t('jam_management.dashboard.title')}</h2>
             <div className="alert alert-info">
-                <p>This will show what the audience and musicians see on the public dashboard.</p>
+                <p>{t('jam_management.dashboard.description')}</p>
             </div>
             <button
                 onClick={() => navigate(`/jams/${jam.id}`)}
                 className="btn btn-primary"
             >
-                Open Public View
+                {t('jam_management.dashboard.open_btn')}
             </button>
         </div>
     )
@@ -739,29 +745,30 @@ function DashboardTab({jam}: { jam: JamResponseDto }) {
  * Analytics Tab Component
  */
 function AnalyticsTab({jam}: { jam: JamResponseDto }) {
+    const { t } = useTranslation()
     const uniqueMusicians = new Set<string>()
     jam.registrations?.forEach((reg) => uniqueMusicians.add(reg.musicianId))
 
     return (
         <div className="space-y-4">
-            <h2 className="text-2xl font-bold">📈 Analytics</h2>
+            <h2 className="text-2xl font-bold">📈 {t('jam_management.analytics.title')}</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="card bg-base-200 shadow">
                     <div className="card-body">
-                        <h3 className="font-semibold">Total Songs</h3>
+                        <h3 className="font-semibold">{t('jam_management.analytics.total_songs')}</h3>
                         <p className="text-3xl font-bold">{jam.jamMusics?.length || 0}</p>
                     </div>
                 </div>
                 <div className="card bg-base-200 shadow">
                     <div className="card-body">
-                        <h3 className="font-semibold">Unique Musicians</h3>
+                        <h3 className="font-semibold">{t('jam_management.analytics.unique_musicians')}</h3>
                         <p className="text-3xl font-bold">{uniqueMusicians.size}</p>
                     </div>
                 </div>
                 <div className="card bg-base-200 shadow">
                     <div className="card-body">
-                        <h3 className="font-semibold">Performances</h3>
+                        <h3 className="font-semibold">{t('jam_management.analytics.performances')}</h3>
                         <p className="text-3xl font-bold">{jam.schedules?.length || 0}</p>
                     </div>
                 </div>
@@ -769,7 +776,7 @@ function AnalyticsTab({jam}: { jam: JamResponseDto }) {
 
             {jam.status === 'FINISHED' && (
                 <div className="alert alert-success">
-                    <p>✅ This jam session has been completed. Export analytics coming soon!</p>
+                    <p>✅ {t('jam_management.analytics.finished_message')}</p>
                 </div>
             )}
         </div>

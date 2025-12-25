@@ -3,7 +3,13 @@
  * Helper functions for role-based access control and permissions
  */
 
-import {type UserRole, ROLE_HIERARCHY, ROLE_PERMISSIONS, type RolePermissions, type AuthUser } from '../../types/auth.types'
+import {
+    type AuthUser,
+    ROLE_HIERARCHY,
+    ROLE_PERMISSIONS,
+    type RolePermissions,
+    type UserRole
+} from '../../types/auth.types'
 
 /**
  * Check if a user can perform a specific action based on their role
@@ -60,9 +66,13 @@ export function getDefaultRedirectByRole(role: UserRole): string {
 /**
  * Get role label for display
  * @param role - User role
- * @returns Human-readable role name
+ * @param t - Translation function (optional)
+ * @returns Human-readable role name or translation key
  */
-export function getRoleLabel(role: UserRole): string {
+export function getRoleLabel(role: UserRole, t?: (key: string) => string): string {
+  const key = `roles.${role}`
+  if (t) return t(key)
+
   switch (role) {
     case 'host':
       return 'Host/Organizer'

@@ -7,6 +7,7 @@
 import {useState} from 'react'
 import {useAuth} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
+import {useTranslation} from 'react-i18next'
 
 interface ProfileSetupModalProps {
   isOpen: boolean
@@ -14,6 +15,7 @@ interface ProfileSetupModalProps {
 }
 
 export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
+  const { t } = useTranslation()
   const { user, updateProfile, clearNewUserFlag } = useAuth()
   const [name, setName] = useState(user?.name || '')
   const [instrument, setInstrument] = useState('')
@@ -35,13 +37,13 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
 
     // Name is required
     if (!name.trim()) {
-      setError('Name is required')
+      setError(t('profile.name_required'))
       return
     }
 
     // At least instrument or level should be provided
     if (!instrument && !level) {
-      setError('Please select at least an instrument or experience level')
+      setError(t('jams.profile_setup.instrument_level_error'))
       return
     }
 
@@ -59,10 +61,10 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
         clearNewUserFlag()
         onClose()
       } else {
-        setError(result.error || 'Failed to save profile')
+        setError(result.error || t('profile.update_failed'))
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong')
+      setError(err instanceof Error ? err.message : t('errors.generic_error'))
     } finally {
       setIsLoading(false)
     }
@@ -81,21 +83,21 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
       <div className="modal-box w-full max-w-md">
         {/* Header */}
         <h3 className="font-bold text-lg mb-2">
-          🎵 Complete Your Profile
+          {t('jams.profile_setup.title')}
         </h3>
         <p className="text-base-content/70 mb-6">
-          Tell us a bit about yourself so we can match you with the right jams.
+          {t('jams.profile_setup.desc')}
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Name Field - Required */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Your Name *</span>
+              <span className="label-text font-semibold">{t('jams.profile_setup.name_label')}</span>
             </label>
             <input
               type="text"
-              placeholder="Enter your name"
+              placeholder={t('jams.profile_setup.name_placeholder')}
               className="input input-bordered"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -107,7 +109,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
           {/* Instrument Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Main Instrument</span>
+              <span className="label-text font-semibold">{t('jams.profile_setup.instrument_label')}</span>
             </label>
             <select
               className="select select-bordered w-full"
@@ -115,7 +117,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
               onChange={(e) => setInstrument(e.target.value)}
               disabled={isLoading}
             >
-              <option value="">Select an instrument...</option>
+              <option value="">{t('jams.profile_setup.instrument_choose')}</option>
               {INSTRUMENTS.map((inst) => (
                 <option key={inst} value={inst}>
                   {inst}
@@ -127,7 +129,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
           {/* Level Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Experience Level</span>
+              <span className="label-text font-semibold">{t('jams.profile_setup.level_label')}</span>
             </label>
             <select
               className="select select-bordered w-full"
@@ -135,10 +137,10 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
               onChange={(e) => setLevel(e.target.value as typeof level)}
               disabled={isLoading}
             >
-              <option value="">Select a level...</option>
+              <option value="">{t('jams.profile_setup.level_choose')}</option>
               {levels.map((lv) => (
                 <option key={lv} value={lv}>
-                  {lv.charAt(0) + lv.slice(1).toLowerCase()}
+                  {t(`schedule.levels.${lv.toLowerCase()}`)}
                 </option>
               ))}
             </select>
@@ -147,11 +149,11 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
           {/* Contact Field - Optional */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">Contact (Optional)</span>
+              <span className="label-text font-semibold">{t('jams.profile_setup.contact_label')}</span>
             </label>
             <input
               type="text"
-              placeholder="Phone or additional contact info"
+              placeholder={t('jams.profile_setup.contact_placeholder')}
               className="input input-bordered"
               value={contact}
               onChange={(e) => setContact(e.target.value)}
@@ -177,14 +179,14 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
               onClick={handleSkip}
               disabled={isLoading}
             >
-              Skip for now
+              {t('jams.onboarding.skip')}
             </button>
             <button
               type="submit"
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
               disabled={isLoading || !name.trim()}
             >
-              {isLoading ? 'Saving...' : 'Save Profile'}
+              {isLoading ? t('musician_form.saving') : t('jams.profile_setup.save_btn')}
             </button>
           </div>
         </form>
@@ -192,7 +194,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
 
       {/* Backdrop - prevent closing by clicking outside */}
       <form method="dialog" className="modal-backdrop">
-        <button disabled={isLoading}>close</button>
+        <button disabled={isLoading}>{t('common.close')}</button>
       </form>
     </dialog>
   )

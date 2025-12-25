@@ -7,6 +7,7 @@ import type {ScheduleResponseDto} from '../../types/api.types'
 import {registrationService} from '../../services/registrationService'
 import {useAuth} from '../../hooks'
 import {useState} from 'react'
+import {useTranslation} from 'react-i18next'
 
 interface ScheduleEnrollmentModalProps {
   schedule: ScheduleResponseDto
@@ -26,6 +27,7 @@ interface InstrumentOption {
 export function ScheduleEnrollmentModal({
                                             schedule, isOpen, onClose, onSuccess,
                                         }: ScheduleEnrollmentModalProps) {
+    const { t } = useTranslation()
     const { user } = useAuth()
     const [selectedInstrument, setSelectedInstrument] = useState('')
     const [enrollLoading, setEnrollLoading] = useState(false)
@@ -37,17 +39,17 @@ export function ScheduleEnrollmentModal({
         const options: InstrumentOption[] = []
         const instrumentMap = [{
             key: 'drums',
-            label: 'Drums',
+            label: t('schedule.instruments.drums'),
             emoji: '🥁',
             field: 'neededDrums' as const
-        }, {key: 'guitars', label: 'Guitars', emoji: '🎸', field: 'neededGuitars' as const}, {
+        }, {key: 'guitars', label: t('schedule.instruments.guitars'), emoji: '🎸', field: 'neededGuitars' as const}, {
             key: 'vocals',
-            label: 'Vocals',
+            label: t('schedule.instruments.vocals'),
             emoji: '🎤',
             field: 'neededVocals' as const
-        }, {key: 'bass', label: 'Bass', emoji: '🎸', field: 'neededBass' as const}, {
+        }, {key: 'bass', label: t('schedule.instruments.bass'), emoji: '🎸', field: 'neededBass' as const}, {
             key: 'keys',
-            label: 'Keys',
+            label: t('schedule.instruments.keys'),
             emoji: '🎹',
             field: 'neededKeys' as const
         },]
@@ -67,12 +69,12 @@ export function ScheduleEnrollmentModal({
 
   const handleEnroll = async () => {
     if (!selectedInstrument) {
-      setError('Please select an instrument')
+      setError(t('errors.please_select_instrument'))
       return
     }
 
     if (!user?.id) {
-      setError('User ID not found. Please login again.')
+      setError(t('errors.no_token_found'))
       return
     }
 
@@ -110,7 +112,7 @@ export function ScheduleEnrollmentModal({
           fullError: err,
         })
       }
-      setError(err.message || 'Failed to enroll')
+      setError(err.message || t('errors.failed_to_enroll'))
     } finally {
       setEnrollLoading(false)
     }
@@ -122,13 +124,13 @@ export function ScheduleEnrollmentModal({
 
     return (<div className="modal modal-open">
             <div className="modal-box max-w-sm">
-                <h3 className="font-bold text-lg mb-4">🎵 Enroll in Performance</h3>
+                <h3 className="font-bold text-lg mb-4">{t('schedule.enroll_title')}</h3>
 
                 {/* Schedule Details */}
                 <div className="bg-base-200 rounded p-3 mb-4">
-                    <p className="font-semibold text-sm truncate">{schedule.music?.title || 'Song TBA'}</p>
+                    <p className="font-semibold text-sm truncate">{schedule.music?.title || t('schedule.song_tba')}</p>
                     <p className="text-xs text-base-content/70 truncate">
-                        by {schedule.music?.artist || 'Artist TBA'}
+                        {t('common.by')} {schedule.music?.artist || t('schedule.artist_tba')}
                     </p>
                     {schedule.music?.duration && (<p className="text-xs text-base-content/60 mt-1">
                             ⏱️ {Math.floor(schedule.music.duration / 60)}:
@@ -144,7 +146,7 @@ export function ScheduleEnrollmentModal({
                 {/* Instrument Selection */}
                 <div className="form-control mb-4">
                     <label className="label">
-                        <span className="label-text">Select Your Instrument *</span>
+                        <span className="label-text">{t('schedule.select_your_instrument')}</span>
                     </label>
                     <select
                         value={selectedInstrument}
@@ -152,12 +154,12 @@ export function ScheduleEnrollmentModal({
                         className="select select-bordered"
                         disabled={enrollLoading}
                     >
-                        <option value="">Choose an instrument...</option>
+                        <option value="">{t('schedule.choose_instrument')}</option>
                         {instrumentOptions.map((option) => {
                             const remaining = option.needed - option.registered
                             const isFull = remaining <= 0
                             return (<option key={option.key} value={option.label} disabled={isFull}>
-                                    {option.emoji} {option.label} {isFull ? '(Full)' : `(${remaining} needed)`}
+                                    {option.emoji} {option.label} {isFull ? t('schedule.full_parentheses') : t('schedule.needed_count_parentheses', { count: remaining })}
                                 </option>)
                         })}
                     </select>
@@ -165,7 +167,7 @@ export function ScheduleEnrollmentModal({
 
                 {/* Instruments Summary */}
                 <div className="text-sm text-base-content/70 mb-4 p-3 bg-base-200 rounded">
-                    <p className="font-semibold mb-2 text-xs">Instruments Needed:</p>
+                    <p className="font-semibold mb-2 text-xs">{t('schedule.instruments_needed')}</p>
                     <div className="flex flex-wrap gap-2">
                         {instrumentOptions.map((option) => {
                             const remaining = option.needed - option.registered
@@ -173,7 +175,7 @@ export function ScheduleEnrollmentModal({
                                     key={option.key}
                                     className={`badge badge-sm ${remaining > 0 ? 'badge-warning' : 'badge-error'}`}
                                 >
-                  {option.emoji} {option.label}: {remaining > 0 ? `${remaining} left` : 'Full'}
+                  {option.emoji} {option.label}: {remaining > 0 ? t('schedule.left_count', { count: remaining }) : t('schedule.full')}
                 </span>)
                         })}
                     </div>
@@ -186,7 +188,7 @@ export function ScheduleEnrollmentModal({
                         className="btn btn-ghost"
                         disabled={enrollLoading}
                     >
-                        Cancel
+                        {t('common.cancel')}
                     </button>
                     <button
                         onClick={handleEnroll}
@@ -195,8 +197,8 @@ export function ScheduleEnrollmentModal({
                     >
                         {enrollLoading ? (<>
                                 <span className="loading loading-spinner loading-sm"></span>
-                                Enrolling...
-                            </>) : ('Enroll Now')}
+                                {t('schedule.enrolling')}
+                            </>) : (t('schedule.enroll_now'))}
                     </button>
                 </div>
             </div>
