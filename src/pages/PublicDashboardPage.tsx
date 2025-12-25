@@ -13,9 +13,11 @@ import {getInstrumentIcon} from '../components/schedule/RegistrationList'
 import {QRCodeSVG} from "qrcode.react"
 import {useJamState, useOfflineQueue} from '../hooks'
 import {formatDuration} from '../lib/formatters'
-import {ErrorAlert} from "../components";
+import {ErrorAlert} from "../components"
+import {useTranslation} from 'react-i18next'
 
 export function PublicDashboardPage() {
+  const { t } = useTranslation()
   const { jamId } = useParams<{ jamId: string }>()
 
   // Use global jam state via JamContext
@@ -114,12 +116,10 @@ export function PublicDashboardPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
-        <ErrorAlert message={error.message} title="Error Loading Dashboard" />
+        <ErrorAlert message={error.message} title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')} />
       </div>
     )
   }
-
-  // ...existing code...
 
   return (
     <div
@@ -144,7 +144,7 @@ export function PublicDashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           className="fixed top-0 left-1/2 transform -translate-x-1/2 z-50 bg-warning text-warning-content px-4 py-2 rounded-b-lg"
         >
-          📵 You are offline - showing cached data
+          📵 {t('publicDashboard.offlineIndicator', 'You are offline - showing cached data')}
         </motion.div>
       )}
 
@@ -154,20 +154,20 @@ export function PublicDashboardPage() {
         <button
           onClick={() => setShowNavbar(!showNavbar)}
           className="btn btn-sm btn-ghost text-white"
-          title="Toggle navbar"
+          title={t('publicDashboard.toggleNavbar', 'Toggle navbar')}
         >
           ☰
         </button>
 
         {/* Jam Title */}
-        <h1 className="text-2xl md:text-3xl font-bold text-center flex-1">🎤 {jam?.name}</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-center flex-1">🎤 {t('publicDashboard.title', { name: jam?.name || '' })}</h1>
 
         {/* Connection Status and Fullscreen Button */}
         <div className="flex items-center gap-2">
           <button
             onClick={toggleFullscreen}
             className="btn btn-sm btn-ghost text-white"
-            title="Toggle fullscreen"
+            title={t('publicDashboard.fullscreen', 'Toggle fullscreen')}
           >
             {isFullscreen ? '⛶' : '⛶'}
           </button>
@@ -184,10 +184,10 @@ export function PublicDashboardPage() {
         >
           <div className="flex items-center justify-between max-w-6xl mx-auto">
             <a href="/" className="link link-hover">
-              ← Back to Home
+              {t('publicDashboard.backToHome', '← Back to Home')}
             </a>
             <a href={`/jams/${jamId}`} className="link link-hover">
-              View Full Details →
+              {t('publicDashboard.viewDetails', 'View Full Details →')}
             </a>
           </div>
         </motion.div>
@@ -209,7 +209,7 @@ export function PublicDashboardPage() {
             >
               <div className="bg-linear-to-br from-purple-900/40 to-blue-900/40 backdrop-blur border border-purple-500/30 rounded-2xl p-8 md:p-12">
                 <p className="text-purple-300 text-sm md:text-lg font-semibold uppercase tracking-widest mb-4">
-                  🎵 Now Playing
+                  {t('publicDashboard.nowPlaying', 'Now Playing')}
                 </p>
 
                 <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 text-wrap">
@@ -217,12 +217,12 @@ export function PublicDashboardPage() {
                 </h2>
 
                 <p className="md:text-3xl text-purple-200 mb-2">
-                  by {currentPerformance.music.artist}
+                  {t('publicDashboard.by', 'by')} {currentPerformance.music.artist}
                 </p>
 
                 {currentPerformance.music.duration && (
                   <p className="text-lg md:text-xl text-purple-300 mb-8">
-                    ⏱️ {formatDuration(currentPerformance.music.duration)}
+                    {t('publicDashboard.durationPrefix', '⏱️')} {formatDuration(currentPerformance.music.duration)}
                   </p>
                 )}
 
@@ -231,7 +231,7 @@ export function PublicDashboardPage() {
                 {currentPerformance.registrations && currentPerformance.registrations.length > 0 ? (
                   <div className="mt-8">
                     <p className="text-lg md:text-2xl font-bold text-white mb-6">
-                      🎸 Current Musicians
+                      {t('publicDashboard.currentMusicians', 'Current Musicians')}
                     </p>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                       {(() => {
@@ -259,7 +259,7 @@ export function PublicDashboardPage() {
                             <div className="space-y-2">
                               {regs && regs.map((reg: RegistrationResponseDto) => (
                                 <p key={reg.id} className="font-semibold text-white text-sm">
-                                  {reg.musician?.name || 'Unknown'}
+                                  {reg.musician?.name || t('publicDashboard.unknown', 'Unknown')}
                                 </p>
                               ))}
                             </div>
@@ -269,7 +269,7 @@ export function PublicDashboardPage() {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-purple-300 text-lg">No musicians registered yet</p>
+                  <p className="text-purple-300 text-lg">{t('publicDashboard.noMusicians', 'No musicians registered yet')}</p>
                 )}
               </div>
             </motion.div>
@@ -286,17 +286,17 @@ export function PublicDashboardPage() {
                   <p className="text-5xl md:text-7xl font-black mb-4">🎉</p>
                 </div>
                 <h2 className="text-4xl md:text-6xl font-black mb-4">
-                  Starting Soon!
+                  {t('publicDashboard.startingSoon', 'Starting Soon!')}
                 </h2>
                 <div className="mt-8">
                   <p className="text-lg md:text-2xl text-slate-300 mb-2">
-                    First up:
+                    {t('publicDashboard.firstUp', 'First up:')}
                   </p>
                   <p className="text-3xl md:text-5xl font-bold text-white mb-2">
                     {firstScheduledSong.music.title}
                   </p>
                   <p className="text-xl md:text-2xl text-slate-400">
-                    by {firstScheduledSong.music.artist}
+                    {t('publicDashboard.by', 'by')} {firstScheduledSong.music.artist}
                   </p>
                 </div>
               </div>
@@ -314,7 +314,7 @@ export function PublicDashboardPage() {
             >
               <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6 md:p-8">
                 <p className="text-slate-300 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">
-                  ⏭️ Up Next
+                  {t('publicDashboard.upNext', '⏭️ Up Next')}
                 </p>
 
                 <h3 className="text-3xl md:text-5xl font-bold text-white mb-2">
@@ -322,14 +322,14 @@ export function PublicDashboardPage() {
                 </h3>
 
                 <p className="text-lg md:text-2xl text-slate-300 mb-4">
-                  {nextSongs[0].music.artist}
+              {nextSongs[0].music.artist}
                 </p>
 
                 {/* Next Song Musicians */}
                 {nextSongs[0].registrations && nextSongs[0].registrations.length > 0 && (
                   <div className="mt-6">
                     <p className="text-base md:text-lg font-semibold text-white mb-3">
-                      Musicians to be called:
+                      {t('publicDashboard.musiciansToBeCalled', 'Musicians to be called:')}
                     </p>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                       {(() => {
@@ -357,7 +357,7 @@ export function PublicDashboardPage() {
                             <div className="space-y-1">
                               {regs && regs.map((reg: RegistrationResponseDto) => (
                                 <p key={reg.id} className="font-semibold text-white text-xs">
-                                  {reg.musician?.name || 'Unknown'}
+                                  {reg.musician?.name || t('publicDashboard.unknown', 'Unknown')}
                                 </p>
                               ))}
                             </div>
@@ -387,9 +387,8 @@ export function PublicDashboardPage() {
           fgColor="#ffffff"
           bgColor="transparent"
         />
-        <p className="text-xs text-center mt-2 text-slate-300">Scan to join</p>
+        <p className="text-xs text-center mt-2 text-slate-300">{t('publicDashboard.scanToJoin', 'Scan to join')}</p>
       </motion.div>
     </div>
   )
 }
-

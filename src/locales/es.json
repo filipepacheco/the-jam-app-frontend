@@ -612,5 +612,25 @@
         }
       }
     }
+  },
+  "publicDashboard": {
+    "title": "{{name}}",
+    "errorTitle": "Error al cargar el tablero",
+    "offlineIndicator": "Estás sin conexión - mostrando datos en caché",
+    "toggleNavbar": "Alternar barra de navegación",
+    "fullscreen": "Alternar pantalla completa",
+    "backToHome": "← Volver al inicio",
+    "viewDetails": "Ver detalles →",
+    "nowPlaying": "Reproduciendo ahora",
+    "by": "por",
+    "durationPrefix": "⏱️",
+    "currentMusicians": "Músicos en el escenario",
+    "noMusicians": "No hay músicos registrados aún",
+    "startingSoon": "¡Comenzando pronto!",
+    "firstUp": "Primero:",
+    "upNext": "⏭️ Siguiente",
+    "musiciansToBeCalled": "Músicos por llamar:",
+    "unknown": "Desconocido",
+    "scanToJoin": "Escanea para unirte"
   }
 }

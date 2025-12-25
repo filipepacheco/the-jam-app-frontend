@@ -628,5 +628,25 @@
         "suggest_song": "Suggest Song"
       }
     }
+  },
+  "publicDashboard": {
+    "title": "{{name}}",
+    "errorTitle": "Error Loading Dashboard",
+    "offlineIndicator": "You are offline - showing cached data",
+    "toggleNavbar": "Toggle navbar",
+    "fullscreen": "Toggle fullscreen",
+    "backToHome": "← Back to Home",
+    "viewDetails": "View Full Details →",
+    "nowPlaying": "Now Playing",
+    "by": "by",
+    "durationPrefix": "⏱️",
+    "currentMusicians": "Current Musicians",
+    "noMusicians": "No musicians registered yet",
+    "startingSoon": "Starting Soon!",
+    "firstUp": "First up:",
+    "upNext": "⏭️ Up Next",
+    "musiciansToBeCalled": "Musicians to be called:",
+    "unknown": "Unknown",
+    "scanToJoin": "Scan to join"
   }
 }
