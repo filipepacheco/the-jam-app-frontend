@@ -249,13 +249,45 @@ export interface CreateScheduleDto {
  * Update schedule request
  */
 export interface UpdateScheduleDto {
-  order?: number
-  status?: ScheduleStatus
+
 }
 
 // ============================================================================
-// STANDARDIZED API RESPONSE WRAPPER
+// LIVE DASHBOARD DTOs (from /jams/{id}/live/dashboard endpoint)
 // ============================================================================
+
+/**
+ * Musician data for dashboard display
+ */
+export interface DashboardMusicianDto {
+  id: string
+  name: string
+  instrument: string
+}
+
+/**
+ * Song data for dashboard display (with musicians)
+ */
+export interface DashboardSongDto {
+  id: string
+  title: string
+  artist: string
+  duration: number | null
+  musicians: DashboardMusicianDto[]
+}
+
+/**
+ * Live dashboard response from GET /jams/{id}/live/dashboard
+ * Optimized for public dashboard display with current and next songs
+ */
+export interface LiveDashboardResponseDto {
+  jamId: string
+  jamName: string
+  qrCode: string | null
+  jamStatus: JamStatus
+  currentSong: DashboardSongDto | null
+  nextSongs: DashboardSongDto[]
+}
 
 /**
  * Standardized API response wrapper

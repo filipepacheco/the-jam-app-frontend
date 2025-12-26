@@ -18,7 +18,6 @@ import {LocalStoragePersistenceTestPage} from './pages/LocalStoragePersistenceTe
 import {AuthFlowTestPage} from './pages/AuthFlowTestPage'
 import {PostLoginBehaviorTestPage} from './pages/PostLoginBehaviorTestPage'
 
-// Phase 5: Auth Flow Pages
 import {LoginPage} from './pages/LoginPage'
 import {BrowseJamsPage} from './pages/BrowseJamsPage'
 import {JamDetailPage} from './pages/JamDetailPage'
@@ -29,14 +28,14 @@ import {HostTestSongsPage} from './pages/HostTestSongsPage'
 import {HostDashboardPage} from './pages/HostDashboardPage'
 import {CreateJamPage} from './pages/CreateJamPage'
 import {JamManagementPage} from './pages/JamManagementPage'
+import {JamDJControlPage} from './pages/JamDJControlPage'
 import {MusicPage} from './pages/MusicPage'
 import {MusiciansPage} from './pages/MusiciansPage'
 import {ProfilePage} from './pages/ProfilePage'
 import {PublicDashboardPage} from './pages/PublicDashboardPage'
-
 import {AuthProvider, JamProvider} from './contexts'
 import {OnboardingModal} from "./components";
-import AuthCallbackPage from "./pages/AuthCallbackPage.tsx";
+import AuthCallbackPage from "./pages/AuthCallbackPage.tsx"
 import {useAuth} from "./hooks";
 
 /**
@@ -166,6 +165,12 @@ function AppContent() {
         <>
           <Navbar />
           <JamManagementPage />
+        </>
+      } />
+      <Route path="/host/jams/:id/dj-control" element={
+        <>
+          <Navbar />
+          <JamDJControlPage />
         </>
       } />
       <Route path="/test/seed-data" element={

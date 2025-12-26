@@ -9,11 +9,12 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {useAuth} from '../hooks'
 import {jamService, registrationService, scheduleService} from '../services'
 import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from '../types/api.types'
-import {ErrorAlert, ScheduleCardManagement, SuccessAlert} from '../components'
+import {ErrorAlert, QueueStats, ScheduleCardManagement, SongQueueTimeline, SuccessAlert} from '../components'
 import {HostMusicianRegistrationModal, LiveJamControlPanel} from '../components/schedule'
 import {useTranslation} from 'react-i18next'
+import {DJControlActions} from "../components/dj-control/DJControlActions.tsx";
 
-type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live'
+type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live' | 'dj-control'
 
 export function JamManagementPage() {
     const { t } = useTranslation()
@@ -146,11 +147,13 @@ export function JamManagementPage() {
     const tabs: { id: TabType; label: string; icon: string }[] = [
         {id: 'overview', label: t('jam_management.tabs.overview'), icon: '📊'},
         {id: 'schedule', label: t('jam_management.tabs.schedule'), icon: '📋'},
+        {id: 'dj-control' as const, label: 'DJ Control', icon: '🎛️'},
         ...(jam?.status === 'ACTIVE' ? [{id: 'live' as const, label: t('jam_management.tabs.live_control'), icon: '🎙️'}] : []),
         // {id: 'dashboard', label: t('jam_management.tabs.dashboard'), icon: '📺'},
         // {id: 'analytics', label: t('jam_management.tabs.analytics'), icon: '📈'},
         // {id: 'registrations', label: t('jam_management.tabs.registrations'), icon: '👥'},
     ]
+
 
     return (
         <div className="min-h-screen bg-base-100">
@@ -213,6 +216,9 @@ export function JamManagementPage() {
                 )}
                 {activeTab === 'schedule' && (
                     <ScheduleTab jam={jam} onReload={() => loadJamData(jamId!)}/>
+                )}
+                {activeTab === 'dj-control' && (
+                    <DJControlTab jam={jam} onReload={() => loadJamData(jamId!)}/>
                 )}
                 {activeTab === 'live' && (
                     <LiveJamControlPanel
@@ -783,4 +789,102 @@ function AnalyticsTab({jam}: { jam: JamResponseDto }) {
     )
 }
 
-export default JamManagementPage
+/**
+ * DJ Control Tab Component
+ */
+function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: () => void }) {
+    const { t } = useTranslation()
+    const [schedules, setSchedules] = useState<ScheduleResponseDto[]>([])
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+    const [success, setSuccess] = useState<string | null>(null)
+    const [autoRefreshInterval, setAutoRefreshInterval] = useState(0)
+
+    useEffect(() => {
+        if (jam?.schedules) {
+            const sorted = jam.schedules.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+            setSchedules(sorted)
+        }
+    }, [jam?.schedules])
+
+    // Auto-refresh setup
+    useEffect(() => {
+        if (autoRefreshInterval === 0) return
+
+        const interval = setInterval(() => {
+            onReload()
+        }, autoRefreshInterval)
+
+        return () => clearInterval(interval)
+    }, [autoRefreshInterval, onReload])
+
+    const handleRemoveSong = async (scheduleId: string) => {
+        if (!confirm(t('dj_control.confirm_remove'))) return
+        setLoading(true)
+        setError(null)
+        try {
+            await scheduleService.remove(scheduleId)
+            setSuccess(t('dj_control.song_removed'))
+            onReload()
+        } catch (err) {
+            setError(err instanceof Error ? err.message : t('common.error'))
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleApproveSong = async (scheduleId: string) => {
+        setLoading(true)
+        setError(null)
+        try {
+            await scheduleService.update(scheduleId, { status: 'SCHEDULED' })
+            setSuccess(t('dj_control.song_approved'))
+            onReload()
+        } catch (err) {
+            setError(err instanceof Error ? err.message : t('common.error'))
+        } finally {
+            setLoading(false)
+        }
+    }
+
+
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold">🎛️ DJ Control</h2>
+            </div>
+
+            {error && <ErrorAlert message={error} onDismiss={() => setError(null)} />}
+            {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
+
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                {/* Timeline */}
+                <div className="lg:col-span-3 min-w-0">
+                    <SongQueueTimeline
+                        schedules={schedules}
+                        onRemoveSong={handleRemoveSong}
+                        onApproveSong={handleApproveSong}
+                        loading={loading}
+                    />
+                </div>
+
+                {/* Sidebar */}
+                <div className="lg:col-span-1 space-y-4">
+                    {/* Queue Stats */}
+                    <QueueStats schedules={schedules} />
+
+                    {/* Controls */}
+                    <DJControlActions
+                        jamId={jam.id}
+                        loading={loading}
+                        onReload={onReload}
+                        schedules={schedules}
+                        onAutoRefreshChange={setAutoRefreshInterval}
+                    />
+
+                </div>
+            </div>
+        </div>
+    )
+}
+

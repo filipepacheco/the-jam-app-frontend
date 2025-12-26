@@ -158,6 +158,43 @@
         ]
       }
     },
+    "/auth/profile": {
+      "patch": {
+        "operationId": "AuthController_updateProfile",
+        "summary": "Update musician profile (name, instrument, level, contact)",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "Profile fields to update",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProfileDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized - invalid or missing token"
+          }
+        },
+        "tags": [
+          "Authentication"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/auth/health": {
       "get": {
         "operationId": "AuthController_healthCheck",
@@ -349,6 +386,129 @@
         ]
       }
     },
+    "/jams/{id}/live/state": {
+      "get": {
+        "operationId": "JamController_getLiveState",
+        "summary": "Get live jam state for polling fallback",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Current jam live state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiveStateResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/live/dashboard": {
+      "get": {
+        "operationId": "JamController_getLiveDashboard",
+        "summary": "Get live jam dashboard data (current and next songs with musicians)",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Live jam dashboard data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiveDashboardResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/live/control": {
+      "post": {
+        "operationId": "JamController_executeControlAction",
+        "summary": "Execute live jam control action (play/pause/skip/reorder)",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ControlJamActionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Action executed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiveControlActionResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not jam host"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "tags": [
+          "Jams"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
     "/musicos": {
       "post": {
         "operationId": "MusicoController_create",
@@ -426,7 +586,7 @@
       },
       "patch": {
         "operationId": "MusicoController_update",
-        "summary": "Update musician (self or admin)",
+        "summary": "Update musician (self or host)",
         "parameters": [
           {
             "name": "id",
@@ -455,7 +615,7 @@
             "description": "Unauthorized"
           },
           "403": {
-            "description": "Forbidden - can only update own profile"
+            "description": "Forbidden - can only update own profile unless host"
           }
         },
         "tags": [
@@ -848,6 +1008,55 @@
       }
     },
     "/inscricoes/{id}": {
+      "patch": {
+        "operationId": "InscricaoController_update",
+        "summary": "Update registration details (instrument, status)",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRegistrationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registration updated successfully"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - host only"
+          },
+          "404": {
+            "description": "Registration not found"
+          }
+        },
+        "tags": [
+          "Registrations"
+        ],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
       "delete": {
         "operationId": "InscricaoController_remove",
         "summary": "Cancel registration",
@@ -1119,8 +1328,15 @@
             "type": "string",
             "description": "User role",
             "enum": [
-              "user"
+              "user",
+              "host",
+              "admin"
             ]
+          },
+          "isHost": {
+            "type": "boolean",
+            "description": "Whether user is a host",
+            "default": false
           },
           "token": {
             "type": "string",
@@ -1133,8 +1349,8 @@
         },
         "required": [
           "userId",
-          "name",
           "role",
+          "isHost",
           "token",
           "isNewUser"
         ]
@@ -1151,6 +1367,33 @@
         "required": [
           "token"
         ]
+      },
+      "UpdateProfileDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Musician name"
+          },
+          "instrument": {
+            "type": "string",
+            "description": "Musician instrument"
+          },
+          "level": {
+            "type": "string",
+            "description": "Musician level",
+            "enum": [
+              "BEGINNER",
+              "INTERMEDIATE",
+              "ADVANCED",
+              "PROFESSIONAL"
+            ]
+          },
+          "contact": {
+            "type": "string",
+            "description": "Musician contact (phone or email)"
+          }
+        }
       },
       "CreateJamDto": {
         "type": "object",
@@ -1171,13 +1414,17 @@
             "type": "string",
             "description": "Jam session location"
           },
+          "hostMusicianId": {
+            "type": "string",
+            "description": "Host musician ID (UUID)"
+          },
           "hostName": {
             "type": "string",
-            "description": "Host name"
+            "description": "Host name (denormalized cache)"
           },
           "hostContact": {
             "type": "string",
-            "description": "Host contact"
+            "description": "Host contact (denormalized cache)"
           },
           "qrCode": {
             "type": "string",
@@ -1195,9 +1442,7 @@
         },
         "required": [
           "name",
-          "location",
-          "hostName",
-          "hostContact"
+          "location"
         ]
       },
       "MusicaResponseDto": {
@@ -1450,6 +1695,238 @@
           "updatedAt"
         ]
       },
+      "LiveStateSongDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "jamId": {
+            "type": "string"
+          },
+          "musicId": {
+            "type": "string"
+          },
+          "order": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "music": {
+            "type": "object"
+          },
+          "registrations": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "jamId",
+          "musicId",
+          "order",
+          "status",
+          "createdAt",
+          "music"
+        ]
+      },
+      "LiveStateResponseDto": {
+        "type": "object",
+        "properties": {
+          "currentSong": {
+            "nullable": true,
+            "description": "Current song being played (IN_PROGRESS status)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LiveStateSongDto"
+              }
+            ]
+          },
+          "nextSongs": {
+            "description": "Next 3 scheduled songs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LiveStateSongDto"
+            }
+          },
+          "jamStatus": {
+            "type": "string",
+            "description": "Current jam status"
+          },
+          "timestamp": {
+            "type": "number",
+            "description": "Timestamp of response"
+          }
+        },
+        "required": [
+          "currentSong",
+          "nextSongs",
+          "jamStatus",
+          "timestamp"
+        ]
+      },
+      "DashboardMusicianDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "instrument": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "instrument"
+        ]
+      },
+      "DashboardSongDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "artist": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "number",
+            "nullable": true
+          },
+          "musicians": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DashboardMusicianDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "artist",
+          "duration",
+          "musicians"
+        ]
+      },
+      "LiveDashboardResponseDto": {
+        "type": "object",
+        "properties": {
+          "jamId": {
+            "type": "string",
+            "description": "Jam ID"
+          },
+          "jamName": {
+            "type": "string",
+            "description": "Jam name"
+          },
+          "qrCode": {
+            "type": "string",
+            "nullable": true,
+            "description": "Jam QR code (data URL)"
+          },
+          "jamStatus": {
+            "type": "string",
+            "description": "Current jam status"
+          },
+          "currentSong": {
+            "nullable": true,
+            "description": "Current song being played (IN_PROGRESS status)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DashboardSongDto"
+              }
+            ]
+          },
+          "nextSongs": {
+            "description": "Next up to 3 scheduled songs",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DashboardSongDto"
+            }
+          }
+        },
+        "required": [
+          "jamId",
+          "jamName",
+          "qrCode",
+          "jamStatus",
+          "currentSong",
+          "nextSongs"
+        ]
+      },
+      "ControlJamActionPayloadDto": {
+        "type": "object",
+        "properties": {
+          "scheduleIds": {
+            "description": "Array of schedule IDs in desired order (for reorder action)",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ControlJamActionDto": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Control action type",
+            "enum": [
+              "play",
+              "pause",
+              "skip",
+              "reorder"
+            ]
+          },
+          "payload": {
+            "description": "Action payload",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ControlJamActionPayloadDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "action"
+        ]
+      },
+      "LiveControlActionResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the action was successful"
+          },
+          "jam": {
+            "description": "Updated jam with all schedules and registrations",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JamResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "success",
+          "jam"
+        ]
+      },
       "UpdateJamDto": {
         "type": "object",
         "properties": {
@@ -1606,6 +2083,24 @@
           "musicianId",
           "scheduleId"
         ]
+      },
+      "UpdateRegistrationDto": {
+        "type": "object",
+        "properties": {
+          "instrument": {
+            "type": "string",
+            "description": "Instrument to play"
+          },
+          "status": {
+            "type": "string",
+            "description": "Registration status",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "REJECTED"
+            ]
+          }
+        }
       },
       "CreateScheduleDto": {
         "type": "object",

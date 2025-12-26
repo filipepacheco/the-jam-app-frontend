@@ -28,7 +28,13 @@ export { useScheduleByJam, useScheduleByMusician } from './useSchedule'
 // Jam state hook
 export { useJamState } from './useJamState'
 
+// Dashboard live hook (polling for public dashboard)
+export { useDashboardLive, type UseDashboardLiveReturn } from './useDashboardLive'
+
 // Offline queue hook
 export { useOfflineQueue, type OfflineQueueState } from './useOfflineQueue'
 
-
+// UI utility hooks
+export { useAppLanguage } from './useAppLanguage'
+export { useFullscreen } from './useFullscreen'
+export { useConfettiOnSongChange, type UseConfettiOnSongChangeOptions } from './useConfettiOnSongChange'

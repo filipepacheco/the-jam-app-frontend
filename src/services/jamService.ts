@@ -5,7 +5,7 @@
 
 import {getToken} from '../lib/auth'
 import {getApiUrl} from '../lib/api/config'
-import type {JamResponseDto} from '../types/api.types'
+import type {JamResponseDto, LiveDashboardResponseDto} from '../types/api.types'
 
 interface SpecialtySlot {
   specialty: string
@@ -194,9 +194,7 @@ export async function getJamDetails(jamId: string): Promise<JamDetails> {
       throw new Error(error.message || 'Failed to load jam details')
     }
 
-    const data: JamDetails = await response.json()
-
-    return data
+    return await response.json()
   } catch (err) {
     if (err instanceof Error) {
       throw err
@@ -336,5 +334,46 @@ export async function deleteFn(id: string): Promise<ApiResponse<{ success: boole
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'
     throw new Error(message)
+  }
+}
+
+/**
+ * Fetch live dashboard data for a jam session
+ * Optimized for public dashboard display with current and next songs
+ * @param id - Jam ID
+ * @returns Promise with live dashboard data
+ */
+export async function getLiveDashboard(id: string): Promise<ApiResponse<LiveDashboardResponseDto>> {
+  try {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    }
+
+    const token = getToken()
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    const response = await fetch(getApiUrl(`/jams/${id}/live/dashboard`), {
+      method: 'GET',
+      headers,
+    })
+
+    if (!response.ok) {
+      const error: ErrorResponse = await response.json()
+      throw new Error(error.message || 'Failed to load dashboard data')
+    }
+
+    const data: LiveDashboardResponseDto = await response.json()
+
+    return {
+      data,
+      status: response.status,
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      throw err
+    }
+    throw new Error('Connection error. Please try again.')
   }
 }

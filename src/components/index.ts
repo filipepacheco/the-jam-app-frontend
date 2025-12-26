@@ -48,3 +48,5 @@ export { JamRegistrationForm } from './forms/JamRegistrationForm'
 export { OnboardingModal } from './OnboardingModal'
 export { ProfileSetupModal } from './ProfileSetupModal'
 
+// DJ Control Components
+export { SongQueueTimeline, TimelineSongItem, QueueStats } from './dj-control'

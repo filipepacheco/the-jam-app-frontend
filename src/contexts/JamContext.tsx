@@ -5,10 +5,10 @@
 
 import {createContext, type ReactNode, useCallback, useEffect, useRef, useState} from 'react'
 import type {
-    JamResponseDto,
-    MusicianResponseDto,
-    RegistrationResponseDto,
-    ScheduleResponseDto,
+  JamResponseDto,
+  MusicianResponseDto,
+  RegistrationResponseDto,
+  ScheduleResponseDto,
 } from '../types/api.types'
 import {jamService} from '../services'
 import {useAuth} from '../hooks'
@@ -58,6 +58,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
   const [userRole, setUserRole] = useState<UserRole>(null)
 
   const activeJamIdRef = useRef<string | null>(null)
+
 
   // Derive current performance from schedule
   // Find the schedule with IN_PROGRESS status
@@ -136,7 +137,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
         activeJamIdRef.current = newJamId
         setJamId(newJamId)
 
-        console.log('✅ Joined jam (polling mode):', newJamId)
+        console.log('✅ Joined jam:', newJamId)
       } catch (err) {
         const errorObj = err instanceof Error ? err : new Error(String(err))
         setError(errorObj)
@@ -148,6 +149,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
     },
     [determineUserRole]
   )
+
 
   /**
    * Leave jam session
@@ -165,6 +167,13 @@ export function JamProvider({ children }: { children: ReactNode }) {
       console.error('❌ Failed to leave jam:', err)
       throw err
     }
+  }, [determineUserRole])
+
+  /**
+   * Update jam state helper (exposed to consumers)
+   */
+  const updateJamState = useCallback((newJam: JamResponseDto) => {
+    setJam(newJam)
   }, [])
 
   /**
@@ -182,10 +191,6 @@ export function JamProvider({ children }: { children: ReactNode }) {
       console.error('❌ Failed to request state refresh:', err)
     }
   }, [determineUserRole])
-
-  const updateJamState = useCallback((newJam: JamResponseDto) => {
-    setJam(newJam)
-  }, [])
 
   const value: JamContextType = {
     jamId,
