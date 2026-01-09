@@ -719,5 +719,12 @@
     "musiciansToBeCalled": "Músicos a serem chamados:",
     "unknown": "Desconhecido",
     "scanToJoin": "Escaneie para entrar"
+  },
+  "seo": {
+    "homepage": {
+      "title": "Plataforma de Gerenciamento de Sessões de Jam",
+      "description": "Crie, gerencie e participe de sessões de jam. Organize apresentações, acompanhe músicos e gerencie seus eventos musicais com facilidade.",
+      "keywords": "karaoke, sessão de jam, gerenciamento musical, agendamento de apresentações, coordenação de músicos, música ao vivo"
+    }
   }
 }

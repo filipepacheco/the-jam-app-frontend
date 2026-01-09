@@ -721,5 +721,12 @@
     "musiciansToBeCalled": "Musicians to be called:",
     "unknown": "Unknown",
     "scanToJoin": "Scan to join"
+  },
+  "seo": {
+    "homepage": {
+      "title": "Jam Management Platform",
+      "description": "Create, manage, and join jam sessions. Organize performances, track musicians, and manage your music events with ease.",
+      "keywords": "karaoke, jam session, music management, performance scheduling, musician coordination, live music"
+    }
   }
 }

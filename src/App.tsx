@@ -1,11 +1,13 @@
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
+import {useTranslation} from 'react-i18next'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Features from './components/Features'
 import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'
+import {SEO} from './components/SEO'
 
 // Test pages
 import {TestPage} from './pages/TestPage'
@@ -43,14 +45,24 @@ import {useAuth} from "./hooks";
  * Main landing page with hero, features, and call-to-action
  */
 function HomePage() {
+  const { t } = useTranslation()
+
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      <Hero />
-      <Features />
-      <CallToAction />
-      <Footer />
-    </div>
+    <>
+      <SEO
+        title={t('seo.homepage.title')}
+        description={t('seo.homepage.description')}
+        keywords={t('seo.homepage.keywords')}
+        ogImage="/og-image.jpg"
+      />
+      <div className="min-h-screen">
+        <Navbar />
+        <Hero />
+        <Features />
+        <CallToAction />
+        <Footer />
+      </div>
+    </>
   )
 }
 

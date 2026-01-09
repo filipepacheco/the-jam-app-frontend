@@ -705,5 +705,12 @@
     "musiciansToBeCalled": "Músicos por llamar:",
     "unknown": "Desconocido",
     "scanToJoin": "Escanea para unirte"
+  },
+  "seo": {
+    "homepage": {
+      "title": "Plataforma de Gestión de Sesiones de Jam",
+      "description": "Crea, gestiona y únete a sesiones de jam. Organiza presentaciones, rastrea músicos y gestiona tus eventos musicales con facilidad.",
+      "keywords": "karaoke, sesión de jam, gestión musical, programación de presentaciones, coordinación de músicos, música en vivo"
+    }
   }
 }
