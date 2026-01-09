@@ -107,6 +107,18 @@
     "go_home": "Go Home",
     "try_again": "Try Again"
   },
+  "homepage": {
+    "hero": {
+      "title": "Organize Live Jam Sessions in Real-Time",
+      "description": "Streamline your music events with real-time coordination. Hosts manage the repertoire, musicians register for songs, and the audience follows along on live dashboards. No more spreadsheets, just seamless jam sessions.",
+      "cta_button": "Join the Jam App"
+    },
+    "call_to_action": {
+      "title": "Ready to Organize Your Jam Session?",
+      "description": "Stop using spreadsheets and manual processes. Start managing your jam sessions like a pro with real-time coordination and seamless communication.",
+      "cta_button": "Get Started Now"
+    }
+  },
   "jams": {
     "register_for_jam_title": "🎭 Register for This Jam",
     "join_this_jam": "Join This Jam",
@@ -627,6 +639,67 @@
         "suggesting": "Suggesting...",
         "suggest_song": "Suggest Song"
       }
+    }
+  },
+  "dj_control": {
+    "title": "DJ Control",
+    "title_with_emoji": "🎛️ DJ Control",
+    "actions": {
+      "title_with_emoji": "⚡ Actions",
+      "refresh": "Refresh",
+      "refresh_data": "Refresh data",
+      "updating": "Updating...",
+      "previous": "Previous",
+      "previous_short": "⏮️",
+      "previous_tooltip": "Go back to previous song",
+      "next": "Next",
+      "next_short": "⏭️",
+      "next_tooltip": "Skip to next song",
+      "add_songs": "Add Songs",
+      "add_songs_short": "Add",
+      "auto_refresh": "Auto Refresh",
+      "auto_refresh_off": "Off",
+      "auto_refresh_3s": "3s",
+      "auto_refresh_5s": "5s",
+      "auto_refresh_10s": "10s"
+    },
+    "timeline": {
+      "now_playing": "NOW PLAYING",
+      "suggestions_header": "⚠️ Suggestions",
+      "empty_queue": "No songs in queue",
+      "empty_queue_hint": "Add songs from the management page",
+      "no_musicians": "No musicians registered"
+    },
+    "stats": {
+      "title_with_emoji": "📊 Queue Stats",
+      "total_songs": "Total Songs",
+      "completed_with_icon": "✓ Completed",
+      "now_playing_with_icon": "▶ Now Playing",
+      "upcoming_with_icon": "• Upcoming",
+      "suggested_with_icon": "⚠ Suggested",
+      "duration_with_emoji": "⏱️ Duration",
+      "remaining": "Remaining"
+    },
+    "song_item": {
+      "unknown_song": "Unknown Song",
+      "unknown_artist": "Unknown Artist",
+      "view_musicians": "View musicians",
+      "remove_from_queue": "Remove from queue",
+      "remove_with_icon": "✕ Remove",
+      "approve_song": "Approve song",
+      "approve_with_icon": "✓ Approve",
+      "musicians_modal_title": "Musicians for \"{{songTitle}}\"",
+      "close": "Close"
+    },
+    "confirm_remove": "Are you sure you want to remove this song from the queue?",
+    "song_removed": "Song removed successfully",
+    "song_approved": "Song approved and added to queue",
+    "errors": {
+      "no_current_song": "No song is currently playing",
+      "no_next_song": "No scheduled songs available to play next",
+      "no_previous_song": "No completed songs available to go back to",
+      "next_failed": "Failed to advance to next song",
+      "previous_failed": "Failed to go back to previous song"
     }
   },
   "publicDashboard": {

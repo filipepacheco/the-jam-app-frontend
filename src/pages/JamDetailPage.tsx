@@ -15,7 +15,7 @@ import {
 } from '../components'
 import {jamService, musicService, scheduleService} from '../services'
 import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto} from "../types/api.types.ts";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useCallback, useMemo} from "react";
 import {getStatusIcon, getStatusLabel} from "../components/schedule/ScheduleDisplayItem.tsx";
 import {getInstrumentIcon} from "../components/schedule/RegistrationList.tsx";
 import {useTranslation} from 'react-i18next'
@@ -40,13 +40,7 @@ export function JamDetailPage() {
     const [selectedScheduleForEnroll, setSelectedScheduleForEnroll] = useState<ScheduleResponseDto | null>(null)
     const [enrollSuccess, setEnrollSuccess] = useState<string | null>(null)
 
-    useEffect(() => {
-        if (jamId) {
-            loadJamData(jamId)
-        }
-    }, [jamId, navigate])
-
-    const loadJamData = async (id: string) => {
+    const loadJamData = useCallback(async (id: string) => {
         setLoading(true)
         setError(null)
         try {
@@ -58,7 +52,13 @@ export function JamDetailPage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [t])
+
+    useEffect(() => {
+        if (jamId) {
+            loadJamData(jamId)
+        }
+    }, [jamId, loadJamData])
 
     // Handle enrollment success - reload jam data from API
     const handleEnrollmentSuccess = async () => {
@@ -77,6 +77,22 @@ export function JamDetailPage() {
         // Clear success message after 2 seconds
         setTimeout(() => setEnrollSuccess(null), 2000)
     }
+
+    const handleCloseEnrollModal = useCallback(() => {
+        setShowEnrollModal(false)
+        setSelectedScheduleForEnroll(null)
+    }, [])
+
+    // Memoize filtered schedules to avoid re-computation
+    const nonSuggestedSchedules = useMemo(() =>
+        jam?.schedules?.filter(s => s.status !== 'SUGGESTED') || [],
+        [jam?.schedules]
+    )
+
+    const suggestedSchedules = useMemo(() =>
+        jam?.schedules?.filter(s => s.status === 'SUGGESTED') || [],
+        [jam?.schedules]
+    )
 
     // Check if current user is already registered in this jam
     const userRegistration = jam?.registrations?.find((reg) => reg.musician?.contact === user?.contact || reg.musician?.id === user?.id)
@@ -210,7 +226,7 @@ export function JamDetailPage() {
                     onClick={() => navigate('/jams')}
                     className="btn btn-ghost btn-sm mb-4"
                 >
-                    ← Back to Jams
+                    {t('jams.back_to_jams')}
                 </button>
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">{jam.name}</h1>
                 <p className="text-base-content/70 mt-2">{jam.description}</p>
@@ -230,7 +246,7 @@ export function JamDetailPage() {
                             <p className="text-xs text-base-content/60">{t('jams.info.date')}</p>
                             <p className="font-semibold text-xs sm:text-sm">{jam.date ? new Date(jam.date).toLocaleDateString('en-US', {
                                 month: 'short', day: 'numeric', year: 'numeric',
-                            }) : 'TBA'}</p>
+                            }) : t('jams.info.tba')}</p>
                         </div>
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
@@ -282,52 +298,47 @@ export function JamDetailPage() {
                     {/* Performance Schedule Card - with nested Musicians */}
                     {jam.schedules && jam.schedules.length > 0 ? (<div className="space-y-6">
                         {/* Non-Suggested Schedules */}
-                        {(() => {
-                            const nonSuggestedSchedules = jam.schedules.filter(s => s.status !== 'SUGGESTED')
-                            return nonSuggestedSchedules.length > 0 ? (<div className="card bg-gradient-to-br from-base-200 to-base-300">
+                        {nonSuggestedSchedules.length > 0 && (<div className="card bg-gradient-to-br from-base-200 to-base-300">
+                            <div className="card-body p-3 sm:p-6">
+                                <h2 className="card-title text-base sm:text-lg">{t('jams.performance_schedule_title')}</h2>
+                                <div className="space-y-4">
+                                    {nonSuggestedSchedules.map((schedule: ScheduleResponseDto) => {
+                                        const userEnrolledInSchedule = schedule.registrations?.some((reg) => reg.musician?.contact === user?.contact || reg.musician?.id === user?.id)
+                                        return (<ScheduleDisplayItem
+                                            key={schedule.id}
+                                            schedule={schedule}
+                                            isSuggested={false}
+                                            userRegisteredForSchedule={userEnrolledInSchedule || false}
+                                            onEnrollClick={() => handleEnrollClick(schedule)}
+                                        />)
+                                    })}
+                                </div>
+                            </div>
+                        </div>)}
+
+                        {/* Suggested Schedules */}
+                        {suggestedSchedules.length > 0 && (
+                            <div className="card bg-gradient-to-br from-base-200 to-base-300 border-t-2 border-info/30">
                                 <div className="card-body p-3 sm:p-6">
-                                    <h2 className="card-title text-base sm:text-lg">{t('jams.performance_schedule_title')}</h2>
+                                    <h2 className="card-title text-base sm:text-lg flex items-center gap-2">
+                                        <span className="text-xl">✨</span>
+                                        {t('jams.suggested_songs_title')}
+                                    </h2>
                                     <div className="space-y-4">
-                                        {nonSuggestedSchedules.map((schedule: ScheduleResponseDto) => {
+                                        {suggestedSchedules.map((schedule: ScheduleResponseDto) => {
                                             const userEnrolledInSchedule = schedule.registrations?.some((reg) => reg.musician?.contact === user?.contact || reg.musician?.id === user?.id)
                                             return (<ScheduleDisplayItem
-                                                key={schedule.id}
-                                                schedule={schedule}
-                                                isSuggested={false}
-                                                userRegisteredForSchedule={userEnrolledInSchedule || false}
-                                                onEnrollClick={() => handleEnrollClick(schedule)}
-                                            />)
+                                                    key={schedule.id}
+                                                    schedule={schedule}
+                                                    isSuggested={true}
+                                                    userRegisteredForSchedule={userEnrolledInSchedule || false}
+                                                    onEnrollClick={() => handleEnrollClick(schedule)}
+                                                />)
                                         })}
                                     </div>
                                 </div>
-                            </div>) : null
-                        })()}
-
-                        {/* Suggested Schedules */}
-                        {(() => {
-                            const suggestedSchedules = jam.schedules.filter(s => s.status === 'SUGGESTED')
-                            return suggestedSchedules.length > 0 ? (
-                                <div className="card bg-gradient-to-br from-base-200 to-base-300 border-t-2 border-info/30">
-                                    <div className="card-body p-3 sm:p-6">
-                                        <h2 className="card-title text-base sm:text-lg flex items-center gap-2">
-                                            <span className="text-xl">✨</span>
-                                            {t('jams.suggested_songs_title')}
-                                        </h2>
-                                        <div className="space-y-4">
-                                            {suggestedSchedules.map((schedule: ScheduleResponseDto) => {
-                                                const userEnrolledInSchedule = schedule.registrations?.some((reg) => reg.musician?.contact === user?.contact || reg.musician?.id === user?.id)
-                                                return (<ScheduleDisplayItem
-                                                        key={schedule.id}
-                                                        schedule={schedule}
-                                                        isSuggested={true}
-                                                        userRegisteredForSchedule={userEnrolledInSchedule || false}
-                                                        onEnrollClick={() => handleEnrollClick(schedule)}
-                                                    />)
-                                            })}
-                                        </div>
-                                    </div>
-                                </div>) : null
-                        })()}
+                            </div>
+                        )}
                     </div>) : (<div className="card bg-gradient-to-br from-base-200 to-base-300">
                         <div className="card-body text-center py-6 sm:py-8 px-3 sm:px-6">
                             <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">📋</div>
@@ -456,10 +467,7 @@ export function JamDetailPage() {
         {selectedScheduleForEnroll && (<ScheduleEnrollmentModal
             schedule={selectedScheduleForEnroll}
             isOpen={showEnrollModal}
-            onClose={() => {
-                setShowEnrollModal(false)
-                setSelectedScheduleForEnroll(null)
-            }}
+            onClose={handleCloseEnrollModal}
             onSuccess={handleEnrollmentSuccess}
         />)}
 

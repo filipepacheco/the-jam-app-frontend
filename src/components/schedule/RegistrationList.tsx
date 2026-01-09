@@ -178,7 +178,7 @@ export function RegistrationList({
                                     {(groupedRegistrations.get(instrument) || []).map((registration) => (
                                         <div
                                             key={registration.id}
-                                            className="bg-white dark:bg-base-100 rounded-lg p-2.5 flex items-start gap-2 shadow-xs border border-base-200 dark:border-base-300 hover:shadow-sm hover:border-primary/30 transition-all"
+                                            className="bg-base-100 rounded-lg p-2.5 flex items-start gap-2 shadow-xs border border-base-200 hover:shadow-sm hover:border-primary/30 transition-all"
                                         >
                                             {/* Left Content */}
                                             <div className="space-y-1 flex-1 min-w-0">
@@ -195,7 +195,7 @@ export function RegistrationList({
                                                 {/* Status Badge */}
                                                 <div className="flex items-center gap-1">
                                                     {registration.status === 'APPROVED' && (
-                                                        <div className="flex items-center gap-1 badge badge-sm text-success-content" style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', borderColor: 'rgb(34, 197, 94)' }}>
+                                                        <div className="flex items-center gap-1 badge badge-sm bg-success/10 text-success border-success">
                                                             <CheckCircle className="w-3 h-3" />
                                                             <span>{t('schedule.statuses.approved')}</span>
                                                         </div>
@@ -207,7 +207,7 @@ export function RegistrationList({
                                                         </div>
                                                     )}
                                                     {!registration.status || (registration.status !== 'APPROVED' && registration.status !== 'REJECTED') && (
-                                                        <div className="flex items-center gap-1 badge badge-sm text-warning-content" style={{ backgroundColor: 'rgba(251, 191, 36, 0.1)', borderColor: 'rgb(251, 191, 36)' }}>
+                                                        <div className="flex items-center gap-1 badge badge-sm bg-warning/10 text-warning border-warning">
                                                             <Clock className="w-3 h-3" />
                                                             <span>{t('schedule.statuses.pending')}</span>
                                                         </div>

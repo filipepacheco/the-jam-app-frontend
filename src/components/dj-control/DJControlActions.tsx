@@ -16,6 +16,7 @@ interface DJControlActionsProps {
   loading: boolean
   onAutoRefreshChange?: (interval: number) => void
   autoRefreshInterval?: number
+  onError?: (error: string) => void
 }
 
 export function DJControlActions({
@@ -25,25 +26,16 @@ export function DJControlActions({
   loading,
   onAutoRefreshChange,
   autoRefreshInterval = 0,
+  onError,
 }: DJControlActionsProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [localAutoRefreshInterval, setLocalAutoRefreshInterval] = useState(autoRefreshInterval)
+  const [error, setError] = useState<string | null>(null)
   const [actionLoading, setActionLoading] = useState(false)
-
-  // Auto-refresh setup
-  useEffect(() => {
-    if (localAutoRefreshInterval === 0) return
-
-    const interval = setInterval(() => {
-      onReload()
-    }, localAutoRefreshInterval)
-
-    return () => clearInterval(interval)
-  }, [localAutoRefreshInterval, onReload])
 
   const handleAutoPlayNext = async () => {
     setActionLoading(true)
+    setError(null)
     try {
       // Get current song
       const current = schedules.find(s => s.status === 'IN_PROGRESS')
@@ -51,8 +43,17 @@ export function DJControlActions({
         s => s.status === 'SCHEDULED' && (!current || s.order > current.order)
       )
 
-      if (!current || !next) {
-        // Error is handled by parent component
+      if (!current) {
+        const errorMsg = t('dj_control.errors.no_current_song')
+        setError(errorMsg)
+        onError?.(errorMsg)
+        return
+      }
+
+      if (!next) {
+        const errorMsg = t('dj_control.errors.no_next_song')
+        setError(errorMsg)
+        onError?.(errorMsg)
         return
       }
 
@@ -60,6 +61,10 @@ export function DJControlActions({
       await scheduleService.update(current.id, { status: 'COMPLETED' })
       await scheduleService.update(next.id, { status: 'IN_PROGRESS' })
       onReload()
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : t('dj_control.errors.next_failed')
+      setError(errorMsg)
+      onError?.(errorMsg)
     } finally {
       setActionLoading(false)
     }
@@ -67,6 +72,7 @@ export function DJControlActions({
 
   const handleAutoPlayPrevious = async () => {
     setActionLoading(true)
+    setError(null)
     try {
       // Get current song
       const current = schedules.find(s => s.status === 'IN_PROGRESS')
@@ -75,8 +81,17 @@ export function DJControlActions({
         .reverse()
         .find(s => s.status === 'COMPLETED' && (!current || s.order < current.order))
 
-      if (!current || !previous) {
-        // Error is handled by parent component
+      if (!current) {
+        const errorMsg = t('dj_control.errors.no_current_song')
+        setError(errorMsg)
+        onError?.(errorMsg)
+        return
+      }
+
+      if (!previous) {
+        const errorMsg = t('dj_control.errors.no_previous_song')
+        setError(errorMsg)
+        onError?.(errorMsg)
         return
       }
 
@@ -84,29 +99,52 @@ export function DJControlActions({
       await scheduleService.update(current.id, { status: 'SCHEDULED' })
       await scheduleService.update(previous.id, { status: 'IN_PROGRESS' })
       onReload()
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : t('dj_control.errors.previous_failed')
+      setError(errorMsg)
+      onError?.(errorMsg)
     } finally {
       setActionLoading(false)
     }
   }
 
   const handleRefreshIntervalChange = (value: number) => {
-    setLocalAutoRefreshInterval(value)
     onAutoRefreshChange?.(value)
   }
+
+  // Check if Next/Previous buttons should be enabled
+  const current = schedules.find(s => s.status === 'IN_PROGRESS')
+  const hasNextSong = schedules.some(
+    s => s.status === 'SCHEDULED' && (!current || s.order > current.order)
+  )
+  const hasPreviousSong = schedules.some(
+    s => s.status === 'COMPLETED' && (!current || s.order < current.order)
+  )
+
+  const isNextDisabled = loading || actionLoading || !current || !hasNextSong
+  const isPreviousDisabled = loading || actionLoading || !current || !hasPreviousSong
 
   return (
     <div className="card bg-base-200 shadow">
       <div className="card-body p-3 sm:p-6 space-y-3">
-        <h3 className="font-bold text-base sm:text-lg">⚡ Actions</h3>
+        <h3 className="font-bold text-base sm:text-lg">{t('dj_control.actions.title_with_emoji')}</h3>
+
+        {/* Error Alert */}
+        {error && (
+          <div className="alert alert-error alert-sm">
+            <span>{error}</span>
+            <button onClick={() => setError(null)} className="btn btn-xs btn-ghost">✕</button>
+          </div>
+        )}
 
         {/* Refresh button */}
         <button
           onClick={() => onReload()}
           className="btn btn-ghost btn-xs sm:btn-sm w-full"
-          title="Refresh data"
+          title={t('dj_control.actions.refresh_data')}
           disabled={loading || actionLoading}
         >
-          🔄 {loading ? 'Updating...' : 'Refresh'}
+          🔄 {loading ? t('dj_control.actions.updating') : t('dj_control.actions.refresh')}
         </button>
 
         {/* Previous and Next buttons side by side */}
@@ -114,20 +152,20 @@ export function DJControlActions({
           <button
             onClick={handleAutoPlayPrevious}
             className="btn btn-warning btn-xs sm:btn-sm flex-1 whitespace-nowrap"
-            disabled={loading || actionLoading || !schedules.some(s => s.status === 'IN_PROGRESS') || !schedules.some(s => s.status === 'COMPLETED')}
-            title="Go back to previous song"
+            disabled={isPreviousDisabled}
+            title={t('dj_control.actions.previous_tooltip')}
           >
-            <span className="hidden sm:inline">⏮️ Previous</span>
-            <span className="sm:hidden">⏮️</span>
+            <span className="hidden sm:inline">⏮️ {t('dj_control.actions.previous')}</span>
+            <span className="sm:hidden">{t('dj_control.actions.previous_short')}</span>
           </button>
           <button
             onClick={handleAutoPlayNext}
             className="btn btn-primary btn-xs sm:btn-sm flex-1 whitespace-nowrap"
-            disabled={loading || actionLoading || !schedules.some(s => s.status === 'IN_PROGRESS')}
-            title="Skip to next song"
+            disabled={isNextDisabled}
+            title={t('dj_control.actions.next_tooltip')}
           >
-            <span className="hidden sm:inline">⏭️ Next</span>
-            <span className="sm:hidden">⏭️</span>
+            <span className="hidden sm:inline">⏭️ {t('dj_control.actions.next')}</span>
+            <span className="sm:hidden">{t('dj_control.actions.next_short')}</span>
           </button>
         </div>
 
@@ -135,24 +173,24 @@ export function DJControlActions({
           onClick={() => navigate(`/host/jams/${jamId}/manage`)}
           className="btn btn-secondary btn-xs sm:btn-sm w-full"
         >
-          ➕ <span className="hidden sm:inline">Add Songs</span><span className="sm:hidden">Add</span>
+          ➕ <span className="hidden sm:inline">{t('dj_control.actions.add_songs')}</span><span className="sm:hidden">{t('dj_control.actions.add_songs_short')}</span>
         </button>
 
         <div className="divider my-1"></div>
 
         <div className="space-y-2">
           <label className="label p-0">
-            <span className="label-text text-xs sm:text-sm">Auto Refresh</span>
+            <span className="label-text text-xs sm:text-sm">{t('dj_control.actions.auto_refresh')}</span>
           </label>
           <select
-            value={localAutoRefreshInterval}
+            value={autoRefreshInterval}
             onChange={(e) => handleRefreshIntervalChange(Number(e.target.value))}
             className="select select-xs sm:select-sm select-bordered w-full"
           >
-            <option value={0}>Off</option>
-            <option value={3000}>3s</option>
-            <option value={5000}>5s</option>
-            <option value={10000}>10s</option>
+            <option value={0}>{t('dj_control.actions.auto_refresh_off')}</option>
+            <option value={3000}>{t('dj_control.actions.auto_refresh_3s')}</option>
+            <option value={5000}>{t('dj_control.actions.auto_refresh_5s')}</option>
+            <option value={10000}>{t('dj_control.actions.auto_refresh_10s')}</option>
           </select>
         </div>
       </div>

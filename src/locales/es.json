@@ -97,6 +97,18 @@
     "go_home": "Ir al Inicio",
     "try_again": "Reintentar"
   },
+  "homepage": {
+    "hero": {
+      "title": "Organiza Sesiones de Jam en Vivo en Tiempo Real",
+      "description": "Optimiza tus eventos musicales con coordinación en tiempo real. Los anfitriones gestionan el repertorio, los músicos se inscriben en las canciones y el público sigue todo en paneles en vivo. Sin más hojas de cálculo, solo sesiones de jam sin problemas.",
+      "cta_button": "Únete a Jam App"
+    },
+    "call_to_action": {
+      "title": "¿Listo para Organizar tu Sesión de Jam?",
+      "description": "Deja de usar hojas de cálculo y procesos manuales. Comienza a gestionar tus sesiones de jam como un profesional con coordinación en tiempo real y comunicación fluida.",
+      "cta_button": "Comienza Ahora"
+    }
+  },
   "jams": {
     "register_for_jam_title": "🎭 Registrarse para este Jam",
     "join_this_jam": "Unirse a este Jam",
@@ -611,6 +623,67 @@
           "suggest_song": "Sugerir Canción"
         }
       }
+    }
+  },
+  "dj_control": {
+    "title": "Control DJ",
+    "title_with_emoji": "🎛️ Control DJ",
+    "actions": {
+      "title_with_emoji": "⚡ Acciones",
+      "refresh": "Actualizar",
+      "refresh_data": "Actualizar datos",
+      "updating": "Actualizando...",
+      "previous": "Anterior",
+      "previous_short": "⏮️",
+      "previous_tooltip": "Volver a la canción anterior",
+      "next": "Siguiente",
+      "next_short": "⏭️",
+      "next_tooltip": "Saltar a la siguiente canción",
+      "add_songs": "Agregar Canciones",
+      "add_songs_short": "Agregar",
+      "auto_refresh": "Actualización Automática",
+      "auto_refresh_off": "Desactivado",
+      "auto_refresh_3s": "3s",
+      "auto_refresh_5s": "5s",
+      "auto_refresh_10s": "10s"
+    },
+    "timeline": {
+      "now_playing": "REPRODUCIENDO AHORA",
+      "suggestions_header": "⚠️ Sugerencias",
+      "empty_queue": "No hay canciones en la cola",
+      "empty_queue_hint": "Agrega canciones desde la página de administración",
+      "no_musicians": "No hay músicos registrados"
+    },
+    "stats": {
+      "title_with_emoji": "📊 Estadísticas de Cola",
+      "total_songs": "Total de Canciones",
+      "completed_with_icon": "✓ Completadas",
+      "now_playing_with_icon": "▶ Reproduciendo",
+      "upcoming_with_icon": "• Próximas",
+      "suggested_with_icon": "⚠ Sugeridas",
+      "duration_with_emoji": "⏱️ Duración",
+      "remaining": "Restante"
+    },
+    "song_item": {
+      "unknown_song": "Canción Desconocida",
+      "unknown_artist": "Artista Desconocido",
+      "view_musicians": "Ver músicos",
+      "remove_from_queue": "Eliminar de la cola",
+      "remove_with_icon": "✕ Eliminar",
+      "approve_song": "Aprobar canción",
+      "approve_with_icon": "✓ Aprobar",
+      "musicians_modal_title": "Músicos para \"{{songTitle}}\"",
+      "close": "Cerrar"
+    },
+    "confirm_remove": "¿Estás seguro de que quieres eliminar esta canción de la cola?",
+    "song_removed": "Canción eliminada exitosamente",
+    "song_approved": "Canción aprobada y agregada a la cola",
+    "errors": {
+      "no_current_song": "No hay ninguna canción reproduciéndose actualmente",
+      "no_next_song": "No hay canciones programadas para reproducir a continuación",
+      "no_previous_song": "No hay canciones completadas para volver atrás",
+      "next_failed": "Error al avanzar a la siguiente canción",
+      "previous_failed": "Error al volver a la canción anterior"
     }
   },
   "publicDashboard": {

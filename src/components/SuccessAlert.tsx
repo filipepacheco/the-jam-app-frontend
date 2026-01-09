@@ -3,6 +3,8 @@
  * Displays success messages with daisyUI styling
  */
 
+import {useEffect} from 'react'
+
 interface SuccessAlertProps {
   message: string
   title?: string
@@ -24,14 +26,18 @@ export function SuccessAlert({
   autoHide = false,
   autoHideDelay = 3000,
 }: SuccessAlertProps) {
-  if (!message) return null
-
   // Auto-hide after delay if enabled
-  if (autoHide && onDismiss) {
-    setTimeout(() => {
+  useEffect(() => {
+    if (!autoHide || !onDismiss || !message) return
+
+    const timeoutId = setTimeout(() => {
       onDismiss()
     }, autoHideDelay)
-  }
+
+    return () => clearTimeout(timeoutId)
+  }, [autoHide, onDismiss, autoHideDelay, message])
+
+  if (!message) return null
 
   return (
     <div className={`alert alert-success ${className}`} role="alert">

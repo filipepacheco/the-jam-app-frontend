@@ -5,6 +5,7 @@
 
 import {useState} from 'react'
 import type {ScheduleResponseDto} from '../../types/api.types'
+import {useTranslation} from 'react-i18next'
 
 interface TimelineSongItemProps {
   schedule: ScheduleResponseDto
@@ -21,6 +22,7 @@ export function TimelineSongItem({
   onApprove,
   loading,
 }: TimelineSongItemProps) {
+  const { t } = useTranslation()
   const [showMusicians, setShowMusicians] = useState(false)
   const song = schedule.music
   const musicianCount = schedule.registrations?.length || 0
@@ -33,8 +35,8 @@ export function TimelineSongItem({
         {/* Song Title and Position */}
         <div className="flex items-start justify-between ">
           <div className="flex-1">
-            <h4 className="font-bold text-base">{song?.title || 'Unknown Song'}</h4>
-            <p className="text-sm text-base-content/70">{song?.artist || 'Unknown Artist'}</p>
+            <h4 className="font-bold text-base">{song?.title || t('dj_control.song_item.unknown_song')}</h4>
+            <p className="text-sm text-base-content/70">{song?.artist || t('dj_control.song_item.unknown_artist')}</p>
           </div>
         </div>
 
@@ -47,7 +49,7 @@ export function TimelineSongItem({
             <button
               onClick={() => setShowMusicians(true)}
               className="btn btn-xs btn-ghost  text-xs text-base-content/60 hover:text-base-content"
-              title="View musicians"
+              title={t('dj_control.song_item.view_musicians')}
             >
               👤 {musicianCount}
             </button>
@@ -61,9 +63,9 @@ export function TimelineSongItem({
               onClick={onRemove}
               className="btn btn-xs btn-ghost"
               disabled={loading}
-              title="Remove from queue"
+              title={t('dj_control.song_item.remove_from_queue')}
             >
-              ✕ Remove
+              {t('dj_control.song_item.remove_with_icon')}
             </button>
 
             {status === 'suggested' && onApprove && (
@@ -71,9 +73,9 @@ export function TimelineSongItem({
                 onClick={onApprove}
                 className="btn btn-xs btn-success"
                 disabled={loading}
-                title="Approve song"
+                title={t('dj_control.song_item.approve_song')}
               >
-                ✓ Approve
+                {t('dj_control.song_item.approve_with_icon')}
               </button>
             )}
           </div>
@@ -84,7 +86,7 @@ export function TimelineSongItem({
       {showMusicians && (
         <div className="modal modal-open">
           <div className="modal-box">
-            <h3 className="font-bold text-lg mb-4">Musicians for "{song?.title}"</h3>
+            <h3 className="font-bold text-lg mb-4">{t('dj_control.song_item.musicians_modal_title', { songTitle: song?.title })}</h3>
             <div className="space-y-2">
               {schedule.registrations && schedule.registrations.length > 0 ? (
                 schedule.registrations.map((reg) => (
@@ -101,7 +103,7 @@ export function TimelineSongItem({
                   </div>
                 ))
               ) : (
-                <p className="text-center text-base-content/70">No musicians registered</p>
+                <p className="text-center text-base-content/70">{t('dj_control.timeline.no_musicians')}</p>
               )}
             </div>
             <div className="modal-action mt-6">
@@ -109,7 +111,7 @@ export function TimelineSongItem({
                 onClick={() => setShowMusicians(false)}
                 className="btn btn-primary"
               >
-                Close
+                {t('dj_control.song_item.close')}
               </button>
             </div>
           </div>

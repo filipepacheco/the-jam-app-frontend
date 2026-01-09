@@ -249,7 +249,9 @@ export interface CreateScheduleDto {
  * Update schedule request
  */
 export interface UpdateScheduleDto {
-
+  status?: ScheduleStatus
+  order?: number
+  musicId?: string
 }
 
 // ============================================================================

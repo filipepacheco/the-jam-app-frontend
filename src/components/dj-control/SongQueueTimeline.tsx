@@ -5,6 +5,7 @@
 
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {TimelineSongItem} from './TimelineSongItem'
+import {useTranslation} from 'react-i18next'
 
 interface SongQueueTimelineProps {
   schedules: ScheduleResponseDto[]
@@ -19,6 +20,8 @@ export function SongQueueTimeline({
   onApproveSong,
   loading,
 }: SongQueueTimelineProps) {
+  const { t } = useTranslation()
+
   // Separate by status
   const completedSongs = schedules.filter(s => s.status === 'COMPLETED')
   const currentSong = schedules.find(s => s.status === 'IN_PROGRESS')
@@ -71,9 +74,9 @@ export function SongQueueTimeline({
       {currentSong && (
         <li>
           <hr className="bg-primary" />
-          <div className={`${getAlternatingClass()} timeline-box bg-linear-to-br from-primary/40 to-accent/40 shadow-2xl shadow-primary/50 border-2 border-primary animate-pulse`}>
+          <div className={`${getAlternatingClass()} timeline-box bg-gradient-to-br from-primary/40 to-accent/40 shadow-2xl shadow-primary/50 border-2 border-primary animate-pulse`}>
             <div className="font-bold text-sm mb-2 flex items-center gap-2">
-              <span className="badge badge-primary animate-pulse">NOW PLAYING</span>
+              <span className="badge badge-primary animate-pulse">{t('dj_control.timeline.now_playing')}</span>
             </div>
             <TimelineSongItem
               schedule={currentSong}
@@ -124,7 +127,7 @@ export function SongQueueTimeline({
       {suggestedSongs.length > 0 && (
         <li>
           <hr className="bg-warning/50" />
-          <div className={`${getAlternatingClass()} text-xs font-bold text-warning`}>⚠️ Suggestions</div>
+          <div className={`${getAlternatingClass()} text-xs font-bold text-warning`}>{t('dj_control.timeline.suggestions_header')}</div>
           <div className="timeline-middle">
             <div className="h-5 w-5 border-2 border-warning rounded-full"></div>
           </div>
@@ -157,8 +160,8 @@ export function SongQueueTimeline({
         <li>
           <hr className="bg-base-300/50" />
           <div className={`${getAlternatingClass()} text-center py-4`}>
-            <p className="text-sm text-base-content/70">No songs in queue</p>
-            <p className="text-xs text-base-content/50">Add songs from the management page</p>
+            <p className="text-sm text-base-content/70">{t('dj_control.timeline.empty_queue')}</p>
+            <p className="text-xs text-base-content/50">{t('dj_control.timeline.empty_queue_hint')}</p>
           </div>
           <div className="timeline-middle">
             <div className="h-5 w-5 border-2 border-base-400 rounded-full"></div>

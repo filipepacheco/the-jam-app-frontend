@@ -4,12 +4,14 @@
  */
 
 import type {ScheduleResponseDto} from '../../types/api.types'
+import {useTranslation} from 'react-i18next'
 
 interface QueueStatsProps {
     schedules: ScheduleResponseDto[]
 }
 
 export function QueueStats({schedules}: QueueStatsProps) {
+    const { t } = useTranslation()
     const totalSongs = schedules.length
     const completedCount = schedules.filter(s => s.status === 'COMPLETED').length
     const scheduledCount = schedules.filter(s => s.status === 'SCHEDULED').length
@@ -30,48 +32,48 @@ export function QueueStats({schedules}: QueueStatsProps) {
     return (
         <div className="space-y-4">
             {/* Main Stats Card */}
-            <div className="card bg-linear-to-br from-primary/10 to-secondary/10 shadow">
+            <div className="card bg-gradient-to-br from-primary/10 to-secondary/10 shadow">
                 <div className="card-body p-4">
-                    <h3 className="font-bold text-lg mb-4">📊 Queue Stats</h3>
+                    <h3 className="font-bold text-lg mb-4">{t('dj_control.stats.title_with_emoji')}</h3>
 
                     <div className="space-y-3">
                         {/* Total Songs */}
                         <div className="flex justify-between items-center p-3 bg-base-200 rounded-lg">
-                            <span className="text-sm font-medium">Total Songs</span>
+                            <span className="text-sm font-medium">{t('dj_control.stats.total_songs')}</span>
                             <span className="badge badge-lg badge-primary">{totalSongs}</span>
                         </div>
 
                         {/* Completed */}
                         <div className="flex justify-between items-center p-2">
-                            <span className="text-xs">✓ Completed</span>
+                            <span className="text-xs">{t('dj_control.stats.completed_with_icon')}</span>
                             <span className="text-xs font-bold">{completedCount}</span>
                         </div>
 
                         {/* Current */}
                         {currentCount > 0 && (
                             <div className="flex justify-between items-center p-2">
-                                <span className="text-xs">▶ Now Playing</span>
+                                <span className="text-xs">{t('dj_control.stats.now_playing_with_icon')}</span>
                                 <span className="text-xs font-bold">{currentCount}</span>
                             </div>
                         )}
 
                         {/* Remaining */}
                         <div className="flex justify-between items-center p-2">
-                            <span className="text-xs">• Upcoming</span>
+                            <span className="text-xs">{t('dj_control.stats.upcoming_with_icon')}</span>
                             <span className="text-xs font-bold">{scheduledCount}</span>
                         </div>
 
                         {/* Suggested */}
                         {suggestedCount > 0 && (
                             <div className="flex justify-between items-center p-2">
-                                <span className="text-xs">⚠ Suggested</span>
+                                <span className="text-xs">{t('dj_control.stats.suggested_with_icon')}</span>
                                 <span className="text-xs font-bold">{suggestedCount}</span>
                             </div>
                         )}
                     </div>
                     <hr className="my-4 border-base-300"/>
                     <div className="flex justify-between text-sm">
-                        <h3 className="font-bold text-sm">⏱️ Duration</h3>
+                        <h3 className="font-bold text-sm">{t('dj_control.stats.duration_with_emoji')}</h3>
                         <span className="font-bold">{formatTime(totalDuration)}</span>
                     </div>
                     <progress
@@ -80,7 +82,7 @@ export function QueueStats({schedules}: QueueStatsProps) {
                         max="100"
                     ></progress>
                     <div className="flex justify-between text-xs text-base-content/70">
-                        <span>Remaining</span>
+                        <span>{t('dj_control.stats.remaining')}</span>
                         <span>{formatTime(remainingDuration)}</span>
                     </div>
                 </div>
