@@ -3,8 +3,11 @@ import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
 import {useTranslation} from 'react-i18next'
 import Navbar from './components/Navbar'
-import Hero from './components/Hero'
+import { EnhancedHero } from './components/EnhancedHero'
 import Features from './components/Features'
+import { Stats } from './components/Stats'
+import { HowItWorks } from './components/HowItWorks'
+import { Testimonials } from './components/Testimonials'
 import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'
 import {SEO} from './components/SEO'
@@ -51,14 +54,17 @@ function HomePage() {
     <>
       <SEO
         title={t('seo.homepage.title')}
-        description={t('seo.homepage.description')}
+        description={t('seo.homepage.description_enhanced')}
         keywords={t('seo.homepage.keywords')}
         ogImage="/og-image.jpg"
       />
       <div className="min-h-screen">
         <Navbar />
-        <Hero />
+        <EnhancedHero />
+        <Stats />
         <Features />
+        <HowItWorks />
+        <Testimonials />
         <CallToAction />
         <Footer />
       </div>

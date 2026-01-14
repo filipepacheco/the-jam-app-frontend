@@ -59,6 +59,7 @@ export interface MusicianResponseDto {
     contact: string
     phone: string
   createdAt: string
+  avatarUrl?: string  // Optional - for future backend support
 }
 
 /**

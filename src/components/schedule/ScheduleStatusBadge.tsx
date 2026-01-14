@@ -4,72 +4,25 @@
  */
 
 import {useTranslation} from 'react-i18next'
+import {getStatusColor, getStatusLabel, getStatusIcon} from '../../lib/schedule/statusHelpers'
 
 interface ScheduleStatusBadgeProps {
   status: string | undefined
+  isSuggested?: boolean
 }
 
-export function ScheduleStatusBadge({ status }: ScheduleStatusBadgeProps) {
+export function ScheduleStatusBadge({ status, isSuggested = false }: ScheduleStatusBadgeProps) {
   const { t } = useTranslation()
-  const getStatusColor = () => {
-    switch (status) {
-      case 'SUGGESTED':
-        return 'badge-info'
-      case 'SCHEDULED':
-        return 'badge-secondary'
-      case 'IN_PROGRESS':
-        return 'badge-warning'
-      case 'COMPLETED':
-        return 'badge-success'
-      case 'CANCELED':
-        return 'badge-error'
-      default:
-        return 'badge-outline'
-    }
-  }
 
-  const getStatusLabel = () => {
-    switch (status) {
-      case 'SUGGESTED':
-        return t('schedule.statuses.suggested')
-      case 'SCHEDULED':
-        return t('schedule.statuses.scheduled')
-      case 'IN_PROGRESS':
-        return t('schedule.statuses.in_progress')
-      case 'COMPLETED':
-        return t('schedule.statuses.completed')
-      case 'CANCELED':
-        return t('schedule.statuses.canceled')
-      default:
-        return t('schedule.statuses.scheduled')
-    }
-  }
-
-  const getStatusIcon = () => {
-    switch (status) {
-      case 'SUGGESTED':
-        return '✨'
-      case 'SCHEDULED':
-        return '📅'
-      case 'IN_PROGRESS':
-        return '🎵'
-      case 'COMPLETED':
-        return '✓'
-      case 'CANCELED':
-        return '✕'
-      default:
-        return ''
-    }
-  }
+  const colorClass = getStatusColor(status, isSuggested)
+  const label = getStatusLabel(status, isSuggested, t)
+  const icon = getStatusIcon(status, isSuggested)
 
   return (
-      <>
-          <div className={`badge ${getStatusColor()}`}>
-              {getStatusIcon() && `${getStatusIcon()} `}
-              {getStatusLabel()}
-          </div>
-      </>
-
+    <div className={`badge ${colorClass}`}>
+      {icon && `${icon} `}
+      {label}
+    </div>
   )
 }
 

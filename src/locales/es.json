@@ -100,13 +100,45 @@
   "homepage": {
     "hero": {
       "title": "Organiza Sesiones de Jam en Vivo en Tiempo Real",
+      "subtitle": "La Plataforma Moderna para Músicos, Anfitriones y Locales",
       "description": "Optimiza tus eventos musicales con coordinación en tiempo real. Los anfitriones gestionan el repertorio, los músicos se inscriben en las canciones y el público sigue todo en paneles en vivo. Sin más hojas de cálculo, solo sesiones de jam sin problemas.",
-      "cta_button": "Únete a Jam App"
+      "cta_button": "Únete a Jam App",
+      "cta_secondary": "Explorar Sesiones de Jam"
+    },
+    "stats": {
+      "title": "Confiado por la Comunidad Musical",
+      "sessions": "Sesiones de Jam",
+      "musicians": "Músicos",
+      "songs": "Canciones Interpretadas"
+    },
+    "how_it_works": {
+      "title": "Cómo Funciona",
+      "subtitle": "Tres pasos simples para organizar tu próxima sesión de jam",
+      "step1_title": "Crear o Unirse",
+      "step1_desc": "Los anfitriones crean sesiones de jam con listas de canciones. Los músicos exploran y se unen a eventos que coinciden con sus habilidades.",
+      "step2_title": "Registrarse para Canciones",
+      "step2_desc": "Los músicos se inscriben en canciones específicas e instrumentos. Los anfitriones aprueban registros en tiempo real.",
+      "step3_title": "Actuar en Directo",
+      "step3_desc": "Sigue el panel en vivo durante el evento. Todos permanecen sincronizados con actualizaciones en tiempo real."
+    },
+    "testimonials": {
+      "title": "Lo que Dice Nuestra Comunidad",
+      "subtitle": "Únete a miles de músicos y anfitriones que han transformado sus sesiones de jam",
+      "host_quote": "¡Esta plataforma transformó cómo organizamos nuestras sesiones de jam semanales! Sin más hojas de cálculo caóticas.",
+      "host_name": "Sarah M.",
+      "host_role": "Anfitriona de Sesión de Jam",
+      "musician_quote": "¡Finalmente puedo ver qué canciones necesitan mi instrumento e inscribirme instantáneamente! Un cambio de juego.",
+      "musician_name": "Mike D.",
+      "musician_role": "Guitarrista y Vocalista",
+      "venue_quote": "A nuestra audiencia le encanta el panel en vivo. Pueden seguir y ver quién actúa a continuación.",
+      "venue_name": "Alex K.",
+      "venue_role": "Propietario del Local"
     },
     "call_to_action": {
       "title": "¿Listo para Organizar tu Sesión de Jam?",
       "description": "Deja de usar hojas de cálculo y procesos manuales. Comienza a gestionar tus sesiones de jam como un profesional con coordinación en tiempo real y comunicación fluida.",
-      "cta_button": "Comienza Ahora"
+      "cta_button": "Comienza Ahora",
+      "browse_jams": "Explorar Sesiones de Jam"
     }
   },
   "jams": {
@@ -280,6 +312,7 @@
     "add_musician": "+ Agregar Músico",
     "unknown": "Desconocido",
     "performance_completed": "✓ Actuación completada",
+    "now_playing": "Reproduciendo Ahora",
     "no_musicians_yet": "No hay músicos aún",
     "no_musicians_registered": "No hay músicos registrados aún",
     "musicians_count": "{{count}} músicos",
@@ -710,7 +743,8 @@
     "homepage": {
       "title": "Plataforma de Gestión de Sesiones de Jam",
       "description": "Crea, gestiona y únete a sesiones de jam. Organiza presentaciones, rastrea músicos y gestiona tus eventos musicales con facilidad.",
-      "keywords": "karaoke, sesión de jam, gestión musical, programación de presentaciones, coordinación de músicos, música en vivo"
+      "description_enhanced": "Gestión profesional de sesiones de jam para músicos, anfitriones y locales. Coordinación en tiempo real, tableros en vivo y registro fluido de músicos. Transforma tus eventos musicales.",
+      "keywords": "karaoke, sesión de jam, gestión musical, programación de presentaciones, coordinación de músicos, eventos de música en vivo, gestor de listas, colaboración de bandas"
     }
   }
 }

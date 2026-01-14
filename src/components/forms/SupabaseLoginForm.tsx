@@ -49,7 +49,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
     setIsLoading(true)
 
     try {
-      let result: { success: boolean; error?: string }
+      let result: { success: boolean; error?: string; message?: string }
 
       if (isSignUp) {
         result = await signUpWithEmail(email, password, name || undefined)
@@ -58,14 +58,19 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
       }
 
       if (result.success) {
-        if (result.error) {
-          // Success with message (e.g., email confirmation required)
-          setMessage(result.error)
+        if (result.message) {
+          // Success with info message (e.g., email confirmation required)
+          setMessage(result.message)
+        } else if (result.error) {
+          // Backend sync error during otherwise successful auth
+          setError(result.error)
         } else {
+          // Fully successful login/signup
           onSuccess?.()
           navigate(getRedirectPath())
         }
       } else {
+        // Failed authentication
         setError(result.error || t('auth.auth_failed'))
       }
     } catch (err) {
@@ -173,11 +178,11 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
           </div>
         )}
 
-        {/* Success Message */}
+        {/* Info/Success Message */}
         {message && (
-          <div role="alert" className="alert alert-success">
+          <div role="alert" className="alert alert-info">
             <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>{message}</span>
           </div>

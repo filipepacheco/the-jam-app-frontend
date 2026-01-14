@@ -7,66 +7,14 @@ import type {ScheduleResponseDto} from '../../types/api.types'
 import {RegistrationList} from './RegistrationList'
 import {formatDuration} from '../../lib/formatters'
 import {useTranslation} from 'react-i18next'
+import {getStatusColor, getStatusLabel, getStatusIcon} from '../../lib/schedule/statusHelpers'
+import {CheckCircle} from 'lucide-react'
 
 interface ScheduleDisplayItemProps {
     schedule: ScheduleResponseDto
     isSuggested?: boolean
     userRegisteredForSchedule?: boolean
     onEnrollClick?: () => void
-}
-
-const getStatusColor = (status: string | undefined, isSuggested: boolean): string => {
-    if (isSuggested) return 'badge-info'
-    switch (status) {
-        case 'SCHEDULED':
-            return 'badge-primary'
-        case 'IN_PROGRESS':
-            return 'badge-warning'
-        case 'APPROVED':
-        case 'COMPLETED':
-            return 'badge-success'
-        case 'CANCELED':
-            return 'badge-error'
-        default:
-            return 'badge-outline'
-    }
-}
-
-export const getStatusLabel = (status: string | undefined, isSuggested: boolean, t: (key: string) => string): string => {
-    if (isSuggested) return t('schedule.statuses.suggested')
-    switch (status) {
-        case 'APPROVED':
-            return t('schedule.statuses.approved')
-        case 'SCHEDULED':
-            return t('schedule.statuses.scheduled')
-        case 'IN_PROGRESS':
-            return t('schedule.statuses.in_progress')
-        case 'COMPLETED':
-            return t('schedule.statuses.completed')
-        case 'CANCELED':
-            return t('schedule.statuses.canceled')
-        default:
-            return t('schedule.statuses.pending')
-    }
-}
-
-export const getStatusIcon = (status: string | undefined, isSuggested: boolean): string => {
-    if (isSuggested) return '✨'
-    switch (status) {
-        case 'PENDING':
-            return '⏳'
-        case 'APPROVED':
-        case 'SCHEDULED':
-            return '📅'
-        case 'IN_PROGRESS':
-            return '🎵'
-        case 'COMPLETED':
-            return '✓'
-        case 'CANCELED':
-            return '✕'
-        default:
-            return ''
-    }
 }
 
 export function ScheduleDisplayItem({
@@ -84,8 +32,24 @@ export function ScheduleDisplayItem({
 
 
     return (<div
-        className={`border-l-4 ${isSuggested ? 'border-info bg-info/5' : 'border-primary'} pl-4 py-2 rounded`}
+        className={`border-l-4 pl-4 py-2 rounded-lg ${
+            schedule.status === 'IN_PROGRESS'
+                ? 'bg-warning/10 border-warning ring-2 ring-warning ring-offset-2 ring-offset-base-100'
+                : isSuggested
+                    ? 'border-info bg-info/5'
+                    : 'border-primary'
+        }`}
     >
+        {/* NOW PLAYING Banner for IN_PROGRESS */}
+        {schedule.status === 'IN_PROGRESS' && (
+            <div className="mb-3 flex items-center gap-2">
+                <span className="text-xl">🔊</span>
+                <span className="badge badge-warning font-bold uppercase">
+                    {t('schedule.now_playing')}
+                </span>
+            </div>
+        )}
+
         {/* Schedule Header */}
         <div className="flex items-start gap-3 mb-3">
             {/* Order Badge */}
@@ -108,12 +72,12 @@ export function ScheduleDisplayItem({
 
                 <div className="flex flex-wrap gap-1 mt-1">
                     {duration && (<span
-                        className="badge badge-sm"> ⏱️ {formatDuration(duration)} </span>)}
-                    {neededDrums > 0 && (<span className="badge badge-sm">🥁 {neededDrums}</span>)}
-                    {neededGuitars > 0 && (<span className="badge badge-sm">🎸 {neededGuitars}</span>)}
-                    {neededVocals > 0 && (<span className="badge badge-sm">🎤 {neededVocals}</span>)}
-                    {neededBass > 0 && (<span className="badge badge-sm">🎸 {neededBass}</span>)}
-                    {neededKeys > 0 && (<span className="badge badge-sm">🎹 {neededKeys}</span>)}
+                        className="badge badge-sm badge-neutral font-semibold"> ⏱️ {formatDuration(duration)} </span>)}
+                    {neededDrums > 0 && (<span className="badge badge-sm badge-ghost">🥁 {neededDrums}</span>)}
+                    {neededGuitars > 0 && (<span className="badge badge-sm badge-ghost">🎸 {neededGuitars}</span>)}
+                    {neededVocals > 0 && (<span className="badge badge-sm badge-ghost">🎤 {neededVocals}</span>)}
+                    {neededBass > 0 && (<span className="badge badge-sm badge-ghost">🎸 {neededBass}</span>)}
+                    {neededKeys > 0 && (<span className="badge badge-sm badge-ghost">🎹 {neededKeys}</span>)}
                 </div>
             </div>
 
@@ -126,13 +90,19 @@ export function ScheduleDisplayItem({
               {getStatusIcon(schedule.status, isSuggested) && `${getStatusIcon(schedule.status, isSuggested)} `}
                 {getStatusLabel(schedule.status, isSuggested, t)}
             </span>
-                <button
-                    onClick={onEnrollClick}
-                    className={`btn btn-sm ${userRegisteredForSchedule ? 'btn-success btn-disabled' : 'btn-primary'}`}
-                    disabled={userRegisteredForSchedule}
-                >
-                    {userRegisteredForSchedule ? t('schedule.already_enrolled') : t('schedule.enroll_btn')}
-                </button>
+                {userRegisteredForSchedule ? (
+                    <span className="badge badge-success gap-2 px-4 py-3">
+                        <CheckCircle className="w-3 h-3" />
+                        {t('schedule.already_enrolled')}
+                    </span>
+                ) : (
+                    <button
+                        onClick={onEnrollClick}
+                        className="btn btn-sm btn-primary font-semibold gap-2"
+                    >
+                        🎵 {t('schedule.enroll_btn')}
+                    </button>
+                )}
             </div>
         </div>
 

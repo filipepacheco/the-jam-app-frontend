@@ -6,7 +6,7 @@ function CallToAction() {
   const { t } = useTranslation()
 
   return (
-    <div className="py-20 px-4 bg-base-200">
+    <div className="py-16 sm:py-20 px-4 bg-gradient-to-br from-base-200 to-base-300">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-4xl font-bold mb-6">
           {t('homepage.call_to_action.title')}
@@ -29,6 +29,9 @@ function CallToAction() {
                 d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             {t('homepage.call_to_action.cta_button')}
+          </button>
+          <button className="btn btn-outline btn-lg" onClick={() => navigate('/jams')}>
+            {t('homepage.call_to_action.browse_jams')}
           </button>
         </div>
       </div>

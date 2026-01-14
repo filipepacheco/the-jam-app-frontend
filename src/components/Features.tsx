@@ -1,4 +1,5 @@
-import {useTranslation} from 'react-i18next'
+import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
 
 function Features() {
   const { t } = useTranslation()
@@ -14,7 +15,11 @@ function Features() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {/* Host Features */}
-          <div className="card bg-base-200 shadow-lg">
+          <motion.div
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+            className="card bg-base-200 shadow-lg"
+          >
             <div className="card-body p-3 sm:p-6">
               <div className="flex justify-center mb-3 sm:mb-4">
                 <svg
@@ -22,7 +27,8 @@ function Features() {
                   className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 text-primary"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                  aria-label="Host features icon">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -35,10 +41,14 @@ function Features() {
                 {t('jams.features.hosts_desc')}
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Musician Features */}
-          <div className="card bg-base-200 shadow-lg">
+          <motion.div
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+            className="card bg-base-200 shadow-lg"
+          >
             <div className="card-body p-3 sm:p-6">
               <div className="flex justify-center mb-3 sm:mb-4">
                 <svg
@@ -46,7 +56,8 @@ function Features() {
                   className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 text-secondary"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                  aria-label="Musician features icon">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -59,10 +70,14 @@ function Features() {
                 {t('jams.features.musicians_desc')}
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Public Features */}
-          <div className="card bg-base-200 shadow-lg">
+          <motion.div
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+            className="card bg-base-200 shadow-lg"
+          >
             <div className="card-body p-3 sm:p-6">
               <div className="flex justify-center mb-3 sm:mb-4">
                 <svg
@@ -70,7 +85,8 @@ function Features() {
                   className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 text-accent"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke="currentColor">
+                  stroke="currentColor"
+                  aria-label="Audience features icon">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -83,7 +99,7 @@ function Features() {
                 {t('jams.features.audience_desc')}
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

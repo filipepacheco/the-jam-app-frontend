@@ -15,10 +15,10 @@ import {
 } from '../components'
 import {jamService, musicService, scheduleService} from '../services'
 import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto} from "../types/api.types.ts";
-import {useEffect, useState, useCallback, useMemo} from "react";
-import {getStatusIcon, getStatusLabel} from "../components/schedule/ScheduleDisplayItem.tsx";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {getInstrumentIcon} from "../components/schedule/RegistrationList.tsx";
 import {useTranslation} from 'react-i18next'
+import {getStatusIcon, getStatusLabel} from "../lib/schedule/statusHelpers.ts";
 
 export function JamDetailPage() {
      const { t } = useTranslation()
@@ -232,45 +232,45 @@ export function JamDetailPage() {
                 <p className="text-base-content/70 mt-2">{jam.description}</p>
 
                 {/* Jam Info Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 mt-6">
-                    <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
-                        <span className="text-base sm:text-lg">📍</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4 mt-6">
+                    <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-base-100/70 rounded-lg">
+                        <span className="text-lg sm:text-xl">📍</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">{t('jams.info.location')}</p>
-                            <p className="font-semibold text-xs sm:text-sm truncate">{jam.location || t('jams.info.tba')}</p>
+                            <p className="text-xs sm:text-sm text-base-content/60">{t('jams.info.location')}</p>
+                            <p className="font-semibold text-sm sm:text-base truncate">{jam.location || t('jams.info.tba')}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
-                        <span className="text-base sm:text-lg">📅</span>
+                    <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-base-100/70 rounded-lg">
+                        <span className="text-lg sm:text-xl">📅</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">{t('jams.info.date')}</p>
-                            <p className="font-semibold text-xs sm:text-sm">{jam.date ? new Date(jam.date).toLocaleDateString('en-US', {
+                            <p className="text-xs sm:text-sm text-base-content/60">{t('jams.info.date')}</p>
+                            <p className="font-semibold text-sm sm:text-base">{jam.date ? new Date(jam.date).toLocaleDateString('en-US', {
                                 month: 'short', day: 'numeric', year: 'numeric',
                             }) : t('jams.info.tba')}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
-                        <span className="text-base sm:text-lg">🎭</span>
+                    <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-base-100/70 rounded-lg">
+                        <span className="text-lg sm:text-xl">🎭</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">{t('jams.info.status')}</p>
+                            <p className="text-xs sm:text-sm text-base-content/60">{t('jams.info.status')}</p>
                             <span
-                                className={`badge badge-xs sm:badge-sm ${jam.status === 'ACTIVE' ? 'badge-success' : jam.status === 'INACTIVE' ? 'badge-warning' : 'badge-error'}`}>
+                                className={`badge badge-sm ${jam.status === 'ACTIVE' ? 'badge-success' : jam.status === 'INACTIVE' ? 'badge-warning' : 'badge-error'}`}>
                                     {jam.status || 'Unknown'}
                                 </span>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
-                        <span className="text-base sm:text-lg">🎵</span>
+                    <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-base-100/70 rounded-lg">
+                        <span className="text-lg sm:text-xl">🎵</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">{t('jams.info.performances')}</p>
-                            <p className="font-semibold text-xs sm:text-sm">{(jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.length || 0)}</p>
+                            <p className="text-xs sm:text-sm text-base-content/60">{t('jams.info.performances')}</p>
+                            <p className="font-semibold text-sm sm:text-base">{(jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.length || 0)}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
-                        <span className="text-base sm:text-lg">⏱️</span>
+                    <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-base-100/70 rounded-lg">
+                        <span className="text-lg sm:text-xl">⏱️</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">{t('jams.info.duration')}</p>
-                            <p className="font-semibold text-xs sm:text-sm">{(() => {
+                            <p className="text-xs sm:text-sm text-base-content/60">{t('jams.info.duration')}</p>
+                            <p className="font-semibold text-sm sm:text-base">{(() => {
                                 const totalSeconds = (jam.schedules?.filter(s => s.status !== 'SUGGESTED')?.reduce((acc, s) => acc + (s.music?.duration || 0), 0) || 0)
                                 const minutes = Math.floor(totalSeconds / 60)
                                 const seconds = totalSeconds % 60
@@ -278,11 +278,11 @@ export function JamDetailPage() {
                             })()}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
-                        <span className="text-base sm:text-lg">👥</span>
+                    <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-base-100/70 rounded-lg">
+                        <span className="text-lg sm:text-xl">👥</span>
                         <div className="min-w-0">
-                            <p className="text-xs text-base-content/60">{t('jams.info.musicians')}</p>
-                            <p className="font-semibold text-xs sm:text-sm">{new Set(jam.registrations?.map(reg => reg.musician?.id || reg.musician?.contact)).size}</p>
+                            <p className="text-xs sm:text-sm text-base-content/60">{t('jams.info.musicians')}</p>
+                            <p className="font-semibold text-sm sm:text-base">{new Set(jam.registrations?.map(reg => reg.musician?.id || reg.musician?.contact)).size}</p>
                         </div>
                     </div>
                 </div>

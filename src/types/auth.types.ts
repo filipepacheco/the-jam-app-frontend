@@ -45,12 +45,13 @@ export interface AuthContextType {
   isLoading: boolean
   role: UserRole
   isNewUser: boolean
+  isLoggingOut: boolean
 
   // Supabase Auth Methods
   loginWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
-  signUpWithEmail: (email: string, password: string, name?: string) => Promise<{ success: boolean; error?: string }>
+  signUpWithEmail: (email: string, password: string, name?: string) => Promise<{ success: boolean; error?: string; message?: string }>
   loginWithOAuth: (provider: OAuthProvider) => Promise<{ success: boolean; error?: string }>
-  logout: () => Promise<void>
+  logout: () => Promise<{ success: boolean; error?: string }>
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>
 
   // Legacy login method (for backward compatibility)

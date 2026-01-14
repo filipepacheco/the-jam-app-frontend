@@ -6,6 +6,7 @@
 import type {RegistrationResponseDto} from '../../types/api.types'
 import {CheckCircle, Clock, Music, Users, XCircle} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
+import {Avatar} from '../Avatar'
 
 export const getInstrumentIcon = (instrument?: string): React.ReactNode => {
     if (!instrument) return <Music className="w-4 h-4" />
@@ -160,11 +161,11 @@ export function RegistrationList({
 
             {hasRegistrations && neededInstruments.length > 0 ? (
                 <div className="overflow-x-auto -mx-3 px-3">
-                    <div className="flex gap-3" style={{ minWidth: '100%', display: 'flex' }}>
+                    <div className="flex gap-4" style={{ minWidth: '100%', display: 'flex' }}>
                         {neededInstruments.map((instrument) => (
                             <div
                                 key={instrument}
-                                className="flex-1 min-w-[120px] bg-base-100 rounded-xl p-3 shadow-sm border border-base-300"
+                                className="flex-1 min-w-[140px] bg-base-100 rounded-xl p-3 shadow-sm border border-base-300"
                             >
                                 {/* Column Header */}
                                 <div className="mb-3 pb-3 border-b-2 border-primary/20">
@@ -174,16 +175,23 @@ export function RegistrationList({
                                 </div>
 
                                 {/* Musician Cards in Column */}
-                                <div className="space-y-2">
+                                <div className="space-y-3">
                                     {(groupedRegistrations.get(instrument) || []).map((registration) => (
                                         <div
                                             key={registration.id}
-                                            className="bg-base-100 rounded-lg p-2.5 flex items-start gap-2 shadow-xs border border-base-200 hover:shadow-sm hover:border-primary/30 transition-all"
+                                            className="bg-base-100 rounded-lg p-3 flex items-start gap-3 shadow-xs border border-base-200 hover:shadow-sm hover:border-primary/30 transition-all"
                                         >
+                                            {/* Avatar */}
+                                            <Avatar
+                                                name={registration.musician?.name || t('schedule.unknown')}
+                                                imageUrl={registration.musician?.avatarUrl}
+                                                size="sm"
+                                            />
+
                                             {/* Left Content */}
                                             <div className="space-y-1 flex-1 min-w-0">
                                                 {/* Musician Name */}
-                                                <p className="text-xs font-bold truncate text-base-content">
+                                                <p className="text-xs font-bold line-clamp-2 text-base-content">
                                                     {registration.musician?.name || t('schedule.unknown')}
                                                     {registration.musician?.instrument && (
                                                         // <span className="text-xs font-normal text-base-content/60 flex items-center gap-1 mt-0.5">

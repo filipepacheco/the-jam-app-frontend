@@ -16,6 +16,8 @@ class ApiClient {
   private client: AxiosInstance
   private isRefreshingToken = false
   private refreshTokenPromise: Promise<string | null> | null = null
+  private refreshAttempts = 0
+  private readonly MAX_REFRESH_ATTEMPTS = 3
 
   constructor() {
     // Create axios instance with default config
@@ -138,18 +140,22 @@ class ApiClient {
           console.warn('✅ API Response:', response.config.method?.toUpperCase(), response.config.url, response.status)
         }
 
+        // Reset refresh attempts on successful response
+        this.refreshAttempts = 0
+
         // Transform response to standardized format
         return this.transformResponse(response)
       },
       async (error: AxiosError) => {
         const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean }
 
-        // Handle 401 Unauthorized - try to refresh token and retry
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // Handle 401 Unauthorized - try to refresh token and retry (with max attempts limit)
+        if (error.response?.status === 401 && !originalRequest._retry && this.refreshAttempts < this.MAX_REFRESH_ATTEMPTS) {
           originalRequest._retry = true
+          this.refreshAttempts++
 
           if (import.meta.env.DEV) {
-            console.warn('🔐 Unauthorized (401) - Attempting token refresh')
+            console.warn(`🔐 Unauthorized (401) - Attempting token refresh (attempt ${this.refreshAttempts}/${this.MAX_REFRESH_ATTEMPTS})`)
           }
 
           // Prevent multiple simultaneous refresh attempts
@@ -177,9 +183,18 @@ class ApiClient {
             }
           }
 
-          // Token refresh failed, redirect to login
+          // Token refresh failed after max attempts, redirect to login
           if (import.meta.env.DEV) {
-            console.error('🔐 Token refresh failed - redirecting to login')
+            console.error(`🔐 Token refresh failed after ${this.refreshAttempts} attempts - redirecting to login`)
+          }
+          const { clearAuth } = await import('../auth')
+          clearAuth()
+          localStorage.removeItem('auth_user')
+          window.location.href = '/login'
+        } else if (error.response?.status === 401 && this.refreshAttempts >= this.MAX_REFRESH_ATTEMPTS) {
+          // Max refresh attempts exceeded
+          if (import.meta.env.DEV) {
+            console.error('🔐 Max token refresh attempts exceeded - redirecting to login')
           }
           const { clearAuth } = await import('../auth')
           clearAuth()

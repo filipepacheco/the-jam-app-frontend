@@ -76,8 +76,13 @@ export async function syncSupabaseUserToBackend(
         })
       }
 
-      // If sync fails due to 401 (token invalid), still allow user to continue
-      // but mark them as guest and return the error
+      // On 401 or other auth errors, throw to trigger sync retry instead of returning broken state
+      // Returning Supabase token as fallback creates broken state where user appears authenticated but API calls fail
+      if (response.status === 401 || response.status === 403) {
+        throw new Error(`Authentication failed: ${errorMessage}`)
+      }
+
+      // For other errors, create fallback user from Supabase data
       return {
         user: createUserFromSupabase(user),
         token: access_token,

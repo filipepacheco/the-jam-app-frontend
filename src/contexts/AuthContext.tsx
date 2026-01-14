@@ -40,6 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
   const [role, setRoleState] = useState<UserRole>('viewer')
   const [isNewUser, setIsNewUser] = useState(false)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   // Track sync attempts to prevent duplicate calls
   const syncTimeoutRef = useRef<number | null>(null)
@@ -149,9 +150,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   /**
    * Handle successful authentication - sync with backend
+   * Returns error if sync fails so login form can display it to user
    */
   const handleAuthSuccess = useCallback(async (session: { access_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown>; phone?: string } }) => {
-    return await syncWithBackendSafe(session)
+    const result = await syncWithBackendSafe(session)
+
+    // If sync failed, return error to caller (e.g., login form)
+    if (!result.success) {
+      return {
+        success: false,
+        error: result.error || 'Failed to sync with server. Please try again.',
+      }
+    }
+
+    return result
   }, [syncWithBackendSafe])
 
   /**
@@ -259,20 +271,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (result.session) {
         const authResult = await handleAuthSuccess(result.session)
+        // Propagate backend sync errors to caller
+        if (!authResult.success) {
+          return {
+            success: false,
+            error: authResult.error || 'Failed to complete login. Please try again.',
+          }
+        }
         return authResult
       }
 
       return { success: false, error: 'No session returned' }
     } catch (err) {
       console.error('Login error:', err)
-      return { success: false, error: 'Login failed' }
+      const errorMessage = err instanceof Error ? err.message : 'Login failed'
+      return { success: false, error: errorMessage }
     }
   }, [handleAuthSuccess])
 
   /**
    * Sign up with email and password (Supabase)
    */
-  const signUpWithEmailFn = useCallback(async (email: string, password: string, name?: string): Promise<{ success: boolean; error?: string }> => {
+  const signUpWithEmailFn = useCallback(async (email: string, password: string, name?: string): Promise<{ success: boolean; error?: string; message?: string }> => {
     if (!isSupabaseConfigured()) {
       return { success: false, error: 'Supabase is not configured' }
     }
@@ -287,14 +307,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // If email confirmation is required, session might be null
       if (result.session) {
         const authResult = await handleAuthSuccess(result.session)
+        // Propagate backend sync errors to caller
+        if (!authResult.success) {
+          return {
+            success: false,
+            error: authResult.error || 'Failed to complete signup. Please try again.',
+          }
+        }
         return authResult
       }
 
       // Email confirmation required
-      return { success: true, error: 'Please check your email to confirm your account' }
+      return { success: true, message: 'Please check your email to confirm your account' }
     } catch (err) {
       console.error('Sign up error:', err)
-      return { success: false, error: 'Sign up failed' }
+      const errorMessage = err instanceof Error ? err.message : 'Sign up failed'
+      return { success: false, error: errorMessage }
     }
   }, [handleAuthSuccess])
 
@@ -324,37 +352,67 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   /**
    * Logout user
+   * Returns error if backend logout fails (but still clears local state)
    */
-  const logout = useCallback(async () => {
+  const logout = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
+    setIsLoggingOut(true)
+    let logoutError: string | null = null
+
     try {
       const token = getToken()
 
       // Logout from backend first
       if (token) {
-        await logoutFromBackend(token)
+        try {
+          await logoutFromBackend(token)
+        } catch (err) {
+          logoutError = 'Failed to clear backend session'
+          console.error('Backend logout error:', err)
+          // Continue with local logout anyway
+        }
       }
 
       // Logout from Supabase
       if (isSupabaseConfigured()) {
-        await supabaseSignOut()
+        try {
+          await supabaseSignOut()
+        } catch (err) {
+          if (!logoutError) {
+            logoutError = 'Failed to clear Supabase session'
+          }
+          console.error('Supabase logout error:', err)
+          // Continue with local logout anyway
+        }
       }
 
-      // Clear local state
+      // Always clear local state
       clearAuth()
       localStorage.removeItem('auth_user')
       setUser(null)
       setRoleState('viewer')
       setIsAuthenticated(false)
       setIsNewUser(false)
+
+      if (logoutError) {
+        console.warn('⚠️ Logout warning:', logoutError)
+        return { success: true, error: logoutError }
+      }
+
+      return { success: true }
     } catch (err) {
-      console.error('Logout failed:', err)
-      // Still clear local state even if API calls fail
+      console.error('Logout error:', err)
+      // Still clear local state even if unexpected errors occur
       clearAuth()
       localStorage.removeItem('auth_user')
       setUser(null)
       setRoleState('viewer')
       setIsAuthenticated(false)
       setIsNewUser(false)
+
+      const errorMessage = err instanceof Error ? err.message : 'Logout failed'
+      return { success: false, error: errorMessage }
+    } finally {
+      setIsLoggingOut(false)
     }
   }, [])
 
@@ -518,6 +576,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isLoading,
     role,
     isNewUser,
+    isLoggingOut,
     loginWithEmail,
     signUpWithEmail: signUpWithEmailFn,
     loginWithOAuth,

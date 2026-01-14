@@ -22,10 +22,10 @@ function Hero() {
       {/* Hero Content */}
       <div className="hero-content text-center lg:text-left">
         <div className="max-w-3xl">
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-white">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-primary-content">
             {t('homepage.hero.title')}
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-gray-100">
+          <p className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-primary-content/90">
             {t('homepage.hero.description')}
           </p>
           <div className="flex gap-2 sm:gap-4 justify-center lg:justify-start flex-wrap">
