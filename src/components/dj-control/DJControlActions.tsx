@@ -3,7 +3,7 @@
  * Reusable actions section with Previous, Next, Refresh, Add Songs buttons and Auto Refresh control
  */
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {scheduleService} from '../../services'

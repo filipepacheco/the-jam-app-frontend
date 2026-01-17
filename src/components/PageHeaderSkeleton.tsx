@@ -36,5 +36,5 @@ export function PageHeaderSkeleton() {
   )
 }
 
-export default PageHeaderSkeleton
+
 

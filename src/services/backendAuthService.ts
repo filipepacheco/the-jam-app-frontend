@@ -194,65 +194,6 @@ export async function updateProfile(
 }
 
 /**
- * Fetch current user profile from backend
- * Calls GET /auth/me to retrieve current authenticated user
- *
- * @param token - Bearer token for authentication
- * @returns Current user data or error
- */
-export async function getAuthMe(
-  token: string
-): Promise<{ user?: AuthUser; error?: string }> {
-  try {
-    const response = await fetch(getApiUrl('/auth/me'), {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      const errorMessage = errorData.message || errorData.error || 'Failed to fetch profile'
-
-      if (import.meta.env.DEV) {
-        console.error('Get profile error:', {
-          status: response.status,
-          message: errorMessage,
-        })
-      }
-
-      return {
-        error: errorMessage,
-      }
-    }
-
-    const data: BackendAuthResponseDto = await response.json()
-
-    // Convert response to AuthUser format
-    const user: AuthUser = {
-      id: data.userId,
-      name: data.name || null,
-      email: data.email || '',
-      phone: data.phone,
-      role: data.isHost ? 'host' : 'user',
-      isHost: data.isHost,
-      instrument: data.instrument,
-    }
-
-    return {
-      user,
-    }
-  } catch (err) {
-    console.error('Get profile error:', err)
-    return {
-      error: err instanceof Error ? err.message : 'Failed to fetch profile',
-    }
-  }
-}
-
-/**
  * Update musician profile in backend (legacy)
  * @deprecated Use updateProfile() instead
  */

@@ -3,7 +3,7 @@
  * Modal form for editing musician details
  */
 
-import {useState} from 'react'
+import React, {useState} from 'react'
 import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
 
 import {useTranslation} from 'react-i18next'

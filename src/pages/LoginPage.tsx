@@ -4,12 +4,12 @@
  */
 
 import {useEffect, useState} from 'react'
-import {useAuth} from '../hooks/useAuth'
+import {useAuth} from '../hooks'
 import {useNavigate} from 'react-router-dom'
-import {SupabaseLoginForm} from '../components/forms/SupabaseLoginForm'
+import {SupabaseLoginForm} from '../components'
 import {isSupabaseConfigured} from '../lib/supabase'
 import SimpleLoginForm from '../components/forms/SimpleLoginForm'
-import {ProfileSetupModal} from '../components/ProfileSetupModal'
+import {ProfileSetupModal} from '../components'
 
 import {useTranslation} from 'react-i18next'
 
@@ -116,4 +116,4 @@ export function LoginPage() {
   )
 }
 
-export default LoginPage
+

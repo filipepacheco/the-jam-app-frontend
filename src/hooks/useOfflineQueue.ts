@@ -4,7 +4,7 @@
  */
 
 import {useCallback, useEffect, useState} from 'react'
-import {getOfflineQueueManager, type QueuedAction, type QueueStats} from '../services/offlineQueue'
+import {getOfflineQueueManager, type QueuedAction, type QueueStats} from '../services'
 
 export interface OfflineQueueState {
   queue: QueuedAction[]
@@ -41,11 +41,9 @@ export function useOfflineQueue(): OfflineQueueState {
     setQueue(queueManager.getQueue())
 
     // Subscribe to queue changes
-    const unsubscribe = queueManager.subscribe((newQueue) => {
+    return queueManager.subscribe((newQueue) => {
       setQueue(newQueue)
     })
-
-    return unsubscribe
   }, [queueManager])
 
   // Listen to online/offline events

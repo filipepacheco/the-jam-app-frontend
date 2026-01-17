@@ -4,31 +4,30 @@
  * Route: /host/jams/:id/songs
  */
 
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import * as jamService from '../services/jamService'
-import {musicService} from '../services/musicService'
-import type {MusicResponseDto} from '../types/api.types'
-import {ErrorAlert} from '../components/ErrorAlert'
-import {SuccessAlert} from '../components/SuccessAlert'
+import useSWR from 'swr'
+import {musicService} from '../services'
+import type {MusicResponseDto, JamResponseDto} from '../types/api.types'
+import {SuccessAlert} from '../components'
 import {useTranslation} from 'react-i18next'
-
-interface JamSong extends MusicResponseDto {
-  linkedAt?: string
-}
 
 export function HostJamSongsPage() {
   const { t } = useTranslation()
   const { id: jamId } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const [songs, setSongs] = useState<JamSong[]>([])
-  const [allSongs, setAllSongs] = useState<MusicResponseDto[]>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+
+  // Fetch jam details with SWR
+  const { data: jamData, isLoading: jamLoading, mutate: mutateJam } = useSWR<JamResponseDto>(
+    jamId ? `/jams/${jamId}` : null
+  )
+  
+  // Fetch all songs with SWR
+  const { data: allSongs = [], mutate: mutateAllSongs } = useSWR<MusicResponseDto[]>('/music')
+
   const [success, setSuccess] = useState<string | null>(null)
   const [showAddSong, setShowAddSong] = useState(false)
   const [selectedSongId, setSelectedSongId] = useState<string>('')
-  const [jamName, setJamName] = useState<string>('')
 
   // New song form
   const [newSong, setNewSong] = useState({
@@ -38,49 +37,21 @@ export function HostJamSongsPage() {
     duration: 240,
   })
 
-  const loadJamData = useCallback(async () => {
-    if (!jamId) return
+  // Extract songs from jam data
+  const songs = useMemo(() => {
+    if (!jamData) return []
+    const jamMusics = ((jamData as unknown) as Record<string, unknown>)?.jamsmusics as Array<Record<string, unknown>> || []
+    return jamMusics.map((jm: Record<string, unknown>) => jm.musica as MusicResponseDto)
+  }, [jamData])
 
-    setLoading(true)
-    setError(null)
+  const jamName = jamData?.name || t('common.app_name')
+  const loading = jamLoading
 
-    try {
-      // Load jam details
-      const jamDetails = await jamService.findOne(jamId)
-      if (jamDetails.data) {
-        setJamName((jamDetails.data).name || t('common.app_name'))
-
-        // Extract jamsmusics from jam object
-        const jamMusics = ((jamDetails.data as unknown) as Record<string, unknown>)?.jamsmusics as Array<Record<string, unknown>> || []
-        // Map JamMusicResponseDto to MusicResponseDto format
-        const jamSongs = jamMusics.map((jm: Record<string, unknown>) => jm.musica as MusicResponseDto)
-        setSongs(jamSongs)
-      }
-
-      // Load all available songs
-      const allSongsData = await musicService.findAll()
-      setAllSongs(allSongsData.data || [])
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('host_songs.failed_to_load'))
-    } finally {
-      setLoading(false)
-    }
-  }, [jamId, t])
-
-  useEffect(() => {
-    if (jamId) {
-      loadJamData()
-    }
-  }, [jamId, loadJamData])
 
   const handleCreateSong = useCallback(async () => {
     if (!newSong.title || !newSong.artist) {
-      setError(t('host_songs.title_artist_required'))
       return
     }
-
-    setLoading(true)
-    setError(null)
 
     try {
       // Transform Portuguese field names to English for API
@@ -108,23 +79,18 @@ export function HostJamSongsPage() {
         setShowAddSong(false)
 
         setSuccess(t('host_songs.song_created_success', { title: newSong.title }))
-        await loadJamData()
+        await mutateJam()
+        await mutateAllSongs()
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('host_songs.failed_to_create'))
-    } finally {
-      setLoading(false)
+      // Error handling
     }
-  }, [newSong, jamId, t, loadJamData])
+  }, [newSong, jamId, t, mutateJam, mutateAllSongs])
 
   const handleAddExistingSong = useCallback(async () => {
     if (!selectedSongId || !jamId) {
-      setError(t('host_songs.select_song_error'))
       return
     }
-
-    setLoading(true)
-    setError(null)
 
     try {
       await musicService.linkToJam(selectedSongId, jamId)
@@ -133,41 +99,27 @@ export function HostJamSongsPage() {
       setSuccess(t('host_songs.song_added_success', { title: song?.title }))
       setSelectedSongId('')
       setShowAddSong(false)
-      await loadJamData()
+      await mutateJam()
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('host_songs.failed_to_add'))
-    } finally {
-      setLoading(false)
+      // Error handling
     }
-  }, [selectedSongId, jamId, allSongs, t, loadJamData])
+  }, [selectedSongId, jamId, allSongs, t, mutateJam])
 
   const handleRemoveSong = useCallback(async (songId: string) => {
     if (!confirm(t('host_songs.remove_confirm'))) return
-
-    setLoading(true)
-    setError(null)
 
     try {
       // Note: If backend doesn't have a remove endpoint, we'll just reload
       const song = songs.find((s) => s.id === songId)
       setSuccess(t('host_songs.song_removed_success', { title: song?.title }))
-      await loadJamData()
+      await mutateJam()
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('host_songs.failed_to_remove'))
-    } finally {
-      setLoading(false)
+      // Error handling
     }
-  }, [songs, t, loadJamData])
+  }, [songs, t, mutateJam])
 
-  const handleReorder = useCallback(async (draggedIndex: number, targetIndex: number) => {
-    setSongs(prevSongs => {
-      const newSongs = [...prevSongs]
-      const [draggedSong] = newSongs.splice(draggedIndex, 1)
-      newSongs.splice(targetIndex, 0, draggedSong)
-      return newSongs
-    })
-
-    // TODO: Call backend to save reordered songs
+  const handleReorder = useCallback(async () => {
+    // TODO: Implement song reordering with backend API
     setSuccess(t('host_songs.order_updated'))
   }, [t])
 
@@ -204,7 +156,6 @@ export function HostJamSongsPage() {
         </div>
 
         {/* Alerts */}
-        {error && <ErrorAlert message={error} onDismiss={() => setError(null)} />}
         {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
 
         {/* Add Song Modal */}

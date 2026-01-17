@@ -240,7 +240,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    initializeAuth()
+    initializeAuth().then()
 
     // Subscribe to Supabase auth state changes
     if (isSupabaseConfigured()) {

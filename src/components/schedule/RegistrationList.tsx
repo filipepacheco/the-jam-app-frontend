@@ -7,6 +7,7 @@ import type {RegistrationResponseDto} from '../../types/api.types'
 import {CheckCircle, Clock, Music, Users, XCircle} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {Avatar} from '../Avatar'
+import React from "react";
 
 export const getInstrumentIcon = (instrument?: string): React.ReactNode => {
     if (!instrument) return <Music className="w-4 h-4" />

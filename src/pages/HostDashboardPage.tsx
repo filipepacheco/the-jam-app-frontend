@@ -6,11 +6,11 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks/useAuth'
+import {useAuth} from '../hooks'
 import * as jamService from '../services/jamService'
 import type {JamResponseDto} from '../types/api.types'
-import {ErrorAlert} from '../components/ErrorAlert'
-import {SuccessAlert} from '../components/SuccessAlert'
+import {ErrorAlert} from '../components'
+import {SuccessAlert} from '../components'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../lib/i18nUtils'
 

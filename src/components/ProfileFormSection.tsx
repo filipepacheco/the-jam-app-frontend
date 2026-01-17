@@ -2,6 +2,7 @@
  * Profile Form Section Component
  * Reusable component for displaying profile sections in view/edit mode
  */
+import React from "react";
 
 interface FormField {
   name: string

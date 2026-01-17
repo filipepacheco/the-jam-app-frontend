@@ -4,12 +4,12 @@
  * Routes: /host/create-jam (create) and /host/jams/:id/edit (edit)
  */
 
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth} from '../hooks/useAuth'
+import {useAuth} from '../hooks'
 import * as jamService from '../services/jamService'
-import {ErrorAlert} from '../components/ErrorAlert'
-import {SuccessAlert} from '../components/SuccessAlert'
+import {ErrorAlert} from '../components'
+import {SuccessAlert} from '../components'
 
 interface FormData {
   name: string

@@ -5,8 +5,8 @@
 
 import {useEffect, useState} from 'react'
 import type {MusicianResponseDto, ScheduleResponseDto} from '../../types/api.types'
-import {registrationService} from '../../services/registrationService'
-import {musicianService} from '../../services/musicianService'
+import {registrationService} from '../../services'
+import {musicianService} from '../../services'
 import {useTranslation} from 'react-i18next'
 
 interface HostMusicianRegistrationModalProps {

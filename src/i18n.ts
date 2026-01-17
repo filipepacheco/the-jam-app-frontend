@@ -23,11 +23,11 @@ function missingKeyHandler(lngs: readonly string[], ns: string, key: string, _fa
       // @ts-ignore
       window.__MISSING_I18N_KEYS__.push({lng: lngStr, ns: nsStr, key});
     }
-    // eslint-disable-next-line no-console
+     
     console.warn('[i18n] missing key', {lng: lngStr, ns: nsStr, key});
   } catch (e) {
     // swallow errors in handler
-    // eslint-disable-next-line no-console
+     
     console.warn('[i18n] missing key handler error', e);
   }
 }
@@ -113,9 +113,5 @@ i18nBuilder.use(initReactI18next)
     // attach the missing key handler so QA can collect unresolved keys
     missingKeyHandler: missingKeyHandler,
   });
-
-export function getMissingI18nKeys() {
-  return _missingI18nKeys.slice();
-}
 
 export default i18n;

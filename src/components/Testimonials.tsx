@@ -87,4 +87,4 @@ export function Testimonials() {
   )
 }
 
-export default Testimonials
+

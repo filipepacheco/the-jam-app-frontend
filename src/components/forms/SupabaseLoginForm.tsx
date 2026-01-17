@@ -255,5 +255,5 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
   )
 }
 
-export default SupabaseLoginForm
+
 

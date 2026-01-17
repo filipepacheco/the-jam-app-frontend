@@ -4,21 +4,21 @@
  * Accessible to all authenticated users
  */
 
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks/useAuth'
+import {useAuth} from '../hooks'
 import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import {ProfileHeader} from '../components/ProfileHeader'
 import {ProfileFormSection} from '../components/ProfileFormSection'
-import {ErrorAlert} from '../components/ErrorAlert'
-import {SuccessAlert} from '../components/SuccessAlert'
+import {ErrorAlert} from '../components'
+import {SuccessAlert} from '../components'
 
 import {useTranslation} from 'react-i18next'
 
 export function ProfilePage() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
-  const { user, isAuthenticated, isLoading: authLoading, updateProfile } = useAuth()
+  useNavigate();
+    const { user, isAuthenticated, isLoading: authLoading, updateProfile } = useAuth()
 
   // State
   const [isEditMode, setIsEditMode] = useState(false)

@@ -1,11 +1,11 @@
 import type {JamResponseDto, ScheduleResponseDto} from "../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
-import { scheduleService } from "../services/scheduleService";
-import {ErrorAlert} from '../components/ErrorAlert';
-import {QueueStats} from '../components/dj-control/QueueStats';
-import {SongQueueTimeline} from '../components/dj-control/SongQueueTimeline';
-import {SuccessAlert} from '../components/SuccessAlert';
+import { scheduleService } from "../services";
+import {ErrorAlert} from '../components';
+import {QueueStats} from '../components';
+import {SongQueueTimeline} from '../components';
+import {SuccessAlert} from '../components';
 import {DJControlActions} from "../components/dj-control/DJControlActions.tsx";
 
 /**

@@ -37,5 +37,5 @@ export function JamCardSkeleton() {
   )
 }
 
-export default JamCardSkeleton
+
 

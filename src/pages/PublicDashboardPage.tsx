@@ -4,8 +4,9 @@
  * Route: /jams/:jamId/dashboard
  */
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {useParams} from 'react-router-dom'
+import useSWR from 'swr'
 import {
     ConfettiWrapper,
     CurrentSongCard,
@@ -16,48 +17,57 @@ import {
     QRCodeCorner,
     StartingSoonCard
 } from '../components/publicDashboard'
-import {useAppLanguage} from '../hooks/useAppLanguage'
-import {useConfettiOnSongChange} from '../hooks/useConfettiOnSongChange'
-import {useDashboardLive} from '../hooks/useDashboardLive'
-import {useFullscreen} from '../hooks/useFullscreen'
-import {useOfflineQueue} from '../hooks/useOfflineQueue'
-import {ErrorAlert} from '../components/ErrorAlert'
+import {useAppLanguage} from '../hooks'
+import {useConfettiOnSongChange} from '../hooks'
+import {useFullscreen} from '../hooks'
+import {useOfflineQueue} from '../hooks'
+import {ErrorAlert} from '../components'
 import {useTranslation} from 'react-i18next'
+import type {LiveDashboardResponseDto} from '../types/api.types'
 
 export function PublicDashboardPage() {
   const { t } = useTranslation()
   const { jamId } = useParams<{ jamId: string }>()
   const { currentLang, changeLanguage } = useAppLanguage()
-
-  // Use dashboard-specific live polling hook
-  const dashboard = useDashboardLive(jamId, { pollingIntervalMs: 5000 })
   const { isOfflineMode } = useOfflineQueue()
 
   // Polling interval (ms) - default 5s, presets available
   const [pollingMs, setPollingMs] = useState<number>(5000)
 
-  // Wire polling interval to dashboard hook
-  useEffect(() => {
-    dashboard.setPollingIntervalMs(pollingMs)
-  }, [pollingMs, dashboard])
+  // Fetch live dashboard data with SWR
+  const swrKey = jamId ? `/jams/${jamId}/live/dashboard` : null
+  const {
+    data: dashboardData,
+    error,
+    isLoading,
+  } = useSWR<LiveDashboardResponseDto>(swrKey, {
+    refreshInterval: pollingMs,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true,
+    dedupingInterval: 2000,
+  })
+
+  // Extract fields from response
+  const jamName = dashboardData?.jamName ?? null
+
+
+  const currentSong = dashboardData?.currentSong ?? null
+  const nextSongs = dashboardData?.nextSongs ?? []
 
   // UI state management
   const [showNavbar, setShowNavbar] = useState(false)
 
   // Custom hooks for UI behaviors
   const { confettiVisible, confettiDimensions, containerRef } = useConfettiOnSongChange(
-    dashboard.currentSong?.id
+    currentSong?.id
   )
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef)
 
-  // Dashboard data is already sorted and filtered from the endpoint
-  const nextSongs = dashboard.nextSongs || []
-
   // Get first scheduled song for "starting soon" display
-  const firstScheduledSong = dashboard.currentSong || nextSongs[0]
+  const firstScheduledSong = currentSong || nextSongs[0]
 
   // Show loading state
-  if (dashboard.isLoading && !dashboard.currentSong) {
+  if (isLoading && !currentSong) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center">
         <div className="loading loading-spinner loading-lg"></div>
@@ -66,10 +76,10 @@ export function PublicDashboardPage() {
   }
 
   // Show error state
-  if (dashboard.error) {
+  if (error) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
-        <ErrorAlert message={dashboard.error.message} title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')} />
+        <ErrorAlert message={error.message} title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')} />
       </div>
     )
   }
@@ -88,7 +98,7 @@ export function PublicDashboardPage() {
 
       {/* Header with Navbar Toggle & Fullscreen Button */}
       <Header
-        title={t('publicDashboard.title', { name: dashboard.jamName || '' })}
+        title={t('publicDashboard.title', { name: jamName || '' })}
         showNavbar={showNavbar}
         setShowNavbar={setShowNavbar}
         isFullscreen={isFullscreen}
@@ -112,8 +122,8 @@ export function PublicDashboardPage() {
       <div className="pt-20 pb-8 px-4 md:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Current Song Section */}
-          {dashboard.currentSong ? (
-            <CurrentSongCard song={dashboard.currentSong} />
+          {currentSong ? (
+            <CurrentSongCard song={currentSong} />
           ) : firstScheduledSong ? (
             <StartingSoonCard song={firstScheduledSong} />
           ) : null}

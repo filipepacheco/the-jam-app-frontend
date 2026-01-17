@@ -4,7 +4,7 @@
  */
 
 import type {ScheduleResponseDto} from '../../types/api.types'
-import {registrationService} from '../../services/registrationService'
+import {registrationService} from '../../services'
 import {useAuth} from '../../hooks'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'

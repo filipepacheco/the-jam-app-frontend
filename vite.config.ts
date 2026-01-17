@@ -20,11 +20,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000, // 1000 KB (main bundle is mostly vendor code)
     // Suppress CSS warnings from DaisyUI's modern CSS features
     rollupOptions: {
-      onwarn(warning, warn) {
-        // Suppress "Unknown at rule: @property" warnings from DaisyUI
-        if (warning.message?.includes('@property')) return
-        warn(warning)
-      },
+
     },
   },
 })

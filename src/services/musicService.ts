@@ -34,24 +34,6 @@ export const musicService = {
   },
 
   /**
-   * Get a single music by ID
-   * @param id - Music ID
-   * @returns Promise with music data
-   */
-  async findOne(id: string): Promise<ApiResponse<MusicResponseDto>> {
-    return apiClient.get<MusicResponseDto>(API_ENDPOINTS.musicById(id))
-  },
-
-  /**
-   * Get all music for a specific jam
-   * @param jamId - Jam ID
-   * @returns Promise with array of music linked to the jam
-   */
-  async findByJam(jamId: string): Promise<ApiResponse<MusicResponseDto[]>> {
-    return apiClient.get<MusicResponseDto[]>(API_ENDPOINTS.musicByJam(jamId))
-  },
-
-  /**
    * Link a music to a jam
    * @param musicId - Music ID
    * @param jamId - Jam ID

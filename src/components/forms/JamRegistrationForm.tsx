@@ -3,7 +3,7 @@
  * Form for registering to a jam with specialty and level selection
  */
 
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {ErrorAlert, SuccessAlert} from '../index'
 import type {JamDetails} from '../../services'
@@ -188,5 +188,5 @@ export function JamRegistrationForm({
   )
 }
 
-export default JamRegistrationForm
+
 

@@ -5,26 +5,25 @@
  * Route: /music
  */
 
-import {useEffect, useMemo, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks/useAuth'
-import {musicService} from '../services/musicService'
+import {useAuth} from '../hooks'
+import {musicService} from '../services'
 import type {CreateMusicDto, MusicResponseDto, UpdateMusicDto} from '../types/api.types'
-import {ErrorAlert} from '../components/ErrorAlert'
-import {MusicEmptyState} from '../components/MusicEmptyState'
-import {MusicFilters} from '../components/MusicFilters'
-import {MusicModalFormFields} from '../components/MusicModalFormFields'
-import {MusicTableRow} from '../components/MusicTable'
-import {SuccessAlert} from '../components/SuccessAlert'
+import {ErrorAlert} from '../components'
+import {MusicEmptyState} from '../components'
+import {MusicFilters} from '../components'
+import {MusicModalFormFields} from '../components'
+import {MusicTableRow} from '../components'
+import {SuccessAlert} from '../components'
 import {filterAndSortMusic, formatDuration, isDuplicate as checkDuplicate, parseDuration} from '../lib/musicUtils'
 import {GENRES} from '../lib/musicConstants'
-import {useTranslation} from 'react-i18next'
 
 type SortBy = 'title' | 'artist' | 'date'
 type StatusFilter = 'all' | 'approved' | 'suggested'
 
 export function MusicPage() {
-    const { t } = useTranslation()
+
     const navigate = useNavigate()
     const {user, isAuthenticated} = useAuth()
     const [musicList, setMusicList] = useState<MusicResponseDto[]>([])
@@ -97,7 +96,7 @@ export function MusicPage() {
         try {
             await musicService.update(music.id, {status: 'APPROVED'})
             setSuccess(`Song "${music.title}" approved!`)
-            loadMusic()
+            await loadMusic()
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to approve song')
         } finally {
@@ -116,7 +115,7 @@ export function MusicPage() {
         try {
             await musicService.remove(music.id)
             setSuccess(`Song "${music.title}" rejected!`)
-            loadMusic()
+            await loadMusic()
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to reject song')
         } finally {
@@ -138,7 +137,7 @@ export function MusicPage() {
         try {
             await musicService.remove(music.id)
             setSuccess(`Song "${music.title}" deleted successfully!`)
-            loadMusic()
+            await loadMusic()
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to delete song')
         } finally {

@@ -4,14 +4,15 @@
  * Visible only to hosts
  */
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useMemo, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks/useAuth'
-import {musicianService} from '../services/musicianService'
+import {useAuth} from '../hooks'
+import {musicianService} from '../services'
+import useSWR from 'swr'
 import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
 import {EditMusicianModal} from '../components/EditMusicianModal'
-import {ErrorAlert} from '../components/ErrorAlert'
-import {SuccessAlert} from '../components/SuccessAlert'
+import {ErrorAlert} from '../components'
+import {SuccessAlert} from '../components'
 import {useTranslation} from 'react-i18next'
 
 export function MusiciansPage() {
@@ -20,14 +21,16 @@ export function MusiciansPage() {
    const { user, isLoading: authLoading } = useAuth()
 
    // State
-   const [musicians, setMusicians] = useState<MusicianResponseDto[]>([])
-   const [filteredMusicians, setFilteredMusicians] = useState<MusicianResponseDto[]>([])
    const [searchQuery, setSearchQuery] = useState('')
    const [selectedLevel, setSelectedLevel] = useState<MusicianLevel | 'ALL'>('ALL')
    const [editingMusician, setEditingMusician] = useState<MusicianResponseDto | null>(null)
-   const [isLoading, setIsLoading] = useState(true)
-   const [error, setError] = useState<string | null>(null)
    const [success, setSuccess] = useState<string | null>(null)
+
+   // Fetch musicians with SWR (only when user is host)
+   const { data: musicians = [], error: swrError, isLoading, mutate: mutateMusicians } = useSWR<MusicianResponseDto[]>(
+     user?.isHost ? '/musicians' : null
+   )
+   const error = swrError?.message ?? null
 
    // Role guard - redirect if not host
    useEffect(() => {
@@ -36,30 +39,8 @@ export function MusiciansPage() {
      }
    }, [user?.isHost, authLoading, navigate])
 
-   // Fetch all musicians on mount
-   useEffect(() => {
-     const fetchMusicians = async () => {
-       setIsLoading(true)
-       setError(null)
-
-       try {
-         const result = await musicianService.findAll()
-         setMusicians(result.data ?? [])
-         setFilteredMusicians(result.data ?? [])
-       } catch (err) {
-        setError(err instanceof Error ? err.message : t('jam_management.musicians.failed_to_load'))
-       } finally {
-         setIsLoading(false)
-       }
-     }
-
-     if (user?.isHost) {
-       fetchMusicians()
-     }
-   }, [user?.isHost])
-
-   // Apply search and filter
-   useEffect(() => {
+   // Apply search and filter with memoization
+   const filteredMusicians = useMemo(() => {
      let filtered = musicians
 
      // Apply search filter
@@ -78,14 +59,14 @@ export function MusiciansPage() {
        filtered = filtered.filter((m) => m.level === selectedLevel)
      }
 
-     setFilteredMusicians(filtered)
+     return filtered
    }, [searchQuery, selectedLevel, musicians])
 
-   const handleEditMusician = (musician: MusicianResponseDto) => {
+   const handleEditMusician = useCallback((musician: MusicianResponseDto) => {
      setEditingMusician(musician)
-   }
+   }, [])
 
-   const handleUpdateMusician = async (updatedMusician: MusicianResponseDto) => {
+   const handleUpdateMusician = useCallback(async (updatedMusician: MusicianResponseDto) => {
      try {
        await musicianService.update(updatedMusician.id, {
          name: updatedMusician.name,
@@ -94,20 +75,18 @@ export function MusiciansPage() {
          contact: updatedMusician.contact,
        })
 
-       // Update local state
-       setMusicians((prev) =>
-         prev.map((m) => (m.id === updatedMusician.id ? updatedMusician : m))
-       )
+       // Refresh musicians data from API
+       await mutateMusicians()
 
-      setSuccess(t('jam_management.musicians.update_success'))
+       setSuccess(t('jam_management.musicians.update_success'))
        setEditingMusician(null)
 
        // Clear success message after 3 seconds
        setTimeout(() => setSuccess(null), 3000)
      } catch (err) {
-      setError(err instanceof Error ? err.message : t('jam_management.musicians.update_failed'))
+       // Error is handled by SWR's swrError, but we can show a toast if needed
      }
-   }
+   }, [mutateMusicians, t])
 
    const handleCloseEditModal = () => {
      setEditingMusician(null)

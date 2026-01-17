@@ -4,18 +4,18 @@
  */
 
 import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth} from '../hooks/useAuth'
-import {ErrorAlert} from '../components/ErrorAlert'
-import {PageHeaderSkeleton} from '../components/PageHeaderSkeleton'
-import {ScheduleCardSkeleton} from '../components/ScheduleCardSkeleton'
-import {ScheduleDisplayItem} from '../components/schedule/ScheduleDisplayItem'
-import {ScheduleEnrollmentModal} from '../components/schedule/ScheduleEnrollmentModal'
-import {SidebarSectionSkeleton} from '../components/SidebarSectionSkeleton'
-import * as jamService from '../services/jamService'
-import {musicService} from '../services/musicService'
-import { scheduleService } from '../services/scheduleService'
+import {useAuth} from '../hooks'
+import useSWR from 'swr'
+import {ErrorAlert} from '../components'
+import {PageHeaderSkeleton} from '../components'
+import {ScheduleCardSkeleton} from '../components'
+import {ScheduleDisplayItem} from '../components'
+import {ScheduleEnrollmentModal} from '../components'
+import {SidebarSectionSkeleton} from '../components'
+import {musicService} from '../services'
+import {scheduleService} from '../services'
 import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto} from "../types/api.types.ts";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import {getInstrumentIcon} from "../components/schedule/RegistrationList.tsx";
 import {useTranslation} from 'react-i18next'
 import {getStatusIcon, getStatusLabel} from "../lib/schedule/statusHelpers.ts";
@@ -25,9 +25,10 @@ export function JamDetailPage() {
      const {jamId} = useParams<{ jamId: string }>()
     const navigate = useNavigate()
     const {isAuthenticated, user} = useAuth()
-    const [jam, setJam] = useState<JamResponseDto | null>(null)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
+    const { data: jam, error: jamError, isLoading } = useSWR<JamResponseDto | null>(
+      jamId ? `/jams/${jamId}` : null
+    )
+    const { mutate: mutateJam } = useSWR<JamResponseDto | null>(jamId ? `/jams/${jamId}` : null)
 
     const [showSuggestModal, setShowSuggestModal] = useState(false)
     const [suggestLoading, setSuggestLoading] = useState(false)
@@ -40,25 +41,7 @@ export function JamDetailPage() {
     const [selectedScheduleForEnroll, setSelectedScheduleForEnroll] = useState<ScheduleResponseDto | null>(null)
     const [enrollSuccess, setEnrollSuccess] = useState<string | null>(null)
 
-    const loadJamData = useCallback(async (id: string) => {
-        setLoading(true)
-        setError(null)
-        try {
-            const result = await jamService.findOne(id)
-            setJam(result.data)
-        } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : t('jams.loading_failed')
-            setError(errorMessage)
-        } finally {
-            setLoading(false)
-        }
-    }, [t])
 
-    useEffect(() => {
-        if (jamId) {
-            loadJamData(jamId)
-        }
-    }, [jamId, loadJamData])
 
     // Handle enrollment success - reload jam data from API
     const handleEnrollmentSuccess = useCallback(async () => {
@@ -70,13 +53,11 @@ export function JamDetailPage() {
         setEnrollSuccess(t('jams.enroll_success'))
 
         // Reload jam data from API to get the latest state
-        if (jamId) {
-            loadJamData(jamId)
-        }
+        await mutateJam()
 
         // Clear success message after 2 seconds
         setTimeout(() => setEnrollSuccess(null), 2000)
-    }, [jamId, loadJamData, t])
+    }, [t, mutateJam])
 
     const handleCloseEnrollModal = useCallback(() => {
         setShowEnrollModal(false)
@@ -85,17 +66,17 @@ export function JamDetailPage() {
 
     // Memoize filtered schedules to avoid re-computation
     const nonSuggestedSchedules = useMemo(() =>
-        jam?.schedules?.filter(s => s.status !== 'SUGGESTED') || [],
+        jam?.schedules?.filter((s: ScheduleResponseDto) => s.status !== 'SUGGESTED') || [],
         [jam?.schedules]
     )
 
     const suggestedSchedules = useMemo(() =>
-        jam?.schedules?.filter(s => s.status === 'SUGGESTED') || [],
+        jam?.schedules?.filter((s: ScheduleResponseDto) => s.status === 'SUGGESTED') || [],
         [jam?.schedules]
     )
 
     // Check if current user is already registered in this jam
-    const userRegistration = jam?.registrations?.find((reg) => reg.musician?.contact === user?.contact || reg.musician?.id === user?.id)
+    const userRegistration = jam?.registrations?.find((reg: any) => reg.musician?.contact === user?.contact || reg.musician?.id === user?.id)
 
     const handleEnrollClick = useCallback((schedule: ScheduleResponseDto) => {
         if (!isAuthenticated) {
@@ -144,15 +125,15 @@ export function JamDetailPage() {
             setSelectedSongId('')
             setShowSuggestModal(false)
 
-            loadJamData(jamId)
+            await mutateJam()
         } catch (err) {
             setSuggestError(err instanceof Error ? err.message : 'Failed to suggest song')
         } finally {
             setSuggestLoading(false)
         }
-    }, [selectedSongId, jamId, loadJamData, t])
+    }, [selectedSongId, jamId, t, mutateJam])
 
-    if (loading && !jam) {
+    if (isLoading && !jam) {
         return (
             <div className="min-h-screen bg-base-100">
                 {/* Page Header Skeleton */}
@@ -185,10 +166,10 @@ export function JamDetailPage() {
         )
     }
 
-    if (error || !jam) {
+    if (jamError || !jam) {
         return (<div className="min-h-screen bg-base-100 p-4">
             <div className="container mx-auto max-w-4xl">
-                <ErrorAlert message={error || t('jams.not_found')} title={t('jams.error_loading_jam')}/>
+                <ErrorAlert message={jamError?.message || t('jams.not_found')} title={t('jams.error_loading_jam')}/>
                 <button onClick={() => navigate('/jams')} className="btn btn-primary mt-4">
                     {t('jams.back_to_jams')}
                 </button>

@@ -31,5 +31,5 @@ export function SidebarSectionSkeleton() {
   )
 }
 
-export default SidebarSectionSkeleton
+
 

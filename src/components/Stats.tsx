@@ -39,4 +39,4 @@ export function Stats() {
   )
 }
 
-export default Stats
+

@@ -3,7 +3,7 @@
  * Shows after first social login to collect instrument & genre preferences
  */
 
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useAuth} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
 import {GENRES} from '../lib/musicConstants'
@@ -209,5 +209,5 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   )
 }
 
-export default OnboardingModal
+
 

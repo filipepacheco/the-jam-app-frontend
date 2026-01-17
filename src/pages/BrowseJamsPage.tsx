@@ -5,17 +5,17 @@
 
 import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useJams} from '../hooks/useJam'
-import {ErrorAlert} from '../components/ErrorAlert'
-import {JamCard} from '../components/JamCard'
-import {JamCardSkeleton} from '../components/JamCardSkeleton'
+import useSWR from 'swr'
+import {ErrorAlert} from '../components'
+import {JamCard} from '../components'
+import {JamCardSkeleton} from '../components'
 import type {JamStatus} from '../types/api.types'
 
 type DateSortOption = 'newest' | 'oldest' | 'upcoming'
 
 export function BrowseJamsPage() {
   const { t } = useTranslation()
-  const { data: jams, loading, error } = useJams()
+  const { data: jams, error, isLoading } = useSWR('/jams')
 
 
   // Filter state
@@ -102,7 +102,7 @@ export function BrowseJamsPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="Search jams"
-                  disabled={loading}
+                  disabled={isLoading}
                 />
               </div>
 
@@ -115,7 +115,7 @@ export function BrowseJamsPage() {
                   className="select select-bordered w-full select-sm sm:select-md text-xs sm:text-sm"
                   value={dateSort}
                   onChange={(e) => setDateSort(e.target.value as DateSortOption)}
-                  disabled={loading}
+                  disabled={isLoading}
                 >
                   <option value="newest">{t('jams.browse.sort.newest')}</option>
                   <option value="oldest">{t('jams.browse.sort.oldest')}</option>
@@ -135,7 +135,7 @@ export function BrowseJamsPage() {
                   onClick={() => setStatusFilter('ALL')}
                   role="tab"
                   aria-selected={statusFilter === 'ALL'}
-                  disabled={loading}
+                  disabled={isLoading}
                 >
                   {t('jams.browse.tabs.all')}
                 </button>
@@ -144,7 +144,7 @@ export function BrowseJamsPage() {
                   onClick={() => setStatusFilter('ACTIVE')}
                   role="tab"
                   aria-selected={statusFilter === 'ACTIVE'}
-                  disabled={loading}
+                  disabled={isLoading}
                 >
                   {t('jams.browse.tabs.active')}
                 </button>
@@ -153,7 +153,7 @@ export function BrowseJamsPage() {
                   onClick={() => setStatusFilter('INACTIVE')}
                   role="tab"
                   aria-selected={statusFilter === 'INACTIVE'}
-                  disabled={loading}
+                  disabled={isLoading}
                 >
                   {t('jams.browse.tabs.inactive')}
                 </button>
@@ -162,7 +162,7 @@ export function BrowseJamsPage() {
                   onClick={() => setStatusFilter('FINISHED')}
                   role="tab"
                   aria-selected={statusFilter === 'FINISHED'}
-                  disabled={loading}
+                  disabled={isLoading}
                 >
                   {t('jams.browse.tabs.finished')}
                 </button>
@@ -183,7 +183,7 @@ export function BrowseJamsPage() {
                 <button
                   onClick={clearFilters}
                   className="btn btn-ghost btn-xs sm:btn-sm text-xs sm:text-sm"
-                  disabled={loading}
+                  disabled={isLoading}
                 >
                   {t('jams.browse.clear_filters')}
                 </button>
@@ -193,7 +193,7 @@ export function BrowseJamsPage() {
         </div>
 
         {/* Loading State */}
-        {loading && (
+        {isLoading && (
           <div>
             <div className="flex justify-center items-center gap-3 mb-8">
               <span className="loading loading-spinner loading-md sm:loading-lg"></span>
@@ -213,7 +213,7 @@ export function BrowseJamsPage() {
         )}
 
         {/* Jam Cards Grid */}
-        {!loading && !error && filteredJams.length > 0 && (
+        {!isLoading && !error && filteredJams.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 animate-in fade-in duration-300">
             {filteredJams.map((jam) => (
               <JamCard
@@ -225,7 +225,7 @@ export function BrowseJamsPage() {
         )}
 
         {/* Empty State */}
-        {!loading && !error && filteredJams.length === 0 && (
+        {!isLoading && !error && filteredJams.length === 0 && (
           <div className="text-center py-8 sm:py-12 lg:py-16">
             <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">🎸</div>
             <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3">{t('jams.browse.empty_title')}</h3>
@@ -246,4 +246,4 @@ export function BrowseJamsPage() {
   )
 }
 
-export default BrowseJamsPage
+

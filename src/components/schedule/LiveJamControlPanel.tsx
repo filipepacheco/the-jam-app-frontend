@@ -4,7 +4,7 @@
  * Allows play/pause/skip and queue reordering
  */
 
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {GripVertical, Music, Pause, Play, SkipForward} from 'lucide-react'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {formatDuration} from '../../lib/formatters'
@@ -112,7 +112,7 @@ export function LiveJamControlPanel({
         throw new Error(errorData.error || t('errors.action_failed'))
       }
 
-      const result = await response.json()
+      await response.json();
 
       // Success feedback
       const actionLabels: Record<string, string> = {

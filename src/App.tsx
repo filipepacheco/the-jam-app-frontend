@@ -3,15 +3,26 @@ import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
 import {useTranslation} from 'react-i18next'
+import {SWRConfig} from 'swr'
+import {apiClient} from './lib/api'
 import Navbar from './components/Navbar'
-import { EnhancedHero } from './components/EnhancedHero'
+import {EnhancedHero} from './components/EnhancedHero'
 import Features from './components/Features'
-import { Stats } from './components/Stats'
-import { HowItWorks } from './components/HowItWorks'
-import { Testimonials } from './components/Testimonials'
+import {Stats} from './components/Stats'
+import {HowItWorks} from './components/HowItWorks'
+import {Testimonials} from './components/Testimonials'
 import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'
 import {SEO} from './components/SEO'
+// Keep eager (critical path)
+import {LoginPage} from './pages/LoginPage'
+import {BrowseJamsPage} from './pages/BrowseJamsPage'
+import {JamRegisterPage} from './pages/JamRegisterPage'
+import {PublicDashboardPage} from './pages/PublicDashboardPage'
+import AuthCallbackPage from "./pages/AuthCallbackPage.tsx"
+import {AuthProvider, JamProvider} from './contexts'
+import {OnboardingModal} from './components'
+import {useAuth} from './hooks'
 
 // Lazy-loaded pages - Priority 1 (Host-only)
 const HostDashboardPage = lazy(() => import('./pages/HostDashboardPage'))
@@ -26,28 +37,19 @@ const ProfilePage = lazy(() => import('./pages/ProfilePage'))
 const MusiciansPage = lazy(() => import('./pages/MusiciansPage'))
 const JamDetailPage = lazy(() => import('./pages/JamDetailPage'))
 
-// Lazy-loaded pages - Priority 3 (Test pages)
-const TestPage = lazy(() => import('./pages/TestPage'))
-const TestDataSeedPage = lazy(() => import('./pages/TestDataSeedPage'))
-const HostTestSongsPage = lazy(() => import('./pages/HostTestSongsPage'))
-const PostLoginBehaviorTestPage = lazy(() => import('./pages/PostLoginBehaviorTestPage'))
-const AuthFlowTestPage = lazy(() => import('./pages/AuthFlowTestPage'))
-const HookTestPage = lazy(() => import('./pages/HookTestPage'))
-const ErrorHandlingTestPage = lazy(() => import('./pages/ErrorHandlingTestPage'))
-const AuthTestPage = lazy(() => import('./pages/AuthTestPage'))
-const AuthContextTestPage = lazy(() => import('./pages/AuthContextTestPage'))
-const RouteGuardsExamplePage = lazy(() => import('./pages/RouteGuardsExamplePage'))
-const LocalStoragePersistenceTestPage = lazy(() => import('./pages/LocalStoragePersistenceTestPage'))
-
-// Keep eager (critical path)
-import {LoginPage} from './pages/LoginPage'
-import {BrowseJamsPage} from './pages/BrowseJamsPage'
-import {JamRegisterPage} from './pages/JamRegisterPage'
-import {PublicDashboardPage} from './pages/PublicDashboardPage'
-import AuthCallbackPage from "./pages/AuthCallbackPage.tsx"
-import {AuthProvider, JamProvider} from './contexts'
-import {OnboardingModal} from './components/OnboardingModal'
-import {useAuth} from './hooks/useAuth'
+/**
+ * SWR Fetcher Function
+ * Converts API response format to standard data format that SWR expects
+ */
+async function swrFetcher<T>(url: string): Promise<T> {
+  const response = await apiClient.get<T>(url)
+  
+  if (!response.success) {
+    throw new Error(response.message || 'Failed to fetch data')
+  }
+  
+  return response.data as T
+}
 
 /**
  * Route Loading Fallback Component
@@ -96,29 +98,9 @@ function HomePage() {
  */
 function AppContent() {
   // Check URL params for different test modes FIRST
-  const searchParams = new URLSearchParams(window.location.search)
-  const isTestMode = searchParams.get('test') === 'true'
-  const isHookTestMode = searchParams.get('hooks') === 'true'
-  const isErrorTestMode = searchParams.get('errors') === 'true'
-  const isAuthTestMode = searchParams.get('auth') === 'true'
-  const isAuthContextTestMode = searchParams.get('authContext') === 'true'
-  const isRouteGuardsTestMode = searchParams.get('routeGuards') === 'true'
-  const isLocalStorageTestMode = searchParams.get('localStorage') === 'true'
-  const isAuthFlowTestMode = searchParams.get('authFlow') === 'true'
-  const isPostLoginTestMode = searchParams.get('postLoginTest') === 'true'
+  new URLSearchParams(window.location.search);
 
-  // Return test pages if in test mode
-  if (isTestMode) return <TestPage />
-  if (isHookTestMode) return <HookTestPage />
-  if (isErrorTestMode) return <ErrorHandlingTestPage />
-  if (isAuthTestMode) return <AuthTestPage />
-  if (isAuthContextTestMode) return <AuthContextTestPage />
-  if (isRouteGuardsTestMode) return <RouteGuardsExamplePage />
-  if (isLocalStorageTestMode) return <LocalStoragePersistenceTestPage />
-  if (isAuthFlowTestMode) return <AuthFlowTestPage />
-  if (isPostLoginTestMode) return <PostLoginBehaviorTestPage />
-
-  // Normal app routing
+    // Normal app routing
   return (
     <Suspense fallback={<RouteLoadingFallback />}>
       <Routes>
@@ -174,12 +156,6 @@ function AppContent() {
           <HostJamSongsPage />
         </>
       } />
-      <Route path="/test/host-songs" element={
-        <>
-          <Navbar />
-          <HostTestSongsPage />
-        </>
-      } />
       <Route path="/host/dashboard" element={
         <>
           <Navbar />
@@ -210,13 +186,6 @@ function AppContent() {
           <JamDJControlPage />
         </>
       } />
-      <Route path="/test/seed-data" element={
-        <>
-          <Navbar />
-          <TestDataSeedPage />
-        </>
-      } />
-      <Route path="/post-login-test" element={<PostLoginBehaviorTestPage />} />
 
       {/* Catch-all - redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
@@ -242,19 +211,31 @@ function OnboardingWrapper() {
 
 /**
  * App Component
- * Root component with AuthProvider and BrowserRouter wrapper
+ * Root component with AuthProvider, SWRConfig, and BrowserRouter wrapper
  */
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <JamProvider>
-          <AppContent />
-          <OnboardingWrapper />
-        </JamProvider>
-      </AuthProvider>
+      <SWRConfig
+        value={{
+          fetcher: swrFetcher,
+          revalidateOnFocus: true,
+          revalidateOnReconnect: true,
+          dedupingInterval: 2000,
+          focusThrottleInterval: 5000,
+          errorRetryCount: 3,
+          errorRetryInterval: 5000,
+        }}
+      >
+        <AuthProvider>
+          <JamProvider>
+            <AppContent />
+            <OnboardingWrapper />
+          </JamProvider>
+        </AuthProvider>
+      </SWRConfig>
       <SpeedInsights />
-        <Analytics/>
+      <Analytics/>
     </BrowserRouter>
   )
 }

@@ -81,5 +81,5 @@ export function JamContextDisplay({ jam }: JamContextDisplayProps) {
   )
 }
 
-export default JamContextDisplay
+
 

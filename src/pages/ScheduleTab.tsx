@@ -1,9 +1,9 @@
 import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from "../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
-import {registrationService} from "../services/registrationService";
-import { scheduleService } from "../services/scheduleService";
-import {ScheduleCardManagement} from '../components/schedule/ScheduleCardManagement';
+import {registrationService} from "../services";
+import { scheduleService } from "../services";
+import {ScheduleCardManagement} from '../components';
 import {HostMusicianRegistrationModal} from "../components/schedule";
 
 /**

@@ -7,11 +7,6 @@ import {getToken, setToken} from '../lib/auth'
 import {getApiUrl} from '../lib/api/config'
 import type {AuthUser} from '../types/auth.types'
 
-interface LoginRequest {
-  email?: string
-  phone?: string
-}
-
 interface LoginResponse {
   userId: string
   name: string
@@ -20,10 +15,6 @@ interface LoginResponse {
   role: 'user'
   token: string
   isNewUser?: boolean
-}
-
-interface LogoutResponse {
-  success: boolean
 }
 
 interface ErrorResponse {

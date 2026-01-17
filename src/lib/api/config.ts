@@ -44,20 +44,14 @@ export const API_ENDPOINTS = {
   // Music/Songs (Músicas) endpoints
   music: '/musicas',
   musicById: (id: string) => `/musicas/${id}`,
-  musicByJam: (jamId: string) => `/jams/${jamId}/musicas`,
   linkMusicToJam: (musicId: string, jamId: string) => `/musicas/${musicId}/link-jam/${jamId}`,
 
   // Registrations (Inscrições) endpoints
   registrations: '/inscricoes',
   registrationById: (id: string) => `/inscricoes/${id}`,
-  registrationsByJam: (jamId: string) => `/jams/${jamId}/inscricoes`,
-  registrationsByMusician: (musicianId: string) => `/musicos/${musicianId}/inscricoes`,
-
   // Schedules (Escalas) endpoints
   schedules: '/escalas',
   scheduleById: (id: string) => `/escalas/${id}`,
-  schedulesByJam: (jamId: string) => `/jams/${jamId}/escalas`,
-  schedulesByMusician: (musicianId: string) => `/musicos/${musicianId}/escalas`,
   reorderSchedules: (jamId: string) => `/escalas/jam/${jamId}/reorder`,
 }
 

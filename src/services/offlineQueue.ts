@@ -117,20 +117,6 @@ class OfflineQueueManager {
   }
 
   /**
-   * Mark action as retried
-   */
-  incrementRetries(id: string): QueuedAction | null {
-    const action = this.queue.get(id)
-    if (!action) return null
-
-    action.retries++
-    this.saveToStorage()
-    this.notifyListeners()
-
-    return action
-  }
-
-  /**
    * Clear failed actions (retries exceeded)
    */
   clearFailed(): number {
@@ -163,27 +149,6 @@ class OfflineQueueManager {
     this.notifyListeners()
     console.log(`🗑️ Cleared ${size} queued actions`)
     return size
-  }
-
-  /**
-   * Clear queue for specific event
-   */
-  clearByEvent(event: string): number {
-    let removed = 0
-
-    for (const [id, action] of this.queue.entries()) {
-      if (action.event === event) {
-        this.queue.delete(id)
-        removed++
-      }
-    }
-
-    if (removed > 0) {
-      this.saveToStorage()
-      this.notifyListeners()
-    }
-
-    return removed
   }
 
   /**

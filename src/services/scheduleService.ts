@@ -26,24 +26,6 @@ export const scheduleService = {
   },
 
   /**
-   * Get all schedules for a specific jam
-   * @param jamId - Jam ID
-   * @returns Promise with array of schedules
-   */
-  async findByJam(jamId: string): Promise<ApiResponse<ScheduleResponseDto[]>> {
-    return apiClient.get<ScheduleResponseDto[]>(API_ENDPOINTS.schedulesByJam(jamId))
-  },
-
-  /**
-   * Get all schedules for a specific musician
-   * @param musicianId - Musician ID (músico ID)
-   * @returns Promise with array of schedules
-   */
-  async findByMusician(musicianId: string): Promise<ApiResponse<ScheduleResponseDto[]>> {
-    return apiClient.get<ScheduleResponseDto[]>(API_ENDPOINTS.schedulesByMusician(musicianId))
-  },
-
-  /**
    * Update a schedule entry
    * @param id - Schedule ID
    * @param data - Update data

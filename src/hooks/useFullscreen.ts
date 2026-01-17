@@ -3,7 +3,7 @@
  * Manages fullscreen state and toggles
  */
 
-import {useCallback, useState} from 'react'
+import React, {useCallback, useState} from 'react'
 
 export function useFullscreen(elementRef: React.RefObject<HTMLDivElement | null>) {
   const [isFullscreen, setIsFullscreen] = useState(false)

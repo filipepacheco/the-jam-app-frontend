@@ -4,7 +4,7 @@
  * This replaces/extends the OnboardingModal to include name field
  */
 
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useAuth} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
 import {useTranslation} from 'react-i18next'
@@ -200,5 +200,5 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
   )
 }
 
-export default ProfileSetupModal
+
 

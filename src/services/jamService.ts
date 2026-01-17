@@ -5,7 +5,7 @@
 
 import {getToken} from '../lib/auth'
 import {getApiUrl} from '../lib/api/config'
-import type {JamResponseDto, LiveDashboardResponseDto} from '../types/api.types'
+import type {JamResponseDto} from '../types/api.types'
 
 interface SpecialtySlot {
   specialty: string
@@ -215,34 +215,6 @@ export async function getJamSpecialties(jamId: string): Promise<SpecialtySlot[]>
 }
 
 /**
- * Get available slots for a specific specialty
- * @param jamId - Jam ID
- * @param specialty - Specialty name
- * @returns Number of available slots
- */
-export async function getAvailableSlots(jamId: string, specialty: string): Promise<number> {
-  const slots = await getJamSpecialties(jamId)
-  const slot = slots.find((s) => s.specialty.toLowerCase() === specialty.toLowerCase())
-
-  if (!slot) {
-    return 0
-  }
-
-  return Math.max(0, slot.required - slot.registered)
-}
-
-/**
- * Check if specialty has available slots
- * @param jamId - Jam ID
- * @param specialty - Specialty name
- * @returns True if slots available
- */
-export async function hasAvailableSlots(jamId: string, specialty: string): Promise<boolean> {
-  const available = await getAvailableSlots(jamId, specialty)
-  return available > 0
-}
-
-/**
  * Get most needed specialty for a jam
  * Returns the specialty with the most available slots
  * @param jamId - Jam ID
@@ -337,43 +309,3 @@ export async function deleteFn(id: string): Promise<ApiResponse<{ success: boole
   }
 }
 
-/**
- * Fetch live dashboard data for a jam session
- * Optimized for public dashboard display with current and next songs
- * @param id - Jam ID
- * @returns Promise with live dashboard data
- */
-export async function getLiveDashboard(id: string): Promise<ApiResponse<LiveDashboardResponseDto>> {
-  try {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-    }
-
-    const token = getToken()
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`
-    }
-
-    const response = await fetch(getApiUrl(`/jams/${id}/live/dashboard`), {
-      method: 'GET',
-      headers,
-    })
-
-    if (!response.ok) {
-      const error: ErrorResponse = await response.json()
-      throw new Error(error.message || 'Failed to load dashboard data')
-    }
-
-    const data: LiveDashboardResponseDto = await response.json()
-
-    return {
-      data,
-      status: response.status,
-    }
-  } catch (err) {
-    if (err instanceof Error) {
-      throw err
-    }
-    throw new Error('Connection error. Please try again.')
-  }
-}

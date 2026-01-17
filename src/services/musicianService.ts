@@ -34,15 +34,6 @@ export const musicianService = {
   },
 
   /**
-   * Get a single musician by ID
-   * @param id - Musician ID
-   * @returns Promise with musician data
-   */
-  async findOne(id: string): Promise<ApiResponse<MusicianResponseDto>> {
-    return apiClient.get<MusicianResponseDto>(API_ENDPOINTS.musicianById(id))
-  },
-
-  /**
    * Update a musician
    * @param id - Musician ID
    * @param data - Update data

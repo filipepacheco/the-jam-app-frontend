@@ -118,4 +118,4 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
   )
 })
 
-export default JamCard
+

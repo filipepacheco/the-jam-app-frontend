@@ -38,5 +38,5 @@ export function ScheduleCardSkeleton() {
   )
 }
 
-export default ScheduleCardSkeleton
+
 

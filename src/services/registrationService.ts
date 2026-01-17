@@ -21,24 +21,6 @@ export const registrationService = {
   },
 
   /**
-   * Get all registrations for a specific jam
-   * @param jamId - Jam ID
-   * @returns Promise with array of registrations
-   */
-  async findByJam(jamId: string): Promise<ApiResponse<RegistrationResponseDto[]>> {
-    return apiClient.get<RegistrationResponseDto[]>(API_ENDPOINTS.registrationsByJam(jamId))
-  },
-
-  /**
-   * Get all registrations for a specific musician
-   * @param musicianId - Musician ID (músico ID)
-   * @returns Promise with array of registrations
-   */
-  async findByMusician(musicianId: string): Promise<ApiResponse<RegistrationResponseDto[]>> {
-    return apiClient.get<RegistrationResponseDto[]>(API_ENDPOINTS.registrationsByMusician(musicianId))
-  },
-
-  /**
    * Update a registration
    * @param id - Registration ID
    * @param data - Registration data to update

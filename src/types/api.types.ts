@@ -148,28 +148,6 @@ export interface JamResponseDto {
 // ============================================================================
 
 /**
- * Create jam session request
- */
-export interface CreateJamDto {
-  name: string
-  description?: string
-  date?: string
-  location: string
-  hostMusicianId?: string
-  hostName?: string
-  hostContact?: string
-  qrCode?: string
-  status?: JamStatus
-}
-
-/**
- * Update jam session request
- */
-export interface UpdateJamDto {
-  status?: JamStatus
-}
-
-/**
  * Create musician request
  */
 export interface CreateMusicianDto {
@@ -317,35 +295,7 @@ export interface ApiError {
 // PAGINATION SUPPORT (for future use)
 // ============================================================================
 
-/**
- * Paginated response wrapper
- */
-export interface PaginatedResponse<T> {
-  data: T[]
-  total: number
-  page: number
-  pageSize: number
-  totalPages: number
-}
-
 // ============================================================================
 // UTILITY TYPES
 // ============================================================================
 
-/**
- * Loading state for async operations
- */
-export interface LoadingState {
-  loading: boolean
-  error: string | null
-}
-
-/**
- * Hook return type with data, loading, and error
- */
-export interface UseQueryResult<T> {
-  data: T | null
-  loading: boolean
-  error: string | null
-  refetch: () => void
-}

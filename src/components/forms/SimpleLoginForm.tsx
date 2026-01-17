@@ -3,7 +3,7 @@
  * Single input for email or phone login with smart post-login redirects
  */
 
-import {useState} from 'react'
+import React, {useState} from 'react'
 import {useAuth} from '../../hooks'
 import {loginOrRegister} from '../../services'
 import {ErrorAlert} from '../index'
@@ -13,7 +13,7 @@ import {useTranslation} from 'react-i18next'
 export function SimpleLoginForm() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const location = useLocation()
+  useLocation();
   const { login } = useAuth()
   const [input, setInput] = useState('')
   const [error, setError] = useState<string | null>(null)
