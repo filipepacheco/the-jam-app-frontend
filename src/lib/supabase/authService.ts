@@ -232,28 +232,3 @@ export async function exchangeCodeForSession(code: string): Promise<SupabaseAuth
   }
 }
 
-/**
- * Refresh the current session to get a new access token
- * This is called when the current token expires
- * @returns New access token or null if refresh fails
- */
-export async function refreshSupabaseSession(): Promise<string | null> {
-  if (!isSupabaseConfigured()) {
-    return null
-  }
-
-  try {
-    const { data, error } = await supabase.auth.refreshSession()
-
-    if (error || !data.session?.access_token) {
-      console.error('Token refresh failed:', error?.message || 'No new token')
-      return null
-    }
-
-    return data.session.access_token
-  } catch (err) {
-    console.error('Token refresh error:', err)
-    return null
-  }
-}
-

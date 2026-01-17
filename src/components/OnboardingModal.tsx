@@ -6,7 +6,6 @@
 import React, {useState} from 'react'
 import {useAuth} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
-import {GENRES} from '../lib/musicConstants'
 import {useTranslation} from 'react-i18next'
 
 interface OnboardingModalProps {
@@ -14,13 +13,15 @@ interface OnboardingModalProps {
   onClose: () => void
 }
 
+const SKILL_LEVELS = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'PROFESSIONAL']
+
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const { t } = useTranslation()
   const { user, completeOnboarding, clearNewUserFlag } = useAuth()
   const [name, setName] = useState(user?.name || '')
   const [phone, setPhone] = useState(user?.phone || '')
   const [instrument, setInstrument] = useState('')
-  const [genre, setGenre] = useState('')
+  const [level, setLevel] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -55,17 +56,22 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       return
     }
 
-    // At least instrument or genre should be provided
-    if (!instrument && !genre) {
-      setError(t('jams.onboarding.instrument_genre_error'))
+    // Instrument and skill level are required
+    if (!instrument) {
+      setError(t('jams.onboarding.instrument_required'))
+      return
+    }
+
+    if (!level) {
+      setError(t('jams.onboarding.level_required'))
       return
     }
 
     setIsLoading(true)
 
     try {
-      // Update profile with name and phone first
-      const result = await completeOnboarding(instrument, genre, { name: name.trim(), phone })
+      // Update profile with instrument, level, and optional name/phone
+      const result = await completeOnboarding(instrument, level as any, { name: name.trim(), phone })
 
       if (result.success) {
         onClose()
@@ -150,21 +156,21 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             </select>
           </div>
 
-          {/* Genre Selection */}
+          {/* Skill Level Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">{t('jams.onboarding.genre_q')}</span>
+              <span className="label-text font-semibold">{t('jams.onboarding.level_q')}</span>
             </label>
             <select
               className="select select-bordered w-full"
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
+              value={level}
+              onChange={(e) => setLevel(e.target.value)}
               disabled={isLoading}
             >
-              <option value="">{t('jams.onboarding.genre_choose')}</option>
-              {GENRES.map((g) => (
-                <option key={g} value={g}>
-                  {g}
+              <option value="">{t('jams.onboarding.level_choose')}</option>
+              {SKILL_LEVELS.map((lv) => (
+                <option key={lv} value={lv}>
+                  {lv}
                 </option>
               ))}
             </select>
@@ -193,7 +199,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             <button
               type="submit"
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
-              disabled={isLoading || !name.trim() || (!instrument && !genre)}
+              disabled={isLoading || !name.trim() || !instrument || !level}
             >
               {isLoading ? t('musician_form.saving') : t('jams.onboarding.get_started')}
             </button>

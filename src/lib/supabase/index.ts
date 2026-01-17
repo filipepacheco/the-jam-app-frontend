@@ -17,7 +17,6 @@ export {
   updatePassword,
   onAuthStateChange,
   exchangeCodeForSession,
-  refreshSupabaseSession,
   type OAuthProvider,
   type SupabaseAuthResult,
 } from './authService'

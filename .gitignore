@@ -32,3 +32,6 @@ dist-ssr
 claude.md
 **/claude.md
 **/**/claude.md
+
+.serena
+docs

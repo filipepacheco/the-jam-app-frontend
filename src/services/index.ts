@@ -4,13 +4,6 @@
  */
 
 export { loginOrRegister, logout } from './authService'
-export {
-  syncSupabaseUserToBackend,
-  updateProfile,
-  logoutFromBackend,
-  type BackendSyncResponse,
-  type SyncResult,
-} from './backendAuthService'
 
 export * as jamService from './jamService'
 export { musicianService } from './musicianService'

@@ -28,22 +28,6 @@ export type ScheduleStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCEL
 // AUTHENTICATION DTOs (from backend auth endpoints)
 // ============================================================================
 
-/**
- * Authentication response from backend
- * Returned by POST /auth/login, POST /auth/sync-user, GET /auth/me
- */
-export interface BackendAuthResponseDto {
-  userId: string
-  name?: string
-  email?: string
-  phone?: string
-  isHost: boolean
-  token: string
-  isNewUser: boolean
-  instrument?: string
-  level?: MusicianLevel
-}
-
 // ============================================================================
 // RESPONSE DTOs (from backend)
 // ============================================================================

@@ -64,15 +64,6 @@ export function getApiBaseUrl(): string {
 }
 
 /**
- * Helper function to get full API URL for an endpoint
- * @param endpoint - API endpoint path
- * @returns Full API URL
- */
-export function getApiUrl(endpoint: string): string {
-  return `${API_CONFIG.baseURL}${endpoint}`
-}
-
-/**
  * Validate that required environment variables are set
  * @throws Error if VITE_API_URL is invalid
  */

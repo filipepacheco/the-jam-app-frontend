@@ -8,7 +8,7 @@ import React, {useState} from 'react'
 import {GripVertical, Music, Pause, Play, SkipForward} from 'lucide-react'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {formatDuration} from '../../lib/formatters'
-import {getToken} from '../../lib/auth'
+import {apiClient} from '../../lib/api'
 import {getInstrumentIcon} from './RegistrationList'
 import {useTranslation} from 'react-i18next'
 
@@ -92,27 +92,11 @@ export function LiveJamControlPanel({
     setIsLoading(true)
 
     try {
-      const token = getToken()
+      const response = await apiClient.post(`/jams/${jam.id}/live/control`, action)
 
-      if (!token) {
-        throw new Error(t('errors.no_token_found'))
+      if (!response.success) {
+        throw new Error(response.error || t('errors.action_failed'))
       }
-
-      const response = await fetch(`/api/jams/${jam.id}/live/control`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(action),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || t('errors.action_failed'))
-      }
-
-      await response.json();
 
       // Success feedback
       const actionLabels: Record<string, string> = {

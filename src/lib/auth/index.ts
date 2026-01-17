@@ -3,24 +3,13 @@
  * Central export point for authentication utilities
  */
 
-export { setToken, getToken, removeToken, isAuthenticated, clearAuth } from './authStorage'
+export { getAccessToken, refreshAccessToken } from './tokenManager'
 
-export {
-  hasPermission,
-  hasRequiredRole,
-  canAccess,
-  getDefaultRedirectByRole,
-  getRoleLabel,
-  isResourceOwner,
-  canEditJam,
-  canDeleteJam,
-  canManageRegistrations,
-  canViewOwnRegistrations,
-  canRegisterForJam,
-  canCreateJam,
-  canViewJamDetails,
-  canViewMusicians,
-  canViewMusic,
-  canViewDashboard,
-} from './roleUtils'
+// Dummy function for backward compatibility
+export function clearAuth(): void {
+  // Auth state is now managed by Supabase and AuthContext
+}
+
+// Re-export role utilities
+export * from './roleUtils'
 

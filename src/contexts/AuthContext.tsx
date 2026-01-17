@@ -3,26 +3,21 @@
  * React Context for managing role-based authentication state with Supabase
  */
 
-import {createContext, type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {createContext, type ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
 import type {AuthContextType, AuthUser, UpdateProfileDto, UserRole} from '../types/auth.types'
 import type {OAuthProvider} from '../lib/supabase'
 import {
   getCurrentSession,
   isSupabaseConfigured,
   onAuthStateChange,
-  refreshSupabaseSession,
   resetPassword as supabaseResetPassword,
   signInWithEmail as supabaseSignIn,
   signInWithOAuth as supabaseOAuth,
   signOut as supabaseSignOut,
   signUpWithEmail as supabaseSignUp,
 } from '../lib/supabase'
-import {clearAuth, getToken, setToken} from '../lib/auth'
-import {
-  logoutFromBackend,
-  syncSupabaseUserToBackend,
-  updateProfile as updateProfileService
-} from '../services/backendAuthService'
+import {clearAuth} from '../lib/auth'
+import {apiClient} from '../lib/api'
 
 /**
  * Create the Authentication Context
@@ -57,225 +52,81 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isNewUser, setIsNewUser] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
-  // Track sync attempts to prevent duplicate calls
-  const syncTimeoutRef = useRef<number | null>(null)
-  const lastSyncTimeRef = useRef<number>(0)
-  const isSyncingRef = useRef(false)
-
-  // ...existing code...
-
   /**
-   * Sync with backend with token refresh and deduplication
-   * Prevents duplicate sync calls and ensures token is fresh before syncing
+   * Load user profile from backend via API client
    */
-  const syncWithBackendSafe = useCallback(async (session?: { access_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown>; phone?: string } }) => {
-    // Prevent concurrent syncs
-    if (isSyncingRef.current) {
-      if (import.meta.env.DEV) {
-        console.log('⏳ Sync already in progress, skipping duplicate call')
-      }
-      return { success: true, error: 'Syncing in progress...' }
-    }
-
-    // Prevent duplicate syncs within 1 second
-    const now = Date.now()
-    if (now - lastSyncTimeRef.current < 1000) {
-      if (import.meta.env.DEV) {
-        console.log('⏳ Sync called too recently, skipping duplicate call')
-      }
-      return { success: true, error: 'Sync called too recently' }
-    }
-
-    // Clear any pending retry
-    if (syncTimeoutRef.current) {
-      clearTimeout(syncTimeoutRef.current)
-      syncTimeoutRef.current = null
-    }
-
-    isSyncingRef.current = true
-    lastSyncTimeRef.current = now
-
+  const loadUserProfile = useCallback(async (): Promise<AuthUser | null> => {
     try {
-      let sessionToSync = session
-
-      // If no session provided, refresh from Supabase to get fresh token
-      if (!sessionToSync && isSupabaseConfigured()) {
-        if (import.meta.env.DEV) {
-          console.log('🔄 Refreshing Supabase session before sync...')
-        }
-        const refreshedToken = await refreshSupabaseSession()
-        if (!refreshedToken) {
-          throw new Error('Failed to refresh token')
-        }
-
-        // Get fresh session
-        const freshSession = await getCurrentSession()
-        if (!freshSession) {
-          throw new Error('No session after refresh')
-        }
-        sessionToSync = freshSession
-      }
-
-      if (!sessionToSync) {
-        throw new Error('No session available for sync')
-      }
-
-      if (import.meta.env.DEV) {
-        console.log('✅ Syncing with fresh token')
-      }
-
-      // Now perform the sync
-      const syncResult = await syncSupabaseUserToBackend(sessionToSync as Parameters<typeof syncSupabaseUserToBackend>[0])
-
-      if (syncResult.error) {
-        console.warn('Backend sync warning:', syncResult.error)
-      }
-
-      // Store token
-      setToken(syncResult.token)
-      localStorage.setItem('auth_user', JSON.stringify(syncResult.user))
-
-      if (import.meta.env.DEV) {
-        console.log('✅ Sync completed successfully')
-      }
-
-      // Update state
-      setUser(syncResult.user)
-      setRoleState(syncResult.user.role)
-      setIsAuthenticated(true)
-      setIsNewUser(syncResult.isNewUser)
-
-      return { success: true, isNewUser: syncResult.isNewUser }
+      const response = await apiClient.get<AuthUser>('/auth/me')
+      return response.data || null
     } catch (err) {
-      console.error('Sync error:', err)
-
-      // Retry after 2 seconds
-      syncTimeoutRef.current = window.setTimeout(() => {
-        if (import.meta.env.DEV) {
-          console.log('🔄 Retrying sync...')
-        }
-        syncWithBackendSafe()
-      }, 2000)
-
-      return { success: false, error: 'Sync failed' }
-    } finally {
-      isSyncingRef.current = false
+      console.error('Failed to load profile:', err)
+      return null
     }
   }, [])
 
-  /**
-   * Handle successful authentication - sync with backend
-   * Returns error if sync fails so login form can display it to user
-   */
-  const handleAuthSuccess = useCallback(async (session: { access_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown>; phone?: string } }) => {
-    const result = await syncWithBackendSafe(session)
 
-    // If sync failed, return error to caller (e.g., login form)
-    if (!result.success) {
-      return {
-        success: false,
-        error: result.error || 'Failed to sync with server. Please try again.',
-      }
-    }
-
-    return result
-  }, [syncWithBackendSafe])
 
   /**
    * Initialize auth state from Supabase session on mount
    */
   useEffect(() => {
     const initializeAuth = async () => {
+      setIsLoading(true)
+
       try {
-        // First, check for existing Supabase session
-        if (isSupabaseConfigured()) {
-          const session = await getCurrentSession()
+        const session = await getCurrentSession()
 
-          if (session) {
-            // User has active Supabase session
-            // Check if we already synced this user (token in localStorage)
-            const existingToken = getToken()
-            if (existingToken) {
-              // Already synced, just restore from storage
-              const storedUser = localStorage.getItem('auth_user')
-              if (storedUser) {
-                const parsedUser: AuthUser = JSON.parse(storedUser)
-                setUser(parsedUser)
-                setRoleState(parsedUser.role)
-                setIsAuthenticated(true)
-                setIsLoading(false)
-                return
-              }
-            }
+        if (session?.user) {
+          const profile = await loadUserProfile()
 
-            // First time with this session, sync to backend
-            await handleAuthSuccess(session)
-            setIsLoading(false)
-            return
+          if (profile) {
+            setUser(profile)
+            setRoleState(profile.role)
+            setIsAuthenticated(true)
+            localStorage.setItem('auth_user', JSON.stringify(profile))
           }
         }
-
-        // Fallback: check localStorage for existing session (backward compatibility)
-        const token = getToken()
-        const storedUser = localStorage.getItem('auth_user')
-
-        if (token && storedUser) {
-          const parsedUser: AuthUser = JSON.parse(storedUser)
-          setUser(parsedUser)
-          setRoleState(parsedUser.role)
-          setIsAuthenticated(true)
-        } else {
-          setUser(null)
-          setRoleState('viewer')
-          setIsAuthenticated(false)
-        }
       } catch (err) {
-        console.error('Failed to initialize auth:', err)
-        setUser(null)
-        setRoleState('viewer')
-        setIsAuthenticated(false)
+        console.error('Auth initialization error:', err)
       } finally {
         setIsLoading(false)
       }
     }
 
-    initializeAuth().then()
+    initializeAuth()
 
-    // Subscribe to Supabase auth state changes
+    // Subscribe to auth state changes
     if (isSupabaseConfigured()) {
       const { unsubscribe } = onAuthStateChange(async (event, session) => {
-        console.log('Auth state change:', event)
-
         if (event === 'SIGNED_IN' && session) {
-          // Check if already synced
-          const existingToken = getToken()
-          if (!existingToken) {
-            await handleAuthSuccess(session)
+          const profile = await loadUserProfile()
+          if (profile) {
+            setUser(profile)
+            setRoleState(profile.role)
+            setIsAuthenticated(true)
+            setIsNewUser(profile.isNewUser || false)
+            localStorage.setItem('auth_user', JSON.stringify(profile))
           }
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
           setRoleState('viewer')
           setIsAuthenticated(false)
           setIsNewUser(false)
-          clearAuth()
           localStorage.removeItem('auth_user')
-        } else if (event === 'TOKEN_REFRESHED' && session) {
-          // When Supabase token is refreshed, re-sync with backend to get fresh JWT
-          if (import.meta.env.DEV) {
-            console.log('🔄 Supabase token refreshed - triggering backend resync')
-          }
-          await syncWithBackendSafe(session)
+        } else if (event === 'TOKEN_REFRESHED') {
+          // No action needed - Supabase handles refresh internally
         }
       })
 
       return () => unsubscribe()
     }
-  }, [handleAuthSuccess])
+  }, [loadUserProfile])
 
   /**
    * Login with email and password (Supabase)
    */
-  const loginWithEmail = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+  const loginWithEmail = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string; isNewUser?: boolean }> => {
     if (!isSupabaseConfigured()) {
       return { success: false, error: 'Supabase is not configured' }
     }
@@ -288,15 +139,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (result.session) {
-        const authResult = await handleAuthSuccess(result.session)
-        // Propagate backend sync errors to caller
-        if (!authResult.success) {
-          return {
-            success: false,
-            error: authResult.error || 'Failed to complete login. Please try again.',
-          }
+        const profile = await loadUserProfile()
+
+        if (!profile) {
+          return { success: false, error: 'Failed to load profile' }
         }
-        return authResult
+
+        setUser(profile)
+        setRoleState(profile.role)
+        setIsAuthenticated(true)
+        setIsNewUser(profile.isNewUser || false)
+        localStorage.setItem('auth_user', JSON.stringify(profile))
+
+        return { success: true, isNewUser: profile.isNewUser }
       }
 
       return { success: false, error: 'No session returned' }
@@ -305,12 +160,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed'
       return { success: false, error: errorMessage }
     }
-  }, [handleAuthSuccess])
+  }, [loadUserProfile])
 
   /**
    * Sign up with email and password (Supabase)
    */
-  const signUpWithEmailFn = useCallback(async (email: string, password: string, name?: string): Promise<{ success: boolean; error?: string; message?: string }> => {
+  const signUpWithEmailFn = useCallback(async (email: string, password: string, name?: string): Promise<{ success: boolean; error?: string; message?: string; isNewUser?: boolean }> => {
     if (!isSupabaseConfigured()) {
       return { success: false, error: 'Supabase is not configured' }
     }
@@ -324,15 +179,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // If email confirmation is required, session might be null
       if (result.session) {
-        const authResult = await handleAuthSuccess(result.session)
-        // Propagate backend sync errors to caller
-        if (!authResult.success) {
-          return {
-            success: false,
-            error: authResult.error || 'Failed to complete signup. Please try again.',
-          }
+        const profile = await loadUserProfile()
+
+        if (!profile) {
+          return { success: false, error: 'Failed to load profile' }
         }
-        return authResult
+
+        setUser(profile)
+        setRoleState(profile.role)
+        setIsAuthenticated(true)
+        setIsNewUser(profile.isNewUser || false)
+        localStorage.setItem('auth_user', JSON.stringify(profile))
+
+        return { success: true, isNewUser: profile.isNewUser }
       }
 
       // Email confirmation required
@@ -342,7 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const errorMessage = err instanceof Error ? err.message : 'Sign up failed'
       return { success: false, error: errorMessage }
     }
-  }, [handleAuthSuccess])
+  }, [loadUserProfile])
 
   /**
    * Login with OAuth provider (Google, GitHub, etc.)
@@ -370,51 +229,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   /**
    * Logout user
-   * Returns error if backend logout fails (but still clears local state)
    */
   const logout = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
     setIsLoggingOut(true)
-    let logoutError: string | null = null
 
     try {
-      const token = getToken()
-
-      // Logout from backend first
-      if (token) {
-        try {
-          await logoutFromBackend(token)
-        } catch (err) {
-          logoutError = 'Failed to clear backend session'
-          console.error('Backend logout error:', err)
-          // Continue with local logout anyway
-        }
-      }
-
       // Logout from Supabase
       if (isSupabaseConfigured()) {
-        try {
-          await supabaseSignOut()
-        } catch (err) {
-          if (!logoutError) {
-            logoutError = 'Failed to clear Supabase session'
-          }
-          console.error('Supabase logout error:', err)
-          // Continue with local logout anyway
-        }
+        await supabaseSignOut()
       }
 
-      // Always clear local state
+      // Clear local state
       clearAuth()
       localStorage.removeItem('auth_user')
       setUser(null)
       setRoleState('viewer')
       setIsAuthenticated(false)
       setIsNewUser(false)
-
-      if (logoutError) {
-        console.warn('⚠️ Logout warning:', logoutError)
-        return { success: true, error: logoutError }
-      }
 
       return { success: true }
     } catch (err) {
@@ -459,9 +290,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Legacy login method (for backward compatibility)
    */
-  const login = useCallback((authUser: AuthUser, token: string) => {
+  const login = useCallback((authUser: AuthUser) => {
     try {
-      setToken(token)
       localStorage.setItem('auth_user', JSON.stringify(authUser))
       setUser(authUser)
       setRoleState(authUser.role)
@@ -498,38 +328,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user])
 
   /**
-   * Complete onboarding - update instrument preferences
+   * Complete onboarding - update instrument, skill level, and contact info
    */
-  const completeOnboarding = useCallback(async (instrument: string, genre: string, profileData?: { name?: string; phone?: string }): Promise<{ success: boolean; error?: string }> => {
+  const completeOnboarding = useCallback(async (instrument: string, level: string, profileData?: { name?: string; phone?: string; contact?: string }): Promise<{ success: boolean; error?: string }> => {
     if (!user) {
       return { success: false, error: 'Not authenticated' }
     }
 
-    const token = getToken()
-    if (!token) {
-      return { success: false, error: 'No auth token' }
-    }
-
     try {
-      // Prepare update object with instrument and optional name/phone
-      const updatePayload: UpdateProfileDto = { instrument }
+      // Prepare update object with required fields (instrument and level are required for registrationComplete)
+      const updatePayload: UpdateProfileDto = { instrument, level: level as any }
       if (profileData?.name) updatePayload.name = profileData.name
-      if (profileData?.phone) updatePayload.contact = profileData.phone
+      if (profileData?.phone) updatePayload.phone = profileData.phone
+      if (profileData?.contact) updatePayload.contact = profileData.contact
 
-      const result = await updateProfileService(token, updatePayload)
+      const response = await apiClient.patch<AuthUser>('/auth/profile', updatePayload)
 
-      if (result.success) {
+      if (response.success && response.data) {
         // Update local user state
-        const updatedUser = { ...user, instrument, genre }
-        if (profileData?.name) updatedUser.name = profileData.name
-        if (profileData?.phone) updatedUser.phone = profileData.phone
-
-        localStorage.setItem('auth_user', JSON.stringify(updatedUser))
-        setUser(updatedUser)
+        localStorage.setItem('auth_user', JSON.stringify(response.data))
+        setUser(response.data)
         setIsNewUser(false)
       }
 
-      return { success: result.success, error: result.error }
+      return { success: response.success, error: response.error }
     } catch (err) {
       console.error('Onboarding error:', err)
       return { success: false, error: 'Failed to update profile' }
@@ -551,23 +373,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: false, error: 'Not authenticated' }
     }
 
-    const token = getToken()
-    if (!token) {
-      return { success: false, error: 'No auth token' }
-    }
-
     try {
-      const result = await updateProfileService(token, updates)
+      const response = await apiClient.patch<AuthUser>('/auth/profile', updates)
 
-      if (result.success && result.data) {
+      if (response.success && response.data) {
         // Update local user state
-        const updatedUser = { ...user, ...result.data }
+        const updatedUser = { ...user, ...response.data }
         localStorage.setItem('auth_user', JSON.stringify(updatedUser))
         setUser(updatedUser)
         setRoleState(updatedUser.role)
       }
 
-      return result
+      return response
     } catch (err) {
       console.error('Profile update error:', err)
       return { success: false, error: 'Failed to update profile' }

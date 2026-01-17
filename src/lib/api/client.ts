@@ -7,8 +7,7 @@ import type {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 import axios, {AxiosError} from 'axios'
 import {API_CONFIG} from './config'
 import type {ApiError, ApiResponse} from '../../types/api.types'
-
-import {clearAuth} from '../auth'
+import {clearAuth, getAccessToken, refreshAccessToken} from '../auth'
 
 /**
  * API Client class
@@ -71,19 +70,7 @@ class ApiClient {
     return response.data
   }
 
-  /**
-   * Token refresh is handled by AuthContext via Supabase auth listeners
-   * This method is deprecated and kept for reference only
-   * DO NOT use this - 401 errors should trigger logout/redirect
-   */
-  private async refreshTokenFromSupabase(): Promise<string | null> {
-    if (import.meta.env.DEV) {
-      console.error('❌ API Client token refresh called - this should never happen!')
-      console.error('❌ Token refresh is handled by AuthContext, not the API client')
-      console.error('❌ If you see this error, there is a bug in the 401 handling logic')
-    }
-    return null
-  }
+
 
   /**
    * Setup request and response interceptors
@@ -92,12 +79,12 @@ class ApiClient {
     // Request interceptor - add auth token
     this.client.interceptors.request.use(
       async (config) => {
-        // Get token from localStorage (set by AuthContext from Supabase or legacy auth)
-        const token = localStorage.getItem('auth_token')
+        // Get token from Supabase session
+        const token = await getAccessToken()
 
         if (import.meta.env.DEV) {
           console.warn('🔵 API Request:', config.method?.toUpperCase(), config.url)
-          console.warn('🔐 Token from localStorage:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN')
+          console.warn('🔐 Token from Supabase:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN')
         }
 
         if (token && token.trim()) {
@@ -107,7 +94,7 @@ class ApiClient {
           }
         } else {
           if (import.meta.env.DEV) {
-            console.warn('⚠️ No token found in localStorage - request will be sent without auth')
+            console.warn('⚠️ No token found - request will be sent without auth')
           }
         }
 
@@ -120,6 +107,9 @@ class ApiClient {
     )
 
     // Response interceptor - standardize responses and handle errors
+    let isRefreshing = false
+    let refreshPromise: Promise<string | null> | null = null
+
     this.client.interceptors.response.use(
       (response) => {
         // Log response in development
@@ -135,12 +125,32 @@ class ApiClient {
         if (error.response?.status === 401) {
           if (import.meta.env.DEV) {
             console.warn('🔐 Unauthorized (401) - Invalid or expired token')
-            console.warn('🔐 Token refresh is handled by AuthContext via Supabase listeners')
-            console.warn('🔐 Clearing auth and redirecting to login')
+            console.warn('🔐 Attempting to refresh token from Supabase')
           }
 
-          // Clear auth state and redirect to login
-          // AuthContext will handle re-establishing connection via Supabase if user is still logged in there
+          // Prevent multiple simultaneous refreshes
+          if (!isRefreshing) {
+            isRefreshing = true
+            refreshPromise = refreshAccessToken()
+          }
+
+          const newToken = await refreshPromise
+          isRefreshing = false
+          refreshPromise = null
+
+          if (newToken && error.config) {
+            // Retry request with new token
+            error.config.headers.Authorization = `Bearer ${newToken}`
+            if (import.meta.env.DEV) {
+              console.warn('✅ Token refreshed, retrying request')
+            }
+            return this.client.request(error.config)
+          }
+
+          // Refresh failed - logout and redirect to login
+          if (import.meta.env.DEV) {
+            console.warn('🔐 Token refresh failed, clearing auth and redirecting to login')
+          }
           clearAuth()
           localStorage.removeItem('auth_user')
           window.location.href = '/login'
@@ -202,12 +212,9 @@ class ApiClient {
 
       console.error('❌ API Error:', apiError)
 
-      // Handle 401 Unauthorized - could redirect to login
+      // 401 is handled in response interceptor above
       if (error.response.status === 401) {
-        console.warn('🔐 Unauthorized - Token may be expired')
-        // In a real app, you might want to clear token and redirect to login
-        // localStorage.removeItem('auth_token')
-        // window.location.href = '/login'
+        console.warn('🔐 Unauthorized - Token refresh attempted')
       }
 
       return Promise.reject(apiError)

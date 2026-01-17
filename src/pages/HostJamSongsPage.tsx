@@ -1,3 +1,5 @@
+// noinspection JSUnusedLocalSymbols
+
 /**
  * Host - Songs Management Page
  * Manage songs for a jam session
@@ -8,7 +10,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import useSWR from 'swr'
 import {musicService} from '../services'
-import type {MusicResponseDto, JamResponseDto} from '../types/api.types'
+import type {JamResponseDto, MusicResponseDto} from '../types/api.types'
 import {SuccessAlert} from '../components'
 import {useTranslation} from 'react-i18next'
 

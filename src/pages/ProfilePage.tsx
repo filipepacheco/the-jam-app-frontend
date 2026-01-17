@@ -47,10 +47,7 @@ export function ProfilePage() {
         phone: user?.phone || '',
         contact: user?.contact || '',
         instrument: user?.instrument || '',
-        genre: user?.genre || '',
-        level: user?.level || '',
-        hostName: user?.hostName || '',
-        hostContact: user?.hostContact || '',
+        level: user?.level,
       })
       setError(null)
     }
@@ -182,15 +179,6 @@ export function ProfilePage() {
                   readOnly: !isEditMode,
                 },
                 {
-                  name: 'genre',
-                  label: t('profile.genre_label'),
-                  type: 'text',
-                  value: formData.genre || '',
-                  onChange: handleInputChange,
-                  disabled: isLoading || !isEditMode,
-                  readOnly: !isEditMode,
-                },
-                {
                   name: 'level',
                   label: t('profile.level_label'),
                   type: 'select',
@@ -204,34 +192,6 @@ export function ProfilePage() {
             />
           )}
 
-          {/* Host Information Section - Only for hosts */}
-          {user.isHost && (
-            <ProfileFormSection
-              title={t('profile.host_info')}
-              icon="🎤"
-              isEditMode={isEditMode}
-              fields={[
-                {
-                  name: 'hostName',
-                  label: t('profile.host_name_label'),
-                  type: 'text',
-                  value: formData.hostName || '',
-                  onChange: handleInputChange,
-                  disabled: isLoading || !isEditMode,
-                  readOnly: !isEditMode,
-                },
-                {
-                  name: 'hostContact',
-                  label: t('profile.host_contact_label'),
-                  type: 'text',
-                  value: formData.hostContact || '',
-                  onChange: handleInputChange,
-                  disabled: isLoading || !isEditMode,
-                  readOnly: !isEditMode,
-                },
-              ]}
-            />
-          )}
 
           {/* Action Buttons */}
           <div className="flex gap-3 justify-center pt-6">

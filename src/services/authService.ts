@@ -3,8 +3,7 @@
  * Handles login/auto-register with email or phone
  */
 
-import {getToken, setToken} from '../lib/auth'
-import {getApiUrl} from '../lib/api/config'
+import {apiClient} from '../lib/api'
 import type {AuthUser} from '../types/auth.types'
 
 interface LoginResponse {
@@ -15,12 +14,6 @@ interface LoginResponse {
   role: 'user'
   token: string
   isNewUser?: boolean
-}
-
-interface ErrorResponse {
-  statusCode: number
-  error: string
-  message: string
 }
 
 /**
@@ -48,26 +41,16 @@ export async function loginOrRegister(
   }
 
   try {
-    const response = await fetch(getApiUrl('/auth/login'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: email || undefined,
-        phone: phone ? cleanPhone(phone) : undefined,
-      }),
+    const response = await apiClient.post<LoginResponse>('/auth/login', {
+      email: email || undefined,
+      phone: phone ? cleanPhone(phone) : undefined,
     })
 
-    if (!response.ok) {
-      const error: ErrorResponse = await response.json()
-      throw new Error(error.message || 'Login failed. Please try again.')
+    if (!response.success) {
+      throw new Error(response.error || 'Login failed. Please try again.')
     }
 
-    const data: LoginResponse = await response.json()
-
-    // Store token
-    setToken(data.token)
+    const data = response.data as LoginResponse
 
     // Convert to AuthUser format
     const user: AuthUser = {
@@ -96,19 +79,8 @@ export async function loginOrRegister(
  * Logout user
  */
 export async function logout(): Promise<void> {
-  const token = getToken()
-
-  if (!token) {
-    return
-  }
-
   try {
-    await fetch(getApiUrl('/auth/logout'), {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    await apiClient.get('/auth/logout')
   } catch (err) {
     console.error('Logout error:', err)
     // Proceed with client-side logout even if API call fails

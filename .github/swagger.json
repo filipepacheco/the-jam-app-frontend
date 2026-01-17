@@ -34,7 +34,8 @@
     "/auth/login": {
       "post": {
         "operationId": "AuthController_login",
-        "summary": "Login or auto-register with email or phone",
+        "summary": "Login or auto-register with email or phone (DEPRECATED)",
+        "description": "This endpoint is deprecated. Use Supabase authentication instead. Will be removed after 2026-01-31.",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -75,8 +76,8 @@
     "/auth/sync-user": {
       "post": {
         "operationId": "AuthController_syncSupabaseUser",
-        "summary": "Sync Supabase user to local database",
-        "description": "Step 5: Endpoint for Supabase OAuth flow. Verifies Supabase token and syncs user data.",
+        "summary": "Sync Supabase user to local database (DEPRECATED)",
+        "description": "This endpoint is deprecated. Use Supabase JWT directly in Authorization header. Will be removed after 2026-01-31.",
         "parameters": [],
         "requestBody": {
           "required": true,

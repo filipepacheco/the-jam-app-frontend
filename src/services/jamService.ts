@@ -3,8 +3,7 @@
  * Handles jam-related API calls
  */
 
-import {getToken} from '../lib/auth'
-import {getApiUrl} from '../lib/api/config'
+import {apiClient} from '../lib/api'
 import type {JamResponseDto} from '../types/api.types'
 
 interface SpecialtySlot {
@@ -26,12 +25,6 @@ export interface JamDetails {
   musicianCount?: number
 }
 
-interface ErrorResponse {
-  statusCode: number
-  error: string
-  message: string
-}
-
 interface ApiResponse<T> {
   data: T
   status: number
@@ -42,32 +35,16 @@ interface ApiResponse<T> {
  * @returns Promise with array of jams wrapped in ApiResponse
  */
 export async function findAll(): Promise<ApiResponse<JamResponseDto[]>> {
-  const token = getToken()
-
   try {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
+    const response = await apiClient.get<JamResponseDto[]>('/jams')
+    
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to load jams')
     }
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`
-    }
-
-    const response = await fetch(getApiUrl('/jams'), {
-      method: 'GET',
-      headers,
-    })
-
-    if (!response.ok) {
-      const error: ErrorResponse = await response.json()
-      throw new Error(error.message || 'Failed to load jams')
-    }
-
-    const data: JamResponseDto[] = await response.json()
 
     return {
-      data,
-      status: response.status,
+      data: response.data || [],
+      status: 200,
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -83,35 +60,16 @@ export async function findAll(): Promise<ApiResponse<JamResponseDto[]>> {
  * @returns Promise with jam wrapped in ApiResponse
  */
 export async function findOne(id: string): Promise<ApiResponse<JamResponseDto>> {
-  const token = getToken()
-
   try {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
+    const response = await apiClient.get<JamResponseDto>(`/jams/${id}`)
+    
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to load jam')
     }
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`
-    }
-
-    const response = await fetch(getApiUrl(`/jams/${id}`), {
-      method: 'GET',
-      headers,
-    })
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Jam not found')
-      }
-      const error: ErrorResponse = await response.json()
-      throw new Error(error.message || 'Failed to load jam')
-    }
-
-    const data: JamResponseDto = await response.json()
 
     return {
-      data,
-      status: response.status,
+      data: response.data as JamResponseDto,
+      status: 200,
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -127,33 +85,16 @@ export async function findOne(id: string): Promise<ApiResponse<JamResponseDto>> 
  * @returns Promise with created jam wrapped in ApiResponse
  */
 export async function create(jamData: Partial<JamResponseDto>): Promise<ApiResponse<JamResponseDto>> {
-  const token = getToken()
-
   try {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
+    const response = await apiClient.post<JamResponseDto>('/jams', jamData)
+    
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to create jam')
     }
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`
-    }
-
-    const response = await fetch(getApiUrl('/jams'), {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(jamData),
-    })
-
-    if (!response.ok) {
-      const error: ErrorResponse = await response.json()
-      throw new Error(error.message || 'Failed to create jam')
-    }
-
-    const data: JamResponseDto = await response.json()
 
     return {
-      data,
-      status: response.status,
+      data: response.data as JamResponseDto,
+      status: 201,
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -170,31 +111,14 @@ export async function create(jamData: Partial<JamResponseDto>): Promise<ApiRespo
  * @throws Error with user-friendly message
  */
 export async function getJamDetails(jamId: string): Promise<JamDetails> {
-  const token = getToken()
-
   try {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
+    const response = await apiClient.get<JamDetails>(`/jams/${jamId}`)
+    
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to load jam details')
     }
 
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`
-    }
-
-    const response = await fetch(getApiUrl(`/jams/${jamId}`), {
-      method: 'GET',
-      headers,
-    })
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error('Jam not found')
-      }
-      const error: ErrorResponse = await response.json()
-      throw new Error(error.message || 'Failed to load jam details')
-    }
-
-    return await response.json()
+    return response.data as JamDetails
   } catch (err) {
     if (err instanceof Error) {
       throw err
@@ -241,33 +165,16 @@ export async function getMostNeededSpecialty(jamId: string): Promise<string | nu
  * @returns Promise with updated jam
  */
 export async function update(id: string, jamData: Partial<JamResponseDto>): Promise<ApiResponse<JamResponseDto>> {
-  const token = getToken()
-
   try {
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
+    const response = await apiClient.patch<JamResponseDto>(`/jams/${id}`, jamData)
+    
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to update jam')
     }
-
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`
-    }
-
-    const response = await fetch(getApiUrl(`/jams/${id}`), {
-      method: 'PATCH',
-      headers,
-      body: JSON.stringify(jamData),
-    })
-
-    if (!response.ok) {
-      const error: ErrorResponse = await response.json()
-      throw new Error(error.message || 'Failed to update jam')
-    }
-
-    const data: JamResponseDto = await response.json()
 
     return {
-      data,
-      status: response.status,
+      data: response.data as JamResponseDto,
+      status: 200,
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -283,25 +190,16 @@ export async function update(id: string, jamData: Partial<JamResponseDto>): Prom
  * @returns Promise with confirmation
  */
 export async function deleteFn(id: string): Promise<ApiResponse<{ success: boolean }>> {
-  const token = getToken()
-
   try {
-    const response = await fetch(getApiUrl(`/jams/${id}`), {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
-      },
-    })
-
-    if (!response.ok) {
-      const error: ErrorResponse = await response.json()
-      throw new Error(error.message || 'Failed to delete jam')
+    const response = await apiClient.delete<{ success: boolean }>(`/jams/${id}`)
+    
+    if (!response.success) {
+      throw new Error(response.error || 'Failed to delete jam')
     }
 
     return {
-      data: { success: true },
-      status: response.status,
+      data: response.data || { success: true },
+      status: 200,
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error'

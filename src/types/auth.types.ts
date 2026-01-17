@@ -11,6 +11,11 @@ import type {OAuthProvider} from '../lib/supabase'
 export type UserRole = 'viewer' | 'user' | 'host'
 
 /**
+ * Musician skill levels
+ */
+export type SkillLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'PROFESSIONAL'
+
+/**
  * Authenticated user object
  */
 export interface AuthUser {
@@ -20,19 +25,20 @@ export interface AuthUser {
   phone?: string
   role: UserRole
   isHost: boolean
+  isNewUser?: boolean
+  registrationComplete?: boolean
 
   // Supabase-specific fields
   supabaseUserId?: string
 
   // Musician-specific fields (if role = 'user')
   instrument?: string
-  genre?: string
-  level?: string
+  level?: SkillLevel
   contact?: string
 
-  // Host-specific fields (if role = 'host')
-  hostName?: string
-  hostContact?: string
+  // Timestamps
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 /**
@@ -48,20 +54,20 @@ export interface AuthContextType {
   isLoggingOut: boolean
 
   // Supabase Auth Methods
-  loginWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string }>
-  signUpWithEmail: (email: string, password: string, name?: string) => Promise<{ success: boolean; error?: string; message?: string }>
+  loginWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string; isNewUser?: boolean }>
+  signUpWithEmail: (email: string, password: string, name?: string) => Promise<{ success: boolean; error?: string; message?: string; isNewUser?: boolean }>
   loginWithOAuth: (provider: OAuthProvider) => Promise<{ success: boolean; error?: string }>
   logout: () => Promise<{ success: boolean; error?: string }>
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>
 
   // Legacy login method (for backward compatibility)
-  login: (user: AuthUser, token: string) => void
+  login: (user: AuthUser, token?: string) => void
 
   // Profile management
   setRole: (role: UserRole) => void
   updateUser: (fields: Partial<AuthUser>) => void
   updateProfile: (updates: UpdateProfileDto) => Promise<{ success: boolean; error?: string }>
-  completeOnboarding: (instrument: string, genre: string, profileData?: { name?: string; phone?: string }) => Promise<{ success: boolean; error?: string }>
+  completeOnboarding: (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }) => Promise<{ success: boolean; error?: string }>
   clearNewUserFlag: () => void
 
   // Helper methods
@@ -69,92 +75,6 @@ export interface AuthContextType {
   isViewer: () => boolean
 }
 
-/**
- * Role hierarchy for permission checking
- */
-export const ROLE_HIERARCHY: Record<UserRole, number> = {
-  viewer: 0,
-  user: 1,
-  host: 2,
-}
-
-/**
- * Permission map for role-based access control
- */
-export interface RolePermissions {
-  canViewJams: boolean
-  canViewMusicians: boolean
-  canViewMusic: boolean
-  canViewDashboard: boolean
-  canCreateProfile: boolean
-  canRegisterForJams: boolean
-  canViewOwnRegistrations: boolean
-  canViewOwnPerformances: boolean
-  canEditOwnProfile: boolean
-  canCreateJams: boolean
-  canEditOwnJams: boolean
-  canDeleteOwnJams: boolean
-  canManageRegistrations: boolean
-  canSetSchedules: boolean
-  canViewAnalytics: boolean
-}
-
-/**
- * Default permissions for each role
- */
-export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
-  viewer: {
-    canViewJams: true,
-    canViewMusicians: true,
-    canViewMusic: true,
-    canViewDashboard: true,
-    canCreateProfile: false,
-    canRegisterForJams: false,
-    canViewOwnRegistrations: false,
-    canViewOwnPerformances: false,
-    canEditOwnProfile: false,
-    canCreateJams: false,
-    canEditOwnJams: false,
-    canDeleteOwnJams: false,
-    canManageRegistrations: false,
-    canSetSchedules: false,
-    canViewAnalytics: false,
-  },
-  user: {
-    canViewJams: true,
-    canViewMusicians: true,
-    canViewMusic: true,
-    canViewDashboard: true,
-    canCreateProfile: true,
-    canRegisterForJams: true,
-    canViewOwnRegistrations: true,
-    canViewOwnPerformances: true,
-    canEditOwnProfile: true,
-    canCreateJams: false,
-    canEditOwnJams: false,
-    canDeleteOwnJams: false,
-    canManageRegistrations: false,
-    canSetSchedules: false,
-    canViewAnalytics: false,
-  },
-  host: {
-    canViewJams: true,
-    canViewMusicians: true,
-    canViewMusic: true,
-    canViewDashboard: true,
-    canCreateProfile: true,
-    canRegisterForJams: true,
-    canViewOwnRegistrations: true,
-    canViewOwnPerformances: true,
-    canEditOwnProfile: true,
-    canCreateJams: true,
-    canEditOwnJams: true,
-    canDeleteOwnJams: true,
-    canManageRegistrations: true,
-    canSetSchedules: true,
-    canViewAnalytics: true,
-  },
-}
 
 /**
  * Profile update data
@@ -163,6 +83,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, RolePermissions> = {
 export interface UpdateProfileDto {
   name?: string
   instrument?: string
-  level?: string
+  level?: SkillLevel
   contact?: string
+  phone?: string
+  isHost?: boolean
 }
