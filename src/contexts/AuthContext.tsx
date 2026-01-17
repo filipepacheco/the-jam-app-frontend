@@ -21,7 +21,6 @@ import {clearAuth, getToken, setToken} from '../lib/auth'
 import {
   logoutFromBackend,
   syncSupabaseUserToBackend,
-  updateMusicianProfile,
   updateProfile as updateProfileService
 } from '../services/backendAuthService'
 
@@ -496,7 +495,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user])
 
   /**
-   * Complete onboarding - update instrument/genre preferences
+   * Complete onboarding - update instrument preferences
    */
   const completeOnboarding = useCallback(async (instrument: string, genre: string, profileData?: { name?: string; phone?: string }): Promise<{ success: boolean; error?: string }> => {
     if (!user) {
@@ -509,12 +508,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      // Prepare update object with instrument, genre, and optional name/phone
-      const updatePayload: any = { instrument, genre }
+      // Prepare update object with instrument and optional name/phone
+      const updatePayload: UpdateProfileDto = { instrument }
       if (profileData?.name) updatePayload.name = profileData.name
-      if (profileData?.phone) updatePayload.phone = profileData.phone
+      if (profileData?.phone) updatePayload.contact = profileData.phone
 
-      const result = await updateMusicianProfile(user.id, token, updatePayload)
+      const result = await updateProfileService(token, updatePayload)
 
       if (result.success) {
         // Update local user state
@@ -527,7 +526,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsNewUser(false)
       }
 
-      return result
+      return { success: result.success, error: result.error }
     } catch (err) {
       console.error('Onboarding error:', err)
       return { success: false, error: 'Failed to update profile' }

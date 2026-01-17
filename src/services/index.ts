@@ -6,7 +6,7 @@
 export { loginOrRegister, logout } from './authService'
 export {
   syncSupabaseUserToBackend,
-  updateMusicianProfile,
+  updateProfile,
   logoutFromBackend,
   type BackendSyncResponse,
   type SyncResult,

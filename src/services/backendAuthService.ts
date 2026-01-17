@@ -194,43 +194,6 @@ export async function updateProfile(
 }
 
 /**
- * Update musician profile in backend (legacy)
- * @deprecated Use updateProfile() instead
- */
-export async function updateMusicianProfile(
-  userId: string,
-  token: string,
-  updates: { instrument?: string; genre?: string; name?: string }
-): Promise<{ success: boolean; error?: string }> {
-  try {
-    const response = await fetch(getApiUrl(`/musicos/${userId}`), {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(updates),
-    })
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}))
-      return {
-        success: false,
-        error: errorData.message || 'Failed to update profile',
-      }
-    }
-
-    return { success: true }
-  } catch (err) {
-    console.error('Profile update error:', err)
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : 'Failed to update profile',
-    }
-  }
-}
-
-/**
  * Create AuthUser from Supabase user (fallback when backend sync fails)
  */
 function createUserFromSupabase(user: User): AuthUser {
