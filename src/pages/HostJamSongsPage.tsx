@@ -118,7 +118,7 @@ export function HostJamSongsPage() {
     }
   }, [songs, t, mutateJam])
 
-  const handleReorder = useCallback(async () => {
+  const handleReorder = useCallback(async (fromIndex: number, toIndex: number) => {
     // TODO: Implement song reordering with backend API
     setSuccess(t('host_songs.order_updated'))
   }, [t])
