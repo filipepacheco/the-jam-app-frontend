@@ -260,8 +260,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           clearAuth()
           localStorage.removeItem('auth_user')
         } else if (event === 'TOKEN_REFRESHED' && session) {
-          // Update token on refresh
-          setToken(session.access_token)
+          // When Supabase token is refreshed, re-sync with backend to get fresh JWT
+          if (import.meta.env.DEV) {
+            console.log('🔄 Supabase token refreshed - triggering backend resync')
+          }
+          await syncWithBackendSafe(session)
         }
       })
 

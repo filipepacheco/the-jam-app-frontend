@@ -93,6 +93,17 @@ export async function syncSupabaseUserToBackend(
 
     const data: BackendAuthResponseDto = await response.json()
 
+    // Validate that backend returned required token field
+    if (!data.token) {
+      const errorMessage = 'Backend did not return authentication token'
+      console.error('❌ Token missing from backend response:', {
+        status: response.status,
+        message: errorMessage,
+        receivedData: data,
+      })
+      throw new Error(errorMessage)
+    }
+
     // Convert backend response to AuthUser format
     const authUser: AuthUser = {
       id: data.userId,
@@ -104,16 +115,14 @@ export async function syncSupabaseUserToBackend(
       instrument: data.instrument,
     }
 
-    const finalToken = data.token || access_token
-
     if (import.meta.env.DEV) {
       console.log('✅ Backend sync successful')
-      console.log('Token returned from backend:', finalToken ? `${finalToken.substring(0, 20)}...` : 'NO TOKEN')
+      console.log('Token returned from backend:', `${data.token.substring(0, 20)}...`)
     }
 
     return {
       user: authUser,
-      token: finalToken,
+      token: data.token,
       isNewUser: data.isNewUser,
     }
   } catch (err) {

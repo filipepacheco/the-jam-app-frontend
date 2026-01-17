@@ -7,8 +7,8 @@ import type {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 import axios, {AxiosError} from 'axios'
 import {API_CONFIG} from './config'
 import type {ApiError, ApiResponse} from '../../types/api.types'
-import {refreshSupabaseSession} from '../supabase'
-import {setToken, clearAuth} from '../auth'
+
+import {clearAuth} from '../auth'
 
 /**
  * API Client class
@@ -16,10 +16,6 @@ import {setToken, clearAuth} from '../auth'
  */
 class ApiClient {
   private client: AxiosInstance
-  private isRefreshingToken = false
-  private refreshTokenPromise: Promise<string | null> | null = null
-  private refreshAttempts = 0
-  private readonly MAX_REFRESH_ATTEMPTS = 3
 
   constructor() {
     // Create axios instance with default config
@@ -76,23 +72,15 @@ class ApiClient {
   }
 
   /**
-   * Attempt to refresh the token from Supabase
+   * Token refresh is handled by AuthContext via Supabase auth listeners
+   * This method is deprecated and kept for reference only
+   * DO NOT use this - 401 errors should trigger logout/redirect
    */
   private async refreshTokenFromSupabase(): Promise<string | null> {
-    try {
-      const newToken = await refreshSupabaseSession()
-
-      if (newToken) {
-        setToken(newToken)
-        if (import.meta.env.DEV) {
-          console.warn('🔄 Token refreshed from Supabase')
-        }
-        return newToken
-      }
-    } catch (err) {
-      if (import.meta.env.DEV) {
-        console.error('❌ Token refresh failed:', err)
-      }
+    if (import.meta.env.DEV) {
+      console.error('❌ API Client token refresh called - this should never happen!')
+      console.error('❌ Token refresh is handled by AuthContext, not the API client')
+      console.error('❌ If you see this error, there is a bug in the 401 handling logic')
     }
     return null
   }
@@ -139,64 +127,26 @@ class ApiClient {
           console.warn('✅ API Response:', response.config.method?.toUpperCase(), response.config.url, response.status)
         }
 
-        // Reset refresh attempts on successful response
-        this.refreshAttempts = 0
-
         // Transform response to standardized format
         return this.transformResponse(response)
       },
       async (error: AxiosError) => {
-        const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean }
-
-        // Handle 401 Unauthorized - try to refresh token and retry (with max attempts limit)
-        if (error.response?.status === 401 && !originalRequest._retry && this.refreshAttempts < this.MAX_REFRESH_ATTEMPTS) {
-          originalRequest._retry = true
-          this.refreshAttempts++
-
+        // Handle 401 Unauthorized
+        if (error.response?.status === 401) {
           if (import.meta.env.DEV) {
-            console.warn(`🔐 Unauthorized (401) - Attempting token refresh (attempt ${this.refreshAttempts}/${this.MAX_REFRESH_ATTEMPTS})`)
+            console.warn('🔐 Unauthorized (401) - Invalid or expired token')
+            console.warn('🔐 Token refresh is handled by AuthContext via Supabase listeners')
+            console.warn('🔐 Clearing auth and redirecting to login')
           }
 
-          // Prevent multiple simultaneous refresh attempts
-          if (!this.isRefreshingToken) {
-            this.isRefreshingToken = true
-            this.refreshTokenPromise = this.refreshTokenFromSupabase()
-          }
-
-          // Wait for token refresh to complete
-          if (this.refreshTokenPromise) {
-            const newToken = await this.refreshTokenPromise
-            this.isRefreshingToken = false
-            this.refreshTokenPromise = null
-
-            if (newToken) {
-              // Retry original request with new token
-              originalRequest.headers = originalRequest.headers || {}
-              originalRequest.headers.Authorization = `Bearer ${newToken}`
-
-              if (import.meta.env.DEV) {
-                console.warn('🔄 Retrying request with refreshed token')
-              }
-
-              return this.client.request(originalRequest)
-            }
-          }
-
-          // Token refresh failed after max attempts, redirect to login
-          if (import.meta.env.DEV) {
-            console.error(`🔐 Token refresh failed after ${this.refreshAttempts} attempts - redirecting to login`)
-          }
+          // Clear auth state and redirect to login
+          // AuthContext will handle re-establishing connection via Supabase if user is still logged in there
           clearAuth()
           localStorage.removeItem('auth_user')
           window.location.href = '/login'
-        } else if (error.response?.status === 401 && this.refreshAttempts >= this.MAX_REFRESH_ATTEMPTS) {
-          // Max refresh attempts exceeded
-          if (import.meta.env.DEV) {
-            console.error('🔐 Max token refresh attempts exceeded - redirecting to login')
-          }
-          clearAuth()
-          localStorage.removeItem('auth_user')
-          window.location.href = '/login'
+
+          // Return error anyway for any pending operations
+          return this.handleError(error)
         }
 
         // Handle other errors
