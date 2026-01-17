@@ -6,10 +6,11 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth} from '../hooks'
-import {jamService} from '../services'
+import {useAuth} from '../hooks/useAuth'
+import * as jamService from '../services/jamService'
 import type {JamResponseDto} from '../types/api.types'
-import {ErrorAlert, SuccessAlert} from '../components'
+import {ErrorAlert} from '../components/ErrorAlert'
+import {SuccessAlert} from '../components/SuccessAlert'
 import {LiveJamControlPanel} from '../components/schedule'
 import {useTranslation} from 'react-i18next'
 import {DJControlTab} from "./DJControlTab.tsx";
@@ -242,3 +243,4 @@ export function JamManagementPage() {
 }
 
 
+export default JamManagementPage

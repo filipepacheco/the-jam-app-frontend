@@ -4,8 +4,9 @@
  */
 
 import { useState } from 'react'
-import { useAuth } from '../hooks'
-import { loginOrRegister, jamService } from '../services'
+import { useAuth } from '../hooks/useAuth'
+import { loginOrRegister } from '../services/authService'
+import * as jamService from '../services/jamService'
 
 export function AuthFlowTestPage() {
   const { user, isAuthenticated, logout, role, login } = useAuth()

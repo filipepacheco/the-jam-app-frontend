@@ -3,9 +3,9 @@
  * Demonstrates how to use route guard components
  */
 
-import { HostOnly, UserOnly, AuthenticatedOnly, ViewerOnly } from '../components'
+import { HostOnly, UserOnly, AuthenticatedOnly, ViewerOnly } from '../components/RouteGuards'
 import { useCanAccess } from '../lib/auth/routeGuardHooks'
-import { useAuth } from '../hooks'
+import { useAuth } from '../hooks/useAuth'
 
 export function RouteGuardsExamplePage() {
   const { user, role } = useAuth()

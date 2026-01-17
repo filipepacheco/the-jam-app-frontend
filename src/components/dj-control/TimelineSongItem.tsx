@@ -3,7 +3,7 @@
  * Individual song entry in the DJ timeline
  */
 
-import {useState} from 'react'
+import {memo, useState} from 'react'
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {useTranslation} from 'react-i18next'
 
@@ -15,7 +15,7 @@ interface TimelineSongItemProps {
   loading: boolean
 }
 
-export function TimelineSongItem({
+export const TimelineSongItem = memo(function TimelineSongItem({
   schedule,
   status,
   onRemove,
@@ -123,7 +123,7 @@ export function TimelineSongItem({
       )}
     </div>
   )
-}
+})
 
 function formatDuration(seconds: number): string {
   const mins = Math.floor(seconds / 60)
@@ -153,4 +153,3 @@ function getInstrumentEmoji(instrument: string): string {
   }
   return map[instrument?.toLowerCase() || ''] || '🎵'
 }
-

@@ -22,7 +22,7 @@ export function PageHeaderSkeleton() {
         {/* Stats Grid Skeleton */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
           {[...Array(6)].map((_, index) => (
-            <div key={index} className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
+            <div key={`skeleton-header-${index}`} className="flex items-center gap-1 sm:gap-2 p-1.5 sm:p-2 bg-base-100/50 rounded">
               <div className="skeleton h-4 w-4 sm:w-5 rounded-full"></div>
               <div className="flex-1 space-y-1">
                 <div className="skeleton h-3 w-12 rounded"></div>

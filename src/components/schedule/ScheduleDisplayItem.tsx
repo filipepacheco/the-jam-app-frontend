@@ -3,6 +3,7 @@
  * Displays a single schedule item for public viewing (JamDetailPage)
  */
 
+import {memo} from 'react'
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {RegistrationList} from './RegistrationList'
 import {formatDuration} from '../../lib/formatters'
@@ -17,7 +18,7 @@ interface ScheduleDisplayItemProps {
     onEnrollClick?: () => void
 }
 
-export function ScheduleDisplayItem({
+export const ScheduleDisplayItem = memo(function ScheduleDisplayItem({
                                         schedule, isSuggested = false, userRegisteredForSchedule = false, onEnrollClick,
                                     }: ScheduleDisplayItemProps) {
     const { t } = useTranslation()
@@ -117,5 +118,5 @@ export function ScheduleDisplayItem({
             neededKeys={schedule.music?.neededKeys}
         />
     </div>)
-}
+})
 

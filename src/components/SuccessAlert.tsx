@@ -3,7 +3,7 @@
  * Displays success messages with daisyUI styling
  */
 
-import {useEffect} from 'react'
+import {memo, useEffect} from 'react'
 
 interface SuccessAlertProps {
   message: string
@@ -18,7 +18,7 @@ interface SuccessAlertProps {
  * Success Alert Component
  * Shows success message in a green alert box
  */
-export function SuccessAlert({
+export const SuccessAlert = memo(function SuccessAlert({
   message,
   title,
   onDismiss,
@@ -65,5 +65,5 @@ export function SuccessAlert({
       )}
     </div>
   )
-}
+})
 

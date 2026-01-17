@@ -6,10 +6,14 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth} from '../hooks'
-import {jamService, scheduleService} from '../services'
+import {useAuth} from '../hooks/useAuth'
+import * as jamService from '../services/jamService'
+import { scheduleService } from '../services/scheduleService'
 import type {JamResponseDto, ScheduleResponseDto} from '../types/api.types'
-import {ErrorAlert, QueueStats, SongQueueTimeline, SuccessAlert} from '../components'
+import {ErrorAlert} from '../components/ErrorAlert'
+import {QueueStats} from '../components/dj-control/QueueStats'
+import {SongQueueTimeline} from '../components/dj-control/SongQueueTimeline'
+import {SuccessAlert} from '../components/SuccessAlert'
 import {useTranslation} from 'react-i18next'
 
 export function JamDJControlPage() {
@@ -290,3 +294,4 @@ export function JamDJControlPage() {
   )
 }
 
+export default JamDJControlPage

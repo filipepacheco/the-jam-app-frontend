@@ -3,6 +3,7 @@
  * Displays individual jam session information in a card format
  */
 
+import {memo} from 'react'
 import {Link} from 'react-router-dom'
 import type {JamResponseDto, JamStatus} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
@@ -67,7 +68,7 @@ function getStatusLabel(status: JamStatus, t: (key: string) => string): string {
 /**
  * JamCard Component
  */
-export function JamCard({ jam }: JamCardProps) {
+export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
   const { t } = useTranslation()
   // Use schedules count as it represents actual performances
   // Fall back to jamMusics count if schedules not available
@@ -115,6 +116,6 @@ export function JamCard({ jam }: JamCardProps) {
       </div>
     </div>
   )
-}
+})
 
 export default JamCard

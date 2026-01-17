@@ -11,18 +11,21 @@ export function Testimonials() {
 
   const testimonials = [
     {
+      id: 'host-1',
       quote: t('homepage.testimonials.host_quote'),
       name: t('homepage.testimonials.host_name'),
       role: t('homepage.testimonials.host_role'),
       initials: 'SM'
     },
     {
+      id: 'musician-1',
       quote: t('homepage.testimonials.musician_quote'),
       name: t('homepage.testimonials.musician_name'),
       role: t('homepage.testimonials.musician_role'),
       initials: 'MD'
     },
     {
+      id: 'venue-1',
       quote: t('homepage.testimonials.venue_quote'),
       name: t('homepage.testimonials.venue_name'),
       role: t('homepage.testimonials.venue_role'),
@@ -55,9 +58,9 @@ export function Testimonials() {
             }
           }}
         >
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((testimonial) => (
             <motion.div
-              key={index}
+              key={testimonial.id}
               variants={{
                 hidden: { opacity: 0, scale: 0.9 },
                 visible: { opacity: 1, scale: 1 }

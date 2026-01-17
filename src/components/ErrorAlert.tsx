@@ -3,6 +3,8 @@
  * Displays error messages with daisyUI styling
  */
 
+import { memo } from 'react'
+
 interface ErrorAlertProps {
   message: string
   title?: string
@@ -14,7 +16,7 @@ interface ErrorAlertProps {
  * Error Alert Component
  * Shows error message in a red alert box
  */
-export function ErrorAlert({ message, title, onDismiss, className = '' }: ErrorAlertProps) {
+export const ErrorAlert = memo(function ErrorAlert({ message, title, onDismiss, className = '' }: ErrorAlertProps) {
   if (!message) return null
 
   return (
@@ -43,5 +45,5 @@ export function ErrorAlert({ message, title, onDismiss, className = '' }: ErrorA
       )}
     </div>
   )
-}
+})
 

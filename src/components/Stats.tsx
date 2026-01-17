@@ -9,9 +9,9 @@ export function Stats() {
   const isInView = useInView(ref, { once: true, amount: 0.3 })
 
   const stats = [
-    { value: "500+", label: t('homepage.stats.sessions') },
-    { value: "2,000+", label: t('homepage.stats.musicians') },
-    { value: "10,000+", label: t('homepage.stats.songs') }
+    { id: 'jams', value: "500+", label: t('homepage.stats.sessions') },
+    { id: 'musicians', value: "2,000+", label: t('homepage.stats.musicians') },
+    { id: 'songs', value: "10,000+", label: t('homepage.stats.songs') }
   ]
 
   return (
@@ -27,8 +27,8 @@ export function Stats() {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
           transition={{ duration: 0.6 }}
         >
-          {stats.map((stat, index) => (
-            <div key={index} className="stat place-items-center">
+          {stats.map((stat) => (
+            <div key={stat.id} className="stat place-items-center">
               <div className="stat-value text-primary">{stat.value}</div>
               <div className="stat-desc text-base-content/70">{stat.label}</div>
             </div>

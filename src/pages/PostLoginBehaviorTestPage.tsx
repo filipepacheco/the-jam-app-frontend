@@ -4,7 +4,7 @@
  */
 
 import {useEffect, useState} from 'react'
-import {useAuth} from '../hooks'
+import {useAuth} from '../hooks/useAuth'
 import {useLocation, useNavigate} from 'react-router-dom'
 
 interface PostLoginBehaviorTest {

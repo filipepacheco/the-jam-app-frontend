@@ -5,7 +5,7 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks'
+import {useAuth} from '../hooks/useAuth'
 import {useTranslation} from 'react-i18next'
 
 export function AuthCallbackPage() {

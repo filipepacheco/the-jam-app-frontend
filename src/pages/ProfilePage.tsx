@@ -6,11 +6,12 @@
 
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks'
+import {useAuth} from '../hooks/useAuth'
 import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import {ProfileHeader} from '../components/ProfileHeader'
 import {ProfileFormSection} from '../components/ProfileFormSection'
-import {ErrorAlert, SuccessAlert} from '../components'
+import {ErrorAlert} from '../components/ErrorAlert'
+import {SuccessAlert} from '../components/SuccessAlert'
 
 import {useTranslation} from 'react-i18next'
 

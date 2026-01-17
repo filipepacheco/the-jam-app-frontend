@@ -7,17 +7,15 @@
 
 import {useEffect, useMemo, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks'
+import {useAuth} from '../hooks/useAuth'
 import {musicService} from '../services/musicService'
 import type {CreateMusicDto, MusicResponseDto, UpdateMusicDto} from '../types/api.types'
-import {
-    ErrorAlert,
-    MusicEmptyState,
-    MusicFilters,
-    MusicModalFormFields,
-    MusicTableRow,
-    SuccessAlert
-} from '../components'
+import {ErrorAlert} from '../components/ErrorAlert'
+import {MusicEmptyState} from '../components/MusicEmptyState'
+import {MusicFilters} from '../components/MusicFilters'
+import {MusicModalFormFields} from '../components/MusicModalFormFields'
+import {MusicTableRow} from '../components/MusicTable'
+import {SuccessAlert} from '../components/SuccessAlert'
 import {filterAndSortMusic, formatDuration, isDuplicate as checkDuplicate, parseDuration} from '../lib/musicUtils'
 import {GENRES} from '../lib/musicConstants'
 import {useTranslation} from 'react-i18next'

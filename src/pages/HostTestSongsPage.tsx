@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as jamService from '../services/jamService'
 import type { JamResponseDto } from '../types/api.types'
-import { ErrorAlert } from '../components'
+import { ErrorAlert } from '../components/ErrorAlert'
 
 export function HostTestSongsPage() {
   const navigate = useNavigate()

@@ -16,8 +16,12 @@ import {
     QRCodeCorner,
     StartingSoonCard
 } from '../components/publicDashboard'
-import {useAppLanguage, useConfettiOnSongChange, useDashboardLive, useFullscreen, useOfflineQueue} from '../hooks'
-import {ErrorAlert} from "../components"
+import {useAppLanguage} from '../hooks/useAppLanguage'
+import {useConfettiOnSongChange} from '../hooks/useConfettiOnSongChange'
+import {useDashboardLive} from '../hooks/useDashboardLive'
+import {useFullscreen} from '../hooks/useFullscreen'
+import {useOfflineQueue} from '../hooks/useOfflineQueue'
+import {ErrorAlert} from '../components/ErrorAlert'
 import {useTranslation} from 'react-i18next'
 
 export function PublicDashboardPage() {

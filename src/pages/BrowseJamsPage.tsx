@@ -3,10 +3,12 @@
  * Public page for browsing all available jam sessions with filters
  */
 
-import {useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useJams} from '../hooks'
-import {ErrorAlert, JamCard, JamCardSkeleton} from '../components'
+import {useJams} from '../hooks/useJam'
+import {ErrorAlert} from '../components/ErrorAlert'
+import {JamCard} from '../components/JamCard'
+import {JamCardSkeleton} from '../components/JamCardSkeleton'
 import type {JamStatus} from '../types/api.types'
 
 type DateSortOption = 'newest' | 'oldest' | 'upcoming'
@@ -59,11 +61,11 @@ export function BrowseJamsPage() {
   }, [jams, searchQuery, statusFilter, dateSort])
 
   // Clear all filters
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSearchQuery('')
     setStatusFilter('ALL')
     setDateSort('newest')
-  }
+  }, [])
 
   // Check if any filters are active
   const hasActiveFilters = searchQuery.trim() !== '' || statusFilter !== 'ALL'
@@ -199,7 +201,7 @@ export function BrowseJamsPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {[...Array(6)].map((_, index) => (
-                <JamCardSkeleton key={index} />
+                <JamCardSkeleton key={`skeleton-jam-${index}`} />
               ))}
             </div>
           </div>

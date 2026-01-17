@@ -7,6 +7,8 @@ import type {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 import axios, {AxiosError} from 'axios'
 import {API_CONFIG} from './config'
 import type {ApiError, ApiResponse} from '../../types/api.types'
+import {refreshSupabaseSession} from '../supabase'
+import {setToken, clearAuth} from '../auth'
 
 /**
  * API Client class
@@ -78,12 +80,9 @@ class ApiClient {
    */
   private async refreshTokenFromSupabase(): Promise<string | null> {
     try {
-      // Dynamically import Supabase to avoid circular dependencies
-      const supabaseModule = await import('../supabase')
-      const newToken = await (supabaseModule.refreshSupabaseSession as () => Promise<string | null>)()
+      const newToken = await refreshSupabaseSession()
 
       if (newToken) {
-        const { setToken } = await import('../auth')
         setToken(newToken)
         if (import.meta.env.DEV) {
           console.warn('🔄 Token refreshed from Supabase')
@@ -187,7 +186,6 @@ class ApiClient {
           if (import.meta.env.DEV) {
             console.error(`🔐 Token refresh failed after ${this.refreshAttempts} attempts - redirecting to login`)
           }
-          const { clearAuth } = await import('../auth')
           clearAuth()
           localStorage.removeItem('auth_user')
           window.location.href = '/login'
@@ -196,7 +194,6 @@ class ApiClient {
           if (import.meta.env.DEV) {
             console.error('🔐 Max token refresh attempts exceeded - redirecting to login')
           }
-          const { clearAuth } = await import('../auth')
           clearAuth()
           localStorage.removeItem('auth_user')
           window.location.href = '/login'

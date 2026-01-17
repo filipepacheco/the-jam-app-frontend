@@ -13,7 +13,7 @@ export function ScheduleCardSkeleton() {
         {/* Schedule Items Skeleton - 3 items */}
         <div className="space-y-3 sm:space-y-4">
           {[...Array(3)].map((_, index) => (
-            <div key={index} className="bg-base-100/50 rounded p-3 sm:p-4 space-y-2">
+            <div key={`skeleton-schedule-${index}`} className="bg-base-100/50 rounded p-3 sm:p-4 space-y-2">
               {/* Song title skeleton */}
               <div className="skeleton h-5 sm:h-6 w-3/4 rounded"></div>
 

@@ -10,6 +10,7 @@ export function HowItWorks() {
 
   const steps = [
     {
+      id: 'create',
       icon: (
         <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Create or join icon">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -19,6 +20,7 @@ export function HowItWorks() {
       description: t('homepage.how_it_works.step1_desc')
     },
     {
+      id: 'register',
       icon: (
         <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Register icon">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
@@ -28,6 +30,7 @@ export function HowItWorks() {
       description: t('homepage.how_it_works.step2_desc')
     },
     {
+      id: 'perform',
       icon: (
         <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Perform live icon">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
@@ -65,7 +68,7 @@ export function HowItWorks() {
         >
           {steps.map((step, index) => (
             <motion.div
-              key={index}
+              key={step.id}
               className="flex flex-col items-center text-center"
               variants={{
                 hidden: { opacity: 0, y: 30 },

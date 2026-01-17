@@ -3,7 +3,7 @@
  * Global state management for active jam session
  */
 
-import {createContext, type ReactNode, useCallback, useEffect, useRef, useState} from 'react'
+import {createContext, type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import type {
   JamResponseDto,
   MusicianResponseDto,
@@ -60,10 +60,11 @@ export function JamProvider({ children }: { children: ReactNode }) {
   const activeJamIdRef = useRef<string | null>(null)
 
 
-  // Derive current performance from schedule
-  // Find the schedule with IN_PROGRESS status
-  const currentPerformance =
-    jam?.schedules?.find((s) => s.status === 'IN_PROGRESS') || null
+  // Derive current performance from schedule (memoized)
+  const currentPerformance = useMemo(
+    () => jam?.schedules?.find((s) => s.status === 'IN_PROGRESS') || null,
+    [jam?.schedules]
+  )
 
   // Debug logging
   useEffect(() => {
@@ -78,21 +79,30 @@ export function JamProvider({ children }: { children: ReactNode }) {
     }
   }, [jam, currentPerformance])
 
-  const musicians = jam?.registrations
-    ?.map((reg) => reg.musician)
-    .filter((m) => m && m.id)
-    .reduce((unique: MusicianResponseDto[], musician) => {
-      if (!unique.find((u) => u.id === musician?.id)) {
-          if (musician) {
-              unique.push(musician)
-          }
+  // Memoize musicians calculation with Set-based deduplication (O(n) instead of O(n²))
+  const musicians = useMemo(() => {
+    if (!jam?.registrations) return []
+    
+    const seen = new Set<string>()
+    return jam.registrations.reduce((unique, reg) => {
+      const musician = reg.musician
+      if (musician?.id && !seen.has(musician.id)) {
+        seen.add(musician.id)
+        unique.push(musician)
       }
       return unique
-    }, []) || []
+    }, [] as MusicianResponseDto[])
+  }, [jam?.registrations])
 
-  const registrations = jam?.registrations || []
+  const registrations = useMemo(
+    () => jam?.registrations || [],
+    [jam?.registrations]
+  )
 
-  const schedule = jam?.schedules || []
+  const schedule = useMemo(
+    () => jam?.schedules || [],
+    [jam?.schedules]
+  )
 
   /**
    * Determine user role in jam
@@ -167,7 +177,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
       console.error('❌ Failed to leave jam:', err)
       throw err
     }
-  }, [determineUserRole])
+  }, []) // Empty deps - function doesn't depend on external values
 
   /**
    * Update jam state helper (exposed to consumers)
@@ -192,7 +202,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
     }
   }, [determineUserRole])
 
-  const value: JamContextType = {
+  const value: JamContextType = useMemo(() => ({
     jamId,
     jam,
     currentPerformance,
@@ -207,7 +217,22 @@ export function JamProvider({ children }: { children: ReactNode }) {
     leaveJam,
     requestStateRefresh,
     updateJamState,
-  }
+  }), [
+    jamId,
+    jam,
+    currentPerformance,
+    musicians,
+    registrations,
+    schedule,
+    isLoading,
+    error,
+    userRole,
+    isConnected,
+    joinJam,
+    leaveJam,
+    requestStateRefresh,
+    updateJamState,
+  ])
 
   return <JamContext.Provider value={value}>{children}</JamContext.Provider>
 }

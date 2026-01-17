@@ -4,11 +4,13 @@
  * Route: /host/jams/:id/songs
  */
 
-import {useEffect, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {jamService, musicService} from '../services'
+import * as jamService from '../services/jamService'
+import {musicService} from '../services/musicService'
 import type {MusicResponseDto} from '../types/api.types'
-import {ErrorAlert, SuccessAlert} from '../components'
+import {ErrorAlert} from '../components/ErrorAlert'
+import {SuccessAlert} from '../components/SuccessAlert'
 import {useTranslation} from 'react-i18next'
 
 interface JamSong extends MusicResponseDto {
@@ -36,14 +38,7 @@ export function HostJamSongsPage() {
     duration: 240,
   })
 
-  useEffect(() => {
-    if (jamId) {
-      loadJamData()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [jamId])
-
-  const loadJamData = async () => {
+  const loadJamData = useCallback(async () => {
     if (!jamId) return
 
     setLoading(true)
@@ -70,9 +65,15 @@ export function HostJamSongsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [jamId, t])
 
-  const handleCreateSong = async () => {
+  useEffect(() => {
+    if (jamId) {
+      loadJamData()
+    }
+  }, [jamId, loadJamData])
+
+  const handleCreateSong = useCallback(async () => {
     if (!newSong.title || !newSong.artist) {
       setError(t('host_songs.title_artist_required'))
       return
@@ -114,9 +115,9 @@ export function HostJamSongsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [newSong, jamId, t, loadJamData])
 
-  const handleAddExistingSong = async () => {
+  const handleAddExistingSong = useCallback(async () => {
     if (!selectedSongId || !jamId) {
       setError(t('host_songs.select_song_error'))
       return
@@ -138,9 +139,9 @@ export function HostJamSongsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [selectedSongId, jamId, allSongs, t, loadJamData])
 
-  const handleRemoveSong = async (songId: string) => {
+  const handleRemoveSong = useCallback(async (songId: string) => {
     if (!confirm(t('host_songs.remove_confirm'))) return
 
     setLoading(true)
@@ -156,22 +157,24 @@ export function HostJamSongsPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [songs, t, loadJamData])
 
-  const handleReorder = async (draggedIndex: number, targetIndex: number) => {
-    const newSongs = [...songs]
-    const [draggedSong] = newSongs.splice(draggedIndex, 1)
-    newSongs.splice(targetIndex, 0, draggedSong)
-    setSongs(newSongs)
+  const handleReorder = useCallback(async (draggedIndex: number, targetIndex: number) => {
+    setSongs(prevSongs => {
+      const newSongs = [...prevSongs]
+      const [draggedSong] = newSongs.splice(draggedIndex, 1)
+      newSongs.splice(targetIndex, 0, draggedSong)
+      return newSongs
+    })
 
     // TODO: Call backend to save reordered songs
     setSuccess(t('host_songs.order_updated'))
-  }
+  }, [t])
 
-  const getAvailableSongs = () => {
+  const availableSongs = useMemo(() => {
     const linkedIds = new Set(songs.map((s) => s.id))
     return allSongs.filter((s) => !linkedIds.has(s.id))
-  }
+  }, [songs, allSongs])
 
   return (
     <div className="min-h-screen bg-base-100 p-4">
@@ -286,7 +289,7 @@ export function HostJamSongsPage() {
                 {/* Option 2: Add Existing Song */}
                 <div className="divider">{t('host_songs.or_add_existing')}</div>
 
-                {getAvailableSongs().length > 0 ? (
+                {availableSongs.length > 0 ? (
                   <>
                     <div className="form-control">
                       <label className="label">
@@ -298,7 +301,7 @@ export function HostJamSongsPage() {
                         className="select select-bordered"
                       >
                         <option value="">{t('jams.choose_song')}</option>
-                        {getAvailableSongs().map((song) => (
+                        {availableSongs.map((song) => (
                           <option key={song.id} value={song.id}>
                             {song.title} - {song.artist}
                           </option>

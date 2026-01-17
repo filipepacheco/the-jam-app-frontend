@@ -5,12 +5,12 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth} from '../hooks'
-import type {JamDetails} from '../services'
-import {jamService} from '../services'
+import {useAuth} from '../hooks/useAuth'
+import type {JamDetails} from '../services/jamService'
+import * as jamService from '../services/jamService'
 import {JamContextDisplay} from '../components/JamContextDisplay'
 import {JamRegistrationForm} from '../components/forms/JamRegistrationForm'
-import {ErrorAlert} from '../components'
+import {ErrorAlert} from '../components/ErrorAlert'
 
 export function JamRegisterPage() {
   const { jamId } = useParams<{ jamId: string }>()

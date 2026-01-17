@@ -4,16 +4,16 @@
  */
 
 import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth} from '../hooks'
-import {
-    ErrorAlert,
-    PageHeaderSkeleton,
-    ScheduleCardSkeleton,
-    ScheduleDisplayItem,
-    ScheduleEnrollmentModal,
-    SidebarSectionSkeleton
-} from '../components'
-import {jamService, musicService, scheduleService} from '../services'
+import {useAuth} from '../hooks/useAuth'
+import {ErrorAlert} from '../components/ErrorAlert'
+import {PageHeaderSkeleton} from '../components/PageHeaderSkeleton'
+import {ScheduleCardSkeleton} from '../components/ScheduleCardSkeleton'
+import {ScheduleDisplayItem} from '../components/schedule/ScheduleDisplayItem'
+import {ScheduleEnrollmentModal} from '../components/schedule/ScheduleEnrollmentModal'
+import {SidebarSectionSkeleton} from '../components/SidebarSectionSkeleton'
+import * as jamService from '../services/jamService'
+import {musicService} from '../services/musicService'
+import { scheduleService } from '../services/scheduleService'
 import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto} from "../types/api.types.ts";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {getInstrumentIcon} from "../components/schedule/RegistrationList.tsx";
@@ -61,7 +61,7 @@ export function JamDetailPage() {
     }, [jamId, loadJamData])
 
     // Handle enrollment success - reload jam data from API
-    const handleEnrollmentSuccess = async () => {
+    const handleEnrollmentSuccess = useCallback(async () => {
         // Close modal immediately for better UX
         setShowEnrollModal(false)
         setSelectedScheduleForEnroll(null)
@@ -76,7 +76,7 @@ export function JamDetailPage() {
 
         // Clear success message after 2 seconds
         setTimeout(() => setEnrollSuccess(null), 2000)
-    }
+    }, [jamId, loadJamData, t])
 
     const handleCloseEnrollModal = useCallback(() => {
         setShowEnrollModal(false)
@@ -97,16 +97,16 @@ export function JamDetailPage() {
     // Check if current user is already registered in this jam
     const userRegistration = jam?.registrations?.find((reg) => reg.musician?.contact === user?.contact || reg.musician?.id === user?.id)
 
-    const handleEnrollClick = (schedule: ScheduleResponseDto) => {
+    const handleEnrollClick = useCallback((schedule: ScheduleResponseDto) => {
         if (!isAuthenticated) {
             navigate(`/login?redirect=/jams/${jamId}`)
         } else {
             setSelectedScheduleForEnroll(schedule)
             setShowEnrollModal(true)
         }
-    }
+    }, [isAuthenticated, navigate, jamId])
 
-    const handleSuggestClick = async () => {
+    const handleSuggestClick = useCallback(async () => {
         if (!isAuthenticated) {
             navigate(`/login?redirect=/jams/${jamId}`)
         } else {
@@ -124,9 +124,9 @@ export function JamDetailPage() {
                 setSuggestLoading(false)
             }
         }
-    }
+    }, [isAuthenticated, navigate, jamId, t])
 
-    const handleSuggestSong = async () => {
+    const handleSuggestSong = useCallback(async () => {
         if (!selectedSongId || !jamId) {
             setSuggestError(t('jams.select_song_error'))
             return
@@ -150,7 +150,7 @@ export function JamDetailPage() {
         } finally {
             setSuggestLoading(false)
         }
-    }
+    }, [selectedSongId, jamId, loadJamData, t])
 
     if (loading && !jam) {
         return (

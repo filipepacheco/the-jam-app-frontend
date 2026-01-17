@@ -25,3 +25,4 @@ export function ErrorHandlingTestPage() {
   )
 }
 
+export default ErrorHandlingTestPage

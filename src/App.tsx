@@ -1,3 +1,4 @@
+import {lazy, Suspense} from 'react'
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
@@ -12,36 +13,53 @@ import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'
 import {SEO} from './components/SEO'
 
-// Test pages
-import {TestPage} from './pages/TestPage'
-import {HookTestPage} from './pages/HookTestPage'
-import {ErrorHandlingTestPage} from './pages/ErrorHandlingTestPage'
-import {AuthTestPage} from './pages/AuthTestPage'
-import {AuthContextTestPage} from './pages/AuthContextTestPage'
-import {RouteGuardsExamplePage} from './pages/RouteGuardsExamplePage'
-import {LocalStoragePersistenceTestPage} from './pages/LocalStoragePersistenceTestPage'
-import {AuthFlowTestPage} from './pages/AuthFlowTestPage'
-import {PostLoginBehaviorTestPage} from './pages/PostLoginBehaviorTestPage'
+// Lazy-loaded pages - Priority 1 (Host-only)
+const HostDashboardPage = lazy(() => import('./pages/HostDashboardPage'))
+const CreateJamPage = lazy(() => import('./pages/CreateJamPage'))
+const JamManagementPage = lazy(() => import('./pages/JamManagementPage'))
+const JamDJControlPage = lazy(() => import('./pages/JamDJControlPage'))
+const HostJamSongsPage = lazy(() => import('./pages/HostJamSongsPage'))
 
+// Lazy-loaded pages - Priority 2 (User-specific)
+const MusicPage = lazy(() => import('./pages/MusicPage'))
+const ProfilePage = lazy(() => import('./pages/ProfilePage'))
+const MusiciansPage = lazy(() => import('./pages/MusiciansPage'))
+const JamDetailPage = lazy(() => import('./pages/JamDetailPage'))
+
+// Lazy-loaded pages - Priority 3 (Test pages)
+const TestPage = lazy(() => import('./pages/TestPage'))
+const TestDataSeedPage = lazy(() => import('./pages/TestDataSeedPage'))
+const HostTestSongsPage = lazy(() => import('./pages/HostTestSongsPage'))
+const PostLoginBehaviorTestPage = lazy(() => import('./pages/PostLoginBehaviorTestPage'))
+const AuthFlowTestPage = lazy(() => import('./pages/AuthFlowTestPage'))
+const HookTestPage = lazy(() => import('./pages/HookTestPage'))
+const ErrorHandlingTestPage = lazy(() => import('./pages/ErrorHandlingTestPage'))
+const AuthTestPage = lazy(() => import('./pages/AuthTestPage'))
+const AuthContextTestPage = lazy(() => import('./pages/AuthContextTestPage'))
+const RouteGuardsExamplePage = lazy(() => import('./pages/RouteGuardsExamplePage'))
+const LocalStoragePersistenceTestPage = lazy(() => import('./pages/LocalStoragePersistenceTestPage'))
+
+// Keep eager (critical path)
 import {LoginPage} from './pages/LoginPage'
 import {BrowseJamsPage} from './pages/BrowseJamsPage'
-import {JamDetailPage} from './pages/JamDetailPage'
 import {JamRegisterPage} from './pages/JamRegisterPage'
-import {TestDataSeedPage} from './pages/TestDataSeedPage'
-import {HostJamSongsPage} from './pages/HostJamSongsPage'
-import {HostTestSongsPage} from './pages/HostTestSongsPage'
-import {HostDashboardPage} from './pages/HostDashboardPage'
-import {CreateJamPage} from './pages/CreateJamPage'
-import {JamManagementPage} from './pages/JamManagementPage'
-import {JamDJControlPage} from './pages/JamDJControlPage'
-import {MusicPage} from './pages/MusicPage'
-import {MusiciansPage} from './pages/MusiciansPage'
-import {ProfilePage} from './pages/ProfilePage'
 import {PublicDashboardPage} from './pages/PublicDashboardPage'
-import {AuthProvider, JamProvider} from './contexts'
-import {OnboardingModal} from "./components";
 import AuthCallbackPage from "./pages/AuthCallbackPage.tsx"
-import {useAuth} from "./hooks";
+import {AuthProvider, JamProvider} from './contexts'
+import {OnboardingModal} from './components/OnboardingModal'
+import {useAuth} from './hooks/useAuth'
+
+/**
+ * Route Loading Fallback Component
+ * Displays a loading spinner while lazy-loaded routes are being fetched
+ */
+function RouteLoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="loading loading-spinner loading-lg"></div>
+    </div>
+  )
+}
 
 /**
  * Home Page Component
@@ -102,7 +120,8 @@ function AppContent() {
 
   // Normal app routing
   return (
-    <Routes>
+    <Suspense fallback={<RouteLoadingFallback />}>
+      <Routes>
       {/* Public Routes */}
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
@@ -201,7 +220,8 @@ function AppContent() {
 
       {/* Catch-all - redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+    </Suspense>
   )
 }
 

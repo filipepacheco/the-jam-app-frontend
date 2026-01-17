@@ -6,11 +6,12 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks'
-import {musicianService} from '../services'
+import {useAuth} from '../hooks/useAuth'
+import {musicianService} from '../services/musicianService'
 import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
 import {EditMusicianModal} from '../components/EditMusicianModal'
-import {ErrorAlert, SuccessAlert} from '../components'
+import {ErrorAlert} from '../components/ErrorAlert'
+import {SuccessAlert} from '../components/SuccessAlert'
 import {useTranslation} from 'react-i18next'
 
 export function MusiciansPage() {

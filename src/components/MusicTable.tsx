@@ -3,6 +3,7 @@
  * Displays a single music entry in the table with actions
  */
 
+import {memo} from 'react'
 import type {MusicResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
 
@@ -16,7 +17,7 @@ interface MusicTableRowProps {
   onReject?: (music: MusicResponseDto) => void
 }
 
-export function MusicTableRow({
+export const MusicTableRow = memo(function MusicTableRow({
   music,
   formatDuration,
   isHost,
@@ -71,7 +72,7 @@ export function MusicTableRow({
       </td>
     </tr>
   )
-}
+})
 
 /**
  * Musicians Badges Component
@@ -81,7 +82,7 @@ interface MusiciansBadgesProps {
   music: MusicResponseDto
 }
 
-export function MusiciansBadges({ music }: MusiciansBadgesProps) {
+export const MusiciansBadges = memo(function MusiciansBadges({ music }: MusiciansBadgesProps) {
   const { t } = useTranslation()
   const instrumentCounts = [
     { count: music.neededDrums || 0, emoji: '🥁', label: t('schedule.instruments.drums') },
@@ -105,7 +106,7 @@ export function MusiciansBadges({ music }: MusiciansBadgesProps) {
       {!hasInstruments && <span className="text-xs text-base-content/50">{t('common.none')}</span>}
     </div>
   )
-}
+})
 
 /**
  * Music Action Buttons Component

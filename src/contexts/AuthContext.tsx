@@ -3,7 +3,7 @@
  * React Context for managing role-based authentication state with Supabase
  */
 
-import {createContext, type ReactNode, useCallback, useEffect, useRef, useState} from 'react'
+import {createContext, type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import type {AuthContextType, AuthUser, UpdateProfileDto, UserRole} from '../types/auth.types'
 import type {OAuthProvider} from '../lib/supabase'
 import {
@@ -35,10 +35,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
  * Wraps the app to provide authentication context to all components
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null)
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    try {
+      const stored = localStorage.getItem('auth_user')
+      return stored ? JSON.parse(stored) : null
+    } catch {
+      return null
+    }
+  })
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
-  const [role, setRoleState] = useState<UserRole>('viewer')
+  const [role, setRoleState] = useState<UserRole>(() => {
+    try {
+      const stored = localStorage.getItem('auth_user')
+      if (stored) {
+        const parsedUser = JSON.parse(stored)
+        return parsedUser.role || 'viewer'
+      }
+    } catch {}
+    return 'viewer'
+  })
   const [isNewUser, setIsNewUser] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
@@ -570,7 +586,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return role === 'viewer'
   }, [role])
 
-  const value: AuthContextType = {
+  const value: AuthContextType = useMemo(() => ({
     user,
     isAuthenticated,
     isLoading,
@@ -590,7 +606,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearNewUserFlag,
     isUser: isUserRole,
     isViewer,
-  }
+  }), [
+    user,
+    isAuthenticated,
+    isLoading,
+    role,
+    isNewUser,
+    isLoggingOut,
+    loginWithEmail,
+    signUpWithEmailFn,
+    loginWithOAuth,
+    logout,
+    resetPasswordFn,
+    login,
+    setRole,
+    updateUser,
+    updateProfile,
+    completeOnboarding,
+    clearNewUserFlag,
+    isUserRole,
+    isViewer,
+  ])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

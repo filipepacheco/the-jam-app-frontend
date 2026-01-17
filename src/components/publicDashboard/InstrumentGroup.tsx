@@ -3,6 +3,7 @@
  * Displays a group of musicians grouped by instrument with emoji and stacked names
  */
 
+import {memo} from 'react'
 import {motion} from 'framer-motion'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentEmoji} from '../../utils/instrumentEmojis'
@@ -14,7 +15,7 @@ interface InstrumentGroupProps {
   size?: 'sm' | 'md' | 'lg'
 }
 
-export function InstrumentGroup({ instrument, musicians, size = 'md' }: InstrumentGroupProps) {
+export const InstrumentGroup = memo(function InstrumentGroup({ instrument, musicians, size = 'md' }: InstrumentGroupProps) {
   const { t } = useTranslation()
 
   const sizeClasses = {
@@ -46,5 +47,5 @@ export function InstrumentGroup({ instrument, musicians, size = 'md' }: Instrume
       </div>
     </motion.div>
   )
-}
+})
 
