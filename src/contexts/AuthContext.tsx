@@ -65,7 +65,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  /**
+   * Helper function to set up auth state after successful login/signup
+   */
+  const handleAuthSuccess = useCallback(async (profile: AuthUser | null): Promise<{ success: boolean; error?: string; isNewUser?: boolean }> => {
+    if (!profile) {
+      return { success: false, error: 'Failed to load profile' }
+    }
 
+    setUser(profile)
+    setRoleState(profile.role)
+    setIsAuthenticated(true)
+    setIsNewUser(profile.isNewUser || false)
+    localStorage.setItem('auth_user', JSON.stringify(profile))
+
+    return { success: true, isNewUser: profile.isNewUser }
+  }, [])
 
   /**
    * Initialize auth state from Supabase session on mount
@@ -140,18 +155,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (result.session) {
         const profile = await loadUserProfile()
-
-        if (!profile) {
-          return { success: false, error: 'Failed to load profile' }
-        }
-
-        setUser(profile)
-        setRoleState(profile.role)
-        setIsAuthenticated(true)
-        setIsNewUser(profile.isNewUser || false)
-        localStorage.setItem('auth_user', JSON.stringify(profile))
-
-        return { success: true, isNewUser: profile.isNewUser }
+        return handleAuthSuccess(profile)
       }
 
       return { success: false, error: 'No session returned' }
@@ -160,7 +164,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const errorMessage = err instanceof Error ? err.message : 'Login failed'
       return { success: false, error: errorMessage }
     }
-  }, [loadUserProfile])
+  }, [loadUserProfile, handleAuthSuccess])
 
   /**
    * Sign up with email and password (Supabase)
@@ -180,18 +184,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // If email confirmation is required, session might be null
       if (result.session) {
         const profile = await loadUserProfile()
-
-        if (!profile) {
-          return { success: false, error: 'Failed to load profile' }
-        }
-
-        setUser(profile)
-        setRoleState(profile.role)
-        setIsAuthenticated(true)
-        setIsNewUser(profile.isNewUser || false)
-        localStorage.setItem('auth_user', JSON.stringify(profile))
-
-        return { success: true, isNewUser: profile.isNewUser }
+        return handleAuthSuccess(profile)
       }
 
       // Email confirmation required
@@ -201,7 +194,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const errorMessage = err instanceof Error ? err.message : 'Sign up failed'
       return { success: false, error: errorMessage }
     }
-  }, [loadUserProfile])
+  }, [loadUserProfile, handleAuthSuccess])
 
   /**
    * Login with OAuth provider (Google, GitHub, etc.)

@@ -4,57 +4,24 @@
  */
 
 import React, {useState} from 'react'
-import {useAuth} from '../../hooks'
+import {useAuth, useFormState} from '../../hooks'
 import {loginOrRegister} from '../../services'
 import {ErrorAlert} from '../index'
-import {useLocation, useNavigate} from 'react-router-dom'
+import {useLocation} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 
 export function SimpleLoginForm() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   useLocation();
   const { login } = useAuth()
   const [input, setInput] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-
-  // Determine redirect destination based on:
-  // 1. ?redirect= query param (explicit override)
-  // 2. Coming from jam registration flow (?jamId param)
-  // 3. Referrer from jam detail page
-  // 4. Default to home page
-  const getRedirectPath = () => {
-    const params = new URLSearchParams(window.location.search)
-
-    // Check for explicit redirect param
-    const redirectParam = params.get('redirect')
-    if (redirectParam) {
-      return redirectParam
-    }
-
-    // Check if coming from jam registration flow (has jam context in search)
-    const jamId = params.get('jamId')
-    if (jamId) {
-      return `/jams/${jamId}/register`
-    }
-
-    // Check if we came from a jam detail page
-    const referer = document.referrer
-    if (referer.includes('/jams/')) {
-      const match = referer.match(/\/jams\/([^/]+)/)
-      if (match) {
-        return `/jams/${match[1]}`
-      }
-    }
-
-    // Default to home
-    return '/'
-  }
+  const { error, setError, isLoading, setIsLoading, handleError, handleSuccess, resetError } = useFormState({
+    defaultErrorMessage: t('auth.auth_failed'),
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError(null)
+    resetError()
 
     const trimmedInput = input.trim()
 
@@ -76,11 +43,9 @@ export function SimpleLoginForm() {
       login(result.user, result.token)
 
       // Redirect to appropriate location based on context
-      const redirectPath = getRedirectPath()
-      navigate(redirectPath)
+      handleSuccess()
     } catch (err) {
-      const message = err instanceof Error ? err.message : t('auth.auth_failed')
-      setError(message)
+      handleError(err)
     } finally {
       setIsLoading(false)
     }

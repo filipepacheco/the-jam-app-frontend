@@ -7,7 +7,8 @@ import type {RegistrationResponseDto} from '../../types/api.types'
 import {CheckCircle, Clock, Music, Users, XCircle} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {Avatar} from '../Avatar'
-import React from "react";
+import React from "react"
+import {groupRegistrationsByInstrument} from '../../utils/musicianUtils';
 
 export const getInstrumentIcon = (instrument?: string): React.ReactNode => {
     if (!instrument) return <Music className="w-4 h-4" />
@@ -64,17 +65,6 @@ const getInstrumentDisplayName = (instrument: string, t: (key: string) => string
     }
 }
 
-const normalizeInstrument = (instrument?: string): string => {
-    if (!instrument) return ''
-    const lower = instrument.toLowerCase()
-    if (lower === 'drums' || lower === 'bateria') return 'drums'
-    if (lower === 'guitar' || lower === 'guitars' || lower === 'guitarra') return 'guitars'
-    if (lower === 'bass' || lower === 'baixo') return 'bass'
-    if (lower === 'vocals' || lower === 'vocal' || lower === 'vozes' || lower === 'voz') return 'vocals'
-    if (lower === 'keys' || lower === 'keyboard' || lower === 'teclado') return 'keys'
-    return lower
-}
-
 const getNeededInstruments = (
     neededDrums?: number,
     neededGuitars?: number,
@@ -89,25 +79,6 @@ const getNeededInstruments = (
     if (neededVocals && neededVocals > 0) instruments.push('vocals')
     if (neededKeys && neededKeys > 0) instruments.push('keys')
     return instruments
-}
-
-const groupRegistrationsByInstrument = (
-    registrations: RegistrationResponseDto[] | undefined
-): Map<string, RegistrationResponseDto[]> => {
-    const grouped = new Map<string, RegistrationResponseDto[]>()
-    if (!registrations) return grouped
-
-    registrations.forEach((reg) => {
-        const instrument = normalizeInstrument(reg.instrument || reg.musician?.instrument)
-        if (instrument) {
-            if (!grouped.has(instrument)) {
-                grouped.set(instrument, [])
-            }
-            grouped.get(instrument)!.push(reg)
-        }
-    })
-
-    return grouped
 }
 
 interface RegistrationListProps {

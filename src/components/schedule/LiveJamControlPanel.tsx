@@ -11,6 +11,7 @@ import {formatDuration} from '../../lib/formatters'
 import {apiClient} from '../../lib/api'
 import {getInstrumentIcon} from './RegistrationList'
 import {useTranslation} from 'react-i18next'
+import {normalizeInstrument} from '../../utils/musicianUtils'
 
 interface LiveJamControlPanelProps {
   jam: JamResponseDto
@@ -48,15 +49,6 @@ const groupRegistrationsByInstrument = (
   return grouped
 }
 
-const normalizeInstrument = (instrument: string): string => {
-  const lower = instrument.toLowerCase()
-  if (lower === 'drums' || lower === 'bateria') return 'drums'
-  if (lower === 'guitar' || lower === 'guitars' || lower === 'guitarra') return 'guitars'
-  if (lower === 'bass' || lower === 'baixo') return 'bass'
-  if (lower === 'vocals' || lower === 'vocal' || lower === 'vozes' || lower === 'voz') return 'vocals'
-  if (lower === 'keys' || lower === 'keyboard' || lower === 'teclado') return 'keys'
-  return lower
-}
 
 /**
  * Get the order of instruments for consistent display

@@ -6,12 +6,12 @@
 import {useEffect, useState} from 'react'
 import {useAuth} from '../hooks'
 import {useNavigate} from 'react-router-dom'
-import {SupabaseLoginForm} from '../components'
+import {ProfileSetupModal, SupabaseLoginForm} from '../components'
 import {isSupabaseConfigured} from '../lib/supabase'
 import SimpleLoginForm from '../components/forms/SimpleLoginForm'
-import {ProfileSetupModal} from '../components'
 
 import {useTranslation} from 'react-i18next'
+import {getRedirectPath} from '../utils/navigationUtils'
 
 export function LoginPage() {
   const { t } = useTranslation()
@@ -19,34 +19,6 @@ export function LoginPage() {
   const { isAuthenticated, isLoading, user, isNewUser } = useAuth()
   const [showProfileSetup, setShowProfileSetup] = useState(false)
 
-  // Determine smart redirect destination
-  const getRedirectPath = () => {
-    const params = new URLSearchParams(window.location.search)
-
-    // Check for explicit redirect param
-    const redirectParam = params.get('redirect')
-    if (redirectParam) {
-      return redirectParam
-    }
-
-    // Check if coming from jam registration flow
-    const jamId = params.get('jamId')
-    if (jamId) {
-      return `/jams/${jamId}/register`
-    }
-
-    // Check if we came from a jam detail page
-    const referer = document.referrer
-    if (referer.includes('/jams/')) {
-      const match = referer.match(/\/jams\/([^/]+)/)
-      if (match) {
-        return `/jams/${match[1]}`
-      }
-    }
-
-    // Default to home
-    return '/'
-  }
 
   // If user is already authenticated, redirect to appropriate location
   useEffect(() => {
@@ -60,6 +32,7 @@ export function LoginPage() {
       navigate(getRedirectPath(), { replace: true })
     }
   }, [isAuthenticated, isNewUser, user?.name, navigate])
+
 
   if (isLoading) {
     return (

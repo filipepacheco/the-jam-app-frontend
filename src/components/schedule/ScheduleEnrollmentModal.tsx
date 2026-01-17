@@ -8,20 +8,16 @@ import {registrationService} from '../../services'
 import {useAuth} from '../../hooks'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {getInstrumentOptions} from '../../utils/scheduleUtils'
+import {ScheduleDetailsCard} from './ScheduleDetailsCard'
+import {ErrorAlert} from './ErrorAlert'
+import {InstrumentsSummary} from './InstrumentsSummary'
 
 interface ScheduleEnrollmentModalProps {
   schedule: ScheduleResponseDto
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
-}
-
-interface InstrumentOption {
-    key: string
-    label: string
-    emoji: string
-    needed: number
-    registered: number
 }
 
 export function ScheduleEnrollmentModal({
@@ -33,39 +29,16 @@ export function ScheduleEnrollmentModal({
     const [enrollLoading, setEnrollLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    const getInstrumentOptions = (): InstrumentOption[] => {
-        if (!schedule.music) return []
-
-        const options: InstrumentOption[] = []
-        const instrumentMap = [{
-            key: 'drums',
-            label: t('schedule.instruments.drums'),
-            emoji: '🥁',
-            field: 'neededDrums' as const
-        }, {key: 'guitars', label: t('schedule.instruments.guitars'), emoji: '🎸', field: 'neededGuitars' as const}, {
-            key: 'vocals',
-            label: t('schedule.instruments.vocals'),
-            emoji: '🎤',
-            field: 'neededVocals' as const
-        }, {key: 'bass', label: t('schedule.instruments.bass'), emoji: '🎸', field: 'neededBass' as const}, {
-            key: 'keys',
-            label: t('schedule.instruments.keys'),
-            emoji: '🎹',
-            field: 'neededKeys' as const
-        },]
-
-        instrumentMap.forEach(({key, label, emoji, field}) => {
-            const needed = schedule.music![field] || 0
-            if (needed > 0) {
-                const registered = schedule.registrations?.filter((reg) => reg.musician?.instrument === label).length || 0
-                options.push({
-                    key, label, emoji, needed, registered,
-                })
-            }
-        })
-
-        return options
-    }
+    const instrumentOptions = getInstrumentOptions(schedule, (key) => {
+        const instrumentKeyMap: Record<string, string> = {
+            drums: t('schedule.instruments.drums'),
+            guitars: t('schedule.instruments.guitars'),
+            vocals: t('schedule.instruments.vocals'),
+            bass: t('schedule.instruments.bass'),
+            keys: t('schedule.instruments.keys'),
+        }
+        return instrumentKeyMap[key] || key
+    })
 
   const handleEnroll = async () => {
     if (!selectedInstrument) {
@@ -120,28 +93,12 @@ export function ScheduleEnrollmentModal({
 
     if (!isOpen) return null
 
-    const instrumentOptions = getInstrumentOptions()
-
     return (<div className="modal modal-open">
             <div className="modal-box max-w-sm">
                 <h3 className="font-bold text-lg mb-4">{t('schedule.enroll_title')}</h3>
 
-                {/* Schedule Details */}
-                <div className="bg-base-200 rounded p-3 mb-4">
-                    <p className="font-semibold text-sm truncate">{schedule.music?.title || t('schedule.song_tba')}</p>
-                    <p className="text-xs text-base-content/70 truncate">
-                        {t('common.by')} {schedule.music?.artist || t('schedule.artist_tba')}
-                    </p>
-                    {schedule.music?.duration && (<p className="text-xs text-base-content/60 mt-1">
-                            ⏱️ {Math.floor(schedule.music.duration / 60)}:
-                            {String(schedule.music.duration % 60).padStart(2, '0')}
-                        </p>)}
-                </div>
-
-                {/* Error Alert */}
-                {error && (<div className="alert alert-error mb-4">
-                        <p>{error}</p>
-                    </div>)}
+                <ScheduleDetailsCard schedule={schedule} />
+                <ErrorAlert error={error} />
 
                 {/* Instrument Selection */}
                 <div className="form-control mb-4">
@@ -165,21 +122,7 @@ export function ScheduleEnrollmentModal({
                     </select>
                 </div>
 
-                {/* Instruments Summary */}
-                <div className="text-sm text-base-content/70 mb-4 p-3 bg-base-200 rounded">
-                    <p className="font-semibold mb-2 text-xs">{t('schedule.instruments_needed')}</p>
-                    <div className="flex flex-wrap gap-2">
-                        {instrumentOptions.map((option) => {
-                            const remaining = option.needed - option.registered
-                            return (<span
-                                    key={option.key}
-                                    className={`badge badge-sm ${remaining > 0 ? 'badge-warning' : 'badge-error'}`}
-                                >
-                  {option.emoji} {option.label}: {remaining > 0 ? t('schedule.left_count', { count: remaining }) : t('schedule.full')}
-                </span>)
-                        })}
-                    </div>
-                </div>
+                <InstrumentsSummary instrumentOptions={instrumentOptions} />
 
                 {/* Modal Actions */}
                 <div className="modal-action">

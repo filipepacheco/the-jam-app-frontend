@@ -19,3 +19,6 @@ export { useOfflineQueue, type OfflineQueueState } from './useOfflineQueue'
 export { useAppLanguage } from './useAppLanguage'
 export { useFullscreen } from './useFullscreen'
 export { useConfettiOnSongChange, type UseConfettiOnSongChangeOptions } from './useConfettiOnSongChange'
+
+// Form state hook
+export { useFormState } from './useFormState'

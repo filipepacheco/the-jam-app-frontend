@@ -6,6 +6,7 @@
 import {motion} from 'framer-motion'
 import {useTranslation} from 'react-i18next'
 import {InstrumentGroup} from './InstrumentGroup'
+import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
 
 interface CurrentSongCardProps {
@@ -47,21 +48,9 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
               {t('publicDashboard.currentMusicians', 'Current Musicians')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {(() => {
-                // Group musicians by instrument
-                const groupedByInstrument = (song.musicians || []).reduce((acc: Record<string, typeof song.musicians>, musician: any) => {
-                  const instrument = musician.instrument || 'Unknown'
-                  if (!acc[instrument]) {
-                    acc[instrument] = []
-                  }
-                  acc[instrument].push(musician)
-                  return acc
-                }, {})
-
-                return Object.entries(groupedByInstrument).map(([instrument, musicians]) => (
-                  <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="lg" />
-                ))
-              })()}
+              {Object.entries(groupMusiciansByInstrument(song.musicians)).map(([instrument, musicians]) => (
+                <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="lg" />
+              ))}
             </div>
           </div>
         ) : (
