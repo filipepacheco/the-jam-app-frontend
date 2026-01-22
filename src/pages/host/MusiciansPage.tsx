@@ -4,16 +4,16 @@
  * Visible only to hosts
  */
 
-import {useEffect, useState, useMemo, useCallback} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks'
-import {musicianService} from '../services'
+import {useAuth} from '../../hooks'
+import {musicianService} from '../../services'
 import useSWR from 'swr'
-import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
-import {EditMusicianModal} from '../components/EditMusicianModal'
-import {ErrorAlert} from '../components'
-import {SuccessAlert} from '../components'
+import type {MusicianLevel, MusicianResponseDto} from '../../types/api.types.ts'
+import {EditMusicianModal} from '../../components/EditMusicianModal.tsx'
+import {ErrorAlert, SuccessAlert} from '../../components'
 import {useTranslation} from 'react-i18next'
+import {API_ENDPOINTS} from "../../lib/api";
 
 export function MusiciansPage() {
   const { t, i18n } = useTranslation()
@@ -28,7 +28,7 @@ export function MusiciansPage() {
 
    // Fetch musicians with SWR (only when user is host)
    const { data: musicians = [], error: swrError, isLoading, mutate: mutateMusicians } = useSWR<MusicianResponseDto[]>(
-     user?.isHost ? '/musicians' : null
+     user?.isHost ? API_ENDPOINTS.musicians : null
    )
    const error = swrError?.message ?? null
 

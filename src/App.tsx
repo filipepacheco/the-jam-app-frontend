@@ -19,23 +19,23 @@ import {LoginPage} from './pages/LoginPage'
 import {BrowseJamsPage} from './pages/BrowseJamsPage'
 import {JamRegisterPage} from './pages/JamRegisterPage'
 import {PublicDashboardPage} from './pages/PublicDashboardPage'
-import AuthCallbackPage from "./pages/AuthCallbackPage.tsx"
+import AuthCallbackPage from "./pages/tabs/AuthCallbackPage.tsx"
 import {AuthProvider, JamProvider} from './contexts'
 import {OnboardingModal} from './components'
 import {useAuth} from './hooks'
 
 // Lazy-loaded pages - Priority 1 (Host-only)
-const HostDashboardPage = lazy(() => import('./pages/HostDashboardPage'))
-const CreateJamPage = lazy(() => import('./pages/CreateJamPage'))
-const JamManagementPage = lazy(() => import('./pages/JamManagementPage'))
-const JamDJControlPage = lazy(() => import('./pages/JamDJControlPage'))
-const HostJamSongsPage = lazy(() => import('./pages/HostJamSongsPage'))
+const HostDashboardPage = lazy(() => import('./pages/host/HostDashboardPage.tsx'))
+const CreateJamPage = lazy(() => import('./pages/host/CreateJamPage.tsx'))
+const JamManagementPage = lazy(() => import('./pages/host/JamManagementPage.tsx'))
+const JamDJControlPage = lazy(() => import('./pages/host/JamDJControlPage.tsx'))
+const HostJamSongsPage = lazy(() => import('./pages/host/HostJamSongsPage.tsx'))
 
 // Lazy-loaded pages - Priority 2 (User-specific)
 const MusicPage = lazy(() => import('./pages/MusicPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage'))
-const MusiciansPage = lazy(() => import('./pages/MusiciansPage'))
-const JamDetailPage = lazy(() => import('./pages/JamDetailPage'))
+const MusiciansPage = lazy(() => import('./pages/host/MusiciansPage.tsx'))
+const JamDetailPage = lazy(() => import('./pages/tabs/JamDetailPageV2.tsx'))
 
 /**
  * SWR Fetcher Function

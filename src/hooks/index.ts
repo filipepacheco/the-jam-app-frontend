@@ -22,3 +22,11 @@ export { useConfettiOnSongChange, type UseConfettiOnSongChangeOptions } from './
 
 // Form state hook
 export { useFormState } from './useFormState'
+
+// Jam control hook
+export { useJamControl } from './useJamControl'
+export type { UseJamControlReturn } from '../types/jamControl.types'
+
+// Queue reorder hook
+export { useQueueReorder } from './useQueueReorder'
+export type { UseQueueReorderReturn } from '../types/jamControl.types'

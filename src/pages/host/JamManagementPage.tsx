@@ -5,20 +5,20 @@
  */
 
 import {useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth} from '../hooks'
-import * as jamService from '../services/jamService'
-import type {JamResponseDto} from '../types/api.types'
-import {ErrorAlert} from '../components'
-import {SuccessAlert} from '../components'
-import {LiveJamControlPanel} from '../components/schedule'
+import {useNavigate, useParams, useSearchParams} from 'react-router-dom'
+import {useAuth} from '../../hooks'
+import * as jamService from '../../services/jamService.ts'
+import type {JamResponseDto} from '../../types/api.types.ts'
+import {ErrorAlert, SuccessAlert} from '../../components'
+import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
-import {DJControlTab} from "./DJControlTab.tsx";
-import {AnalyticsTab} from "./AnalyticsTab.tsx";
-import {DashboardTab} from "./DashboardTab.tsx";
-import {ScheduleTab} from "./ScheduleTab.tsx";
-import {RegistrationsTab} from "./RegistrationsTab.tsx";
-import {OverviewTab} from "./OverviewTab.tsx";
+import {DJControlTab} from "../tabs/DJControlTab.tsx";
+import {DJControlTabV2} from "../tabs/DJControlTabV2.tsx";
+import {AnalyticsTab} from "../tabs/AnalyticsTab.tsx";
+import {DashboardTab} from "../tabs/DashboardTab.tsx";
+import {ScheduleTab} from "../tabs/ScheduleTab.tsx";
+import {RegistrationsTab} from "../tabs/RegistrationsTab.tsx";
+import {OverviewTab} from "../tabs/OverviewTab.tsx";
 
 type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live' | 'dj-control'
 
@@ -26,7 +26,11 @@ export function JamManagementPage() {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const {id: jamId} = useParams<{ id: string }>()
+    const [searchParams] = useSearchParams()
     const {isAuthenticated, isLoading: authLoading} = useAuth()
+
+    // Check for legacy DJ control flag in URL: ?useLegacyDJ=true
+    const useLegacyDJ = searchParams.get('useLegacyDJ') === 'true'
 
     const [activeTab, setActiveTab] = useState<TabType>('overview')
     const [jam, setJam] = useState<JamResponseDto | null>(null)
@@ -224,7 +228,11 @@ export function JamManagementPage() {
                     <ScheduleTab jam={jam} onReload={() => loadJamData(jamId!)}/>
                 )}
                 {activeTab === 'dj-control' && (
-                    <DJControlTab jam={jam} onReload={() => loadJamData(jamId!)}/>
+                    useLegacyDJ ? (
+                        <DJControlTab jam={jam} onReload={() => loadJamData(jamId!)}/>
+                    ) : (
+                        <DJControlTabV2 jamId={jamId!} onReload={() => loadJamData(jamId!)}/>
+                    )
                 )}
                 {activeTab === 'live' && (
                     <LiveJamControlPanel

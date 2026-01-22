@@ -1,14 +1,13 @@
-import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from "../types/api.types.ts";
+import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
-import {registrationService} from "../services";
-import { scheduleService } from "../services";
-import {ScheduleCardManagement} from '../components';
-import {HostMusicianRegistrationModal} from "../components/schedule";
+import {registrationService, scheduleService} from "../../services";
+import {ScheduleCardManagement} from '../../components';
+import {HostMusicianRegistrationModal} from "../../components/schedule";
 
 /**
  * Schedule Tab Component - Full management with nested registrations
- * Matches JamDetailPage view but with management controls
+ * Similar to jam detail page view but with additional management controls
  */
 export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => void }) {
     const {t} = useTranslation()

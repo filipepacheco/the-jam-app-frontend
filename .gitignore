@@ -16,6 +16,17 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+.env.development
+.env.production
+.env.staging
+.env.test
+!.env.example
+
+# Backup files
+*.backup
+*.bak
+.backups/
+**/.backups/
 
 # Editor directories and files
 .vscode/*
@@ -33,5 +44,8 @@ claude.md
 **/claude.md
 **/**/claude.md
 
+.github
+.cursor
+.claude
 .serena
 docs

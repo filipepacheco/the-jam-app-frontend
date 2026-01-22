@@ -1,6 +1,6 @@
 /**
  * Schedule Display Item Component
- * Displays a single schedule item for public viewing (JamDetailPage)
+ * Displays a single schedule item for public viewing on jam detail page
  */
 
 import {memo} from 'react'

@@ -9,9 +9,9 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import useSWR from 'swr'
-import {musicService} from '../services'
-import type {JamResponseDto, MusicResponseDto} from '../types/api.types'
-import {SuccessAlert} from '../components'
+import {musicService} from '../../services'
+import type {JamResponseDto, MusicResponseDto} from '../../types/api.types.ts'
+import {SuccessAlert} from '../../components'
 import {useTranslation} from 'react-i18next'
 
 export function HostJamSongsPage() {

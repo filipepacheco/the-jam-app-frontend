@@ -30,6 +30,10 @@
     "skip": "Omitir",
     "complete": "Completar",
     "unknown": "Desconocido",
+    "you": "Tú",
+    "expanded": "Expandido",
+    "collapsed": "Contraído",
+    "collapse": "Contraer",
     "select_theme": "Seleccionar tema",
     "select_language": "Seleccionar idioma",
     "about": "Acerca de",
@@ -187,7 +191,8 @@
       "collaborate_desc": "Varios músicos pueden tocar la misma canción. Cada rol puede tener sus propios intérpretes.",
       "performance_time": "Momento de la Actuación",
       "performance_time_desc": "Toca en el orden programado. ¡Estate listo con tu instrumento!",
-      "suggest_btn": "🎵 Sugerir una Canción"
+      "suggest_btn": "🎵 Sugerir una Canción",
+      "steps_count": "{{count}} pasos"
     },
     "qr_code": "📱 Código QR",
     "scan_to_share": "Escanea para compartir o unirte a este jam",
@@ -263,9 +268,25 @@
     "loading_failed": "Error al cargar el jam",
     "enroll_success": "✅ ¡Inscripción exitosa!",
     "suggest_success": "¡Canción sugerida con éxito! El anfitrión la revisará.",
+    "suggest_failed": "Error al sugerir canción",
     "loading_songs_failed": "Fallo al cargar canciones",
     "select_song_error": "Por favor selecciona una canción",
-    "loading_jam_details": "Cargando detalles del jam...",
+    "my_registrations": "Mis Inscripciones",
+    "any_instrument": "Cualquier Instrumento",
+    "approved": "Aprobado",
+    "pending": "Pendiente",
+    "no_registrations_yet": "Sin inscripciones aún",
+    "click_register_to_start": "Haz clic en registrar para inscribirte en una actuación",
+    "awaiting_approval": "Pendiente de aprobación",
+    "select_performance": "Selecciona una Actuación",
+    "select_performance_desc": "Elige qué actuación te gustaría registrar",
+    "no_performances_available": "No hay actuaciones disponibles",
+    "actions": {
+      "suggesting": "Sugiriendo...",
+      "suggest_song": "Sugerir Canción",
+      "close": "Cerrar"
+    },
+    "loading_jam_details": "Cargando detalles del jam…",
     "not_found": "Jam no encontrado",
     "error_loading_jam": "Error al cargar el Jam",
     "back_to_jams": "← Volver a Jams",
@@ -276,13 +297,35 @@
       "status": "Estado",
       "performances": "Actuaciones",
       "duration": "Duración",
-      "musicians": "Músicos"
+      "musicians": "Músicos",
+      "jam_details": "Detalles del Jam",
+      "performances_count": "{{count}} actuaciones"
     },
     "performance_schedule_title": "📋 Programación de Actuaciones",
     "suggested_songs_title": "Canciones Sugeridas (Pendientes de Aprobación)",
+    "instruments": "Instrumentos",
+    "scheduled": "Programado",
+    "suggested": "Sugerido",
+    "register": "Registrarse",
+    "go_to_stage": "¡Al Escenario! Es Tu Turno",
     "no_performance_schedule_title": "Aún no hay programación",
-    "no_performance_schedule_desc": "La programación se organizará una vez que los músicos estén inscritos."
+    "no_performance_schedule_desc": "La programación se organizará una vez que los músicos estén inscritos.",
+    "no_registrations_for_song": "Aún no hay músicos registrados para esta canción"
 
+  },
+  "registration": {
+    "statuses": {
+      "pending": "Pendiente",
+      "confirmed": "Confirmado",
+      "approved": "Aprobado",
+      "canceled": "Cancelado",
+      "rejected": "Rechazado"
+    }
+  },
+  "timeline": {
+    "start": "Inicio",
+    "finish": "Fin",
+    "jam_started_at": "Jam comenzó a las {{time}}"
   },
   "schedule": {
     "add_musician_title": "👥 Agregar Músico",
@@ -312,10 +355,17 @@
     "add_musician": "+ Agregar Músico",
     "unknown": "Desconocido",
     "performance_completed": "✓ Actuación completada",
+    "performance_in_progress": "🎵 Actuación en curso",
     "now_playing": "Reproduciendo Ahora",
     "no_musicians_yet": "No hay músicos aún",
     "no_musicians_registered": "No hay músicos registrados aún",
+    "no_registrations_yet": "No hay registros aún",
     "musicians_count": "{{count}} músicos",
+    "required_instruments": "Instrumentos Requeridos",
+    "no_instruments_required": "No se requieren instrumentos",
+    "registered_musicians": "Músicos Registrados",
+    "show_musicians": "Mostrar Músicos",
+    "no_registrations": "Nadie registrado aún",
     "statuses": {
       "suggested": "Sugerida",
       "approved": "Aprobada",
@@ -364,7 +414,10 @@
     "failed_to_execute_action": "Fallo al ejecutar acción",
     "no_song_playing": "No hay canción sonando",
     "invalid_email_phone": "Ingresa un correo o teléfono válido",
-    "must_agree_terms": "Debes aceptar los términos antes de registrarte"
+    "must_agree_terms": "Debes aceptar los términos antes de registrarte",
+    "queue_empty": "No se puede reordenar una cola vacía",
+    "duplicate_ids": "Canciones duplicadas detectadas",
+    "reorder_failed": "Fallo al reordenar la cola"
   },
   "live_control": {
     "now_playing": "Sonando Ahora",
@@ -373,8 +426,15 @@
     "song_paused_feedback": "Canción pausada",
     "skipped_feedback": "Saltado a la siguiente canción",
     "reordered_feedback": "Cola reordenada",
-    "executing_action": "Ejecutando acción...",
-    "start_to_begin": "Inicia la primera canción para comenzar"
+    "executing_action": "Ejecutando acción…",
+    "start_to_begin": "Inicia la primera canción para comenzar",
+    "no_more_songs": "No hay más canciones programadas",
+    "drag_to_reorder": "Arrastra para reordenar",
+    "reorder_validation_error": "Orden de canciones inválido",
+    "reorder_permission_error": "No tienes permiso para reordenar",
+    "reorder_network_error": "Conexión perdida, intenta nuevamente",
+    "reorder_server_error": "Algo salió mal, intenta nuevamente",
+    "no_song_playing": "No hay canción sonando actualmente"
   },
   "music_form": {
     "title": "Título",
@@ -663,9 +723,23 @@
     "title_with_emoji": "🎛️ Control DJ",
     "actions": {
       "title_with_emoji": "⚡ Acciones",
+      "status": "Estado",
       "refresh": "Actualizar",
       "refresh_data": "Actualizar datos",
       "updating": "Actualizando...",
+      "start": "Iniciar Jam",
+      "start_tooltip": "Iniciar la sesión de jam",
+      "stop": "Detener Jam",
+      "stop_tooltip": "Detener la sesión de jam",
+      "resume": "Reanudar",
+      "resume_tooltip": "Reanudar reproducción",
+      "play": "Reproducir",
+      "play_tooltip": "Reanudar reproducción",
+      "pause": "Pausar",
+      "pause_tooltip": "Pausar canción actual",
+      "skip": "Saltar",
+      "skip_short": "⏭️",
+      "skip_tooltip": "Saltar a la siguiente canción",
       "previous": "Anterior",
       "previous_short": "⏮️",
       "previous_tooltip": "Volver a la canción anterior",
@@ -683,12 +757,18 @@
     "timeline": {
       "now_playing": "REPRODUCIENDO AHORA",
       "suggestions_header": "⚠️ Sugerencias",
+      "suggested_songs": "Canciones Sugeridas (Pendiente de Aprobación)",
+      "approve_song": "Aprobar canción",
+      "approve": "Aprobar",
       "empty_queue": "No hay canciones en la cola",
       "empty_queue_hint": "Agrega canciones desde la página de administración",
-      "no_musicians": "No hay músicos registrados"
+      "no_musicians": "No hay músicos registrados",
+      "remove_song": "Eliminar canción",
+      "remove": "Eliminar"
     },
     "stats": {
       "title_with_emoji": "📊 Estadísticas de Cola",
+      "status": "Estado",
       "total_songs": "Total de Canciones",
       "completed_with_icon": "✓ Completadas",
       "now_playing_with_icon": "▶ Reproduciendo",
@@ -712,6 +792,9 @@
     "song_removed": "Canción eliminada exitosamente",
     "song_approved": "Canción aprobada y agregada a la cola",
     "errors": {
+      "no_jam_id": "No se proporcionó ID de jam",
+      "failed_to_load": "Error al cargar estado del jam",
+      "action_failed": "Acción fallida. Por favor intenta de nuevo.",
       "no_current_song": "No hay ninguna canción reproduciéndose actualmente",
       "no_next_song": "No hay canciones programadas para reproducir a continuación",
       "no_previous_song": "No hay canciones completadas para volver atrás",

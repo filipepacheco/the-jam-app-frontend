@@ -11,35 +11,35 @@ import {RegistrationList} from './RegistrationList'
 import {useTranslation} from 'react-i18next'
 
 interface ScheduleCardProps {
-  schedule: ScheduleResponseDto
-  index?: number
-  loading?: boolean
-  isSuggested?: boolean
-  onStatusChange?: (scheduleId: string, status: string) => void
-  onDelete?: (scheduleId: string) => void
-  onMoveUp?: (index: number) => void
-  onMoveDown?: (index: number) => void
-  maxIndex?: number
-  onApproveRegistration?: (registrationId: string) => void
-  onRejectRegistration?: (registrationId: string) => void
-  onAddMusician?: () => void
+    schedule: ScheduleResponseDto
+    index?: number
+    loading?: boolean
+    isSuggested?: boolean
+    onStatusChange?: (scheduleId: string, status: string) => void
+    onDelete?: (scheduleId: string) => void
+    onMoveUp?: (index: number) => void
+    onMoveDown?: (index: number) => void
+    maxIndex?: number
+    onApproveRegistration?: (registrationId: string) => void
+    onRejectRegistration?: (registrationId: string) => void
+    onAddMusician?: () => void
 }
 
 export function ScheduleCardManagement({
-  schedule,
-  index = 0,
-  loading = false,
-  isSuggested = false,
-  onStatusChange,
-  onDelete,
-  onMoveUp,
-  onMoveDown,
-  maxIndex = 0,
-  onApproveRegistration,
-  onRejectRegistration,
-  onAddMusician,
-}: ScheduleCardProps) {
-    const { t } = useTranslation()
+                                           schedule,
+                                           index = 0,
+                                           loading = false,
+                                           isSuggested = false,
+                                           onStatusChange,
+                                           onDelete,
+                                           onMoveUp,
+                                           onMoveDown,
+                                           maxIndex = 0,
+                                           onApproveRegistration,
+                                           onRejectRegistration,
+                                           onAddMusician,
+                                       }: ScheduleCardProps) {
+    const {t} = useTranslation()
     return (
         <div
             className={`card shadow ${
@@ -97,23 +97,13 @@ export function ScheduleCardManagement({
                     {/* Status Badge and Actions - Right side */}
                     <div className="ml-auto flex flex-col gap-1 sm:gap-2 items-end">
                         <ScheduleStatusBadge status={schedule.status}/>
-                        {isSuggested && (
-                            <ScheduleActionButtons
-                                status={schedule.status}
-                                loading={loading}
-                                isSuggested={true}
-                                onStatusChange={(status) => onStatusChange?.(schedule.id, status)}
-                                onDelete={() => onDelete?.(schedule.id)}
-                            />
-                        )}
-                        {!isSuggested && (
-                            <ScheduleActionButtons
-                                status={schedule.status}
-                                loading={loading}
-                                onStatusChange={(status) => onStatusChange?.(schedule.id, status)}
-                                onDelete={() => onDelete?.(schedule.id)}
-                            />
-                        )}
+                        <ScheduleActionButtons
+                            status={schedule.status}
+                            loading={loading}
+                            isSuggested={isSuggested}
+                            onStatusChange={(status) => onStatusChange?.(schedule.id, status)}
+                            onDelete={() => onDelete?.(schedule.id)}
+                        />
                     </div>
                 </div>
 

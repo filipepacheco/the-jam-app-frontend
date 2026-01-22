@@ -12,6 +12,7 @@ import {apiClient} from '../../lib/api'
 import {getInstrumentIcon} from './RegistrationList'
 import {useTranslation} from 'react-i18next'
 import {normalizeInstrument} from '../../utils/musicianUtils'
+import {useQueueReorder} from '../../hooks'
 
 interface LiveJamControlPanelProps {
   jam: JamResponseDto
@@ -76,8 +77,21 @@ export function LiveJamControlPanel({
   )
   const [draggedItem, setDraggedItem] = useState<string | null>(null)
 
+  // New reorder hook for queue management
+  const { reorderQueue, isReordering } = useQueueReorder(
+    jam.id,
+    localQueue,
+    (updatedSchedules) => {
+      setLocalQueue(updatedSchedules)
+      onActionSuccess?.(t('live_control.reordered_feedback'))
+    },
+    (errorMessage) => {
+      onActionError?.(errorMessage)
+    }
+  )
+
   const currentSong = jam.schedules?.find((s) => s.status === 'IN_PROGRESS')
-  const nextThreeSongs = localQueue.slice(0, 3)
+  const nextSongs = localQueue
 
   // Send control action to backend
   const sendControlAction = async (action: ControlAction) => {
@@ -160,22 +174,19 @@ export function LiveJamControlPanel({
 
     if (draggedIndex === -1 || targetIndex === -1) return
 
-    // Reorder locally
+    // Reorder locally (optimistic update)
     const newQueue = [...localQueue]
     const [draggedSchedule] = newQueue.splice(draggedIndex, 1)
     newQueue.splice(targetIndex, 0, draggedSchedule)
 
-    // Update local state
+    // Update local state immediately
     setLocalQueue(newQueue)
     setDraggedItem(null)
 
-    // Send reorder action with new schedule IDs
-    sendControlAction({
-      action: 'reorder',
-      payload: {
-        scheduleIds: newQueue.map((s) => s.id),
-      },
-    })
+    // Send reorder request using new dedicated endpoint
+    // Hook handles rollback on error
+    const scheduleIds = newQueue.map((s) => s.id)
+    reorderQueue(scheduleIds)
   }
 
   return (
@@ -186,16 +197,16 @@ export function LiveJamControlPanel({
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-sm font-semibold text-white/80 mb-1">{t('live_control.now_playing')}</p>
-              <h2 className="text-3xl font-bold">{currentSong.music?.title || t('schedule.song_tba')}</h2>
-              <p className="text-xl text-white/90 mt-1">{currentSong.music?.artist || t('schedule.artist_tba')}</p>
+              <h2 className="text-3xl font-bold text-balance">{currentSong.music?.title || t('schedule.song_tba')}</h2>
+              <p className="text-xl text-white/90 mt-1 text-pretty">{currentSong.music?.artist || t('schedule.artist_tba')}</p>
             </div>
-            <Music className="w-12 h-12 text-white/60" />
+            <Music className="size-12 text-white/60" aria-hidden="true" />
           </div>
 
           {/* Duration */}
           {currentSong.music?.duration && (
-            <p className="text-lg mb-4">
-              ⏱️ {formatDuration(currentSong.music.duration)}
+            <p className="text-lg mb-4 tabular-nums">
+              <span aria-hidden="true">⏱️</span> {formatDuration(currentSong.music.duration)}
             </p>
           )}
 
@@ -226,24 +237,27 @@ export function LiveJamControlPanel({
               onClick={handlePlay}
               disabled={isLoading}
               className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
+              aria-label={t('common.play')}
             >
-              <Play className="w-4 h-4" />
+              <Play className="size-4" aria-hidden="true" />
               {t('common.play')}
             </button>
             <button
               onClick={handlePause}
               disabled={isLoading}
               className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
+              aria-label={t('common.pause')}
             >
-              <Pause className="w-4 h-4" />
+              <Pause className="size-4" aria-hidden="true" />
               {t('common.pause')}
             </button>
             <button
               onClick={handleSkip}
               disabled={isLoading}
               className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
+              aria-label={t('common.skip')}
             >
-              <SkipForward className="w-4 h-4" />
+              <SkipForward className="size-4" aria-hidden="true" />
               {t('common.skip')}
             </button>
           </div>
@@ -257,39 +271,42 @@ export function LiveJamControlPanel({
 
       {/* Up Next Section */}
       <div className="bg-base-100 rounded-xl p-6 border border-base-300">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-          <Music className="w-5 h-5" />
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-balance">
+          <Music className="size-5" aria-hidden="true" />
           {t('live_control.up_next')}
         </h3>
 
-        {nextThreeSongs.length > 0 ? (
+        {nextSongs.length > 0 ? (
           <div className="space-y-2">
-            {nextThreeSongs.map((schedule, index) => (
+            {nextSongs.map((schedule, index) => (
               <div
                 key={schedule.id}
-                draggable
+                draggable={!isReordering}
                 onDragStart={() => handleDragStart(schedule.id)}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, schedule)}
-                className="bg-base-200 rounded-lg p-4 flex items-start gap-3 cursor-move hover:bg-base-300 transition-colors border-2 border-transparent"
+                className="bg-base-200 rounded-lg p-4 flex items-start gap-3 cursor-move hover:bg-base-300 transition-[background-color] duration-150 motion-reduce:transition-none border-2 border-transparent"
+                role="button"
+                tabIndex={0}
+                aria-label={`${schedule.music?.title || t('schedule.song_tba')} - ${t('live_control.drag_to_reorder')}`}
               >
                 {/* Drag Handle */}
-                <div className="pt-1 text-base-content/40">
-                  <GripVertical className="w-5 h-5" />
+                <div className="pt-1 text-base-content/40" aria-hidden="true">
+                  <GripVertical className="size-5" />
                 </div>
 
                 {/* Song Info */}
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-base-content">
+                  <p className="font-bold text-base-content text-balance">
                     {index + 1}. {schedule.music?.title || t('schedule.song_tba')}
                   </p>
-                  <p className="text-sm text-base-content/70">
+                  <p className="text-sm text-base-content/70 text-pretty">
                     {schedule.music?.artist || t('schedule.artist_tba')}
                   </p>
                   {schedule.music?.duration && (
-                    <p className="text-xs text-base-content/60 mt-1">
-                      ⏱️ {formatDuration(schedule.music.duration)}
+                    <p className="text-xs text-base-content/60 mt-1 tabular-nums">
+                      <span aria-hidden="true">⏱️</span> {formatDuration(schedule.music.duration)}
                     </p>
                   )}
                 </div>
@@ -309,7 +326,7 @@ export function LiveJamControlPanel({
       </div>
 
       {/* Loading Indicator */}
-      {isLoading && (
+      {(isLoading || isReordering) && (
         <div className="flex items-center justify-center gap-2 text-sm text-base-content/60">
           <span className="loading loading-spinner loading-sm"></span>
           {t('live_control.executing_action')}

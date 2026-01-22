@@ -5,7 +5,7 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../hooks'
+import {useAuth} from '../../hooks'
 import {useTranslation} from 'react-i18next'
 
 export function AuthCallbackPage() {
@@ -76,7 +76,7 @@ export function AuthCallbackPage() {
               <a href="/login" className="btn btn-primary">
                 {t('auth.try_again')}
               </a>
-              <a href="/" className="btn btn-ghost">
+              <a href="/public" className="btn btn-ghost">
                 {t('auth.go_home')}
               </a>
             </div>

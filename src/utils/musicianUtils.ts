@@ -3,13 +3,17 @@
  * Helper functions for organizing musicians by instrument
  */
 
+import type { MusicianResponseDto, RegistrationResponseDto } from '../types/api.types'
+
 /**
  * Group musicians by instrument
  * @param musicians - Array of musician objects with instrument property
  * @returns Object with instruments as keys and arrays of musicians as values
  */
-export function groupMusiciansByInstrument(musicians: any[] | undefined): Record<string, any[]> {
-  return (musicians || []).reduce((acc: Record<string, any[]>, musician: any) => {
+export function groupMusiciansByInstrument(
+  musicians: MusicianResponseDto[] | undefined
+): Record<string, MusicianResponseDto[]> {
+  return (musicians || []).reduce((acc: Record<string, MusicianResponseDto[]>, musician: MusicianResponseDto) => {
     const instrument = musician.instrument || 'Unknown'
     if (!acc[instrument]) {
       acc[instrument] = []
@@ -42,9 +46,9 @@ export function normalizeInstrument(instrument?: string): string {
  * @returns Map with instruments as keys and arrays of registrations as values
  */
 export function groupRegistrationsByInstrument(
-  registrations: any[] | undefined
-): Map<string, any[]> {
-  const grouped = new Map<string, any[]>()
+  registrations: RegistrationResponseDto[] | undefined
+): Map<string, RegistrationResponseDto[]> {
+  const grouped = new Map<string, RegistrationResponseDto[]>()
   if (!registrations) return grouped
 
   registrations.forEach((reg) => {

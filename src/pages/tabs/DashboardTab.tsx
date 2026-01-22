@@ -1,4 +1,4 @@
-import type {JamResponseDto} from "../types/api.types.ts";
+import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 

@@ -44,9 +44,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const stored = localStorage.getItem('auth_user')
       if (stored) {
         const parsedUser = JSON.parse(stored)
-        return parsedUser.role || 'viewer'
+        // Derive role from user data - check role field first, then isHost
+        if (parsedUser.role) return parsedUser.role
+        if (parsedUser.isHost === true) return 'host'
+        return 'viewer'
       }
-    } catch {}
+    } catch (err) {
+      console.error('Failed to parse stored auth_user:', err)
+    }
     return 'viewer'
   })
   const [isNewUser, setIsNewUser] = useState(false)
@@ -67,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   /**
    * Helper function to set up auth state after successful login/signup
+   * Derives role from profile data with fallback logic
    */
   const handleAuthSuccess = useCallback(async (profile: AuthUser | null): Promise<{ success: boolean; error?: string; isNewUser?: boolean }> => {
     if (!profile) {
@@ -74,7 +80,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     setUser(profile)
-    setRoleState(profile.role)
+    
+    // Derive role: use profile.role if available, otherwise determine from isHost flag
+    const derivedRole: UserRole = profile.role || (profile.isHost ? 'host' : 'user')
+    setRoleState(derivedRole)
+    
     setIsAuthenticated(true)
     setIsNewUser(profile.isNewUser || false)
     localStorage.setItem('auth_user', JSON.stringify(profile))
@@ -97,7 +107,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
           if (profile) {
             setUser(profile)
-            setRoleState(profile.role)
+            // Derive role from profile, with fallback to isHost flag
+            const derivedRole: UserRole = profile.role || (profile.isHost ? 'host' : 'user')
+            setRoleState(derivedRole)
             setIsAuthenticated(true)
             localStorage.setItem('auth_user', JSON.stringify(profile))
           }
@@ -118,7 +130,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const profile = await loadUserProfile()
           if (profile) {
             setUser(profile)
-            setRoleState(profile.role)
+            // Derive role from profile, with fallback to isHost flag
+            const derivedRole: UserRole = profile.role || (profile.isHost ? 'host' : 'user')
+            setRoleState(derivedRole)
             setIsAuthenticated(true)
             setIsNewUser(profile.isNewUser || false)
             localStorage.setItem('auth_user', JSON.stringify(profile))
@@ -316,7 +330,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const updatedUser = { ...user, ...fields }
       localStorage.setItem('auth_user', JSON.stringify(updatedUser))
       setUser(updatedUser)
-      setRoleState(updatedUser.role)
+      // Derive role from updated user, with fallback to isHost flag
+      const derivedRole: UserRole = updatedUser.role || (updatedUser.isHost ? 'host' : 'user')
+      setRoleState(derivedRole)
     }
   }, [user])
 
@@ -374,7 +390,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const updatedUser = { ...user, ...response.data }
         localStorage.setItem('auth_user', JSON.stringify(updatedUser))
         setUser(updatedUser)
-        setRoleState(updatedUser.role)
+        // Derive role from updated user, with fallback to isHost flag
+        const derivedRole: UserRole = updatedUser.role || (updatedUser.isHost ? 'host' : 'user')
+        setRoleState(derivedRole)
       }
 
       return response

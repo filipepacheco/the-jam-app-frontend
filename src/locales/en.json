@@ -33,6 +33,10 @@
     "select_theme": "Select Theme",
     "select_language": "Select Language",
     "unknown": "Unknown",
+    "you": "You",
+    "expanded": "Expanded",
+    "collapsed": "Collapsed",
+    "collapse": "Collapse",
     "about": "About",
     "features_label": "Features",
     "pricing": "Pricing",
@@ -200,7 +204,8 @@
       "collaborate_desc": "Multiple musicians can perform the same song. Each role (vocals, guitar, bass, etc.) can have dedicated performers.",
       "performance_time": "Performance Time",
       "performance_time_desc": "Perform in the scheduled order. Be ready with your instrument and know your part!",
-      "suggest_btn": "🎵 Suggest a Song"
+      "suggest_btn": "🎵 Suggest a Song",
+      "steps_count": "{{count}} steps"
     },
     "qr_code": "📱 QR Code",
     "scan_to_share": "Scan to share or join this jam",
@@ -277,9 +282,26 @@
     "loading_failed": "Failed to load jam",
     "enroll_success": "✅ Successfully enrolled!",
     "suggest_success": "Song suggested successfully! Host will review it.",
+    "suggest_failed": "Failed to suggest song",
     "loading_songs_failed": "Failed to load songs",
     "select_song_error": "Please select a song",
-    "loading_jam_details": "Loading jam details...",
+    "my_registrations": "My Registrations",
+    "any_instrument": "Any Instrument",
+    "approved": "Approved",
+    "pending": "Pending",
+    "no_registrations_yet": "No registrations yet",
+    "click_register_to_start": "Click register to sign up for a performance",
+    "no_registrations_for_song": "No musicians registered for this song yet",
+    "awaiting_approval": "Awaiting approval",
+    "select_performance": "Select a Performance",
+    "select_performance_desc": "Choose which performance you'd like to register for",
+    "no_performances_available": "No performances available",
+    "actions": {
+      "suggesting": "Suggesting...",
+      "suggest_song": "Suggest Song",
+      "close": "Close"
+    },
+    "loading_jam_details": "Loading jam details…",
     "not_found": "Jam not found",
     "error_loading_jam": "Error Loading Jam",
     "back_to_jams": "← Back to Jams",
@@ -290,12 +312,33 @@
       "status": "Status",
       "performances": "Performances",
       "duration": "Duration",
-      "musicians": "Musicians"
+      "musicians": "Musicians",
+      "jam_details": "Jam Details",
+      "performances_count": "{{count}} performances"
     },
-    "performance_schedule_title": "📋 Performance Schedule",
+    "performance_schedule_title": "Performance Schedule",
     "suggested_songs_title": "Suggested Songs (Pending Approval)",
+    "instruments": "Instruments",
+    "scheduled": "Scheduled",
+    "suggested": "Suggested",
+    "register": "Register",
+    "go_to_stage": "Go to the Stage! It's Your Turn",
     "no_performance_schedule_title": "No Performance Schedule Yet",
     "no_performance_schedule_desc": "Schedule will be organized once musicians are registered."
+  },
+  "registration": {
+    "statuses": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "approved": "Approved",
+      "canceled": "Canceled",
+      "rejected": "Rejected"
+    }
+  },
+  "timeline": {
+    "start": "Start",
+    "finish": "Finish",
+    "jam_started_at": "Jam started at {{time}}"
   },
   "schedule": {
     "add_musician_title": "👥 Add Musician to Performance",
@@ -325,10 +368,17 @@
     "add_musician": "+ Add Musician",
     "unknown": "Unknown",
     "performance_completed": "✓ Performance completed",
+    "performance_in_progress": "🎵 Performance in progress",
     "now_playing": "Now Playing",
     "no_musicians_yet": "No musicians yet",
     "no_musicians_registered": "No musicians registered for this performance yet",
+    "no_registrations_yet": "No registrations yet",
     "musicians_count": "{{count}} musicians",
+    "required_instruments": "Required Instruments",
+    "no_instruments_required": "No instruments required",
+    "registered_musicians": "Registered Musicians",
+    "show_musicians": "Show Musicians",
+    "no_registrations": "No one registered yet",
     "statuses": {
       "suggested": "Suggested",
       "approved": "Approved",
@@ -378,7 +428,10 @@
     "failed_to_execute_action": "Failed to execute action",
     "no_song_playing": "No song currently playing",
     "invalid_email_phone": "Please enter a valid email or phone number",
-    "must_agree_terms": "You must agree to the terms before registering"
+    "must_agree_terms": "You must agree to the terms before registering",
+    "queue_empty": "Cannot reorder empty queue",
+    "duplicate_ids": "Duplicate songs detected",
+    "reorder_failed": "Failed to reorder queue"
   },
   "live_control": {
     "now_playing": "Now Playing",
@@ -387,9 +440,15 @@
     "song_paused_feedback": "Song paused",
     "skipped_feedback": "Skipped to next song",
     "reordered_feedback": "Queue reordered",
-    "executing_action": "Executing action...",
+    "executing_action": "Executing action…",
     "start_to_begin": "Start the first song to begin",
-    "no_more_songs": "No more songs scheduled"
+    "no_more_songs": "No more songs scheduled",
+    "drag_to_reorder": "Drag to reorder",
+    "reorder_validation_error": "Invalid song order",
+    "reorder_permission_error": "You don't have permission to reorder",
+    "reorder_network_error": "Connection lost, please retry",
+    "reorder_server_error": "Something went wrong, please try again",
+    "no_song_playing": "No song currently playing"
   },
   "music_form": {
     "title": "Title",
@@ -679,9 +738,23 @@
     "title_with_emoji": "🎛️ DJ Control",
     "actions": {
       "title_with_emoji": "⚡ Actions",
+      "status": "Status",
       "refresh": "Refresh",
       "refresh_data": "Refresh data",
       "updating": "Updating...",
+      "start": "Start Jam",
+      "start_tooltip": "Start the jam session",
+      "stop": "Stop Jam",
+      "stop_tooltip": "Stop the jam session",
+      "resume": "Resume",
+      "resume_tooltip": "Resume playback",
+      "play": "Play",
+      "play_tooltip": "Resume playback",
+      "pause": "Pause",
+      "pause_tooltip": "Pause current song",
+      "skip": "Skip",
+      "skip_short": "⏭️",
+      "skip_tooltip": "Skip to next song",
       "previous": "Previous",
       "previous_short": "⏮️",
       "previous_tooltip": "Go back to previous song",
@@ -699,12 +772,18 @@
     "timeline": {
       "now_playing": "NOW PLAYING",
       "suggestions_header": "⚠️ Suggestions",
+      "suggested_songs": "Suggested Songs (Pending Approval)",
+      "approve_song": "Approve song",
+      "approve": "Approve",
       "empty_queue": "No songs in queue",
       "empty_queue_hint": "Add songs from the management page",
-      "no_musicians": "No musicians registered"
+      "no_musicians": "No musicians registered",
+      "remove_song": "Remove song",
+      "remove": "Remove"
     },
     "stats": {
       "title_with_emoji": "📊 Queue Stats",
+      "status": "Status",
       "total_songs": "Total Songs",
       "completed_with_icon": "✓ Completed",
       "now_playing_with_icon": "▶ Now Playing",
@@ -728,6 +807,9 @@
     "song_removed": "Song removed successfully",
     "song_approved": "Song approved and added to queue",
     "errors": {
+      "no_jam_id": "No jam ID provided",
+      "failed_to_load": "Failed to load jam state",
+      "action_failed": "Action failed. Please try again.",
       "no_current_song": "No song is currently playing",
       "no_next_song": "No scheduled songs available to play next",
       "no_previous_song": "No completed songs available to go back to",

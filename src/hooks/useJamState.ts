@@ -4,7 +4,7 @@
  */
 
 import {useContext} from 'react'
-import {JamContext, type JamContextType} from '../contexts'
+import {JamContext, type JamContextType} from '../contexts/JamContext'
 
 /**
  * Hook to access jam context

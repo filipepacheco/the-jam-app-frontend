@@ -7,6 +7,7 @@ import React, {useState} from 'react'
 import {useAuth} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
 import {useTranslation} from 'react-i18next'
+import type {MusicianLevel} from '../types/api.types'
 
 interface OnboardingModalProps {
   isOpen: boolean
@@ -71,7 +72,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
     try {
       // Update profile with instrument, level, and optional name/phone
-      const result = await completeOnboarding(instrument, level as any, { name: name.trim(), phone })
+      const result = await completeOnboarding(instrument, level as MusicianLevel, { name: name.trim(), phone })
 
       if (result.success) {
         onClose()

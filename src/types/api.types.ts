@@ -48,24 +48,32 @@ export interface MusicianResponseDto {
 
 /**
  * Music response from API
+ * NOTE: Backend uses Portuguese field names (titulo, artista, duracao)
+ * Includes English aliases for backward compatibility
  */
 export interface MusicResponseDto {
   id: string
-  title: string
-  artist: string
-genre?: string
+  titulo: string  // Portuguese for "title"
+  artista: string  // Portuguese for "artist"
+  genero?: string  // Portuguese for "genre"
+  duracao?: number  // Portuguese for "duration" (in seconds)
   description?: string
   link?: string
-  duration?: number
   status?: 'APPROVED' | 'SUGGESTED'
   createdAt: string
   registrations?: RegistrationResponseDto[]
   schedules?: ScheduleResponseDto[]
-    neededDrums?: number
-    neededGuitars?: number
-    neededVocals?: number
-    neededBass?: number
-    neededKeys?: number
+  neededDrums?: number
+  neededGuitars?: number
+  neededVocals?: number
+  neededBass?: number
+  neededKeys?: number
+  
+  // English aliases for backward compatibility (same as Portuguese fields)
+  title: string
+  artist: string
+  genre?: string
+  duration?: number
 }
 
 /**

@@ -3,10 +3,10 @@
  * Displays error messages with daisyUI styling
  */
 
-import { memo } from 'react'
+import {memo} from 'react'
 
 interface ErrorAlertProps {
-  message: string
+  message?: string | null
   title?: string
   onDismiss?: () => void
   className?: string

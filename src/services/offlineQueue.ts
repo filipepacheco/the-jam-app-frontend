@@ -6,10 +6,10 @@
 /**
  * Queued socket action
  */
-export interface QueuedAction {
+export interface QueuedAction<T = unknown> {
   id: string
   event: string
-  payload: any
+  payload: T
   timestamp: number
   retries: number
   priority: 'high' | 'normal' | 'low'
@@ -31,9 +31,9 @@ export interface QueueStats {
  */
 class OfflineQueueManager {
   private static instance: OfflineQueueManager | null = null
-  private queue: Map<string, QueuedAction> = new Map()
+  private queue: Map<string, QueuedAction<unknown>> = new Map()
   private persistenceKey = 'socket_offline_queue'
-  private listeners: ((queue: QueuedAction[]) => void)[] = []
+  private listeners: ((queue: QueuedAction<unknown>[]) => void)[] = []
 
   private constructor() {
     this.loadFromStorage()
@@ -52,15 +52,15 @@ class OfflineQueueManager {
   /**
    * Add action to queue
    */
-  addAction(
+  addAction<T = unknown>(
     event: string,
-    payload: any,
+    payload: T,
     priority: 'high' | 'normal' | 'low' = 'normal'
   ): string {
     // noinspection JSDeprecatedSymbols
     const id = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
-    const action: QueuedAction = {
+    const action: QueuedAction<T> = {
       id,
       event,
       payload,

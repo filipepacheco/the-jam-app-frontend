@@ -1,9 +1,9 @@
 /**
- * DJ Control Components Module
- * Exports all DJ control related components
+ * DJ Control V2 Components
+ * New components using the /control endpoints
  */
 
-export { SongQueueTimeline } from './SongQueueTimeline'
-export { TimelineSongItem } from './TimelineSongItem'
-export { QueueStats } from './QueueStats'
-
+export { DJControlActions } from './DJControlActions.tsx'
+export { SongQueueTimeline } from './SongQueueTimeline.tsx'
+export { TimelineSongItem } from './TimelineSongItem.tsx'
+export { QueueStats } from './QueueStats.tsx'

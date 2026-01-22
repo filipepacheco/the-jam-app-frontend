@@ -6,10 +6,9 @@
 
 import React, {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth} from '../hooks'
-import * as jamService from '../services/jamService'
-import {ErrorAlert} from '../components'
-import {SuccessAlert} from '../components'
+import {useAuth} from '../../hooks'
+import * as jamService from '../../services/jamService.ts'
+import {ErrorAlert, SuccessAlert} from '../../components'
 
 interface FormData {
   name: string
