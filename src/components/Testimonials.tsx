@@ -37,7 +37,7 @@ export function Testimonials() {
     <section className="py-12 sm:py-16 lg:py-20 bg-base-200" aria-labelledby="testimonials-title">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 id="testimonials-title" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-base-content">
+          <h2 id="testimonials-title" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-base-content text-wrap-balance">
             {t('homepage.testimonials.title')}
           </h2>
           <p className="text-lg text-base-content/70">
@@ -69,7 +69,7 @@ export function Testimonials() {
             >
               <div className="card bg-base-100 shadow-lg h-full">
                 <div className="card-body">
-                  <p className="text-base-content/80 italic mb-4">"{testimonial.quote}"</p>
+                  <blockquote className="text-base-content/80 italic mb-4">\"{testimonial.quote}\"</blockquote>
                   <div className="flex items-center gap-3 mt-auto">
                     <Avatar name={testimonial.name} size="md" />
                     <div>

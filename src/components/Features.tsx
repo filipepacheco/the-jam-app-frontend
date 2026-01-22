@@ -6,7 +6,7 @@ function Features() {
   return (
     <div className="py-8 sm:py-12 lg:py-16 px-2 sm:px-4 lg:px-8 bg-base-100">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-2 sm:mb-4">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-2 sm:mb-4 text-wrap-balance">
           {t('jams.features.title')}
         </h2>
         <p className="text-center text-sm sm:text-base lg:text-lg mb-8 sm:mb-12 max-w-2xl mx-auto">
@@ -28,7 +28,7 @@ function Features() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  aria-label="Host features icon">
+                  aria-hidden="true">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -57,7 +57,7 @@ function Features() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  aria-label="Musician features icon">
+                  aria-hidden="true">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -86,7 +86,7 @@ function Features() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  aria-label="Audience features icon">
+                  aria-hidden="true">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

@@ -12,7 +12,7 @@ export function HowItWorks() {
     {
       id: 'create',
       icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Create or join icon">
+        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
         </svg>
       ),
@@ -22,7 +22,7 @@ export function HowItWorks() {
     {
       id: 'register',
       icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Register icon">
+        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
         </svg>
       ),
@@ -32,7 +32,7 @@ export function HowItWorks() {
     {
       id: 'perform',
       icon: (
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Perform live icon">
+        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
         </svg>
       ),
@@ -45,7 +45,7 @@ export function HowItWorks() {
     <section className="py-12 sm:py-16 lg:py-20 bg-base-100" aria-labelledby="how-it-works-title">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 id="how-it-works-title" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-base-content">
+          <h2 id="how-it-works-title" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-base-content text-wrap-balance">
             {t('homepage.how_it_works.title')}
           </h2>
           <p className="text-lg text-base-content/70">

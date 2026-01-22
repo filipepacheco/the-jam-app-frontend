@@ -8,7 +8,7 @@ import {apiClient} from './lib/api'
 import Navbar from './components/Navbar'
 import {EnhancedHero} from './components/EnhancedHero'
 import Features from './components/Features'
-import {Stats} from './components/Stats'
+
 import {HowItWorks} from './components/HowItWorks'
 import {Testimonials} from './components/Testimonials'
 import CallToAction from './components/CallToAction'
@@ -67,7 +67,8 @@ function RouteLoadingFallback() {
  * Home Page Component
  * Main landing page with hero, features, and call-to-action
  */
-function HomePage() {
+function
+HomePage() {
   const { t } = useTranslation()
 
   return (
@@ -81,7 +82,6 @@ function HomePage() {
       <div className="min-h-screen">
         <Navbar />
         <EnhancedHero />
-        <Stats />
         <Features />
         <HowItWorks />
         <Testimonials />

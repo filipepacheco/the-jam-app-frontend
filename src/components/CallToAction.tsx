@@ -8,20 +8,21 @@ function CallToAction() {
   return (
     <div className="py-16 sm:py-20 px-4 bg-gradient-to-br from-base-200 to-base-300">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-4xl font-bold mb-6">
+        <h2 className="text-4xl font-bold mb-6 text-wrap-balance">
           {t('homepage.call_to_action.title')}
         </h2>
         <p className="text-xl mb-8">
           {t('homepage.call_to_action.description')}
         </p>
         <div className="flex gap-4 justify-center flex-wrap">
-          <button className="btn btn-primary btn-lg" onClick={() => navigate('/register')}>
+          <button className="btn btn-primary btn-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary" onClick={() => navigate('/register')}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor">
+              stroke="currentColor"
+              aria-hidden="true">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -30,7 +31,7 @@ function CallToAction() {
             </svg>
             {t('homepage.call_to_action.cta_button')}
           </button>
-          <button className="btn btn-outline btn-lg" onClick={() => navigate('/jams')}>
+          <button className="btn btn-outline btn-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-base-content" onClick={() => navigate('/jams')}>
             {t('homepage.call_to_action.browse_jams')}
           </button>
         </div>
