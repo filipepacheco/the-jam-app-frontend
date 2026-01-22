@@ -45,7 +45,7 @@ export function EnhancedHero() {
 
         {/* Hero Content */}
         <motion.div
-          className="lg:w-3/5 text-center lg:text-left relative z-20"
+          className="lg:w-3/5 text-center lg:text-left relative z-20 bg-black/50 lg:bg-transparent px-4 py-6 lg:p-0 rounded-lg lg:rounded-none"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
