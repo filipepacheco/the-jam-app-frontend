@@ -3,17 +3,25 @@
  * Helper functions for organizing musicians by instrument
  */
 
-import type { MusicianResponseDto, RegistrationResponseDto } from '../types/api.types'
+import type {RegistrationResponseDto} from '../types/api.types'
+
+/**
+ * Minimal musician interface for grouping
+ * Any type with an instrument property can be grouped
+ */
+interface HasInstrument {
+  instrument: string
+}
 
 /**
  * Group musicians by instrument
  * @param musicians - Array of musician objects with instrument property
  * @returns Object with instruments as keys and arrays of musicians as values
  */
-export function groupMusiciansByInstrument(
-  musicians: MusicianResponseDto[] | undefined
-): Record<string, MusicianResponseDto[]> {
-  return (musicians || []).reduce((acc: Record<string, MusicianResponseDto[]>, musician: MusicianResponseDto) => {
+export function groupMusiciansByInstrument<T extends HasInstrument>(
+  musicians: T[] | undefined
+): Record<string, T[]> {
+  return (musicians || []).reduce((acc: Record<string, T[]>, musician: T) => {
     const instrument = musician.instrument || 'Unknown'
     if (!acc[instrument]) {
       acc[instrument] = []

@@ -27,8 +27,8 @@ export function TimelineSongItem({ song, status, onRemove, loading }: TimelineSo
     : '--:--'
 
   // Handle both Portuguese (titulo/artista) and English (title/artist) field names
-  const title = song.music.titulo || song.music.title || 'Unknown'
-  const artist = song.music.artista || song.music.artist || 'Unknown'
+  const title = song.music.title || 'Unknown'
+  const artist = song.music.artist || 'Unknown'
 
   return (
     <div className="space-y-1">
