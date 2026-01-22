@@ -21,14 +21,14 @@ export function EnhancedHero() {
   }
 
   return (
-    <section className="hero min-h-screen bg-gradient-to-r from-purple-900 via-purple-800 to-rose-900 relative overflow-hidden">
+    <section className="hero min-h-screen bg-gradient-to-r from-purple-900 via-purple-800 to-rose-900 relative">
       {/* Dark overlay for text readability */}
       <div className="absolute inset-0 bg-black/40" />
       
       <div className="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 flex-col lg:flex-row-reverse gap-8 lg:gap-12 relative z-10">
         {/* Hero Image */}
         <motion.div
-          className="w-full sm:w-4/5 md:w-3/5 lg:w-2/5 relative z-20 max-h-64 sm:max-h-80 md:max-h-96 lg:max-h-full"
+          className="w-full sm:w-4/5 md:w-3/5 lg:w-2/5 relative z-0 max-h-64 sm:max-h-80 md:max-h-96 lg:max-h-full"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}

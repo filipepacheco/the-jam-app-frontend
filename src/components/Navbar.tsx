@@ -49,7 +49,7 @@ function Navbar() {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-48 sm:w-52 p-2 shadow text-xs sm:text-sm">
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-48 sm:w-52 p-2 shadow text-xs sm:text-sm">
             {/* Mobile Menu Items */}
             <li><a href="/">{t('nav.home')}</a></li>
             <li><a href="/jams">{t('nav.browse_jams')}</a></li>
@@ -125,7 +125,7 @@ function Navbar() {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content z-1 menu p-2 shadow bg-base-100 rounded-box w-48 sm:w-52 text-xs sm:text-sm">
+            className="dropdown-content z-50 menu p-2 shadow bg-base-100 rounded-box w-48 sm:w-52 text-xs sm:text-sm">
             {isAuthenticated && user && (
               <>
                 <li className="menu-title">
