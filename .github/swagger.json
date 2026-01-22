@@ -4,13 +4,13 @@
     "/": {
       "get": {
         "operationId": "AppController_getHello",
-        "summary": "Health check endpoint",
         "parameters": [],
         "responses": {
           "200": {
             "description": ""
           }
         },
+        "summary": "Health check endpoint",
         "tags": [
           "Health Check"
         ]
@@ -19,104 +19,21 @@
     "/health": {
       "get": {
         "operationId": "AppController_getHealth",
-        "summary": "API health status",
         "parameters": [],
         "responses": {
           "200": {
             "description": ""
           }
         },
+        "summary": "API health status",
         "tags": [
           "Health Check"
-        ]
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "operationId": "AuthController_login",
-        "summary": "Login or auto-register with email or phone (DEPRECATED)",
-        "description": "This endpoint is deprecated. Use Supabase authentication instead. Will be removed after 2026-01-31.",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Login successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation error"
-          },
-          "401": {
-            "description": "Account locked due to too many failed attempts"
-          },
-          "429": {
-            "description": "Too many requests - rate limited"
-          }
-        },
-        "tags": [
-          "Authentication"
-        ]
-      }
-    },
-    "/auth/sync-user": {
-      "post": {
-        "operationId": "AuthController_syncSupabaseUser",
-        "summary": "Sync Supabase user to local database (DEPRECATED)",
-        "description": "This endpoint is deprecated. Use Supabase JWT directly in Authorization header. Will be removed after 2026-01-31.",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "description": "Supabase authentication token",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SyncSupabaseUserDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "User synced successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponseDto"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Supabase not configured"
-          },
-          "401": {
-            "description": "Invalid Supabase token"
-          }
-        },
-        "tags": [
-          "Authentication"
         ]
       }
     },
     "/auth/logout": {
       "post": {
         "operationId": "AuthController_logout",
-        "summary": "Logout user",
         "parameters": [],
         "responses": {
           "200": {
@@ -126,43 +43,50 @@
             "description": "Unauthorized - invalid or missing token"
           }
         },
-        "tags": [
-          "Authentication"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Logout user",
+        "tags": [
+          "Authentication"
         ]
       }
     },
     "/auth/me": {
       "get": {
         "operationId": "AuthController_getProfile",
-        "summary": "Get current user profile",
         "parameters": [],
         "responses": {
           "200": {
-            "description": "User profile retrieved"
+            "description": "User profile retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MusicianProfileResponseDto"
+                }
+              }
+            }
           },
           "401": {
             "description": "Unauthorized - invalid or missing token"
           }
         },
-        "tags": [
-          "Authentication"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Get current user profile with registration status",
+        "tags": [
+          "Authentication"
         ]
       }
     },
     "/auth/profile": {
       "patch": {
         "operationId": "AuthController_updateProfile",
-        "summary": "Update musician profile (name, instrument, level, contact)",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -177,7 +101,14 @@
         },
         "responses": {
           "200": {
-            "description": "Profile updated successfully"
+            "description": "Profile updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MusicianProfileResponseDto"
+                }
+              }
+            }
           },
           "400": {
             "description": "Validation error"
@@ -186,26 +117,27 @@
             "description": "Unauthorized - invalid or missing token"
           }
         },
-        "tags": [
-          "Authentication"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Update musician profile (name, instrument, level, contact, phone, isHost)",
+        "tags": [
+          "Authentication"
         ]
       }
     },
     "/auth/health": {
       "get": {
         "operationId": "AuthController_healthCheck",
-        "summary": "Health check endpoint",
         "parameters": [],
         "responses": {
           "200": {
             "description": "Service is healthy"
           }
         },
+        "summary": "Health check endpoint",
         "tags": [
           "Authentication"
         ]
@@ -214,7 +146,6 @@
     "/jams": {
       "post": {
         "operationId": "JamController_create",
-        "summary": "Create a new jam session",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -244,18 +175,18 @@
             "description": "Forbidden - insufficient permissions"
           }
         },
-        "tags": [
-          "Jams"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Create a new jam session",
+        "tags": [
+          "Jams"
         ]
       },
       "get": {
         "operationId": "JamController_findAll",
-        "summary": "List all jams",
         "parameters": [],
         "responses": {
           "200": {
@@ -272,6 +203,7 @@
             }
           }
         },
+        "summary": "List all jams",
         "tags": [
           "Jams"
         ]
@@ -280,7 +212,6 @@
     "/jams/{id}": {
       "get": {
         "operationId": "JamController_findOne",
-        "summary": "Get jam by ID",
         "parameters": [
           {
             "name": "id",
@@ -306,13 +237,13 @@
             "description": "Jam not found"
           }
         },
+        "summary": "Get jam by ID",
         "tags": [
           "Jams"
         ]
       },
       "patch": {
         "operationId": "JamController_update",
-        "summary": "Update jam",
         "parameters": [
           {
             "name": "id",
@@ -344,18 +275,18 @@
             "description": "Forbidden - insufficient permissions"
           }
         },
-        "tags": [
-          "Jams"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Update jam",
+        "tags": [
+          "Jams"
         ]
       },
       "delete": {
         "operationId": "JamController_remove",
-        "summary": "Delete jam",
         "parameters": [
           {
             "name": "id",
@@ -377,20 +308,20 @@
             "description": "Forbidden - insufficient permissions"
           }
         },
-        "tags": [
-          "Jams"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Delete jam",
+        "tags": [
+          "Jams"
         ]
       }
     },
     "/jams/{id}/live/state": {
       "get": {
         "operationId": "JamController_getLiveState",
-        "summary": "Get live jam state for polling fallback",
         "parameters": [
           {
             "name": "id",
@@ -416,6 +347,7 @@
             "description": "Jam not found"
           }
         },
+        "summary": "Get live jam state for polling fallback",
         "tags": [
           "Jams"
         ]
@@ -424,7 +356,6 @@
     "/jams/{id}/live/dashboard": {
       "get": {
         "operationId": "JamController_getLiveDashboard",
-        "summary": "Get live jam dashboard data (current and next songs with musicians)",
         "parameters": [
           {
             "name": "id",
@@ -450,6 +381,7 @@
             "description": "Jam not found"
           }
         },
+        "summary": "Get live jam dashboard data (current and next songs with musicians)",
         "tags": [
           "Jams"
         ]
@@ -458,7 +390,6 @@
     "/jams/{id}/live/control": {
       "post": {
         "operationId": "JamController_executeControlAction",
-        "summary": "Execute live jam control action (play/pause/skip/reorder)",
         "parameters": [
           {
             "name": "id",
@@ -500,20 +431,333 @@
             "description": "Jam not found"
           }
         },
-        "tags": [
-          "Jams"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Execute live jam control action (play/pause/skip/reorder)",
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/control/start": {
+      "post": {
+        "operationId": "JamController_startJam",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Jam started successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not jam host"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Start jam playback (starts first scheduled song)",
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/control/stop": {
+      "post": {
+        "operationId": "JamController_stopJam",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Jam stopped successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not jam host"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Stop jam playback",
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/control/next": {
+      "post": {
+        "operationId": "JamController_nextSong",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Skip"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not jam host"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Skip to next song",
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/control/previous": {
+      "post": {
+        "operationId": "JamController_previousSong",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Previous"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not jam host"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Go back to previous song",
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/control/pause": {
+      "post": {
+        "operationId": "JamController_pauseSong",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Pause"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not jam host"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Pause current song",
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/control/resume": {
+      "post": {
+        "operationId": "JamController_resumeSong",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Resume"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not jam host"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Resume paused song",
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/control/reorder": {
+      "post": {
+        "operationId": "JamController_reorderSchedules",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderSchedulesDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Queue reordered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JamResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid schedule IDs or validation error"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - not jam host"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Reorder schedules in jam queue (drag and drop support)",
+        "tags": [
+          "Jams"
+        ]
+      }
+    },
+    "/jams/{id}/playback-history": {
+      "get": {
+        "operationId": "JamController_getPlaybackHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Playback history retrieved"
+          },
+          "404": {
+            "description": "Jam not found"
+          }
+        },
+        "summary": "Get playback history for jam",
+        "tags": [
+          "Jams"
         ]
       }
     },
     "/musicos": {
       "post": {
         "operationId": "MusicoController_create",
-        "summary": "Create a new musician (admin only)",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -536,24 +780,25 @@
             "description": "Forbidden - admin only"
           }
         },
-        "tags": [
-          "Musicians"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Create a new musician (admin only)",
+        "tags": [
+          "Musicians"
         ]
       },
       "get": {
         "operationId": "MusicoController_findAll",
-        "summary": "List all musicians",
         "parameters": [],
         "responses": {
           "200": {
             "description": "List of musicians"
           }
         },
+        "summary": "List all musicians",
         "tags": [
           "Musicians"
         ]
@@ -562,7 +807,6 @@
     "/musicos/{id}": {
       "get": {
         "operationId": "MusicoController_findOne",
-        "summary": "Get musician by ID",
         "parameters": [
           {
             "name": "id",
@@ -581,13 +825,13 @@
             "description": "Musician not found"
           }
         },
+        "summary": "Get musician by ID",
         "tags": [
           "Musicians"
         ]
       },
       "patch": {
         "operationId": "MusicoController_update",
-        "summary": "Update musician (self or host)",
         "parameters": [
           {
             "name": "id",
@@ -619,18 +863,18 @@
             "description": "Forbidden - can only update own profile unless host"
           }
         },
-        "tags": [
-          "Musicians"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Update musician (self or host)",
+        "tags": [
+          "Musicians"
         ]
       },
       "delete": {
         "operationId": "MusicoController_remove",
-        "summary": "Delete musician (admin only)",
         "parameters": [
           {
             "name": "id",
@@ -652,20 +896,20 @@
             "description": "Forbidden - admin only"
           }
         },
-        "tags": [
-          "Musicians"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Delete musician (admin only)",
+        "tags": [
+          "Musicians"
         ]
       }
     },
     "/musicas": {
       "post": {
         "operationId": "MusicaController_create",
-        "summary": "Create a new music",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -688,24 +932,25 @@
             "description": "Forbidden - insufficient permissions"
           }
         },
-        "tags": [
-          "Musicas"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Create a new music",
+        "tags": [
+          "Musicas"
         ]
       },
       "get": {
         "operationId": "MusicaController_findAll",
-        "summary": "List all musics independent of jam",
         "parameters": [],
         "responses": {
           "200": {
             "description": "List of musics"
           }
         },
+        "summary": "List all musics independent of jam",
         "tags": [
           "Musicas"
         ]
@@ -714,7 +959,6 @@
     "/musicas/{id}": {
       "get": {
         "operationId": "MusicaController_findOne",
-        "summary": "Get music by ID",
         "parameters": [
           {
             "name": "id",
@@ -733,13 +977,13 @@
             "description": "Music not found"
           }
         },
+        "summary": "Get music by ID",
         "tags": [
           "Musicas"
         ]
       },
       "patch": {
         "operationId": "MusicaController_update",
-        "summary": "Update music",
         "parameters": [
           {
             "name": "id",
@@ -771,18 +1015,18 @@
             "description": "Forbidden - insufficient permissions"
           }
         },
-        "tags": [
-          "Musicas"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Update music",
+        "tags": [
+          "Musicas"
         ]
       },
       "delete": {
         "operationId": "MusicaController_remove",
-        "summary": "Delete music",
         "parameters": [
           {
             "name": "id",
@@ -804,20 +1048,20 @@
             "description": "Forbidden - insufficient permissions"
           }
         },
-        "tags": [
-          "Musicas"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Delete music",
+        "tags": [
+          "Musicas"
         ]
       }
     },
     "/musicas/jam/{jamId}": {
       "get": {
         "operationId": "MusicaController_findByJam",
-        "summary": "Get musics by jam",
         "parameters": [
           {
             "name": "jamId",
@@ -833,6 +1077,7 @@
             "description": "List of musics for jam"
           }
         },
+        "summary": "Get musics by jam",
         "tags": [
           "Musicas"
         ]
@@ -841,7 +1086,6 @@
     "/musicas/{id}/link-jam/{jamId}": {
       "patch": {
         "operationId": "MusicaController_linkToJam",
-        "summary": "Link music to a jam",
         "parameters": [
           {
             "name": "id",
@@ -871,20 +1115,20 @@
             "description": "Forbidden - insufficient permissions"
           }
         },
-        "tags": [
-          "Musicas"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Link music to a jam",
+        "tags": [
+          "Musicas"
         ]
       }
     },
     "/inscricoes": {
       "post": {
         "operationId": "InscricaoController_create",
-        "summary": "Create a new registration",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -904,20 +1148,20 @@
             "description": "Unauthorized"
           }
         },
-        "tags": [
-          "Registrations"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Create a new registration",
+        "tags": [
+          "Registrations"
         ]
       }
     },
     "/inscricoes/jam/{jamId}": {
       "get": {
         "operationId": "InscricaoController_findByJam",
-        "summary": "Get registrations by jam",
         "parameters": [
           {
             "name": "jamId",
@@ -933,6 +1177,7 @@
             "description": "List of registrations for jam"
           }
         },
+        "summary": "Get registrations by jam",
         "tags": [
           "Registrations"
         ]
@@ -941,7 +1186,6 @@
     "/inscricoes/{id}/approve": {
       "patch": {
         "operationId": "InscricaoController_approve",
-        "summary": "Approve a registration",
         "parameters": [
           {
             "name": "id",
@@ -963,20 +1207,20 @@
             "description": "Forbidden - host only"
           }
         },
-        "tags": [
-          "Registrations"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Approve a registration",
+        "tags": [
+          "Registrations"
         ]
       }
     },
     "/inscricoes/{id}/reject": {
       "patch": {
         "operationId": "InscricaoController_reject",
-        "summary": "Reject a registration",
         "parameters": [
           {
             "name": "id",
@@ -998,20 +1242,20 @@
             "description": "Forbidden - host only"
           }
         },
-        "tags": [
-          "Registrations"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Reject a registration",
+        "tags": [
+          "Registrations"
         ]
       }
     },
     "/inscricoes/{id}": {
       "patch": {
         "operationId": "InscricaoController_update",
-        "summary": "Update registration details (instrument, status)",
         "parameters": [
           {
             "name": "id",
@@ -1049,18 +1293,18 @@
             "description": "Registration not found"
           }
         },
-        "tags": [
-          "Registrations"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Update registration details (instrument, status)",
+        "tags": [
+          "Registrations"
         ]
       },
       "delete": {
         "operationId": "InscricaoController_remove",
-        "summary": "Cancel registration",
         "parameters": [
           {
             "name": "id",
@@ -1079,20 +1323,20 @@
             "description": "Unauthorized"
           }
         },
-        "tags": [
-          "Registrations"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Cancel registration",
+        "tags": [
+          "Registrations"
         ]
       }
     },
     "/escalas": {
       "post": {
         "operationId": "EscalaController_create",
-        "summary": "Create new schedule",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1115,20 +1359,20 @@
             "description": "Forbidden - insufficient permissions"
           }
         },
-        "tags": [
-          "Schedules"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Create new schedule",
+        "tags": [
+          "Schedules"
         ]
       }
     },
     "/escalas/jam/{jamId}": {
       "get": {
         "operationId": "EscalaController_findByJam",
-        "summary": "Get schedules by jam",
         "parameters": [
           {
             "name": "jamId",
@@ -1144,6 +1388,7 @@
             "description": "List of schedules for jam"
           }
         },
+        "summary": "Get schedules by jam",
         "tags": [
           "Schedules"
         ]
@@ -1152,7 +1397,6 @@
     "/escalas/{id}": {
       "patch": {
         "operationId": "EscalaController_update",
-        "summary": "Update schedule",
         "parameters": [
           {
             "name": "id",
@@ -1184,18 +1428,18 @@
             "description": "Forbidden - host only"
           }
         },
-        "tags": [
-          "Schedules"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Update schedule",
+        "tags": [
+          "Schedules"
         ]
       },
       "delete": {
         "operationId": "EscalaController_remove",
-        "summary": "Remove from schedule",
         "parameters": [
           {
             "name": "id",
@@ -1217,20 +1461,20 @@
             "description": "Forbidden - host only"
           }
         },
-        "tags": [
-          "Schedules"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Remove from schedule",
+        "tags": [
+          "Schedules"
         ]
       }
     },
     "/escalas/jam/{jamId}/reorder": {
       "put": {
         "operationId": "EscalaController_reorderSchedule",
-        "summary": "Reorder schedules - array position becomes the order",
         "parameters": [
           {
             "name": "jamId",
@@ -1265,13 +1509,14 @@
             "description": "Forbidden - host only"
           }
         },
-        "tags": [
-          "Schedules"
-        ],
         "security": [
           {
             "bearer": []
           }
+        ],
+        "summary": "Reorder schedules - array position becomes the order",
+        "tags": [
+          "Schedules"
         ]
       }
     }
@@ -1291,82 +1536,78 @@
   "servers": [],
   "components": {
     "schemas": {
-      "LoginDto": {
+      "MusicianProfileResponseDto": {
         "type": "object",
         "properties": {
-          "email": {
+          "id": {
             "type": "string",
-            "description": "User email address",
-            "example": "user@example.com"
+            "description": "Musician ID (UUID)"
           },
-          "phone": {
+          "supabaseUserId": {
             "type": "string",
-            "description": "User phone number (E.164 format recommended)",
-            "example": "+5511999999999"
-          }
-        }
-      },
-      "AuthResponseDto": {
-        "type": "object",
-        "properties": {
-          "userId": {
-            "type": "string",
-            "description": "User ID"
+            "description": "Supabase user ID"
           },
           "name": {
             "type": "string",
-            "description": "User name"
+            "description": "Musician name"
           },
           "email": {
             "type": "string",
-            "description": "User email"
+            "description": "Musician email"
           },
           "phone": {
             "type": "string",
-            "description": "User phone"
+            "description": "Musician phone"
           },
-          "role": {
+          "contact": {
             "type": "string",
-            "description": "User role",
+            "description": "Primary contact info"
+          },
+          "instrument": {
+            "type": "string",
+            "description": "Instrument (drums, guitar, vocals, bass, keys, etc.)"
+          },
+          "level": {
+            "type": "string",
+            "description": "Skill level",
             "enum": [
-              "user",
-              "host",
-              "admin"
+              "BEGINNER",
+              "INTERMEDIATE",
+              "ADVANCED",
+              "PROFESSIONAL"
             ]
           },
           "isHost": {
             "type": "boolean",
-            "description": "Whether user is a host",
-            "default": false
+            "description": "Whether user is a jam host"
           },
-          "token": {
-            "type": "string",
-            "description": "JWT token"
+          "registrationComplete": {
+            "type": "boolean",
+            "description": "Whether profile registration is complete (has instrument, level, and contact)"
           },
           "isNewUser": {
             "type": "boolean",
-            "description": "Whether user is newly created"
-          }
-        },
-        "required": [
-          "userId",
-          "role",
-          "isHost",
-          "token",
-          "isNewUser"
-        ]
-      },
-      "SyncSupabaseUserDto": {
-        "type": "object",
-        "properties": {
-          "token": {
+            "description": "Whether is new user"
+          },
+          "createdAt": {
+            "format": "date-time",
             "type": "string",
-            "description": "Supabase access token from authentication",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            "description": "Account creation timestamp"
           }
         },
         "required": [
-          "token"
+          "id",
+          "supabaseUserId",
+          "name",
+          "email",
+          "phone",
+          "contact",
+          "instrument",
+          "level",
+          "isHost",
+          "registrationComplete",
+          "isNewUser",
+          "createdAt"
         ]
       },
       "UpdateProfileDto": {
@@ -1378,11 +1619,11 @@
           },
           "instrument": {
             "type": "string",
-            "description": "Musician instrument"
+            "description": "Musician instrument (drums, guitar, vocals, bass, keys, etc.)"
           },
           "level": {
             "type": "string",
-            "description": "Musician level",
+            "description": "Musician skill level",
             "enum": [
               "BEGINNER",
               "INTERMEDIATE",
@@ -1392,7 +1633,15 @@
           },
           "contact": {
             "type": "string",
-            "description": "Musician contact (phone or email)"
+            "description": "Contact phone number or secondary email"
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number"
+          },
+          "isHost": {
+            "type": "boolean",
+            "description": "Whether user wants to host jams"
           }
         }
       },
@@ -1718,6 +1967,24 @@
             "format": "date-time",
             "type": "string"
           },
+          "startedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "description": "When the song started playing"
+          },
+          "pausedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "description": "When the song was paused (if paused)"
+          },
+          "completedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "description": "When the song was completed"
+          },
           "music": {
             "type": "object"
           },
@@ -1735,6 +2002,9 @@
           "order",
           "status",
           "createdAt",
+          "startedAt",
+          "pausedAt",
+          "completedAt",
           "music"
         ]
       },
@@ -1757,9 +2027,44 @@
               "$ref": "#/components/schemas/LiveStateSongDto"
             }
           },
+          "previousSongs": {
+            "description": "Previously played songs (up to 3)",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LiveStateSongDto"
+            }
+          },
+          "suggestedSongs": {
+            "description": "Suggested songs in the jam",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LiveStateSongDto"
+            }
+          },
           "jamStatus": {
             "type": "string",
             "description": "Current jam status"
+          },
+          "playbackState": {
+            "type": "string",
+            "enum": [
+              "STOPPED",
+              "PLAYING",
+              "PAUSED"
+            ],
+            "description": "Current playback state"
+          },
+          "currentSongStartedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "description": "When the current song started playing"
+          },
+          "currentSongPausedAt": {
+            "format": "date-time",
+            "type": "string",
+            "nullable": true,
+            "description": "When the current song was paused (if paused)"
           },
           "timestamp": {
             "type": "number",
@@ -1770,6 +2075,9 @@
           "currentSong",
           "nextSongs",
           "jamStatus",
+          "playbackState",
+          "currentSongStartedAt",
+          "currentSongPausedAt",
           "timestamp"
         ]
       },
@@ -1926,6 +2234,26 @@
         "required": [
           "success",
           "jam"
+        ]
+      },
+      "ReorderSchedulesDto": {
+        "type": "object",
+        "properties": {
+          "scheduleIds": {
+            "description": "Array of schedule IDs in the desired order",
+            "example": [
+              "123e4567-e89b-12d3-a456-426614174000",
+              "123e4567-e89b-12d3-a456-426614174001",
+              "123e4567-e89b-12d3-a456-426614174002"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "scheduleIds"
         ]
       },
       "UpdateJamDto": {

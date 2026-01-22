@@ -3,7 +3,7 @@
  * Global state management for active jam session
  */
 
-import {createContext, type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {createContext, type ReactNode, useCallback, useMemo, useRef, useState} from 'react'
 import type {
   JamResponseDto,
   MusicianResponseDto,
@@ -66,18 +66,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
     [jam?.schedules]
   )
 
-  // Debug logging
-  useEffect(() => {
-    if (jam) {
-      console.log('📊 Jam data updated:', {
-        jamId: jam.id,
-        schedules: jam.schedules,
-        schedulesCount: jam.schedules?.length,
-        inProgressSchedules: jam.schedules?.filter((s) => s.status === 'IN_PROGRESS'),
-        currentPerformance,
-      })
-    }
-  }, [jam, currentPerformance])
+
 
   // Memoize musicians calculation with Set-based deduplication (O(n) instead of O(n²))
   const musicians = useMemo(() => {
@@ -146,8 +135,6 @@ export function JamProvider({ children }: { children: ReactNode }) {
 
         activeJamIdRef.current = newJamId
         setJamId(newJamId)
-
-        console.log('✅ Joined jam:', newJamId)
       } catch (err) {
         const errorObj = err instanceof Error ? err : new Error(String(err))
         setError(errorObj)
@@ -171,8 +158,6 @@ export function JamProvider({ children }: { children: ReactNode }) {
       setJam(null)
       setUserRole(null)
       setIsConnected(false)
-
-      console.log('✅ Left jam')
     } catch (err) {
       console.error('❌ Failed to leave jam:', err)
       throw err

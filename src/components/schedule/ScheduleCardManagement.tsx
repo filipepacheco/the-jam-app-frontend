@@ -8,7 +8,6 @@ import {ScheduleStatusBadge} from './ScheduleStatusBadge'
 import {SongInfo} from './SongInfo'
 import {ScheduleActionButtons} from './ScheduleActionButtons'
 import {RegistrationList} from './RegistrationList'
-import {useTranslation} from 'react-i18next'
 
 interface ScheduleCardProps {
     schedule: ScheduleResponseDto
@@ -17,9 +16,6 @@ interface ScheduleCardProps {
     isSuggested?: boolean
     onStatusChange?: (scheduleId: string, status: string) => void
     onDelete?: (scheduleId: string) => void
-    onMoveUp?: (index: number) => void
-    onMoveDown?: (index: number) => void
-    maxIndex?: number
     onApproveRegistration?: (registrationId: string) => void
     onRejectRegistration?: (registrationId: string) => void
     onAddMusician?: () => void
@@ -27,19 +23,14 @@ interface ScheduleCardProps {
 
 export function ScheduleCardManagement({
                                            schedule,
-                                           index = 0,
                                            loading = false,
                                            isSuggested = false,
                                            onStatusChange,
                                            onDelete,
-                                           onMoveUp,
-                                           onMoveDown,
-                                           maxIndex = 0,
                                            onApproveRegistration,
                                            onRejectRegistration,
                                            onAddMusician,
                                        }: ScheduleCardProps) {
-    const {t} = useTranslation()
     return (
         <div
             className={`card shadow ${
@@ -50,41 +41,16 @@ export function ScheduleCardManagement({
                         : 'bg-base-200'
             }`}
         >
-            <div className="card-body p-2 sm:p-4">
+            <div className="card-body p-3 sm:p-5">
                 {/* Schedule Header */}
-                <div className="flex items-start gap-1 sm:gap-3 flex-wrap sm:flex-nowrap">
-                    {/* Reorder Buttons (not shown for suggested) */}
+                <div className="flex items-start gap-2 sm:gap-3 flex-wrap sm:flex-nowrap">
+                    {/* Order Badge */}
                     {!isSuggested && (
-                        <>
-                            <div className="flex flex-col gap-0.5 sm:gap-1 mt-auto mb-auto">
-                                <button
-                                    onClick={() => onMoveUp?.(index)}
-                                    disabled={index === 0 || loading}
-                                    className="btn btn-xs btn-ghost text-xs"
-                                    title={t('schedule.actions.move_up')}
-                                >
-                                    ▲
-                                </button>
-                                <button
-                                    onClick={() => onMoveDown?.(index)}
-                                    disabled={index === maxIndex || loading}
-                                    className="btn btn-xs btn-ghost text-xs"
-                                    title={t('schedule.actions.move_down')}
-                                >
-                                    ▼
-                                </button>
-                            </div>
-                            {/* Order Badge */}
-                            <div
-                                className={`badge badge-sm sm:badge-md font-bold text-sm sm:text-lg px-2 sm:px-4 py-1 sm:py-5 mt-auto mb-auto ${
-                                    isSuggested ? 'badge-info' : 'badge-info'
-                                }`}
-                            >
-                                {schedule.order}
-                            </div>
-
-                        </>
-
+                        <div
+                            className={`badge badge-md font-bold text-sm sm:text-base px-3 sm:px-4 py-2 mt-auto mb-auto badge-info`}
+                        >
+                            #{schedule.order}
+                        </div>
                     )}
 
                     {/* Song Info */}

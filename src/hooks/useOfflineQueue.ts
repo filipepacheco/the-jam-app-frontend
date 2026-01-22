@@ -10,9 +10,9 @@ export interface OfflineQueueState {
   queue: QueuedAction[]
   stats: QueueStats
   isOfflineMode: boolean
-  queueAction: (
+  queueAction: <T = unknown>(
     event: string,
-    payload: any,
+    payload: T,
     priority?: 'high' | 'normal' | 'low'
   ) => string
   removeAction: (id: string) => void
@@ -49,12 +49,10 @@ export function useOfflineQueue(): OfflineQueueState {
   // Listen to online/offline events
   useEffect(() => {
     const handleOnline = () => {
-      console.log('🌐 Online - Processing queue')
       setIsOfflineMode(false)
     }
 
     const handleOffline = () => {
-      console.log('📵 Offline - Queuing actions')
       setIsOfflineMode(true)
     }
 
@@ -68,7 +66,7 @@ export function useOfflineQueue(): OfflineQueueState {
   }, [])
 
   const queueAction = useCallback(
-    (event: string, payload: any, priority: 'high' | 'normal' | 'low' = 'normal'): string => {
+    <T = unknown>(event: string, payload: T, priority: 'high' | 'normal' | 'low' = 'normal'): string => {
       return queueManager.addAction(event, payload, priority)
     },
     [queueManager]

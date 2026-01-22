@@ -3,7 +3,7 @@
  * Modal for suggesting a new song to add to jam schedule
  */
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useCallback, useRef} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {MusicResponseDto} from '../../types/api.types'
 import {musicService, scheduleService} from '../../services'
@@ -28,19 +28,32 @@ export function SuggestSongModal({
   const [loadingSongs, setLoadingSongs] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  // Manage focus within modal
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return
+
+    // Focus the first focusable element
+    const focusableElements = modalRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    const firstElement = focusableElements[0] as HTMLElement
+    if (firstElement) firstElement.focus()
+
+    // Handle Escape key
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   // Load songs when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      loadSongs()
-    } else {
-      // Reset state when modal closes
-      setSelectedSongId('')
-      setError(null)
-    }
-  }, [isOpen])
-
-  const loadSongs = async () => {
+  const loadSongs = useCallback(async () => {
     setLoadingSongs(true)
     setError(null)
 
@@ -52,7 +65,17 @@ export function SuggestSongModal({
     } finally {
       setLoadingSongs(false)
     }
-  }
+  }, [t])
+
+  useEffect(() => {
+    if (isOpen) {
+      void loadSongs()
+    } else {
+      // Reset state when modal closes
+      setSelectedSongId('')
+      setError(null)
+    }
+  }, [isOpen, loadSongs])
 
   const handleSuggest = async () => {
     if (!selectedSongId) {
@@ -82,7 +105,7 @@ export function SuggestSongModal({
   if (!isOpen) return null
 
   return (
-    <div className="modal modal-open" role="dialog" aria-modal="true" aria-labelledby="suggest-modal-title">
+    <div className="modal modal-open" role="dialog" aria-modal="true" aria-labelledby="suggest-modal-title" ref={modalRef}>
       <div className="modal-box max-w-md">
         <h3 id="suggest-modal-title" className="font-bold text-lg mb-4">
           {t('jams.suggest_modal_title')}

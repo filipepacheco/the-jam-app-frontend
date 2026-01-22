@@ -24,7 +24,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
 
     // Handle schedule status change
     const handleStatusChange = async (scheduleId: string, newStatus: string) => {
-        const updatePayload: any = {status: newStatus}
+        const updatePayload: { status: string; order?: number } = {status: newStatus}
 
         // If approving a suggested schedule, set order to last position
         if (newStatus === 'SCHEDULED') {
@@ -58,40 +58,6 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             onReload()
         } catch (err) {
             setError(err instanceof Error ? err.message : t('errors.failed_to_remove'))
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    // Handle move up
-    const handleMoveUp = async (index: number) => {
-        const nonSuggestedSchedules = sortedSchedules.filter(s => s.status !== 'SUGGESTED')
-        if (index === 0) return
-        const newOrder = nonSuggestedSchedules.map((s) => s.id)
-        ;[newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]]
-        setLoading(true)
-        try {
-            await scheduleService.reorder(jam.id, newOrder)
-            onReload()
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t('errors.failed_to_execute_action'))
-        } finally {
-            setLoading(false)
-        }
-    }
-
-    // Handle move down
-    const handleMoveDown = async (index: number) => {
-        const nonSuggestedSchedules = sortedSchedules.filter(s => s.status !== 'SUGGESTED')
-        if (index === nonSuggestedSchedules.length - 1) return
-        const newOrder = nonSuggestedSchedules.map((s) => s.id)
-        ;[newOrder[index], newOrder[index + 1]] = [newOrder[index + 1], newOrder[index]]
-        setLoading(true)
-        try {
-            await scheduleService.reorder(jam.id, newOrder)
-            onReload()
-        } catch (err) {
-            setError(err instanceof Error ? err.message : t('errors.failed_to_execute_action'))
         } finally {
             setLoading(false)
         }
@@ -147,7 +113,6 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         setError(null)
 
         try {
-            console.log('✅ Approving registration:', registrationId)
             await registrationService.update(registrationId, {status: 'APPROVED'})
             onReload()
         } catch (err) {
@@ -167,11 +132,11 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
     return (
         <div className="space-y-4">
             {/* Header */}
-            <div className="flex justify-between items-center">
-                <p className="text-3xl font-bold">📋 {t('jam_management.schedule.title')}</p>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                <p className="text-2xl sm:text-3xl font-bold">📋 {t('jam_management.schedule.title')}</p>
                 <button
                     onClick={() => setShowAddModal(true)}
-                    className="btn btn-primary"
+                    className="btn btn-primary btn-sm sm:btn-md w-full sm:w-auto"
                     disabled={loading}
                 >
                     {t('jam_management.schedule.add_new_song')}
@@ -180,9 +145,15 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
 
             {/* Error Alert */}
             {error && (
-                <div className="alert alert-error">
-                    <p>{error}</p>
-                    <button onClick={() => setError(null)} className="btn btn-sm btn-ghost">✕</button>
+                <div className="alert alert-error" role="alert" aria-live="polite">
+                    <p className="flex-1">{error}</p>
+                    <button 
+                        onClick={() => setError(null)} 
+                        className="btn btn-xs sm:btn-sm btn-ghost"
+                        aria-label="Close error alert"
+                    >
+                        ✕
+                    </button>
                 </div>
             )}
 
@@ -201,9 +172,6 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     isSuggested={false}
                                     onStatusChange={handleStatusChange}
                                     onDelete={handleDeleteSchedule}
-                                    onMoveUp={handleMoveUp}
-                                    onMoveDown={handleMoveDown}
-                                    maxIndex={nonSuggestedSchedules.length - 1}
                                     onApproveRegistration={handleApproveRegistration}
                                     onRejectRegistration={handleRejectRegistration}
                                     onAddMusician={() => handleAddMusician(schedule)}
@@ -269,17 +237,19 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             {/* Add Schedule Modal */}
             {showAddModal && (
                 <div className="modal modal-open">
-                    <div className="modal-box">
+                    <div className="modal-box max-w-md w-full mx-auto">
                         <h3 className="font-bold text-lg mb-4">{t('jam_management.schedule.add_entry_modal')}</h3>
 
                         <div className="form-control mb-4">
-                            <label className="label">
+                            <label className="label" htmlFor="music-select">
                                 <span className="label-text">{t('jam_management.schedule.song_label')}</span>
                             </label>
                             <select
+                                id="music-select"
                                 value={selectedMusicId}
                                 onChange={(e) => setSelectedMusicId(e.target.value)}
                                 className="select select-bordered"
+                                aria-label={t('jam_management.schedule.song_label')}
                             >
                                 <option value="">{t('jam_management.schedule.select_song')}</option>
                                 {jam.jamMusics?.map((jm: JamMusicResponseDto) => (
@@ -291,14 +261,16 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                         </div>
 
                         <div className="form-control mb-4">
-                            <label className="label">
+                            <label className="label" htmlFor="order-input">
                                 <span className="label-text">{t('jam_management.schedule.order_label')}</span>
                             </label>
                             <input
+                                id="order-input"
                                 type="text"
                                 value={t('jam_management.schedule.order_auto', {count: sortedSchedules.length + 1})}
                                 className="input input-bordered"
                                 disabled
+                                aria-label={t('jam_management.schedule.order_label')}
                             />
                         </div>
 
@@ -308,20 +280,20 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                             </div>
                         )}
 
-                        <div className="modal-action">
+                        <div className="modal-action gap-2">
                             <button
                                 onClick={() => {
                                     setShowAddModal(false)
                                     setError(null)
                                     setSelectedMusicId('')
                                 }}
-                                className="btn btn-ghost"
+                                className="btn btn-ghost btn-sm sm:btn-md"
                             >
                                 {t('common.cancel')}
                             </button>
                             <button
                                 onClick={handleAddSchedule}
-                                className="btn btn-primary"
+                                className="btn btn-primary btn-sm sm:btn-md"
                                 disabled={loading || !selectedMusicId}
                             >
                                 {loading ?

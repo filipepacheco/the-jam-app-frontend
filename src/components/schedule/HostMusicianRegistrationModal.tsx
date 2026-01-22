@@ -3,7 +3,7 @@
  * Allows hosts to manually register musicians into specific schedules
  */
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useCallback} from 'react'
 import type {MusicianResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {registrationService} from '../../services'
 import {musicianService} from '../../services'
@@ -35,13 +35,7 @@ export function HostMusicianRegistrationModal({
   const [error, setError] = useState<string | null>(null)
 
   // Load all musicians when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      loadMusicians()
-    }
-  }, [isOpen])
-
-  const loadMusicians = async () => {
+  const loadMusicians = useCallback(async () => {
     setMusicianLoading(true)
     try {
       const result = await musicianService.findAll()
@@ -51,7 +45,13 @@ export function HostMusicianRegistrationModal({
     } finally {
       setMusicianLoading(false)
     }
-  }
+  }, [t])
+
+  useEffect(() => {
+    if (isOpen) {
+      void loadMusicians()
+    }
+  }, [isOpen, loadMusicians])
 
   const instrumentOptions = getInstrumentOptions(schedule, (key) => {
     const instrumentKeyMap: Record<string, string> = {

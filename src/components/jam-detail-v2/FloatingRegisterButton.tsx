@@ -16,7 +16,7 @@ export function FloatingRegisterButton({
   return (
     <button
       onClick={onClick}
-      className={`fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-[calc(1.5rem+env(safe-area-inset-right))] btn btn-primary btn-circle btn-lg shadow-2xl transition-[opacity,transform] duration-300 motion-reduce:transition-none z-40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+      className={`fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-[calc(1.5rem+env(safe-area-inset-right))] btn btn-primary btn-circle btn-lg shadow-2xl transition-[opacity,transform] duration-300 motion-reduce:transition-none z-40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 hover:shadow-xl ${
         isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75 motion-reduce:scale-100 pointer-events-none'
       }`}
       aria-label={t('jams.register')}
@@ -25,7 +25,11 @@ export function FloatingRegisterButton({
       <div className="relative">
         <span className="text-2xl" aria-hidden="true">📝</span>
         {registrationCount > 0 && (
-          <span className="absolute -top-2 -right-2 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center tabular-nums">
+          <span 
+            className="absolute -top-2 -right-2 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center tabular-nums"
+            aria-label={t('jams.registrations_count', { count: registrationCount })}
+            role="status"
+          >
             {registrationCount}
           </span>
         )}

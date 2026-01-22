@@ -1,5 +1,6 @@
 import type {RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {useTranslation} from 'react-i18next'
+import {useReducedMotion} from '../../hooks'
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import React from "react";
 
@@ -26,6 +27,7 @@ export function TimelineItemV2Waveform({
   onToggleExpanded,
 }: TimelineItemV2Props) {
   const { t } = useTranslation()
+  const { prefersReducedMotion } = useReducedMotion()
 
   const userRegistered = user?.id
     ? schedule.registrations?.some(
@@ -80,14 +82,13 @@ export function TimelineItemV2Waveform({
   const status = getStatusDisplay()
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
-      className={`card ${bgClasses} ${borderClasses} transition-all duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none ${isInProgress && userRegistered ? 'animate-pulse' : ''}`}
+    <button
+      className={`card ${bgClasses} ${borderClasses} transition-all duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
       aria-expanded={isExpanded}
       aria-label={`${schedule.music?.title} by ${schedule.music?.artist}. ${status.text}`}
+      type="button"
     >
       <div className="card-body p-4">
 
@@ -216,6 +217,6 @@ export function TimelineItemV2Waveform({
           </>
         )}
       </div>
-    </div>
+    </button>
   )
 }

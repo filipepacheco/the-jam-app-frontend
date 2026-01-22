@@ -4,19 +4,21 @@
  * Route: /jams/:jamId/dashboard
  */
 
-import {useState} from 'react'
+import {useState, lazy, Suspense} from 'react'
 import {useParams} from 'react-router-dom'
 import useSWR from 'swr'
 import {
-    ConfettiWrapper,
     CurrentSongCard,
     Header,
     Navbar,
     NextSongCard,
     OfflineBanner,
-    QRCodeCorner,
     StartingSoonCard
 } from '../components/publicDashboard'
+
+// Lazy load heavy components to reduce main bundle size
+const ConfettiWrapper = lazy(() => import('../components/publicDashboard/ConfettiWrapper'))
+const QRCodeCorner = lazy(() => import('../components/publicDashboard/QRCodeCorner'))
 import {useAppLanguage} from '../hooks'
 import {useConfettiOnSongChange} from '../hooks'
 import {useFullscreen} from '../hooks'
@@ -87,11 +89,16 @@ export function PublicDashboardPage() {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-hidden"
+      className="min-h-screen animate-gradient-shift text-white overflow-hidden relative"
       data-theme="dark"
     >
+      {/* Radial Glow Spotlight */}
+      <div className="radial-glow" />
+
       {/* Confetti */}
-      <ConfettiWrapper show={confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
+      <Suspense fallback={null}>
+        <ConfettiWrapper show={confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
+      </Suspense>
 
       {/* Offline Indicator */}
       <OfflineBanner visible={isOfflineMode} message={t('publicDashboard.offlineIndicator', 'You are offline - showing cached data')} />
@@ -119,7 +126,7 @@ export function PublicDashboardPage() {
       />
 
       {/* Main Content */}
-      <div className="pt-20 pb-8 px-4 md:px-8">
+      <div className="relative pt-20 pb-8 px-4 md:px-8 z-10">
         <div className="max-w-6xl mx-auto">
           {/* Current Song Section */}
           {currentSong ? (
@@ -137,7 +144,9 @@ export function PublicDashboardPage() {
        </div>
 
        {/* QR Code Corner */}
-      <QRCodeCorner jamId={jamId} />
+      <Suspense fallback={null}>
+        <QRCodeCorner jamId={jamId} />
+      </Suspense>
      </div>
    )
  }

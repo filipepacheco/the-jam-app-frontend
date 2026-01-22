@@ -4,7 +4,7 @@
  * Routes: /host/create-jam (create) and /host/jams/:id/edit (edit)
  */
 
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useCallback} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
@@ -43,32 +43,7 @@ export function CreateJamPage() {
   })
 
   // Initialize on mount
-  useEffect(() => {
-    if (authLoading) {
-      return
-    }
-
-    if (!isAuthenticated) {
-      navigate('/login')
-      return
-    }
-
-    // Auto-fill host musician ID from auth context
-    setFormData((prev) => ({
-      ...prev,
-      hostMusicianId: user?.id || '',
-    }))
-
-    // Detect mode and load data if editing
-    if (jamId) {
-      setMode('edit')
-      loadJamData(jamId)
-    } else {
-      setMode('create')
-    }
-  }, [jamId, isAuthenticated, authLoading, navigate, user])
-
-  const loadJamData = async (id: string) => {
+  const loadJamData = useCallback(async (id: string) => {
     setLoading(true)
     setError(null)
 
@@ -99,7 +74,32 @@ export function CreateJamPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user?.id])
+
+  useEffect(() => {
+    if (authLoading) {
+      return
+    }
+
+    if (!isAuthenticated) {
+      navigate('/login')
+      return
+    }
+
+    // Auto-fill host musician ID from auth context
+    setFormData((prev) => ({
+      ...prev,
+      hostMusicianId: user?.id || '',
+    }))
+
+    // Detect mode and load data if editing
+    if (jamId) {
+      setMode('edit')
+      void loadJamData(jamId)
+    } else {
+      setMode('create')
+    }
+  }, [jamId, isAuthenticated, authLoading, navigate, user, loadJamData])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>

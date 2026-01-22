@@ -1,4 +1,10 @@
-export function safeT(t: (k: string, opts?: any) => any, key: string, opts?: any): string {
+type TranslationOptions = Record<string, string | number | boolean | undefined>
+
+export function safeT(
+  t: (k: string, opts?: TranslationOptions) => string | Record<string, unknown>,
+  key: string,
+  opts?: TranslationOptions
+): string {
   const res = t(key, opts)
   if (typeof res === 'string') return res
 

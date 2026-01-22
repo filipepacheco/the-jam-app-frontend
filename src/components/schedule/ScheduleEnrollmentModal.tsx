@@ -6,7 +6,7 @@
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {registrationService} from '../../services'
 import {useAuth} from '../../hooks'
-import {useState} from 'react'
+import {useState, useRef, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
@@ -28,6 +28,29 @@ export function ScheduleEnrollmentModal({
     const [selectedInstrument, setSelectedInstrument] = useState('')
     const [enrollLoading, setEnrollLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const modalRef = useRef<HTMLDivElement>(null)
+
+    // Manage focus within modal
+    useEffect(() => {
+        if (!isOpen || !modalRef.current) return
+
+        // Focus the first focusable element
+        const focusableElements = modalRef.current.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        const firstElement = focusableElements[0] as HTMLElement
+        if (firstElement) firstElement.focus()
+
+        // Handle Escape key
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onClose()
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [isOpen, onClose])
 
     const instrumentOptions = getInstrumentOptions(schedule, (key) => {
         const instrumentKeyMap: Record<string, string> = {
@@ -55,37 +78,18 @@ export function ScheduleEnrollmentModal({
     setError(null)
 
     try {
-      if (import.meta.env.DEV) {
-        console.log('📝 Attempting enrollment with:', {
-          musicianId: user.id,
-          scheduleId: schedule.id,
-          instrument: selectedInstrument,
-        })
-        const token = localStorage.getItem('auth_token')
-        console.log('🔐 Current auth token:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN')
-      }
-
       await registrationService.create({
         musicianId: user.id,
         scheduleId: schedule.id,
         instrument: selectedInstrument,
-      } as any)
-
-      if (import.meta.env.DEV) {
-        console.log('✅ Enrollment successful!')
-      }
+        jamMusicId: schedule.musicId || '',
+      })
 
       onClose()
       onSuccess()
-    } catch (err: any) {
-      if (import.meta.env.DEV) {
-        console.error('❌ Enrollment error:', err)
-        console.error('Error details:', {
-          message: err.message || 'Unknown error',
-          fullError: err,
-        })
-      }
-      setError(err.message || t('errors.failed_to_enroll'))
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error(String(err))
+      setError(error.message || t('errors.failed_to_enroll'))
     } finally {
       setEnrollLoading(false)
     }
@@ -93,8 +97,9 @@ export function ScheduleEnrollmentModal({
 
     if (!isOpen) return null
 
-    return (<div className="modal modal-open">
-            <div className="modal-box max-w-sm">
+    return (
+      <div className="modal modal-open" ref={modalRef}>
+        <div className="modal-box max-w-sm">
                 <h3 className="font-bold text-lg mb-4">{t('schedule.enroll_title')}</h3>
 
                 <ScheduleDetailsCard schedule={schedule} />
@@ -144,8 +149,9 @@ export function ScheduleEnrollmentModal({
                             </>) : (t('schedule.enroll_now'))}
                     </button>
                 </div>
-            </div>
-            <div className="modal-backdrop" onClick={onClose}></div>
-        </div>)
+          <div className="modal-backdrop" onClick={onClose}></div>
+        </div>
+      </div>
+    )
 }
 

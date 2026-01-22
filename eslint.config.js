@@ -6,10 +6,11 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'node_modules', '.vite'],
+    ignores: ['dist', 'node_modules', '.vite', 'src/__tests__'],
   },
   {
     files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/__tests__/**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,

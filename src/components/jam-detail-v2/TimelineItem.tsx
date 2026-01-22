@@ -82,7 +82,7 @@ export function TimelineItem({
         {/* Instruments Breakdown */}
         {schedule.registrations && schedule.registrations.length > 0 && (
           <div className="mb-4 flex flex-wrap gap-2">
-            {schedule.registrations.map((reg: any) => (
+            {schedule.registrations.map((reg) => (
               <span key={reg.id} className="badge badge-sm badge-outline" aria-hidden="true">
                 {getInstrumentIcon(reg.instrument)}
               </span>

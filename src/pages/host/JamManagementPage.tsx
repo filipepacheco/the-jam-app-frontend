@@ -4,7 +4,7 @@
  * Route: /host/jams/:id/manage
  */
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useCallback} from 'react'
 import {useNavigate, useParams, useSearchParams} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
@@ -38,6 +38,22 @@ export function JamManagementPage() {
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
 
+    const loadJamData = useCallback(async (id: string) => {
+        setLoading(true)
+        setError(null)
+
+        try {
+            const result = await jamService.findOne(id)
+            setJam(result.data)
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : t('jam_management.error_loading')
+            console.error('❌ Error loading jam:', err)
+            setError(errorMessage)
+        } finally {
+            setLoading(false)
+        }
+    }, [t])
+
     useEffect(() => {
         if (authLoading) {
             return
@@ -49,27 +65,9 @@ export function JamManagementPage() {
         }
 
         if (jamId) {
-            loadJamData(jamId)
+            void loadJamData(jamId)
         }
-    }, [jamId, isAuthenticated, authLoading, navigate])
-
-    const loadJamData = async (id: string) => {
-        setLoading(true)
-        setError(null)
-
-        try {
-            console.log('🔍 Loading jam data for management hub...')
-            const result = await jamService.findOne(id)
-            console.log('✅ Jam data loaded:', result.data)
-            setJam(result.data)
-        } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : t('jam_management.error_loading')
-            console.error('❌ Error loading jam:', err)
-            setError(errorMessage)
-        } finally {
-            setLoading(false)
-        }
-    }
+    }, [jamId, isAuthenticated, authLoading, navigate, loadJamData])
 
     const handleStatusChange = async (newStatus: 'ACTIVE' | 'INACTIVE' | 'FINISHED') => {
         if (!jamId || !jam) return

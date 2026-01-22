@@ -26,14 +26,6 @@ function formatDate(isoString: string): string {
 }
 
 /**
- * Truncate text to specified length
- */
-function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text
-  return text.slice(0, maxLength) + '...'
-}
-
-/**
  * Get badge class based on jam status with friendly styling
  */
 function getStatusBadgeClass(status: JamStatus): string {
@@ -79,37 +71,37 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
     <div className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow">
       <div className="card-body p-3 sm:p-6">
         {/* Header: Name + Status Badge */}
-        <div className="flex justify-between items-start gap-2">
-          <h3 className="card-title text-base sm:text-lg">{jam.name || t('jams.no_name')}</h3>
-          <div className={`badge badge-md sm:badge-lg ${getStatusBadgeClass(jam.status)}`}>
+        <div className="flex justify-between items-center gap-2">
+          <h3 className="card-title text-base sm:text-lg min-w-0">{jam.name || t('jams.no_name')}</h3>
+          <div className={`badge badge-sm sm:badge-md lg:badge-lg flex-shrink-0 ${getStatusBadgeClass(jam.status)}`}>
             {getStatusLabel(jam.status, t)}
           </div>
         </div>
 
         {/* Date */}
         {jam.date && (
-          <p className="text-xs sm:text-sm text-base-content/70">
+          <p className="text-sm sm:text-base text-base-content/70">
             📅 {formatDate(jam.date)}
           </p>
         )}
 
         {/* Description */}
         {jam.description && (
-          <p className="text-xs sm:text-sm text-base-content/80 mt-2">
-            {truncate(jam.description, 100)}
+          <p className="text-sm sm:text-base text-base-content/80 mt-2 line-clamp-3">
+            {jam.description}
           </p>
         )}
 
         {/* Song Count */}
         <div className="flex items-center gap-2 mt-2">
-          <div className="text-xs sm:text-sm text-base-content/60">
+          <div className="text-sm sm:text-base text-base-content/60">
             🎵 {safeT(t, 'jams.songs_count', { count: songCount })}
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="card-actions justify-end mt-3 sm:mt-4">
-          <Link to={`/jams/${jam.id}`} className="btn btn-primary btn-xs sm:btn-sm text-xs sm:text-sm">
+        <div className="card-actions justify-end gap-2 mt-4 sm:mt-6">
+          <Link to={`/jams/${jam.id}`} className="btn btn-primary btn-sm text-xs sm:text-sm">
             {t('common.details')}
           </Link>
         </div>

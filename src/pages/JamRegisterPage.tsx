@@ -57,7 +57,6 @@ export function JamRegisterPage() {
   const handleRegistration = async (specialty: string, level: string) => {
     // TODO: Call registration API endpoint
     // For now, just resolve
-    console.log('Registering with specialty:', specialty, 'level:', level)
     return Promise.resolve()
   }
 

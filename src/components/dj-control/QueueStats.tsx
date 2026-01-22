@@ -5,7 +5,7 @@
  */
 
 import {useTranslation} from 'react-i18next'
-import type {LiveStateResponseDto} from '../../types/jamControl.types'
+import type {LiveStateResponseDto, LiveStateSongDto} from '../../types/jamControl.types'
 
 interface QueueStatsProps {
   liveState: LiveStateResponseDto | null
@@ -44,7 +44,7 @@ export function QueueStats({ liveState }: QueueStatsProps) {
   const upcomingCount = nextSongs.length
 
   // Calculate total duration
-  const calculateDuration = (songs: any[]) => {
+  const calculateDuration = (songs: LiveStateSongDto[]) => {
     return songs.reduce((acc, song) => {
       return acc + (song.music?.duracao || 0)
     }, 0)

@@ -13,16 +13,14 @@ import {useTranslation} from 'react-i18next'
 const SUCCESS_TOAST_DURATION = 3000
 import {
     ErrorAlert,
-    PageHeaderSkeleton,
-    ScheduleCardSkeleton,
     ScheduleEnrollmentModal,
-    SidebarSectionSkeleton
 } from '../../components'
 import {
     CollapsibleSection,
     CollapsibleSidebar,
     FloatingRegisterButton,
     FloatingSuggestButton,
+    JamDetailLoadingSkeleton,
     PerformanceSelectionModal,
     SuggestSongModal,
     TimelineShowcaseV2Waveform,
@@ -120,34 +118,13 @@ export function JamDetailPageV2() {
 
     // Auto-expand registrations when user first has registrations
     useEffect(() => {
-        if (userRegistrations.length > 0 && !isRegistrationsExpanded) {
+        if (userRegistrations.length > 0) {
             setIsRegistrationsExpanded(true)
         }
-    }, [userRegistrations.length]) // Only depend on registrations count, not expanded state
+    }, [userRegistrations.length])
     // Loading state
     if (isLoading && !jam) {
-        return (
-            <div className="min-h-screen bg-base-100">
-                <PageHeaderSkeleton/>
-                <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-6 sm:py-8">
-                    <div className="flex justify-center items-center gap-3 mb-8">
-                        <span className="loading loading-spinner loading-md sm:loading-lg"></span>
-                        <span
-                            className="font-semibold text-sm sm:text-base text-base-content/70">{t('jams.loading_jam_details')}</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                        <div className="md:col-span-2 lg:col-span-3 space-y-4 sm:space-y-6">
-                            <ScheduleCardSkeleton/>
-                            <ScheduleCardSkeleton/>
-                        </div>
-                        <div className="md:col-span-1 space-y-4">
-                            <SidebarSectionSkeleton/>
-                            <SidebarSectionSkeleton/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
+        return <JamDetailLoadingSkeleton />
     }
 
     // Error state
@@ -193,7 +170,7 @@ export function JamDetailPageV2() {
                     <p className="text-base-content/70 mb-6 text-pretty max-w-3xl">{jam.description}</p>
 
                     {/* Jam Stats Grid */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
                         {[
                             {icon: '📍', label: t('jams.info.location'), value: jam.location || t('jams.info.tba')},
                             {
@@ -234,12 +211,12 @@ export function JamDetailPageV2() {
                             },
                         ].map((stat, idx) => (
                             <div key={idx}
-                                 className="flex items-center gap-2 sm:gap-3 p-3 sm:p-4 bg-base-100/80 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                                <span className="text-lg sm:text-xl shrink-0"
+                                 className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 lg:p-4 bg-base-100/80 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                                <span className="text-base sm:text-lg lg:text-xl shrink-0"
                                       aria-hidden="true">{stat.icon}</span>
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-xs sm:text-sm text-base-content/60 font-medium">{stat.label}</p>
-                                    <p className="font-bold text-sm sm:text-base truncate tabular-nums">{stat.value}</p>
+                                    <p className="text-xs sm:text-sm text-base-content/60 font-medium line-clamp-1">{stat.label}</p>
+                                    <p className="font-bold text-xs sm:text-sm lg:text-base truncate tabular-nums">{stat.value}</p>
                                 </div>
                             </div>
                         ))}

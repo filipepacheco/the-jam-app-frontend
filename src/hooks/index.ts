@@ -30,3 +30,6 @@ export type { UseJamControlReturn } from '../types/jamControl.types'
 // Queue reorder hook
 export { useQueueReorder } from './useQueueReorder'
 export type { UseQueueReorderReturn } from '../types/jamControl.types'
+
+// Accessibility hook
+export { useReducedMotion } from './useReducedMotion'

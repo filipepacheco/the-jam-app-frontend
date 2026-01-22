@@ -4,6 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { useEffect, useRef } from 'react'
 import type { ScheduleResponseDto, RegistrationResponseDto } from '../../types/api.types'
 
 interface PerformanceSelectionModalProps {
@@ -22,6 +23,29 @@ export function PerformanceSelectionModal({
   userId,
 }: PerformanceSelectionModalProps) {
   const { t } = useTranslation()
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  // Manage focus within modal
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return
+
+    // Focus the first focusable element
+    const focusableElements = modalRef.current.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    const firstElement = focusableElements[0] as HTMLElement
+    if (firstElement) firstElement.focus()
+
+    // Handle Escape key
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -34,7 +58,7 @@ export function PerformanceSelectionModal({
   }
 
   return (
-    <div className="modal modal-open" role="dialog" aria-modal="true" aria-labelledby="performance-select-modal-title">
+    <div className="modal modal-open" role="dialog" aria-modal="true" aria-labelledby="performance-select-modal-title" ref={modalRef}>
       <div className="modal-box max-w-md">
         <h3 id="performance-select-modal-title" className="font-bold text-lg mb-4">
           {t('jams.select_performance')}

@@ -246,6 +246,54 @@
   animation: timeline-pulse-horizontal 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Phase 1 - Public Dashboard Animations */
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient-shift {
+  background: linear-gradient(-45deg, #0f172a, #1e1b4b, #0c4a6e, #0f172a);
+  background-size: 400% 400%;
+  animation: gradient-shift 20s ease infinite;
+}
+
+@keyframes radial-pulse {
+  0%, 100% { opacity: 0.15; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(1.05); }
+}
+
+.radial-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 800px;
+  margin-left: -400px;
+  margin-top: -400px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+  pointer-events: none;
+  animation: radial-pulse 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes text-glow {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(167, 139, 250, 0.5),
+                 0 0 20px rgba(167, 139, 250, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(167, 139, 250, 0.8),
+                 0 0 30px rgba(96, 165, 250, 0.6),
+                 0 0 40px rgba(96, 165, 250, 0.4);
+  }
+}
+
+.animate-text-glow {
+  animation: text-glow 2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-spin-slow,
   .animate-wave-pulse,
@@ -253,8 +301,19 @@
   .animate-wave-flow-reverse,
   .animate-fade-in,
   .animate-ping-slow,
-  .animate-pulse-subtle {
+  .animate-pulse-subtle,
+  .animate-gradient-shift,
+  .radial-glow,
+  .animate-text-glow {
     animation: none;
+  }
+  
+  .animate-gradient-shift {
+    background-size: 100% 100%;
+  }
+  
+  .radial-glow {
+    opacity: 0.15;
   }
 }
 /*noinspection CssUnknownProperty*/

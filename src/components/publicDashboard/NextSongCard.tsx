@@ -5,6 +5,7 @@
 
 import {motion} from 'framer-motion'
 import {useTranslation} from 'react-i18next'
+import {useReducedMotion} from '../../hooks'
 import {InstrumentGroup} from './InstrumentGroup'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
@@ -15,21 +16,22 @@ interface NextSongCardProps {
 
 export function NextSongCard({ song }: NextSongCardProps) {
   const { t } = useTranslation()
+  const { transition } = useReducedMotion()
 
   return (
     <motion.div
       key={`next-${song.id}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
+      transition={{ ...transition, delay: transition.duration === 0 ? 0 : 0.1 }}
       className="mb-12"
     >
       <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6 md:p-8">
-        <p className="text-slate-300 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">
+        <p className="text-slate-200 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">
           {t('publicDashboard.upNext')}
         </p>
         <h3 className="text-3xl md:text-5xl font-bold text-white mb-2">{song.title}</h3>
-        <p className="text-lg md:text-2xl text-slate-300 mb-4">{song.artist}</p>
+        <p className="text-lg md:text-2xl text-slate-200 mb-4">{song.artist}</p>
 
         {song.musicians && song.musicians.length > 0 && (
           <div className="mt-6">

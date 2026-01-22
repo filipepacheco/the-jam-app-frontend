@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import {motion} from 'framer-motion'
+import {useReducedMotion} from '../../hooks'
 import {LanguageSelector} from './LanguageSelector'
 
 interface Props {
@@ -13,16 +14,47 @@ interface Props {
 }
 
 export default function Navbar({ visible, jamId, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange }: Props) {
+  const { transition } = useReducedMotion()
+
+  const navbarTransition = useMemo(() => ({
+    opacity: transition.duration === 0 ? 0.1 : 0,
+    y: -20
+  }), [transition])
+  
   if (!visible) return null
+
+  const handleBackdropClick = () => {
+    onClose()
+  }
+
+  const handleEscapeKey = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose()
+    }
+  }
+
   return (
-    <motion.div
-      id="public-dashboard-navbar"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      className="fixed top-16 left-0 right-0 z-40 bg-base-200 border-b border-base-300 p-4"
-      role="navigation"
-    >
+    <>
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-30 bg-black/50"
+        onClick={handleBackdropClick}
+        aria-hidden="true"
+      />
+
+      <motion.div
+        id="public-dashboard-navbar"
+        initial={navbarTransition}
+        animate={{ opacity: 1, y: 0 }}
+        exit={navbarTransition}
+        transition={transition}
+        className="fixed top-16 left-0 right-0 z-40 bg-base-200 border-b border-base-300 p-4"
+        role="navigation"
+        onKeyDown={handleEscapeKey}
+      >
       <div className="flex items-center justify-between max-w-6xl mx-auto">
         <div className="flex items-center justify-between flex-1">
           <div className="flex items-center gap-4">
@@ -61,7 +93,8 @@ export default function Navbar({ visible, jamId, onClose, currentLang, onChangeL
         </div>
 
       </div>
-    </motion.div>
+      </motion.div>
+    </>
   )
 }
 

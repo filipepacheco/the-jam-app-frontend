@@ -1,7 +1,8 @@
 import type {JamResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {useTranslation} from 'react-i18next'
+import {useReducedMotion} from '../../hooks'
 import {TimelineItemV2Waveform} from './TimelineItemV2Waveform'
-import {useState} from 'react'
+import {useMemo, useState} from 'react'
 
 interface TimelineUser {
   id: string
@@ -21,7 +22,16 @@ export function TimelineShowcaseV2Waveform({
   onRegisterClick,
 }: TimelineShowcaseV2Props) {
   const { t } = useTranslation()
+  const { prefersReducedMotion } = useReducedMotion()
   const [expandedScheduleId, setExpandedScheduleId] = useState<string | null>(null)
+
+  // Helper to get dot style based on status (must be defined before early return)
+  const getDotStyle = useMemo(() => (status: string) => {
+    if (status === 'COMPLETED') return 'bg-success border-success/30'
+    if (status === 'IN_PROGRESS') return `bg-primary border-primary/30 ${prefersReducedMotion ? '' : 'animate-pulse'}`
+    if (status === 'SUGGESTED') return 'bg-info border-info/30'
+    return 'bg-base-300 border-base-300/50'
+  }, [prefersReducedMotion])
 
   const toggleExpanded = (scheduleId: string) => {
     setExpandedScheduleId(prev => prev === scheduleId ? null : scheduleId)
@@ -29,14 +39,6 @@ export function TimelineShowcaseV2Waveform({
 
   if (schedules.length === 0) {
     return <EmptyTimelineState />
-  }
-
-  // Helper to get dot style based on status
-  const getDotStyle = (status: string) => {
-    if (status === 'COMPLETED') return 'bg-success border-success/30'
-    if (status === 'IN_PROGRESS') return 'bg-primary border-primary/30 animate-pulse'
-    if (status === 'SUGGESTED') return 'bg-info border-info/30'
-    return 'bg-base-300 border-base-300/50'
   }
 
   return (
@@ -122,7 +124,7 @@ function EmptyTimelineState() {
   return (
     <div className="card bg-linear-to-br from-base-200 to-base-300">
       <div className="card-body text-center py-12">
-        <div className="text-5xl mb-4" aria-hidden="true">📋</div>
+        <div className="text-5xl mb-4" aria-label={t('jams.no_performance_schedule_title')}>📋</div>
         <h3 className="font-bold text-lg mb-2 text-balance">
           {t('jams.no_performance_schedule_title')}
         </h3>

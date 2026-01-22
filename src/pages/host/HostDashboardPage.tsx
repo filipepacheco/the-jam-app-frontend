@@ -4,7 +4,7 @@
  * Route: /host/dashboard
  */
 
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useCallback} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
@@ -28,23 +28,7 @@ export function HostDashboardPage() {
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
 
-    useEffect(() => {
-        // Wait for auth to finish loading
-        if (authLoading) {
-            return
-        }
-
-        // If not authenticated after auth is loaded, redirect to login
-        if (!isAuthenticated) {
-            navigate('/login')
-            return
-        }
-
-        // Auth is ready and user is authenticated, load jams
-        loadJams()
-    }, [authLoading, isAuthenticated, navigate])
-
-    const loadJams = async () => {
+    const loadJams = useCallback(async () => {
         setLoading(true)
         setError(null)
 
@@ -58,7 +42,23 @@ export function HostDashboardPage() {
         } finally {
             setLoading(false)
         }
-    }
+    }, [t])
+
+    useEffect(() => {
+        // Wait for auth to finish loading
+        if (authLoading) {
+            return
+        }
+
+        // If not authenticated after auth is loaded, redirect to login
+        if (!isAuthenticated) {
+            navigate('/login')
+            return
+        }
+
+        // Auth is ready and user is authenticated, load jams
+        void loadJams()
+    }, [authLoading, isAuthenticated, navigate, loadJams])
 
     const categorizeJams = (): JamCategory => {
         const categorized: JamCategory = {

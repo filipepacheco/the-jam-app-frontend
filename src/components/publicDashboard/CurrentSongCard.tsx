@@ -4,8 +4,11 @@
  */
 
 import {motion} from 'framer-motion'
+import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
+import {useReducedMotion} from '../../hooks'
 import {InstrumentGroup} from './InstrumentGroup'
+import {WaveformVisualizer} from './WaveformVisualizer'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
 
@@ -13,8 +16,32 @@ interface CurrentSongCardProps {
   song: DashboardSongDto
 }
 
+// Animation configurations for optimal performance
+const CARD_ENTRY_ANIMATION = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 },
+} as const
+
+const CARD_PULSE_ANIMATION = {
+  scale: [1, 1.015, 1],
+}
+
+const CARD_PULSE_TRANSITION = {
+  duration: 3,
+  repeat: Infinity,
+  ease: 'easeInOut',
+} as const
+
 export function CurrentSongCard({ song }: CurrentSongCardProps) {
   const { t } = useTranslation()
+  const { transition, prefersReducedMotion } = useReducedMotion()
+
+  // Memoize pulse transition to prevent object recreation on re-renders
+  const pulseTransition = useMemo(
+    () => (prefersReducedMotion ? { duration: 0 } : CARD_PULSE_TRANSITION),
+    [prefersReducedMotion]
+  )
 
   const formatDuration = (seconds: number): string => {
     if (!seconds) return '0:00'
@@ -24,22 +51,25 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
   return (
     <motion.div
       key={`current-${song.id}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5 }}
+      {...CARD_ENTRY_ANIMATION}
+      transition={transition}
       className="mb-12"
     >
-      <div className="bg-linear-to-br from-purple-900/40 to-blue-900/40 backdrop-blur border border-purple-500/30 rounded-2xl p-8 md:p-12">
-        <p className="text-purple-300 text-sm md:text-lg font-semibold uppercase tracking-widest mb-4">
+      <motion.div
+        className="bg-linear-to-br from-purple-900/40 to-blue-900/40 backdrop-blur border border-purple-500/30 rounded-2xl p-8 md:p-12"
+        animate={prefersReducedMotion ? {} : CARD_PULSE_ANIMATION}
+        transition={pulseTransition}
+      >
+        <p className="text-purple-200 text-sm md:text-lg font-semibold uppercase tracking-widest mb-4">
           {t('publicDashboard.nowPlaying', 'Now Playing')}
         </p>
-        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 text-wrap">{song.title}</h2>
-        <p className="md:text-3xl text-purple-200 mb-2">
+        <h2 className="animate-text-glow text-5xl md:text-7xl lg:text-8xl font-black mb-4 text-wrap">{song.title}</h2>
+        <WaveformVisualizer className="my-4" />
+        <p className="md:text-3xl text-purple-100 mb-2">
           {t('publicDashboard.by', 'by')} {song.artist}
         </p>
         {song.duration && (
-          <p className="text-lg md:text-xl text-purple-300 mb-8">⏱️ {formatDuration(song.duration)}</p>
+          <p className="text-lg md:text-xl text-purple-200 mb-8">⏱️ {formatDuration(song.duration)}</p>
         )}
 
         {song.musicians && song.musicians.length > 0 ? (
@@ -54,9 +84,9 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
             </div>
           </div>
         ) : (
-          <p className="text-purple-300 text-lg">{t('publicDashboard.noMusicians', 'No musicians registered yet')}</p>
+          <p className="text-purple-200 text-lg">{t('publicDashboard.noMusicians', 'No musicians registered yet')}</p>
         )}
-      </div>
+      </motion.div>
     </motion.div>
   )
 }

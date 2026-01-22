@@ -3,9 +3,9 @@
  * Custom hook to consume AuthContext
  */
 
-import { useContext } from 'react'
-import { AuthContext } from '../contexts/AuthContext'
-import type { AuthContextType } from '../types/auth.types'
+import {useContext} from 'react'
+import {AuthContext} from '../contexts'
+import type {AuthContextType} from '../types/auth.types'
 
 /**
  * Custom hook to access authentication context

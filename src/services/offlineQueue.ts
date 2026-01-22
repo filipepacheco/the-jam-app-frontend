@@ -31,9 +31,9 @@ export interface QueueStats {
  */
 class OfflineQueueManager {
   private static instance: OfflineQueueManager | null = null
-  private queue: Map<string, QueuedAction<unknown>> = new Map()
+  private queue: Map<string, QueuedAction> = new Map()
   private persistenceKey = 'socket_offline_queue'
-  private listeners: ((queue: QueuedAction<unknown>[]) => void)[] = []
+  private listeners: ((queue: QueuedAction[]) => void)[] = []
 
   private constructor() {
     this.loadFromStorage()
@@ -73,8 +73,6 @@ class OfflineQueueManager {
     this.queue.set(id, action)
     this.saveToStorage()
     this.notifyListeners()
-
-    console.log(`📤 Queued action: ${event} (Priority: ${priority})`)
 
     return id
   }
@@ -148,7 +146,6 @@ class OfflineQueueManager {
     this.queue.clear()
     this.saveToStorage()
     this.notifyListeners()
-    console.log(`🗑️ Cleared ${size} queued actions`)
     return size
   }
 
@@ -209,8 +206,6 @@ class OfflineQueueManager {
         recentActions.forEach((action) => {
           this.queue.set(action.id, action)
         })
-
-        console.log(`📥 Restored ${recentActions.length} queued actions from storage`)
       }
     } catch (err) {
       console.error('Failed to load queue from storage:', err)

@@ -606,7 +606,7 @@
     "manage_title": "Gerenciar",
     "tabs": {
       "overview": "Visão geral",
-      "schedule": "Programação",
+      "schedule": "Escala",
       "live_control": "Controle ao vivo",
       "registrations": "Registros",
       "dashboard": "Painel público",
@@ -637,7 +637,7 @@
       "no_registrations": "Nenhuma inscrição ainda."
     },
     "schedule": {
-      "title": "Escala de músicas",
+      "title": "Músicos Escalados",
       "add_new_song": "+ Adicionar nova música",
       "suggested_songs": "Músicas sugeridas (pendentes de aprovação)",
       "add_entry_modal": "Adicionar entrada de apresentação",

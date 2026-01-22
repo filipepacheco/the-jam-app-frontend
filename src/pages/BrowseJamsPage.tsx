@@ -78,7 +78,7 @@ export function BrowseJamsPage() {
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4">
             🎸 {t('jams.browse.title')}
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl opacity-90">
+          <p className="text-base sm:text-lg lg:text-xl opacity-95">
             {t('jams.browse.subtitle')}
           </p>
         </div>
@@ -129,7 +129,7 @@ export function BrowseJamsPage() {
               <label className="label">
                 <span className="label-text font-semibold text-xs sm:text-sm">{t('jams.browse.filter_label')}</span>
               </label>
-              <div className="tabs tabs-boxed text-xs sm:text-sm flex-wrap" role="tablist">
+              <div className="tabs tabs-boxed text-xs sm:text-sm flex-wrap overflow-x-auto" role="tablist">
                 <button
                   className={`tab ${statusFilter === 'ALL' ? 'tab-active' : ''}`}
                   onClick={() => setStatusFilter('ALL')}
@@ -182,7 +182,7 @@ export function BrowseJamsPage() {
               {hasActiveFilters && (
                 <button
                   onClick={clearFilters}
-                  className="btn btn-ghost btn-xs sm:btn-sm text-xs sm:text-sm"
+                  className="btn btn-ghost btn-sm text-xs sm:text-sm"
                   disabled={isLoading}
                 >
                   {t('jams.browse.clear_filters')}
@@ -214,7 +214,7 @@ export function BrowseJamsPage() {
 
         {/* Jam Cards Grid */}
         {!isLoading && !error && filteredJams.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 animate-in fade-in duration-300">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 animate-in fade-in duration-300">
             {filteredJams.map((jam) => (
               <JamCard
                 key={jam.id}

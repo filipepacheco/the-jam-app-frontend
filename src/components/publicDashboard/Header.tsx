@@ -24,7 +24,7 @@ export default function Header({
       <button
         type="button"
         onClick={() => setShowNavbar(!showNavbar)}
-        className="btn btn-sm btn-ghost text-white pointer-events-auto"
+        className="btn btn-sm btn-ghost text-white pointer-events-auto min-h-10 min-w-10"
         title={ariaToggleLabel || 'Toggle navbar'}
         aria-expanded={showNavbar}
         aria-controls="public-dashboard-navbar"
@@ -33,14 +33,14 @@ export default function Header({
         ☰
       </button>
 
-      <h1 className="absolute left-1/2 transform -translate-x-1/2 text-2xl md:text-3xl font-bold pointer-events-none">
+      <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg sm:text-2xl md:text-3xl font-bold pointer-events-none max-w-[60%] truncate">
         🎤 <span className="pointer-events-none">{title}</span>
       </h1>
 
       <div className="flex items-center gap-2 pointer-events-auto">
         <button
           onClick={onToggleFullscreen}
-          className="btn btn-sm btn-ghost text-white pointer-events-auto"
+          className="btn btn-sm btn-ghost text-white pointer-events-auto min-h-10 min-w-10"
           title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
           aria-pressed={isFullscreen}
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}

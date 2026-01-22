@@ -9,18 +9,25 @@ import pt from './locales/pt.json';
 const _missingI18nKeys: Array<{lng: string; ns: string; key: string}> = [];
 
 // i18next expects missingKeyHandler to have the signature:
-// (lngs: readonly string[], ns: string, key: string, fallbackValue: string, updateMissing: boolean, options: any) => void
-function missingKeyHandler(lngs: readonly string[], ns: string, key: string, _fallbackValue?: string, _updateMissing?: boolean, _options?: any) {
+// (lngs: readonly string[], ns: string, key: string, fallbackValue: string, updateMissing: boolean, options: Record<string, unknown>) => void
+function missingKeyHandler(
+  lngs: readonly string[],
+  ns: string,
+  key: string,
+  _fallbackValue?: string,
+  _updateMissing?: boolean,
+  _options?: Record<string, unknown>
+) {
   try {
-    const lngStr = Array.isArray(lngs) ? (lngs as string[]).join(',') : String(lngs as any || '');
+    const lngStr = Array.isArray(lngs) ? (lngs as string[]).join(',') : String(lngs || '');
     const nsStr = String(ns || '');
 
     _missingI18nKeys.push({lng: lngStr, ns: nsStr, key});
     // expose on window for quick inspection in the browser during QA
     if (typeof window !== 'undefined') {
-      // @ts-ignore - attach to window for debugging only
+      // @ts-expect-error - attach to window for debugging only
       window.__MISSING_I18N_KEYS__ = window.__MISSING_I18N_KEYS__ || [];
-      // @ts-ignore
+      // @ts-expect-error - Custom window property for QA debugging
       window.__MISSING_I18N_KEYS__.push({lng: lngStr, ns: nsStr, key});
     }
      
