@@ -1,14 +1,13 @@
 /**
  * Live Jam Control Panel Component
- * Host control interface for managing active jam playback
- * Allows play/pause/skip and queue reordering
+ * Host control interface for managing active jam queue
+ * Allows queue reordering via drag and drop
  */
 
 import React, {useState} from 'react'
-import {GripVertical, Music, Pause, Play, SkipForward} from 'lucide-react'
+import {GripVertical, Music} from 'lucide-react'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {formatDuration} from '../../lib/formatters'
-import {apiClient} from '../../lib/api'
 import {getInstrumentIcon} from './RegistrationList'
 import {useTranslation} from 'react-i18next'
 import {normalizeInstrument} from '../../utils/musicianUtils'
@@ -18,13 +17,6 @@ interface LiveJamControlPanelProps {
   jam: JamResponseDto
   onActionSuccess?: (message: string) => void
   onActionError?: (error: string) => void
-}
-
-interface ControlAction {
-  action: 'play' | 'pause' | 'skip' | 'reorder'
-  payload?: {
-    scheduleIds?: string[]
-  }
 }
 
 /**
@@ -71,7 +63,6 @@ export function LiveJamControlPanel({
   onActionError,
 }: LiveJamControlPanelProps) {
   const { t } = useTranslation()
-  const [isLoading, setIsLoading] = useState(false)
   const [localQueue, setLocalQueue] = useState<ScheduleResponseDto[]>(
     jam.schedules?.filter((s) => s.status === 'SCHEDULED').sort((a, b) => (a.order || 0) - (b.order || 0)) || []
   )
@@ -87,67 +78,15 @@ export function LiveJamControlPanel({
     },
     (errorMessage) => {
       onActionError?.(errorMessage)
+    },
+    (previousQueue) => {
+      // Rollback to previous queue state without showing success alert
+      setLocalQueue(previousQueue)
     }
   )
 
   const currentSong = jam.schedules?.find((s) => s.status === 'IN_PROGRESS')
   const nextSongs = localQueue
-
-  // Send control action to backend
-  const sendControlAction = async (action: ControlAction) => {
-    setIsLoading(true)
-
-    try {
-      const response = await apiClient.post(`/jams/${jam.id}/live/control`, action)
-
-      if (!response.success) {
-        throw new Error(response.error || t('errors.action_failed'))
-      }
-
-      // Success feedback
-      const actionLabels: Record<string, string> = {
-        play: t('live_control.song_playing_feedback'),
-        pause: t('live_control.song_paused_feedback'),
-        skip: t('live_control.skipped_feedback'),
-        reorder: t('live_control.reordered_feedback'),
-      }
-
-      onActionSuccess?.(actionLabels[action.action] || t('errors.generic_error'))
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : t('errors.failed_to_execute_action')
-      onActionError?.(errorMessage)
-      console.error('❌ Control action error:', err)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  // Handle play button
-  const handlePlay = () => {
-    if (!currentSong) {
-      onActionError?.(t('errors.no_song_playing'))
-      return
-    }
-    sendControlAction({ action: 'play' })
-  }
-
-  // Handle pause button
-  const handlePause = () => {
-    if (!currentSong) {
-      onActionError?.(t('errors.no_song_playing'))
-      return
-    }
-    sendControlAction({ action: 'pause' })
-  }
-
-  // Handle skip button
-  const handleSkip = () => {
-    if (!currentSong) {
-      onActionError?.(t('errors.no_song_playing'))
-      return
-    }
-    sendControlAction({ action: 'skip' })
-  }
 
   // Handle drag and drop for reordering
   const handleDragStart = (scheduleId: string) => {
@@ -184,9 +123,8 @@ export function LiveJamControlPanel({
     setDraggedItem(null)
 
     // Send reorder request using new dedicated endpoint
-    // Hook handles rollback on error
-    const scheduleIds = newQueue.map((s) => s.id)
-    reorderQueue(scheduleIds)
+    // Hook builds explicit order values and handles rollback on error
+    reorderQueue(newQueue)
   }
 
   return (
@@ -218,49 +156,17 @@ export function LiveJamControlPanel({
                 {Array.from(groupRegistrationsByInstrument(currentSong.registrations).entries())
                   .sort(([a], [b]) => getInstrumentOrder(a) - getInstrumentOrder(b))
                   .map(([instrument, musicians]) => (
-                    <div key={instrument} className="flex items-center gap-1">
-                      <span className="text-2xl">{getInstrumentIcon(instrument)}</span>
-                      {musicians.length > 1 && (
-                        <span className="badge badge-sm badge-white text-primary">
-                          ×{musicians.length}
-                        </span>
-                      )}
+                    <div key={instrument} className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1">
+                      <span className="text-lg">{getInstrumentIcon(instrument)}</span>
+                      <span className="text-sm text-white/90">
+                        {musicians.map(m => m.musician?.name || t('common.unknown')).join(', ')}
+                      </span>
                     </div>
                   ))}
               </div>
             </div>
           )}
 
-          {/* Control Buttons */}
-          <div className="flex gap-3">
-            <button
-              onClick={handlePlay}
-              disabled={isLoading}
-              className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
-              aria-label={t('common.play')}
-            >
-              <Play className="size-4" aria-hidden="true" />
-              {t('common.play')}
-            </button>
-            <button
-              onClick={handlePause}
-              disabled={isLoading}
-              className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
-              aria-label={t('common.pause')}
-            >
-              <Pause className="size-4" aria-hidden="true" />
-              {t('common.pause')}
-            </button>
-            <button
-              onClick={handleSkip}
-              disabled={isLoading}
-              className="btn btn-sm btn-accent text-accent-content flex-1 gap-2"
-              aria-label={t('common.skip')}
-            >
-              <SkipForward className="size-4" aria-hidden="true" />
-              {t('common.skip')}
-            </button>
-          </div>
         </div>
       ) : (
         <div className="bg-base-200 rounded-xl p-6 text-center">
@@ -270,7 +176,7 @@ export function LiveJamControlPanel({
       )}
 
       {/* Up Next Section */}
-      <div className="bg-base-100 rounded-xl p-6 border border-base-300">
+      <div className="bg-base-100 rounded-xl p-6 border border-base-300 relative">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2 text-balance">
           <Music className="size-5" aria-hidden="true" />
           {t('live_control.up_next')}
@@ -323,15 +229,17 @@ export function LiveJamControlPanel({
         ) : (
           <p className="text-center text-base-content/60 py-4">{t('live_control.no_more_songs')}</p>
         )}
-      </div>
 
-      {/* Loading Indicator */}
-      {(isLoading || isReordering) && (
-        <div className="flex items-center justify-center gap-2 text-sm text-base-content/60">
-          <span className="loading loading-spinner loading-sm"></span>
-          {t('live_control.executing_action')}
-        </div>
-      )}
+        {/* Loading Overlay */}
+        {isReordering && (
+          <div className="absolute inset-0 bg-base-100/80 rounded-xl flex items-center justify-center backdrop-blur-sm">
+            <div className="flex items-center gap-2 text-base-content">
+              <span className="loading loading-spinner loading-md"></span>
+              <span className="font-medium">{t('live_control.executing_action')}</span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

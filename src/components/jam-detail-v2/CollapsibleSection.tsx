@@ -52,7 +52,7 @@ export function CollapsibleSection({
       <div
         id={contentId}
         className={`overflow-hidden transition-all duration-300 ease-in-out motion-reduce:transition-none ${
-          expanded ? 'max-h-96 opacity-100 pt-4' : 'max-h-0 opacity-0'
+          expanded ? 'max-h-[800px] opacity-100 pt-4' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="px-4 pb-4">

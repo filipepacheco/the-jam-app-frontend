@@ -6,8 +6,15 @@ import {useTranslation} from "react-i18next";
  */
 export function AnalyticsTab({jam}: { jam: JamResponseDto }) {
     const {t} = useTranslation()
+
+    // Calculate unique musicians - use array when available
     const uniqueMusicians = new Set<string>()
     jam.registrations?.forEach((reg) => uniqueMusicians.add(reg.musicianId))
+    const musicianCount = uniqueMusicians.size > 0 ? uniqueMusicians.size : (jam._count?.registrations ?? 0)
+
+    // Use _count when available (list endpoint), fall back to array length (detail endpoint)
+    const songCount = jam._count?.jamMusics ?? jam.jamMusics?.length ?? 0
+    const performanceCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
 
     return (
         <div className="space-y-4">
@@ -17,19 +24,19 @@ export function AnalyticsTab({jam}: { jam: JamResponseDto }) {
                 <div className="card bg-base-200 shadow">
                     <div className="card-body">
                         <h3 className="font-semibold">{t('jam_management.analytics.total_songs')}</h3>
-                        <p className="text-3xl font-bold">{jam.jamMusics?.length || 0}</p>
+                        <p className="text-3xl font-bold">{songCount}</p>
                     </div>
                 </div>
                 <div className="card bg-base-200 shadow">
                     <div className="card-body">
                         <h3 className="font-semibold">{t('jam_management.analytics.unique_musicians')}</h3>
-                        <p className="text-3xl font-bold">{uniqueMusicians.size}</p>
+                        <p className="text-3xl font-bold">{musicianCount}</p>
                     </div>
                 </div>
                 <div className="card bg-base-200 shadow">
                     <div className="card-body">
                         <h3 className="font-semibold">{t('jam_management.analytics.performances')}</h3>
-                        <p className="text-3xl font-bold">{jam.schedules?.length || 0}</p>
+                        <p className="text-3xl font-bold">{performanceCount}</p>
                     </div>
                 </div>
             </div>

@@ -17,8 +17,14 @@ export function OverviewTab({
     const {t} = useTranslation()
     const navigate = useNavigate()
 
+    // Calculate unique musicians - use array when available
     const uniqueMusicians = new Set<string>()
     jam.registrations?.forEach((reg) => uniqueMusicians.add(reg.musicianId))
+    const musicianCount = uniqueMusicians.size
+
+    // Use _count when available (list endpoint), fall back to array length (detail endpoint)
+    const performanceCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
+    const registrationCount = jam._count?.registrations ?? jam.registrations?.length ?? 0
 
     return (
         <div className="space-y-4 sm:space-y-6">
@@ -78,7 +84,7 @@ export function OverviewTab({
                         <div
                             className="stat-title text-xs sm:text-sm">{t('jam_management.overview.stats.performances')}</div>
                         <div
-                            className="stat-value text-success text-xl sm:text-2xl lg:text-3xl">{jam.schedules?.length || 0}</div>
+                            className="stat-value text-success text-xl sm:text-2xl lg:text-3xl">{performanceCount}</div>
                     </div>
                 </div>
                 <div className="stats shadow bg-base-200 p-3 sm:p-6">
@@ -86,7 +92,7 @@ export function OverviewTab({
                         <div
                             className="stat-title text-xs sm:text-sm">{t('jam_management.overview.stats.registrations')}</div>
                         <div
-                            className="stat-value text-accent text-xl sm:text-2xl lg:text-3xl">{jam.registrations?.length || 0}</div>
+                            className="stat-value text-accent text-xl sm:text-2xl lg:text-3xl">{registrationCount}</div>
                     </div>
                 </div>
                 <div className="stats shadow bg-base-200 p-3 sm:p-6">
@@ -94,7 +100,7 @@ export function OverviewTab({
                         <div
                             className="stat-title text-xs sm:text-sm">{t('jam_management.overview.stats.musicians')}</div>
                         <div
-                            className="stat-value text-secondary text-xl sm:text-2xl lg:text-3xl">{uniqueMusicians.size}</div>
+                            className="stat-value text-secondary text-xl sm:text-2xl lg:text-3xl">{musicianCount}</div>
                     </div>
                 </div>
             </div>

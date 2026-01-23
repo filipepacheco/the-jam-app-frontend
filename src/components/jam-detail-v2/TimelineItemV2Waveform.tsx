@@ -83,7 +83,7 @@ export function TimelineItemV2Waveform({
 
   return (
     <button
-      className={`card ${bgClasses} ${borderClasses} transition-all duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`}
+      className={`card w-full ${bgClasses} ${borderClasses} transition-all duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
       aria-expanded={isExpanded}
@@ -92,88 +92,83 @@ export function TimelineItemV2Waveform({
     >
       <div className="card-body p-4">
 
-        {/* Header with position and status */}
-        <div className="flex items-start justify-between gap-3 mb-2">
-          {position !== undefined && (
-            <div className="badge badge-neutral badge-sm font-bold">
-              #{position}
+        {/* Header with position, song info, and status - all in one row on desktop */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-start gap-3 min-w-0 flex-1">
+            {position !== undefined && (
+              <div className="badge badge-neutral badge-sm font-bold shrink-0">
+                #{position}
+              </div>
+            )}
+            <div className="min-w-0 flex-1">
+              <h3 className="text-lg font-bold text-base-content mb-0.5 truncate">
+                {schedule.music?.title}
+              </h3>
+              <p className="text-sm text-base-content/70 truncate">
+                {schedule.music?.artist}
+              </p>
             </div>
-          )}
-          <div className={`flex items-center gap-1.5 text-xs font-semibold ${status.color} ml-auto`}>
+          </div>
+          <div className={`flex items-center gap-1.5 text-xs font-semibold ${status.color} shrink-0`}>
             <span className="text-base" aria-hidden="true">{status.icon}</span>
             <span>{status.text}</span>
           </div>
         </div>
 
-        {/* Song Info */}
-        <div className="mb-3">
-          <h3 className="text-lg font-bold text-base-content mb-0.5">
-            {schedule.music?.title}
-          </h3>
-          <p className="text-sm text-base-content/70">
-            {schedule.music?.artist}
-          </p>
-        </div>
-
-        {/* Registered Musicians - Expandable */}
-        {schedule.registrations && schedule.registrations.length > 0 && (
-          <div className="mb-3">
+        {/* Musicians count and duration - same row */}
+        <div className="flex items-center gap-4 text-xs text-base-content/60 mb-3">
+          {schedule.registrations && schedule.registrations.length > 0 ? (
             <button
               onClick={(e) => {
                 e.stopPropagation()
                 onToggleExpanded?.()
               }}
-              className="w-full text-left text-xs text-base-content/60 font-semibold flex items-center justify-between gap-1.5 hover:text-base-content/80 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded outline-none"
+              className="flex items-center gap-1.5 hover:text-base-content/80 transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded outline-none font-semibold"
               type="button"
               aria-expanded={isExpanded}
               aria-controls={`musician-list-${schedule.id}`}
             >
-              <span className="flex items-center gap-1.5">
-                <span aria-hidden="true">🎵</span>
-                {schedule.registrations.length} {schedule.registrations.length === 1 ? t('jams.info.musician') : t('jams.info.musicians')}
-              </span>
+              <span aria-hidden="true">🎵</span>
+              <span>{schedule.registrations.length} {schedule.registrations.length === 1 ? t('jams.info.musician') : t('jams.info.musicians')}</span>
               <span className="text-xs" aria-hidden="true">{isExpanded ? '▲' : '▼'}</span>
             </button>
-
-            {/* Expandable musician list with animation */}
-            <div
-              id={`musician-list-${schedule.id}`}
-              className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                isExpanded ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'
-              }`}
-            >
-              <div className="flex flex-wrap gap-2">
-                {schedule.registrations.map((reg: RegistrationResponseDto) => (
-                  <div
-                    key={reg.id}
-                    className="inline-flex items-center gap-1.5 bg-base-200/50 px-2 py-1 rounded text-xs"
-                  >
-                    <span aria-hidden="true">{getInstrumentIcon(reg.instrument)}</span>
-                    <span className="font-medium">
-                      {reg.musician?.id === user?.id ? t('common.you') : reg.musician?.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
+          ) : (
+            <div className="flex items-center gap-1 text-warning font-semibold">
+              <span aria-hidden="true">⚠</span>
+              <span>{t('jams.no_registrations_yet')}</span>
             </div>
-          </div>
-        )}
-
-        {/* Metadata row */}
-        <div className="flex items-center gap-4 text-xs text-base-content/60 mb-3">
+          )}
           <div className="flex items-center gap-1">
             <span aria-hidden="true">⏱️</span>
             <span className="font-medium tabular-nums">
               {Math.floor((schedule.music?.duration || 0) / 60)}min
             </span>
           </div>
-          {!schedule.registrations?.length && (
-            <div className="flex items-center gap-1 text-warning">
-              <span aria-hidden="true">⚠</span>
-              <span className="font-medium">{t('jams.no_registrations_yet')}</span>
-            </div>
-          )}
         </div>
+
+        {/* Expandable musician list with animation */}
+        {schedule.registrations && schedule.registrations.length > 0 && (
+          <div
+            id={`musician-list-${schedule.id}`}
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              isExpanded ? 'max-h-96 opacity-100 mb-3' : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="flex flex-wrap gap-2">
+              {schedule.registrations.map((reg: RegistrationResponseDto) => (
+                <div
+                  key={reg.id}
+                  className="inline-flex items-center gap-1.5 bg-base-200/50 px-2 py-1 rounded text-xs"
+                >
+                  <span aria-hidden="true">{getInstrumentIcon(reg.instrument)}</span>
+                  <span className="font-medium">
+                    {reg.musician?.id === user?.id ? t('common.you') : reg.musician?.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Register Button / Stage Call-to-Action */}
         {!isCompleted && (

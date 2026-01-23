@@ -7,13 +7,14 @@
 import {useCallback, useRef, useState} from 'react'
 import {jamControlService} from '../services'
 import type {ScheduleResponseDto} from '../types/api.types'
-import type {UseQueueReorderReturn} from '../types/jamControl.types'
+import type {ScheduleOrderUpdate, UseQueueReorderReturn} from '../types/jamControl.types'
 
 export function useQueueReorder(
   jamId: string,
   currentQueue: ScheduleResponseDto[],
   onSuccess: (updatedSchedules: ScheduleResponseDto[]) => void,
-  onError: (error: string) => void
+  onError: (error: string) => void,
+  onRollback?: (previousQueue: ScheduleResponseDto[]) => void
 ): UseQueueReorderReturn {
   const [isReordering, setIsReordering] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -22,7 +23,7 @@ export function useQueueReorder(
   const previousQueueRef = useRef<ScheduleResponseDto[]>(currentQueue)
 
   const reorderQueue = useCallback(
-    async (scheduleIds: string[]) => {
+    async (newQueue: ScheduleResponseDto[]) => {
       // Clear any pending debounce
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current)
@@ -32,12 +33,13 @@ export function useQueueReorder(
       previousQueueRef.current = currentQueue
 
       // Client-side validation
-      if (scheduleIds.length === 0) {
+      if (newQueue.length === 0) {
         setError('Cannot reorder empty queue')
         onError('Cannot reorder empty queue')
         return
       }
 
+      const scheduleIds = newQueue.map(s => s.id)
       const uniqueIds = new Set(scheduleIds)
       if (uniqueIds.size !== scheduleIds.length) {
         setError('Duplicate schedule IDs detected')
@@ -45,32 +47,44 @@ export function useQueueReorder(
         return
       }
 
+      // Build updates array with explicit 1-based order values
+      const updates: ScheduleOrderUpdate[] = newQueue.map((schedule, index) => ({
+        scheduleId: schedule.id,
+        order: index + 1
+      }))
+
+      // Show loading immediately on drop
+      setIsReordering(true)
+      setError(null)
+
       // Debounce the API call
       debounceTimerRef.current = setTimeout(async () => {
-        setIsReordering(true)
-        setError(null)
-
-        const response = await jamControlService.reorderQueue(jamId, scheduleIds)
+        const response = await jamControlService.reorderQueue(jamId, updates)
 
         setIsReordering(false)
 
-        if (response.success && response.data && response.data.schedules) {
-          // Success: update with server response
-          const sortedSchedules = response.data.schedules
-            .filter(s => s.status === 'SCHEDULED' || s.status === 'IN_PROGRESS')
-            .sort((a, b) => (a.order || 0) - (b.order || 0))
-
-          onSuccess(sortedSchedules)
+        if (response.success) {
+          if (response.data?.schedules) {
+            // Server returned full jam - use server state
+            const sortedSchedules = response.data.schedules
+              .filter(s => s.status === 'SCHEDULED' || s.status === 'IN_PROGRESS')
+              .sort((a, b) => (a.order || 0) - (b.order || 0))
+            onSuccess(sortedSchedules)
+          } else {
+            // Server returned true - keep optimistic update already applied
+            onSuccess(newQueue)
+          }
         } else {
           // Failure: rollback and show error
           const errorMessage = response.error?.message || 'Failed to reorder queue'
           setError(errorMessage)
           onError(errorMessage)
-          onSuccess(previousQueueRef.current) // Rollback
+          // Rollback via separate callback to avoid triggering success alert
+          onRollback?.(previousQueueRef.current)
         }
       }, 300) // 300ms debounce
     },
-    [jamId, currentQueue, onSuccess, onError]
+    [jamId, currentQueue, onSuccess, onError, onRollback]
   )
 
   const resetError = useCallback(() => {

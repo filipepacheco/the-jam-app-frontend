@@ -62,9 +62,8 @@ function getStatusLabel(status: JamStatus, t: (key: string) => string): string {
  */
 export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
   const { t } = useTranslation()
-  // Use schedules count as it represents actual performances
-  // Fall back to jamMusics count if schedules not available
-  const songCount = jam.schedules?.length || jam.jamMusics?.length || 0
+  // Use _count from API when available (list endpoint), fall back to array length (detail endpoint)
+  const songCount = jam._count?.schedules ?? jam.schedules?.length ?? jam._count?.jamMusics ?? jam.jamMusics?.length ?? 0
 
 
   return (

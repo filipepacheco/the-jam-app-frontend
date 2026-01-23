@@ -678,6 +678,7 @@
       "stats": {
         "total_jams": "Total Jams",
         "musicians": "Musicians",
+        "registrations": "Registrations",
         "songs": "Songs",
         "upcoming": "Upcoming"
       },
@@ -693,6 +694,7 @@
       },
       "songs_count": "{{count}} songs",
       "musicians_count": "{{count}} musicians",
+      "registrations_count": "{{count}} registrations",
       "view_public": "View Public",
       "manage_btn": "Manage",
       "delete_btn": "Delete"

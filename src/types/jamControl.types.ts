@@ -26,7 +26,7 @@ export interface LiveStateMusic {
   id: string
   title: string
   artist: string
-  duracao?: number
+  duration?: number
   genre?: string
   description?: string
   link?: string
@@ -124,11 +124,21 @@ export interface UseJamControlReturn {
 // ============================================================================
 
 /**
+ * Individual schedule order update
+ * Explicit order value for Prisma batch updates
+ */
+export interface ScheduleOrderUpdate {
+  scheduleId: string
+  order: number
+}
+
+/**
  * Request payload for reorder endpoint
  * POST /jams/:id/control/reorder
+ * Uses explicit order values instead of array index derivation
  */
 export interface ReorderQueueRequest {
-  scheduleIds: string[]
+  updates: ScheduleOrderUpdate[]
 }
 
 /**
@@ -150,7 +160,7 @@ export interface ReorderQueueResponse {
  * Provides reorder method and state management
  */
 export interface UseQueueReorderReturn {
-  reorderQueue: (scheduleIds: string[]) => Promise<void>
+  reorderQueue: (newQueue: import('./api.types').ScheduleResponseDto[]) => Promise<void>
   isReordering: boolean
   error: string | null
   resetError: () => void

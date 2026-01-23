@@ -117,10 +117,24 @@ export interface JamMusicResponseDto {
 }
 
 /**
+ * Playback state for a jam session
+ */
+export type PlaybackState = 'PLAYING' | 'PAUSED' | 'STOPPED'
+
+/**
+ * Count summary for jam-related entities
+ */
+export interface JamCountDto {
+  jamMusics: number
+  registrations: number
+  schedules: number
+}
+
+/**
  * Jam session response from API
  */
 export interface JamResponseDto {
-    location: string;
+  location: string
   id: string
   name: string
   hostName: string
@@ -130,6 +144,9 @@ export interface JamResponseDto {
   status: JamStatus
   createdAt: string
   updatedAt: string
+  playbackState?: PlaybackState
+  currentScheduleId?: string
+  _count?: JamCountDto
   jamMusics?: JamMusicResponseDto[]
   registrations?: RegistrationResponseDto[]
   schedules?: ScheduleResponseDto[]
@@ -284,8 +301,26 @@ export interface ApiError {
 }
 
 // ============================================================================
-// PAGINATION SUPPORT (for future use)
+// PAGINATION SUPPORT
 // ============================================================================
+
+/**
+ * Pagination metadata from paginated endpoints
+ */
+export interface PaginationMeta {
+  total: number
+  skip: number
+  take: number
+  hasMore: boolean
+}
+
+/**
+ * Paginated response wrapper
+ */
+export interface PaginatedResponse<T> {
+  data: T[]
+  meta: PaginationMeta
+}
 
 // ============================================================================
 // UTILITY TYPES

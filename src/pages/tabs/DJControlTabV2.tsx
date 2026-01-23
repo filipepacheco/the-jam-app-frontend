@@ -69,7 +69,6 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">{t('dj_control.title_with_emoji')}</h2>
-        <div className="text-xs badge badge-info">V2 - New Control System</div>
       </div>
 
       {/* Error Alert */}
@@ -114,26 +113,26 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
 
         {/* Sidebar */}
         <div className="lg:col-span-1 space-y-4">
-          {/* Queue Stats */}
-          <QueueStats liveState={liveState} />
-
           {/* Controls */}
           <DJControlActions
-            jamId={jamId}
-            liveState={liveState}
-            isLoading={isLoading}
-            error={error}
-            onStart={start}
-            onStop={stop}
-            onResume={resume}
-            onPause={pause}
-            onNext={next}
-            onPrevious={previous}
-            onRefresh={handleRefresh}
-            onError={() => {
-              /* Error is handled by hook */
-            }}
+              jamId={jamId}
+              liveState={liveState}
+              isLoading={isLoading}
+              error={error}
+              onStart={start}
+              onStop={stop}
+              onResume={resume}
+              onPause={pause}
+              onNext={next}
+              onPrevious={previous}
+              onRefresh={handleRefresh}
+              onError={() => {
+                /* Error is handled by hook */
+              }}
           />
+
+          {/* Queue Stats */}
+          <QueueStats liveState={liveState} />
         </div>
       </div>
     </div>

@@ -43,15 +43,6 @@ export const scheduleService = {
   async remove(id: string): Promise<ApiResponse<void>> {
     return apiClient.delete<void>(API_ENDPOINTS.scheduleById(id))
   },
-
-  /**
-   * Reorder schedules for a jam
-   * @param jamId - Jam ID
-   * @param scheduleIds - Array of schedule IDs in desired order
-   * @returns Promise with confirmation
-   */
-  async reorder(jamId: string, scheduleIds: string[]): Promise<ApiResponse<void>> {
-    return apiClient.put<void>(API_ENDPOINTS.reorderSchedules(jamId), scheduleIds)
-  },
+  // Note: Reorder functionality moved to jamControlService.reorderQueue()
 }
 

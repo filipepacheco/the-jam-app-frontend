@@ -4,7 +4,7 @@
  */
 
 import {apiClient} from '../lib/api'
-import type {JamResponseDto} from '../types/api.types'
+import type {JamResponseDto, PaginatedResponse} from '../types/api.types'
 
 interface SpecialtySlot {
   specialty: string
@@ -32,18 +32,36 @@ interface ApiResponse<T> {
 
 /**
  * Fetch all jams from the API
+ * @param skip - Number of records to skip (default: 0)
+ * @param take - Number of records to return (default: 100)
  * @returns Promise with array of jams wrapped in ApiResponse
  */
-export async function findAll(): Promise<ApiResponse<JamResponseDto[]>> {
+export async function findAll(skip = 0, take = 100): Promise<ApiResponse<JamResponseDto[]>> {
   try {
-    const response = await apiClient.get<JamResponseDto[]>('/jams')
-    
+    const response = await apiClient.get<PaginatedResponse<JamResponseDto> | JamResponseDto[]>(
+      `/jams?skip=${skip}&take=${take}`
+    )
+
     if (!response.success) {
       throw new Error(response.error || 'Failed to load jams')
     }
 
+    // Handle both paginated response (new) and array response (legacy)
+    const responseData = response.data
+    let jams: JamResponseDto[]
+
+    if (responseData && 'data' in responseData && 'meta' in responseData) {
+      // New paginated response format
+      jams = responseData.data
+    } else if (Array.isArray(responseData)) {
+      // Legacy array format (fallback)
+      jams = responseData
+    } else {
+      jams = []
+    }
+
     return {
-      data: response.data || [],
+      data: jams,
       status: 200,
     }
   } catch (err) {

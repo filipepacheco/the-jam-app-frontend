@@ -33,20 +33,21 @@ function Navbar() {
       {/* Navbar Start - Logo and Mobile Menu */}
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <button tabIndex={0} className="btn btn-ghost lg:hidden" aria-label={t('nav.toggle_menu')}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor">
+              stroke="currentColor"
+              aria-hidden="true">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
-          </div>
+          </button>
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-48 sm:w-52 p-2 shadow text-xs sm:text-sm">
@@ -115,14 +116,14 @@ function Navbar() {
 
         {/* Auth Dropdown */}
         <div className="dropdown dropdown-end">
-          <div
+          <button
             tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar placeholder w-8 sm:w-10">
+            className="btn btn-ghost btn-circle avatar placeholder w-8 sm:w-10"
+            aria-label={t('nav.user_menu')}>
             <div className="bg-primary text-primary-content rounded-full w-8 sm:w-10 flex items-center justify-center text-xs sm:text-sm">
               {isAuthenticated && user ? (user.name || 'U').charAt(0).toUpperCase() : 'G'}
             </div>
-          </div>
+          </button>
           <ul
             tabIndex={0}
             className="dropdown-content z-50 menu p-2 shadow bg-base-100 rounded-box w-48 sm:w-52 text-xs sm:text-sm">

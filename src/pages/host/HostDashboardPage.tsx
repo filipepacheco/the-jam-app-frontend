@@ -83,19 +83,19 @@ export function HostDashboardPage() {
     const calculateStats = () => {
         const totalJams = jams.length
 
-        // Deduplicate musicians by musicianId across all registrations
-        const uniqueMusicians = new Set<string>()
-        jams.forEach((jam) => {
-            jam.registrations?.forEach((reg) => {
-                uniqueMusicians.add(reg.musicianId)
-            })
-        })
-        const totalMusicians = uniqueMusicians.size
+        // Count total registrations across all jams
+        // Note: This is registration count, not unique musicians (one musician can have multiple registrations)
+        const totalRegistrations = jams.reduce((sum, jam) => {
+            if (jam.registrations) {
+                return sum + jam.registrations.length
+            }
+            return sum + (jam._count?.registrations ?? 0)
+        }, 0)
 
-        // Count schedules for total songs
-        const totalSongs = jams.reduce((sum, jam) => sum + (jam.schedules?.length || 0), 0)
+        // Count schedules for total songs - use _count when available
+        const totalSongs = jams.reduce((sum, jam) => sum + (jam._count?.schedules ?? jam.schedules?.length ?? 0), 0)
 
-        return {totalJams, totalMusicians, totalSongs}
+        return {totalJams, totalRegistrations, totalSongs}
     }
 
     const handleDeleteJam = async (jamId: string) => {
@@ -168,9 +168,9 @@ export function HostDashboardPage() {
                     <div className="stats shadow bg-base-200 p-3 sm:p-6 w-full">
                         <div className="stat w-full">
                             <div
-                                className="stat-title text-xs sm:text-sm">{t('jam_management.host_dashboard.stats.musicians')}</div>
+                                className="stat-title text-xs sm:text-sm">{t('jam_management.host_dashboard.stats.registrations')}</div>
                             <div
-                                className="stat-value text-secondary text-xl sm:text-2xl lg:text-3xl">{stats.totalMusicians}</div>
+                                className="stat-value text-secondary text-xl sm:text-2xl lg:text-3xl">{stats.totalRegistrations}</div>
                         </div>
                     </div>
 
@@ -306,14 +306,11 @@ function JamCard({jam, onDelete, onNavigate, loading}: JamCardProps) {
         }
     }
 
-    // Calculate unique musicians in this jam
-    const uniqueMusiciansInJam = new Set<string>()
-    jam.registrations?.forEach((reg) => {
-        uniqueMusiciansInJam.add(reg.musicianId)
-    })
+    // Count registrations for this jam - use _count when available
+    const registrationCount = jam._count?.registrations ?? jam.registrations?.length ?? 0
 
-    const songCount = jam.schedules?.length || 0
-    const musicianCount = uniqueMusiciansInJam.size
+    // Use _count when available (list endpoint), fall back to array length (detail endpoint)
+    const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
 
     return (
         <div className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow">
@@ -340,7 +337,7 @@ function JamCard({jam, onDelete, onNavigate, loading}: JamCardProps) {
             🎵 {safeT(t, 'jam_management.host_dashboard.songs_count', {count: songCount})}
           </span>
                     <span className="badge badge-outline badge-xs sm:badge-sm">
-            👥 {safeT(t, 'jam_management.host_dashboard.musicians_count', {count: musicianCount})}
+            👥 {safeT(t, 'jam_management.host_dashboard.registrations_count', {count: registrationCount})}
           </span>
                 </div>
 

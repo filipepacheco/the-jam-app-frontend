@@ -663,6 +663,7 @@
       "stats": {
         "total_jams": "Total de Jams",
         "musicians": "Músicos",
+        "registrations": "Inscripciones",
         "songs": "Músicas",
         "upcoming": "Próximos"
       },
@@ -678,6 +679,7 @@
       },
       "songs_count": "{{count}} canciones",
       "musicians_count": "{{count}} músicos",
+      "registrations_count": "{{count}} inscripciones",
       "view_public": "Ver Público",
       "manage_btn": "Gestionar",
       "delete_btn": "Eliminar"

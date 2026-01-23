@@ -22,8 +22,8 @@ export function TimelineSongItem({ song, status, onRemove, loading }: TimelineSo
     .filter(Boolean)
     .join(', ') || t('dj_control.timeline.no_musicians')
 
-  const duration = song.music.duracao
-    ? `${Math.floor(song.music.duracao / 60)}:${String(song.music.duracao % 60).padStart(2, '0')}`
+  const duration = song.music.duration
+    ? `${Math.floor(song.music.duration / 60)}:${String(song.music.duration % 60).padStart(2, '0')}`
     : '--:--'
 
   // Handle both Portuguese (titulo/artista) and English (title/artist) field names
@@ -41,7 +41,7 @@ export function TimelineSongItem({ song, status, onRemove, loading }: TimelineSo
       </div>
 
       {/* Duration */}
-      {song.music.duracao && (
+      {song.music.duration && (
         <div className="text-xs text-base-content/60">
           ⏱️ {duration}
         </div>

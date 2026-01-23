@@ -46,15 +46,15 @@ export function QueueStats({ liveState }: QueueStatsProps) {
   // Calculate total duration
   const calculateDuration = (songs: LiveStateSongDto[]) => {
     return songs.reduce((acc, song) => {
-      return acc + (song.music?.duracao || 0)
+      return acc + (song.music?.duration || 0)
     }, 0)
   }
 
   const totalDuration = calculateDuration(previousSongs) +
-    (currentSong ? currentSong.music.duracao || 0 : 0) +
+    (currentSong ? currentSong.music.duration || 0 : 0) +
     calculateDuration(nextSongs)
 
-  const remainingDuration = (currentSong ? currentSong.music.duracao || 0 : 0) + calculateDuration(nextSongs)
+  const remainingDuration = (currentSong ? currentSong.music.duration || 0 : 0) + calculateDuration(nextSongs)
 
   const completedDuration = calculateDuration(previousSongs)
 

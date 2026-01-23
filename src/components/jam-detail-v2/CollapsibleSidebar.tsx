@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {JamResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {CollapsibleSection} from './CollapsibleSection'
@@ -10,16 +10,42 @@ interface CollapsibleSidebarProps {
   isAuthenticated: boolean
 }
 
+// Check if we're on desktop (lg breakpoint = 1024px)
+function getIsDesktop() {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(min-width: 1024px)').matches
+}
+
 export function CollapsibleSidebar({
   jam,
   onSuggestClick,
 
 }: CollapsibleSidebarProps) {
   const { t } = useTranslation()
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    qrCode: false,
-    howItWorks: false,
+
+  // Initialize expanded state based on screen size - open on desktop, collapsed on mobile
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => {
+    const isDesktop = getIsDesktop()
+    return {
+      qrCode: isDesktop,
+      howItWorks: isDesktop,
+    }
   })
+
+  // Update expanded state when screen size changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(min-width: 1024px)')
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setExpandedSections({
+        qrCode: e.matches,
+        howItWorks: e.matches,
+      })
+    }
+
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [])
 
   const toggleSection = (section: string) => {
     setExpandedSections((prev) => ({

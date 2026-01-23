@@ -6,7 +6,7 @@
 
 import {apiClient} from '../lib/api'
 import type {JamResponseDto} from '../types/api.types'
-import type {LiveStateResponseDto, ReorderQueueRequest, ReorderQueueResponse} from '../types/jamControl.types'
+import type {LiveStateResponseDto, ReorderQueueRequest, ReorderQueueResponse, ScheduleOrderUpdate} from '../types/jamControl.types'
 
 interface ApiResponse<T> {
   data: T
@@ -107,7 +107,7 @@ export async function resume(jamId: string): Promise<ApiResponse<JamResponseDto>
 
     return {
       data: response.data as JamResponseDto,
-      status: 201,
+      status: 200,
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -133,7 +133,7 @@ export async function pause(jamId: string): Promise<ApiResponse<JamResponseDto>>
 
     return {
       data: response.data as JamResponseDto,
-      status: 201,
+      status: 200,
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -159,7 +159,7 @@ export async function next(jamId: string): Promise<ApiResponse<JamResponseDto>> 
 
     return {
       data: response.data as JamResponseDto,
-      status: 201,
+      status: 200,
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -185,7 +185,7 @@ export async function previous(jamId: string): Promise<ApiResponse<JamResponseDt
 
     return {
       data: response.data as JamResponseDto,
-      status: 201,
+      status: 200,
     }
   } catch (err) {
     if (err instanceof Error) {
@@ -199,15 +199,15 @@ export async function previous(jamId: string): Promise<ApiResponse<JamResponseDt
  * Reorder schedules in jam queue
  * Uses new dedicated endpoint: POST /jams/:id/control/reorder
  * @param jamId - Jam ID
- * @param scheduleIds - Array of schedule IDs in desired order
+ * @param updates - Array of schedule order updates with explicit order values
  * @returns Promise with standardized response containing full jam with updated schedules
  */
 export async function reorderQueue(
   jamId: string,
-  scheduleIds: string[]
+  updates: ScheduleOrderUpdate[]
 ): Promise<ReorderQueueResponse> {
   try {
-    const payload: ReorderQueueRequest = { scheduleIds }
+    const payload: ReorderQueueRequest = { updates }
 
     const response = await apiClient.post<JamResponseDto>(
       `/jams/${jamId}/control/reorder`,

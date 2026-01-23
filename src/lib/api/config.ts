@@ -52,7 +52,7 @@ export const API_ENDPOINTS = {
   // Schedules (Escalas) endpoints
   schedules: '/escalas',
   scheduleById: (id: string) => `/escalas/${id}`,
-  reorderSchedules: (jamId: string) => `/escalas/jam/${jamId}/reorder`,
+  // Note: Reorder now uses /jams/:id/control/reorder via jamControlService
 }
 
 /**

@@ -606,8 +606,8 @@
     "manage_title": "Gerenciar",
     "tabs": {
       "overview": "Visão geral",
-      "schedule": "Escala",
-      "live_control": "Controle ao vivo",
+      "schedule": "Escalas",
+      "live_control": "Ordenação",
       "registrations": "Registros",
       "dashboard": "Painel público",
       "analytics": "Análises"
@@ -676,6 +676,7 @@
       "stats": {
         "total_jams": "Total de Jams",
         "musicians": "Músicos",
+        "registrations": "Inscrições",
         "songs": "Músicas",
         "upcoming": "Próximos"
       },
@@ -691,6 +692,7 @@
       },
       "songs_count": "{{count}} músicas",
       "musicians_count": "{{count}} músicos",
+      "registrations_count": "{{count}} inscrições",
       "view_public": "Ver público",
       "manage_btn": "Gerenciar",
       "delete_btn": "Excluir"
@@ -733,7 +735,7 @@
   },
   "dj_control": {
     "title": "Controle DJ",
-    "title_with_emoji": "🎛️ Controle DJ",
+    "title_with_emoji": "🎛️ Controle Musical",
     "actions": {
       "title_with_emoji": "⚡ Ações",
       "status": "Status",

@@ -208,7 +208,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                         <div className="text-4xl mb-3">📋</div>
                         <h3 className="font-semibold mb-2">{t('jam_management.schedule.no_schedule_yet')}</h3>
                         <p className="text-sm text-base-content/70">
-                            {jam.jamMusics?.length
+                            {(jam._count?.jamMusics ?? jam.jamMusics?.length ?? 0) > 0
                                 ? t('jam_management.schedule.add_entry_hint')
                                 : t('jam_management.schedule.add_songs_first')}
 
