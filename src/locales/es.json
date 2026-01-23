@@ -591,6 +591,7 @@
     "error_loading": "Error al cargar Jam",
     "back_to_dashboard": "← Volver al Panel",
     "manage_title": "Gestionar",
+    "view_public_dashboard": "Ver Dashboard",
     "tabs": {
       "overview": "Resumen",
       "schedule": "Programación",

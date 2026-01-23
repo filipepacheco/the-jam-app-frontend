@@ -606,6 +606,7 @@
     "error_loading": "Error Loading Jam",
     "back_to_dashboard": "← Back to Dashboard",
     "manage_title": "Manage",
+    "view_public_dashboard": "View Dashboard",
     "tabs": {
       "overview": "Overview",
       "schedule": "Schedule",

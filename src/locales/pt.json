@@ -604,6 +604,7 @@
     "error_loading": "Erro ao carregar o Jam",
     "back_to_dashboard": "← Voltar ao painel",
     "manage_title": "Gerenciar",
+    "view_public_dashboard": "Dashboard ao vivo",
     "tabs": {
       "overview": "Visão geral",
       "schedule": "Escalas",
