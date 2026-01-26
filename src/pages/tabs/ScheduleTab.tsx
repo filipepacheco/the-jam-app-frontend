@@ -160,16 +160,18 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             {/* Schedule List */}
             {sortedSchedules.length > 0 ? (
                 <div className="space-y-6">
-                    {/* Non-Suggested Schedules */}
-                    {nonSuggestedSchedules.length > 0 && (
+                    {/* Suggested Schedules */}
+                    {suggestedSchedules.length > 0 && (
                         <div className="space-y-4">
-                            {nonSuggestedSchedules.map((schedule, index) => (
+                            <h3 className="text-3xl font-semibold flex items-center gap-2">
+                                ✨ {t('jam_management.schedule.suggested_songs')}
+                            </h3>
+                            {suggestedSchedules.map((schedule) => (
                                 <ScheduleCardManagement
                                     key={schedule.id}
                                     schedule={schedule}
-                                    index={index}
                                     loading={loading}
-                                    isSuggested={false}
+                                    isSuggested={true}
                                     onStatusChange={handleStatusChange}
                                     onDelete={handleDeleteSchedule}
                                     onApproveRegistration={handleApproveRegistration}
@@ -180,18 +182,21 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                         </div>
                     )}
 
-                    {/* Suggested Schedules */}
-                    {suggestedSchedules.length > 0 && (
-                        <div className="space-y-4 mt-6 pt-6 border-t-2 border-info/30">
-                            <h3 className="text-3xl font-semibold flex items-center gap-2">
-                                ✨ {t('jam_management.schedule.suggested_songs')}
-                            </h3>
-                            {suggestedSchedules.map((schedule) => (
+                    {/* Scheduled Songs */}
+                    {nonSuggestedSchedules.length > 0 && (
+                        <div className={`space-y-4 ${suggestedSchedules.length > 0 ? 'mt-6 pt-6 border-t-2 border-primary/30' : ''}`}>
+                            {suggestedSchedules.length > 0 && (
+                                <h3 className="text-3xl font-semibold flex items-center gap-2">
+                                    📋 {t('jam_management.schedule.title')}
+                                </h3>
+                            )}
+                            {nonSuggestedSchedules.map((schedule, index) => (
                                 <ScheduleCardManagement
                                     key={schedule.id}
                                     schedule={schedule}
+                                    index={index}
                                     loading={loading}
-                                    isSuggested={true}
+                                    isSuggested={false}
                                     onStatusChange={handleStatusChange}
                                     onDelete={handleDeleteSchedule}
                                     onApproveRegistration={handleApproveRegistration}

@@ -152,7 +152,7 @@ export function HostJamSongsPage() {
               className="btn btn-primary"
               disabled={loading}
             >
-              {t('host_songs.add_song')}
+              {t('common.add_song')}
             </button>
           </div>
         </div>
@@ -172,11 +172,11 @@ export function HostJamSongsPage() {
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">{t('host_songs.title_label')}</span>
+                    <span className="label-text">{t('common.form_labels.title')}</span>
                   </label>
                   <input
                     type="text"
-                    placeholder={t('music_form.title')}
+                    placeholder={t('common.form_labels.title')}
                     value={newSong.title}
                     onChange={(e) => setNewSong({ ...newSong, title: e.target.value })}
                     className="input input-bordered"
@@ -185,11 +185,11 @@ export function HostJamSongsPage() {
 
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text">{t('host_songs.artist_label')}</span>
+                    <span className="label-text">{t('common.form_labels.artist')}</span>
                   </label>
                   <input
                     type="text"
-                    placeholder={t('music_form.artist')}
+                    placeholder={t('common.form_labels.artist')}
                     value={newSong.artist}
                     onChange={(e) => setNewSong({ ...newSong, artist: e.target.value })}
                     className="input input-bordered"
@@ -199,7 +199,7 @@ export function HostJamSongsPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="form-control">
                     <label className="label">
-                      <span className="label-text">{t('host_songs.genre_label')}</span>
+                      <span className="label-text">{t('common.form_labels.genre')}</span>
                     </label>
                     <select
                       value={newSong.genre}
@@ -267,7 +267,7 @@ export function HostJamSongsPage() {
                       className="btn btn-secondary w-full"
                       disabled={loading || !selectedSongId}
                     >
-                      {loading ? t('host_songs.adding') : t('host_songs.add_btn')}
+                      {loading ? t('common.adding') : t('host_songs.add_btn')}
                     </button>
                   </>
                 ) : (
@@ -334,7 +334,7 @@ export function HostJamSongsPage() {
                       <button
                         onClick={() => handleReorder(index, index - 1)}
                         className="btn btn-sm btn-ghost"
-                        title={t('host_songs.move_up')}
+                        title={t('common.move_up')}
                       >
                         ↑
                       </button>
@@ -343,7 +343,7 @@ export function HostJamSongsPage() {
                       <button
                         onClick={() => handleReorder(index, index + 1)}
                         className="btn btn-sm btn-ghost"
-                        title={t('host_songs.move_down')}
+                        title={t('common.move_down')}
                       >
                         ↓
                       </button>
@@ -353,7 +353,7 @@ export function HostJamSongsPage() {
                       className="btn btn-sm btn-error btn-outline"
                       disabled={loading}
                     >
-                      {t('host_songs.remove')}
+                      {t('common.remove')}
                     </button>
                   </div>
                 </div>

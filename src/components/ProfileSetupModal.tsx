@@ -186,7 +186,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
               disabled={isLoading || !name.trim()}
             >
-              {isLoading ? t('musician_form.saving') : t('jams.profile_setup.save_btn')}
+              {isLoading ? t('common.saving') : t('jams.profile_setup.save_btn')}
             </button>
           </div>
         </form>

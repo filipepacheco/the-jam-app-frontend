@@ -75,7 +75,7 @@ export function TimelineItemV2Waveform({
   const getStatusDisplay = () => {
     if (isCompleted) return { icon: '✓', text: t('schedule.statuses.completed'), color: 'text-success' }
     if (isInProgress) return { icon: '▶', text: t('schedule.statuses.in_progress'), color: 'text-primary' }
-    if (isSuggested) return { icon: '✨', text: t('schedule.statuses.suggested'), color: 'text-info' }
+    if (isSuggested) return { icon: '✨', text: t('common.statuses.suggested'), color: 'text-info' }
     return { icon: '○', text: t('schedule.statuses.scheduled'), color: 'text-base-content/60' }
   }
 
@@ -135,7 +135,7 @@ export function TimelineItemV2Waveform({
           ) : (
             <div className="flex items-center gap-1 text-warning font-semibold">
               <span aria-hidden="true">⚠</span>
-              <span>{t('jams.no_registrations_yet')}</span>
+              <span>{t('common.no_registrations_yet')}</span>
             </div>
           )}
           <div className="flex items-center gap-1">

@@ -37,7 +37,7 @@ export function MusicModalFormFields({
       <div className="form-control">
         <label className="label">
           <span className="label-text">
-            {t('music_form.title')} <span className="text-error">*</span>
+            {t('common.form_labels.title')} <span className="text-error">*</span>
           </span>
         </label>
         <input
@@ -54,7 +54,7 @@ export function MusicModalFormFields({
       <div className="form-control">
         <label className="label">
           <span className="label-text">
-            {t('music_form.artist')} <span className="text-error">*</span>
+            {t('common.form_labels.artist')} <span className="text-error">*</span>
           </span>
         </label>
         <input
@@ -105,7 +105,7 @@ export function MusicModalFormFields({
       <div className="form-control">
         <label className="label">
           <span className="label-text">
-            {t('music_form.genre')} <span className="text-error">*</span>
+            {t('common.form_labels.genre')} <span className="text-error">*</span>
           </span>
         </label>
         <select

@@ -128,7 +128,7 @@ export function PerformanceSelectionModal({
                     >
                       {schedule.status === 'COMPLETED' && t('schedule.statuses.completed')}
                       {schedule.status === 'IN_PROGRESS' && t('schedule.statuses.in_progress')}
-                      {schedule.status === 'SUGGESTED' && t('schedule.statuses.suggested')}
+                      {schedule.status === 'SUGGESTED' && t('common.statuses.suggested')}
                       {schedule.status === 'SCHEDULED' && t('schedule.statuses.scheduled')}
                     </span>
                   )}

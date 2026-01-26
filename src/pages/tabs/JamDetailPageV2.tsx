@@ -275,7 +275,7 @@ export function JamDetailPageV2() {
                             ) : (
                                 <div className="text-center py-6">
                                     <div className="text-3xl mb-3" aria-hidden="true">🎵</div>
-                                    <p className="text-sm font-semibold mb-1">{t('jams.no_registrations_yet')}</p>
+                                    <p className="text-sm font-semibold mb-1">{t('common.no_registrations_yet')}</p>
                                     <p className="text-xs text-base-content/60">{t('jams.click_register_to_start')}</p>
                                 </div>
                             )}

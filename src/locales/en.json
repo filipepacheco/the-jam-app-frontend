@@ -51,7 +51,27 @@
       "idle": "Idle"
     },
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "statuses": {
+      "approved": "Approved",
+      "pending": "Pending",
+      "suggested": "Suggested"
+    },
+    "form_labels": {
+      "title": "Title",
+      "artist": "Artist",
+      "genre": "Genre"
+    },
+    "remove": "Remove",
+    "save_changes": "Save Changes",
+    "saving": "Saving...",
+    "adding": "Adding...",
+    "suggesting": "Suggesting...",
+    "suggest_song": "Suggest Song",
+    "move_up": "Move up",
+    "move_down": "Move down",
+    "add_song": "+ Add Song",
+    "no_registrations_yet": "No registrations yet"
   },
   "roles": {
     "host": "Host/Organizer",
@@ -287,20 +307,12 @@
     "select_song_error": "Please select a song",
     "my_registrations": "My Registrations",
     "any_instrument": "Any Instrument",
-    "approved": "Approved",
-    "pending": "Pending",
-    "no_registrations_yet": "No registrations yet",
     "click_register_to_start": "Click register to sign up for a performance",
     "no_registrations_for_song": "No musicians registered for this song yet",
     "awaiting_approval": "Awaiting approval",
     "select_performance": "Select a Performance",
     "select_performance_desc": "Choose which performance you'd like to register for",
     "no_performances_available": "No performances available",
-    "actions": {
-      "suggesting": "Suggesting...",
-      "suggest_song": "Suggest Song",
-      "close": "Close"
-    },
     "loading_jam_details": "Loading jam details…",
     "not_found": "Jam not found",
     "error_loading_jam": "Error Loading Jam",
@@ -362,17 +374,14 @@
     "enrolling": "Enrolling...",
     "already_enrolled": "✓ Already Enrolled",
     "enroll_btn": "🎵 Enroll",
-    "adding": "Adding...",
     "add_musician_btn": "Add Musician",
     "musicians_registered": "Musicians Registered",
     "add_musician": "+ Add Musician",
-    "unknown": "Unknown",
     "performance_completed": "✓ Performance completed",
     "performance_in_progress": "🎵 Performance in progress",
     "now_playing": "Now Playing",
     "no_musicians_yet": "No musicians yet",
     "no_musicians_registered": "No musicians registered for this performance yet",
-    "no_registrations_yet": "No registrations yet",
     "musicians_count": "{{count}} musicians",
     "required_instruments": "Required Instruments",
     "no_instruments_required": "No instruments required",
@@ -380,19 +389,14 @@
     "show_musicians": "Show Musicians",
     "no_registrations": "No one registered yet",
     "statuses": {
-      "suggested": "Suggested",
-      "approved": "Approved",
       "scheduled": "Scheduled",
       "in_progress": "In Progress",
       "completed": "Completed",
-      "canceled": "Canceled",
-      "pending": "Pending"
+      "canceled": "Canceled"
     },
     "actions": {
       "start": "▶️ Start",
-      "reschedule": "🔄 Reschedule",
-      "move_up": "Move up",
-      "move_down": "Move down"
+      "reschedule": "🔄 Reschedule"
     },
     "instruments": {
       "drums": "Drums",
@@ -451,9 +455,6 @@
     "no_song_playing": "No song currently playing"
   },
   "music_form": {
-    "title": "Title",
-    "artist": "Artist",
-    "genre": "Genre",
     "duration_label": "Duration (mm:ss)",
     "description_placeholder": "Optional. Add notes about this song (e.g., style, tempo, mood)",
     "description_hint": "Optional. A brief description of the song.",
@@ -480,8 +481,6 @@
     "contact_placeholder": "e.g., email@example.com",
     "phone_label": "Phone",
     "phone_placeholder": "e.g., (555) 123-4567",
-    "saving": "Saving...",
-    "save_changes": "Save Changes",
     "name_required": "Name is required",
     "instrument_required": "Instrument is required",
     "contact_required": "Contact is required",
@@ -490,22 +489,14 @@
   "host_songs": {
     "back_to_manage": "← Back to Jam Management",
     "title": "🎵 Songs Management",
-    "add_song": "+ Add Song",
     "add_song_modal": "Add Song to Jam",
     "create_new": "Create New Song",
     "or_add_existing": "Or Add Existing Song",
-    "title_label": "Title",
-    "artist_label": "Artist",
-    "genre_label": "Genre",
     "duration_sec": "Duration (sec)",
     "create_btn": "Create & Add Song",
     "add_btn": "Add Song",
     "creating": "Creating...",
-    "adding": "Adding...",
     "no_songs_available": "No other songs available. Create a new one above.",
-    "move_up": "Move up",
-    "move_down": "Move down",
-    "remove": "Remove",
     "remove_confirm": "Remove this song from the jam?",
     "order_updated": "Song order updated",
     "song_added_success": "Song \"{{title}}\" added to jam",
@@ -521,8 +512,6 @@
   "profile": {
     "title": "Profile",
     "edit_profile": "Edit Profile",
-    "save_changes": "Save Changes",
-    "saving": "Saving...",
     "update_success": "Profile updated successfully!",
     "update_failed": "Failed to update profile",
     "contact_info": "Contact Information",
@@ -542,8 +531,6 @@
   },
   "music_library": {
     "title": "Music Library",
-    "add_song": "+ Add Song",
-    "suggest_song": "Suggest Song",
     "search_placeholder": "Search by title or artist...",
     "all_genres": "All Genres",
     "sort_title": "Sort by Title",
@@ -551,14 +538,9 @@
     "sort_date": "Sort by Date Added",
     "clear_filters": "Clear Filters",
     "filters": {
-      "approved": "Approved",
-      "suggested": "Suggested",
       "all": "All Songs"
     },
     "table": {
-      "title": "Title",
-      "artist": "Artist",
-      "genre": "Genre",
       "duration": "Duration",
       "link": "Link",
       "status": "Status",
@@ -569,8 +551,6 @@
       "add_title": "Add New Song",
       "suggest_title": "Suggest a New Song",
       "edit_title": "Edit \"{{title}}\"",
-      "adding": "Adding...",
-      "suggesting": "Suggesting...",
       "updating": "Updating...",
       "add_btn": "Add to Library",
       "suggest_btn": "Suggest Song",
@@ -727,13 +707,6 @@
       "actions": {
         "edit": "Edit"
       }
-    },
-    "detail": {
-      "actions": {
-        "cancel": "Cancel",
-        "suggesting": "Suggesting...",
-        "suggest_song": "Suggest Song"
-      }
     }
   },
   "dj_control": {
@@ -781,8 +754,7 @@
       "empty_queue": "No songs in queue",
       "empty_queue_hint": "Add songs from the management page",
       "no_musicians": "No musicians registered",
-      "remove_song": "Remove song",
-      "remove": "Remove"
+      "remove_song": "Remove song"
     },
     "stats": {
       "title_with_emoji": "📊 Queue Stats",
@@ -803,8 +775,7 @@
       "remove_with_icon": "✕ Remove",
       "approve_song": "Approve song",
       "approve_with_icon": "✓ Approve",
-      "musicians_modal_title": "Musicians for \"{{songTitle}}\"",
-      "close": "Close"
+      "musicians_modal_title": "Musicians for \"{{songTitle}}\""
     },
     "confirm_remove": "Are you sure you want to remove this song from the queue?",
     "song_removed": "Song removed successfully",
@@ -837,8 +808,20 @@
     "firstUp": "First up:",
     "upNext": "⏭️ Up Next",
     "musiciansToBeCalled": "Musicians to be called:",
-    "unknown": "Unknown",
     "scanToJoin": "Scan to join"
+  },
+  "share": {
+    "title": "Share Jam",
+    "copy_link": "Copy Link",
+    "whatsapp": "WhatsApp",
+    "instagram": "Instagram",
+    "native_share": "More Options",
+    "copied_success": "Link copied!",
+    "instagram_hint": "Link copied - paste it in Instagram",
+    "whatsapp_message": "Check out this jam session: {{name}}",
+    "whatsapp_message_default": "Check out this jam session!",
+    "default_title": "Jam Session",
+    "share_button": "Share"
   },
   "seo": {
     "homepage": {
@@ -846,6 +829,51 @@
       "description": "Create, manage, and join jam sessions. Organize performances, track musicians, and manage your music events with ease.",
       "description_enhanced": "Professional jam session management for musicians, hosts, and venues. Real-time coordination, live dashboards, and seamless musician registration. Transform your music events.",
       "keywords": "karaoke, jam session, music management, performance scheduling, musician coordination, live music events, setlist manager, band collaboration"
+    }
+  },
+  "promoVideo": {
+    "appName": "Karaoke Jam",
+    "tagline": "Connect. Perform. Rock the stage.",
+    "features": {
+      "title": "Built for Everyone",
+      "hosts": {
+        "title": "Hosts",
+        "description": "Create jams, manage queues, and control performances in real-time"
+      },
+      "musicians": {
+        "title": "Musicians",
+        "description": "Register for jams, select your instrument, and join the stage"
+      },
+      "audience": {
+        "title": "Audience",
+        "description": "Watch live dashboards showing what's playing now and coming up next"
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "step1": {
+        "title": "Create a Jam",
+        "description": "Set up your session with song lists"
+      },
+      "step2": {
+        "title": "Musicians Register",
+        "description": "Pick instruments and join the lineup"
+      },
+      "step3": {
+        "title": "Perform Live",
+        "description": "Take the stage and rock the house"
+      }
+    },
+    "dashboard": {
+      "title": "Live Dashboard",
+      "liveLabel": "Live - Friday Night Jam",
+      "nowPlaying": "Now Playing",
+      "upNext": "Up Next",
+      "scanToJoin": "Scan to join"
+    },
+    "cta": {
+      "tagline": "Your stage is waiting",
+      "button": "Get Started Free"
     }
   }
 }

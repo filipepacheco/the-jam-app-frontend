@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks'
 import { useTranslation } from 'react-i18next'
+import { PromoVideoPlayer } from './PromoVideo/PromoVideoPlayer'
 
 export function EnhancedHero() {
   const { t } = useTranslation()
@@ -26,21 +27,14 @@ export function EnhancedHero() {
       <div className="absolute inset-0 bg-black/40" />
       
       <div className="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20 flex-col lg:flex-row-reverse gap-8 lg:gap-12 relative z-10">
-        {/* Hero Image */}
+        {/* Hero Video */}
         <motion.div
-          className="w-full sm:w-4/5 md:w-3/5 lg:w-2/5 relative z-0 max-h-64 sm:max-h-80 md:max-h-96 lg:max-h-full"
+          className="w-full sm:w-4/5 md:w-3/5 lg:w-1/2 relative z-0"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <img
-            src="/97130f59c0f23afb65fbd430832420f1.jpg"
-            alt="Musicians performing at a rooftop jam session"
-            width={600}
-            height={400}
-            loading="lazy"
-            className="rounded-lg shadow-2xl w-full object-cover"
-          />
+          <PromoVideoPlayer autoPlay loop controls={false} />
         </motion.div>
 
         {/* Hero Content */}

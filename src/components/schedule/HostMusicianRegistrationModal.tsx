@@ -118,7 +118,7 @@ export function HostMusicianRegistrationModal({
             <option value="">{t('schedule.choose_musician')}</option>
             {musicians.map((musician) => (
               <option key={musician.id} value={musician.id}>
-                {musician.name} ({musician.instrument || t('schedule.unknown')})
+                {musician.name} ({musician.instrument || t('common.unknown')})
               </option>
             ))}
           </select>
@@ -167,7 +167,7 @@ export function HostMusicianRegistrationModal({
             {loading ? (
               <>
                 <span className="loading loading-spinner loading-sm"></span>
-                {t('schedule.adding')}
+                {t('common.adding')}
               </>
             ) : (
               t('schedule.add_musician_btn')

@@ -37,7 +37,7 @@ export function getStatusColor(status: string | undefined, isSuggested: boolean)
  * @returns Translated status label
  */
 export function getStatusLabel(status: string | undefined, isSuggested: boolean, t: TFunction): string {
-  if (isSuggested) return t('schedule.statuses.suggested')
+  if (isSuggested) return t('common.statuses.suggested')
 
   switch (status) {
     case 'SCHEDULED':
@@ -45,7 +45,7 @@ export function getStatusLabel(status: string | undefined, isSuggested: boolean,
     case 'IN_PROGRESS':
       return t('schedule.statuses.in_progress')
     case 'APPROVED':
-      return t('schedule.statuses.approved')
+      return t('common.statuses.approved')
     case 'COMPLETED':
       return t('schedule.statuses.completed')
     case 'CANCELED':

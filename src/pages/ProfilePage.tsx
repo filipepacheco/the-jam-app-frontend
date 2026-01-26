@@ -221,10 +221,10 @@ export function ProfilePage() {
                   {isLoading ? (
                     <>
                       <span className="loading loading-spinner loading-sm"></span>
-                      {t('profile.saving')}
+                      {t('common.saving')}
                     </>
                   ) : (
-                    <>💾 {t('profile.save_changes')}</>
+                    <>💾 {t('common.save_changes')}</>
                   )}
                 </button>
               </>

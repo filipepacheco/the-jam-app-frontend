@@ -3,7 +3,7 @@
  * Modal for suggesting a new song to add to jam schedule
  */
 
-import {useEffect, useState, useCallback, useRef} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {MusicResponseDto} from '../../types/api.types'
 import {musicService, scheduleService} from '../../services'
@@ -171,7 +171,7 @@ export function SuggestSongModal({
             disabled={submitting}
             type="button"
           >
-            {t('jams.actions.cancel')}
+            {t('common.cancel')}
           </button>
           <button
             onClick={handleSuggest}
@@ -182,10 +182,10 @@ export function SuggestSongModal({
             {submitting ? (
               <>
                 <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>
-                {t('jams.actions.suggesting')}
+                {t('common.suggesting')}
               </>
             ) : (
-              t('jams.actions.suggest_song')
+              t('common.suggest_song')
             )}
           </button>
         </div>

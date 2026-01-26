@@ -54,7 +54,7 @@ export const MusicTableRow = memo(function MusicTableRow({
         <div
           className={`badge badge-lg ${music.status === 'SUGGESTED' ? 'badge-warning' : 'badge-success'}`}
         >
-          {music.status === 'SUGGESTED' ? `💡 ${t('schedule.statuses.suggested')}` : `✅ ${t('schedule.statuses.approved')}`}
+          {music.status === 'SUGGESTED' ? `💡 ${t('common.statuses.suggested')}` : `✅ ${t('common.statuses.approved')}`}
         </div>
       </td>
       <td>

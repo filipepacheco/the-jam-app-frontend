@@ -73,7 +73,7 @@ export function TimelineSongItem({ song, status, onRemove, loading }: TimelineSo
           className="btn btn-xs btn-ghost btn-outline text-error hover:bg-error/20 mt-1"
           title={t('dj_control.timeline.remove_song')}
         >
-          ✕ {t('dj_control.timeline.remove')}
+          ✕ {t('common.remove')}
         </button>
       )}
     </div>

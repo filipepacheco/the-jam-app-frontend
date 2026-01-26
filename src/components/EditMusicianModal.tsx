@@ -197,7 +197,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
               className="btn btn-primary"
               disabled={isLoading}
             >
-              {isLoading ? t('musician_form.saving') : t('musician_form.save_changes')}
+              {isLoading ? t('common.saving') : t('common.save_changes')}
             </button>
           </div>
         </form>

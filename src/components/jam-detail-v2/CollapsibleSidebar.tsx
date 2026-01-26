@@ -1,7 +1,9 @@
-import {useState, useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
+import {Share2} from 'lucide-react'
 import type {JamResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {CollapsibleSection} from './CollapsibleSection'
+import {ShareModal} from '../ShareModal'
 
 interface CollapsibleSidebarProps {
   jam: JamResponseDto | null
@@ -22,12 +24,12 @@ export function CollapsibleSidebar({
 
 }: CollapsibleSidebarProps) {
   const { t } = useTranslation()
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
   // Initialize expanded state based on screen size - open on desktop, collapsed on mobile
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => {
     const isDesktop = getIsDesktop()
     return {
-      qrCode: isDesktop,
       howItWorks: isDesktop,
     }
   })
@@ -38,7 +40,6 @@ export function CollapsibleSidebar({
 
     const handleChange = (e: MediaQueryListEvent) => {
       setExpandedSections({
-        qrCode: e.matches,
         howItWorks: e.matches,
       })
     }
@@ -57,27 +58,26 @@ export function CollapsibleSidebar({
   return (
     <div className="space-y-3">
 
-      {/* QR Code Section - Collapsible */}
-      {jam?.qrCode && (
-        <CollapsibleSection
-          title={t('jams.qr_code')}
-          isExpanded={expandedSections.qrCode}
-          onToggle={() => toggleSection('qrCode')}
+      {/* Share Button */}
+      {jam && (
+        <button
+          type="button"
+          onClick={() => setIsShareModalOpen(true)}
+          className="btn btn-outline btn-block gap-2"
         >
-          <div className="flex justify-center py-4">
-            <img
-              src={jam.qrCode}
-              alt={t('jams.qr_code')}
-              width={150}
-              height={150}
-              loading="lazy"
-              className="border-2 border-base-300 rounded-lg"
-            />
-          </div>
-          <p className="text-xs text-center text-base-content/70">
-            {t('jams.scan_to_share')}
-          </p>
-        </CollapsibleSection>
+          <Share2 className="w-4 h-4" />
+          {t('share.share_button')}
+        </button>
+      )}
+
+      {/* Share Modal */}
+      {jam && (
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          jamId={jam.id}
+          jamName={jam.name}
+        />
       )}
 
       {/* How It Works - Collapsible */}
@@ -85,7 +85,7 @@ export function CollapsibleSidebar({
         title={t('jams.how_it_works.title')}
         isExpanded={expandedSections.howItWorks}
         onToggle={() => toggleSection('howItWorks')}
-        badge={t('jams.how_it_works.steps_count', { count: 5 })}
+        // badge={t('jams.how_it_works.steps_count', { count: 5 })}
       >
         <div className="space-y-3 text-xs">
           {/* Steps */}
@@ -97,7 +97,7 @@ export function CollapsibleSidebar({
             { icon: '🎵', title: 'performance_time', desc: 'performance_time_desc' },
           ].map((step, idx) => (
             <div key={idx} className="flex gap-2">
-              <span className="text-lg flex-shrink-0" aria-hidden="true">{step.icon}</span>
+              <span className="text-lg shrink-0" aria-hidden="true">{step.icon}</span>
               <div className="min-w-0">
                 <p className="font-semibold">{t(`jams.how_it_works.${step.title}`)}</p>
                 <p className="text-base-content/60 text-xs">

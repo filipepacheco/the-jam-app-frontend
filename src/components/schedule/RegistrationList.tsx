@@ -155,7 +155,7 @@ export function RegistrationList({
                                         >
                                             {/* Avatar */}
                                             <Avatar
-                                                name={registration.musician?.name || t('schedule.unknown')}
+                                                name={registration.musician?.name || t('common.unknown')}
                                                 imageUrl={registration.musician?.avatarUrl}
                                                 size="sm"
                                             />
@@ -164,7 +164,7 @@ export function RegistrationList({
                                             <div className="space-y-1 flex-1 min-w-0">
                                                 {/* Musician Name */}
                                                 <p className="text-xs font-bold line-clamp-2 text-base-content">
-                                                    {registration.musician?.name || t('schedule.unknown')}
+                                                    {registration.musician?.name || t('common.unknown')}
                                                     {registration.musician?.instrument && (
                                                         // <span className="text-xs font-normal text-base-content/60 flex items-center gap-1 mt-0.5">
                                                             <>{' '}({getInstrumentIcon(registration.musician.instrument)})</>
@@ -177,7 +177,7 @@ export function RegistrationList({
                                                     {registration.status === 'APPROVED' && (
                                                         <div className="flex items-center gap-1 badge badge-sm bg-success/10 text-success border-success">
                                                             <CheckCircle className="w-3 h-3" />
-                                                            <span>{t('schedule.statuses.approved')}</span>
+                                                            <span>{t('common.statuses.approved')}</span>
                                                         </div>
                                                     )}
                                                     {registration.status === 'REJECTED' && (
@@ -189,7 +189,7 @@ export function RegistrationList({
                                                     {!registration.status || (registration.status !== 'APPROVED' && registration.status !== 'REJECTED') && (
                                                         <div className="flex items-center gap-1 badge badge-sm bg-warning/10 text-warning border-warning">
                                                             <Clock className="w-3 h-3" />
-                                                            <span>{t('schedule.statuses.pending')}</span>
+                                                            <span>{t('common.statuses.pending')}</span>
                                                         </div>
                                                     )}
                                                 </div>

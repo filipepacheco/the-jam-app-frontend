@@ -202,7 +202,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
               disabled={isLoading || !name.trim() || !instrument || !level}
             >
-              {isLoading ? t('musician_form.saving') : t('jams.onboarding.get_started')}
+              {isLoading ? t('common.saving') : t('jams.onboarding.get_started')}
             </button>
           </div>
         </form>
