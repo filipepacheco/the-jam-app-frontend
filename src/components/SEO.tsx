@@ -23,10 +23,10 @@ export function SEO({
   const { currentLang } = useAppLanguage()
 
   // Build full title with site name
-  const fullTitle = title ? `${title} | Let's Jam` : "Let's Jam - Karaoke Jam Management"
+  const fullTitle = title ? `${title} | Let's Jam` : "The Jam APP"
 
   // Build canonical URL
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://letsjam.app' // Configure in .env
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jamapp.app' // Configure in .env
   const canonicalUrl = canonical || siteUrl
 
   // Build OG image URL (absolute)
