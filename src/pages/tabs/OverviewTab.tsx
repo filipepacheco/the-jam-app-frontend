@@ -1,6 +1,7 @@
 import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
+import {initiateSpotifyAuth} from "../../lib/spotify/pkce";
 
 /**
  * Overview Tab Component
@@ -45,6 +46,12 @@ export function OverviewTab({
                         <button onClick={() => navigate(`/jams/${jam.id}`)}
                                 className="btn btn-secondary btn-xs sm:btn-sm">
                             👁️ {t('jam_management.overview.view_public')}
+                        </button>
+                        <button
+                            onClick={() => { void initiateSpotifyAuth(jam.id) }}
+                            className="btn btn-accent btn-xs sm:btn-sm"
+                        >
+                            {t('spotify.export_button')}
                         </button>
                         {jam.status === 'INACTIVE' && (
                             <button

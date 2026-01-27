@@ -68,7 +68,9 @@
     "move_up": "Subir",
     "move_down": "Bajar",
     "add_song": "+ Agregar Canción",
-    "no_registrations_yet": "Sin inscripciones aún"
+    "no_registrations_yet": "Sin inscripciones aún",
+    "confirm": "Confirmar",
+    "are_you_sure": "¿Estás seguro?"
   },
   "nav": {
     "home": "Inicio",
@@ -515,14 +517,29 @@
     "name_required": "El nombre es obligatorio",
     "phone_required": "El teléfono es obligatorio"
   },
+  "music_empty": {
+    "no_songs_found": "No se encontraron canciones",
+    "no_music_in_library": "No hay música en la biblioteca",
+    "try_adjusting_filters": "Intenta ajustar tus filtros",
+    "host_hint": "Haz clic en \"Agregar Canción\" para empezar a construir tu biblioteca musical",
+    "empty_hint": "La biblioteca musical está vacía. ¡Vuelve más tarde!"
+  },
   "music_library": {
     "title": "Biblioteca de Música",
+    "page_title": "Biblioteca de Música",
+    "add_song": "+ Agregar Canción",
+    "suggest_song": "Sugerir Canción",
     "search_placeholder": "Buscar por título o artista...",
     "all_genres": "Todos los Géneros",
     "sort_title": "Ordenar por Título",
     "sort_artist": "Ordenar por Artista",
     "sort_date": "Ordenar por Fecha",
     "clear_filters": "Limpiar Filtros",
+    "tabs": {
+      "approved": "Aprobadas",
+      "suggested": "Sugeridas",
+      "all": "Todas las Canciones"
+    },
     "filters": {
       "all": "Todas las Canciones"
     },
@@ -555,6 +572,11 @@
       "update_success": "¡Canción \"{{title}}\" actualizada con éxito!",
       "duplicate_error": "La canción \"{{title}}\" de {{artist}}\" ya existe en la biblioteca",
       "invalid_duration": "Formato de duración inválido. Usa mm:ss (ej., 4:30)"
+    },
+    "validation": {
+      "title_required": "El título es obligatorio",
+      "artist_required": "El artista es obligatorio",
+      "genre_required": "El género es obligatorio"
     },
     "errors": {
       "failed_to_load": "Error al cargar música",
@@ -795,6 +817,11 @@
     "musiciansToBeCalled": "Músicos por llamar:",
     "scanToJoin": "Escanea para unirte"
   },
+  "searchableSelect": {
+    "placeholder": "Selecciona una opcion...",
+    "noResults": "No se encontraron resultados",
+    "search": "Buscar..."
+  },
   "share": {
     "title": "Compartir Jam",
     "copy_link": "Copiar Enlace",
@@ -814,6 +841,97 @@
       "description": "Crea, gestiona y únete a sesiones de jam. Organiza presentaciones, rastrea músicos y gestiona tus eventos musicales con facilidad.",
       "description_enhanced": "Gestión profesional de sesiones de jam para músicos, anfitriones y locales. Coordinación en tiempo real, tableros en vivo y registro fluido de músicos. Transforma tus eventos musicales.",
       "keywords": "karaoke, sesión de jam, gestión musical, programación de presentaciones, coordinación de músicos, eventos de música en vivo, gestor de listas, colaboración de bandas"
+    }
+  },
+  "feedback": {
+    "button_text": "Comentarios",
+    "button_label": "Enviar comentarios sobre la app",
+    "modal_title": "Comparte tu Opinion",
+    "modal_subtitle": "Ayudanos a mejorar compartiendo tu experiencia",
+    "rating_label": "Como calificarias tu experiencia?",
+    "rating_required": "Por favor selecciona una calificacion",
+    "comment_label": "Comentarios adicionales (opcional)",
+    "comment_placeholder": "Cuentanos que te gusto o que podriamos mejorar...",
+    "character_count": "{{count}}/500",
+    "submit_button": "Enviar Comentarios",
+    "submitting": "Enviando...",
+    "submit_failed": "Error al enviar comentarios. Por favor intenta de nuevo.",
+    "success_title": "Gracias!",
+    "success_message": "Tu opinion nos ayuda a mejorar la app.",
+    "stars": {
+      "1": "Malo",
+      "2": "Regular",
+      "3": "Bueno",
+      "4": "Muy bueno",
+      "5": "Excelente"
+    }
+  },
+  "spotify": {
+    "import_button": "Importar de Spotify",
+    "export_button": "Exportar a Spotify",
+    "import_modal": {
+      "title": "Importar Playlist de Spotify",
+      "subtitle": "Crea un jam a partir de una playlist publica de Spotify",
+      "url_label": "URL de la Playlist",
+      "url_placeholder": "https://open.spotify.com/playlist/...",
+      "url_required": "Por favor ingresa una URL de playlist",
+      "url_invalid": "Por favor ingresa una URL valida de playlist de Spotify",
+      "override_section": "Detalles Opcionales",
+      "name_label": "Nombre del Jam",
+      "name_placeholder": "Reemplazar nombre de la playlist",
+      "description_label": "Descripcion",
+      "description_placeholder": "Reemplazar descripcion de la playlist",
+      "date_label": "Fecha",
+      "location_label": "Ubicacion",
+      "location_placeholder": "Donde se realizara el jam?",
+      "importing": "Importando...",
+      "import_button": "Importar Playlist",
+      "success_title": "Playlist Importada!",
+      "success_message": "Tu jam ha sido creado a partir de la playlist de Spotify.",
+      "imported_tracks": "Pistas importadas",
+      "reused_tracks": "Pistas reutilizadas",
+      "skipped_tracks": "Pistas omitidas",
+      "view_jam": "Ver Jam",
+      "errors": {
+        "invalid_url": "URL de playlist invalida. Verifica e intenta de nuevo.",
+        "private_playlist": "Esta playlist es privada. Solo se pueden importar playlists publicas.",
+        "not_found": "Playlist no encontrada. Verifica la URL.",
+        "rate_limit": "Demasiadas solicitudes. Espera un momento e intenta de nuevo.",
+        "network_error": "No se pudo conectar con Spotify. Intenta mas tarde.",
+        "not_configured": "La integracion con Spotify no esta configurada en el servidor.",
+        "import_failed": "Error al importar playlist. Intenta de nuevo."
+      }
+    },
+    "export_modal": {
+      "title": "Exportar a Spotify",
+      "subtitle": "Crea una playlist de Spotify con las canciones de este jam",
+      "name_label": "Nombre de la Playlist",
+      "description_label": "Descripcion",
+      "description_placeholder": "Agrega una descripcion para la playlist",
+      "public_label": "Playlist publica",
+      "exporting": "Exportando...",
+      "export_button": "Crear Playlist",
+      "success_title": "Playlist Creada!",
+      "success_message": "Tu playlist de Spotify ha sido creada.",
+      "open_playlist": "Abrir en Spotify",
+      "total_tracks": "Total de pistas",
+      "skipped_tracks": "Pistas omitidas",
+      "errors": {
+        "no_valid_tracks": "No se encontraron pistas validas para exportar.",
+        "invalid_token": "La autorizacion de Spotify expiro. Intenta de nuevo.",
+        "not_found": "Jam no encontrado.",
+        "rate_limit": "Demasiadas solicitudes. Espera un momento e intenta de nuevo.",
+        "network_error": "No se pudo conectar con Spotify. Intenta mas tarde.",
+        "export_failed": "Error al exportar playlist. Intenta de nuevo."
+      }
+    },
+    "callback": {
+      "processing": "Conectando con Spotify...",
+      "auth_failed": "La autorizacion de Spotify fallo",
+      "invalid_state": "Estado de autorizacion invalido. Intenta de nuevo.",
+      "code_exchange_failed": "Error al completar la autorizacion de Spotify.",
+      "user_denied": "La autorizacion de Spotify fue denegada.",
+      "retry": "Reintentar"
     }
   },
   "promoVideo": {

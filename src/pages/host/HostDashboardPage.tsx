@@ -10,6 +10,7 @@ import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
 import {ErrorAlert, SuccessAlert} from '../../components'
+import {SpotifyImportModal} from '../../components/SpotifyImportModal'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
 
@@ -27,6 +28,7 @@ export function HostDashboardPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
+    const [showImportModal, setShowImportModal] = useState(false)
 
     const loadJams = useCallback(async () => {
         setLoading(true)
@@ -140,13 +142,22 @@ export function HostDashboardPage() {
                 <div className="mb-6 sm:mb-8">
                     <div className="flex items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 flex-wrap">
                         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">🎭 {t('jam_management.host_dashboard.title')}</h1>
-                        <button
-                            onClick={() => navigate('/host/create-jam')}
-                            className="btn btn-primary btn-sm sm:btn-md"
-                            disabled={loading}
-                        >
-                            {t('jam_management.host_dashboard.create_jam_btn')}
-                        </button>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setShowImportModal(true)}
+                                className="btn btn-secondary btn-sm sm:btn-md"
+                                disabled={loading}
+                            >
+                                {t('spotify.import_button')}
+                            </button>
+                            <button
+                                onClick={() => navigate('/host/create-jam')}
+                                className="btn btn-primary btn-sm sm:btn-md"
+                                disabled={loading}
+                            >
+                                {t('jam_management.host_dashboard.create_jam_btn')}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Alerts */}
@@ -263,6 +274,15 @@ export function HostDashboardPage() {
                     </>
                 )}
             </div>
+
+            <SpotifyImportModal
+                isOpen={showImportModal}
+                onClose={() => setShowImportModal(false)}
+                onSuccess={(jamId) => {
+                    setShowImportModal(false)
+                    navigate(`/host/jams/${jamId}/manage`)
+                }}
+            />
         </div>
     )
 }

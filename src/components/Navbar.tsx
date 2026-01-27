@@ -9,6 +9,7 @@ import {useNavigate} from 'react-router-dom'
 import {useState} from 'react'
 import ThemeSwitcher from './ThemeSwitcher'
 import LanguageSwitcher from './LanguageSwitcher'
+import {FeedbackButton} from './FeedbackButton'
 import {useTranslation} from 'react-i18next'
 
 function Navbar() {
@@ -70,6 +71,7 @@ function Navbar() {
                 <li><a href="/host/create-jam">{t('nav.create_jam')}</a></li>
               </>
             )}
+            <li><FeedbackButton iconOnly className="w-full justify-start" /></li>
           </ul>
         </div>
         <a href="/" className="btn btn-ghost text-base sm:text-lg md:text-xl">
@@ -102,6 +104,9 @@ function Navbar() {
 
       {/* Navbar End - Auth Actions */}
       <div className="navbar-end gap-1 sm:gap-2 md:gap-3 flex-wrap md:flex-nowrap justify-end">
+        {/* Feedback Button - Desktop */}
+        <FeedbackButton className="hidden sm:flex" />
+
         {/* Role Badge */}
         <div className="badge badge-outline hidden sm:inline-flex text-xs sm:text-sm">
           {getRoleLabel(role, t)}

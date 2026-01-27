@@ -7,7 +7,8 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {MusicResponseDto} from '../../types/api.types'
 import {musicService, scheduleService} from '../../services'
-import {ErrorAlert} from "../ErrorAlert.tsx";
+import {ErrorAlert} from "../ErrorAlert.tsx"
+import {SearchableSelect} from "../forms/SearchableSelect.tsx"
 
 interface SuggestSongModalProps {
   jamId: string
@@ -131,24 +132,28 @@ export function SuggestSongModal({
           </div>
         ) : (
           <div className="form-control mb-4">
-            <label className="label" htmlFor="song-select">
+            <label className="label" id="song-select-label" htmlFor="song-select">
               <span className="label-text">{t('jams.select_song')}</span>
             </label>
-            <select
+            <SearchableSelect<MusicResponseDto>
               id="song-select"
+              items={allSongs}
               value={selectedSongId}
-              onChange={(e) => setSelectedSongId(e.target.value)}
-              className="select select-bordered w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              disabled={loadingSongs || submitting}
+              onChange={setSelectedSongId}
+              getItemLabel={(song) => song.title ?? song.titulo ?? ''}
+              getItemSubLabel={(song) => song.artist ?? song.artista ?? ''}
+              placeholder={t('jams.choose_song')}
+              searchPlaceholder={t('common.search')}
+              disabled={submitting}
+              loading={loadingSongs}
               name="song"
-            >
-              <option value="">{t('jams.choose_song')}</option>
-              {allSongs.map((song) => (
-                <option key={song.id} value={song.id}>
-                  {song.title} - {song.artist}
-                </option>
-              ))}
-            </select>
+              filterFn={(song, term) => {
+                const searchLower = term.toLowerCase()
+                const title = (song.title ?? song.titulo ?? '').toLowerCase()
+                const artist = (song.artist ?? song.artista ?? '').toLowerCase()
+                return title.includes(searchLower) || artist.includes(searchLower)
+              }}
+            />
           </div>
         )}
 

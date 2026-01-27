@@ -29,6 +29,8 @@ export { MusicTableRow, MusiciansBadges } from './MusicTable'
 export { MusicFilters } from './MusicFilters'
 export { MusicModalFormFields } from './MusicModalFormFields'
 export { MusicEmptyState } from './MusicEmptyState'
+export { MusicModal } from './MusicModal'
+export { ConfirmDialog } from './ConfirmDialog'
 
 // Schedule Components
 export {
@@ -47,6 +49,10 @@ export { OAuthButton } from './forms/OAuthButton'
 export { JamRegistrationForm } from './forms/JamRegistrationForm'
 export { OnboardingModal } from './OnboardingModal'
 export { ProfileSetupModal } from './ProfileSetupModal'
+
+// Spotify Components
+export { SpotifyImportModal } from './SpotifyImportModal'
+export { SpotifyExportModal } from './SpotifyExportModal'
 
 // DJ Control Components
 export { SongQueueTimeline, TimelineSongItem, QueueStats } from './dj-control'

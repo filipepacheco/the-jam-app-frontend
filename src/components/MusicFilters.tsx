@@ -33,7 +33,9 @@ export function MusicFilters({
         <div className="flex flex-wrap gap-4 items-center">
           {/* Search */}
           <div className="form-control flex-1 min-w-[200px]">
+            <label className="sr-only" htmlFor="music-search">{t('common.search')}</label>
             <input
+              id="music-search"
               type="text"
               placeholder={t('music_library.search_placeholder')}
               value={searchTerm}
@@ -44,10 +46,13 @@ export function MusicFilters({
 
           {/* Genre Filter */}
           <div className="form-control min-w-[150px]">
+            <label className="sr-only" htmlFor="music-genre-filter">{t('common.form_labels.genre')}</label>
             <select
+              id="music-genre-filter"
               value={genreFilter}
               onChange={(e) => onGenreChange(e.target.value)}
               className="select select-bordered"
+              aria-label={t('common.form_labels.genre')}
             >
               <option value="">{t('music_library.all_genres')}</option>
               {genres.map((genre) => (
@@ -60,10 +65,13 @@ export function MusicFilters({
 
           {/* Sort */}
           <div className="form-control min-w-[150px]">
+            <label className="sr-only" htmlFor="music-sort">{t('jams.browse.sort_label')}</label>
             <select
+              id="music-sort"
               value={sortBy}
               onChange={(e) => onSortChange(e.target.value as 'title' | 'artist' | 'date')}
               className="select select-bordered"
+              aria-label={t('jams.browse.sort_label')}
             >
               <option value="title">{t('music_library.sort_title')}</option>
               <option value="artist">{t('music_library.sort_artist')}</option>

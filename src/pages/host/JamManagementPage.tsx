@@ -5,11 +5,12 @@
  */
 
 import {useEffect, useState, useCallback} from 'react'
-import {useNavigate, useParams, useSearchParams} from 'react-router-dom'
+import {useNavigate, useParams, useSearchParams, useLocation} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
 import {ErrorAlert, SuccessAlert} from '../../components'
+import {SpotifyExportModal} from '../../components/SpotifyExportModal'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
 import {ExternalLink} from 'lucide-react'
@@ -26,6 +27,7 @@ type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analyt
 export function JamManagementPage() {
     const { t } = useTranslation()
     const navigate = useNavigate()
+    const location = useLocation()
     const {id: jamId} = useParams<{ id: string }>()
     const [searchParams] = useSearchParams()
     const {isAuthenticated, isLoading: authLoading} = useAuth()
@@ -38,6 +40,19 @@ export function JamManagementPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
+    const [spotifyAccessToken, setSpotifyAccessToken] = useState<string | null>(null)
+    const [showExportModal, setShowExportModal] = useState(false)
+
+    // Detect Spotify access token from redirect state
+    useEffect(() => {
+        const state = location.state as { spotifyAccessToken?: string } | null
+        if (state?.spotifyAccessToken) {
+            setSpotifyAccessToken(state.spotifyAccessToken)
+            setShowExportModal(true)
+            // Clear the state to prevent re-opening on navigation
+            navigate(location.pathname, { replace: true, state: {} })
+        }
+    }, [location.state, location.pathname, navigate])
 
     const loadJamData = useCallback(async (id: string) => {
         setLoading(true)
@@ -255,7 +270,18 @@ export function JamManagementPage() {
                 {activeTab === 'analytics' && <AnalyticsTab jam={jam}/>}
             </div>
 
-
+            {spotifyAccessToken && (
+                <SpotifyExportModal
+                    isOpen={showExportModal}
+                    onClose={() => {
+                        setShowExportModal(false)
+                        setSpotifyAccessToken(null)
+                    }}
+                    jamId={jamId!}
+                    jamName={jam.name}
+                    spotifyAccessToken={spotifyAccessToken}
+                />
+            )}
         </div>
     )
 }

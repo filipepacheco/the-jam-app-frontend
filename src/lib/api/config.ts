@@ -53,6 +53,15 @@ export const API_ENDPOINTS = {
   schedules: '/escalas',
   scheduleById: (id: string) => `/escalas/${id}`,
   // Note: Reorder now uses /jams/:id/control/reorder via jamControlService
+
+  // Feedback endpoint
+  feedback: '/feedback',
+
+  // Spotify integration endpoints
+  spotify: {
+    import: '/spotify/import',
+    export: '/spotify/export',
+  },
 }
 
 /**

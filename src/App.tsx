@@ -31,6 +31,9 @@ const JamManagementPage = lazy(() => import('./pages/host/JamManagementPage.tsx'
 const JamDJControlPage = lazy(() => import('./pages/host/JamDJControlPage.tsx'))
 const HostJamSongsPage = lazy(() => import('./pages/host/HostJamSongsPage.tsx'))
 
+// Lazy-loaded pages - Spotify integration
+const SpotifyCallbackPage = lazy(() => import('./pages/SpotifyCallbackPage'))
+
 // Lazy-loaded pages - Priority 2 (User-specific)
 const MusicPage = lazy(() => import('./pages/MusicPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage'))
@@ -109,6 +112,9 @@ function AppContent() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<LoginPage />} />
       <Route path="/auth/callback" element={<AuthCallbackPage />} />
+      <Route path="/auth/spotify/callback" element={
+        <SpotifyCallbackPage />
+      } />
 
       {/* Jam Routes */}
       <Route path="/jams" element={

@@ -12,5 +12,7 @@ export { musicService } from './musicService'
 export { registrationService } from './registrationService'
 export { scheduleService } from './scheduleService'
 export { getOfflineQueueManager, type QueuedAction, type QueueStats } from './offlineQueue'
+export { feedbackService } from './feedbackService'
+export { spotifyService } from './spotifyService'
 
 export type { JamDetails } from './jamService'

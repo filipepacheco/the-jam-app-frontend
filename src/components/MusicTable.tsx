@@ -31,10 +31,10 @@ export const MusicTableRow = memo(function MusicTableRow({
     <tr className="hover">
       <td className="font-semibold">{music.title}</td>
       <td>{music.artist}</td>
-      <td>
+      <td className="hidden sm:table-cell">
         <span className="badge badge-outline">{music.genre || t('common.unknown')}</span>
       </td>
-      <td>{formatDuration(music.duration)}</td>
+      <td className="hidden sm:table-cell">{formatDuration(music.duration)}</td>
       <td>
         {music.link ? (
           <a
@@ -140,6 +140,7 @@ function MusicActionButtons({
             onClick={() => onApprove?.(music)}
             className="btn btn-xs btn-success"
             title={t('common.approve')}
+            aria-label={t('common.approve')}
           >
             ✅
           </button>
@@ -147,6 +148,7 @@ function MusicActionButtons({
             onClick={() => onReject?.(music)}
             className="btn btn-xs btn-error btn-outline"
             title={t('common.reject')}
+            aria-label={t('common.reject')}
           >
             ❌
           </button>
@@ -157,6 +159,7 @@ function MusicActionButtons({
             onClick={() => onEdit(music)}
             className="btn btn-xs btn-ghost"
             title={t('common.edit')}
+            aria-label={t('common.edit')}
           >
             ✏️
           </button>
@@ -164,6 +167,7 @@ function MusicActionButtons({
             onClick={() => onDelete(music)}
             className="btn btn-xs btn-error btn-outline"
             title={t('common.delete')}
+            aria-label={t('common.delete')}
           >
             🗑️
           </button>

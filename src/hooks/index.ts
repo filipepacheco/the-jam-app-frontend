@@ -33,3 +33,6 @@ export type { UseQueueReorderReturn } from '../types/jamControl.types'
 
 // Accessibility hook
 export { useReducedMotion } from './useReducedMotion'
+
+// Searchable select hook
+export { useSearchableSelect } from './useSearchableSelect'
