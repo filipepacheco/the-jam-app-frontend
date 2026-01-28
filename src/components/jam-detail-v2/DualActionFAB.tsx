@@ -48,7 +48,7 @@ export function DualActionFAB({
     : t('jams.how_it_works.suggest_btn')
 
   return (
-    <div className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-[calc(1.5rem+env(safe-area-inset-right))] z-40">
+    <div className="fixed bottom-6 right-6 z-40">
       {/* Secondary actions - appear when expanded */}
       <div
         className={`flex flex-col gap-3 mb-3 transition-[opacity,transform] duration-300 ${

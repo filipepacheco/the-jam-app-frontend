@@ -18,8 +18,7 @@ import {
 import {
     CollapsibleSection,
     CollapsibleSidebar,
-    FloatingRegisterButton,
-    FloatingSuggestButton,
+    DualActionFAB,
     JamDetailLoadingSkeleton,
     PerformanceSelectionModal,
     SuggestSongModal,
@@ -50,17 +49,23 @@ export function JamDetailPageV2() {
     // State for performance selection modal (from FAB)
     const [showPerformanceSelectModal, setShowPerformanceSelectModal] = useState(false)
 
-    // Memoize all schedules for registration (including suggested ones)
-    const allSchedules = useMemo(() =>
-            jam?.schedules || [],
-        [jam?.schedules]
-    )
+    // Derive all schedule data in a single pass
+    const { allSchedules, nonSuggestedSchedules, performanceCount, totalDurationSeconds } = useMemo(() => {
+        const all = jam?.schedules || []
+        let perfCount = 0
+        let totalSecs = 0
+        const nonSuggested: ScheduleResponseDto[] = []
 
-    // Non-suggested schedules for timeline display
-    const nonSuggestedSchedules = useMemo(() =>
-            jam?.schedules?.filter((s: ScheduleResponseDto) => s.status !== 'SUGGESTED') || [],
-        [jam?.schedules]
-    )
+        for (const s of all) {
+            if (s.status !== 'SUGGESTED') {
+                nonSuggested.push(s)
+                perfCount++
+                totalSecs += s.music?.duration || 0
+            }
+        }
+
+        return { allSchedules: all, nonSuggestedSchedules: nonSuggested, performanceCount: perfCount, totalDurationSeconds: totalSecs }
+    }, [jam?.schedules])
 
     // Get user's registered performances (filter from schedules, not registrations)
     // Registrations don't have music data, but schedules do
@@ -95,6 +100,15 @@ export function JamDetailPageV2() {
         await mutateJam()
         setTimeout(() => setEnrollSuccess(null), SUCCESS_TOAST_DURATION)
     }, [t, mutateJam])
+
+    // Handle FAB register click
+    const handleFABRegisterClick = useCallback(() => {
+        if (nonSuggestedSchedules.length === 1) {
+            handleEnrollClick(nonSuggestedSchedules[0])
+        } else if (nonSuggestedSchedules.length > 1) {
+            setShowPerformanceSelectModal(true)
+        }
+    }, [nonSuggestedSchedules, handleEnrollClick])
 
     // Handle suggest click
     const handleSuggestClick = useCallback(() => {
@@ -187,22 +201,19 @@ export function JamDetailPageV2() {
                             {
                                 icon: '🎭',
                                 label: t('jams.info.status'),
-                                value: jam.status,
+                                value: t(`jams.statuses.${jam.status.toLowerCase()}`),
                             },
                             {
                                 icon: '🎵',
                                 label: t('jams.info.performances'),
-                                value: jam.schedules?.filter((s) => s.status !== 'SUGGESTED').length || 0,
+                                value: performanceCount,
                             },
                             {
                                 icon: '⏱️',
                                 label: t('jams.info.duration'),
-                                value: (() => {
-                                    const totalSeconds = (jam.schedules?.filter((s) => s.status !== 'SUGGESTED').reduce((acc, s) => acc + (s.music?.duration || 0), 0) || 0)
-                                    const minutes = Math.floor(totalSeconds / 60)
-                                    const seconds = totalSeconds % 60
-                                    return minutes > 0 ? `${minutes}m` : `${seconds}s`
-                                })(),
+                                value: totalDurationSeconds > 0
+                                    ? `${Math.floor(totalDurationSeconds / 60)}m`
+                                    : `${totalDurationSeconds}s`,
                             },
                             {
                                 icon: '👥',
@@ -225,7 +236,7 @@ export function JamDetailPageV2() {
             </div>
 
             {/* Main Content */}
-            <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+            <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 pb-24">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
                     {/* Collapsible Sidebar (30% width) - First on mobile, second on desktop */}
@@ -287,32 +298,20 @@ export function JamDetailPageV2() {
                             user={user}
                             onRegisterClick={handleEnrollClick}
                             jam={jam}
+                            jamStatus={jam.status}
                         />
                     </div>
 
                 </div>
             </div>
 
-            {/* Floating Action Buttons - Show only when schedules exist */}
-            <FloatingRegisterButton
-                isVisible={nonSuggestedSchedules.length > 0}
+            {/* Floating Action Button - Combined register + suggest */}
+            <DualActionFAB
+                isVisible={isAuthenticated && nonSuggestedSchedules.length > 0}
                 registrationCount={userRegistrations.length}
-                onClick={() => {
-                    if (!isAuthenticated) {
-                        navigate(`/login?redirect=/jams/${jamId}`)
-                    } else if (nonSuggestedSchedules.length === 1) {
-                        // If only one performance, enroll directly
-                        handleEnrollClick(nonSuggestedSchedules[0])
-                    } else if (nonSuggestedSchedules.length > 1) {
-                        // If multiple performances, show selection modal
-                        setShowPerformanceSelectModal(true)
-                    }
-                }}
-            />
-
-            <FloatingSuggestButton
-                isVisible={isAuthenticated}
-                onClick={handleSuggestClick}
+                onRegisterClick={handleFABRegisterClick}
+                onSuggestClick={handleSuggestClick}
+                primaryAction="register"
             />
 
             {/* Modals */}

@@ -76,11 +76,10 @@ export function DJControlActions({
   }
 
   return (
-    <div className="card bg-base-200 shadow">
-      <div className="card-body p-3 sm:p-6 space-y-3">
-        <h3 className="font-bold text-base sm:text-lg">
-          {t('dj_control.actions.title_with_emoji')}
-        </h3>
+    <div className="space-y-3">
+      <h3 className="font-bold text-base sm:text-lg">
+        {t('dj_control.actions.title_with_emoji')}
+      </h3>
 
         {/* Error Alert */}
         {displayError && (
@@ -193,7 +192,6 @@ export function DJControlActions({
           <span className="hidden sm:inline">{t('dj_control.actions.add_songs')}</span>
           <span className="sm:hidden">{t('dj_control.actions.add_songs_short')}</span>
         </button>
-      </div>
     </div>
   )
 }

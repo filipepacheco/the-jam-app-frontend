@@ -1,7 +1,6 @@
 /**
  * DJ Control Tab Component V2
- * New implementation using /control endpoints
- * Simpler than legacy version - backend handles complex state management
+ * Controls at top for easy access, timeline below
  */
 
 import {useTranslation} from 'react-i18next'
@@ -18,8 +17,7 @@ interface DJControlTabV2Props {
 
 /**
  * DJ Control Tab V2
- * Uses new useJamControl hook for state management
- * Also fetches full jam to show suggested songs
+ * Controls at top for better UX on mobile
  */
 export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
   const { t } = useTranslation()
@@ -67,9 +65,7 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">{t('dj_control.title_with_emoji')}</h2>
-      </div>
+      <h2 className="text-2xl font-bold">{t('dj_control.title_with_emoji')}</h2>
 
       {/* Error Alert */}
       {error && (
@@ -84,8 +80,30 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
       {/* Success Alert */}
       {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      {/* Controls at Top */}
+      <div className="card bg-base-200 shadow-sm">
+        <div className="card-body p-3 sm:p-4">
+          <DJControlActions
+            jamId={jamId}
+            liveState={liveState}
+            isLoading={isLoading}
+            error={error}
+            onStart={start}
+            onStop={stop}
+            onResume={resume}
+            onPause={pause}
+            onNext={next}
+            onPrevious={previous}
+            onRefresh={handleRefresh}
+            onError={() => {
+              /* Error is handled by hook */
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Main Content: Timeline and Stats */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Timeline - Main Content */}
         <div className="lg:col-span-3 min-w-0">
           {isLoading && !liveState ? (
@@ -111,27 +129,8 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
           )}
         </div>
 
-        {/* Sidebar */}
-        <div className="lg:col-span-1 space-y-4">
-          {/* Controls */}
-          <DJControlActions
-              jamId={jamId}
-              liveState={liveState}
-              isLoading={isLoading}
-              error={error}
-              onStart={start}
-              onStop={stop}
-              onResume={resume}
-              onPause={pause}
-              onNext={next}
-              onPrevious={previous}
-              onRefresh={handleRefresh}
-              onError={() => {
-                /* Error is handled by hook */
-              }}
-          />
-
-          {/* Queue Stats */}
+        {/* Sidebar - Queue Stats */}
+        <div className="lg:col-span-1">
           <QueueStats liveState={liveState} />
         </div>
       </div>

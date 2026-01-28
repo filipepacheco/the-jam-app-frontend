@@ -26,6 +26,7 @@ export { SidebarSectionSkeleton } from './SidebarSectionSkeleton'
 
 // Music Components
 export { MusicTableRow, MusiciansBadges } from './MusicTable'
+export { MusicCard } from './MusicCard'
 export { MusicFilters } from './MusicFilters'
 export { MusicModalFormFields } from './MusicModalFormFields'
 export { MusicEmptyState } from './MusicEmptyState'

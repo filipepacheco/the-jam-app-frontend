@@ -1,10 +1,11 @@
 /**
  * Music Modal Component (Add/Edit/Suggest)
- * Extracted from MusicPage for reuse and separation of concerns
+ * Responsive modal with scrollable content and fixed footer
  */
 
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { X } from 'lucide-react'
 import { musicService } from '../services'
 import type { CreateMusicDto, MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import { MusicModalFormFields } from './MusicModalFormFields'
@@ -103,21 +104,21 @@ export function MusicModal({
       if (mode === 'add') {
         const result = await musicService.create(payload as CreateMusicDto)
         if (!result.success) {
-          setError(result.error ||t('music_library.errors.failed_to_add'))
+          setError(result.error || t('music_library.errors.failed_to_add'))
           return
         }
         setSuccess(t('music_library.feedback.add_success', { title: formData.title }))
       } else if (mode === 'suggest') {
         const result = await musicService.create(payload as CreateMusicDto)
         if (!result.success) {
-          setError(result.error ||t('music_library.errors.failed_to_suggest'))
+          setError(result.error || t('music_library.errors.failed_to_suggest'))
           return
         }
         setSuccess(t('music_library.feedback.suggest_success', { title: formData.title }))
       } else if (music) {
         const result = await musicService.update(music.id, payload as UpdateMusicDto)
         if (!result.success) {
-          setError(result.error ||t('music_library.errors.failed_to_update'))
+          setError(result.error || t('music_library.errors.failed_to_update'))
           return
         }
         setSuccess(t('music_library.feedback.update_success', { title: formData.title }))
@@ -167,25 +168,56 @@ export function MusicModal({
 
   return (
     <dialog className="modal modal-open" aria-labelledby="music-modal-title">
-      <div className="modal-box max-w-lg">
-        <h3 id="music-modal-title" className="font-bold text-lg mb-4">
-          {getModalTitle()}
-        </h3>
+      <div className="modal-box max-w-lg w-full max-h-[90vh] flex flex-col p-0">
+        {/* Header - Fixed */}
+        <div className="px-4 sm:px-6 py-4 border-b border-base-300 flex items-center justify-between shrink-0">
+          <h3 id="music-modal-title" className="font-bold text-lg sm:text-xl">
+            {getModalTitle()}
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="btn btn-ghost btn-sm btn-circle"
+            aria-label={t('common.close')}
+          >
+            <X className="size-5" />
+          </button>
+        </div>
 
-        <form onSubmit={(e) => { void handleSubmit(e) }} className="space-y-4">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           <MusicModalFormFields formData={formData} onChange={handleFieldChange} />
+        </div>
 
-          <div className="modal-action">
-            <button type="button" onClick={onClose} className="btn btn-ghost" disabled={submitting}>
-              {t('common.cancel')}
-            </button>
-            <button type="submit" className="btn btn-primary" disabled={submitting}>
-              {submitting && <span className="loading loading-spinner loading-sm" />}
-              {getSubmitLabel()}
-            </button>
-          </div>
-        </form>
+        {/* Footer - Fixed */}
+        <div className="px-4 sm:px-6 py-4 border-t border-base-300 flex justify-end gap-3 shrink-0 bg-base-100">
+          <button
+            type="button"
+            onClick={onClose}
+            className="btn btn-ghost"
+            disabled={submitting}
+          >
+            {t('common.cancel')}
+          </button>
+          <button
+            type="submit"
+            form="music-form"
+            className="btn btn-primary"
+            disabled={submitting}
+          >
+            {submitting && <span className="loading loading-spinner loading-sm mr-2" />}
+            {getSubmitLabel()}
+          </button>
+        </div>
       </div>
+
+      {/* Form outside modal-box to handle submission properly */}
+      <form
+        id="music-form"
+        onSubmit={(e) => { void handleSubmit(e) }}
+        className="hidden"
+      />
+
       <form method="dialog" className="modal-backdrop">
         <button type="button" onClick={onClose}>
           {t('common.close')}

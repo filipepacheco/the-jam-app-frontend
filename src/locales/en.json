@@ -200,9 +200,10 @@
       "other": "{{count}} songs"
     },
     "statuses": {
-      "active": "🎉 Live Now",
+      "live": "🎉 Live Now",
+      "active": "✅ Active",
       "inactive": "⏸️ Coming Soon",
-      "finished": "✅ Completed"
+      "finished": "🏁 Completed"
     },
     "features": {
       "title": "Built for Everyone at the Jam",
@@ -298,7 +299,11 @@
       "error_title": "Failed to Load Jams",
       "empty_title": "No Jams Found",
       "empty_try_filters": "Try adjusting your filters to see more results",
-      "empty_no_jams": "Be the first to create a jam session!"
+      "empty_no_jams": "Be the first to create a jam session!",
+      "section_current": "Current Jams",
+      "section_past": "Past Jams",
+      "section_no_current": "No current jams found",
+      "section_no_past": "No past jams found"
     },
 
     "loading_failed": "Failed to load jam",
@@ -447,6 +452,7 @@
     "skipped_feedback": "Skipped to next song",
     "reordered_feedback": "Queue reordered",
     "executing_action": "Executing action…",
+    "saving_order": "Saving order…",
     "start_to_begin": "Start the first song to begin",
     "no_more_songs": "No more songs scheduled",
     "drag_to_reorder": "Drag to reorder",
@@ -621,7 +627,8 @@
       "actions_controls": "Actions & Controls",
       "edit_jam": "Edit Jam",
       "view_public": "View Public Page",
-      "start_jam": "Start Jam",
+      "activate_jam": "Activate",
+      "start_jam": "Start Live",
       "end_jam": "End Jam",
       "reactivate_jam": "Reactivate Jam",
       "confirm_start": "Are you sure you want to start this jam session?",
@@ -691,6 +698,7 @@
         "past": "Past"
       },
       "statuses": {
+        "live": "Live",
         "active": "Active",
         "inactive": "Inactive",
         "finished": "Finished"
@@ -901,20 +909,36 @@
       "location_placeholder": "Where will the jam take place?",
       "importing": "Importing...",
       "import_button": "Import Playlist",
+      "add_to_jam_button": "Add to Jam",
       "success_title": "Playlist Imported!",
+      "success_title_existing": "Songs Added!",
       "success_message": "Your jam has been created from the Spotify playlist.",
+      "success_message_existing": "Songs have been added to {{name}}.",
       "imported_tracks": "Imported tracks",
       "reused_tracks": "Reused tracks",
       "skipped_tracks": "Skipped tracks",
+      "added_tracks": "Added tracks",
+      "duplicate_tracks": "Already in jam",
+      "duplicate_tracks_desc": "These tracks were skipped",
       "view_jam": "View Jam",
+      "back_to_jam": "Back to Jam",
+      "mode_new": "Create New Jam",
+      "mode_existing": "Add to Existing Jam",
+      "select_jam_label": "Select Jam",
+      "select_jam_placeholder": "Choose a jam...",
+      "select_jam_required": "Please select a jam",
+      "current_jam": "Current Jam",
+      "songs_count": "songs",
       "errors": {
         "invalid_url": "Invalid playlist URL. Please check and try again.",
         "private_playlist": "This playlist is private. Only public playlists can be imported.",
-        "not_found": "Playlist not found. Please check the URL.",
+        "not_found": "Playlist or jam not found. Please check and try again.",
         "rate_limit": "Too many requests. Please wait a moment and try again.",
         "network_error": "Could not reach Spotify. Please try again later.",
         "not_configured": "Spotify integration is not configured on the server.",
-        "import_failed": "Failed to import playlist. Please try again."
+        "import_failed": "Failed to import playlist. Please try again.",
+        "forbidden": "You must be the jam host to add tracks.",
+        "validation": "Invalid request. Please check your input and try again."
       }
     },
     "export_modal": {
@@ -992,6 +1016,58 @@
     "cta": {
       "tagline": "Your stage is waiting",
       "button": "Get Started Free"
+    }
+  },
+  "create_jam": {
+    "title_create": "Create New Jam",
+    "title_edit": "Edit \"{{name}}\"",
+    "back_to_dashboard": "Back to Dashboard",
+    "spotify_import_title": "Import from Spotify",
+    "spotify_import_desc": "Create a jam automatically from a Spotify playlist",
+    "spotify_import_btn": "Import Playlist",
+    "or_manually": "or fill in manually",
+    "form": {
+      "jam_name": "Jam Name",
+      "description": "Description",
+      "date": "Date",
+      "time": "Time",
+      "location": "Location",
+      "host_name": "Host Name",
+      "host_contact": "Host Contact",
+      "status": "Status",
+      "placeholder_name": "e.g., Jazz Night 2025",
+      "placeholder_description": "Brief description of your jam session...",
+      "placeholder_location": "e.g., Studio A, 123 Music St",
+      "placeholder_contact": "Email or phone",
+      "status_active": "Active",
+      "status_inactive": "Inactive",
+      "status_finished": "Finished"
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "delete": "Delete Jam",
+      "create": "Create Jam",
+      "update": "Update Jam",
+      "saving": "Saving..."
+    },
+    "validation": {
+      "name_required": "Jam name is required",
+      "location_required": "Location is required",
+      "host_id_required": "Host musician ID is required",
+      "time_required": "Time is required when date is specified"
+    },
+    "messages": {
+      "create_success": "Jam \"{{name}}\" created successfully!",
+      "update_success": "Jam \"{{name}}\" updated successfully!",
+      "delete_success": "Jam deleted successfully!",
+      "load_error": "Failed to load jam",
+      "save_error": "Failed to save jam",
+      "delete_error": "Failed to delete jam",
+      "confirm_delete": "Are you sure you want to delete this jam? This action cannot be undone."
+    },
+    "info": {
+      "create_hint": "Create a new jam session. You can add songs and manage registrations later.",
+      "edit_hint": "Update the jam details. Changes will be saved immediately."
     }
   }
 }

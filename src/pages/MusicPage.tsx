@@ -5,7 +5,7 @@
  * Route: /music
  */
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import useSWR from 'swr'
@@ -16,32 +16,23 @@ import { API_ENDPOINTS } from '../lib/api/config'
 import {
   ConfirmDialog,
   ErrorAlert,
+  MusicCard,
   MusicEmptyState,
   MusicFilters,
   MusicModal,
   MusicTableRow,
   SuccessAlert,
 } from '../components'
-import { filterAndSortMusic, formatDuration } from '../lib/musicUtils'
+import { filterAndSortMusic } from '../lib/musicUtils'
 import { GENRES } from '../lib/musicConstants'
 
 type SortBy = 'title' | 'artist' | 'date'
 type StatusFilter = 'all' | 'approved' | 'suggested'
+type ModalMode = 'add' | 'edit' | 'suggest' | null
 
-interface ConfirmState {
-  isOpen: boolean
-  title: string
-  message: string
-  variant: 'default' | 'destructive'
-  onConfirm: () => void | Promise<void>
-}
-
-const INITIAL_CONFIRM_STATE: ConfirmState = {
-  isOpen: false,
-  title: '',
-  message: '',
-  variant: 'default',
-  onConfirm: () => {},
+interface ModalState {
+  mode: ModalMode
+  editingMusic: MusicResponseDto | null
 }
 
 export function MusicPage() {
@@ -67,18 +58,43 @@ export function MusicPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('approved')
   const [sortBy, setSortBy] = useState<SortBy>('title')
 
-  // Modal states
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [showSuggestModal, setShowSuggestModal] = useState(false)
-  const [showEditModal, setShowEditModal] = useState(false)
-  const [editingMusic, setEditingMusic] = useState<MusicResponseDto | null>(null)
+  // Modal state (single state object instead of multiple booleans)
+  const [modalState, setModalState] = useState<ModalState>({
+    mode: null,
+    editingMusic: null,
+  })
 
-  // Confirm dialog state
-  const [confirmState, setConfirmState] = useState<ConfirmState>(INITIAL_CONFIRM_STATE)
+  // Confirm dialog state (without function - using ref instead)
+  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [confirmTitle, setConfirmTitle] = useState('')
+  const [confirmMessage, setConfirmMessage] = useState('')
+  const [confirmVariant, setConfirmVariant] = useState<'default' | 'destructive'>('default')
+  const pendingConfirmAction = useRef<(() => Promise<void>) | null>(null)
+
+  const openConfirm = useCallback((
+    title: string,
+    message: string,
+    variant: 'default' | 'destructive',
+    action: () => Promise<void>
+  ) => {
+    setConfirmTitle(title)
+    setConfirmMessage(message)
+    setConfirmVariant(variant)
+    pendingConfirmAction.current = action
+    setConfirmOpen(true)
+  }, [])
 
   const closeConfirm = useCallback(() => {
-    setConfirmState(INITIAL_CONFIRM_STATE)
+    setConfirmOpen(false)
+    pendingConfirmAction.current = null
   }, [])
+
+  const handleConfirm = useCallback(async () => {
+    if (pendingConfirmAction.current) {
+      await pendingConfirmAction.current()
+    }
+    closeConfirm()
+  }, [closeConfirm])
 
   const handleClearFilters = useCallback(() => {
     setSearchTerm('')
@@ -96,25 +112,22 @@ export function MusicPage() {
   }, [musicList, searchTerm, genreFilter, statusFilter, sortBy])
 
   const handleEdit = useCallback((music: MusicResponseDto) => {
-    setEditingMusic(music)
-    setShowEditModal(true)
+    setModalState({ mode: 'edit', editingMusic: music })
   }, [])
 
   const handleApprove = useCallback(
     (music: MusicResponseDto) => {
-      setConfirmState({
-        isOpen: true,
-        title: t('common.approve'),
-        message: t('music_library.feedback.approve_confirm', { title: music.title, artist: music.artist }),
-        variant: 'default',
-        onConfirm: async () => {
-          closeConfirm()
+      openConfirm(
+        t('common.approve'),
+        t('music_library.feedback.approve_confirm', { title: music.title, artist: music.artist }),
+        'default',
+        async () => {
           setActionLoading(true)
           setError(null)
           try {
             const result = await musicService.update(music.id, { status: 'APPROVED' })
             if (!result.success) {
-              setError(result.error ||t('music_library.errors.failed_to_approve'))
+              setError(result.error || t('music_library.errors.failed_to_approve'))
             } else {
               setSuccess(t('music_library.feedback.approve_success', { title: music.title }))
               await mutate()
@@ -124,27 +137,25 @@ export function MusicPage() {
           } finally {
             setActionLoading(false)
           }
-        },
-      })
+        }
+      )
     },
-    [t, closeConfirm, mutate],
+    [t, openConfirm, mutate],
   )
 
   const handleReject = useCallback(
     (music: MusicResponseDto) => {
-      setConfirmState({
-        isOpen: true,
-        title: t('common.reject'),
-        message: t('music_library.feedback.reject_confirm', { title: music.title, artist: music.artist }),
-        variant: 'destructive',
-        onConfirm: async () => {
-          closeConfirm()
+      openConfirm(
+        t('common.reject'),
+        t('music_library.feedback.reject_confirm', { title: music.title, artist: music.artist }),
+        'destructive',
+        async () => {
           setActionLoading(true)
           setError(null)
           try {
             const result = await musicService.remove(music.id)
             if (!result.success) {
-              setError(result.error ||t('music_library.errors.failed_to_reject'))
+              setError(result.error || t('music_library.errors.failed_to_reject'))
             } else {
               setSuccess(t('music_library.feedback.reject_success', { title: music.title }))
               await mutate()
@@ -154,27 +165,25 @@ export function MusicPage() {
           } finally {
             setActionLoading(false)
           }
-        },
-      })
+        }
+      )
     },
-    [t, closeConfirm, mutate],
+    [t, openConfirm, mutate],
   )
 
   const handleDelete = useCallback(
     (music: MusicResponseDto) => {
-      setConfirmState({
-        isOpen: true,
-        title: t('common.delete'),
-        message: t('music_library.feedback.delete_confirm', { title: music.title, artist: music.artist }),
-        variant: 'destructive',
-        onConfirm: async () => {
-          closeConfirm()
+      openConfirm(
+        t('common.delete'),
+        t('music_library.feedback.delete_confirm', { title: music.title, artist: music.artist }),
+        'destructive',
+        async () => {
           setActionLoading(true)
           setError(null)
           try {
             const result = await musicService.remove(music.id)
             if (!result.success) {
-              setError(result.error ||t('music_library.errors.failed_to_delete'))
+              setError(result.error || t('music_library.errors.failed_to_delete'))
             } else {
               setSuccess(t('music_library.feedback.delete_success', { title: music.title }))
               await mutate()
@@ -184,37 +193,46 @@ export function MusicPage() {
           } finally {
             setActionLoading(false)
           }
-        },
-      })
+        }
+      )
     },
-    [t, closeConfirm, mutate],
+    [t, openConfirm, mutate],
   )
 
   const handleAdd = useCallback(() => {
-    setShowAddModal(true)
+    setModalState({ mode: 'add', editingMusic: null })
   }, [])
 
   const handleSuggest = useCallback(() => {
-    setShowSuggestModal(true)
+    setModalState({ mode: 'suggest', editingMusic: null })
   }, [])
 
   const handleModalSuccess = useCallback(async () => {
-    setShowAddModal(false)
-    setShowSuggestModal(false)
-    setShowEditModal(false)
-    setEditingMusic(null)
+    setModalState({ mode: null, editingMusic: null })
     await mutate()
   }, [mutate])
 
-  const handleEditClose = useCallback(() => {
-    setShowEditModal(false)
-    setEditingMusic(null)
+  const handleModalClose = useCallback(() => {
+    setModalState({ mode: null, editingMusic: null })
   }, [])
 
+  // Loading skeleton
   if (isLoading && musicList.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <div className="loading loading-spinner loading-lg"></div>
+      <div className="min-h-screen bg-base-100">
+        <div className="bg-base-200 border-b border-base-300">
+          <div className="container mx-auto max-w-7xl px-4 py-6">
+            <div className="h-10 w-48 bg-base-300 rounded animate-pulse" />
+          </div>
+        </div>
+        <div className="container mx-auto max-w-7xl px-4 py-8">
+          <div className="h-24 bg-base-200 rounded-lg animate-pulse mb-4" />
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-20 bg-base-200 rounded-lg animate-pulse" />
+            ))}
+          </div>
+        </div>
       </div>
     )
   }
@@ -225,30 +243,29 @@ export function MusicPage() {
       <div className="bg-base-200 border-b border-base-300">
         <div className="container mx-auto max-w-7xl px-4 py-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-            <h1 className="text-4xl font-bold">{t('music_library.page_title')}</h1>
-            <div className="flex gap-2">
+            <h1 className="text-3xl sm:text-4xl font-bold text-balance">{t('music_library.page_title')}</h1>
+            <div className="flex gap-2 w-full sm:w-auto">
               {user?.isHost && (
                 <button
                   onClick={handleAdd}
-                  className="btn btn-primary"
+                  className="btn btn-primary flex-1 sm:flex-none"
                   disabled={actionLoading}
                 >
                   {t('music_library.add_song')}
                 </button>
               )}
-              {isAuthenticated && (
+              {isAuthenticated ? (
                 <button
                   onClick={handleSuggest}
-                  className="btn btn-secondary"
+                  className="btn btn-secondary flex-1 sm:flex-none"
                   disabled={actionLoading}
                 >
                   {t('music_library.suggest_song')}
                 </button>
-              )}
-              {!isAuthenticated && (
+              ) : (
                 <button
                   onClick={() => navigate('/login?redirect=/music')}
-                  className="btn btn-secondary"
+                  className="btn btn-secondary flex-1 sm:flex-none"
                 >
                   {t('music_library.suggest_song')}
                 </button>
@@ -258,30 +275,17 @@ export function MusicPage() {
 
           {/* Status Filter Tabs */}
           <div className="flex gap-2 flex-wrap" role="tablist">
-            <button
-              onClick={() => setStatusFilter('approved')}
-              className={`tab ${statusFilter === 'approved' ? 'tab-active' : ''}`}
-              role="tab"
-              aria-selected={statusFilter === 'approved'}
-            >
-              {t('music_library.tabs.approved')}
-            </button>
-            <button
-              onClick={() => setStatusFilter('suggested')}
-              className={`tab ${statusFilter === 'suggested' ? 'tab-active' : ''}`}
-              role="tab"
-              aria-selected={statusFilter === 'suggested'}
-            >
-              {t('music_library.tabs.suggested')}
-            </button>
-            <button
-              onClick={() => setStatusFilter('all')}
-              className={`tab ${statusFilter === 'all' ? 'tab-active' : ''}`}
-              role="tab"
-              aria-selected={statusFilter === 'all'}
-            >
-              {t('music_library.tabs.all')}
-            </button>
+            {(['approved', 'suggested', 'all'] as const).map((filter) => (
+              <button
+                key={filter}
+                onClick={() => setStatusFilter(filter)}
+                className={`tab ${statusFilter === filter ? 'tab-active' : ''}`}
+                role="tab"
+                aria-selected={statusFilter === filter}
+              >
+                {t(`music_library.tabs.${filter}`)}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -311,76 +315,93 @@ export function MusicPage() {
         />
       </div>
 
-      {/* Music Table */}
+      {/* Music List - Responsive: Cards on mobile, Table on desktop */}
       <div className="container mx-auto max-w-7xl px-4 pb-8">
         {filteredAndSortedMusic.length > 0 ? (
-          <div className="overflow-x-auto bg-base-200 rounded-lg shadow">
-            <table className="table table-zebra w-full">
-              <thead>
-                <tr className="bg-base-300">
-                  <th className="text-base">{t('common.form_labels.title')}</th>
-                  <th className="text-base">{t('common.form_labels.artist')}</th>
-                  <th className="text-base hidden sm:table-cell">{t('common.form_labels.genre')}</th>
-                  <th className="text-base hidden sm:table-cell">{t('music_library.table.duration')}</th>
-                  <th className="text-base">{t('music_library.table.link')}</th>
-                  <th className="text-base">{t('music_library.table.status')}</th>
-                  <th className="text-base">{t('music_library.table.musicians_needed')}</th>
-                  <th className="text-base">{t('music_library.table.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredAndSortedMusic.map((music) => (
-                  <MusicTableRow
-                    key={music.id}
-                    music={music}
-                    formatDuration={formatDuration}
-                    isHost={user?.isHost || false}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                    onApprove={user?.isHost ? handleApprove : undefined}
-                    onReject={user?.isHost ? handleReject : undefined}
-                  />
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <>
+            {/* Mobile: Card Layout */}
+            <div className="block lg:hidden space-y-2">
+              {filteredAndSortedMusic.map((music) => (
+                <MusicCard
+                  key={music.id}
+                  music={music}
+                  isHost={user?.isHost || false}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onApprove={user?.isHost ? handleApprove : undefined}
+                  onReject={user?.isHost ? handleReject : undefined}
+                />
+              ))}
+            </div>
+
+            {/* Desktop: Table Layout */}
+            <div className="hidden lg:block overflow-x-auto bg-base-200 rounded-lg shadow">
+              <table className="table table-zebra w-full">
+                <thead>
+                  <tr className="bg-base-300">
+                    <th className="text-base">{t('common.form_labels.title')}</th>
+                    <th className="text-base">{t('common.form_labels.artist')}</th>
+                    <th className="text-base">{t('common.form_labels.genre')}</th>
+                    <th className="text-base">{t('music_library.table.duration')}</th>
+                    <th className="text-base">{t('music_library.table.link')}</th>
+                    <th className="text-base">{t('music_library.table.status')}</th>
+                    <th className="text-base">{t('music_library.table.musicians_needed')}</th>
+                    <th className="text-base">{t('music_library.table.actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredAndSortedMusic.map((music) => (
+                    <MusicTableRow
+                      key={music.id}
+                      music={music}
+                      isHost={user?.isHost || false}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                      onApprove={user?.isHost ? handleApprove : undefined}
+                      onReject={user?.isHost ? handleReject : undefined}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         ) : (
           <MusicEmptyState hasFilters={!!searchTerm || !!genreFilter} isHost={user?.isHost || false} />
         )}
       </div>
 
       {/* Add Music Modal */}
-      {showAddModal && (
+      {modalState.mode === 'add' && (
         <MusicModal
           mode="add"
           existingSongs={musicList}
-          onClose={() => setShowAddModal(false)}
-          onSuccess={() => { void handleModalSuccess() }}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
           setError={setError}
           setSuccess={setSuccess}
         />
       )}
 
       {/* Suggest Song Modal */}
-      {showSuggestModal && (
+      {modalState.mode === 'suggest' && (
         <MusicModal
           mode="suggest"
           existingSongs={musicList}
-          onClose={() => setShowSuggestModal(false)}
-          onSuccess={() => { void handleModalSuccess() }}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
           setError={setError}
           setSuccess={setSuccess}
         />
       )}
 
       {/* Edit Music Modal */}
-      {showEditModal && editingMusic && (
+      {modalState.mode === 'edit' && modalState.editingMusic && (
         <MusicModal
           mode="edit"
-          music={editingMusic}
+          music={modalState.editingMusic}
           existingSongs={musicList}
-          onClose={handleEditClose}
-          onSuccess={() => { void handleModalSuccess() }}
+          onClose={handleModalClose}
+          onSuccess={handleModalSuccess}
           setError={setError}
           setSuccess={setSuccess}
         />
@@ -388,12 +409,12 @@ export function MusicPage() {
 
       {/* Confirm Dialog */}
       <ConfirmDialog
-        isOpen={confirmState.isOpen}
-        title={confirmState.title}
-        message={confirmState.message}
-        variant={confirmState.variant}
+        isOpen={confirmOpen}
+        title={confirmTitle}
+        message={confirmMessage}
+        variant={confirmVariant}
         loading={actionLoading}
-        onConfirm={confirmState.onConfirm}
+        onConfirm={handleConfirm}
         onCancel={closeConfirm}
       />
     </div>

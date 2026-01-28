@@ -6,9 +6,10 @@
 
 import React, {useEffect, useState, useCallback} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
+import {useTranslation} from 'react-i18next'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import {ErrorAlert, SuccessAlert} from '../../components'
+import {ErrorAlert, SuccessAlert, SpotifyImportModal} from '../../components'
 
 interface FormData {
   name: string
@@ -26,11 +27,13 @@ export function CreateJamPage() {
   const navigate = useNavigate()
   const { id: jamId } = useParams<{ id: string }>()
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
+  const { t } = useTranslation()
 
   const [mode, setMode] = useState<'create' | 'edit'>('create')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
+  const [spotifyModalOpen, setSpotifyModalOpen] = useState(false)
 
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -68,13 +71,13 @@ export function CreateJamPage() {
         status: jam.status as 'ACTIVE' | 'INACTIVE' | 'FINISHED',
       })
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to load jam'
-      console.error('❌ Error loading jam:', err)
+      const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.load_error')
+      console.error('Error loading jam:', err)
       setError(errorMessage)
     } finally {
       setLoading(false)
     }
-  }, [user?.id])
+  }, [user?.id, t])
 
   useEffect(() => {
     if (authLoading) {
@@ -113,19 +116,19 @@ export function CreateJamPage() {
 
   const validateForm = (): boolean => {
     if (!formData.name.trim()) {
-      setError('Jam name is required')
+      setError(t('create_jam.validation.name_required'))
       return false
     }
     if (!formData.location.trim()) {
-      setError('Location is required')
+      setError(t('create_jam.validation.location_required'))
       return false
     }
     if (!formData.hostMusicianId) {
-      setError('Host musician ID is required')
+      setError(t('create_jam.validation.host_id_required'))
       return false
     }
     if (formData.date && !formData.time) {
-      setError('Time is required when date is specified')
+      setError(t('create_jam.validation.time_required'))
       return false
     }
     return true
@@ -160,17 +163,16 @@ export function CreateJamPage() {
 
       if (mode === 'create') {
         const result = await jamService.create(jamPayload)
-        setSuccess(`✓ Jam "${result.data.name}" created successfully!`)
-        // Redirect to dashboard after short delay
+        setSuccess(t('create_jam.messages.create_success', { name: result.data.name }))
         setTimeout(() => navigate('/host/dashboard'), 1500)
       } else if (jamId) {
         const result = await jamService.update(jamId, jamPayload)
-        setSuccess(`✓ Jam "${result.data.name}" updated successfully!`)
+        setSuccess(t('create_jam.messages.update_success', { name: result.data.name }))
         setTimeout(() => navigate('/host/dashboard'), 1500)
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to save jam'
-      console.error('❌ Error saving jam:', err)
+      const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.save_error')
+      console.error('Error saving jam:', err)
       setError(errorMessage)
     } finally {
       setLoading(false)
@@ -180,7 +182,7 @@ export function CreateJamPage() {
   const handleDelete = async () => {
     if (!jamId) return
 
-    if (!confirm('Are you sure you want to delete this jam? This action cannot be undone.')) {
+    if (!confirm(t('create_jam.messages.confirm_delete'))) {
       return
     }
 
@@ -189,15 +191,19 @@ export function CreateJamPage() {
 
     try {
       await jamService.deleteFn(jamId)
-      setSuccess('Jam deleted successfully!')
+      setSuccess(t('create_jam.messages.delete_success'))
       setTimeout(() => navigate('/host/dashboard'), 1500)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to delete jam'
-      console.error('❌ Error deleting jam:', err)
+      const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.delete_error')
+      console.error('Error deleting jam:', err)
       setError(errorMessage)
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleSpotifySuccess = (newJamId: string) => {
+    navigate(`/host/jams/${newJamId}/manage`)
   }
 
   // Show loading spinner while auth is initializing
@@ -209,7 +215,9 @@ export function CreateJamPage() {
     )
   }
 
-  const title = mode === 'create' ? 'Create New Jam' : `Edit "${formData.name}"`
+  const title = mode === 'create'
+    ? t('create_jam.title_create')
+    : t('create_jam.title_edit', { name: formData.name })
 
   return (
     <div className="min-h-screen bg-base-100 p-4">
@@ -220,7 +228,7 @@ export function CreateJamPage() {
             onClick={() => navigate('/host/dashboard')}
             className="btn btn-ghost btn-sm mb-4"
           >
-            ← Back to Dashboard
+            ← {t('create_jam.back_to_dashboard')}
           </button>
           <h1 className="text-4xl font-bold">{title}</h1>
         </div>
@@ -228,6 +236,28 @@ export function CreateJamPage() {
         {/* Alerts */}
         {error && <ErrorAlert message={error} onDismiss={() => setError(null)} />}
         {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
+
+        {/* Spotify Import Section - only in create mode */}
+        {mode === 'create' && (
+          <>
+            <div className="card bg-base-200 shadow-lg mb-6">
+              <div className="card-body items-center text-center">
+                <h2 className="card-title">{t('create_jam.spotify_import_title')}</h2>
+                <p className="text-base-content/70">{t('create_jam.spotify_import_desc')}</p>
+                <div className="card-actions mt-2">
+                  <button
+                    className="btn btn-success"
+                    onClick={() => setSpotifyModalOpen(true)}
+                  >
+                    {t('create_jam.spotify_import_btn')}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="divider">{t('create_jam.or_manually')}</div>
+          </>
+        )}
 
         {/* Form Card */}
         <div className="card bg-base-200 shadow-lg">
@@ -237,7 +267,7 @@ export function CreateJamPage() {
               <div className="form-control">
                 <label className="label">
                   <span className="label-text font-semibold">
-                    Jam Name <span className="text-error">*</span>
+                    {t('create_jam.form.jam_name')} <span className="text-error">*</span>
                   </span>
                 </label>
                 <input
@@ -245,7 +275,7 @@ export function CreateJamPage() {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  placeholder="e.g., Jazz Night 2025"
+                  placeholder={t('create_jam.form.placeholder_name')}
                   className="input input-bordered"
                   required
                   disabled={loading}
@@ -255,13 +285,13 @@ export function CreateJamPage() {
               {/* Description */}
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-semibold">Description</span>
+                  <span className="label-text font-semibold">{t('create_jam.form.description')}</span>
                 </label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  placeholder="Brief description of your jam session..."
+                  placeholder={t('create_jam.form.placeholder_description')}
                   className="textarea textarea-bordered h-24"
                   disabled={loading}
                 />
@@ -271,7 +301,7 @@ export function CreateJamPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-semibold">Date</span>
+                    <span className="label-text font-semibold">{t('create_jam.form.date')}</span>
                   </label>
                   <input
                     type="date"
@@ -284,7 +314,7 @@ export function CreateJamPage() {
                 </div>
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text font-semibold">Time</span>
+                    <span className="label-text font-semibold">{t('create_jam.form.time')}</span>
                   </label>
                   <input
                     type="time"
@@ -301,7 +331,7 @@ export function CreateJamPage() {
               <div className="form-control">
                 <label className="label">
                   <span className="label-text font-semibold">
-                    Location <span className="text-error">*</span>
+                    {t('create_jam.form.location')} <span className="text-error">*</span>
                   </span>
                 </label>
                 <input
@@ -309,7 +339,7 @@ export function CreateJamPage() {
                   name="location"
                   value={formData.location}
                   onChange={handleInputChange}
-                  placeholder="e.g., Studio A, 123 Music St"
+                  placeholder={t('create_jam.form.placeholder_location')}
                   className="input input-bordered"
                   required
                   disabled={loading}
@@ -321,7 +351,7 @@ export function CreateJamPage() {
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text font-semibold">
-                      Host Name <span className="text-error">*</span>
+                      {t('create_jam.form.host_name')} <span className="text-error">*</span>
                     </span>
                   </label>
                   <input
@@ -337,7 +367,7 @@ export function CreateJamPage() {
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text font-semibold">
-                      Host Contact <span className="text-error">*</span>
+                      {t('create_jam.form.host_contact')} <span className="text-error">*</span>
                     </span>
                   </label>
                   <input
@@ -345,7 +375,7 @@ export function CreateJamPage() {
                     name="hostContact"
                     value={formData.hostContact}
                     onChange={handleInputChange}
-                    placeholder="Email or phone"
+                    placeholder={t('create_jam.form.placeholder_contact')}
                     className="input input-bordered"
                     required
                     disabled={loading}
@@ -356,7 +386,7 @@ export function CreateJamPage() {
               {/* Status */}
               <div className="form-control">
                 <label className="label">
-                  <span className="label-text font-semibold">Status</span>
+                  <span className="label-text font-semibold">{t('create_jam.form.status')}</span>
                 </label>
                 <select
                   name="status"
@@ -365,9 +395,9 @@ export function CreateJamPage() {
                   className="select select-bordered"
                   disabled={loading}
                 >
-                  <option value="ACTIVE">Active</option>
-                  <option value="INACTIVE">Inactive</option>
-                  <option value="FINISHED">Finished</option>
+                  <option value="ACTIVE">{t('create_jam.form.status_active')}</option>
+                  <option value="INACTIVE">{t('create_jam.form.status_inactive')}</option>
+                  <option value="FINISHED">{t('create_jam.form.status_finished')}</option>
                 </select>
               </div>
 
@@ -379,7 +409,7 @@ export function CreateJamPage() {
                   className="btn btn-ghost"
                   disabled={loading}
                 >
-                  Cancel
+                  {t('create_jam.actions.cancel')}
                 </button>
 
                 <div className="flex gap-2">
@@ -390,7 +420,7 @@ export function CreateJamPage() {
                       className="btn btn-error btn-outline"
                       disabled={loading}
                     >
-                      Delete Jam
+                      {t('create_jam.actions.delete')}
                     </button>
                   )}
                   <button
@@ -401,12 +431,12 @@ export function CreateJamPage() {
                     {loading ? (
                       <>
                         <span className="loading loading-spinner loading-sm"></span>
-                        Saving...
+                        {t('create_jam.actions.saving')}
                       </>
                     ) : mode === 'create' ? (
-                      'Create Jam'
+                      t('create_jam.actions.create')
                     ) : (
-                      'Update Jam'
+                      t('create_jam.actions.update')
                     )}
                   </button>
                 </div>
@@ -418,15 +448,21 @@ export function CreateJamPage() {
         {/* Info Box */}
         <div className="alert alert-info mt-6">
           <p>
-            💡 {mode === 'create'
-              ? 'Create a new jam session. You can add songs and manage registrations later.'
-              : 'Update the jam details. Changes will be saved immediately.'}
+            {mode === 'create'
+              ? t('create_jam.info.create_hint')
+              : t('create_jam.info.edit_hint')}
           </p>
         </div>
       </div>
+
+      {/* Spotify Import Modal */}
+      <SpotifyImportModal
+        isOpen={spotifyModalOpen}
+        onClose={() => setSpotifyModalOpen(false)}
+        onSuccess={handleSpotifySuccess}
+      />
     </div>
   )
 }
 
 export default CreateJamPage
-

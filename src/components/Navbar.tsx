@@ -51,7 +51,7 @@ function Navbar() {
           </button>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-48 sm:w-52 p-2 shadow text-xs sm:text-sm">
+            className="menu dropdown-content bg-base-100 rounded-box z-50 mt-3 w-56 sm:w-60 p-2 shadow text-sm">
             {/* Mobile Menu Items */}
             <li><a href="/">{t('nav.home')}</a></li>
             <li><a href="/jams">{t('nav.browse_jams')}</a></li>
@@ -116,15 +116,15 @@ function Navbar() {
         <div className="dropdown dropdown-end">
           <button
             tabIndex={0}
-            className="btn btn-ghost btn-circle avatar placeholder w-8 sm:w-10"
+            className="btn btn-ghost btn-circle avatar placeholder w-10"
             aria-label={t('nav.user_menu')}>
-            <div className="bg-primary text-primary-content rounded-full w-8 sm:w-10 flex items-center justify-center text-xs sm:text-sm">
+            <div className="bg-primary text-primary-content rounded-full w-10 flex items-center justify-center text-sm">
               {isAuthenticated && user ? (user.name || 'U').charAt(0).toUpperCase() : 'G'}
             </div>
           </button>
           <ul
             tabIndex={0}
-            className="dropdown-content z-50 menu p-2 shadow bg-base-100 rounded-box w-48 sm:w-52 text-xs sm:text-sm">
+            className="dropdown-content z-50 menu p-2 shadow bg-base-100 rounded-box w-56 sm:w-60 text-sm">
             {isAuthenticated && user && (
               <>
                 <li className="menu-title">
@@ -181,14 +181,14 @@ function Navbar() {
 
         {/* Create Jam Button - Host Only */}
         {user?.isHost && (
-          <a href="/host/create-jam" className="btn btn-primary btn-xs sm:btn-sm whitespace-nowrap">
+          <a href="/host/create-jam" className="btn btn-primary btn-sm whitespace-nowrap">
             {t('nav.create_jam')}
           </a>
         )}
 
         {/* Register Button - Viewer/Anonymous Only */}
         {isViewer() && !isAuthenticated && (
-          <a href="/register" className="btn btn-primary btn-xs sm:btn-sm whitespace-nowrap">
+          <a href="/register" className="btn btn-primary btn-sm whitespace-nowrap">
             {t('nav.join')}
           </a>
         )}

@@ -278,7 +278,7 @@ export function HostDashboardPage() {
             <SpotifyImportModal
                 isOpen={showImportModal}
                 onClose={() => setShowImportModal(false)}
-                onSuccess={(jamId) => {
+                onSuccess={(jamId, isExistingJam) => {
                     setShowImportModal(false)
                     navigate(`/host/jams/${jamId}/manage`)
                 }}

@@ -22,6 +22,7 @@ export function BrowseJamsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState<'ALL' | JamStatus>('ALL')
   const [dateSort, setDateSort] = useState<DateSortOption>('newest')
+  const [pastJamsExpanded, setPastJamsExpanded] = useState(false)
 
   // Client-side filtering and sorting
   const filteredJams = useMemo(() => {
@@ -59,6 +60,21 @@ export function BrowseJamsPage() {
 
     return result
   }, [jams, searchQuery, statusFilter, dateSort])
+
+  // Split into current and past jams
+  const currentJams = useMemo(
+    () => filteredJams.filter((jam) => jam.status === 'ACTIVE' || jam.status === 'INACTIVE'),
+    [filteredJams]
+  )
+  const pastJams = useMemo(
+    () => filteredJams.filter((jam) => jam.status === 'FINISHED'),
+    [filteredJams]
+  )
+
+  // Section visibility based on status filter
+  const showCurrentSection = statusFilter === 'ALL' || statusFilter === 'ACTIVE' || statusFilter === 'INACTIVE'
+  const showPastSection = statusFilter === 'ALL' || statusFilter === 'FINISHED'
+  const visibleCount = (showCurrentSection ? currentJams.length : 0) + (showPastSection ? pastJams.length : 0)
 
   // Clear all filters
   const clearFilters = useCallback(() => {
@@ -159,7 +175,7 @@ export function BrowseJamsPage() {
                 </button>
                 <button
                   className={`tab ${statusFilter === 'FINISHED' ? 'tab-active' : ''}`}
-                  onClick={() => setStatusFilter('FINISHED')}
+                  onClick={() => { setStatusFilter('FINISHED'); setPastJamsExpanded(true) }}
                   role="tab"
                   aria-selected={statusFilter === 'FINISHED'}
                   disabled={isLoading}
@@ -173,7 +189,7 @@ export function BrowseJamsPage() {
             <div className="flex items-center justify-between mt-3 sm:mt-4 flex-wrap gap-2">
               <div className="badge badge-primary badge-sm sm:badge-md lg:badge-lg text-xs sm:text-sm">
                 {(() => {
-                  const count = filteredJams.length
+                  const count = visibleCount
                   const key = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
                   return t(key, { count })
                 })()}
@@ -212,34 +228,81 @@ export function BrowseJamsPage() {
           <ErrorAlert title={t('jams.browse.error_title')} message={error} />
         )}
 
-        {/* Jam Cards Grid */}
-        {!isLoading && !error && filteredJams.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 animate-in fade-in duration-300">
-            {filteredJams.map((jam) => (
-              <JamCard
-                key={jam.id}
-                jam={jam}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!isLoading && !error && filteredJams.length === 0 && (
-          <div className="text-center py-8 sm:py-12 lg:py-16">
-            <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">🎸</div>
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3">{t('jams.browse.empty_title')}</h3>
-            <p className="text-xs sm:text-sm lg:text-base text-base-content/70 mb-4 sm:mb-6">
-              {hasActiveFilters
-                ? t('jams.browse.empty_try_filters')
-                : t('jams.browse.empty_no_jams')}
-            </p>
-            {hasActiveFilters && (
-              <button onClick={clearFilters} className="btn btn-primary btn-xs sm:btn-sm lg:btn-md">
-                {t('jams.browse.clear_filters')}
-              </button>
+        {/* Jam Sections */}
+        {!isLoading && !error && (
+          <>
+            {/* Current Jams Section */}
+            {showCurrentSection && (
+              <div className="mb-6 sm:mb-8">
+                <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-base-content">
+                  {t('jams.browse.section_current')}
+                  <span className="badge badge-primary badge-sm ml-2">{currentJams.length}</span>
+                </h2>
+                {currentJams.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 animate-in fade-in duration-300">
+                    {currentJams.map((jam) => (
+                      <JamCard key={jam.id} jam={jam} />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-base-content/60 py-4">{t('jams.browse.section_no_current')}</p>
+                )}
+              </div>
             )}
-          </div>
+
+            {/* Past Jams Section - Collapsible */}
+            {showPastSection && (
+              <div>
+                <button
+                  onClick={() => setPastJamsExpanded(!pastJamsExpanded)}
+                  className="flex items-center gap-2 mb-3 sm:mb-4 cursor-pointer group"
+                  type="button"
+                  aria-expanded={pastJamsExpanded}
+                >
+                  <span
+                    className={`transform transition-transform motion-reduce:transition-none text-base-content/60 ${pastJamsExpanded ? 'rotate-90' : ''}`}
+                    aria-hidden="true"
+                  >
+                    &#9654;
+                  </span>
+                  <h2 className="text-lg sm:text-xl font-bold text-base-content group-hover:text-primary transition-colors">
+                    {t('jams.browse.section_past')}
+                  </h2>
+                  <span className="badge badge-ghost badge-sm">{pastJams.length}</span>
+                </button>
+
+                {pastJamsExpanded && pastJams.length > 0 && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 animate-in fade-in duration-300">
+                    {pastJams.map((jam) => (
+                      <JamCard key={jam.id} jam={jam} />
+                    ))}
+                  </div>
+                )}
+
+                {pastJamsExpanded && pastJams.length === 0 && (
+                  <p className="text-sm text-base-content/60 py-4">{t('jams.browse.section_no_past')}</p>
+                )}
+              </div>
+            )}
+
+            {/* Global Empty State */}
+            {visibleCount === 0 && (
+              <div className="text-center py-8 sm:py-12 lg:py-16">
+                <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">🎸</div>
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3">{t('jams.browse.empty_title')}</h3>
+                <p className="text-xs sm:text-sm lg:text-base text-base-content/70 mb-4 sm:mb-6">
+                  {hasActiveFilters
+                    ? t('jams.browse.empty_try_filters')
+                    : t('jams.browse.empty_no_jams')}
+                </p>
+                {hasActiveFilters && (
+                  <button onClick={clearFilters} className="btn btn-primary btn-xs sm:btn-sm lg:btn-md">
+                    {t('jams.browse.clear_filters')}
+                  </button>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

@@ -43,8 +43,8 @@ export function SongQueueTimeline({
       {suggestedSongs.length > 0 && (
         <div className="card bg-warning/10 border border-warning/30">
           <div className="card-body">
-            <h3 className="card-title text-sm flex items-center gap-2">
-              <span className="badge badge-warning">{suggestedSongs.length}</span>
+            <h3 className="card-title text-base flex items-center gap-2">
+              <span className="badge badge-warning badge-lg">{suggestedSongs.length}</span>
               {t('dj_control.timeline.suggested_songs')}
             </h3>
             <ul className="space-y-2">

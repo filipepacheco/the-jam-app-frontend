@@ -6,6 +6,7 @@
 
 import {useEffect, useState, useCallback} from 'react'
 import {useNavigate, useParams, useSearchParams, useLocation} from 'react-router-dom'
+import useSWR from 'swr'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
@@ -24,6 +25,12 @@ import {OverviewTab} from "../tabs/OverviewTab.tsx";
 
 type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live' | 'dj-control'
 
+// SWR fetcher for jam data
+const jamFetcher = async (id: string): Promise<JamResponseDto> => {
+    const result = await jamService.findOne(id)
+    return result.data
+}
+
 export function JamManagementPage() {
     const { t } = useTranslation()
     const navigate = useNavigate()
@@ -36,12 +43,38 @@ export function JamManagementPage() {
     const useLegacyDJ = searchParams.get('useLegacyDJ') === 'true'
 
     const [activeTab, setActiveTab] = useState<TabType>('overview')
-    const [jam, setJam] = useState<JamResponseDto | null>(null)
-    const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
     const [spotifyAccessToken, setSpotifyAccessToken] = useState<string | null>(null)
     const [showExportModal, setShowExportModal] = useState(false)
+
+    // Use SWR for jam data fetching
+    // Note: revalidateOnFocus is false - only schedule tab needs fresh data on focus
+    // Performance tabs (dj-control, live) use useJamControl with live state polling
+    const {
+        data: jam,
+        error: swrError,
+        isLoading: jamLoading,
+        mutate: refreshJam,
+    } = useSWR<JamResponseDto>(
+        jamId ? `jam-${jamId}` : null,
+        () => jamFetcher(jamId!),
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: true,
+            dedupingInterval: 2000,
+            errorRetryCount: 3,
+            errorRetryInterval: 5000,
+        }
+    )
+
+    // Handle SWR errors
+    useEffect(() => {
+        if (swrError) {
+            const errorMessage = swrError instanceof Error ? swrError.message : t('jam_management.error_loading')
+            setError(errorMessage)
+        }
+    }, [swrError, t])
 
     // Detect Spotify access token from redirect state
     useEffect(() => {
@@ -54,21 +87,17 @@ export function JamManagementPage() {
         }
     }, [location.state, location.pathname, navigate])
 
-    const loadJamData = useCallback(async (id: string) => {
-        setLoading(true)
-        setError(null)
-
-        try {
-            const result = await jamService.findOne(id)
-            setJam(result.data)
-        } catch (err) {
-            const errorMessage = err instanceof Error ? err.message : t('jam_management.error_loading')
-            console.error('❌ Error loading jam:', err)
-            setError(errorMessage)
-        } finally {
-            setLoading(false)
+    // Trigger refresh only for schedule tab which uses getJam data
+    // DJ Control and Live tabs use useJamControl with live state (independent polling)
+    const handleTabChange = useCallback((tabId: TabType) => {
+        setActiveTab(tabId)
+        
+        // Only schedule tab needs getJam refresh - it displays schedules from jam data
+        // dj-control and live tabs use useJamControl hook with getLiveState endpoint
+        if (tabId === 'schedule' && jamId) {
+            void refreshJam()
         }
-    }, [t])
+    }, [refreshJam, jamId])
 
     useEffect(() => {
         if (authLoading) {
@@ -79,17 +108,13 @@ export function JamManagementPage() {
             navigate('/login')
             return
         }
+    }, [jamId, isAuthenticated, authLoading, navigate])
 
-        if (jamId) {
-            void loadJamData(jamId)
-        }
-    }, [jamId, isAuthenticated, authLoading, navigate, loadJamData])
-
-    const handleStatusChange = async (newStatus: 'ACTIVE' | 'INACTIVE' | 'FINISHED') => {
+    const handleStatusChange = async (newStatus: 'ACTIVE' | 'INACTIVE' | 'LIVE' | 'FINISHED') => {
         if (!jamId || !jam) return
 
         const confirmMessage =
-            newStatus === 'ACTIVE'
+            newStatus === 'LIVE'
                 ? t('jam_management.overview.confirm_start')
                 : newStatus === 'FINISHED'
                     ? t('jam_management.overview.confirm_end')
@@ -99,19 +124,16 @@ export function JamManagementPage() {
             return
         }
 
-        setLoading(true)
         setError(null)
 
         try {
             await jamService.update(jamId, {status: newStatus})
             setSuccess(t('jam_management.overview.status_updated', { status: newStatus }))
-            await loadJamData(jamId)
+            await refreshJam()
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : t('errors.failed_to_execute_action')
             console.error('❌ Error updating jam status:', err)
             setError(errorMessage)
-        } finally {
-            setLoading(false)
         }
     }
 
@@ -127,7 +149,7 @@ export function JamManagementPage() {
         )
     }
 
-    if (loading && !jam) {
+    if (jamLoading && !jam) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-base-100">
                 <div className="flex flex-col items-center gap-3">
@@ -157,8 +179,10 @@ export function JamManagementPage() {
 
     const getStatusBadgeColor = () => {
         switch (jam.status) {
+            case 'LIVE':
+                return 'badge-success'  // Live/playing
             case 'ACTIVE':
-                return 'badge-success'
+                return 'badge-info'     // Active/ready
             case 'INACTIVE':
                 return 'badge-warning'
             case 'FINISHED':
@@ -172,7 +196,7 @@ export function JamManagementPage() {
         {id: 'overview', label: t('jam_management.tabs.overview'), icon: '📊'},
         {id: 'schedule', label: t('jam_management.tabs.schedule'), icon: '📋'},
         {id: 'dj-control' as const, label: t('dj_control.title'), icon: '🎛️'},
-        ...(jam?.status === 'ACTIVE' ? [{id: 'live' as const, label: t('jam_management.tabs.live_control'), icon: '🎙️'}] : []),
+        ...(jam?.status === 'LIVE' ? [{id: 'live' as const, label: t('jam_management.tabs.live_control'), icon: '🎙️'}] : []),
         // {id: 'dashboard', label: t('jam_management.tabs.dashboard'), icon: '📺'},
         // {id: 'analytics', label: t('jam_management.tabs.analytics'), icon: '📈'},
         // {id: 'registrations', label: t('jam_management.tabs.registrations'), icon: '👥'},
@@ -220,15 +244,18 @@ export function JamManagementPage() {
             {/* Tab Navigation */}
             <div className="border-b border-base-300 bg-base-200">
                 <div className="container mx-auto max-w-6xl px-2 sm:px-4">
-                    <div className="tabs tabs-boxed bg-transparent gap-1 sm:gap-2 py-2 text-xs sm:text-sm overflow-x-auto">
+                    <div className="flex gap-1 sm:gap-2 py-2 overflow-x-auto">
                         {tabs.map((tab) => (
                             <button
                                 key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`tab whitespace-nowrap ${activeTab === tab.id ? 'tab-active' : ''}`}
+                                onClick={() => handleTabChange(tab.id)}
+                                className={`
+                                    btn btn-sm whitespace-nowrap shrink-0 gap-2
+                                    ${activeTab === tab.id ? 'btn-primary' : 'btn-ghost'}
+                                `}
                             >
-                                <span className="mr-1 sm:mr-2">{tab.icon}</span>
-                                {tab.label}
+                                <span>{tab.icon}</span>
+                                <span>{tab.label}</span>
                             </button>
                         ))}
                     </div>
@@ -244,24 +271,24 @@ export function JamManagementPage() {
             {/* Tab Content */}
             <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8">
                 {activeTab === 'overview' && (
-                    <OverviewTab jam={jam} onStatusChange={handleStatusChange} loading={loading}/>
+                    <OverviewTab jam={jam} onStatusChange={handleStatusChange} loading={jamLoading}/>
                 )}
                 {activeTab === 'registrations' && (
                     <RegistrationsTab jam={jam}/>
                 )}
                 {activeTab === 'schedule' && (
-                    <ScheduleTab jam={jam} onReload={() => loadJamData(jamId!)}/>
+                    <ScheduleTab jam={jam} onReload={() => refreshJam()}/>
                 )}
                 {activeTab === 'dj-control' && (
                     useLegacyDJ ? (
-                        <DJControlTab jam={jam} onReload={() => loadJamData(jamId!)}/>
+                        <DJControlTab jam={jam} onReload={() => refreshJam()}/>
                     ) : (
-                        <DJControlTabV2 jamId={jamId!} onReload={() => loadJamData(jamId!)}/>
+                        <DJControlTabV2 jamId={jamId!} onReload={() => refreshJam()}/>
                     )
                 )}
                 {activeTab === 'live' && (
                     <LiveJamControlPanel
-                        jam={jam}
+                        jamId={jamId!}
                         onActionSuccess={(msg) => setSuccess(msg)}
                         onActionError={(err) => setError(err)}
                     />

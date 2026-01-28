@@ -6,10 +6,10 @@
 import {memo} from 'react'
 import type {MusicResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
+import {formatDuration} from '../lib/musicUtils'
 
 interface MusicTableRowProps {
   music: MusicResponseDto
-  formatDuration: (seconds?: number) => string
   isHost: boolean
   onEdit: (music: MusicResponseDto) => void
   onDelete: (music: MusicResponseDto) => void
@@ -19,7 +19,6 @@ interface MusicTableRowProps {
 
 export const MusicTableRow = memo(function MusicTableRow({
   music,
-  formatDuration,
   isHost,
   onEdit,
   onDelete,
@@ -133,43 +132,39 @@ function MusicActionButtons({
   const isSuggested = music.status === 'SUGGESTED'
 
   return (
-    <div className="flex gap-1 flex-wrap">
+    <div className="flex gap-2">
       {isSuggested && isHost ? (
         <>
           <button
             onClick={() => onApprove?.(music)}
-            className="btn btn-xs btn-success"
+            className="btn btn-xs btn-success gap-1"
             title={t('common.approve')}
-            aria-label={t('common.approve')}
           >
-            ✅
+            ✅ <span className="hidden xl:inline">{t('common.approve')}</span>
           </button>
           <button
             onClick={() => onReject?.(music)}
-            className="btn btn-xs btn-error btn-outline"
+            className="btn btn-xs btn-error btn-outline gap-1"
             title={t('common.reject')}
-            aria-label={t('common.reject')}
           >
-            ❌
+            ❌ <span className="hidden xl:inline">{t('common.reject')}</span>
           </button>
         </>
       ) : isHost && !isSuggested ? (
         <>
           <button
             onClick={() => onEdit(music)}
-            className="btn btn-xs btn-ghost"
+            className="btn btn-xs btn-ghost gap-1"
             title={t('common.edit')}
-            aria-label={t('common.edit')}
           >
-            ✏️
+            ✏️ <span className="hidden xl:inline">{t('common.edit')}</span>
           </button>
           <button
             onClick={() => onDelete(music)}
-            className="btn btn-xs btn-error btn-outline"
+            className="btn btn-xs btn-error btn-outline gap-1"
             title={t('common.delete')}
-            aria-label={t('common.delete')}
           >
-            🗑️
+            🗑️ <span className="hidden xl:inline">{t('common.delete')}</span>
           </button>
         </>
       ) : (

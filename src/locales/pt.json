@@ -83,7 +83,7 @@
     "browse_jams": "Explorar Jams",
     "jams": "Jams",
     "musicians": "Músicos",
-    "music": "Música",
+    "music": "Biblioteca Musical",
     "music_library": "Biblioteca Musical",
     "host_dashboard": "Painel do Host",
     "create_jam": "Criar Jam",
@@ -198,9 +198,10 @@
       "other": "{{count}} músicas"
     },
     "statuses": {
-      "active": "🎉 Ao vivo",
+      "live": "🎉 Ao vivo",
+      "active": "✅ Ativo",
       "inactive": "⏸️ Em breve",
-      "finished": "✅ Concluído"
+      "finished": "🏁 Concluído"
     },
     "features": {
       "title": "Desenvolvido para todos no Jam",
@@ -296,7 +297,11 @@
       "error_title": "Falha ao carregar os jams",
       "empty_title": "Nenhum Jam encontrado",
       "empty_try_filters": "Tente ajustar seus filtros para ver mais resultados",
-      "empty_no_jams": "Seja o primeiro a criar uma sessão de jam!"
+      "empty_no_jams": "Seja o primeiro a criar uma sessão de jam!",
+      "section_current": "Jams Atuais",
+      "section_past": "Jams Anteriores",
+      "section_no_current": "Nenhuma jam atual encontrada",
+      "section_no_past": "Nenhuma jam anterior encontrada"
     },
 
     "loading_failed": "Falha ao carregar o jam",
@@ -445,6 +450,7 @@
     "skipped_feedback": "Pulou para a próxima música",
     "reordered_feedback": "Fila reordenada",
     "executing_action": "Executando ação…",
+    "saving_order": "Salvando ordem…",
     "start_to_begin": "Inicie a primeira música para começar",
     "no_more_songs": "Sem mais músicas agendadas",
     "drag_to_reorder": "Arraste para reordenar",
@@ -619,7 +625,8 @@
       "actions_controls": "Ações e controles",
       "edit_jam": "Editar Jam",
       "view_public": "Ver página pública",
-      "start_jam": "Iniciar",
+      "activate_jam": "Ativar",
+      "start_jam": "Iniciar Live",
       "end_jam": "Finalizar",
       "reactivate_jam": "Reativar Jam",
       "confirm_start": "Tem certeza de que deseja iniciar esta sessão de jam?",
@@ -689,6 +696,7 @@
         "past": "Passados"
       },
       "statuses": {
+        "live": "Ao vivo",
         "active": "Ativo",
         "inactive": "Inativo",
         "finished": "Concluído"
@@ -899,20 +907,36 @@
       "location_placeholder": "Onde o jam acontecera?",
       "importing": "Importando...",
       "import_button": "Importar Playlist",
+      "add_to_jam_button": "Adicionar ao Jam",
       "success_title": "Playlist Importada!",
+      "success_title_existing": "Musicas Adicionadas!",
       "success_message": "Seu jam foi criado a partir da playlist do Spotify.",
+      "success_message_existing": "Musicas foram adicionadas a {{name}}.",
       "imported_tracks": "Faixas importadas",
       "reused_tracks": "Faixas reutilizadas",
       "skipped_tracks": "Faixas ignoradas",
+      "added_tracks": "Faixas adicionadas",
+      "duplicate_tracks": "Ja no jam",
+      "duplicate_tracks_desc": "Estas faixas foram ignoradas",
       "view_jam": "Ver Jam",
+      "back_to_jam": "Voltar ao Jam",
+      "mode_new": "Criar Novo Jam",
+      "mode_existing": "Adicionar a Jam Existente",
+      "select_jam_label": "Selecionar Jam",
+      "select_jam_placeholder": "Escolha um jam...",
+      "select_jam_required": "Por favor selecione um jam",
+      "current_jam": "Jam Atual",
+      "songs_count": "musicas",
       "errors": {
         "invalid_url": "URL da playlist invalida. Verifique e tente novamente.",
         "private_playlist": "Esta playlist e privada. Apenas playlists publicas podem ser importadas.",
-        "not_found": "Playlist nao encontrada. Verifique a URL.",
+        "not_found": "Playlist ou jam nao encontrado. Verifique e tente novamente.",
         "rate_limit": "Muitas solicitacoes. Aguarde um momento e tente novamente.",
         "network_error": "Nao foi possivel conectar ao Spotify. Tente novamente mais tarde.",
         "not_configured": "A integracao com Spotify nao esta configurada no servidor.",
-        "import_failed": "Falha ao importar playlist. Tente novamente."
+        "import_failed": "Falha ao importar playlist. Tente novamente.",
+        "forbidden": "Voce deve ser o anfitriao do jam para adicionar faixas.",
+        "validation": "Requisicao invalida. Verifique os dados e tente novamente."
       }
     },
     "export_modal": {
@@ -990,6 +1014,58 @@
     "cta": {
       "tagline": "Seu palco esta esperando",
       "button": "Comece de Graca"
+    }
+  },
+  "create_jam": {
+    "title_create": "Criar Novo Jam",
+    "title_edit": "Editar \"{{name}}\"",
+    "back_to_dashboard": "Voltar ao Painel",
+    "spotify_import_title": "Importar do Spotify",
+    "spotify_import_desc": "Crie um jam automaticamente a partir de uma playlist do Spotify",
+    "spotify_import_btn": "Importar Playlist",
+    "or_manually": "ou preencha manualmente",
+    "form": {
+      "jam_name": "Nome do Jam",
+      "description": "Descricao",
+      "date": "Data",
+      "time": "Horario",
+      "location": "Local",
+      "host_name": "Nome do Anfitriao",
+      "host_contact": "Contato do Anfitriao",
+      "status": "Status",
+      "placeholder_name": "ex., Noite de Jazz 2025",
+      "placeholder_description": "Breve descricao da sua sessao de jam...",
+      "placeholder_location": "ex., Estudio A, Rua da Musica 123",
+      "placeholder_contact": "Email ou telefone",
+      "status_active": "Ativo",
+      "status_inactive": "Inativo",
+      "status_finished": "Finalizado"
+    },
+    "actions": {
+      "cancel": "Cancelar",
+      "delete": "Excluir Jam",
+      "create": "Criar Jam",
+      "update": "Atualizar Jam",
+      "saving": "Salvando..."
+    },
+    "validation": {
+      "name_required": "O nome do jam e obrigatorio",
+      "location_required": "O local e obrigatorio",
+      "host_id_required": "O ID do anfitriao e obrigatorio",
+      "time_required": "O horario e obrigatorio quando uma data e especificada"
+    },
+    "messages": {
+      "create_success": "Jam \"{{name}}\" criado com sucesso!",
+      "update_success": "Jam \"{{name}}\" atualizado com sucesso!",
+      "delete_success": "Jam excluido com sucesso!",
+      "load_error": "Falha ao carregar o jam",
+      "save_error": "Falha ao salvar o jam",
+      "delete_error": "Falha ao excluir o jam",
+      "confirm_delete": "Tem certeza de que deseja excluir este jam? Esta acao nao pode ser desfeita."
+    },
+    "info": {
+      "create_hint": "Crie uma nova sessao de jam. Voce pode adicionar musicas e gerenciar inscricoes depois.",
+      "edit_hint": "Atualize os detalhes do jam. As alteracoes serao salvas imediatamente."
     }
   }
 }

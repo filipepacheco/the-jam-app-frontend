@@ -72,23 +72,23 @@ export function TimelineItemV2Waveform({
   }
 
   // Status text and icon
-  const getStatusDisplay = () => {
-    if (isCompleted) return { icon: '✓', text: t('schedule.statuses.completed'), color: 'text-success' }
-    if (isInProgress) return { icon: '▶', text: t('schedule.statuses.in_progress'), color: 'text-primary' }
-    if (isSuggested) return { icon: '✨', text: t('common.statuses.suggested'), color: 'text-info' }
-    return { icon: '○', text: t('schedule.statuses.scheduled'), color: 'text-base-content/60' }
-  }
-
-  const status = getStatusDisplay()
+  const status = isCompleted
+    ? { icon: '✓', text: t('schedule.statuses.completed'), color: 'text-success' }
+    : isInProgress
+    ? { icon: '▶', text: t('schedule.statuses.in_progress'), color: 'text-primary' }
+    : isSuggested
+    ? { icon: '✨', text: t('common.statuses.suggested'), color: 'text-info' }
+    : { icon: '○', text: t('schedule.statuses.scheduled'), color: 'text-base-content/60' }
 
   return (
-    <button
-      className={`card w-full ${bgClasses} ${borderClasses} transition-all duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`}
+    <div
+      role="button"
+      tabIndex={0}
+      className={`card w-full ${bgClasses} ${borderClasses} transition-all duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left`}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
       aria-expanded={isExpanded}
       aria-label={`${schedule.music?.title} by ${schedule.music?.artist}. ${status.text}`}
-      type="button"
     >
       <div className="card-body p-4">
 
@@ -101,7 +101,7 @@ export function TimelineItemV2Waveform({
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <h3 className="text-lg font-bold text-base-content mb-0.5 truncate">
+              <h3 className="text-base sm:text-lg font-bold text-base-content mb-0.5 truncate">
                 {schedule.music?.title}
               </h3>
               <p className="text-sm text-base-content/70 truncate">
@@ -110,7 +110,7 @@ export function TimelineItemV2Waveform({
             </div>
           </div>
           <div className={`flex items-center gap-1.5 text-xs font-semibold ${status.color} shrink-0`}>
-            <span className="text-base" aria-hidden="true">{status.icon}</span>
+            <span className={`text-base ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`} aria-hidden="true">{status.icon}</span>
             <span>{status.text}</span>
           </div>
         </div>
@@ -212,6 +212,6 @@ export function TimelineItemV2Waveform({
           </>
         )}
       </div>
-    </button>
+    </div>
   )
 }

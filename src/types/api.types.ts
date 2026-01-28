@@ -12,7 +12,7 @@
 /**
  * Jam session status
  */
-export type JamStatus = 'ACTIVE' | 'INACTIVE' | 'FINISHED'
+export type JamStatus = 'ACTIVE' | 'INACTIVE' | 'LIVE' | 'FINISHED'
 
 /**
  * Musician experience level

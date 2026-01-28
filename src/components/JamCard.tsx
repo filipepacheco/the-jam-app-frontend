@@ -30,12 +30,14 @@ function formatDate(isoString: string): string {
  */
 function getStatusBadgeClass(status: JamStatus): string {
   switch (status) {
+    case 'LIVE':
+      return 'badge-success badge-lg font-semibold'  // Green - live now
     case 'ACTIVE':
-      return 'badge-success badge-lg font-semibold'
+      return 'badge-info badge-lg font-semibold'     // Blue - active/ready
     case 'INACTIVE':
       return 'badge-warning badge-lg font-semibold'
     case 'FINISHED':
-      return 'badge-info badge-lg font-semibold'
+      return 'badge-ghost badge-lg font-semibold'
     default:
       return 'badge-ghost badge-lg font-semibold'
   }
@@ -46,6 +48,8 @@ function getStatusBadgeClass(status: JamStatus): string {
  */
 function getStatusLabel(status: JamStatus, t: (key: string) => string): string {
   switch (status) {
+    case 'LIVE':
+      return t('jams.statuses.live')
     case 'ACTIVE':
       return t('jams.statuses.active')
     case 'INACTIVE':
