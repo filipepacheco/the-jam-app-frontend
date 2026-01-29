@@ -1,13 +1,12 @@
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Share2} from 'lucide-react'
-import type {JamResponseDto, ScheduleResponseDto} from '../../types/api.types'
+import type {JamResponseDto} from '../../types/api.types'
 import {CollapsibleSection} from './CollapsibleSection'
 import {ShareModal} from '../ShareModal'
 
 interface CollapsibleSidebarProps {
   jam: JamResponseDto | null
-  userRegistrations: ScheduleResponseDto[]
   onSuggestClick: () => void
   isAuthenticated: boolean
 }

@@ -9,6 +9,7 @@ import {useTranslation} from 'react-i18next'
 import {Avatar} from '../Avatar'
 import React from "react"
 import {groupRegistrationsByInstrument} from '../../utils/musicianUtils';
+import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 
 // Re-export from centralized helper for backwards compatibility
 export { getInstrumentIcon } from '../../lib/schedule/instrumentHelpers'
