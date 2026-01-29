@@ -338,7 +338,10 @@ export function JamDetailPageV2() {
                                                 <div className="flex items-center gap-2 justify-between">
                                                     <div className="flex items-center gap-2 min-w-0 flex-1">
                                                         <span aria-hidden="true">{getInstrumentIcon(registration.instrument || '')}</span>
-                                                        <span className="font-semibold truncate">{schedule.music?.title}</span>
+                                                        <span className="truncate">
+                                                            <span className="font-semibold">{schedule.music?.title}</span>
+                                                            <span className="text-base-content/60"> - {schedule.music?.artist}</span>
+                                                        </span>
                                                     </div>
                                                     <div className="flex items-center gap-1 flex-shrink-0">
                                                         <span className="badge badge-xs badge-outline">
@@ -359,9 +362,6 @@ export function JamDetailPageV2() {
                                                             )}
                                                         </button>
                                                     </div>
-                                                </div>
-                                                <div className="text-base-content/60 truncate mt-1">
-                                                    {schedule.music?.artist}
                                                 </div>
                                             </div>
                                         )
