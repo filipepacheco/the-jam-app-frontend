@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next'
 import { Pencil, Trash2 } from 'lucide-react'
 import type { MusicResponseDto } from '../types/api.types'
 import { formatDuration } from '../lib/musicUtils'
+import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
+import { SpotifyPreview, isSpotifyTrackLink } from './SpotifyPreview'
 
 interface MusicCardProps {
   music: MusicResponseDto
@@ -42,15 +44,17 @@ export const MusicCard = memo(function MusicCard({
   const isSuggested = music.status === 'SUGGESTED'
 
   const instrumentCounts = [
-    { count: music.neededDrums || 0, emoji: '🥁', label: t('schedule.instruments.drums') },
-    { count: music.neededGuitars || 0, emoji: '🎸', label: t('schedule.instruments.guitars') },
-    { count: music.neededVocals || 0, emoji: '🎤', label: t('schedule.instruments.vocals') },
-    { count: music.neededBass || 0, emoji: '🎸', label: t('schedule.instruments.bass') },
-    { count: music.neededKeys || 0, emoji: '🎹', label: t('schedule.instruments.keys') },
+    { count: music.neededDrums || 0, key: 'drums', label: t('schedule.instruments.drums') },
+    { count: music.neededGuitars || 0, key: 'guitars', label: t('schedule.instruments.guitars') },
+    { count: music.neededVocals || 0, key: 'vocals', label: t('schedule.instruments.vocals') },
+    { count: music.neededBass || 0, key: 'bass', label: t('schedule.instruments.bass') },
+    { count: music.neededKeys || 0, key: 'keys', label: t('schedule.instruments.keys') },
   ].filter(inst => inst.count > 0)
 
-  // Check if link is Spotify
-  const isSpotify = music.link?.includes('spotify.com') || music.link?.includes('open.spotify.com')
+  // Check if link is a Spotify track (playable preview)
+  const hasSpotifyPreview = isSpotifyTrackLink(music.link)
+  // Check if link is any Spotify URL (for icon display)
+  const isSpotifyLink = music.link?.includes('spotify.com')
 
   return (
     <div className="card bg-base-100 border border-base-200 shadow-sm compact">
@@ -121,35 +125,38 @@ export const MusicCard = memo(function MusicCard({
         </div>
 
         {/* Meta Info Row: Genre, Duration, Instruments, Link - directly below artist */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-0">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           {music.genre && (
             <span className="badge badge-outline badge-xs">{music.genre}</span>
           )}
-          
+
           {music.duration && (
             <span className="text-xs text-base-content/60">
               ⏱️ {formatDuration(music.duration)}
             </span>
           )}
-          
+
           {/* Instrument counts inline with duration */}
           {instrumentCounts.map((inst) => (
-            <span key={inst.label} className="text-xs text-base-content/60">
-              {inst.emoji} {inst.count}
+            <span key={inst.key} className="text-xs text-base-content/60">
+              {getInstrumentIcon(inst.key)} {inst.count}
             </span>
           ))}
-          
-          {music.link && (
+
+          {/* Spotify Preview or Link */}
+          {hasSpotifyPreview ? (
+            <SpotifyPreview link={music.link} title={music.title} size="sm" />
+          ) : music.link ? (
             <a
               href={music.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="link link-primary flex items-center gap-1"
-              title={isSpotify ? 'Spotify' : t('common.link')}
+              className="link link-primary flex items-center gap-1 text-xs"
+              title={isSpotifyLink ? 'Spotify' : t('common.link')}
             >
-              {isSpotify ? <SpotifyIcon /> : '🔗'}
+              {isSpotifyLink ? <SpotifyIcon /> : '🔗'}
             </a>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

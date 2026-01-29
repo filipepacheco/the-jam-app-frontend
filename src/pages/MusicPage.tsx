@@ -336,17 +336,17 @@ export function MusicPage() {
 
             {/* Desktop: Table Layout */}
             <div className="hidden lg:block overflow-x-auto bg-base-200 rounded-lg shadow">
-              <table className="table table-zebra w-full">
+              <table className="table table-zebra w-full table-fixed">
                 <thead>
                   <tr className="bg-base-300">
-                    <th className="text-base">{t('common.form_labels.title')}</th>
-                    <th className="text-base">{t('common.form_labels.artist')}</th>
-                    <th className="text-base">{t('common.form_labels.genre')}</th>
-                    <th className="text-base">{t('music_library.table.duration')}</th>
-                    <th className="text-base">{t('music_library.table.link')}</th>
-                    <th className="text-base">{t('music_library.table.status')}</th>
-                    <th className="text-base">{t('music_library.table.musicians_needed')}</th>
-                    <th className="text-base">{t('music_library.table.actions')}</th>
+                    <th className="text-sm w-[22%]">{t('common.form_labels.title')}</th>
+                    <th className="text-sm w-[14%]">{t('common.form_labels.artist')}</th>
+                    <th className="text-sm w-[10%]">{t('common.form_labels.genre')}</th>
+                    <th className="text-sm w-[8%]">{t('music_library.table.duration')}</th>
+                    <th className="text-sm w-[6%]">{t('music_library.table.link')}</th>
+                    <th className="text-sm w-[12%]">{t('music_library.table.status')}</th>
+                    <th className="text-sm w-[14%]">{t('music_library.table.musicians_needed')}</th>
+                    <th className="text-sm w-[14%]">{t('music_library.table.actions')}</th>
                   </tr>
                 </thead>
                 <tbody>

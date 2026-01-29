@@ -4,6 +4,7 @@ import {useReducedMotion} from '../../hooks'
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {isScheduleReadyToPlay, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {InstrumentsSummary} from '../schedule/InstrumentsSummary'
+import {SpotifyPlayButton} from '../SpotifyPreview'
 import React, {useCallback, useMemo} from "react"
 
 interface TimelineUser {
@@ -159,6 +160,11 @@ export function TimelineItemV2Waveform({
               {Math.floor((schedule.music?.duration || 0) / 60)}min
             </span>
           </div>
+          {/* Spotify Preview Button */}
+          <SpotifyPlayButton
+            link={schedule.music?.link}
+            title={schedule.music?.title}
+          />
         </div>
 
         {/* Expandable musician list with animation */}

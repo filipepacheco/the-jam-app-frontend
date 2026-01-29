@@ -54,6 +54,7 @@ export { ProfileSetupModal } from './ProfileSetupModal'
 // Spotify Components
 export { SpotifyImportModal } from './SpotifyImportModal'
 export { SpotifyExportModal } from './SpotifyExportModal'
+export { SpotifyPreview, SpotifyPlayButton, isSpotifyTrackLink } from './SpotifyPreview'
 
 // DJ Control Components
 export { SongQueueTimeline, TimelineSongItem, QueueStats } from './dj-control'

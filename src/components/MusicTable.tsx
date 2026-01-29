@@ -7,6 +7,8 @@ import {memo} from 'react'
 import type {MusicResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
 import {formatDuration} from '../lib/musicUtils'
+import {getInstrumentIcon} from '../lib/schedule/instrumentHelpers'
+import {SpotifyPlayButton, isSpotifyTrackLink} from './SpotifyPreview'
 
 interface MusicTableRowProps {
   music: MusicResponseDto
@@ -28,33 +30,42 @@ export const MusicTableRow = memo(function MusicTableRow({
   const { t } = useTranslation()
   return (
     <tr className="hover">
-      <td className="font-semibold">{music.title}</td>
-      <td>{music.artist}</td>
+      <td className="font-semibold truncate" title={music.title}>{music.title}</td>
+      <td className="truncate" title={music.artist}>{music.artist}</td>
       <td className="hidden sm:table-cell">
-        <span className="badge badge-outline">{music.genre || t('common.unknown')}</span>
-      </td>
-      <td className="hidden sm:table-cell">{formatDuration(music.duration)}</td>
-      <td>
-        {music.link ? (
-          <a
-            href={music.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link link-primary text-sm truncate"
-            title={music.link}
-          >
-            🔗 {t('common.link')}
-          </a>
+        {music.genre ? (
+          <span className="badge badge-outline badge-sm">{music.genre}</span>
         ) : (
-          <span className="text-xs text-base-content/50">-</span>
+          <span className="text-xs text-base-content/40">-</span>
         )}
       </td>
+      <td className="hidden sm:table-cell tabular-nums text-sm">{formatDuration(music.duration)}</td>
       <td>
-        <div
-          className={`badge badge-lg ${music.status === 'SUGGESTED' ? 'badge-warning' : 'badge-success'}`}
-        >
-          {music.status === 'SUGGESTED' ? `💡 ${t('common.statuses.suggested')}` : `✅ ${t('common.statuses.approved')}`}
+        <div className="flex items-center gap-1">
+          {isSpotifyTrackLink(music.link) ? (
+            <SpotifyPlayButton link={music.link} title={music.title} />
+          ) : null}
+          {music.link ? (
+            <a
+              href={music.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-ghost btn-xs"
+              title={music.link}
+            >
+              🔗
+            </a>
+          ) : (
+            <span className="text-xs text-base-content/40">-</span>
+          )}
         </div>
+      </td>
+      <td>
+        <span
+          className={`badge badge-sm ${music.status === 'SUGGESTED' ? 'badge-warning' : 'badge-success'}`}
+        >
+          {music.status === 'SUGGESTED' ? '💡' : '✓'} {music.status === 'SUGGESTED' ? t('common.statuses.suggested') : t('common.statuses.approved')}
+        </span>
       </td>
       <td>
         <MusiciansBadges music={music} />
@@ -84,11 +95,11 @@ interface MusiciansBadgesProps {
 export const MusiciansBadges = memo(function MusiciansBadges({ music }: MusiciansBadgesProps) {
   const { t } = useTranslation()
   const instrumentCounts = [
-    { count: music.neededDrums || 0, emoji: '🥁', label: t('schedule.instruments.drums') },
-    { count: music.neededGuitars || 0, emoji: '🎸', label: t('schedule.instruments.guitars') },
-    { count: music.neededVocals || 0, emoji: '🎤', label: t('schedule.instruments.vocals') },
-    { count: music.neededBass || 0, emoji: '🎸', label: t('schedule.instruments.bass') },
-    { count: music.neededKeys || 0, emoji: '🎹', label: t('schedule.instruments.keys') },
+    { count: music.neededDrums || 0, key: 'drums', label: t('schedule.instruments.drums') },
+    { count: music.neededGuitars || 0, key: 'guitars', label: t('schedule.instruments.guitars') },
+    { count: music.neededVocals || 0, key: 'vocals', label: t('schedule.instruments.vocals') },
+    { count: music.neededBass || 0, key: 'bass', label: t('schedule.instruments.bass') },
+    { count: music.neededKeys || 0, key: 'keys', label: t('schedule.instruments.keys') },
   ]
 
   const hasInstruments = instrumentCounts.some((inst) => inst.count > 0)
@@ -97,12 +108,12 @@ export const MusiciansBadges = memo(function MusiciansBadges({ music }: Musician
     <div className="flex flex-wrap gap-1">
       {instrumentCounts.map((inst) =>
         inst.count > 0 ? (
-          <span key={inst.label} className="badge badge-sm">
-            {inst.emoji} {inst.count}
+          <span key={inst.key} className="badge badge-sm gap-0.5" title={inst.label}>
+            {getInstrumentIcon(inst.key)} {inst.count}
           </span>
         ) : null
       )}
-      {!hasInstruments && <span className="text-xs text-base-content/50">{t('common.none')}</span>}
+      {!hasInstruments && <span className="text-xs text-base-content/40">-</span>}
     </div>
   )
 })
@@ -132,7 +143,7 @@ function MusicActionButtons({
   const isSuggested = music.status === 'SUGGESTED'
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1">
       {isSuggested && isHost ? (
         <>
           <button
@@ -140,14 +151,14 @@ function MusicActionButtons({
             className="btn btn-xs btn-success gap-1"
             title={t('common.approve')}
           >
-            ✅ <span className="hidden xl:inline">{t('common.approve')}</span>
+            ✓ <span className="hidden xl:inline">{t('common.approve')}</span>
           </button>
           <button
             onClick={() => onReject?.(music)}
-            className="btn btn-xs btn-error btn-outline gap-1"
+            className="btn btn-xs btn-ghost text-error hover:bg-error/10 gap-1"
             title={t('common.reject')}
           >
-            ❌ <span className="hidden xl:inline">{t('common.reject')}</span>
+            ✕ <span className="hidden xl:inline">{t('common.reject')}</span>
           </button>
         </>
       ) : isHost && !isSuggested ? (
@@ -161,14 +172,14 @@ function MusicActionButtons({
           </button>
           <button
             onClick={() => onDelete(music)}
-            className="btn btn-xs btn-error btn-outline gap-1"
+            className="btn btn-xs btn-ghost text-error hover:bg-error/10 gap-1"
             title={t('common.delete')}
           >
             🗑️ <span className="hidden xl:inline">{t('common.delete')}</span>
           </button>
         </>
       ) : (
-        <span className="text-xs text-base-content/50">-</span>
+        <span className="text-xs text-base-content/40">-</span>
       )}
     </div>
   )
