@@ -315,7 +315,6 @@ export function JamDetailPageV2() {
                     <aside className="lg:col-span-1 order-1 lg:order-2">
                         <CollapsibleSidebar
                             jam={jam}
-                            userRegistrations={userRegistrations}
                             onSuggestClick={handleSuggestClick}
                             isAuthenticated={isAuthenticated}
                         />
