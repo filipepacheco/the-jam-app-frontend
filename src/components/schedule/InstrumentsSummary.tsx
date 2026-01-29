@@ -22,15 +22,15 @@ export function InstrumentsSummary({ instrumentOptions }: InstrumentsSummaryProp
   if (availableOptions.length === 0) return null
 
   return (
-    <div className="text-sm text-base-content/70 mb-4 p-3 bg-base-200 rounded">
-      <p className="font-semibold mb-2 text-xs">{t('schedule.instruments_needed')}</p>
-      <div className="flex flex-wrap gap-2">
+    <div className="text-sm text-base-content/70 mb-2 px-2.5 py-1.5 bg-base-200/50 rounded">
+      <p className="font-medium mb-1 text-xs text-base-content/50">{t('schedule.instruments_needed')}</p>
+      <div className="flex flex-wrap gap-1.5">
         {availableOptions.map((option) => {
           const remaining = option.needed - option.registered
           return (
             <span
               key={option.key}
-              className="badge badge-sm badge-warning"
+              className="badge badge-sm badge-warning gap-1"
               title={option.label}
             >
               {getInstrumentIcon(option.key)} {t('schedule.left_count', { count: remaining })}

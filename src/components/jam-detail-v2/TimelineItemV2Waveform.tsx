@@ -94,39 +94,39 @@ export function TimelineItemV2Waveform({
     <div
       role="button"
       tabIndex={0}
-      className={`card w-full ${bgClasses} ${borderClasses} transition-shadow duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left`}
+      className={`card w-full relative ${bgClasses} ${borderClasses} transition-shadow duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left`}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
       aria-expanded={isExpanded}
       aria-label={`${schedule.music?.title} by ${schedule.music?.artist}. ${status.text}`}
     >
-      <div className="card-body p-3 sm:p-4">
+      {/* Status - absolute positioned top-right */}
+      <div className={`absolute top-2.5 right-3 flex items-center gap-1 text-xs font-semibold ${status.color}`}>
+        <span className={`text-sm ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`} aria-hidden="true">{status.icon}</span>
+        <span className="whitespace-nowrap">{status.text}</span>
+      </div>
 
-        {/* Header with position, song info, and status */}
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3 mb-3">
-          <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1 overflow-hidden">
-            {position !== undefined && (
-              <div className="badge badge-neutral badge-sm font-bold shrink-0">
-                #{position}
-              </div>
-            )}
-            <div className="min-w-0 flex-1">
-              <h3 className="text-sm sm:text-base md:text-lg font-bold text-base-content mb-0.5 truncate">
-                {schedule.music?.title}
-              </h3>
-              <p className="text-xs sm:text-sm text-base-content/70 truncate">
-                {schedule.music?.artist}
-              </p>
+      <div className="card-body p-3">
+
+        {/* Header with position and song info */}
+        <div className="flex items-start gap-2 mb-1">
+          {position !== undefined && (
+            <div className="badge badge-neutral badge-sm font-bold shrink-0">
+              #{position}
             </div>
-          </div>
-          <div className={`flex items-center gap-1.5 text-xs font-semibold ${status.color} shrink-0 self-end sm:self-start`}>
-            <span className={`text-sm sm:text-base ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`} aria-hidden="true">{status.icon}</span>
-            <span className="whitespace-nowrap">{status.text}</span>
+          )}
+          <div className="min-w-0 flex-1 pr-28 sm:pr-36">
+            <h3 className="text-sm sm:text-base md:text-lg font-bold text-base-content mb-0.5 truncate">
+              {schedule.music?.title}
+            </h3>
+            <p className="text-xs sm:text-sm text-base-content/70 truncate">
+              {schedule.music?.artist}
+            </p>
           </div>
         </div>
 
         {/* Musicians count and duration - same row */}
-        <div className="flex items-center gap-4 text-xs text-base-content/60 mb-3">
+        <div className="flex items-center gap-4 text-xs text-base-content/60 mb-1.5">
           {schedule.registrations && schedule.registrations.length > 0 ? (
             <button
               onClick={(e) => {
