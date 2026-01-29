@@ -64,10 +64,6 @@ export function MusicModal({
       setError(t('music_library.validation.artist_required'))
       return
     }
-    if (!formData.genre) {
-      setError(t('music_library.validation.genre_required'))
-      return
-    }
 
     if (mode !== 'edit' && checkDuplicate(existingSongs, formData.title, formData.artist, music?.id)) {
       setError(t('music_library.feedback.duplicate_error', { title: formData.title, artist: formData.artist }))
@@ -168,7 +164,10 @@ export function MusicModal({
 
   return (
     <dialog className="modal modal-open" aria-labelledby="music-modal-title">
-      <div className="modal-box max-w-lg w-full max-h-[90vh] flex flex-col p-0">
+      <form
+        onSubmit={(e) => { void handleSubmit(e) }}
+        className="modal-box max-w-lg w-full max-h-[90vh] flex flex-col p-0"
+      >
         {/* Header - Fixed */}
         <div className="px-4 sm:px-6 py-4 border-b border-base-300 flex items-center justify-between shrink-0">
           <h3 id="music-modal-title" className="font-bold text-lg sm:text-xl">
@@ -201,7 +200,6 @@ export function MusicModal({
           </button>
           <button
             type="submit"
-            form="music-form"
             className="btn btn-primary"
             disabled={submitting}
           >
@@ -209,19 +207,10 @@ export function MusicModal({
             {getSubmitLabel()}
           </button>
         </div>
-      </div>
-
-      {/* Form outside modal-box to handle submission properly */}
-      <form
-        id="music-form"
-        onSubmit={(e) => { void handleSubmit(e) }}
-        className="hidden"
-      />
+      </form>
 
       <form method="dialog" className="modal-backdrop">
-        <button type="button" onClick={onClose}>
-          {t('common.close')}
-        </button>
+        <button type="button" onClick={onClose} aria-label={t('common.close')}>close</button>
       </form>
     </dialog>
   )

@@ -71,7 +71,7 @@ function Navbar() {
                 <li><a href="/host/create-jam">{t('nav.create_jam')}</a></li>
               </>
             )}
-            <li><FeedbackButton iconOnly className="w-full justify-start" /></li>
+            <li><FeedbackButton className="w-full justify-start" /></li>
           </ul>
         </div>
         <a href="/" className="btn btn-ghost text-base sm:text-lg md:text-xl">

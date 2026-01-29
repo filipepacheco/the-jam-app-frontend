@@ -4,39 +4,14 @@
  */
 
 import type {RegistrationResponseDto} from '../../types/api.types'
-import {CheckCircle, Clock, Music, Users, XCircle} from 'lucide-react'
+import {CheckCircle, Clock, Users, XCircle} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {Avatar} from '../Avatar'
 import React from "react"
 import {groupRegistrationsByInstrument} from '../../utils/musicianUtils';
 
-export const getInstrumentIcon = (instrument?: string): React.ReactNode => {
-    if (!instrument) return <Music className="w-4 h-4" />
-    const lower = instrument.toLowerCase()
-    switch (lower) {
-        case 'drums':
-        case 'bateria':
-            return '🥁'
-        case 'guitar':
-        case 'guitars':
-        case 'guitarra':
-            return '🎸'
-        case 'bass':
-        case 'baixo':
-            return '🎸b'
-        case 'vocals':
-        case 'vocal':
-        case 'vozes':
-        case 'voz':
-            return '🎤'
-        case 'keys':
-        case 'keyboard':
-        case 'teclado':
-            return '🎹'
-        default:
-            return <Music className="w-4 h-4" />
-    }
-}
+// Re-export from centralized helper for backwards compatibility
+export { getInstrumentIcon } from '../../lib/schedule/instrumentHelpers'
 
 const getInstrumentDisplayName = (instrument: string, t: (key: string) => string): string => {
     const lower = instrument.toLowerCase()

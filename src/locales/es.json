@@ -24,6 +24,8 @@
     "details": "Detalles",
     "actions": "Acciones",
     "link": "Enlace",
+    "copy_address": "Copiar dirección",
+    "copied": "Copiado!",
     "none": "Ninguno",
     "play": "Reproducir",
     "pause": "Pausar",
@@ -293,7 +295,7 @@
       "section_no_past": "No se encontraron jams anteriores"
     },
     "loading_failed": "Error al cargar el jam",
-    "enroll_success": "✅ ¡Inscripción exitosa!",
+    "enroll_success": "¡Inscripción exitosa!",
     "suggest_success": "¡Canción sugerida con éxito! El anfitrión la revisará.",
     "suggest_failed": "Error al sugerir canción",
     "loading_songs_failed": "Fallo al cargar canciones",
@@ -318,7 +320,8 @@
       "duration": "Duración",
       "musicians": "Músicos",
       "jam_details": "Detalles del Jam",
-      "performances_count": "{{count}} actuaciones"
+      "performances_count": "{{count}} actuaciones",
+      "full_address": "Dirección completa"
     },
     "performance_schedule_title": "📋 Programación de Actuaciones",
     "suggested_songs_title": "Canciones Sugeridas (Pendientes de Aprobación)",
@@ -367,6 +370,7 @@
     "enroll_now": "Inscribirse Ahora",
     "enrolling": "Inscribiendo...",
     "already_enrolled": "✓ Ya Inscrito",
+    "register_another": "Agregar Instrumento",
     "enroll_btn": "🎵 Inscribirse",
     "add_musician_btn": "Agregar Músico",
     "musicians_registered": "Músicos Registrados",
@@ -386,7 +390,9 @@
       "scheduled": "Programada",
       "in_progress": "En Curso",
       "completed": "Completada",
-      "canceled": "Cancelada"
+      "canceled": "Cancelada",
+      "awaiting_registrations": "Esperando Inscripciones",
+      "ready_to_play": "Listo para Tocar"
     },
     "actions": {
       "start": "▶️ Iniciar",

@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { X, CheckCircle } from 'lucide-react'
 import { feedbackService } from '../services'
@@ -87,9 +88,9 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
 
   if (!isOpen) return null
 
-  return (
-    <dialog className="modal modal-open">
-      <div className="modal-box max-w-md">
+  return createPortal(
+    <dialog className="modal modal-open modal-bottom sm:modal-middle">
+      <div className="modal-box w-full max-w-md max-h-[90vh] overflow-y-auto overscroll-contain">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -110,7 +111,7 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
         {showSuccess ? (
           /* Success State */
           <div className="flex flex-col items-center py-8 text-center">
-            <CheckCircle className="w-16 h-16 text-success mb-4" />
+            <CheckCircle className="w-16 h-16 text-success mb-4" aria-hidden="true" />
             <h4 className="text-xl font-bold mb-2">{t('feedback.success_title')}</h4>
             <p className="text-base-content/70">{t('feedback.success_message')}</p>
           </div>
@@ -155,13 +156,14 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
 
             {/* Comment Textarea */}
             <div className="form-control">
-              <label className="label">
+              <label className="label" htmlFor="feedback-comment">
                 <span className="label-text">{t('feedback.comment_label')}</span>
                 <span className="label-text-alt text-base-content/50">
                   {t('feedback.character_count', { count: comment.length })}
                 </span>
               </label>
               <textarea
+                id="feedback-comment"
                 className="textarea textarea-bordered h-24 resize-none"
                 placeholder={t('feedback.comment_placeholder')}
                 value={comment}
@@ -207,6 +209,7 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
           {t('common.close')}
         </button>
       </form>
-    </dialog>
+    </dialog>,
+    document.body
   )
 }

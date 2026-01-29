@@ -56,8 +56,7 @@ export function MusicModalFormFields({
             value={formData.title}
             onChange={(e) => onChange('title', e.target.value)}
             className="input input-bordered w-full"
-            placeholder="e.g., Bluesette"
-            required
+            placeholder="e.g., Bluesette…"
           />
         </div>
 
@@ -74,8 +73,7 @@ export function MusicModalFormFields({
             value={formData.artist}
             onChange={(e) => onChange('artist', e.target.value)}
             className="input input-bordered w-full"
-            placeholder="e.g., Toots Thielemans"
-            required
+            placeholder="e.g., Toots Thielemans…"
           />
         </div>
       </div>
@@ -106,7 +104,7 @@ export function MusicModalFormFields({
           </label>
           <input
             id="music-link"
-            type="url"
+            type="text"
             value={formData.link}
             onChange={(e) => onChange('link', e.target.value)}
             className="input input-bordered w-full"
@@ -123,7 +121,7 @@ export function MusicModalFormFields({
           <div className="form-control">
             <label className="label py-1" htmlFor="music-genre">
               <span className="label-text font-medium">
-                {t('common.form_labels.genre')} <span className="text-error">*</span>
+                {t('common.form_labels.genre')}
               </span>
             </label>
             <select
@@ -131,7 +129,6 @@ export function MusicModalFormFields({
               value={formData.genre}
               onChange={(e) => onChange('genre', e.target.value)}
               className="select select-bordered w-full"
-              required
             >
               <option value="">{t('music_form.select_genre')}</option>
               {GENRES.map((genre) => (

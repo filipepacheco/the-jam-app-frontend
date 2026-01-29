@@ -24,8 +24,9 @@ import {
     SuggestSongModal,
     TimelineShowcaseV2Waveform,
 } from '../../components/jam-detail-v2/'
-import type {JamResponseDto, ScheduleResponseDto} from '../../types/api.types'
+import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../components/schedule/RegistrationList.tsx";
+import {registrationService} from '../../services/registrationService'
 
 export function JamDetailPageV2() {
     const {t} = useTranslation()
@@ -49,6 +50,25 @@ export function JamDetailPageV2() {
     // State for performance selection modal (from FAB)
     const [showPerformanceSelectModal, setShowPerformanceSelectModal] = useState(false)
 
+    // State for registration removal loading
+    const [removingRegistrationId, setRemovingRegistrationId] = useState<string | null>(null)
+
+    // State for copy location feedback
+    const [locationCopied, setLocationCopied] = useState(false)
+
+    // Handle copy location to clipboard
+    const handleCopyLocation = useCallback(async () => {
+        if (jam?.location) {
+            try {
+                await navigator.clipboard.writeText(jam.location)
+                setLocationCopied(true)
+                setTimeout(() => setLocationCopied(false), 2000)
+            } catch (error) {
+                console.error('Failed to copy location:', error)
+            }
+        }
+    }, [jam?.location])
+
     // Derive all schedule data in a single pass
     const { allSchedules, nonSuggestedSchedules, performanceCount, totalDurationSeconds } = useMemo(() => {
         const all = jam?.schedules || []
@@ -67,13 +87,20 @@ export function JamDetailPageV2() {
         return { allSchedules: all, nonSuggestedSchedules: nonSuggested, performanceCount: perfCount, totalDurationSeconds: totalSecs }
     }, [jam?.schedules])
 
-    // Get user's registered performances (filter from schedules, not registrations)
-    // Registrations don't have music data, but schedules do
+    // Get user's registrations with schedule data (supports multiple registrations per schedule)
     const userRegistrations = useMemo(() => {
         if (!jam?.schedules || !user?.id) return []
-        return jam.schedules.filter((schedule: ScheduleResponseDto) =>
-            schedule.registrations?.some((reg) => reg.musician?.id === user.id)
-        )
+        const registrations: Array<{ schedule: ScheduleResponseDto; registration: RegistrationResponseDto }> = []
+        for (const schedule of jam.schedules) {
+            if (schedule.registrations) {
+                for (const reg of schedule.registrations) {
+                    if (reg.musician?.id === user.id) {
+                        registrations.push({ schedule, registration: reg })
+                    }
+                }
+            }
+        }
+        return registrations
     }, [jam?.schedules, user?.id])
 
     // Memoize unique musicians count to avoid creating Set on every render
@@ -126,6 +153,21 @@ export function JamDetailPageV2() {
         await mutateJam()
         setTimeout(() => setSuggestSuccess(null), SUCCESS_TOAST_DURATION)
     }, [t, mutateJam])
+
+    // Handle remove registration
+    const handleRemoveRegistration = useCallback(async (registrationId: string) => {
+        setRemovingRegistrationId(registrationId)
+        try {
+            const result = await registrationService.remove(registrationId)
+            if (result.success) {
+                await mutateJam()
+            }
+        } catch (error) {
+            console.error('Failed to remove registration:', error)
+        } finally {
+            setRemovingRegistrationId(null)
+        }
+    }, [mutateJam])
 
     // State for My Registrations section - default to expanded only if user has registrations
     const [isRegistrationsExpanded, setIsRegistrationsExpanded] = useState(false)
@@ -185,8 +227,35 @@ export function JamDetailPageV2() {
 
                     {/* Jam Stats Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
+                        {/* Location Stat - Special handling with dropdown */}
+                        <div className="dropdown dropdown-bottom">
+                            <div
+                                tabIndex={0}
+                                role="button"
+                                className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 lg:p-4 bg-base-100/80 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer w-full"
+                            >
+                                <span className="text-base sm:text-lg lg:text-xl shrink-0" aria-hidden="true">📍</span>
+                                <div className="min-w-0 flex-1">
+                                    <p className="text-xs sm:text-sm text-base-content/60 font-medium line-clamp-1">{t('jams.info.location')}</p>
+                                    <p className="font-bold text-xs sm:text-sm lg:text-base truncate tabular-nums">{jam.location || t('jams.info.tba')}</p>
+                                </div>
+                            </div>
+                            {jam.location && (
+                                <div tabIndex={0} className="dropdown-content z-50 menu p-3 shadow-lg bg-base-100 rounded-box w-72 max-w-[90vw]">
+                                    <p className="text-sm font-semibold mb-2">{t('jams.info.full_address')}</p>
+                                    <p className="text-sm text-base-content/80 mb-3 break-words">{jam.location}</p>
+                                    <button
+                                        onClick={handleCopyLocation}
+                                        className="btn btn-sm btn-outline w-full"
+                                    >
+                                        {locationCopied ? t('common.copied') : t('common.copy_address')}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Other Stats */}
                         {[
-                            {icon: '📍', label: t('jams.info.location'), value: jam.location || t('jams.info.tba')},
                             {
                                 icon: '📅',
                                 label: t('jams.info.date'),
@@ -195,6 +264,9 @@ export function JamDetailPageV2() {
                                         month: 'short',
                                         day: 'numeric',
                                         year: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                        timeZone: 'UTC',
                                     }).format(new Date(jam.date))
                                     : t('jams.info.tba'),
                             },
@@ -260,21 +332,34 @@ export function JamDetailPageV2() {
                         >
                             {userRegistrations.length > 0 ? (
                                 <div className="space-y-2">
-                                    {userRegistrations.map((schedule: ScheduleResponseDto, idx: number) => {
-                                        // Find user's registration for this schedule to get their instrument and status
-                                        const userReg = schedule.registrations?.find((reg) => reg.musician?.id === user?.id)
-                                        // Show registration status if available, fallback to 'pending'
-                                        const registrationStatus = userReg?.status?.toLowerCase() || 'pending'
+                                    {userRegistrations.map(({ schedule, registration }, idx) => {
+                                        const registrationStatus = registration.status?.toLowerCase() || 'pending'
                                         return (
-                                            <div key={schedule.id || idx} className="text-xs p-2 bg-base-300/30 rounded">
+                                            <div key={registration.id || idx} className="text-xs p-2 bg-base-300/30 rounded">
                                                 <div className="flex items-center gap-2 justify-between">
                                                     <div className="flex items-center gap-2 min-w-0 flex-1">
-                                                        <span aria-hidden="true">{getInstrumentIcon(userReg?.instrument || '')}</span>
+                                                        <span aria-hidden="true">{getInstrumentIcon(registration.instrument || '')}</span>
                                                         <span className="font-semibold truncate">{schedule.music?.title}</span>
                                                     </div>
-                                                    <span className="badge badge-xs badge-outline flex-shrink-0">
-                                                        {t(`registration.statuses.${registrationStatus}`)}
-                                                    </span>
+                                                    <div className="flex items-center gap-1 flex-shrink-0">
+                                                        <span className="badge badge-xs badge-outline">
+                                                            {t(`registration.statuses.${registrationStatus}`)}
+                                                        </span>
+                                                        <button
+                                                            onClick={() => registration.id && handleRemoveRegistration(registration.id)}
+                                                            className="btn btn-ghost btn-xs px-1 text-base-content/50 hover:text-error"
+                                                            title={t('common.remove')}
+                                                            aria-label={t('common.remove')}
+                                                            type="button"
+                                                            disabled={removingRegistrationId === registration.id}
+                                                        >
+                                                            {removingRegistrationId === registration.id ? (
+                                                                <span className="loading loading-spinner loading-xs"></span>
+                                                            ) : (
+                                                                '✕'
+                                                            )}
+                                                        </button>
+                                                    </div>
                                                 </div>
                                                 <div className="text-base-content/60 truncate mt-1">
                                                     {schedule.music?.artist}

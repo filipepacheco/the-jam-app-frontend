@@ -140,7 +140,7 @@ export function HostMusicianRegistrationModal({
               const remaining = option.needed - option.registered
               const isFull = remaining <= 0
               return (
-                <option key={option.key} value={option.label} disabled={isFull}>
+                <option key={option.key} value={option.key} disabled={isFull}>
                   {option.emoji} {option.label} {isFull ? t('schedule.full_parentheses') : t('schedule.needed_count_parentheses', { count: remaining })}
                 </option>
               )

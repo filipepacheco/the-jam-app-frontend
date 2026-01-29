@@ -2,6 +2,8 @@ import type {RegistrationResponseDto, ScheduleResponseDto} from '../../types/api
 import {useTranslation} from 'react-i18next'
 import {useReducedMotion} from '../../hooks'
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
+import {isScheduleReadyToPlay, getInstrumentOptions} from '../../utils/scheduleUtils'
+import {InstrumentsSummary} from '../schedule/InstrumentsSummary'
 import React from "react";
 
 interface TimelineUser {
@@ -71,6 +73,12 @@ export function TimelineItemV2Waveform({
     borderClasses = 'border border-info/30'
   }
 
+  // Check if schedule is ready to play (all musician slots filled)
+  const isReadyToPlay = !isCompleted && !isInProgress && !isSuggested && isScheduleReadyToPlay(schedule)
+
+  // Get instrument options for showing available slots
+  const instrumentOptions = getInstrumentOptions(schedule, (key) => t(`schedule.instruments.${key}`))
+
   // Status text and icon
   const status = isCompleted
     ? { icon: '✓', text: t('schedule.statuses.completed'), color: 'text-success' }
@@ -78,40 +86,42 @@ export function TimelineItemV2Waveform({
     ? { icon: '▶', text: t('schedule.statuses.in_progress'), color: 'text-primary' }
     : isSuggested
     ? { icon: '✨', text: t('common.statuses.suggested'), color: 'text-info' }
-    : { icon: '○', text: t('schedule.statuses.scheduled'), color: 'text-base-content/60' }
+    : isReadyToPlay
+    ? { icon: '✓', text: t('schedule.statuses.ready_to_play'), color: 'text-success' }
+    : { icon: '○', text: t('schedule.statuses.awaiting_registrations'), color: 'text-base-content/60' }
 
   return (
     <div
       role="button"
       tabIndex={0}
-      className={`card w-full ${bgClasses} ${borderClasses} transition-all duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left`}
+      className={`card w-full ${bgClasses} ${borderClasses} transition-shadow duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left`}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
       aria-expanded={isExpanded}
       aria-label={`${schedule.music?.title} by ${schedule.music?.artist}. ${status.text}`}
     >
-      <div className="card-body p-4">
+      <div className="card-body p-3 sm:p-4">
 
-        {/* Header with position, song info, and status - all in one row on desktop */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex items-start gap-3 min-w-0 flex-1">
+        {/* Header with position, song info, and status */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-3 mb-3">
+          <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1 overflow-hidden">
             {position !== undefined && (
               <div className="badge badge-neutral badge-sm font-bold shrink-0">
                 #{position}
               </div>
             )}
             <div className="min-w-0 flex-1">
-              <h3 className="text-base sm:text-lg font-bold text-base-content mb-0.5 truncate">
+              <h3 className="text-sm sm:text-base md:text-lg font-bold text-base-content mb-0.5 truncate">
                 {schedule.music?.title}
               </h3>
-              <p className="text-sm text-base-content/70 truncate">
+              <p className="text-xs sm:text-sm text-base-content/70 truncate">
                 {schedule.music?.artist}
               </p>
             </div>
           </div>
-          <div className={`flex items-center gap-1.5 text-xs font-semibold ${status.color} shrink-0`}>
-            <span className={`text-base ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`} aria-hidden="true">{status.icon}</span>
-            <span>{status.text}</span>
+          <div className={`flex items-center gap-1.5 text-xs font-semibold ${status.color} shrink-0 self-end sm:self-start`}>
+            <span className={`text-sm sm:text-base ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`} aria-hidden="true">{status.icon}</span>
+            <span className="whitespace-nowrap">{status.text}</span>
           </div>
         </div>
 
@@ -150,7 +160,7 @@ export function TimelineItemV2Waveform({
         {schedule.registrations && schedule.registrations.length > 0 && (
           <div
             id={`musician-list-${schedule.id}`}
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
               isExpanded ? 'max-h-96 opacity-100 mb-3' : 'max-h-0 opacity-0'
             }`}
           >
@@ -170,6 +180,11 @@ export function TimelineItemV2Waveform({
           </div>
         )}
 
+        {/* Instruments still needed */}
+        {!isCompleted && !isInProgress && (
+          <InstrumentsSummary instrumentOptions={instrumentOptions} />
+        )}
+
         {/* Register Button / Stage Call-to-Action */}
         {!isCompleted && (
           <>
@@ -186,27 +201,20 @@ export function TimelineItemV2Waveform({
                 </div>
               )
             ) : (
-              /* OTHER STATUSES: Show register button */
+              /* OTHER STATUSES: Show register button (always enabled for multi-instrument registration) */
               <button
                 onClick={handleRegisterClick}
-                disabled={userRegistered}
                 className={`btn btn-sm w-full ${
                   userRegistered
-                    ? 'btn-outline btn-disabled'
+                    ? 'btn-ghost border border-base-300'
                     : isSuggested
                     ? 'btn-info'
                     : 'btn-primary btn-outline'
                 }`}
                 type="button"
               >
-                {userRegistered ? (
-                  t('schedule.already_enrolled')
-                ) : (
-                  <>
-                    <span className="text-base" aria-hidden="true">+</span>
-                    {t('jams.register')}
-                  </>
-                )}
+                <span className="text-base" aria-hidden="true">+</span>
+                {userRegistered ? t('schedule.register_another') : t('jams.register')}
               </button>
             )}
           </>

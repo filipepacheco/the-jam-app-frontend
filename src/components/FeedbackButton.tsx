@@ -26,7 +26,7 @@ export function FeedbackButton({ className = '', iconOnly = false }: FeedbackBut
         aria-label={t('feedback.button_label')}
       >
         <MessageSquareHeart className="w-5 h-5" />
-        {!iconOnly && <span className="hidden sm:inline">{t('feedback.button_text')}</span>}
+        {!iconOnly && <span>{t('feedback.button_text')}</span>}
       </button>
 
       <FeedbackModal

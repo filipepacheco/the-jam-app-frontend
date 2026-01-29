@@ -28,6 +28,8 @@
     "details": "Detalhes",
     "actions": "Ações",
     "link": "Link",
+    "copy_address": "Copiar endereço",
+    "copied": "Copiado!",
     "none": "Nenhum",
     "by": "por",
     "select_theme": "Selecionar Tema",
@@ -199,7 +201,7 @@
     },
     "statuses": {
       "live": "🎉 Ao vivo",
-      "active": "✅ Ativo",
+      "active": "✅ Programado",
       "inactive": "⏸️ Em breve",
       "finished": "🏁 Concluído"
     },
@@ -284,7 +286,7 @@
       "filter_label": "Filtrar por status",
       "tabs": {
         "all": "Todos",
-        "active": "Ativo",
+        "active": "Programado",
         "inactive": "Inativo",
         "finished": "Finalizado"
       },
@@ -305,7 +307,7 @@
     },
 
     "loading_failed": "Falha ao carregar o jam",
-    "enroll_success": "✅ Inscrição realizada com sucesso!",
+    "enroll_success": "Inscrição realizada com sucesso!",
     "suggest_success": "Música sugerida com sucesso! O anfitrião irá revisá-la.",
     "suggest_failed": "Falha ao sugerir música",
     "loading_songs_failed": "Falha ao carregar músicas",
@@ -329,8 +331,10 @@
       "performances": "Apresentações",
       "duration": "Duração",
       "musicians": "Músicos",
+      "musician": "Músico",
       "jam_details": "Detalhes do Jam",
-      "performances_count": "{{count}} apresentações"
+      "performances_count": "{{count}} apresentações",
+      "full_address": "Endereço completo"
     },
     "performance_schedule_title": "Programação",
     "suggested_songs_title": "Músicas Sugeridas (Pendente de Aprovação)",
@@ -378,6 +382,7 @@
     "enroll_now": "Inscreva-se agora",
     "enrolling": "Inscrevendo...",
     "already_enrolled": "✓ Já inscrito",
+    "register_another": "Registrar Novamente",
     "enroll_btn": "🎵 Inscrever-se",
     "add_musician_btn": "Adicionar músico",
     "musicians_registered": "Músicos registrados",
@@ -397,7 +402,9 @@
       "scheduled": "Agendada",
       "in_progress": "Em andamento",
       "completed": "Concluída",
-      "canceled": "Cancelada"
+      "canceled": "Cancelada",
+      "awaiting_registrations": "Aguardando Inscrições",
+      "ready_to_play": "Pronto para Tocar"
     },
     "actions": {
       "start": "▶️ Iniciar",
@@ -697,7 +704,7 @@
       },
       "statuses": {
         "live": "Ao vivo",
-        "active": "Ativo",
+        "active": "Programado",
         "inactive": "Inativo",
         "finished": "Concluído"
       },
@@ -1037,7 +1044,7 @@
       "placeholder_description": "Breve descricao da sua sessao de jam...",
       "placeholder_location": "ex., Estudio A, Rua da Musica 123",
       "placeholder_contact": "Email ou telefone",
-      "status_active": "Ativo",
+      "status_active": "Programado",
       "status_inactive": "Inativo",
       "status_finished": "Finalizado"
     },

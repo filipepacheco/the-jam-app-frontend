@@ -28,6 +28,8 @@
     "details": "Details",
     "actions": "Actions",
     "link": "Link",
+    "copy_address": "Copy address",
+    "copied": "Copied!",
     "none": "None",
     "by": "by",
     "select_theme": "Select Theme",
@@ -307,7 +309,7 @@
     },
 
     "loading_failed": "Failed to load jam",
-    "enroll_success": "✅ Successfully enrolled!",
+    "enroll_success": "Successfully enrolled!",
     "suggest_success": "Song suggested successfully! Host will review it.",
     "suggest_failed": "Failed to suggest song",
     "loading_songs_failed": "Failed to load songs",
@@ -333,7 +335,8 @@
       "duration": "Duration",
       "musicians": "Musicians",
       "jam_details": "Jam Details",
-      "performances_count": "{{count}} performances"
+      "performances_count": "{{count}} performances",
+      "full_address": "Full address"
     },
     "performance_schedule_title": "Performance Schedule",
     "suggested_songs_title": "Suggested Songs (Pending Approval)",
@@ -380,6 +383,7 @@
     "enroll_now": "Enroll Now",
     "enrolling": "Enrolling...",
     "already_enrolled": "✓ Already Enrolled",
+    "register_another": "Add Instrument",
     "enroll_btn": "🎵 Enroll",
     "add_musician_btn": "Add Musician",
     "musicians_registered": "Musicians Registered",
@@ -399,7 +403,9 @@
       "scheduled": "Scheduled",
       "in_progress": "In Progress",
       "completed": "Completed",
-      "canceled": "Canceled"
+      "canceled": "Canceled",
+      "awaiting_registrations": "Awaiting Registrations",
+      "ready_to_play": "Ready to Play"
     },
     "actions": {
       "start": "▶️ Start",
