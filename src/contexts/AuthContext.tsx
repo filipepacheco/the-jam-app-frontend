@@ -363,7 +363,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: response.success, error: response.error }
     } catch (err) {
       console.error('Onboarding error:', err)
-      return { success: false, error: 'Failed to update profile' }
+      // Extract error message from ApiError or Error
+      const errorMessage = (err && typeof err === 'object' && 'message' in err)
+        ? (err as { message: string }).message
+        : 'Failed to update profile'
+      return { success: false, error: errorMessage }
     }
   }, [user])
 

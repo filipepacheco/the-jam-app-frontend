@@ -94,7 +94,13 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       if (result.success) {
         onClose()
       } else {
-        setError(result.error || t('profile.update_failed'))
+        // Check for duplicate phone error
+        const errorMsg = result.error || ''
+        if (errorMsg.toLowerCase().includes('telefone') && errorMsg.toLowerCase().includes('already exists')) {
+          setError(t('jams.onboarding.phone_duplicate'))
+        } else {
+          setError(result.error || t('profile.update_failed'))
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('errors.generic_error'))

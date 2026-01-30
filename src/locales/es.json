@@ -253,6 +253,7 @@
       "instrument_choose": "Selecciona un instrumento...",
       "instrument_required": "Por favor selecciona un instrumento",
       "phone_required": "Por favor ingresa un teléfono válido",
+      "phone_duplicate": "Este teléfono ya está registrado",
       "level_q": "¿Cuál es tu nivel de experiencia?",
       "level_choose": "Selecciona un nivel...",
       "level_required": "Por favor selecciona tu nivel de experiencia",

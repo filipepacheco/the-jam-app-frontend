@@ -266,6 +266,7 @@
       "instrument_choose": "Select an instrument...",
       "instrument_required": "Please select an instrument",
       "phone_required": "Please enter a valid phone number",
+      "phone_duplicate": "This phone number is already registered",
       "level_q": "What's your experience level?",
       "level_choose": "Select a level...",
       "level_required": "Please select your experience level",
