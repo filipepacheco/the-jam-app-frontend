@@ -258,12 +258,13 @@
     "onboarding": {
       "welcome_title": "🎉 Bem-vindo e vamos tocar!",
       "welcome_desc": "Conte-nos um pouco sobre você para que possamos combiná-lo com os jams certos.",
-      "name_label": "Seu nome *",
+      "name_label": "Seu nome",
       "name_placeholder": "Digite seu nome",
       "phone_label": "Telefone",
       "instrument_q": "Qual é o seu instrumento principal?",
       "instrument_choose": "Selecione um instrumento...",
       "instrument_required": "Por favor, selecione um instrumento",
+      "phone_required": "Por favor, insira um telefone válido",
       "level_q": "Qual é o seu nível de experiência?",
       "level_choose": "Selecione um nível...",
       "level_required": "Por favor, selecione seu nível de experiência",
@@ -276,7 +277,7 @@
     "profile_setup": {
       "title": "🎵 Complete seu perfil",
       "desc": "Conte-nos um pouco sobre você para que possamos combiná-lo com os jams certos.",
-      "name_label": "Seu nome *",
+      "name_label": "Seu nome",
       "name_placeholder": "Digite seu nome",
       "instrument_label": "Instrumento principal",
       "instrument_choose": "Selecione um instrumento...",

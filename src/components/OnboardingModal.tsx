@@ -68,6 +68,12 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       return
     }
 
+    // Phone is required (minimum 14 chars for Brazilian format)
+    if (!phone || phone.replace(/\D/g, '').length < 10) {
+      setError(t('jams.onboarding.phone_required'))
+      return
+    }
+
     // Instrument and skill level are required
     if (!instrument) {
       setError(t('jams.onboarding.instrument_required'))
@@ -119,7 +125,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {/* Name Field - Required */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">{t('jams.onboarding.name_label')}</span>
+              <span className="label-text font-semibold">{t('jams.onboarding.name_label')} <span className="text-error">*</span></span>
             </label>
             <input
               type="text"
@@ -132,26 +138,27 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             />
           </div>
 
-          {/* Phone Field - Optional */}
+          {/* Phone Field - Required */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold  ">{t('jams.onboarding.phone_label')}</span>
+              <span className="label-text font-semibold">{t('jams.onboarding.phone_label')} <span className="text-error">*</span></span>
             </label>
             <input
               type="tel"
               placeholder="(XX) XXXXX-XXXX"
-              className="input input-bordered  w-full"
+              className="input input-bordered w-full"
               value={phone}
               onChange={handlePhoneChange}
               disabled={isLoading}
               maxLength={15}
+              required
             />
           </div>
 
           {/* Instrument Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">{t('jams.onboarding.instrument_q')}</span>
+              <span className="label-text font-semibold">{t('jams.onboarding.instrument_q')} <span className="text-error">*</span></span>
             </label>
             <select
               className="select select-bordered w-full"
@@ -171,7 +178,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           {/* Skill Level Selection */}
           <div className="form-control">
             <label className="label">
-              <span className="label-text font-semibold">{t('jams.onboarding.level_q')}</span>
+              <span className="label-text font-semibold">{t('jams.onboarding.level_q')} <span className="text-error">*</span></span>
             </label>
             <select
               className="select select-bordered w-full"
@@ -211,7 +218,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             <button
               type="submit"
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
-              disabled={isLoading || !name.trim() || !instrument || !level}
+              disabled={isLoading || !name.trim() || phone.replace(/\D/g, '').length < 10 || !instrument || !level}
             >
               {isLoading ? t('common.saving') : t('jams.onboarding.get_started')}
             </button>

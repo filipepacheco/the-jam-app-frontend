@@ -259,12 +259,13 @@
     "onboarding": {
       "welcome_title": "🎉 Welcome and Let's Jam!",
       "welcome_desc": "Tell us a bit about yourself so we can match you with the right jams.",
-      "name_label": "Your Name *",
+      "name_label": "Your Name",
       "name_placeholder": "Enter your name",
       "phone_label": "Phone",
       "instrument_q": "What's your main instrument?",
       "instrument_choose": "Select an instrument...",
       "instrument_required": "Please select an instrument",
+      "phone_required": "Please enter a valid phone number",
       "level_q": "What's your experience level?",
       "level_choose": "Select a level...",
       "level_required": "Please select your experience level",
@@ -277,7 +278,7 @@
     "profile_setup": {
       "title": "🎵 Complete Your Profile",
       "desc": "Tell us a bit about yourself so we can match you with the right jams.",
-      "name_label": "Your Name *",
+      "name_label": "Your Name",
       "name_placeholder": "Enter your name",
       "instrument_label": "Main Instrument",
       "instrument_choose": "Select an instrument...",
