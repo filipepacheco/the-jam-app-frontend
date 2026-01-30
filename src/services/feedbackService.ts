@@ -4,7 +4,7 @@
  */
 
 import { apiClient } from '../lib/api'
-import type { CreateFeedbackDto, FeedbackResponseDto } from '../types/feedback.types'
+import type { CreateFeedbackDto, FeedbackResponseDto, FeedbackListResponseDto } from '../types/feedback.types'
 import type { ApiResponse } from '../types/api.types'
 
 /**
@@ -25,5 +25,15 @@ export const feedbackService = {
       pageUrl: window.location.href,
     }
     return apiClient.post<FeedbackResponseDto>('/feedback', payload)
+  },
+
+  /**
+   * List all feedback (host only)
+   * @param page - Page number (1-based)
+   * @param limit - Items per page
+   * @returns Promise with paginated feedback list
+   */
+  async list(page = 1, limit = 20): Promise<ApiResponse<FeedbackListResponseDto>> {
+    return apiClient.get<FeedbackListResponseDto>(`/feedback?page=${page}&limit=${limit}`)
   },
 }

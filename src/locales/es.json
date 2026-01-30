@@ -896,6 +896,18 @@
       "5": "Excelente"
     }
   },
+  "feedback_page": {
+    "title": "Comentarios de Usuarios",
+    "loading": "Cargando comentarios...",
+    "load_error": "Error al cargar comentarios",
+    "no_feedback": "No se han recibido comentarios aun.",
+    "anonymous": "Anonimo",
+    "stats": {
+      "total": "Total de Comentarios",
+      "average": "Calificacion Promedio"
+    },
+    "pagination": "Pagina {{page}} de {{totalPages}}"
+  },
   "spotify": {
     "import_button": "Importar de Spotify",
     "export_button": "Exportar a Spotify",

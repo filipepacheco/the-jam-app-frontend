@@ -23,3 +23,27 @@ export interface FeedbackResponseDto {
   createdAt: string
   userId?: string          // null for anonymous users
 }
+
+/**
+ * Feedback list item DTO
+ */
+export interface FeedbackListItemDto {
+  id: string
+  rating: number
+  comment?: string
+  pageUrl?: string
+  createdAt: string
+  musicianId?: string
+  musicianName?: string
+}
+
+/**
+ * Paginated feedback list response
+ */
+export interface FeedbackListResponseDto {
+  items: FeedbackListItemDto[]
+  total: number
+  page: number
+  limit: number
+  totalPages: number
+}

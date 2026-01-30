@@ -45,6 +45,7 @@
     "contact": "Contato",
     "copyright": "Direitos Autorais",
     "all_rights_reserved": "Todos os direitos reservados.",
+    "back": "Voltar",
     "connection": {
       "connected": "Conectado",
       "connecting": "Conectando...",
@@ -909,6 +910,18 @@
       "4": "Muito bom",
       "5": "Excelente"
     }
+  },
+  "feedback_page": {
+    "title": "Feedback dos Usuarios",
+    "loading": "Carregando feedback...",
+    "load_error": "Falha ao carregar feedback",
+    "no_feedback": "Nenhum feedback recebido ainda.",
+    "anonymous": "Anonimo",
+    "stats": {
+      "total": "Total de Feedback",
+      "average": "Avaliacao Media"
+    },
+    "pagination": "Pagina {{page}} de {{totalPages}}"
   },
   "spotify": {
     "import_button": "Importar do Spotify",

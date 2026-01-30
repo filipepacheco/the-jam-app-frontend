@@ -41,11 +41,11 @@ export function MusicModal({
     duration: music?.duration
       ? `${Math.floor(music.duration / 60)}:${String(music.duration % 60).padStart(2, '0')}`
       : '',
-    neededDrums: music?.neededDrums || 0,
-    neededGuitars: music?.neededGuitars || 0,
-    neededVocals: music?.neededVocals || 0,
-    neededBass: music?.neededBass || 0,
-    neededKeys: music?.neededKeys || 0,
+    neededDrums: music?.neededDrums ?? 1,
+    neededGuitars: music?.neededGuitars ?? 2,
+    neededVocals: music?.neededVocals ?? 1,
+    neededBass: music?.neededBass ?? 1,
+    neededKeys: music?.neededKeys ?? 0,
   })
 
   const handleFieldChange = (field: keyof typeof formData, value: string | number) => {

@@ -911,6 +911,18 @@
       "5": "Excellent"
     }
   },
+  "feedback_page": {
+    "title": "User Feedback",
+    "loading": "Loading feedback...",
+    "load_error": "Failed to load feedback",
+    "no_feedback": "No feedback received yet.",
+    "anonymous": "Anonymous",
+    "stats": {
+      "total": "Total Feedback",
+      "average": "Average Rating"
+    },
+    "pagination": "Page {{page}} of {{totalPages}}"
+  },
   "spotify": {
     "import_button": "Import from Spotify",
     "export_button": "Export to Spotify",

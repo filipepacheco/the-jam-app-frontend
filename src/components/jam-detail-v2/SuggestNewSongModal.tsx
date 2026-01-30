@@ -53,7 +53,7 @@ export function SuggestNewSongModal({
   const [importError, setImportError] = useState<string | null>(null)
   const [importSuccess, setImportSuccess] = useState(false)
 
-  // Form state
+  // Form state - default band setup: 1 vocal, 2 guitars, 1 bass, 1 drums
   const [formData, setFormData] = useState({
     title: '',
     artist: '',
@@ -61,10 +61,10 @@ export function SuggestNewSongModal({
     link: '',
     genre: '',
     duration: '',
-    neededDrums: 0,
-    neededGuitars: 0,
-    neededVocals: 0,
-    neededBass: 0,
+    neededDrums: 1,
+    neededGuitars: 2,
+    neededVocals: 1,
+    neededBass: 1,
     neededKeys: 0,
   })
 
@@ -87,10 +87,10 @@ export function SuggestNewSongModal({
         link: '',
         genre: '',
         duration: '',
-        neededDrums: 0,
-        neededGuitars: 0,
-        neededVocals: 0,
-        neededBass: 0,
+        neededDrums: 1,
+        neededGuitars: 2,
+        neededVocals: 1,
+        neededBass: 1,
         neededKeys: 0,
       })
       setSubmitting(false)

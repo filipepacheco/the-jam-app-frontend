@@ -138,6 +138,13 @@ export function HostDashboardPage() {
                     <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">🎭 {t('jam_management.host_dashboard.title')}</h1>
                     <div className="flex gap-2">
                         <button
+                            onClick={() => navigate('/host/feedback')}
+                            className="btn btn-outline btn-sm sm:btn-md"
+                            disabled={loading}
+                        >
+                            {t('feedback_page.title')}
+                        </button>
+                        <button
                             onClick={() => setShowImportModal(true)}
                             className="btn btn-secondary btn-sm sm:btn-md"
                             disabled={loading}
