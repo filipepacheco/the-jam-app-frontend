@@ -132,7 +132,17 @@
     "login_page_simple_desc": "Entre ou crie sua conta de músico",
     "completing_sign_in": "Concluindo entrada...",
     "go_home": "Ir para o Início",
-    "try_again": "Tentar Novamente"
+    "try_again": "Tentar Novamente",
+    "email_verification": {
+      "title": "Verifique seu Email",
+      "description": "Enviamos um link de verificação para seu email. Por favor, clique no link para verificar sua conta e completar o login.",
+      "check_spam": "Se não encontrar o email, verifique sua pasta de spam.",
+      "back_to_login": "Voltar ao Login"
+    },
+    "error": {
+      "title": "Falha na Autenticação",
+      "timeout": "A autenticação está demorando muito. Por favor, tente novamente."
+    }
   },
   "homepage": {
     "hero": {
@@ -436,7 +446,13 @@
       "guitars": "Guitarras",
       "vocals": "Voz",
       "bass": "Baixo",
-      "keys": "Teclados"
+      "keys": "Teclados",
+      "Vocals": "Voz",
+      "Guitar": "Guitarra",
+      "Bass": "Baixo",
+      "Drums": "Bateria",
+      "Keyboard/Piano": "Teclado/Piano",
+      "Other": "Outro"
     },
     "levels": {
       "experience_level": "Nível de experiência",

@@ -133,7 +133,17 @@
     "login_page_simple_desc": "Login or create your musician account",
     "completing_sign_in": "Completing sign in...",
     "go_home": "Go Home",
-    "try_again": "Try Again"
+    "try_again": "Try Again",
+    "email_verification": {
+      "title": "Check Your Email",
+      "description": "We sent a verification link to your email address. Please click the link to verify your account and complete the sign-in process.",
+      "check_spam": "If you don't see the email, check your spam folder.",
+      "back_to_login": "Back to Login"
+    },
+    "error": {
+      "title": "Authentication Failed",
+      "timeout": "Authentication is taking too long. Please try again."
+    }
   },
   "homepage": {
     "hero": {
@@ -436,7 +446,13 @@
       "guitars": "Guitars",
       "vocals": "Vocals",
       "bass": "Bass",
-      "keys": "Keys"
+      "keys": "Keys",
+      "Vocals": "Vocals",
+      "Guitar": "Guitar",
+      "Bass": "Bass",
+      "Drums": "Drums",
+      "Keyboard/Piano": "Keyboard/Piano",
+      "Other": "Other"
     },
     "levels": {
       "experience_level": "Experience Level",

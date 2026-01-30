@@ -120,7 +120,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
               <option value="">{t('jams.profile_setup.instrument_choose')}</option>
               {INSTRUMENTS.map((inst) => (
                 <option key={inst} value={inst}>
-                  {inst}
+                  {t(`schedule.instruments.${inst}`)}
                 </option>
               ))}
             </select>

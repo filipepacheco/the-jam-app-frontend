@@ -9,8 +9,6 @@ export const INSTRUMENTS = [
   'Bass',
   'Drums',
   'Keyboard/Piano',
-  'Percussion',
-  'DJ/Turntables',
   'Other',
 ]
 

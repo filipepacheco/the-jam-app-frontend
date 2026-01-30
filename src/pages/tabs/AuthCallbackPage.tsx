@@ -8,12 +8,23 @@ import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import {useTranslation} from 'react-i18next'
 
+/**
+ * Check if error is about unverified email
+ */
+const isEmailVerificationError = (error: string): boolean => {
+  const lowerError = error.toLowerCase()
+  return lowerError.includes('unverified email') ||
+         lowerError.includes('email not confirmed') ||
+         lowerError.includes('confirmation email')
+}
+
 export function AuthCallbackPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { isAuthenticated, isLoading, isNewUser } = useAuth()
   const [error, setError] = useState<string | null>(null)
   const [timedOut, setTimedOut] = useState(false)
+  const [needsEmailVerification, setNeedsEmailVerification] = useState(false)
 
   useEffect(() => {
     // Get redirect path from session storage (set before OAuth redirect)
@@ -34,7 +45,14 @@ export function AuthCallbackPage() {
     if (errorDescription) {
       // Clean up session storage on error
       sessionStorage.removeItem('auth_redirect')
-      setError(decodeURIComponent(errorDescription))
+      const decodedError = decodeURIComponent(errorDescription)
+
+      // Check if this is an email verification error
+      if (isEmailVerificationError(decodedError)) {
+        setNeedsEmailVerification(true)
+      } else {
+        setError(decodedError)
+      }
       return
     }
 
@@ -59,6 +77,33 @@ export function AuthCallbackPage() {
     return () => clearTimeout(timeoutId)
   }, [isAuthenticated, isLoading, isNewUser, navigate, error])
 
+  // Show email verification message (not an error)
+  if (needsEmailVerification) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-base-100 p-4">
+        <div className="card bg-base-200 w-full max-w-md">
+          <div className="card-body text-center">
+            <div className="text-5xl mb-4">📧</div>
+            <h2 className="card-title justify-center text-primary">
+              {t('auth.email_verification.title')}
+            </h2>
+            <p className="text-base-content/70 mt-2">
+              {t('auth.email_verification.description')}
+            </p>
+            <p className="text-base-content/50 text-sm mt-4">
+              {t('auth.email_verification.check_spam')}
+            </p>
+            <div className="card-actions justify-center mt-6">
+              <a href="/login" className="btn btn-primary">
+                {t('auth.email_verification.back_to_login')}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // Show error if OAuth failed or timed out
   if (error || timedOut) {
     return (
@@ -66,17 +111,19 @@ export function AuthCallbackPage() {
         <div className="card bg-base-200 w-full max-w-md">
           <div className="card-body text-center">
             <div className="text-5xl mb-4">❌</div>
-            <h2 className="card-title justify-center text-error">Authentication Failed</h2>
+            <h2 className="card-title justify-center text-error">
+              {t('auth.error.title')}
+            </h2>
             <p className="text-base-content/70 mt-2">
               {timedOut
-                ? 'Authentication is taking too long. Please try again.'
+                ? t('auth.error.timeout')
                 : error}
             </p>
             <div className="card-actions justify-center mt-6">
               <a href="/login" className="btn btn-primary">
                 {t('auth.try_again')}
               </a>
-              <a href="/public" className="btn btn-ghost">
+              <a href="/" className="btn btn-ghost">
                 {t('auth.go_home')}
               </a>
             </div>

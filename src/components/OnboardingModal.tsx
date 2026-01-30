@@ -16,10 +16,21 @@ interface OnboardingModalProps {
 
 const SKILL_LEVELS = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'PROFESSIONAL']
 
+/**
+ * Check if a name looks like an email prefix (not a real name)
+ */
+const isEmailPrefix = (name: string): boolean => {
+  if (!name) return false
+  // Email prefixes often contain: underscore, dots, numbers, or are all lowercase
+  return name.includes('_') || name.includes('@') || /^\d+$/.test(name) || /^[a-z0-9.]+$/.test(name)
+}
+
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const { t } = useTranslation()
   const { user, completeOnboarding, clearNewUserFlag } = useAuth()
-  const [name, setName] = useState(user?.name || '')
+  // Don't prefill if name looks like an email prefix
+  const initialName = user?.name && !isEmailPrefix(user.name) ? user.name : ''
+  const [name, setName] = useState(initialName)
   const [phone, setPhone] = useState(user?.phone || '')
   const [instrument, setInstrument] = useState('')
   const [level, setLevel] = useState('')
@@ -151,7 +162,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
               <option value="">{t('jams.onboarding.instrument_choose')}</option>
               {INSTRUMENTS.map((inst) => (
                 <option key={inst} value={inst}>
-                  {inst}
+                  {t(`schedule.instruments.${inst}`)}
                 </option>
               ))}
             </select>
@@ -171,7 +182,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
               <option value="">{t('jams.onboarding.level_choose')}</option>
               {SKILL_LEVELS.map((lv) => (
                 <option key={lv} value={lv}>
-                  {lv}
+                  {t(`schedule.levels.${lv}`)}
                 </option>
               ))}
             </select>
@@ -208,10 +219,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         </form>
       </div>
 
-      {/* Backdrop - clicking dismisses modal */}
-      <form method="dialog" className="modal-backdrop">
-        <button onClick={handleSkip}>{t('common.close')}</button>
-      </form>
+      {/* Non-clickable backdrop */}
+      <div className="modal-backdrop bg-black/50" />
     </dialog>
   )
 }
