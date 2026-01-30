@@ -412,7 +412,7 @@
     "now_playing": "Reproduciendo Ahora",
     "no_musicians_yet": "No hay músicos aún",
     "no_musicians_registered": "No hay músicos registrados aún",
-    "musicians_count": "{{count}} músicos",
+    "musicians_count": "{{count}} personas ya registradas",
     "required_instruments": "Instrumentos Requeridos",
     "no_instruments_required": "No se requieren instrumentos",
     "registered_musicians": "Músicos Registrados",

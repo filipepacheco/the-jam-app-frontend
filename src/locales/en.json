@@ -425,7 +425,7 @@
     "now_playing": "Now Playing",
     "no_musicians_yet": "No musicians yet",
     "no_musicians_registered": "No musicians registered for this performance yet",
-    "musicians_count": "{{count}} musicians",
+    "musicians_count": "{{count}} people already registered",
     "required_instruments": "Required Instruments",
     "no_instruments_required": "No instruments required",
     "registered_musicians": "Registered Musicians",
