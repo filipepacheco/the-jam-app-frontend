@@ -15,11 +15,25 @@ interface InstrumentsSummaryProps {
 export function InstrumentsSummary({ instrumentOptions }: InstrumentsSummaryProps) {
   const { t } = useTranslation()
 
-  // Filter out instruments that are already full
-  const availableOptions = instrumentOptions.filter((option) => option.needed - option.registered > 0)
+  // Check if this is an "open" song with no requirements defined (-1 means unlimited)
+  const hasNoRequirements = instrumentOptions.length > 0 && instrumentOptions.every((opt) => opt.needed === -1)
+
+  // Filter out instruments that are already full (but keep unlimited ones)
+  const availableOptions = instrumentOptions.filter(
+    (option) => option.needed === -1 || option.needed - option.registered > 0
+  )
 
   // Don't render if no instruments need musicians
   if (availableOptions.length === 0) return null
+
+  // For songs with no requirements, show a different message
+  if (hasNoRequirements) {
+    return (
+      <div className="text-sm text-base-content/70 mb-2 px-2.5 py-1.5 bg-base-200/50 rounded">
+        <p className="text-xs text-base-content/60">{t('schedule.any_instrument_welcome')}</p>
+      </div>
+    )
+  }
 
   return (
     <div className="text-sm text-base-content/70 mb-2 px-2.5 py-1.5 bg-base-200/50 rounded">

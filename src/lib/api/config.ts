@@ -61,6 +61,7 @@ export const API_ENDPOINTS = {
   spotify: {
     import: '/spotify/import',
     export: '/spotify/export',
+    track: '/spotify/track',
   },
 }
 

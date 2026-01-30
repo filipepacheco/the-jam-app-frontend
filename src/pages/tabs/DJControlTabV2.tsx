@@ -80,30 +80,59 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
       {/* Success Alert */}
       {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
 
-      {/* Controls at Top */}
-      <div className="card bg-base-200 shadow-sm">
-        <div className="card-body p-3 sm:p-4">
-          <DJControlActions
-            jamId={jamId}
-            liveState={liveState}
-            isLoading={isLoading}
-            error={error}
-            onStart={start}
-            onStop={stop}
-            onResume={resume}
-            onPause={pause}
-            onNext={next}
-            onPrevious={previous}
-            onRefresh={handleRefresh}
-            onError={() => {
-              /* Error is handled by hook */
-            }}
-          />
+      {/* Mobile Layout: Actions and Stats at top */}
+      <div className="lg:hidden space-y-4">
+        {/* Controls */}
+        <div className="card bg-base-200 shadow-sm">
+          <div className="card-body p-3 sm:p-4">
+            <DJControlActions
+              jamId={jamId}
+              liveState={liveState}
+              isLoading={isLoading}
+              error={error}
+              onStart={start}
+              onStop={stop}
+              onResume={resume}
+              onPause={pause}
+              onNext={next}
+              onPrevious={previous}
+              onRefresh={handleRefresh}
+              onError={() => {
+                /* Error is handled by hook */
+              }}
+            />
+          </div>
         </div>
+
+        {/* Queue Stats */}
+        <QueueStats liveState={liveState} />
+
+        {/* Timeline */}
+        {isLoading && !liveState ? (
+          <div className="card bg-base-200 shadow">
+            <div className="card-body text-center">
+              <p className="text-sm text-base-content/70">{t('common.loading')}</p>
+              <progress className="progress progress-primary w-full mt-2"></progress>
+            </div>
+          </div>
+        ) : liveState ? (
+          <SongQueueTimeline
+            liveState={liveState}
+            suggestedSongs={liveState.suggestedSongs}
+            onRemoveSong={handleRemoveSong}
+            onApproveSong={handleApproveSong}
+            loading={isLoading || actionLoading}
+          />
+        ) : (
+          <ErrorAlert
+            message={t('dj_control.errors.failed_to_load')}
+            onDismiss={() => {}}
+          />
+        )}
       </div>
 
-      {/* Main Content: Timeline and Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+      {/* Desktop Layout: Timeline left, Actions+Stats right */}
+      <div className="hidden lg:grid lg:grid-cols-4 gap-4">
         {/* Timeline - Main Content */}
         <div className="lg:col-span-3 min-w-0">
           {isLoading && !liveState ? (
@@ -129,8 +158,31 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
           )}
         </div>
 
-        {/* Sidebar - Queue Stats */}
-        <div className="lg:col-span-1">
+        {/* Sidebar - Actions + Stats */}
+        <div className="lg:col-span-1 space-y-4">
+          {/* Controls */}
+          <div className="card bg-base-200 shadow-sm">
+            <div className="card-body p-3 sm:p-4">
+              <DJControlActions
+                jamId={jamId}
+                liveState={liveState}
+                isLoading={isLoading}
+                error={error}
+                onStart={start}
+                onStop={stop}
+                onResume={resume}
+                onPause={pause}
+                onNext={next}
+                onPrevious={previous}
+                onRefresh={handleRefresh}
+                onError={() => {
+                  /* Error is handled by hook */
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Queue Stats */}
           <QueueStats liveState={liveState} />
         </div>
       </div>

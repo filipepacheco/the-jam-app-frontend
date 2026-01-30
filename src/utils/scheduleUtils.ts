@@ -76,10 +76,18 @@ export function getInstrumentOptions(
     { key: 'keys', emoji: '🎹', field: 'neededKeys' as const },
   ]
 
+  // Check if any instrument requirements are defined
+  const hasAnyRequirements = instrumentMap.some(
+    ({ field }) => (schedule.music![field] || 0) > 0
+  )
+
   instrumentMap.forEach(({ key, emoji, field }) => {
     const label = getLabel(key)
     const needed = schedule.music![field] || 0
-    if (needed > 0) {
+
+    // Show instrument if it has requirements, OR if no requirements are defined at all
+    // (e.g., for suggested songs where user hasn't specified needed instruments)
+    if (needed > 0 || !hasAnyRequirements) {
       // Count registrations for THIS schedule by matching normalized instrument
       const registered =
         schedule.registrations?.filter((reg) => normalizeInstrument(reg.instrument) === key).length || 0
@@ -87,7 +95,8 @@ export function getInstrumentOptions(
         key,
         label,
         emoji,
-        needed,
+        // Use -1 to indicate "unlimited/any" when no requirements defined
+        needed: hasAnyRequirements ? needed : -1,
         registered,
       })
     }

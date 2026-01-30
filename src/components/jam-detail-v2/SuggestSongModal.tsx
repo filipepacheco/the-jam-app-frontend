@@ -15,6 +15,7 @@ interface SuggestSongModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+  onCreateNewSong?: () => void
 }
 
 export function SuggestSongModal({
@@ -22,6 +23,7 @@ export function SuggestSongModal({
   isOpen,
   onClose,
   onSuccess,
+  onCreateNewSong,
 }: SuggestSongModalProps) {
   const { t } = useTranslation()
   const [selectedSongId, setSelectedSongId] = useState('')
@@ -154,6 +156,19 @@ export function SuggestSongModal({
                 return title.includes(searchLower) || artist.includes(searchLower)
               }}
             />
+            {onCreateNewSong && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose()
+                  onCreateNewSong()
+                }}
+                className="btn btn-ghost btn-sm w-full mt-2 text-base-content/70 hover:text-primary"
+                disabled={submitting}
+              >
+                {t('jams.didnt_find_music')}
+              </button>
+            )}
           </div>
         )}
 

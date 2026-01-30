@@ -10,6 +10,7 @@ import type {
   SpotifyImportResponse,
   SpotifyExportRequest,
   SpotifyExportResponse,
+  SpotifyTrackMetadata,
 } from '../types/spotify.types'
 
 export const spotifyService = {
@@ -19,5 +20,9 @@ export const spotifyService = {
 
   async exportPlaylist(data: SpotifyExportRequest): Promise<ApiResponse<SpotifyExportResponse>> {
     return apiClient.post<SpotifyExportResponse>(API_ENDPOINTS.spotify.export, data)
+  },
+
+  async getTrackMetadata(trackUrl: string): Promise<ApiResponse<SpotifyTrackMetadata>> {
+    return apiClient.post<SpotifyTrackMetadata>(API_ENDPOINTS.spotify.track, { trackUrl })
   },
 }

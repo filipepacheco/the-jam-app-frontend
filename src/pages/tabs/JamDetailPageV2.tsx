@@ -22,6 +22,7 @@ import {
     JamDetailLoadingSkeleton,
     PerformanceSelectionModal,
     SuggestSongModal,
+    SuggestNewSongModal,
     TimelineShowcaseV2Waveform,
 } from '../../components/jam-detail-v2/'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
@@ -47,6 +48,12 @@ export function JamDetailPageV2() {
     const [showSuggestModal, setShowSuggestModal] = useState(false)
     const [suggestSuccess, setSuggestSuccess] = useState<string | null>(null)
 
+    // State for suggest new song modal (create new music)
+    const [showNewSongModal, setShowNewSongModal] = useState(false)
+
+    // State for suggested songs section collapse
+    const [isSuggestedExpanded, setIsSuggestedExpanded] = useState(true)
+
     // State for performance selection modal (from FAB)
     const [showPerformanceSelectModal, setShowPerformanceSelectModal] = useState(false)
 
@@ -70,21 +77,24 @@ export function JamDetailPageV2() {
     }, [jam?.location])
 
     // Derive all schedule data in a single pass
-    const { allSchedules, nonSuggestedSchedules, performanceCount, totalDurationSeconds } = useMemo(() => {
+    const { allSchedules, nonSuggestedSchedules, suggestedSchedules, performanceCount, totalDurationSeconds } = useMemo(() => {
         const all = jam?.schedules || []
         let perfCount = 0
         let totalSecs = 0
         const nonSuggested: ScheduleResponseDto[] = []
+        const suggested: ScheduleResponseDto[] = []
 
         for (const s of all) {
             if (s.status !== 'SUGGESTED') {
                 nonSuggested.push(s)
                 perfCount++
                 totalSecs += s.music?.duration || 0
+            } else {
+                suggested.push(s)
             }
         }
 
-        return { allSchedules: all, nonSuggestedSchedules: nonSuggested, performanceCount: perfCount, totalDurationSeconds: totalSecs }
+        return { allSchedules: all, nonSuggestedSchedules: nonSuggested, suggestedSchedules: suggested, performanceCount: perfCount, totalDurationSeconds: totalSecs }
     }, [jam?.schedules])
 
     // Get user's registrations with schedule data (supports multiple registrations per schedule)
@@ -150,6 +160,19 @@ export function JamDetailPageV2() {
     const handleSuggestSuccess = useCallback(async () => {
         setShowSuggestModal(false)
         setSuggestSuccess(t('jams.suggest_success'))
+        await mutateJam()
+        setTimeout(() => setSuggestSuccess(null), SUCCESS_TOAST_DURATION)
+    }, [t, mutateJam])
+
+    // Handle create new song click (from SuggestSongModal)
+    const handleCreateNewSong = useCallback(() => {
+        setShowNewSongModal(true)
+    }, [])
+
+    // Handle new song creation success
+    const handleNewSongSuccess = useCallback(async () => {
+        setShowNewSongModal(false)
+        setSuggestSuccess(t('jams.song_created_success'))
         await mutateJam()
         setTimeout(() => setSuggestSuccess(null), SUCCESS_TOAST_DURATION)
     }, [t, mutateJam])
@@ -384,6 +407,71 @@ export function JamDetailPageV2() {
                             jam={jam}
                             jamStatus={jam.status}
                         />
+
+                        {/* Suggested Songs Section */}
+                        {suggestedSchedules.length > 0 && (
+                            <CollapsibleSection
+                                title={t('jams.suggested_songs_title')}
+                                isExpanded={isSuggestedExpanded}
+                                onToggle={() => setIsSuggestedExpanded(!isSuggestedExpanded)}
+                                badge={`${suggestedSchedules.length}`}
+                            >
+                                <div className="space-y-3">
+                                    {suggestedSchedules.map((schedule) => (
+                                        <div
+                                            key={schedule.id}
+                                            className="p-3 bg-base-200/50 rounded-lg border border-dashed border-base-300"
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                <div className="text-2xl shrink-0" aria-hidden="true">✨</div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-semibold text-sm">
+                                                        {schedule.music?.title}
+                                                    </p>
+                                                    <p className="text-xs text-base-content/60">
+                                                        {schedule.music?.artist}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            {/* Registered Musicians */}
+                                            {schedule.registrations && schedule.registrations.length > 0 && (
+                                                <div className="mt-2 pt-2 border-t border-base-300/30">
+                                                    <p className="text-xs text-base-content/50 mb-1">{t('jams.registered_musicians')}:</p>
+                                                    <div className="flex flex-wrap gap-1">
+                                                        {schedule.registrations.map((reg) => (
+                                                            <span
+                                                                key={reg.id}
+                                                                className="badge badge-sm badge-ghost gap-1"
+                                                            >
+                                                                {getInstrumentIcon(reg.instrument || '')}
+                                                                {reg.musician?.name || reg.musician?.contact}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-base-300/50">
+                                                <span className="badge badge-warning badge-sm">
+                                                    {t('jams.awaiting_approval')}
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleEnrollClick(schedule)}
+                                                    className="btn btn-primary btn-sm"
+                                                >
+                                                    {t('jams.register')}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="text-xs text-base-content/60 mt-3 text-center">
+                                    {t('jams.suggested_songs_hint')}
+                                </p>
+                            </CollapsibleSection>
+                        )}
                     </div>
 
                 </div>
@@ -416,6 +504,14 @@ export function JamDetailPageV2() {
                 isOpen={showSuggestModal}
                 onClose={() => setShowSuggestModal(false)}
                 onSuccess={handleSuggestSuccess}
+                onCreateNewSong={handleCreateNewSong}
+            />
+
+            <SuggestNewSongModal
+                jamId={jamId || ''}
+                isOpen={showNewSongModal}
+                onClose={() => setShowNewSongModal(false)}
+                onSuccess={handleNewSongSuccess}
             />
 
             <PerformanceSelectionModal
