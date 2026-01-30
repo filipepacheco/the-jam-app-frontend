@@ -363,7 +363,8 @@
       "status": "Status",
       "performances": "Performances",
       "duration": "Duration",
-      "musicians": "Musicians",
+      "musicians": "people already registered",
+      "musician": "person already registered",
       "jam_details": "Jam Details",
       "performances_count": "{{count}} performances",
       "full_address": "Full address"

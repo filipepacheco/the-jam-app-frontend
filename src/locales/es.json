@@ -348,7 +348,8 @@
       "status": "Estado",
       "performances": "Actuaciones",
       "duration": "Duración",
-      "musicians": "Músicos",
+      "musicians": "personas ya registradas",
+      "musician": "persona ya registrada",
       "jam_details": "Detalles del Jam",
       "performances_count": "{{count}} actuaciones",
       "full_address": "Dirección completa"
