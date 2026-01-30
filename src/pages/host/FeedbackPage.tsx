@@ -31,7 +31,7 @@ export function FeedbackPage() {
     if (result.success && result.data) {
       setFeedbackData(result.data)
     } else {
-      setError(result.error?.message || t('feedback_page.load_error'))
+      setError(result.error || t('feedback_page.load_error'))
     }
     setLoading(false)
   }, [t])
