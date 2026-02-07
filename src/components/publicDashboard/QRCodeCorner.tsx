@@ -23,7 +23,7 @@ export default function QRCodeCorner({ jamId, position = 'bottom-left' }: { jamI
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         onClick={() => setIsExpanded(true)}
-        className={`${positionClasses[position]} bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 rounded-lg p-5 z-40 transition-all cursor-pointer`}
+        className={`${positionClasses[position]} bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 rounded-lg p-5 z-40 transition-all cursor-pointer hidden md:block`}
         type="button"
         title="Click to expand QR code"
         aria-label="Expand QR code"
