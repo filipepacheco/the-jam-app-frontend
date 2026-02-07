@@ -22,7 +22,7 @@ export function groupMusiciansByInstrument<T extends HasInstrument>(
   musicians: T[] | undefined
 ): Record<string, T[]> {
   return (musicians || []).reduce((acc: Record<string, T[]>, musician: T) => {
-    const instrument = musician.instrument || 'Unknown'
+    const instrument = normalizeInstrument(musician.instrument) || 'Unknown'
     if (!acc[instrument]) {
       acc[instrument] = []
     }
@@ -40,11 +40,11 @@ export function groupMusiciansByInstrument<T extends HasInstrument>(
 export function normalizeInstrument(instrument?: string): string {
   if (!instrument) return ''
   const lower = instrument.toLowerCase()
-  if (lower === 'drums' || lower === 'bateria') return 'drums'
-  if (lower === 'guitar' || lower === 'guitars' || lower === 'guitarra') return 'guitars'
-  if (lower === 'bass' || lower === 'baixo') return 'bass'
+  if (lower === 'drums' || lower === 'bateria' || lower === 'baterias') return 'drums'
+  if (lower === 'guitar' || lower === 'guitars' || lower === 'guitarra' || lower === 'guitarras') return 'guitars'
+  if (lower === 'bass' || lower === 'baixo' || lower === 'baixos') return 'bass'
   if (lower === 'vocals' || lower === 'vocal' || lower === 'vozes' || lower === 'voz') return 'vocals'
-  if (lower === 'keys' || lower === 'keyboard' || lower === 'teclado') return 'keys'
+  if (lower === 'keys' || lower === 'keyboard' || lower === 'teclado' || lower === 'teclados') return 'keys'
   return lower
 }
 

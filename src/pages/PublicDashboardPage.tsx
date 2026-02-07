@@ -150,9 +150,10 @@ export function PublicDashboardPage() {
          </div>
        </div>
 
-       {/* QR Code Corner */}
+       {/* QR Code Corners */}
       <Suspense fallback={null}>
-        <QRCodeCorner jamId={jamId} />
+        <QRCodeCorner jamId={jamId} position="top-left" />
+        <QRCodeCorner jamId={jamId} position="top-right" />
       </Suspense>
      </div>
    )

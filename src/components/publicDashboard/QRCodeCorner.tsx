@@ -1,25 +1,34 @@
-import React, {useState} from 'react'
-import {QRCodeSVG} from 'qrcode.react'
-import {AnimatePresence, motion} from 'framer-motion'
+import React, { useState } from 'react'
+import { QRCodeSVG } from 'qrcode.react'
+import { AnimatePresence, motion } from 'framer-motion'
 
-export default function QRCodeCorner({ jamId }: { jamId?: string }) {
+type Position = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+
+export default function QRCodeCorner({ jamId, position = 'bottom-left' }: { jamId?: string; position?: Position }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/jams/${jamId || ''}`
 
+  const positionClasses: Record<Position, string> = {
+    'top-left': 'fixed top-6 left-6',
+    'top-right': 'fixed top-6 right-6',
+    'bottom-left': 'fixed bottom-6 left-6',
+    'bottom-right': 'fixed bottom-6 right-6',
+  }
+
   return (
     <>
-      {/* Small QR Code in Corner */}
+      {/* QR Code in Corner */}
       <motion.button
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         onClick={() => setIsExpanded(true)}
-        className="fixed bottom-6 left-6 bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 rounded-lg p-4 z-40 transition-all cursor-pointer"
+        className={`${positionClasses[position]} bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 rounded-lg p-5 z-40 transition-all cursor-pointer`}
         type="button"
         title="Click to expand QR code"
         aria-label="Expand QR code"
       >
-        <QRCodeSVG value={url} size={120} fgColor="#ffffff" bgColor="transparent" />
+        <QRCodeSVG value={url} size={150} fgColor="#ffffff" bgColor="transparent" />
         <p className="text-xs text-center mt-2 text-slate-300">Scan to join</p>
       </motion.button>
 
@@ -74,4 +83,3 @@ export default function QRCodeCorner({ jamId }: { jamId?: string }) {
     </>
   )
 }
-
