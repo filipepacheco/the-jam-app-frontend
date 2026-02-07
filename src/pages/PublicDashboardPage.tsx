@@ -51,8 +51,7 @@ export function PublicDashboardPage() {
 
   // Extract fields from response
   const jamName = dashboardData?.jamName ?? null
-
-
+  const jamStatus = dashboardData?.jamStatus ?? null
   const currentSong = dashboardData?.currentSong ?? null
   const nextSongs = dashboardData?.nextSongs ?? []
 
@@ -65,8 +64,10 @@ export function PublicDashboardPage() {
   )
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef)
 
-  // Get first scheduled song for "starting soon" display
-  const firstScheduledSong = currentSong || nextSongs[0]
+  // When jam hasn't started, StartingSoonCard shows nextSongs[0],
+  // so NextSongCard should show nextSongs[1] to avoid duplicate
+  const isNotStarted = !currentSong
+  const nextSongToShow = isNotStarted ? nextSongs[1] : nextSongs[0]
 
   // Show loading state
   if (isLoading && !currentSong) {
@@ -110,8 +111,6 @@ export function PublicDashboardPage() {
         setShowNavbar={setShowNavbar}
         isFullscreen={isFullscreen}
         onToggleFullscreen={toggleFullscreen}
-        currentLang={currentLang}
-        onChangeLanguage={changeLanguage}
         ariaToggleLabel={t('publicDashboard.toggleNavbar', 'Toggle navbar')}
       />
 
@@ -128,16 +127,24 @@ export function PublicDashboardPage() {
       {/* Main Content */}
       <div className="relative pt-20 pb-8 px-4 md:px-8 z-10">
         <div className="max-w-6xl mx-auto">
-          {/* Current Song Section */}
-          {currentSong ? (
+          {/* Current Song / Starting Soon Section */}
+          {jamStatus === 'FINISHED' ? (
+            <div className="mb-12 text-center">
+              <div className="bg-linear-to-br from-slate-800/40 to-slate-700/40 backdrop-blur border border-slate-500/30 rounded-2xl p-8 md:p-12">
+                <p className="text-5xl md:text-7xl mb-6">👏</p>
+                <h2 className="text-4xl md:text-6xl font-black mb-4">{t('publicDashboard.jamFinished', 'That\'s a wrap!')}</h2>
+                <p className="text-lg md:text-2xl text-slate-300">{t('publicDashboard.thankYou', 'Thanks for jamming with us!')}</p>
+              </div>
+            </div>
+          ) : currentSong ? (
             <CurrentSongCard song={currentSong} />
-          ) : firstScheduledSong ? (
-            <StartingSoonCard song={firstScheduledSong} />
-          ) : null}
+          ) : (
+            <StartingSoonCard song={nextSongs[0] ?? null} />
+          )}
 
-          {/* Next Song Section */}
-          {nextSongs && nextSongs.length > 0 && nextSongs[0] && (
-            <NextSongCard song={nextSongs[0]} />
+          {/* Next Song Section - only if there's a different song to show */}
+          {nextSongToShow && (
+            <NextSongCard song={nextSongToShow} />
           )}
 
          </div>

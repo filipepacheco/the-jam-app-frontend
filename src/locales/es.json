@@ -291,6 +291,7 @@
       "filter_label": "Filtrar por estado",
       "tabs": {
         "all": "Todos",
+        "live": "En Vivo",
         "active": "Activo",
         "inactive": "Inactivo",
         "finished": "Finalizado"
@@ -868,7 +869,10 @@
     "firstUp": "Primero:",
     "upNext": "⏭️ Siguiente",
     "musiciansToBeCalled": "Músicos por llamar:",
-    "scanToJoin": "Escanea para unirte"
+    "scanToJoin": "Escanea para unirte",
+    "preparingSetlist": "Preparando la lista de canciones...",
+    "jamFinished": "Eso es todo!",
+    "thankYou": "Gracias por tocar con nosotros!"
   },
   "searchableSelect": {
     "placeholder": "Selecciona una opcion...",

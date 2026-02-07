@@ -63,7 +63,7 @@ export function BrowseJamsPage() {
 
   // Split into current and past jams
   const currentJams = useMemo(
-    () => filteredJams.filter((jam) => jam.status === 'ACTIVE' || jam.status === 'INACTIVE'),
+    () => filteredJams.filter((jam) => jam.status === 'ACTIVE' || jam.status === 'INACTIVE' || jam.status === 'LIVE'),
     [filteredJams]
   )
   const pastJams = useMemo(
@@ -72,7 +72,7 @@ export function BrowseJamsPage() {
   )
 
   // Section visibility based on status filter
-  const showCurrentSection = statusFilter === 'ALL' || statusFilter === 'ACTIVE' || statusFilter === 'INACTIVE'
+  const showCurrentSection = statusFilter === 'ALL' || statusFilter === 'ACTIVE' || statusFilter === 'INACTIVE' || statusFilter === 'LIVE'
   const showPastSection = statusFilter === 'ALL' || statusFilter === 'FINISHED'
   const visibleCount = (showCurrentSection ? currentJams.length : 0) + (showPastSection ? pastJams.length : 0)
 
@@ -154,6 +154,15 @@ export function BrowseJamsPage() {
                   disabled={isLoading}
                 >
                   {t('jams.browse.tabs.all')}
+                </button>
+                <button
+                  className={`tab ${statusFilter === 'LIVE' ? 'tab-active' : ''}`}
+                  onClick={() => setStatusFilter('LIVE')}
+                  role="tab"
+                  aria-selected={statusFilter === 'LIVE'}
+                  disabled={isLoading}
+                >
+                  {t('jams.browse.tabs.live')}
                 </button>
                 <button
                   className={`tab ${statusFilter === 'ACTIVE' ? 'tab-active' : ''}`}

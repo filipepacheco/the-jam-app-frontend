@@ -24,7 +24,7 @@ export function NextSongCard({ song }: NextSongCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...transition, delay: transition.duration === 0 ? 0 : 0.1 }}
-      className="mb-12"
+      className="mb-8"
     >
       <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6 md:p-8">
         <p className="text-slate-200 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">

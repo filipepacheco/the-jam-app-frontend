@@ -303,6 +303,7 @@
       "filter_label": "Filtrar por status",
       "tabs": {
         "all": "Todos",
+        "live": "Ao Vivo",
         "active": "Programado",
         "inactive": "Inativo",
         "finished": "Finalizado"
@@ -881,8 +882,11 @@
     "startingSoon": "Começando em breve!",
     "firstUp": "Próximo:",
     "upNext": "⏭️ Em seguida",
-    "musiciansToBeCalled": "Músicos a serem chamados:",
-    "scanToJoin": "Escaneie para entrar"
+    "musiciansToBeCalled": "Quem vai subir no palco:",
+    "scanToJoin": "Escaneie para entrar",
+    "preparingSetlist": "Preparando o repertorio...",
+    "jamFinished": "E isso ai!",
+    "thankYou": "Obrigado por tocar com a gente!"
   },
   "searchableSelect": {
     "placeholder": "Selecione uma opcao...",

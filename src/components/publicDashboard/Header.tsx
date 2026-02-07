@@ -6,8 +6,6 @@ interface HeaderProps {
   setShowNavbar: (v: boolean) => void
   isFullscreen: boolean
   onToggleFullscreen: () => void
-  currentLang: string
-  onChangeLanguage: (lang: string) => void
   ariaToggleLabel?: string
 }
 
@@ -45,11 +43,9 @@ export default function Header({
           aria-pressed={isFullscreen}
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
         >
-          {isFullscreen ? '⛶' : '️⛶'}
+          {isFullscreen ? '✕' : '⛶'}
         </button>
       </div>
     </div>
   )
 }
-
-

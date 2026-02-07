@@ -304,6 +304,7 @@
       "filter_label": "Filter by Status",
       "tabs": {
         "all": "All",
+        "live": "Live",
         "active": "Active",
         "inactive": "Inactive",
         "finished": "Finished"
@@ -883,7 +884,10 @@
     "firstUp": "First up:",
     "upNext": "⏭️ Up Next",
     "musiciansToBeCalled": "Musicians to be called:",
-    "scanToJoin": "Scan to join"
+    "scanToJoin": "Scan to join",
+    "preparingSetlist": "Setting up the setlist...",
+    "jamFinished": "That's a wrap!",
+    "thankYou": "Thanks for jamming with us!"
   },
   "searchableSelect": {
     "placeholder": "Select an option...",
