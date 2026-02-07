@@ -4,7 +4,7 @@
  */
 
 import type {RegistrationResponseDto} from '../../types/api.types'
-import {CheckCircle, Clock, Users, XCircle} from 'lucide-react'
+import {CheckCircle, Clock, Users, XCircle, Trash2} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {Avatar} from '../Avatar'
 import React from "react"
@@ -62,6 +62,7 @@ interface RegistrationListProps {
     loading?: boolean
     onApprove?: (registrationId: string) => void
     onReject?: (registrationId: string) => void
+    onDelete?: (registrationId: string) => void
     showActions?: boolean
     onAddMusician?: () => void
     neededDrums?: number
@@ -76,6 +77,7 @@ export function RegistrationList({
                                      loading = false,
                                      onApprove,
                                      onReject,
+                                     onDelete,
                                      showActions = false,
                                      onAddMusician,
                                      neededDrums,
@@ -188,25 +190,39 @@ export function RegistrationList({
                                             </div>
 
                                             {/* Action Buttons - Right side */}
-                                            {showActions && registration.status !== 'APPROVED' && registration.status !== 'REJECTED' && (
-                                                <div className="flex gap-1 flex-shrink-0">
-                                                    <button
-                                                        onClick={() => onApprove?.(registration.id)}
-                                                        className="btn btn-xs btn-success btn-outline"
-                                                        disabled={loading}
-                                                        title={t('common.approve')}
-                                                    >
-                                                        ✓
-                                                    </button>
-                                                    <button
-                                                        onClick={() => onReject?.(registration.id)}
-                                                        className="btn btn-xs btn-error btn-outline"
-                                                        disabled={loading}
-                                                        title={t('common.reject')}
-                                                    >
-                                                        ✕
-                                                    </button>
-                                                </div>
+                                            {showActions && (
+                                                <>
+                                                    {registration.status !== 'APPROVED' && registration.status !== 'REJECTED' && (
+                                                        <div className="flex gap-1 flex-shrink-0">
+                                                            <button
+                                                                onClick={() => onApprove?.(registration.id)}
+                                                                className="btn btn-xs btn-success btn-outline"
+                                                                disabled={loading}
+                                                                title={t('common.approve')}
+                                                            >
+                                                                ✓
+                                                            </button>
+                                                            <button
+                                                                onClick={() => onReject?.(registration.id)}
+                                                                className="btn btn-xs btn-error btn-outline"
+                                                                disabled={loading}
+                                                                title={t('common.reject')}
+                                                            >
+                                                                ✕
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                    {registration.status === 'APPROVED' && (
+                                                        <button
+                                                            onClick={() => onDelete?.(registration.id)}
+                                                            className="btn btn-xs btn-error btn-outline"
+                                                            disabled={loading}
+                                                            title={t('common.delete')}
+                                                        >
+                                                            <Trash2 className="w-3 h-3" />
+                                                        </button>
+                                                    )}
+                                                </>
                                             )}
                                         </div>
                                     ))}

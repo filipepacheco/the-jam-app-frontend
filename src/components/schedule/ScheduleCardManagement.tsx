@@ -18,6 +18,7 @@ interface ScheduleCardProps {
     onDelete?: (scheduleId: string) => void
     onApproveRegistration?: (registrationId: string) => void
     onRejectRegistration?: (registrationId: string) => void
+    onDeleteRegistration?: (registrationId: string) => void
     onAddMusician?: () => void
 }
 
@@ -29,6 +30,7 @@ export function ScheduleCardManagement({
                                            onDelete,
                                            onApproveRegistration,
                                            onRejectRegistration,
+                                           onDeleteRegistration,
                                            onAddMusician,
                                        }: ScheduleCardProps) {
     return (
@@ -83,6 +85,7 @@ export function ScheduleCardManagement({
                             loading={loading}
                             onApprove={onApproveRegistration}
                             onReject={onRejectRegistration}
+                            onDelete={onDeleteRegistration}
                             showActions={true}
                             onAddMusician={onAddMusician}
                             neededDrums={schedule.music?.neededDrums}

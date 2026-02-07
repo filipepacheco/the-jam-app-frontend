@@ -216,9 +216,9 @@ export interface UpdateMusicDto {
  * Create registration request
  */
 export interface CreateRegistrationDto {
-  musicianId: string
-  jamMusicId: string
-  scheduleId?: string
+  musicianId?: string
+  jamMusicId?: string
+  scheduleId: string
   instrument?: string
 }
 

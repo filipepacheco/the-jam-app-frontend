@@ -83,7 +83,7 @@ export function HostMusicianRegistrationModal({
         musicianId: selectedMusicianId,
         scheduleId: schedule.id,
         instrument: selectedInstrument,
-      } as any)
+      })
 
       onClose()
       onSuccess()

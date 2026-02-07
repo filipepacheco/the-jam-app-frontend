@@ -176,6 +176,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     onDelete={handleDeleteSchedule}
                                     onApproveRegistration={handleApproveRegistration}
                                     onRejectRegistration={handleRejectRegistration}
+                                    onDeleteRegistration={handleRejectRegistration}
                                     onAddMusician={() => handleAddMusician(schedule)}
                                 />
                             ))}
@@ -201,6 +202,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     onDelete={handleDeleteSchedule}
                                     onApproveRegistration={handleApproveRegistration}
                                     onRejectRegistration={handleRejectRegistration}
+                                    onDeleteRegistration={handleRejectRegistration}
                                     onAddMusician={() => handleAddMusician(schedule)}
                                 />
                             ))}

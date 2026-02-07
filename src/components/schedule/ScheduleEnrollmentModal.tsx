@@ -82,7 +82,6 @@ export function ScheduleEnrollmentModal({
         musicianId: user.id,
         scheduleId: schedule.id,
         instrument: selectedInstrument,
-        jamMusicId: schedule.musicId || '',
       })
 
       onClose()

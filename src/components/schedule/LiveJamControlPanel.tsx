@@ -164,6 +164,16 @@ const QueueItem = React.memo(function QueueItem({
 }: QueueItemProps) {
   const { t } = useTranslation()
 
+  const groupedMusicians = useMemo(
+    () => groupRegistrationsByInstrument(schedule.registrations),
+    [schedule.registrations]
+  )
+
+  const sortedInstruments = useMemo(
+    () => Array.from(groupedMusicians.entries()).sort(([a], [b]) => getInstrumentOrder(a) - getInstrumentOrder(b)),
+    [groupedMusicians]
+  )
+
   return (
     <div
       ref={itemRef}
@@ -200,27 +210,45 @@ const QueueItem = React.memo(function QueueItem({
         )}
       </div>
 
-      {/* Song Info */}
+      {/* Song Info + Musicians */}
       <div className="flex-1 min-w-0">
-        <p className={`font-bold text-balance ${isReorderingThisItem ? 'text-base-content/70' : 'text-base-content'}`}>
-          {index + 1}. {schedule.music?.title || t('schedule.song_tba')}
-        </p>
-        <p className="text-sm text-base-content/70 text-pretty">
-          {schedule.music?.artist || t('schedule.artist_tba')}
-        </p>
-        {schedule.music?.duration && (
-          <p className="text-xs text-base-content/60 mt-1 tabular-nums">
-            <span aria-hidden="true">⏱️</span> {formatDuration(schedule.music.duration)}
-          </p>
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className={`font-bold text-balance ${isReorderingThisItem ? 'text-base-content/70' : 'text-base-content'}`}>
+              {index + 1}. {schedule.music?.title || t('schedule.song_tba')}
+            </p>
+            <p className="text-sm text-base-content/70 text-pretty">
+              {schedule.music?.artist || t('schedule.artist_tba')}
+            </p>
+            {schedule.music?.duration && (
+              <p className="text-xs text-base-content/60 mt-1 tabular-nums">
+                <span aria-hidden="true">⏱️</span> {formatDuration(schedule.music.duration)}
+              </p>
+            )}
+          </div>
+
+          {/* Musicians Count Badge */}
+          {schedule.registrations && schedule.registrations.length > 0 && (
+            <div className="badge badge-outline text-xs shrink-0">
+              {t('schedule.musicians_count', { count: schedule.registrations.length })}
+            </div>
+          )}
+        </div>
+
+        {/* Musicians by Instrument */}
+        {sortedInstruments.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {sortedInstruments.map(([instrument, musicians]) => (
+              <div key={instrument} className="flex items-center gap-1 bg-base-300/60 rounded-full px-2 py-0.5 text-xs">
+                <span className="text-sm">{getInstrumentIcon(instrument)}</span>
+                <span className="text-base-content/80">
+                  {musicians.map(m => m.musician?.name || t('common.unknown')).join(', ')}
+                </span>
+              </div>
+            ))}
+          </div>
         )}
       </div>
-
-      {/* Musicians Count */}
-      {schedule.registrations && schedule.registrations.length > 0 && (
-        <div className="badge badge-outline text-xs">
-          {t('schedule.musicians_count', { count: schedule.registrations.length })}
-        </div>
-      )}
     </div>
   )
 })
