@@ -9,9 +9,10 @@ import { useTranslation } from 'react-i18next'
 import { X, CheckCircle, ChevronDown, ChevronUp, Plus, ListMusic } from 'lucide-react'
 import { spotifyService } from '../services'
 import { jamService } from '../services'
-import { ErrorAlert } from './ErrorAlert'
+import { Alert } from './Alert'
 import type { SpotifyImportResponse } from '../types/spotify.types'
 import type { JamResponseDto } from '../types/api.types'
+import { isValidSpotifyPlaylistUrl } from '../lib/spotifyUtils'
 
 type ImportMode = 'new' | 'existing'
 
@@ -21,13 +22,6 @@ interface SpotifyImportModalProps {
   onSuccess: (jamId: string, isExistingJam: boolean) => void
   preselectedJamId?: string  // Optional: if provided, pre-select "existing" mode with this jam
   preselectedJamName?: string // Optional: name of the preselected jam
-}
-
-const SPOTIFY_URL_PATTERN = /^https:\/\/open\.spotify\.com\/playlist\/[a-zA-Z0-9]+/
-const SPOTIFY_URI_PATTERN = /^spotify:playlist:[a-zA-Z0-9]+$/
-
-function isValidSpotifyUrl(url: string): boolean {
-  return SPOTIFY_URL_PATTERN.test(url) || SPOTIFY_URI_PATTERN.test(url)
 }
 
 export function SpotifyImportModal({ 
@@ -124,7 +118,7 @@ export function SpotifyImportModal({
       return
     }
 
-    if (!isValidSpotifyUrl(playlistUrl.trim())) {
+    if (!isValidSpotifyPlaylistUrl(playlistUrl.trim())) {
       setError(t('spotify.import_modal.url_invalid'))
       return
     }
@@ -275,7 +269,7 @@ export function SpotifyImportModal({
 
         <div className="space-y-4">
           {error && (
-            <ErrorAlert message={error} onDismiss={() => setError(null)} />
+            <Alert type="error" message={error} onDismiss={() => setError(null)} />
           )}
 
           {/* Mode Selection - Only show if no preselectedJamId */}

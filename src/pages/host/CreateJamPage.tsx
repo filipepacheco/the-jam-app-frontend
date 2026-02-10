@@ -9,7 +9,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import {ErrorAlert, SuccessAlert, SpotifyImportModal} from '../../components'
+import {Alert, SpotifyImportModal} from '../../components'
 
 interface FormData {
   name: string
@@ -234,8 +234,8 @@ export function CreateJamPage() {
         </div>
 
         {/* Alerts */}
-        {error && <ErrorAlert message={error} onDismiss={() => setError(null)} />}
-        {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
+        {error && <Alert type="error" message={error} onDismiss={() => setError(null)} />}
+        {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
 
         {/* Spotify Import Section - only in create mode */}
         {mode === 'create' && (

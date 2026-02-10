@@ -3,10 +3,7 @@
  * Central export point for all components
  */
 
-export { ErrorAlert } from './ErrorAlert'
-export { SuccessAlert } from './SuccessAlert'
-export { WarningAlert } from './WarningAlert'
-export { InfoAlert } from './InfoAlert'
+export { Alert } from './Alert'
 
 export {
   ProtectedRoute,

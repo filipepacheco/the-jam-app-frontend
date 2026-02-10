@@ -12,7 +12,7 @@ import {useTranslation} from 'react-i18next'
 // Constants
 const SUCCESS_TOAST_DURATION = 3000
 import {
-    ErrorAlert,
+    Alert,
     ScheduleEnrollmentModal,
 } from '../../components'
 import {
@@ -211,7 +211,7 @@ export function JamDetailPageV2() {
         return (
             <div className="min-h-screen bg-base-100 p-4">
                 <div className="container mx-auto max-w-4xl">
-                    <ErrorAlert message={jamError?.message || t('jams.not_found')} title={t('jams.error_loading_jam')}/>
+                    <Alert type="error" message={jamError?.message || t('jams.not_found')} title={t('jams.error_loading_jam')}/>
                 </div>
             </div>
         )

@@ -2,7 +2,7 @@ import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {scheduleService} from "../../services";
-import {ErrorAlert, SuccessAlert} from '../../components';
+import {Alert} from '../../components';
 import {DJControlActions, QueueStats, SongQueueTimeline} from "../../components/dj-control";
 import {useJamControl} from "../../hooks";
 
@@ -60,8 +60,8 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
                 <h2 className="text-2xl font-bold">{t('dj_control.title_with_emoji')}</h2>
             </div>
 
-            {error && <ErrorAlert message={error} onDismiss={() => {/* Error is auto-cleared on next state update */}}/>}
-            {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)}/>}
+            {error && <Alert type="error" message={error} onDismiss={() => {/* Error is auto-cleared on next state update */}}/>}
+            {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)}/>}
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                 {/* Timeline */}
@@ -82,7 +82,8 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
                             loading={isLoading || actionLoading}
                         />
                     ) : (
-                        <ErrorAlert
+                        <Alert
+                            type="error"
                             message={t('dj_control.errors.failed_to_load')}
                             onDismiss={() => {}}
                         />

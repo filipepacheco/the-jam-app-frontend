@@ -10,7 +10,7 @@ import type {JamDetails} from '../services'
 import * as jamService from '../services/jamService'
 import {JamContextDisplay} from '../components'
 import {JamRegistrationForm} from '../components'
-import {ErrorAlert} from '../components'
+import {Alert} from '../components'
 
 export function JamRegisterPage() {
   const { jamId } = useParams<{ jamId: string }>()
@@ -76,7 +76,7 @@ export function JamRegisterPage() {
     return (
       <div className="min-h-screen bg-base-100 p-4">
         <div className="container mx-auto max-w-2xl">
-          <ErrorAlert message={error || 'Jam not found'} title="Error Loading Jam" />
+          <Alert type="error" message={error || 'Jam not found'} title="Error Loading Jam" />
           <button onClick={() => navigate('/jams')} className="btn btn-primary mt-4">
             ← Back to Jams
           </button>

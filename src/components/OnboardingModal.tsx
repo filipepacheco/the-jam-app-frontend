@@ -4,7 +4,7 @@
  */
 
 import React, {useState} from 'react'
-import {useAuth} from '../hooks'
+import {useAuth, useFormState} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
 import {useTranslation} from 'react-i18next'
 import type {MusicianLevel} from '../types/api.types'
@@ -34,8 +34,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const [phone, setPhone] = useState(user?.phone || '')
   const [instrument, setInstrument] = useState('')
   const [level, setLevel] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { error, setError, isLoading, setIsLoading } = useFormState({ navigateOnSuccess: false })
 
   /**
    * Format phone number with Brazilian mask: (XX) XXXXX-XXXX

@@ -5,8 +5,9 @@
 
 import React, {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {ErrorAlert, SuccessAlert} from '../index'
+import {Alert} from '../index'
 import type {JamDetails} from '../../services'
+import {useFormState} from '../../hooks'
 import {useTranslation} from 'react-i18next'
 
 export const MUSIC_LEVELS = ['beginner', 'intermediate', 'advanced', 'professional'] as const
@@ -27,9 +28,7 @@ export function JamRegistrationForm({
   const [specialty, setSpecialty] = useState<string>(defaultSpecialty || '')
   const [level, setLevel] = useState<string>('')
   const [agreeToTerms, setAgreeToTerms] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
+  const { error, setError, isLoading, setIsLoading, success, setSuccess } = useFormState({ navigateOnSuccess: false })
 
   // Get available specialties
   const availableSpecialties = jam.specialtySlots
@@ -57,7 +56,7 @@ export function JamRegistrationForm({
       if (onSubmit) {
         await onSubmit(specialty, level)
       }
-      setSuccess(true)
+      setSuccess('registered')
 
       // Show success for 2 seconds then redirect
       setTimeout(() => {
@@ -75,7 +74,8 @@ export function JamRegistrationForm({
     return (
       <div className="card bg-base-200">
         <div className="card-body">
-          <SuccessAlert
+          <Alert
+            type="success"
             message={t('jams.registration_pending_approval')}
             title={t('jams.registration_successful_title')}
           />
@@ -156,7 +156,7 @@ export function JamRegistrationForm({
 
           {/* Error Alert */}
           {error && (
-            <ErrorAlert message={error} title={t('errors.registration_error_title')} />
+            <Alert type="error" message={error} title={t('errors.registration_error_title')} />
           )}
 
           {/* Buttons */}

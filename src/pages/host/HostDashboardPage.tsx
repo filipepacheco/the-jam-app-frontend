@@ -9,9 +9,10 @@ import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {ErrorAlert, SpotifyImportModal, SuccessAlert} from '../../components'
+import {Alert, SpotifyImportModal} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
+import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
 
 interface JamCategory {
     planned: JamResponseDto[]
@@ -162,8 +163,8 @@ export function HostDashboardPage() {
                 </div>
 
                 {/* Alerts */}
-                {error && <ErrorAlert message={error} onDismiss={() => setError(null)}/>}
-                {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)}/>}
+                {error && <Alert type="error" message={error} onDismiss={() => setError(null)}/>}
+                {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)}/>}
             </div>
 
             {/* Statistics Cards */}
@@ -282,32 +283,6 @@ interface JamCardProps {
 function JamCard({jam, onDelete, onNavigate, loading}: JamCardProps) {
     const {t} = useTranslation()
 
-    function getStatusLabel(status: string) {
-        switch (status) {
-            case 'ACTIVE':
-                return t('jam_management.host_dashboard.statuses.active')
-            case 'INACTIVE':
-                return t('jam_management.host_dashboard.statuses.inactive')
-            case 'FINISHED':
-                return t('jam_management.host_dashboard.statuses.finished')
-            default:
-                return t('common.unknown')
-        }
-    }
-
-    const getStatusBadgeColor = () => {
-        switch (jam.status) {
-            case 'ACTIVE':
-                return 'badge-success'
-            case 'INACTIVE':
-                return 'badge-warning'
-            case 'FINISHED':
-                return 'badge-error'
-            default:
-                return 'badge-outline'
-        }
-    }
-
     // Count registrations for this jam - use _count when available
     const registrationCount = jam._count?.registrations ?? jam.registrations?.length ?? 0
 
@@ -319,7 +294,7 @@ function JamCard({jam, onDelete, onNavigate, loading}: JamCardProps) {
             <div className="flex items-start justify-between gap-2">
                 <h3 className="card-title text-base sm:text-lg">{jam.name}</h3>
                 <div
-                    className={`badge badge-sm sm:badge-md ${getStatusBadgeColor()}`}>{getStatusLabel(jam.status)}</div>
+                    className={`badge badge-sm sm:badge-md ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
             </div>
 
             <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm">

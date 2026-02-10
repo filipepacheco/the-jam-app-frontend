@@ -6,7 +6,7 @@
 import {memo} from 'react'
 import type {MusicResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
-import {formatDuration} from '../lib/musicUtils'
+import {formatDuration} from '../lib/formatters'
 import {getInstrumentIcon} from '../lib/schedule/instrumentHelpers'
 import {SpotifyPlayButton, isSpotifyTrackLink} from './SpotifyPreview'
 

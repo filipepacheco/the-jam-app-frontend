@@ -6,7 +6,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import useSWR from 'swr'
-import {ErrorAlert} from '../components'
+import {Alert} from '../components'
 import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
 import type {JamStatus} from '../types/api.types'
@@ -234,7 +234,7 @@ export function BrowseJamsPage() {
 
         {/* Error State */}
         {error && (
-          <ErrorAlert title={t('jams.browse.error_title')} message={error} />
+          <Alert type="error" title={t('jams.browse.error_title')} message={error} />
         )}
 
         {/* Jam Sections */}

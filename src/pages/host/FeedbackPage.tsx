@@ -11,7 +11,7 @@ import { Star, MessageSquare, User, Globe, ChevronLeft, ChevronRight } from 'luc
 import { useAuth } from '../../hooks'
 import { feedbackService } from '../../services/feedbackService'
 import type { FeedbackListItemDto, FeedbackListResponseDto } from '../../types/feedback.types'
-import { ErrorAlert } from '../../components'
+import { Alert } from '../../components'
 
 export function FeedbackPage() {
   const { t } = useTranslation()
@@ -96,7 +96,7 @@ export function FeedbackPage() {
             </button>
           </div>
 
-          {error && <ErrorAlert message={error} onDismiss={() => setError(null)} />}
+          {error && <Alert type="error" message={error} onDismiss={() => setError(null)} />}
         </div>
 
         {/* Statistics Cards */}

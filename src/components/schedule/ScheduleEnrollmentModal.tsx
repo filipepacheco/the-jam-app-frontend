@@ -5,12 +5,12 @@
 
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {registrationService} from '../../services'
-import {useAuth} from '../../hooks'
+import {useAuth, useFormState} from '../../hooks'
 import {useState, useRef, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
-import {ErrorAlert} from './ErrorAlert'
+import {Alert} from '../Alert'
 import {InstrumentsSummary} from './InstrumentsSummary'
 
 interface ScheduleEnrollmentModalProps {
@@ -26,8 +26,7 @@ export function ScheduleEnrollmentModal({
     const { t } = useTranslation()
     const { user } = useAuth()
     const [selectedInstrument, setSelectedInstrument] = useState('')
-    const [enrollLoading, setEnrollLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
+    const { error, setError, isLoading: enrollLoading, setIsLoading: setEnrollLoading } = useFormState({ navigateOnSuccess: false })
     const modalRef = useRef<HTMLDivElement>(null)
 
     // Manage focus within modal
@@ -102,7 +101,7 @@ export function ScheduleEnrollmentModal({
                 <h3 className="font-bold text-lg mb-4">{t('schedule.enroll_title')}</h3>
 
                 <ScheduleDetailsCard schedule={schedule} />
-                <ErrorAlert error={error} />
+                <Alert type="error" message={error} />
 
                 {/* Instrument Selection */}
                 <div className="form-control mb-4">

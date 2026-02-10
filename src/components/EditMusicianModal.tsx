@@ -5,7 +5,7 @@
 
 import React, {useState} from 'react'
 import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
-
+import {useFormState} from '../hooks'
 import {useTranslation} from 'react-i18next'
 
 interface EditMusicianModalProps {
@@ -24,8 +24,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
     phone: musician.phone ?? '',
   })
 
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const { error, setError, isLoading, setIsLoading } = useFormState({ navigateOnSuccess: false })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target

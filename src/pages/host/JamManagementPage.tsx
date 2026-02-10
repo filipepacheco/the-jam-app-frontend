@@ -10,7 +10,7 @@ import useSWR from 'swr'
 import {useAuth} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {ErrorAlert, SuccessAlert} from '../../components'
+import {Alert} from '../../components'
 import {SpotifyExportModal} from '../../components/SpotifyExportModal'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
@@ -149,7 +149,7 @@ export function JamManagementPage() {
     if (error && !jam) {
         return (<div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
                 <div className="container mx-auto max-w-6xl">
-                    <ErrorAlert message={error} title={t('jam_management.error_loading')}/>
+                    <Alert type="error" message={error} title={t('jam_management.error_loading')}/>
                     <button onClick={() => navigate('/host/dashboard')} className="btn btn-primary mt-4">
                         {t('jam_management.back_to_dashboard')}
                     </button>
@@ -249,8 +249,8 @@ export function JamManagementPage() {
 
             {/* Alerts */}
             <div className="container sticky top-0 z-50 mx-auto max-w-6xl px-2 sm:px-4 mt-3 sm:mt-4">
-                {error && <ErrorAlert message={error} onDismiss={() => setError(null)}/>}
-                {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)}/>}
+                {error && <Alert type="error" message={error} onDismiss={() => setError(null)}/>}
+                {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)}/>}
             </div>
 
             {/* Tab Content */}

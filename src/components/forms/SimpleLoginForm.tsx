@@ -6,7 +6,7 @@
 import React, {useState} from 'react'
 import {useAuth, useFormState} from '../../hooks'
 import {loginOrRegister} from '../../services'
-import {ErrorAlert} from '../index'
+import {Alert} from '../index'
 import {useLocation} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 
@@ -78,7 +78,8 @@ export function SimpleLoginForm() {
 
           {/* Error Alert */}
           {error && (
-            <ErrorAlert
+            <Alert
+              type="error"
               message={error}
               title={t('auth.login_error_title')}
             />

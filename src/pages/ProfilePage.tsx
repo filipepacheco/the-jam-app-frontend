@@ -10,8 +10,7 @@ import {useAuth} from '../hooks'
 import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import {ProfileHeader} from '../components/ProfileHeader'
 import {ProfileFormSection} from '../components/ProfileFormSection'
-import {ErrorAlert} from '../components'
-import {SuccessAlert} from '../components'
+import {Alert} from '../components'
 
 import {useTranslation} from 'react-i18next'
 
@@ -109,8 +108,8 @@ export function ProfilePage() {
     <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Alerts */}
-        {error && <ErrorAlert message={error} title={t('common.error')} />}
-        {success && <SuccessAlert message={success} title={t('common.success_title')} />}
+        {error && <Alert type="error" message={error} title={t('common.error')} />}
+        {success && <Alert type="success" message={success} title={t('common.success_title')} />}
 
         {/* Profile Header */}
         <ProfileHeader user={user} />

@@ -10,6 +10,7 @@ import {useReducedMotion} from '../../hooks'
 import {InstrumentGroup} from './InstrumentGroup'
 import {WaveformVisualizer} from './WaveformVisualizer'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
+import {formatDuration} from '../../lib/formatters'
 import type {DashboardSongDto} from '../../types/api.types'
 
 interface CurrentSongCardProps {
@@ -42,11 +43,6 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
     () => (prefersReducedMotion ? { duration: 0 } : CARD_PULSE_TRANSITION),
     [prefersReducedMotion]
   )
-
-  const formatDuration = (seconds: number): string => {
-    if (!seconds) return '0:00'
-    return `${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`
-  }
 
   return (
     <motion.div

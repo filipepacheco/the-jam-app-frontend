@@ -6,7 +6,7 @@
 import * as React from 'react'
 import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../../hooks'
+import {useAuth, useFormState} from '../../hooks'
 import type {OAuthProvider} from '../../lib/supabase'
 import OAuthButton from "./OAuthButton.tsx";
 import {useTranslation} from 'react-i18next'
@@ -24,9 +24,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [message, setMessage] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const { error, setError, success: message, setSuccess: setMessage, isLoading, setIsLoading } = useFormState({ navigateOnSuccess: false })
 
   // Get redirect path from URL params
   const getRedirectPath = () => {

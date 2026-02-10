@@ -7,7 +7,8 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {MusicResponseDto} from '../../types/api.types'
 import {musicService, scheduleService} from '../../services'
-import {ErrorAlert} from "../ErrorAlert.tsx"
+import {useFormState} from '../../hooks'
+import {Alert} from "../Alert"
 import {SearchableSelect} from "../forms/SearchableSelect.tsx"
 
 interface SuggestSongModalProps {
@@ -29,8 +30,7 @@ export function SuggestSongModal({
   const [selectedSongId, setSelectedSongId] = useState('')
   const [allSongs, setAllSongs] = useState<MusicResponseDto[]>([])
   const [loadingSongs, setLoadingSongs] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { error, setError, submitting, setSubmitting, resetError } = useFormState({ navigateOnSuccess: false })
   const modalRef = useRef<HTMLDivElement>(null)
 
   // Manage focus within modal
@@ -76,7 +76,7 @@ export function SuggestSongModal({
     } else {
       // Reset state when modal closes
       setSelectedSongId('')
-      setError(null)
+      resetError()
     }
   }, [isOpen, loadSongs])
 
@@ -114,7 +114,7 @@ export function SuggestSongModal({
           {t('jams.suggest_modal_title')}
         </h3>
 
-        <ErrorAlert message={error}/>
+        <Alert type="error" message={error}/>
 
         {/* Loading State */}
         {loadingSongs && !allSongs.length ? (

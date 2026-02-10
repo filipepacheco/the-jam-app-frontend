@@ -7,10 +7,11 @@ import {useEffect, useState, useCallback} from 'react'
 import type {MusicianResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {registrationService} from '../../services'
 import {musicianService} from '../../services'
+import {useFormState} from '../../hooks'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
-import {ErrorAlert} from './ErrorAlert'
+import {Alert} from '../Alert'
 import {InstrumentsSummary} from './InstrumentsSummary'
 
 interface HostMusicianRegistrationModalProps {
@@ -30,9 +31,8 @@ export function HostMusicianRegistrationModal({
   const [musicians, setMusicians] = useState<MusicianResponseDto[]>([])
   const [selectedMusicianId, setSelectedMusicianId] = useState('')
   const [selectedInstrument, setSelectedInstrument] = useState('')
-  const [loading, setLoading] = useState(false)
+  const { error, setError, isLoading: loading, setIsLoading: setLoading } = useFormState({ navigateOnSuccess: false })
   const [musicianLoading, setMusicianLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   // Load all musicians when modal opens
   const loadMusicians = useCallback(async () => {
@@ -102,7 +102,7 @@ export function HostMusicianRegistrationModal({
         <h3 className="font-bold text-lg mb-4">{t('schedule.add_musician_title')}</h3>
 
         <ScheduleDetailsCard schedule={schedule} />
-        <ErrorAlert error={error} />
+        <Alert type="error" message={error} />
 
         {/* Musician Selection */}
         <div className="form-control mb-4">

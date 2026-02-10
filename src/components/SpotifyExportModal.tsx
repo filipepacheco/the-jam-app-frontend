@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { X, CheckCircle, ExternalLink } from 'lucide-react'
 import { spotifyService } from '../services'
-import { ErrorAlert } from './ErrorAlert'
+import { Alert } from './Alert'
 import type { SpotifyExportResponse } from '../types/spotify.types'
 
 interface SpotifyExportModalProps {
@@ -134,7 +134,7 @@ export function SpotifyExportModal({
           /* Form */
           <div className="space-y-4">
             {error && (
-              <ErrorAlert message={error} onDismiss={() => setError(null)} />
+              <Alert type="error" message={error} onDismiss={() => setError(null)} />
             )}
 
             {/* Playlist Name */}

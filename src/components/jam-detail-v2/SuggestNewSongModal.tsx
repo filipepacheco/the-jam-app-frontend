@@ -11,6 +11,8 @@ import { musicService, scheduleService } from '../../services'
 import { spotifyService } from '../../services/spotifyService'
 import { MusicModalFormFields } from '../MusicModalFormFields'
 import { parseDuration } from '../../lib/musicUtils'
+import { formatDuration } from '../../lib/formatters'
+import { isValidSpotifyTrackUrl } from '../../lib/spotifyUtils'
 import type { CreateMusicDto } from '../../types/api.types'
 
 interface SuggestNewSongModalProps {
@@ -21,22 +23,6 @@ interface SuggestNewSongModalProps {
 }
 
 type SubmitStep = 'idle' | 'creating' | 'linking'
-
-// Helper to validate Spotify track URLs
-function isValidSpotifyTrackUrl(url: string): boolean {
-  if (!url.trim()) return false
-  // Match https://open.spotify.com/track/ID or spotify:track:ID
-  return /open\.spotify\.com\/track\/[a-zA-Z0-9]+/.test(url) ||
-         /spotify:track:[a-zA-Z0-9]+/.test(url)
-}
-
-// Helper to format duration from milliseconds to mm:ss
-function formatDurationFromMs(durationMs: number): string {
-  const totalSeconds = Math.floor(durationMs / 1000)
-  const minutes = Math.floor(totalSeconds / 60)
-  const seconds = totalSeconds % 60
-  return `${minutes}:${String(seconds).padStart(2, '0')}`
-}
 
 export function SuggestNewSongModal({
   jamId,
@@ -145,7 +131,7 @@ export function SuggestNewSongModal({
         title: result.data.title,
         artist: result.data.artist,
         link: result.data.spotifyUrl,
-        duration: formatDurationFromMs(result.data.durationMs),
+        duration: formatDuration(result.data.durationMs, 'ms'),
       }))
       setImportSuccess(true)
       setImportError(null)

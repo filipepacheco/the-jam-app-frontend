@@ -10,7 +10,7 @@ import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useAuth, useJamControl} from '../../hooks'
 import {scheduleService} from '../../services'
-import {ErrorAlert, SuccessAlert} from '../../components'
+import {Alert} from '../../components'
 import {DJControlActions, QueueStats, SongQueueTimeline} from '../../components/dj-control'
 import {useTranslation} from 'react-i18next'
 
@@ -90,7 +90,7 @@ export function JamDJControlPage() {
   if (!jamId) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <ErrorAlert message={t('common.error')} onDismiss={() => navigate('/host/dashboard')} />
+        <Alert type="error" message={t('common.error')} onDismiss={() => navigate('/host/dashboard')} />
       </div>
     )
   }
@@ -124,8 +124,8 @@ export function JamDJControlPage() {
 
       {/* Alerts */}
       <div className="container sticky top-0 z-40 mx-auto max-w-6xl px-2 sm:px-4 mt-2 sm:mt-4">
-        {displayError && <ErrorAlert message={displayError} onDismiss={() => setLocalError(null)} />}
-        {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
+        {displayError && <Alert type="error" message={displayError} onDismiss={() => setLocalError(null)} />}
+        {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
       </div>
 
       {/* Main Content */}
@@ -149,7 +149,8 @@ export function JamDJControlPage() {
                 loading={isLoading || actionLoading}
               />
             ) : (
-              <ErrorAlert
+              <Alert
+                type="error"
                 message={t('dj_control.errors.failed_to_load')}
                 onDismiss={() => {}}
               />

@@ -5,9 +5,10 @@
 
 import {memo} from 'react'
 import {Link} from 'react-router-dom'
-import type {JamResponseDto, JamStatus} from '../types/api.types'
+import type {JamResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../lib/i18nUtils'
+import {getJamStatusBadgeClass, getJamStatusLabel} from '../lib/statusUtils'
 
 interface JamCardProps {
   jam: JamResponseDto
@@ -26,42 +27,6 @@ function formatDate(isoString: string): string {
 }
 
 /**
- * Get badge class based on jam status with friendly styling
- */
-function getStatusBadgeClass(status: JamStatus): string {
-  switch (status) {
-    case 'LIVE':
-      return 'badge-success badge-lg font-semibold'  // Green - live now
-    case 'ACTIVE':
-      return 'badge-info badge-lg font-semibold'     // Blue - active/ready
-    case 'INACTIVE':
-      return 'badge-warning badge-lg font-semibold'
-    case 'FINISHED':
-      return 'badge-ghost badge-lg font-semibold'
-    default:
-      return 'badge-ghost badge-lg font-semibold'
-  }
-}
-
-/**
- * Get friendly status label with emoji
- */
-function getStatusLabel(status: JamStatus, t: (key: string) => string): string {
-  switch (status) {
-    case 'LIVE':
-      return t('jams.statuses.live')
-    case 'ACTIVE':
-      return t('jams.statuses.active')
-    case 'INACTIVE':
-      return t('jams.statuses.inactive')
-    case 'FINISHED':
-      return t('jams.statuses.finished')
-    default:
-      return `❓ ${t('common.unknown')}`
-  }
-}
-
-/**
  * JamCard Component
  */
 export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
@@ -76,8 +41,8 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
         {/* Header: Name + Status Badge */}
         <div className="flex justify-between items-center gap-2">
           <h3 className="card-title text-base sm:text-lg min-w-0">{jam.name || t('jams.no_name')}</h3>
-          <div className={`badge badge-sm sm:badge-md lg:badge-lg flex-shrink-0 ${getStatusBadgeClass(jam.status)}`}>
-            {getStatusLabel(jam.status, t)}
+          <div className={`badge badge-sm sm:badge-md lg:badge-lg flex-shrink-0 badge-lg font-semibold ${getJamStatusBadgeClass(jam.status)}`}>
+            {getJamStatusLabel(jam.status, t)}
           </div>
         </div>
 

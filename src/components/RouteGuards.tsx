@@ -6,7 +6,7 @@
 import type { ReactNode } from 'react'
 import { useAuth } from '../hooks'
 import type { UserRole } from '../types/auth.types'
-import { ErrorAlert } from './ErrorAlert'
+import { Alert } from './Alert'
 
 /**
  * Props for route guard components
@@ -59,7 +59,8 @@ export function ProtectedRoute({
     return (
       fallback || (
         <div className="min-h-screen flex items-center justify-center p-4">
-          <ErrorAlert
+          <Alert
+            type="error"
             message={`You don't have permission to access this page. Required role: ${
               Array.isArray(requiredRole) ? requiredRole.join(', ') : requiredRole
             }`}

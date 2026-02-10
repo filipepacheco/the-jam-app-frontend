@@ -5,7 +5,7 @@
  */
 
 import React, {useState} from 'react'
-import {useAuth} from '../hooks'
+import {useAuth, useFormState} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
 import {useTranslation} from 'react-i18next'
 
@@ -21,8 +21,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
   const [instrument, setInstrument] = useState('')
   const [level, setLevel] = useState<'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'PROFESSIONAL' | ''>('')
   const [contact, setContact] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { error, setError, isLoading, setIsLoading } = useFormState({ navigateOnSuccess: false })
 
   const levels: Array<'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'PROFESSIONAL'> = [
     'BEGINNER',

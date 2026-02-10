@@ -14,14 +14,13 @@ import { musicService } from '../services'
 import type { MusicResponseDto } from '../types/api.types'
 import { API_ENDPOINTS } from '../lib/api/config'
 import {
+  Alert,
   ConfirmDialog,
-  ErrorAlert,
   MusicCard,
   MusicEmptyState,
   MusicFilters,
   MusicModal,
   MusicTableRow,
-  SuccessAlert,
 } from '../components'
 import { filterAndSortMusic } from '../lib/musicUtils'
 import { GENRES } from '../lib/musicConstants'
@@ -293,12 +292,13 @@ export function MusicPage() {
       {/* Alerts */}
       <div className="container mx-auto max-w-7xl px-4 mt-4">
         {(error || swrError) && (
-          <ErrorAlert
+          <Alert
+            type="error"
             message={error || swrError?.message || t('music_library.errors.failed_to_load')}
             onDismiss={() => setError(null)}
           />
         )}
-        {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
+        {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
       </div>
 
       {/* Search & Filter */}

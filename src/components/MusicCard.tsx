@@ -7,7 +7,7 @@ import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pencil, Trash2 } from 'lucide-react'
 import type { MusicResponseDto } from '../types/api.types'
-import { formatDuration } from '../lib/musicUtils'
+import { formatDuration } from '../lib/formatters'
 import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
 import { SpotifyPreview, isSpotifyTrackLink } from './SpotifyPreview'
 

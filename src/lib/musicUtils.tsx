@@ -39,16 +39,6 @@ export  const providerLabels: Record<OAuthProvider, string> = {
 }
 
 /**
- * Format duration from seconds to mm:ss
- */
-export function formatDuration(seconds?: number): string {
-  if (!seconds) return '--:--'
-  const mins = Math.floor(seconds / 60)
-  const secs = seconds % 60
-  return `${mins}:${String(secs).padStart(2, '0')}`
-}
-
-/**
  * Parse duration from mm:ss to seconds
  */
 export function parseDuration(mmss: string): number | null {

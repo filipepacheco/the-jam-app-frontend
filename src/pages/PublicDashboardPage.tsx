@@ -23,7 +23,7 @@ import {useAppLanguage} from '../hooks'
 import {useConfettiOnSongChange} from '../hooks'
 import {useFullscreen} from '../hooks'
 import {useOfflineQueue} from '../hooks'
-import {ErrorAlert} from '../components'
+import {Alert} from '../components'
 import {useTranslation} from 'react-i18next'
 import type {LiveDashboardResponseDto} from '../types/api.types'
 
@@ -82,7 +82,7 @@ export function PublicDashboardPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
-        <ErrorAlert message={error.message} title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')} />
+        <Alert type="error" message={error.message} title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')} />
       </div>
     )
   }

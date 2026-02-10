@@ -8,7 +8,7 @@ import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { X, CheckCircle } from 'lucide-react'
 import { feedbackService } from '../services'
-import { ErrorAlert } from './ErrorAlert'
+import { Alert } from './Alert'
 
 interface FeedbackModalProps {
   isOpen: boolean
@@ -120,7 +120,8 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
           <div className="space-y-4">
             {/* Error Alert */}
             {error && (
-              <ErrorAlert
+              <Alert
+                type="error"
                 message={error}
                 onDismiss={() => setError(null)}
               />

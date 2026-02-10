@@ -11,7 +11,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import useSWR from 'swr'
 import {musicService} from '../../services'
 import type {JamResponseDto, MusicResponseDto} from '../../types/api.types.ts'
-import {SuccessAlert} from '../../components'
+import {Alert} from '../../components'
 import {useTranslation} from 'react-i18next'
 
 export function HostJamSongsPage() {
@@ -158,7 +158,7 @@ export function HostJamSongsPage() {
         </div>
 
         {/* Alerts */}
-        {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
+        {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
 
         {/* Add Song Modal */}
         {showAddSong && (

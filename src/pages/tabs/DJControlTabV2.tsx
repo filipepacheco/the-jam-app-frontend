@@ -6,7 +6,7 @@
 import {useTranslation} from 'react-i18next'
 import {useState} from 'react'
 import {useJamControl} from '../../hooks'
-import {ErrorAlert, SuccessAlert} from '../../components'
+import {Alert} from '../../components'
 import {DJControlActions, QueueStats, SongQueueTimeline,} from '../../components/dj-control'
 import {scheduleService} from '../../services'
 
@@ -69,7 +69,8 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
 
       {/* Error Alert */}
       {error && (
-        <ErrorAlert
+        <Alert
+          type="error"
           message={error}
           onDismiss={() => {
             /* Error is auto-cleared on next state update */
@@ -78,7 +79,7 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
       )}
 
       {/* Success Alert */}
-      {success && <SuccessAlert message={success} onDismiss={() => setSuccess(null)} />}
+      {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
 
       {/* Mobile Layout: Actions and Stats at top */}
       <div className="lg:hidden space-y-4">
@@ -124,7 +125,8 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
             loading={isLoading || actionLoading}
           />
         ) : (
-          <ErrorAlert
+          <Alert
+            type="error"
             message={t('dj_control.errors.failed_to_load')}
             onDismiss={() => {}}
           />
@@ -151,7 +153,8 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
               loading={isLoading || actionLoading}
             />
           ) : (
-            <ErrorAlert
+            <Alert
+              type="error"
               message={t('dj_control.errors.failed_to_load')}
               onDismiss={() => {}}
             />

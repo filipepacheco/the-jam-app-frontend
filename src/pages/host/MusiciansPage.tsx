@@ -11,7 +11,7 @@ import {musicianService} from '../../services'
 import useSWR from 'swr'
 import type {MusicianLevel, MusicianResponseDto} from '../../types/api.types.ts'
 import {EditMusicianModal} from '../../components/EditMusicianModal.tsx'
-import {ErrorAlert, SuccessAlert} from '../../components'
+import {Alert} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {API_ENDPOINTS} from "../../lib/api";
 
@@ -130,8 +130,8 @@ export function MusiciansPage() {
         </div>
 
         {/* Alerts */}
-        {error && <ErrorAlert message={error} title={t('common.error')} />}
-        {success && <SuccessAlert message={success} title={t('common.success')} />}
+        {error && <Alert type="error" message={error} title={t('common.error')} />}
+        {success && <Alert type="success" message={success} title={t('common.success')} />}
 
         {/* Search and Filter Bar */}
         <div className="card bg-base-200 mb-6">
