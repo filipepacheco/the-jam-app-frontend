@@ -3,17 +3,9 @@
  * Types for the new /control endpoints and live state management
  */
 
-import type {RegistrationResponseDto} from './api.types'
+import type {PlaybackState, RegistrationResponseDto, ScheduleStatus} from './api.types'
 
-/**
- * Playback state of the jam
- */
-export type PlaybackState = 'STOPPED' | 'PLAYING' | 'PAUSED'
-
-/**
- * Schedule status types
- */
-export type ScheduleStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELED' | 'SUGGESTED'
+export type { PlaybackState, ScheduleStatus }
 
 // ============================================================================
 // LIVE STATE TYPES (from /jams/{id}/live/state endpoint)

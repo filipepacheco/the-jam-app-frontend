@@ -134,7 +134,6 @@ export function RegistrationList({
                                             {/* Avatar */}
                                             <Avatar
                                                 name={registration.musician?.name || t('common.unknown')}
-                                                imageUrl={registration.musician?.avatarUrl}
                                                 size="sm"
                                             />
 

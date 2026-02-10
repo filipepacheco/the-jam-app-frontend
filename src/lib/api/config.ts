@@ -22,10 +22,8 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   // Auth endpoints
   auth: {
-    login: '/auth/login',
     logout: '/auth/logout',
     me: '/auth/me',
-    refreshToken: '/auth/refresh',
   },
 
   // Jams endpoints

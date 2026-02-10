@@ -60,7 +60,7 @@ export function groupRegistrationsByInstrument(
   if (!registrations) return grouped
 
   registrations.forEach((reg) => {
-    const instrument = normalizeInstrument(reg.instrument || reg.musician?.instrument)
+    const instrument = normalizeInstrument(reg.instrument ?? reg.musician?.instrument ?? undefined)
     if (instrument) {
       if (!grouped.has(instrument)) {
         grouped.set(instrument, [])

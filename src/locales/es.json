@@ -51,6 +51,8 @@
       "error": "Error de conexión",
       "idle": "Inactivo"
     },
+    "error": "Error",
+    "success": "Exito",
     "statuses": {
       "approved": "Aprobado",
       "pending": "Pendiente",
@@ -73,6 +75,11 @@
     "no_registrations_yet": "Sin inscripciones aún",
     "confirm": "Confirmar",
     "are_you_sure": "¿Estás seguro?"
+  },
+  "roles": {
+    "host": "Anfitrion/Organizador",
+    "user": "Musico",
+    "viewer": "Espectador"
   },
   "nav": {
     "home": "Inicio",
@@ -99,7 +106,8 @@
     "phone_hint": "Los números deben tener al menos 10 dígitos",
     "auth_failed": "Autenticación fallida",
     "oauth_failed": "Fallo inicio con OAuth",
-    "logging_out": "Cerrando sesión...",
+    "logging_in": "Iniciando sesion...",
+    "logging_out": "Cerrando sesion...",
     "signing_in": "Iniciando sesión...",
     "creating_account": "Creando cuenta...",
     "already_have_account": "¿Ya tienes cuenta? Iniciar Sesión",
@@ -112,6 +120,7 @@
     "password_placeholder": "••••••••",
     "password_hint": "Mínimo 6 caracteres",
     "continue_with": "Continuar con {{provider}}",
+    "welcome_user": "Hola, {{name}}!",
     "register_page_title": "🎸 Crear Cuenta",
     "register_page_subtitle": "Únete a la comunidad de jam sessions",
     "register_how_it_works": "Cómo funciona:",
@@ -202,7 +211,10 @@
       "inactive": "⏸️ Próximamente",
       "finished": "🏁 Finalizado"
     },
-    "songs_count": "{{count}} canciones",
+    "songs_count": {
+      "one": "{{count}} cancion",
+      "other": "{{count}} canciones"
+    },
     "no_name": "Jam sin nombre",
     "features": {
       "title": "Creado para todos en el Jam",
@@ -456,7 +468,8 @@
       "ADVANCED": "Avanzado",
       "PROFESSIONAL": "Profesional"
     },
-    "registration_pending_agreement": "Entiendo que mi participación está sujeta a aprobación"
+    "choose_level": "Selecciona un nivel...",
+    "registration_pending_agreement": "Entiendo que mi participacion esta sujeta a aprobacion"
   },
   "errors": {
     "generic_error": "Ocurrió un error. Inténtalo de nuevo.",

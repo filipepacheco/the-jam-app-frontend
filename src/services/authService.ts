@@ -80,7 +80,7 @@ export async function loginOrRegister(
  */
 export async function logout(): Promise<void> {
   try {
-    await apiClient.get('/auth/logout')
+    await apiClient.post('/auth/logout', {})
   } catch (err) {
     console.error('Logout error:', err)
     // Proceed with client-side logout even if API call fails

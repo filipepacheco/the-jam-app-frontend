@@ -17,11 +17,11 @@ interface EditMusicianModalProps {
 export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianModalProps) {
   const { t } = useTranslation()
   const [formData, setFormData] = useState({
-    name: musician.name,
-    instrument: musician.instrument,
-    level: musician.level as MusicianLevel,
-    contact: musician.contact,
-    phone: musician.phone || '',
+    name: musician.name ?? '',
+    instrument: musician.instrument ?? '',
+    level: (musician.level ?? 'BEGINNER') as MusicianLevel,
+    contact: musician.contact ?? '',
+    phone: musician.phone ?? '',
   })
 
   const [error, setError] = useState<string | null>(null)

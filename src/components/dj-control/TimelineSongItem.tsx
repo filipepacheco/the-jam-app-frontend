@@ -26,7 +26,6 @@ export function TimelineSongItem({ song, status, onRemove, loading }: TimelineSo
     ? `${Math.floor(song.music.duration / 60)}:${String(song.music.duration % 60).padStart(2, '0')}`
     : '--:--'
 
-  // Handle both Portuguese (titulo/artista) and English (title/artist) field names
   const title = song.music.title || 'Unknown'
   const artist = song.music.artist || 'Unknown'
 

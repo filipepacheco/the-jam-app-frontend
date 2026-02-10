@@ -53,6 +53,8 @@
       "error": "Erro",
       "idle": "Inativo"
     },
+    "error": "Erro",
+    "success": "Sucesso",
     "statuses": {
       "approved": "Aprovado",
       "pending": "Pendente",

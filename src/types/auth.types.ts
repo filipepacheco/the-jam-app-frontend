@@ -86,5 +86,4 @@ export interface UpdateProfileDto {
   level?: SkillLevel
   contact?: string
   phone?: string
-  isHost?: boolean
 }

@@ -142,8 +142,8 @@ export function SuggestSongModal({
               items={allSongs}
               value={selectedSongId}
               onChange={setSelectedSongId}
-              getItemLabel={(song) => song.title ?? song.titulo ?? ''}
-              getItemSubLabel={(song) => song.artist ?? song.artista ?? ''}
+              getItemLabel={(song) => song.title ?? ''}
+              getItemSubLabel={(song) => song.artist ?? ''}
               placeholder={t('jams.choose_song')}
               searchPlaceholder={t('common.search')}
               disabled={submitting}
@@ -151,8 +151,8 @@ export function SuggestSongModal({
               name="song"
               filterFn={(song, term) => {
                 const searchLower = term.toLowerCase()
-                const title = (song.title ?? song.titulo ?? '').toLowerCase()
-                const artist = (song.artist ?? song.artista ?? '').toLowerCase()
+                const title = (song.title ?? '').toLowerCase()
+                const artist = (song.artist ?? '').toLowerCase()
                 return title.includes(searchLower) || artist.includes(searchLower)
               }}
             />

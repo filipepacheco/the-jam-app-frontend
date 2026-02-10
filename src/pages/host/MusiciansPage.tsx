@@ -48,8 +48,8 @@ export function MusiciansPage() {
        const query = searchQuery.toLowerCase()
        filtered = filtered.filter(
          (m) =>
-           m.name.toLowerCase().includes(query) ||
-           m.instrument.toLowerCase().includes(query) ||
+           (m.name?.toLowerCase().includes(query) ?? false) ||
+           (m.instrument?.toLowerCase().includes(query) ?? false) ||
            (m.contact?.toLowerCase().includes(query) ?? false)
        )
      }
@@ -69,10 +69,10 @@ export function MusiciansPage() {
    const handleUpdateMusician = useCallback(async (updatedMusician: MusicianResponseDto) => {
      try {
        await musicianService.update(updatedMusician.id, {
-         name: updatedMusician.name,
-         instrument: updatedMusician.instrument,
-         level: updatedMusician.level,
-         contact: updatedMusician.contact,
+         name: updatedMusician.name ?? undefined,
+         instrument: updatedMusician.instrument ?? undefined,
+         level: updatedMusician.level ?? undefined,
+         contact: updatedMusician.contact ?? undefined,
        })
 
        // Refresh musicians data from API

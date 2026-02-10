@@ -42,8 +42,8 @@ export function HostJamSongsPage() {
   // Extract songs from jam data
   const songs = useMemo(() => {
     if (!jamData) return []
-    const jamMusics = ((jamData as unknown) as Record<string, unknown>)?.jamsmusics as Array<Record<string, unknown>> || []
-    return jamMusics.map((jm: Record<string, unknown>) => jm.musica as MusicResponseDto)
+    const jamMusics = jamData?.jamMusics || []
+    return jamMusics.map((jm) => jm.music)
   }, [jamData])
 
   const jamName = jamData?.name || t('common.app_name')

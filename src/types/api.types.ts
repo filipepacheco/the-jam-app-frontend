@@ -37,26 +37,27 @@ export type ScheduleStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCEL
  */
 export interface MusicianResponseDto {
   id: string
-  name: string
-  instrument: string
-  level: MusicianLevel
-    contact: string
-    phone: string
+  name?: string | null
+  instrument?: string | null
+  level?: MusicianLevel | null
+  contact?: string | null
+  phone?: string | null
+  email?: string | null
+  supabaseUserId?: string | null
+  isHost: boolean
   createdAt: string
-  avatarUrl?: string  // Optional - for future backend support
 }
 
 /**
  * Music response from API
- * NOTE: Backend uses Portuguese field names (titulo, artista, duracao)
- * Includes English aliases for backward compatibility
+ * Backend returns English field names via Prisma (Portuguese only in DB columns via @map)
  */
 export interface MusicResponseDto {
   id: string
-  titulo: string  // Portuguese for "title"
-  artista: string  // Portuguese for "artist"
-  genero?: string  // Portuguese for "genre"
-  duracao?: number  // Portuguese for "duration" (in seconds)
+  title: string
+  artist: string
+  genre?: string
+  duration?: number
   description?: string
   link?: string
   status?: 'APPROVED' | 'SUGGESTED'
@@ -68,12 +69,6 @@ export interface MusicResponseDto {
   neededVocals?: number
   neededBass?: number
   neededKeys?: number
-  
-  // English aliases for backward compatibility (same as Portuguese fields)
-  title: string
-  artist: string
-  genre?: string
-  duration?: number
 }
 
 /**
@@ -134,12 +129,12 @@ export interface JamCountDto {
  * Jam session response from API
  */
 export interface JamResponseDto {
-  location: string
   id: string
   name: string
   hostName: string
   description?: string
   date?: string
+  location?: string
   qrCode?: string
   status: JamStatus
   createdAt: string
@@ -217,7 +212,6 @@ export interface UpdateMusicDto {
  */
 export interface CreateRegistrationDto {
   musicianId?: string
-  jamMusicId?: string
   scheduleId: string
   instrument?: string
 }
@@ -228,7 +222,6 @@ export interface CreateRegistrationDto {
 export interface CreateScheduleDto {
   jamId: string
   musicId: string
-  registrationId: string
   order: number
   status?: ScheduleStatus
 }
