@@ -7,6 +7,7 @@
 import {useState, lazy, Suspense} from 'react'
 import {useParams} from 'react-router-dom'
 import useSWR from 'swr'
+import {SWR_DEFAULTS} from '../config/swrDefaults'
 import {
     CurrentSongCard,
     Header,
@@ -23,7 +24,7 @@ import {useAppLanguage} from '../hooks'
 import {useConfettiOnSongChange} from '../hooks'
 import {useFullscreen} from '../hooks'
 import {useOfflineQueue} from '../hooks'
-import {Alert} from '../components'
+import {Alert, FullPageSpinner} from '../components'
 import {useTranslation} from 'react-i18next'
 import type {LiveDashboardResponseDto} from '../types/api.types'
 
@@ -43,10 +44,8 @@ export function PublicDashboardPage() {
     error,
     isLoading,
   } = useSWR<LiveDashboardResponseDto>(swrKey, {
+    ...SWR_DEFAULTS,
     refreshInterval: pollingMs,
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true,
-    dedupingInterval: 2000,
   })
 
   // Extract fields from response
@@ -71,11 +70,7 @@ export function PublicDashboardPage() {
 
   // Show loading state
   if (isLoading && !currentSong) {
-    return (
-      <div className="min-h-screen bg-base-100 flex items-center justify-center">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    )
+    return <FullPageSpinner />
   }
 
   // Show error state

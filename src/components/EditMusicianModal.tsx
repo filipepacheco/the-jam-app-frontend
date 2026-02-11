@@ -7,6 +7,9 @@ import React, {useState} from 'react'
 import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
 import {useFormState} from '../hooks'
 import {useTranslation} from 'react-i18next'
+import {Alert} from './Alert'
+import {Modal} from './Modal'
+import {ModalFooter} from './ModalFooter'
 
 interface EditMusicianModalProps {
   musician: MusicianResponseDto
@@ -71,142 +74,127 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
   }
 
   return (
-    <div className="modal modal-open">
-      <div className="modal-box max-w-md">
-        {/* Header */}
-        <h3 className="font-bold text-lg mb-4">{t('musician_form.edit_title')}</h3>
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title={t('musician_form.edit_title')}
+      size="md"
+      footer={
+        <ModalFooter
+          onCancel={onClose}
+          onSubmit={() => {
+            const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
+            void handleSubmit(syntheticEvent)
+          }}
+          submitLabel={isLoading ? t('common.saving') : t('common.save_changes')}
+          submitting={isLoading}
+        />
+      }
+    >
+      {/* Form */}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Musician ID (read-only) */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('musician_form.musician_id')}</span>
+          </label>
+          <input
+            type="text"
+            value={musician.id}
+            disabled
+            className="input input-bordered input-disabled"
+          />
+        </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Musician ID (read-only) */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('musician_form.musician_id')}</span>
-            </label>
-            <input
-              type="text"
-              value={musician.id}
-              disabled
-              className="input input-bordered input-disabled"
-            />
-          </div>
+        {/* Name */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('musician_form.name_label')}</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            className="input input-bordered"
+            placeholder={t('musician_form.name_placeholder')}
+            disabled={isLoading}
+          />
+        </div>
 
-          {/* Name */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('musician_form.name_label')}</span>
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="input input-bordered"
-              placeholder={t('musician_form.name_placeholder')}
-              disabled={isLoading}
-            />
-          </div>
+        {/* Instrument */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('musician_form.instrument_label')}</span>
+          </label>
+          <input
+            type="text"
+            name="instrument"
+            value={formData.instrument}
+            onChange={handleInputChange}
+            className="input input-bordered"
+            placeholder={t('musician_form.instrument_placeholder')}
+            disabled={isLoading}
+          />
+        </div>
 
-          {/* Instrument */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('musician_form.instrument_label')}</span>
-            </label>
-            <input
-              type="text"
-              name="instrument"
-              value={formData.instrument}
-              onChange={handleInputChange}
-              className="input input-bordered"
-              placeholder={t('musician_form.instrument_placeholder')}
-              disabled={isLoading}
-            />
-          </div>
+        {/* Level */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('schedule.levels.experience_level')}</span>
+          </label>
+          <select
+            name="level"
+            value={formData.level}
+            onChange={handleInputChange}
+            className="select select-bordered"
+            disabled={isLoading}
+          >
+            <option value="BEGINNER">{t('schedule.levels.beginner')}</option>
+            <option value="INTERMEDIATE">{t('schedule.levels.intermediate')}</option>
+            <option value="ADVANCED">{t('schedule.levels.advanced')}</option>
+            <option value="PROFESSIONAL">{t('schedule.levels.professional')}</option>
+          </select>
+        </div>
 
-          {/* Level */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('schedule.levels.experience_level')}</span>
-            </label>
-            <select
-              name="level"
-              value={formData.level}
-              onChange={handleInputChange}
-              className="select select-bordered"
-              disabled={isLoading}
-            >
-              <option value="BEGINNER">{t('schedule.levels.beginner')}</option>
-              <option value="INTERMEDIATE">{t('schedule.levels.intermediate')}</option>
-              <option value="ADVANCED">{t('schedule.levels.advanced')}</option>
-              <option value="PROFESSIONAL">{t('schedule.levels.professional')}</option>
-            </select>
-          </div>
+        {/* Contact */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('musician_form.contact_label')}</span>
+          </label>
+          <input
+            type="text"
+            name="contact"
+            value={formData.contact}
+            onChange={handleInputChange}
+            className="input input-bordered"
+            placeholder={t('musician_form.contact_placeholder')}
+            disabled={isLoading}
+          />
+        </div>
 
-          {/* Contact */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('musician_form.contact_label')}</span>
-            </label>
-            <input
-              type="text"
-              name="contact"
-              value={formData.contact}
-              onChange={handleInputChange}
-              className="input input-bordered"
-              placeholder={t('musician_form.contact_placeholder')}
-              disabled={isLoading}
-            />
-          </div>
+        {/* Phone */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('musician_form.phone_label')}</span>
+          </label>
+          <input
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={handleInputChange}
+            className="input input-bordered"
+            placeholder={t('musician_form.phone_placeholder')}
+            disabled={isLoading}
+          />
+        </div>
 
-          {/* Phone */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('musician_form.phone_label')}</span>
-            </label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              className="input input-bordered"
-              placeholder={t('musician_form.phone_placeholder')}
-              disabled={isLoading}
-            />
-          </div>
+        {/* Error Alert */}
+        <Alert type="error" message={error} />
 
-          {/* Error Alert */}
-          {error && (
-            <div className="alert alert-error">
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* Actions */}
-          <div className="modal-action">
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              {t('common.cancel')}
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isLoading}
-            >
-              {isLoading ? t('common.saving') : t('common.save_changes')}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      {/* Modal Backdrop */}
-      <form method="dialog" className="modal-backdrop">
-        <button onClick={onClose}>{t('common.close')}</button>
+        {/* Hidden submit button for form Enter key submission */}
+        <button type="submit" className="hidden" />
       </form>
-    </div>
+    </Modal>
   )
 }
-

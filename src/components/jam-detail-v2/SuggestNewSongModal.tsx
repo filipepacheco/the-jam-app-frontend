@@ -4,9 +4,8 @@
  * Supports importing song metadata from Spotify
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { type FormEvent, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X } from 'lucide-react'
 import { musicService, scheduleService } from '../../services'
 import { spotifyService } from '../../services/spotifyService'
 import { MusicModalFormFields } from '../MusicModalFormFields'
@@ -14,6 +13,8 @@ import { parseDuration } from '../../lib/musicUtils'
 import { formatDuration } from '../../lib/formatters'
 import { isValidSpotifyTrackUrl } from '../../lib/spotifyUtils'
 import type { CreateMusicDto } from '../../types/api.types'
+import { Alert } from '../Alert'
+import { Modal } from '../Modal'
 
 interface SuggestNewSongModalProps {
   jamId: string
@@ -31,7 +32,6 @@ export function SuggestNewSongModal({
   onSuccess,
 }: SuggestNewSongModalProps) {
   const { t } = useTranslation()
-  const modalRef = useRef<HTMLDivElement>(null)
 
   // Spotify import state
   const [spotifyUrl, setSpotifyUrl] = useState('')
@@ -85,26 +85,6 @@ export function SuggestNewSongModal({
     }
   }, [isOpen])
 
-  // Handle Escape key and focus management
-  useEffect(() => {
-    if (!isOpen || !modalRef.current) return
-
-    const focusableElements = modalRef.current.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
-    const firstElement = focusableElements[0] as HTMLElement
-    if (firstElement) firstElement.focus()
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && !submitting) {
-        onClose()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose, submitting])
-
   // Handle form field changes
   const handleFieldChange = useCallback((field: keyof typeof formData, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -143,7 +123,7 @@ export function SuggestNewSongModal({
   }, [spotifyUrl, t])
 
   // Handle form submission
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
 
@@ -233,118 +213,96 @@ export function SuggestNewSongModal({
   if (!isOpen) return null
 
   return (
-    <dialog className="modal modal-open" aria-labelledby="suggest-new-song-modal-title">
-      <div
-        ref={modalRef}
-        className="modal-box max-w-lg w-full max-h-[90vh] flex flex-col p-0"
-        role="dialog"
-        aria-modal="true"
-      >
-        {/* Header */}
-        <div className="px-4 sm:px-6 py-4 border-b border-base-300 flex items-center justify-between shrink-0">
-          <h3 id="suggest-new-song-modal-title" className="font-bold text-lg sm:text-xl">
-            {t('jams.suggest_new_song_title')}
-          </h3>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('jams.suggest_new_song_title')}
+      size="lg"
+      scrollable
+      closeDisabled={submitting}
+      footer={
+        <>
           <button
             type="button"
             onClick={onClose}
-            className="btn btn-ghost btn-sm btn-circle"
-            aria-label={t('common.close')}
+            className="btn btn-ghost"
             disabled={submitting}
           >
-            <X className="size-5" />
+            {t('common.cancel')}
           </button>
-        </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              const syntheticEvent = { preventDefault: () => {} } as FormEvent
+              void handleSubmit(syntheticEvent)
+            }}
+            className="btn btn-primary"
+            disabled={submitting || !formData.title.trim() || !formData.artist.trim()}
+          >
+            {submitting && <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>}
+            {getSubmitLabel()}
+          </button>
+        </>
+      }
+    >
+      <form onSubmit={(e) => { void handleSubmit(e) }} className="space-y-6">
+        {/* Description */}
+        <p className="text-sm text-base-content/70">
+          {t('jams.suggest_new_song_description')}
+        </p>
 
-        {/* Scrollable Content */}
-        <form onSubmit={(e) => { void handleSubmit(e) }} className="flex-1 overflow-y-auto">
-          <div className="p-4 sm:p-6 space-y-6">
-            {/* Description */}
-            <p className="text-sm text-base-content/70">
-              {t('jams.suggest_new_song_description')}
-            </p>
+        {/* Error Alert */}
+        <Alert type="error" message={error} />
 
-            {/* Error Alert */}
-            {error && (
-              <div className="alert alert-error" role="alert">
-                <span>{error}</span>
-              </div>
-            )}
-
-            {/* Spotify Import Section */}
-            <div className="bg-base-200 rounded-lg p-4 space-y-3">
-              <label className="label py-0" htmlFor="spotify-url">
-                <span className="label-text font-medium">{t('jams.spotify_url_label')}</span>
-              </label>
-              <div className="flex gap-2">
-                <input
-                  id="spotify-url"
-                  type="text"
-                  value={spotifyUrl}
-                  onChange={(e) => {
-                    setSpotifyUrl(e.target.value)
-                    setImportError(null)
-                    setImportSuccess(false)
-                  }}
-                  className="input input-bordered flex-1"
-                  placeholder={t('jams.spotify_url_placeholder')}
-                  disabled={importLoading || submitting}
-                />
-                <button
-                  type="button"
-                  onClick={() => { void handleSpotifyImport() }}
-                  className="btn btn-secondary"
-                  disabled={!spotifyUrl.trim() || importLoading || submitting}
-                >
-                  {importLoading ? (
-                    <>
-                      <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>
-                      {t('jams.importing_metadata')}
-                    </>
-                  ) : (
-                    t('jams.import_from_spotify')
-                  )}
-                </button>
-              </div>
-              {importError && (
-                <p className="text-sm text-error">{importError}</p>
-              )}
-              {importSuccess && (
-                <p className="text-sm text-success">{t('jams.import_success')}</p>
-              )}
-            </div>
-
-            {/* Form Fields */}
-            <MusicModalFormFields formData={formData} onChange={handleFieldChange} />
-          </div>
-
-          {/* Footer */}
-          <div className="px-4 sm:px-6 py-4 border-t border-base-300 flex justify-end gap-3 shrink-0 bg-base-100 sticky bottom-0">
+        {/* Spotify Import Section */}
+        <div className="bg-base-200 rounded-lg p-4 space-y-3">
+          <label className="label py-0" htmlFor="spotify-url">
+            <span className="label-text font-medium">{t('jams.spotify_url_label')}</span>
+          </label>
+          <div className="flex gap-2">
+            <input
+              id="spotify-url"
+              type="text"
+              value={spotifyUrl}
+              onChange={(e) => {
+                setSpotifyUrl(e.target.value)
+                setImportError(null)
+                setImportSuccess(false)
+              }}
+              className="input input-bordered flex-1"
+              placeholder={t('jams.spotify_url_placeholder')}
+              disabled={importLoading || submitting}
+            />
             <button
               type="button"
-              onClick={onClose}
-              className="btn btn-ghost"
-              disabled={submitting}
+              onClick={() => { void handleSpotifyImport() }}
+              className="btn btn-secondary"
+              disabled={!spotifyUrl.trim() || importLoading || submitting}
             >
-              {t('common.cancel')}
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={submitting || !formData.title.trim() || !formData.artist.trim()}
-            >
-              {submitting && <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>}
-              {getSubmitLabel()}
+              {importLoading ? (
+                <>
+                  <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>
+                  {t('jams.importing_metadata')}
+                </>
+              ) : (
+                t('jams.import_from_spotify')
+              )}
             </button>
           </div>
-        </form>
-      </div>
+          {importError && (
+            <p className="text-sm text-error">{importError}</p>
+          )}
+          {importSuccess && (
+            <p className="text-sm text-success">{t('jams.import_success')}</p>
+          )}
+        </div>
 
-      <form method="dialog" className="modal-backdrop">
-        <button type="button" onClick={onClose} aria-label={t('common.close')} disabled={submitting}>
-          close
-        </button>
+        {/* Form Fields */}
+        <MusicModalFormFields formData={formData} onChange={handleFieldChange} />
+
+        {/* Hidden submit button for form Enter key submission */}
+        <button type="submit" className="hidden" />
       </form>
-    </dialog>
+    </Modal>
   )
 }

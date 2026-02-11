@@ -9,7 +9,7 @@ import { useCallback, useMemo, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import useSWR from 'swr'
-import { useAuth } from '../hooks'
+import { useAuth, usePageAlerts } from '../hooks'
 import { musicService } from '../services'
 import type { MusicResponseDto } from '../types/api.types'
 import { API_ENDPOINTS } from '../lib/api/config'
@@ -21,6 +21,7 @@ import {
   MusicFilters,
   MusicModal,
   MusicTableRow,
+  PageAlerts,
 } from '../components'
 import { filterAndSortMusic } from '../lib/musicUtils'
 import { GENRES } from '../lib/musicConstants'
@@ -48,8 +49,7 @@ export function MusicPage() {
   } = useSWR<MusicResponseDto[]>(API_ENDPOINTS.music)
 
   const [actionLoading, setActionLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
 
   // Filter states
   const [searchTerm, setSearchTerm] = useState('')
@@ -290,16 +290,13 @@ export function MusicPage() {
       </div>
 
       {/* Alerts */}
-      <div className="container mx-auto max-w-7xl px-4 mt-4">
-        {(error || swrError) && (
-          <Alert
-            type="error"
-            message={error || swrError?.message || t('music_library.errors.failed_to_load')}
-            onDismiss={() => setError(null)}
-          />
-        )}
-        {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
-      </div>
+      <PageAlerts
+        error={error || swrError?.message || null}
+        success={success}
+        onDismissError={clearError}
+        onDismissSuccess={clearSuccess}
+        className="container mx-auto max-w-7xl px-4 mt-4"
+      />
 
       {/* Search & Filter */}
       <div className="container mx-auto max-w-7xl px-4 py-4">

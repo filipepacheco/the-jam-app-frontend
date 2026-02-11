@@ -3,13 +3,15 @@
  * Modal for suggesting a new song to add to jam schedule
  */
 
-import {useCallback, useEffect, useRef, useState} from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {MusicResponseDto} from '../../types/api.types'
 import {musicService, scheduleService} from '../../services'
 import {useFormState} from '../../hooks'
 import {Alert} from "../Alert"
 import {SearchableSelect} from "../forms/SearchableSelect.tsx"
+import {Modal} from '../Modal'
+import {ModalFooter} from '../ModalFooter'
 
 interface SuggestSongModalProps {
   jamId: string
@@ -31,29 +33,6 @@ export function SuggestSongModal({
   const [allSongs, setAllSongs] = useState<MusicResponseDto[]>([])
   const [loadingSongs, setLoadingSongs] = useState(false)
   const { error, setError, submitting, setSubmitting, resetError } = useFormState({ navigateOnSuccess: false })
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  // Manage focus within modal
-  useEffect(() => {
-    if (!isOpen || !modalRef.current) return
-
-    // Focus the first focusable element
-    const focusableElements = modalRef.current.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
-    const firstElement = focusableElements[0] as HTMLElement
-    if (firstElement) firstElement.focus()
-
-    // Handle Escape key
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose])
 
   // Load songs when modal opens
   const loadSongs = useCallback(async () => {
@@ -108,109 +87,89 @@ export function SuggestSongModal({
   if (!isOpen) return null
 
   return (
-    <div className="modal modal-open" role="dialog" aria-modal="true" aria-labelledby="suggest-modal-title" ref={modalRef}>
-      <div className="modal-box max-w-md">
-        <h3 id="suggest-modal-title" className="font-bold text-lg mb-4">
-          {t('jams.suggest_modal_title')}
-        </h3>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('jams.suggest_modal_title')}
+      size="md"
+      footer={
+        <ModalFooter
+          onCancel={onClose}
+          onSubmit={handleSuggest}
+          submitLabel={submitting ? t('common.suggesting') : t('common.suggest_song')}
+          submitting={submitting}
+          submitDisabled={!selectedSongId || loadingSongs}
+        />
+      }
+    >
+      <Alert type="error" message={error}/>
 
-        <Alert type="error" message={error}/>
-
-        {/* Loading State */}
-        {loadingSongs && !allSongs.length ? (
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-3">
-              <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>
-              <span className="text-sm text-base-content/70 font-semibold">
-                {t('jams.loading_songs')}
-              </span>
-            </div>
-            <div className="form-control">
-              <label className="label" htmlFor="song-select">
-                <span className="label-text">{t('jams.select_song')}</span>
-              </label>
-              <div className="skeleton h-12 w-full rounded"></div>
-            </div>
+      {/* Loading State */}
+      {loadingSongs && !allSongs.length ? (
+        <div className="mb-4">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>
+            <span className="text-sm text-base-content/70 font-semibold">
+              {t('jams.loading_songs')}
+            </span>
           </div>
-        ) : (
-          <div className="form-control mb-4">
-            <label className="label" id="song-select-label" htmlFor="song-select">
+          <div className="form-control">
+            <label className="label" htmlFor="song-select">
               <span className="label-text">{t('jams.select_song')}</span>
             </label>
-            <SearchableSelect<MusicResponseDto>
-              id="song-select"
-              items={allSongs}
-              value={selectedSongId}
-              onChange={setSelectedSongId}
-              getItemLabel={(song) => song.title ?? ''}
-              getItemSubLabel={(song) => song.artist ?? ''}
-              placeholder={t('jams.choose_song')}
-              searchPlaceholder={t('common.search')}
-              disabled={submitting}
-              loading={loadingSongs}
-              name="song"
-              filterFn={(song, term) => {
-                const searchLower = term.toLowerCase()
-                const title = (song.title ?? '').toLowerCase()
-                const artist = (song.artist ?? '').toLowerCase()
-                return title.includes(searchLower) || artist.includes(searchLower)
-              }}
-            />
-            {onCreateNewSong && (
-              <button
-                type="button"
-                onClick={() => {
-                  onClose()
-                  onCreateNewSong()
-                }}
-                className="btn btn-ghost btn-sm w-full mt-2 text-base-content/70 hover:text-primary"
-                disabled={submitting}
-              >
-                {t('jams.didnt_find_music')}
-              </button>
-            )}
+            <div className="skeleton h-12 w-full rounded"></div>
           </div>
-        )}
-
-        {/* Info Box */}
-        <div className="bg-base-200 rounded-lg p-3 mb-4">
-          <p className="font-semibold text-sm mb-2">{t('jams.how_it_works_short')}</p>
-          <ul className="list-disc list-inside space-y-1 text-xs text-base-content/70">
-            <li>{t('jams.how_it_works_list.select')}</li>
-            <li>{t('jams.how_it_works_list.slot')}</li>
-            <li>{t('jams.how_it_works_list.review')}</li>
-            <li>{t('jams.how_it_works_list.register')}</li>
-          </ul>
         </div>
-
-        {/* Modal Actions */}
-        <div className="modal-action">
-          <button
-            onClick={onClose}
-            className="btn btn-ghost"
+      ) : (
+        <div className="form-control mb-4">
+          <label className="label" id="song-select-label" htmlFor="song-select">
+            <span className="label-text">{t('jams.select_song')}</span>
+          </label>
+          <SearchableSelect<MusicResponseDto>
+            id="song-select"
+            items={allSongs}
+            value={selectedSongId}
+            onChange={setSelectedSongId}
+            getItemLabel={(song) => song.title ?? ''}
+            getItemSubLabel={(song) => song.artist ?? ''}
+            placeholder={t('jams.choose_song')}
+            searchPlaceholder={t('common.search')}
             disabled={submitting}
-            type="button"
-          >
-            {t('common.cancel')}
-          </button>
-          <button
-            onClick={handleSuggest}
-            className="btn btn-primary"
-            disabled={submitting || !selectedSongId || loadingSongs}
-            type="button"
-          >
-            {submitting ? (
-              <>
-                <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>
-                {t('common.suggesting')}
-              </>
-            ) : (
-              t('common.suggest_song')
-            )}
-          </button>
+            loading={loadingSongs}
+            name="song"
+            filterFn={(song, term) => {
+              const searchLower = term.toLowerCase()
+              const title = (song.title ?? '').toLowerCase()
+              const artist = (song.artist ?? '').toLowerCase()
+              return title.includes(searchLower) || artist.includes(searchLower)
+            }}
+          />
+          {onCreateNewSong && (
+            <button
+              type="button"
+              onClick={() => {
+                onClose()
+                onCreateNewSong()
+              }}
+              className="btn btn-ghost btn-sm w-full mt-2 text-base-content/70 hover:text-primary"
+              disabled={submitting}
+            >
+              {t('jams.didnt_find_music')}
+            </button>
+          )}
         </div>
+      )}
+
+      {/* Info Box */}
+      <div className="bg-base-200 rounded-lg p-3 mb-4">
+        <p className="font-semibold text-sm mb-2">{t('jams.how_it_works_short')}</p>
+        <ul className="list-disc list-inside space-y-1 text-xs text-base-content/70">
+          <li>{t('jams.how_it_works_list.select')}</li>
+          <li>{t('jams.how_it_works_list.slot')}</li>
+          <li>{t('jams.how_it_works_list.review')}</li>
+          <li>{t('jams.how_it_works_list.register')}</li>
+        </ul>
       </div>
-      <div className="modal-backdrop" onClick={onClose}></div>
-    </div>
+    </Modal>
   )
 }

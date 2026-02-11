@@ -7,10 +7,11 @@
 import {useCallback, useEffect, useState} from 'react'
 import {useLocation, useNavigate, useParams, useSearchParams} from 'react-router-dom'
 import useSWR from 'swr'
-import {useAuth} from '../../hooks'
+import {SWR_DEFAULTS} from '../../config/swrDefaults'
+import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {Alert} from '../../components'
+import {Alert, FullPageSpinner, PageAlerts} from '../../components'
 import {SpotifyExportModal} from '../../components/SpotifyExportModal'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
@@ -43,8 +44,7 @@ export function JamManagementPage() {
     const useLegacyDJ = searchParams.get('useLegacyDJ') === 'true'
 
     const [activeTab, setActiveTab] = useState<TabType>('overview')
-    const [error, setError] = useState<string | null>(null)
-    const [success, setSuccess] = useState<string | null>(null)
+    const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
     const [spotifyAccessToken, setSpotifyAccessToken] = useState<string | null>(null)
     const [showExportModal, setShowExportModal] = useState(false)
 
@@ -54,11 +54,8 @@ export function JamManagementPage() {
     const {
         data: jam, error: swrError, isLoading: jamLoading, mutate: refreshJam,
     } = useSWR<JamResponseDto>(jamId ? `jam-${jamId}` : null, () => jamFetcher(jamId!), {
+        ...SWR_DEFAULTS,
         revalidateOnFocus: false,
-        revalidateOnReconnect: true,
-        dedupingInterval: 2000,
-        errorRetryCount: 3,
-        errorRetryInterval: 5000,
     })
 
     // Handle SWR errors
@@ -127,23 +124,11 @@ export function JamManagementPage() {
 
     // Show loading spinner while auth is initializing
     if (authLoading) {
-        return (<div className="min-h-screen flex items-center justify-center bg-base-100">
-                <div className="flex flex-col items-center gap-3">
-                    <span className="loading loading-spinner loading-lg"></span>
-                    <span
-                        className="text-sm sm:text-base font-semibold text-base-content/70">{t('common.loading')}</span>
-                </div>
-            </div>)
+        return <FullPageSpinner label={t('common.loading')} />
     }
 
     if (jamLoading && !jam) {
-        return (<div className="min-h-screen flex items-center justify-center bg-base-100">
-                <div className="flex flex-col items-center gap-3">
-                    <span className="loading loading-spinner loading-lg"></span>
-                    <span
-                        className="text-sm sm:text-base font-semibold text-base-content/70">{t('jam_management.loading_jam')}</span>
-                </div>
-            </div>)
+        return <FullPageSpinner label={t('jam_management.loading_jam')} />
     }
 
     if (error && !jam) {
@@ -248,10 +233,7 @@ export function JamManagementPage() {
             </div>
 
             {/* Alerts */}
-            <div className="container sticky top-0 z-50 mx-auto max-w-6xl px-2 sm:px-4 mt-3 sm:mt-4">
-                {error && <Alert type="error" message={error} onDismiss={() => setError(null)}/>}
-                {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)}/>}
-            </div>
+            <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} className="container sticky top-0 z-50 mx-auto max-w-6xl px-2 sm:px-4 mt-3 sm:mt-4" />
 
             {/* Tab Content */}
             <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8">

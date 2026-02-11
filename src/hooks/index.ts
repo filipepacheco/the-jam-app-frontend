@@ -31,6 +31,9 @@ export type { UseJamControlReturn } from '../types/jamControl.types'
 export { useQueueReorder } from './useQueueReorder'
 export type { UseQueueReorderReturn } from '../types/jamControl.types'
 
+// Page-level alert state hook
+export { usePageAlerts } from './usePageAlerts'
+
 // Accessibility hook
 export { useReducedMotion } from './useReducedMotion'
 

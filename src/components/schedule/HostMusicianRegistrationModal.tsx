@@ -13,6 +13,8 @@ import {getInstrumentOptions} from '../../utils/scheduleUtils'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
 import {Alert} from '../Alert'
 import {InstrumentsSummary} from './InstrumentsSummary'
+import {Modal} from '../Modal'
+import {ModalFooter} from '../ModalFooter'
 
 interface HostMusicianRegistrationModalProps {
   schedule: ScheduleResponseDto
@@ -97,86 +99,69 @@ export function HostMusicianRegistrationModal({
   if (!isOpen) return null
 
   return (
-    <div className="modal modal-open">
-      <div className="modal-box max-w-sm">
-        <h3 className="font-bold text-lg mb-4">{t('schedule.add_musician_title')}</h3>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('schedule.add_musician_title')}
+      size="sm"
+      footer={
+        <ModalFooter
+          onCancel={onClose}
+          onSubmit={handleRegister}
+          submitLabel={loading ? t('common.adding') : t('schedule.add_musician_btn')}
+          submitting={loading}
+          submitDisabled={!selectedMusicianId || !selectedInstrument}
+        />
+      }
+    >
+      <ScheduleDetailsCard schedule={schedule} />
+      <Alert type="error" message={error} />
 
-        <ScheduleDetailsCard schedule={schedule} />
-        <Alert type="error" message={error} />
-
-        {/* Musician Selection */}
-        <div className="form-control mb-4">
-          <label className="label">
-            <span className="label-text">{t('schedule.select_musician')}</span>
-          </label>
-          <select
-            value={selectedMusicianId}
-            onChange={(e) => setSelectedMusicianId(e.target.value)}
-            className="select select-bordered"
-            disabled={musicianLoading || loading}
-          >
-            <option value="">{t('schedule.choose_musician')}</option>
-            {musicians.map((musician) => (
-              <option key={musician.id} value={musician.id}>
-                {musician.name} ({musician.instrument || t('common.unknown')})
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Instrument Selection */}
-        <div className="form-control mb-4">
-          <label className="label">
-            <span className="label-text">{t('schedule.select_instrument')}</span>
-          </label>
-          <select
-            value={selectedInstrument}
-            onChange={(e) => setSelectedInstrument(e.target.value)}
-            className="select select-bordered"
-            disabled={loading}
-          >
-            <option value="">{t('schedule.choose_instrument')}</option>
-            {instrumentOptions.map((option) => {
-              const remaining = option.needed - option.registered
-              const isFull = remaining <= 0
-              return (
-                <option key={option.key} value={option.key} disabled={isFull}>
-                  {option.emoji} {option.label} {isFull ? t('schedule.full_parentheses') : t('schedule.needed_count_parentheses', { count: remaining })}
-                </option>
-              )
-            })}
-          </select>
-        </div>
-
-        <InstrumentsSummary instrumentOptions={instrumentOptions} />
-
-        {/* Modal Actions */}
-        <div className="modal-action">
-          <button
-            onClick={onClose}
-            className="btn btn-ghost"
-            disabled={loading}
-          >
-            {t('common.cancel')}
-          </button>
-          <button
-            onClick={handleRegister}
-            className="btn btn-primary"
-            disabled={loading || !selectedMusicianId || !selectedInstrument}
-          >
-            {loading ? (
-              <>
-                <span className="loading loading-spinner loading-sm"></span>
-                {t('common.adding')}
-              </>
-            ) : (
-              t('schedule.add_musician_btn')
-            )}
-          </button>
-        </div>
+      {/* Musician Selection */}
+      <div className="form-control mb-4">
+        <label className="label">
+          <span className="label-text">{t('schedule.select_musician')}</span>
+        </label>
+        <select
+          value={selectedMusicianId}
+          onChange={(e) => setSelectedMusicianId(e.target.value)}
+          className="select select-bordered"
+          disabled={musicianLoading || loading}
+        >
+          <option value="">{t('schedule.choose_musician')}</option>
+          {musicians.map((musician) => (
+            <option key={musician.id} value={musician.id}>
+              {musician.name} ({musician.instrument || t('common.unknown')})
+            </option>
+          ))}
+        </select>
       </div>
-      <div className="modal-backdrop" onClick={onClose}></div>
-    </div>
+
+      {/* Instrument Selection */}
+      <div className="form-control mb-4">
+        <label className="label">
+          <span className="label-text">{t('schedule.select_instrument')}</span>
+        </label>
+        <select
+          value={selectedInstrument}
+          onChange={(e) => setSelectedInstrument(e.target.value)}
+          className="select select-bordered"
+          disabled={loading}
+        >
+          <option value="">{t('schedule.choose_instrument')}</option>
+          {instrumentOptions.map((option) => {
+            const remaining = option.needed - option.registered
+            const isFull = remaining <= 0
+            return (
+              <option key={option.key} value={option.key} disabled={isFull}>
+                {option.emoji} {option.label} {isFull ? t('schedule.full_parentheses') : t('schedule.needed_count_parentheses', { count: remaining })}
+              </option>
+            )
+          })}
+        </select>
+      </div>
+
+      <InstrumentsSummary instrumentOptions={instrumentOptions} />
+    </Modal>
   )
 }
-

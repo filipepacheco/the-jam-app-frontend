@@ -1,4 +1,5 @@
 import { memo, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type AlertType = 'error' | 'warning' | 'success' | 'info'
 
@@ -35,6 +36,8 @@ export const Alert = memo(function Alert({
   autoHide = false,
   autoHideDelay = 3000,
 }: AlertProps) {
+  const { t } = useTranslation()
+
   useEffect(() => {
     if (!autoHide || !onDismiss || !message) return
     const timeoutId = setTimeout(onDismiss, autoHideDelay)
@@ -63,7 +66,7 @@ export const Alert = memo(function Alert({
         <div className="text-sm">{message}</div>
       </div>
       {onDismiss && (
-        <button className="btn btn-sm btn-ghost" onClick={onDismiss} aria-label="Dismiss">
+        <button className="btn btn-sm btn-ghost" onClick={onDismiss} aria-label={t('common.dismiss')}>
           ✕
         </button>
       )}

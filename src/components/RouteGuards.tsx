@@ -4,9 +4,11 @@
  */
 
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks'
 import type { UserRole } from '../types/auth.types'
 import { Alert } from './Alert'
+import { FullPageSpinner } from './FullPageSpinner'
 
 /**
  * Props for route guard components
@@ -43,14 +45,11 @@ export function ProtectedRoute({
   requiredRole,
   fallback,
 }: RouteGuardProps) {
+  const { t } = useTranslation()
   const { role, isLoading } = useAuth()
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    )
+    return <FullPageSpinner />
   }
 
   const isAuthorized = hasRequiredRole(role, requiredRole)
@@ -61,10 +60,10 @@ export function ProtectedRoute({
         <div className="min-h-screen flex items-center justify-center p-4">
           <Alert
             type="error"
-            message={`You don't have permission to access this page. Required role: ${
-              Array.isArray(requiredRole) ? requiredRole.join(', ') : requiredRole
-            }`}
-            title="Access Denied"
+            message={t('errors.insufficient_permission', {
+              role: Array.isArray(requiredRole) ? requiredRole.join(', ') : requiredRole
+            })}
+            title={t('errors.access_denied')}
           />
         </div>
       )

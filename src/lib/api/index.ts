@@ -5,6 +5,7 @@
 
 export { apiClient, ApiClient } from './client'
 export { API_CONFIG, API_ENDPOINTS, validateEnvironment, getApiBaseUrl } from './config'
+export { withLegacyResponse } from './serviceWrapper'
 export {
   handleApiError,
   isNetworkError,

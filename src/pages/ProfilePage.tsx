@@ -10,7 +10,7 @@ import {useAuth} from '../hooks'
 import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import {ProfileHeader} from '../components/ProfileHeader'
 import {ProfileFormSection} from '../components/ProfileFormSection'
-import {Alert} from '../components'
+import {Alert, FullPageSpinner} from '../components'
 
 import {useTranslation} from 'react-i18next'
 
@@ -93,11 +93,7 @@ export function ProfilePage() {
   }
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    )
+    return <FullPageSpinner />
   }
 
   if (!isAuthenticated || !user) {

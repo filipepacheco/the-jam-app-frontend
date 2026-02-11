@@ -8,10 +8,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Star, MessageSquare, User, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useAuth } from '../../hooks'
+import { useAuth, usePageAlerts } from '../../hooks'
 import { feedbackService } from '../../services/feedbackService'
 import type { FeedbackListItemDto, FeedbackListResponseDto } from '../../types/feedback.types'
-import { Alert } from '../../components'
+import { Alert, FullPageSpinner } from '../../components'
 
 export function FeedbackPage() {
   const { t } = useTranslation()
@@ -19,7 +19,7 @@ export function FeedbackPage() {
   const { isAuthenticated, isLoading: authLoading, role } = useAuth()
   const [feedbackData, setFeedbackData] = useState<FeedbackListResponseDto | null>(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const {error, setError, clearError} = usePageAlerts()
   const [page, setPage] = useState(1)
   const limit = 20
 
@@ -67,16 +67,7 @@ export function FeedbackPage() {
   }, [feedbackData])
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <div className="flex flex-col items-center gap-3">
-          <span className="loading loading-spinner loading-lg"></span>
-          <span className="text-sm sm:text-base font-semibold text-base-content/70">
-            {t('common.loading')}
-          </span>
-        </div>
-      </div>
-    )
+    return <FullPageSpinner label={t('common.loading')} />
   }
 
   return (
@@ -96,7 +87,7 @@ export function FeedbackPage() {
             </button>
           </div>
 
-          {error && <Alert type="error" message={error} onDismiss={() => setError(null)} />}
+          {error && <Alert type="error" message={error} onDismiss={clearError} />}
         </div>
 
         {/* Statistics Cards */}
@@ -132,9 +123,7 @@ export function FeedbackPage() {
             </div>
           </div>
         ) : feedbackData?.items.length === 0 ? (
-          <div className="alert alert-info mb-6 sm:mb-8">
-            <p className="text-sm sm:text-base">{t('feedback_page.no_feedback')}</p>
-          </div>
+          <Alert type="info" message={t('feedback_page.no_feedback')} className="mb-6 sm:mb-8" />
         ) : (
           <>
             <div className="space-y-4">

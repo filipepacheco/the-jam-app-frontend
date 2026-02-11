@@ -1,5 +1,6 @@
 import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
+import {Alert} from "../../components";
 
 /**
  * Analytics Tab Component
@@ -42,9 +43,7 @@ export function AnalyticsTab({jam}: { jam: JamResponseDto }) {
             </div>
 
             {jam.status === 'FINISHED' && (
-                <div className="alert alert-success">
-                    <p>✅ {t('jam_management.analytics.finished_message')}</p>
-                </div>
+                <Alert type="success" message={t('jam_management.analytics.finished_message')} />
             )}
         </div>
     )

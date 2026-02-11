@@ -7,9 +7,9 @@
 import React, {useEffect, useState, useCallback} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
-import {useAuth} from '../../hooks'
+import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import {Alert, SpotifyImportModal} from '../../components'
+import {Alert, FullPageSpinner, PageAlerts, SpotifyImportModal} from '../../components'
 
 interface FormData {
   name: string
@@ -31,8 +31,7 @@ export function CreateJamPage() {
 
   const [mode, setMode] = useState<'create' | 'edit'>('create')
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
   const [spotifyModalOpen, setSpotifyModalOpen] = useState(false)
 
   const [formData, setFormData] = useState<FormData>({
@@ -208,11 +207,7 @@ export function CreateJamPage() {
 
   // Show loading spinner while auth is initializing
   if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    )
+    return <FullPageSpinner />
   }
 
   const title = mode === 'create'
@@ -234,8 +229,7 @@ export function CreateJamPage() {
         </div>
 
         {/* Alerts */}
-        {error && <Alert type="error" message={error} onDismiss={() => setError(null)} />}
-        {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
+        <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} />
 
         {/* Spotify Import Section - only in create mode */}
         {mode === 'create' && (
@@ -446,13 +440,13 @@ export function CreateJamPage() {
         </div>
 
         {/* Info Box */}
-        <div className="alert alert-info mt-6">
-          <p>
-            {mode === 'create'
-              ? t('create_jam.info.create_hint')
-              : t('create_jam.info.edit_hint')}
-          </p>
-        </div>
+        <Alert
+          type="info"
+          message={mode === 'create'
+            ? t('create_jam.info.create_hint')
+            : t('create_jam.info.edit_hint')}
+          className="mt-6"
+        />
       </div>
 
       {/* Spotify Import Modal */}

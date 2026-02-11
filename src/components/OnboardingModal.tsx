@@ -8,6 +8,8 @@ import {useAuth, useFormState} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
 import {useTranslation} from 'react-i18next'
 import type {MusicianLevel} from '../types/api.types'
+import {Alert} from './Alert'
+import {Modal} from './Modal'
 
 interface OnboardingModalProps {
   isOpen: boolean
@@ -116,126 +118,119 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   if (!isOpen) return null
 
   return (
-    <dialog className="modal modal-open">
-      <div className="modal-box">
-        {/* Header */}
-        <h3 className="font-bold text-lg mb-2">
-          {t('jams.onboarding.welcome_title')}
-        </h3>
-        <p className="text-base-content/70 mb-6">
-          {t('jams.onboarding.welcome_desc')}
-        </p>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={t('jams.onboarding.welcome_title')}
+      closeDisabled={true}
+      footer={
+        <>
+        {/*  <button*/}
+        {/*    type="button"*/}
+        {/*    className="btn btn-ghost"*/}
+        {/*    onClick={handleSkip}*/}
+        {/*    disabled={isLoading}*/}
+        {/*  >*/}
+        {/*    Skip for now*/}
+        {/*  </button>*/}
+          <button
+            type="button"
+            className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading || !name.trim() || phone.replace(/\D/g, '').length < 10 || !instrument || !level}
+            onClick={() => {
+              const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
+              void handleSubmit(syntheticEvent)
+            }}
+          >
+            {isLoading ? t('common.saving') : t('jams.onboarding.get_started')}
+          </button>
+        </>
+      }
+    >
+      <p className="text-base-content/70 mb-6">
+        {t('jams.onboarding.welcome_desc')}
+      </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name Field - Required */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('jams.onboarding.name_label')} <span className="text-error">*</span></span>
-            </label>
-            <input
-              type="text"
-              placeholder={t('jams.onboarding.name_placeholder')}
-              className="input input-bordered w-full"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              disabled={isLoading}
-              required
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Name Field - Required */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('jams.onboarding.name_label')} <span className="text-error">*</span></span>
+          </label>
+          <input
+            type="text"
+            placeholder={t('jams.onboarding.name_placeholder')}
+            className="input input-bordered w-full"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            disabled={isLoading}
+            required
+          />
+        </div>
 
-          {/* Phone Field - Required */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('jams.onboarding.phone_label')} <span className="text-error">*</span></span>
-            </label>
-            <input
-              type="tel"
-              placeholder="(XX) XXXXX-XXXX"
-              className="input input-bordered w-full"
-              value={phone}
-              onChange={handlePhoneChange}
-              disabled={isLoading}
-              maxLength={15}
-              required
-            />
-          </div>
+        {/* Phone Field - Required */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('jams.onboarding.phone_label')} <span className="text-error">*</span></span>
+          </label>
+          <input
+            type="tel"
+            placeholder="(XX) XXXXX-XXXX"
+            className="input input-bordered w-full"
+            value={phone}
+            onChange={handlePhoneChange}
+            disabled={isLoading}
+            maxLength={15}
+            required
+          />
+        </div>
 
-          {/* Instrument Selection */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('jams.onboarding.instrument_q')} <span className="text-error">*</span></span>
-            </label>
-            <select
-              className="select select-bordered w-full"
-              value={instrument}
-              onChange={(e) => setInstrument(e.target.value)}
-              disabled={isLoading}
-            >
-              <option value="">{t('jams.onboarding.instrument_choose')}</option>
-              {INSTRUMENTS.map((inst) => (
-                <option key={inst} value={inst}>
-                  {t(`schedule.instruments.${inst}`)}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Instrument Selection */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('jams.onboarding.instrument_q')} <span className="text-error">*</span></span>
+          </label>
+          <select
+            className="select select-bordered w-full"
+            value={instrument}
+            onChange={(e) => setInstrument(e.target.value)}
+            disabled={isLoading}
+          >
+            <option value="">{t('jams.onboarding.instrument_choose')}</option>
+            {INSTRUMENTS.map((inst) => (
+              <option key={inst} value={inst}>
+                {t(`schedule.instruments.${inst}`)}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {/* Skill Level Selection */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('jams.onboarding.level_q')} <span className="text-error">*</span></span>
-            </label>
-            <select
-              className="select select-bordered w-full"
-              value={level}
-              onChange={(e) => setLevel(e.target.value)}
-              disabled={isLoading}
-            >
-              <option value="">{t('jams.onboarding.level_choose')}</option>
-              {SKILL_LEVELS.map((lv) => (
-                <option key={lv} value={lv}>
-                  {t(`schedule.levels.${lv}`)}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Skill Level Selection */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('jams.onboarding.level_q')} <span className="text-error">*</span></span>
+          </label>
+          <select
+            className="select select-bordered w-full"
+            value={level}
+            onChange={(e) => setLevel(e.target.value)}
+            disabled={isLoading}
+          >
+            <option value="">{t('jams.onboarding.level_choose')}</option>
+            {SKILL_LEVELS.map((lv) => (
+              <option key={lv} value={lv}>
+                {t(`schedule.levels.${lv}`)}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {/* Error Alert */}
-          {error && (
-            <div className="alert alert-error">
-              <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>{error}</span>
-            </div>
-          )}
+        {/* Error Alert */}
+        <Alert type="error" message={error} />
 
-          {/* Actions */}
-          <div className="modal-action">
-          {/*  <button*/}
-          {/*    type="button"*/}
-          {/*    className="btn btn-ghost"*/}
-          {/*    onClick={handleSkip}*/}
-          {/*    disabled={isLoading}*/}
-          {/*  >*/}
-          {/*    Skip for now*/}
-          {/*  </button>*/}
-            <button
-              type="submit"
-              className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
-              disabled={isLoading || !name.trim() || phone.replace(/\D/g, '').length < 10 || !instrument || !level}
-            >
-              {isLoading ? t('common.saving') : t('jams.onboarding.get_started')}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      {/* Non-clickable backdrop */}
-      <div className="modal-backdrop bg-black/50" />
-    </dialog>
+        {/* Hidden submit button for form Enter key submission */}
+        <button type="submit" className="hidden" />
+      </form>
+    </Modal>
   )
 }
-
-
-

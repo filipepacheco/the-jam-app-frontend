@@ -41,7 +41,7 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
         {/* Header: Name + Status Badge */}
         <div className="flex justify-between items-center gap-2">
           <h3 className="card-title text-base sm:text-lg min-w-0">{jam.name || t('jams.no_name')}</h3>
-          <div className={`badge badge-sm sm:badge-md lg:badge-lg flex-shrink-0 badge-lg font-semibold ${getJamStatusBadgeClass(jam.status)}`}>
+          <div className={`badge badge-sm sm:badge-md lg:badge-lg flex-shrink-0 font-semibold ${getJamStatusBadgeClass(jam.status)}`}>
             {getJamStatusLabel(jam.status, t)}
           </div>
         </div>

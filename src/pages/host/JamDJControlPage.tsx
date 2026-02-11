@@ -8,9 +8,9 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
-import {useAuth, useJamControl} from '../../hooks'
+import {useAuth, useJamControl, usePageAlerts} from '../../hooks'
 import {scheduleService} from '../../services'
-import {Alert} from '../../components'
+import {Alert, FullPageSpinner, PageAlerts} from '../../components'
 import {DJControlActions, QueueStats, SongQueueTimeline} from '../../components/dj-control'
 import {useTranslation} from 'react-i18next'
 
@@ -21,8 +21,7 @@ export function JamDJControlPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth()
 
   const [actionLoading, setActionLoading] = useState(false)
-  const [localError, setLocalError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const {error: localError, setError: setLocalError, clearError: clearLocalError, success, setSuccess, clearSuccess} = usePageAlerts()
 
   // Use the new jam control hook with auto-refresh
   const { liveState, isLoading, error, start, stop, resume, pause, next, previous, refresh } =
@@ -77,14 +76,7 @@ export function JamDJControlPage() {
   const displayError = localError || error
 
   if (authLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <div className="flex flex-col items-center gap-3">
-          <span className="loading loading-spinner loading-lg"></span>
-          <span className="text-sm font-semibold text-base-content/70">{t('common.loading')}</span>
-        </div>
-      </div>
-    )
+    return <FullPageSpinner label={t('common.loading')} />
   }
 
   if (!jamId) {
@@ -123,10 +115,7 @@ export function JamDJControlPage() {
       </div>
 
       {/* Alerts */}
-      <div className="container sticky top-0 z-40 mx-auto max-w-6xl px-2 sm:px-4 mt-2 sm:mt-4">
-        {displayError && <Alert type="error" message={displayError} onDismiss={() => setLocalError(null)} />}
-        {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
-      </div>
+      <PageAlerts error={displayError} success={success} onDismissError={clearLocalError} onDismissSuccess={clearSuccess} className="container sticky top-0 z-40 mx-auto max-w-6xl px-2 sm:px-4 mt-2 sm:mt-4" />
 
       {/* Main Content */}
       <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8">

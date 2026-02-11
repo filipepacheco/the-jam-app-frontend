@@ -7,6 +7,7 @@
 import {useCallback} from 'react'
 import useSWR from 'swr'
 import {jamControlService} from '../services'
+import {SWR_DEFAULTS} from '../config/swrDefaults'
 import type {LiveStateResponseDto, UseJamControlReturn} from '../types/jamControl.types'
 
 interface UseJamControlOptions {
@@ -40,13 +41,9 @@ export function useJamControl(jamId: string, options?: UseJamControlOptions): Us
     isLoading,
     mutate,
   } = useSWR<LiveStateResponseDto>(swrKey, fetcher, {
+    ...SWR_DEFAULTS,
     refreshInterval: autoRefreshEnabled ? autoRefreshInterval : 0,
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true,
-    dedupingInterval: 2000, // Prevent duplicate requests within 2s
     shouldRetryOnError: true,
-    errorRetryCount: 3,
-    errorRetryInterval: 5000,
   })
 
   // Convert SWR error to string

@@ -76,7 +76,8 @@
     "add_song": "+ Adicionar Música",
     "no_registrations_yet": "Sem inscrições ainda",
     "confirm": "Confirmar",
-    "are_you_sure": "Tem certeza?"
+    "are_you_sure": "Tem certeza?",
+    "dismiss": "Dispensar"
   },
   "roles": {
     "host": "Organizador",
@@ -357,6 +358,9 @@
     "not_found": "Jam não encontrado",
     "error_loading_jam": "Erro ao carregar o Jam",
     "back_to_jams": "← Voltar para Jams",
+    "back_to_jam": "← Voltar para o Jam",
+    "registering_as": "Inscrevendo-se como",
+    "register_for_name": "Inscrever-se no {{name}}",
     "info": {
       "location": "Local",
       "tba": "A definir",
@@ -489,7 +493,12 @@
     "must_agree_terms": "Você deve concordar com os termos antes de se inscrever",
     "queue_empty": "Não é possível reordenar fila vazia",
     "duplicate_ids": "Músicas duplicadas detectadas",
-    "reorder_failed": "Falha ao reordenar a fila"
+    "reorder_failed": "Falha ao reordenar a fila",
+    "connection_error": "Erro de conexão. Por favor, tente novamente.",
+    "access_denied": "Acesso Negado",
+    "insufficient_permission": "Você não tem permissão para acessar esta página. Papel necessário: {{role}}",
+    "jam_id_not_provided": "ID do Jam não fornecido",
+    "failed_to_load_jam": "Falha ao carregar o jam"
   },
   "live_control": {
     "now_playing": "Tocando agora",

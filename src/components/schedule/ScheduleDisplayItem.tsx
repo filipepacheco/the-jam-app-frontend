@@ -6,7 +6,7 @@
 import {memo} from 'react'
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {RegistrationList} from './RegistrationList'
-import {formatDuration} from '../../lib/formatters'
+import {InstrumentBadges} from './InstrumentBadges'
 import {useTranslation} from 'react-i18next'
 import {getStatusColor, getStatusLabel, getStatusIcon} from '../../lib/schedule/statusHelpers'
 import {CheckCircle} from 'lucide-react'
@@ -71,15 +71,14 @@ export const ScheduleDisplayItem = memo(function ScheduleDisplayItem({
                         className="text-sm text-base-content/70 ml-1">{t('common.by')} {schedule.music?.artist || t('schedule.artist_tba')}</span>
                 </p>
 
-                <div className="flex flex-wrap gap-1 mt-1">
-                    {duration && (<span
-                        className="badge badge-sm badge-neutral font-semibold"> ⏱️ {formatDuration(duration)} </span>)}
-                    {neededDrums > 0 && (<span className="badge badge-sm badge-ghost">🥁 {neededDrums}</span>)}
-                    {neededGuitars > 0 && (<span className="badge badge-sm badge-ghost">🎸 {neededGuitars}</span>)}
-                    {neededVocals > 0 && (<span className="badge badge-sm badge-ghost">🎤 {neededVocals}</span>)}
-                    {neededBass > 0 && (<span className="badge badge-sm badge-ghost">🎸 {neededBass}</span>)}
-                    {neededKeys > 0 && (<span className="badge badge-sm badge-ghost">🎹 {neededKeys}</span>)}
-                </div>
+                <InstrumentBadges
+                    neededDrums={neededDrums}
+                    neededGuitars={neededGuitars}
+                    neededVocals={neededVocals}
+                    neededBass={neededBass}
+                    neededKeys={neededKeys}
+                    duration={duration}
+                />
             </div>
 
 

@@ -6,7 +6,7 @@
 import {useEffect, useState} from 'react'
 import {useAuth} from '../hooks'
 import {useNavigate} from 'react-router-dom'
-import {ProfileSetupModal, SupabaseLoginForm} from '../components'
+import {FullPageSpinner, ProfileSetupModal, SupabaseLoginForm} from '../components'
 import {isSupabaseConfigured} from '../lib/supabase'
 import SimpleLoginForm from '../components/forms/SimpleLoginForm'
 
@@ -35,14 +35,7 @@ export function LoginPage() {
 
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <div className="flex flex-col items-center gap-3">
-          <span className="loading loading-spinner loading-lg"></span>
-          <span className="text-sm sm:text-base font-semibold text-base-content/70">{t('common.loading')}</span>
-        </div>
-      </div>
-    )
+    return <FullPageSpinner label={t('common.loading')} />
   }
 
   // If authenticated and not showing profile setup modal, redirect or return null

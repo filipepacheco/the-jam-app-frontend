@@ -19,39 +19,85 @@ const emojiStyle: React.CSSProperties = {
 export function getInstrumentIcon(instrument?: string): React.ReactNode {
   if (!instrument) return <Music className="w-4 h-4" />
 
-  const lower = instrument.toLowerCase()
-  switch (lower) {
-    // Drums - EN: Drums, PT: Bateria, ES: Batería
-    case 'drums':
-    case 'bateria':
-    case 'batería':
-      return <span style={emojiStyle}>🥁</span>
-    // Guitar - EN: Guitars, PT: Guitarras, ES: Guitarras
-    case 'guitar':
-    case 'guitars':
-    case 'guitarra':
-    case 'guitarras':
-      return <span style={emojiStyle}>🎸</span>
-    // Bass - EN: Bass, PT: Baixo, ES: Bajo
-    case 'bass':
-    case 'baixo':
-    case 'bajo':
-      return <span style={emojiStyle} className="inline-flex items-baseline">🎸<sub className="text-[0.6em] font-bold">B</sub></span>
-    // Vocals - EN: Vocals, PT: Voz, ES: Voces
-    case 'vocals':
-    case 'vocal':
-    case 'vozes':
-    case 'voz':
-    case 'voces':
-      return <span style={emojiStyle}>🎤</span>
-    // Keys - EN: Keys, PT: Teclados, ES: Teclados
-    case 'keys':
-    case 'keyboard':
-    case 'teclado':
-    case 'teclados':
-      return <span style={emojiStyle}>🎹</span>
-    default:
-      return <Music className="w-4 h-4" />
+  const emoji = getInstrumentEmoji(instrument)
+  if (emoji === '🎵') return <Music className="w-4 h-4" />
+
+  // Special rendering for bass (subscript B marker)
+  const lower = instrument.toLowerCase().trim()
+  if (lower === 'bass' || lower === 'bass guitar' || lower === 'baixo' || lower === 'bajo') {
+    return <span style={emojiStyle} className="inline-flex items-baseline">🎸<sub className="text-[0.6em] font-bold">B</sub></span>
   }
+
+  return <span style={emojiStyle}>{emoji}</span>
+}
+
+/**
+ * Get a plain emoji string for a given instrument
+ * @param instrument - The instrument name (case-insensitive, supports multiple languages)
+ * @returns Plain emoji string (no React wrapper)
+ */
+/**
+ * Map of instrument names to emojis (case-insensitive lookup)
+ */
+const instrumentEmojiMap: Record<string, string> = {
+  // Drums
+  'drums': '🥁',
+  'drum': '🥁',
+  'drums set': '🥁',
+  'bateria': '🥁',
+  'batería': '🥁',
+  'percussion': '🥁',
+  'percussions': '🥁',
+  // Guitar
+  'guitar': '🎸',
+  'guitars': '🎸',
+  'guitarra': '🎸',
+  'guitarras': '🎸',
+  // Bass
+  'bass': 'ᵇ🎸',
+  'bass guitar': 'ᵇ🎸',
+  'baixo': 'ᵇ🎸',
+  'bajo': 'ᵇ🎸',
+  // Vocals
+  'vocals': '🎤',
+  'vocal': '🎤',
+  'vozes': '🎤',
+  'voz': '🎤',
+  'voces': '🎤',
+  'singer': '🎤',
+  'voice': '🎤',
+  'lead vocals': '🎤',
+  'lead': '🎤',
+  'backup vocals': '🎤',
+  'backing vocals': '🎤',
+  // Keys / Piano
+  'keys': '🎹',
+  'keyboard': '🎹',
+  'keyboards': '🎹',
+  'teclado': '🎹',
+  'teclados': '🎹',
+  'piano': '🎹',
+  // Strings
+  'violin': '🎻',
+  'cello': '🎻',
+  'strings': '🎻',
+  // Brass / Woodwind
+  'trumpet': '🎺',
+  'trombone': '🎺',
+  'saxophone': '🎷',
+  'sax': '🎷',
+  'flute': '🎵',
+  'harmonica': '🎵',
+}
+
+/**
+ * Get a plain emoji string for a given instrument
+ * @param instrument - The instrument name (case-insensitive, supports multiple languages)
+ * @returns Plain emoji string (no React wrapper)
+ */
+export function getInstrumentEmoji(instrument?: string): string {
+  if (!instrument) return '🎵'
+  const lower = instrument.toLowerCase().trim()
+  return instrumentEmojiMap[lower] || '🎵'
 }
 

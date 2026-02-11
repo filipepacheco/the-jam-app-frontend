@@ -6,10 +6,10 @@
 
 import {useCallback, useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '../../hooks'
+import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {Alert, SpotifyImportModal} from '../../components'
+import {Alert, FullPageSpinner, PageAlerts, SpotifyImportModal} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
@@ -26,8 +26,7 @@ export function HostDashboardPage() {
     const {isAuthenticated, isLoading: authLoading} = useAuth()
     const [jams, setJams] = useState<JamResponseDto[]>([])
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-    const [success, setSuccess] = useState<string | null>(null)
+    const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
     const [showImportModal, setShowImportModal] = useState(false)
 
     const loadJams = useCallback(async () => {
@@ -122,13 +121,7 @@ export function HostDashboardPage() {
 
     // Show loading spinner while auth is initializing
     if (authLoading) {
-        return (<div className="min-h-screen flex items-center justify-center bg-base-100">
-            <div className="flex flex-col items-center gap-3">
-                <span className="loading loading-spinner loading-lg"></span>
-                <span
-                    className="text-sm sm:text-base font-semibold text-base-content/70">{t('common.loading')}</span>
-            </div>
-        </div>)
+        return <FullPageSpinner label={t('common.loading')} />
     }
 
     return (<div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
@@ -163,8 +156,7 @@ export function HostDashboardPage() {
                 </div>
 
                 {/* Alerts */}
-                {error && <Alert type="error" message={error} onDismiss={() => setError(null)}/>}
-                {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)}/>}
+                <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} />
             </div>
 
             {/* Statistics Cards */}
@@ -212,9 +204,9 @@ export function HostDashboardPage() {
                     <span
                         className="text-sm sm:text-base font-semibold text-base-content/70">{t('jam_management.host_dashboard.loading_jams')}</span>
                 </div>
-            </div>) : jams.length === 0 ? (<div className="alert alert-info mb-6 sm:mb-8">
-                <p className="text-sm sm:text-base">{t('jam_management.host_dashboard.no_jams_desc')}</p>
-            </div>) : (<>
+            </div>) : jams.length === 0 ? (
+                <Alert type="info" message={t('jam_management.host_dashboard.no_jams_desc')} className="mb-6 sm:mb-8" />
+            ) : (<>
                 {/* In Progress Jams */}
                 {categories.inProgress.length > 0 && (<div className="mb-6 sm:mb-8">
                     <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">{t('jam_management.host_dashboard.categories.in_progress')}</h2>

@@ -5,11 +5,11 @@
 
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { X } from 'lucide-react'
 import { musicService } from '../services'
 import type { CreateMusicDto, MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import { MusicModalFormFields } from './MusicModalFormFields'
 import { isDuplicate as checkDuplicate, parseDuration } from '../lib/musicUtils'
+import { Modal } from './Modal'
 
 interface MusicModalProps {
   mode: 'add' | 'edit' | 'suggest'
@@ -163,33 +163,14 @@ export function MusicModal({
   }
 
   return (
-    <dialog className="modal modal-open" aria-labelledby="music-modal-title">
-      <form
-        onSubmit={(e) => { void handleSubmit(e) }}
-        className="modal-box max-w-lg w-full max-h-[90vh] flex flex-col p-0"
-      >
-        {/* Header - Fixed */}
-        <div className="px-4 sm:px-6 py-4 border-b border-base-300 flex items-center justify-between shrink-0">
-          <h3 id="music-modal-title" className="font-bold text-lg sm:text-xl">
-            {getModalTitle()}
-          </h3>
-          <button
-            type="button"
-            onClick={onClose}
-            className="btn btn-ghost btn-sm btn-circle"
-            aria-label={t('common.close')}
-          >
-            <X className="size-5" />
-          </button>
-        </div>
-
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-          <MusicModalFormFields formData={formData} onChange={handleFieldChange} />
-        </div>
-
-        {/* Footer - Fixed */}
-        <div className="px-4 sm:px-6 py-4 border-t border-base-300 flex justify-end gap-3 shrink-0 bg-base-100">
+    <Modal
+      isOpen={true}
+      onClose={onClose}
+      title={getModalTitle()}
+      size="lg"
+      scrollable
+      footer={
+        <>
           <button
             type="button"
             onClick={onClose}
@@ -199,19 +180,25 @@ export function MusicModal({
             {t('common.cancel')}
           </button>
           <button
-            type="submit"
+            type="button"
+            onClick={(e) => {
+              const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
+              void handleSubmit(syntheticEvent)
+            }}
             className="btn btn-primary"
             disabled={submitting}
           >
             {submitting && <span className="loading loading-spinner loading-sm mr-2" />}
             {getSubmitLabel()}
           </button>
-        </div>
+        </>
+      }
+    >
+      <form onSubmit={(e) => { void handleSubmit(e) }}>
+        <MusicModalFormFields formData={formData} onChange={handleFieldChange} />
+        {/* Hidden submit button for form Enter key submission */}
+        <button type="submit" className="hidden" />
       </form>
-
-      <form method="dialog" className="modal-backdrop">
-        <button type="button" onClick={onClose} aria-label={t('common.close')}>close</button>
-      </form>
-    </dialog>
+    </Modal>
   )
 }

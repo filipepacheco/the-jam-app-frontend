@@ -2,7 +2,7 @@ import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from "../
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {registrationService, scheduleService} from "../../services";
-import {ScheduleCardManagement} from '../../components';
+import {Alert, ScheduleCardManagement} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
 
 /**
@@ -144,18 +144,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             </div>
 
             {/* Error Alert */}
-            {error && (
-                <div className="alert alert-error" role="alert" aria-live="polite">
-                    <p className="flex-1">{error}</p>
-                    <button 
-                        onClick={() => setError(null)} 
-                        className="btn btn-xs sm:btn-sm btn-ghost"
-                        aria-label="Close error alert"
-                    >
-                        ✕
-                    </button>
-                </div>
-            )}
+            <Alert type="error" message={error} onDismiss={() => setError(null)} />
 
             {/* Schedule List */}
             {sortedSchedules.length > 0 ? (
@@ -281,11 +270,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                             />
                         </div>
 
-                        {error && (
-                            <div className="alert alert-error mb-4">
-                                <p>{error}</p>
-                            </div>
-                        )}
+                        <Alert type="error" message={error} className="mb-4" />
 
                         <div className="modal-action gap-2">
                             <button

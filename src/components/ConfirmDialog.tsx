@@ -3,8 +3,9 @@
  * Reusable confirmation dialog for destructive actions
  */
 
-import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Modal } from './Modal'
+import { ModalFooter } from './ModalFooter'
 
 interface ConfirmDialogProps {
   isOpen: boolean
@@ -30,68 +31,30 @@ export function ConfirmDialog({
   loading = false,
 }: ConfirmDialogProps) {
   const { t } = useTranslation()
-  const confirmBtnRef = useRef<HTMLButtonElement>(null)
-
-  useEffect(() => {
-    if (isOpen) {
-      confirmBtnRef.current?.focus()
-    }
-  }, [isOpen])
-
-  useEffect(() => {
-    if (!isOpen) return
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onCancel()
-      }
-    }
-    document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onCancel])
 
   if (!isOpen) return null
 
   return (
-    <dialog
-      className="modal modal-open"
+    <Modal
+      isOpen={isOpen}
+      onClose={onCancel}
+      title={title}
+      size="sm"
       role="alertdialog"
-      aria-labelledby="confirm-dialog-title"
-      aria-describedby="confirm-dialog-message"
+      footer={
+        <ModalFooter
+          onCancel={onCancel}
+          onSubmit={onConfirm}
+          submitLabel={confirmLabel || t('common.confirm', 'Confirm')}
+          cancelLabel={cancelLabel}
+          submitVariant={variant === 'destructive' ? 'error' : 'primary'}
+          submitting={loading}
+        />
+      }
     >
-      <div className="modal-box max-w-sm">
-        <h3 id="confirm-dialog-title" className="font-bold text-lg mb-2">
-          {title}
-        </h3>
-        <p id="confirm-dialog-message" className="text-base-content/80 whitespace-pre-line">
-          {message}
-        </p>
-        <div className="modal-action">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="btn btn-ghost"
-            disabled={loading}
-          >
-            {cancelLabel || t('common.cancel')}
-          </button>
-          <button
-            ref={confirmBtnRef}
-            type="button"
-            onClick={onConfirm}
-            className={`btn ${variant === 'destructive' ? 'btn-error' : 'btn-primary'}`}
-            disabled={loading}
-          >
-            {loading && <span className="loading loading-spinner loading-sm" />}
-            {confirmLabel || t('common.confirm', 'Confirm')}
-          </button>
-        </div>
-      </div>
-      <form method="dialog" className="modal-backdrop">
-        <button type="button" onClick={onCancel}>
-          {t('common.close')}
-        </button>
-      </form>
-    </dialog>
+      <p className="text-base-content/80 whitespace-pre-line">
+        {message}
+      </p>
+    </Modal>
   )
 }

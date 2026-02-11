@@ -6,12 +6,14 @@
 import type {ScheduleResponseDto} from '../../types/api.types'
 import {registrationService} from '../../services'
 import {useAuth, useFormState} from '../../hooks'
-import {useState, useRef, useEffect} from 'react'
+import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
 import {Alert} from '../Alert'
 import {InstrumentsSummary} from './InstrumentsSummary'
+import {Modal} from '../Modal'
+import {ModalFooter} from '../ModalFooter'
 
 interface ScheduleEnrollmentModalProps {
   schedule: ScheduleResponseDto
@@ -27,29 +29,6 @@ export function ScheduleEnrollmentModal({
     const { user } = useAuth()
     const [selectedInstrument, setSelectedInstrument] = useState('')
     const { error, setError, isLoading: enrollLoading, setIsLoading: setEnrollLoading } = useFormState({ navigateOnSuccess: false })
-    const modalRef = useRef<HTMLDivElement>(null)
-
-    // Manage focus within modal
-    useEffect(() => {
-        if (!isOpen || !modalRef.current) return
-
-        // Focus the first focusable element
-        const focusableElements = modalRef.current.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        )
-        const firstElement = focusableElements[0] as HTMLElement
-        if (firstElement) firstElement.focus()
-
-        // Handle Escape key
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') {
-                onClose()
-            }
-        }
-
-        window.addEventListener('keydown', handleKeyDown)
-        return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [isOpen, onClose])
 
     const instrumentOptions = getInstrumentOptions(schedule, (key) => {
         const instrumentKeyMap: Record<string, string> = {
@@ -96,62 +75,49 @@ export function ScheduleEnrollmentModal({
     if (!isOpen) return null
 
     return (
-      <div className="modal modal-open" ref={modalRef}>
-        <div className="modal-box max-w-sm">
-                <h3 className="font-bold text-lg mb-4">{t('schedule.enroll_title')}</h3>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        title={t('schedule.enroll_title')}
+        size="sm"
+        footer={
+          <ModalFooter
+            onCancel={onClose}
+            onSubmit={handleEnroll}
+            submitLabel={enrollLoading ? t('schedule.enrolling') : t('schedule.enroll_now')}
+            submitting={enrollLoading}
+            submitDisabled={!selectedInstrument}
+          />
+        }
+      >
+        <ScheduleDetailsCard schedule={schedule} />
+        <Alert type="error" message={error} />
 
-                <ScheduleDetailsCard schedule={schedule} />
-                <Alert type="error" message={error} />
-
-                {/* Instrument Selection */}
-                <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">{t('schedule.select_your_instrument')}</span>
-                    </label>
-                    <select
-                        value={selectedInstrument}
-                        onChange={(e) => setSelectedInstrument(e.target.value)}
-                        className="select select-bordered"
-                        disabled={enrollLoading}
-                    >
-                        <option value="">{t('schedule.choose_instrument')}</option>
-                        {instrumentOptions.map((option) => {
-                            // -1 means unlimited (no requirements defined)
-                            const isUnlimited = option.needed === -1
-                            const remaining = isUnlimited ? Infinity : option.needed - option.registered
-                            const isFull = !isUnlimited && remaining <= 0
-                            return (<option key={option.key} value={option.key} disabled={isFull}>
-                                    {option.emoji} {option.label} {isFull ? t('schedule.full_parentheses') : isUnlimited ? '' : t('schedule.needed_count_parentheses', { count: remaining })}
-                                </option>)
-                        })}
-                    </select>
-                </div>
-
-                <InstrumentsSummary instrumentOptions={instrumentOptions} />
-
-                {/* Modal Actions */}
-                <div className="modal-action">
-                    <button
-                        onClick={onClose}
-                        className="btn btn-ghost"
-                        disabled={enrollLoading}
-                    >
-                        {t('common.cancel')}
-                    </button>
-                    <button
-                        onClick={handleEnroll}
-                        className="btn btn-primary"
-                        disabled={enrollLoading || !selectedInstrument}
-                    >
-                        {enrollLoading ? (<>
-                                <span className="loading loading-spinner loading-sm"></span>
-                                {t('schedule.enrolling')}
-                            </>) : (t('schedule.enroll_now'))}
-                    </button>
-                </div>
-          <div className="modal-backdrop" onClick={onClose}></div>
+        {/* Instrument Selection */}
+        <div className="form-control mb-4">
+          <label className="label">
+            <span className="label-text">{t('schedule.select_your_instrument')}</span>
+          </label>
+          <select
+            value={selectedInstrument}
+            onChange={(e) => setSelectedInstrument(e.target.value)}
+            className="select select-bordered"
+            disabled={enrollLoading}
+          >
+            <option value="">{t('schedule.choose_instrument')}</option>
+            {instrumentOptions.map((option) => {
+              // -1 means unlimited (no requirements defined)
+              const isUnlimited = option.needed === -1
+              const remaining = isUnlimited ? Infinity : option.needed - option.registered
+              const isFull = !isUnlimited && remaining <= 0
+              return (<option key={option.key} value={option.key} disabled={isFull}>
+                {option.emoji} {option.label} {isFull ? t('schedule.full_parentheses') : isUnlimited ? '' : t('schedule.needed_count_parentheses', { count: remaining })}
+              </option>)
+            })}
+          </select>
         </div>
-      </div>
+
+        <InstrumentsSummary instrumentOptions={instrumentOptions} />
+      </Modal>
     )
 }
-

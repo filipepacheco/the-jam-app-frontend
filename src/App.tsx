@@ -4,6 +4,7 @@ import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
 import {useTranslation} from 'react-i18next'
 import {SWRConfig} from 'swr'
+import {SWR_POLLING_DEFAULTS} from './config/swrDefaults'
 import {apiClient} from './lib/api'
 import Navbar from './components/Navbar'
 import {EnhancedHero} from './components/EnhancedHero'
@@ -21,7 +22,7 @@ import {JamRegisterPage} from './pages/JamRegisterPage'
 import {PublicDashboardPage} from './pages/PublicDashboardPage'
 import AuthCallbackPage from "./pages/tabs/AuthCallbackPage.tsx"
 import {AuthProvider, JamProvider} from './contexts'
-import {OnboardingModal} from './components'
+import {FullPageSpinner, OnboardingModal} from './components'
 import {useAuth} from './hooks'
 
 // Lazy-loaded pages - Priority 1 (Host-only)
@@ -60,11 +61,7 @@ async function swrFetcher<T>(url: string): Promise<T> {
  * Displays a loading spinner while lazy-loaded routes are being fetched
  */
 function RouteLoadingFallback() {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="loading loading-spinner loading-lg"></div>
-    </div>
-  )
+  return <FullPageSpinner />
 }
 
 /**
@@ -232,12 +229,7 @@ function App() {
       <SWRConfig
         value={{
           fetcher: swrFetcher,
-          revalidateOnFocus: true,
-          revalidateOnReconnect: true,
-          dedupingInterval: 2000,
-          focusThrottleInterval: 5000,
-          errorRetryCount: 3,
-          errorRetryInterval: 5000,
+          ...SWR_POLLING_DEFAULTS,
         }}
       >
         <AuthProvider>

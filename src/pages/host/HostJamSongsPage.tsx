@@ -271,9 +271,7 @@ export function HostJamSongsPage() {
                     </button>
                   </>
                 ) : (
-                  <div className="alert alert-info">
-                    <p>{t('host_songs.no_songs_available')}</p>
-                  </div>
+                  <Alert type="info" message={t('host_songs.no_songs_available')} />
                 )}
               </div>
 
@@ -305,9 +303,7 @@ export function HostJamSongsPage() {
             <span className="loading loading-spinner loading-lg" />
           </div>
         ) : songs.length === 0 ? (
-          <div className="alert alert-warning">
-            <p>{t('jams.no_songs_yet')}</p>
-          </div>
+          <Alert type="warning" message={t('jams.no_songs_yet')} />
         ) : (
           <div className="space-y-2">
             {songs.map((song, index) => (

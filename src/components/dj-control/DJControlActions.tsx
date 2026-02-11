@@ -8,6 +8,7 @@ import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 import type {LiveStateResponseDto} from '../../types/jamControl.types'
+import {Alert} from '../Alert'
 
 interface DJControlActionsProps {
   jamId: string
@@ -82,17 +83,7 @@ export function DJControlActions({
       </h3>
 
         {/* Error Alert */}
-        {displayError && (
-          <div className="alert alert-error alert-sm">
-            <span>{displayError}</span>
-            <button
-              onClick={() => setLocalError(null)}
-              className="btn btn-xs btn-ghost"
-            >
-              ✕
-            </button>
-          </div>
-        )}
+        <Alert type="error" message={displayError} onDismiss={() => setLocalError(null)} className="alert-sm" />
 
         {/* Playback State Display */}
         {liveState && (

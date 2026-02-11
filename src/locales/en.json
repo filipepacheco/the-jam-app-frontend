@@ -76,7 +76,8 @@
     "add_song": "+ Add Song",
     "no_registrations_yet": "No registrations yet",
     "confirm": "Confirm",
-    "are_you_sure": "Are you sure?"
+    "are_you_sure": "Are you sure?",
+    "dismiss": "Dismiss"
   },
   "roles": {
     "host": "Host/Organizer",
@@ -358,6 +359,9 @@
     "not_found": "Jam not found",
     "error_loading_jam": "Error Loading Jam",
     "back_to_jams": "← Back to Jams",
+    "back_to_jam": "← Back to Jam",
+    "registering_as": "Registering as",
+    "register_for_name": "Register for {{name}}",
     "info": {
       "location": "Location",
       "tba": "TBA",
@@ -489,7 +493,12 @@
     "must_agree_terms": "You must agree to the terms before registering",
     "queue_empty": "Cannot reorder empty queue",
     "duplicate_ids": "Duplicate songs detected",
-    "reorder_failed": "Failed to reorder queue"
+    "reorder_failed": "Failed to reorder queue",
+    "connection_error": "Connection error. Please try again.",
+    "access_denied": "Access Denied",
+    "insufficient_permission": "You don't have permission to access this page. Required role: {{role}}",
+    "jam_id_not_provided": "Jam ID not provided",
+    "failed_to_load_jam": "Failed to load jam"
   },
   "live_control": {
     "now_playing": "Now Playing",

@@ -74,7 +74,8 @@
     "add_song": "+ Agregar Canción",
     "no_registrations_yet": "Sin inscripciones aún",
     "confirm": "Confirmar",
-    "are_you_sure": "¿Estás seguro?"
+    "are_you_sure": "¿Estás seguro?",
+    "dismiss": "Cerrar"
   },
   "roles": {
     "host": "Anfitrion/Organizador",
@@ -354,6 +355,9 @@
     "not_found": "Jam no encontrado",
     "error_loading_jam": "Error al cargar el Jam",
     "back_to_jams": "← Volver a Jams",
+    "back_to_jam": "← Volver al Jam",
+    "registering_as": "Inscribiéndose como",
+    "register_for_name": "Inscribirse en {{name}}",
     "info": {
       "location": "Ubicación",
       "tba": "Por anunciar",
@@ -487,7 +491,12 @@
     "must_agree_terms": "Debes aceptar los términos antes de registrarte",
     "queue_empty": "No se puede reordenar una cola vacía",
     "duplicate_ids": "Canciones duplicadas detectadas",
-    "reorder_failed": "Fallo al reordenar la cola"
+    "reorder_failed": "Fallo al reordenar la cola",
+    "connection_error": "Error de conexión. Por favor, inténtalo de nuevo.",
+    "access_denied": "Acceso Denegado",
+    "insufficient_permission": "No tienes permiso para acceder a esta página. Rol requerido: {{role}}",
+    "jam_id_not_provided": "ID del Jam no proporcionado",
+    "failed_to_load_jam": "Fallo al cargar el jam"
   },
   "live_control": {
     "now_playing": "Sonando Ahora",

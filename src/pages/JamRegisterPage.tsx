@@ -5,16 +5,16 @@
 
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
+import {useTranslation} from 'react-i18next'
 import {useAuth} from '../hooks'
 import type {JamDetails} from '../services'
 import * as jamService from '../services/jamService'
-import {JamContextDisplay} from '../components'
-import {JamRegistrationForm} from '../components'
-import {Alert} from '../components'
+import {Alert, FullPageSpinner, JamContextDisplay, JamRegistrationForm} from '../components'
 
 export function JamRegisterPage() {
   const { jamId } = useParams<{ jamId: string }>()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { isAuthenticated, user } = useAuth()
   const [jam, setJam] = useState<JamDetails | null>(null)
   const [mostNeededSpecialty, setMostNeededSpecialty] = useState<string | null>(null)
@@ -31,7 +31,7 @@ export function JamRegisterPage() {
   useEffect(() => {
     const fetchJam = async () => {
       if (!jamId) {
-        setError('Jam ID not provided')
+        setError(t('errors.jam_id_not_provided'))
         setLoading(false)
         return
       }
@@ -44,7 +44,7 @@ export function JamRegisterPage() {
         const mostNeeded = await jamService.getMostNeededSpecialty(jamId)
         setMostNeededSpecialty(mostNeeded)
       } catch (err) {
-        const message = err instanceof Error ? err.message : 'Failed to load jam'
+        const message = err instanceof Error ? err.message : t('errors.failed_to_load_jam')
         setError(message)
       } finally {
         setLoading(false)
@@ -65,20 +65,16 @@ export function JamRegisterPage() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-base-100">
-        <div className="loading loading-spinner loading-lg"></div>
-      </div>
-    )
+    return <FullPageSpinner />
   }
 
   if (error || !jam) {
     return (
       <div className="min-h-screen bg-base-100 p-4">
         <div className="container mx-auto max-w-2xl">
-          <Alert type="error" message={error || 'Jam not found'} title="Error Loading Jam" />
+          <Alert type="error" message={error || t('jams.not_found')} title={t('jams.error_loading_jam')} />
           <button onClick={() => navigate('/jams')} className="btn btn-primary mt-4">
-            ← Back to Jams
+            {t('jams.back_to_jams')}
           </button>
         </div>
       </div>
@@ -94,9 +90,9 @@ export function JamRegisterPage() {
             onClick={() => navigate(`/jams/${jamId}`)}
             className="btn btn-ghost btn-sm mb-4"
           >
-            ← Back to Jam
+            {t('jams.back_to_jam')}
           </button>
-          <h1 className="text-3xl font-bold">Register for {jam.nome}</h1>
+          <h1 className="text-3xl font-bold">{t('jams.register_for_name', { name: jam.nome })}</h1>
         </div>
       </div>
 
@@ -109,13 +105,13 @@ export function JamRegisterPage() {
           {/* User Info */}
           <div className="card bg-base-200">
             <div className="card-body">
-              <h3 className="font-semibold">👤 Registering as</h3>
+              <h3 className="font-semibold">👤 {t('jams.registering_as')}</h3>
               <p className="mt-2">
                 <span className="font-semibold">{user?.name}</span>
                 <span className="text-base-content/70 ml-2">({user?.email || user?.phone})</span>
               </p>
               <a href="/profile" className="link link-sm mt-2">
-                Edit profile →
+                {t('profile.edit_profile')} →
               </a>
             </div>
           </div>

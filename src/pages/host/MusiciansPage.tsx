@@ -11,7 +11,7 @@ import {musicianService} from '../../services'
 import useSWR from 'swr'
 import type {MusicianLevel, MusicianResponseDto} from '../../types/api.types.ts'
 import {EditMusicianModal} from '../../components/EditMusicianModal.tsx'
-import {Alert} from '../../components'
+import {Alert, FullPageSpinner} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {API_ENDPOINTS} from "../../lib/api";
 
@@ -101,19 +101,11 @@ export function MusiciansPage() {
 
    if (!hasBundle) {
      // Show a small loader until translations are ready to avoid i18next missingKey logs
-     return (
-       <div className="min-h-screen flex items-center justify-center bg-base-100">
-         <div className="loading loading-spinner loading-lg"></div>
-       </div>
-     )
+     return <FullPageSpinner />
    }
 
    if (authLoading) {
-     return (
-       <div className="min-h-screen flex items-center justify-center bg-base-100">
-         <div className="loading loading-spinner loading-lg"></div>
-       </div>
-     )
+     return <FullPageSpinner />
    }
 
    if (!user?.isHost) {

@@ -111,9 +111,7 @@ export function JamRegistrationForm({
                 ))}
               </select>
             ) : (
-              <div className="alert alert-warning">
-                <span>{t('jams.no_specialties_available')}</span>
-              </div>
+              <Alert type="warning" message={t('jams.no_specialties_available')} />
             )}
           </div>
 
