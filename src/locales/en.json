@@ -97,7 +97,13 @@
     "dashboard": "Dashboard",
     "logout": "Logout",
     "login_register": "Login/Register",
-    "join": "Join"
+    "join": "Join",
+    "toggle_menu": "Toggle navigation menu",
+    "user_menu": "User menu",
+    "mobile_menu": "Navigation menu",
+    "close_menu": "Close menu",
+    "login": "Login",
+    "greeting": "Hello, {{name}}"
   },
   "auth": {
     "sign_in": "Sign In",

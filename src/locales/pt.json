@@ -97,7 +97,13 @@
     "dashboard": "Painel",
     "logout": "Sair",
     "login_register": "Entrar/Registrar",
-    "join": "Participar"
+    "join": "Participar",
+    "toggle_menu": "Alternar menu de navegacao",
+    "user_menu": "Menu do usuario",
+    "mobile_menu": "Menu de navegacao",
+    "close_menu": "Fechar menu",
+    "login": "Entrar",
+    "greeting": "Ola, {{name}}"
   },
   "auth": {
     "sign_in": "Entrar",

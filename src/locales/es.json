@@ -95,7 +95,13 @@
     "dashboard": "Panel",
     "logout": "Cerrar Sesión",
     "login_register": "Iniciar Sesión/Registrarse",
-    "join": "Unirse"
+    "join": "Unirse",
+    "toggle_menu": "Alternar menu de navegacion",
+    "user_menu": "Menu del usuario",
+    "mobile_menu": "Menu de navegacion",
+    "close_menu": "Cerrar menu",
+    "login": "Iniciar sesion",
+    "greeting": "Hola, {{name}}"
   },
   "auth": {
     "sign_in": "Iniciar Sesión",
