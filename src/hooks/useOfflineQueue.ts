@@ -34,7 +34,7 @@ export function useOfflineQueue(): OfflineQueueState {
   const [queue, setQueue] = useState<QueuedAction[]>([])
   const [isOfflineMode, setIsOfflineMode] = useState(!navigator.onLine)
 
-  const queueManager = getOfflineQueueManager()
+  const [queueManager] = useState(() => getOfflineQueueManager())
 
   // Initialize queue from manager
   useEffect(() => {

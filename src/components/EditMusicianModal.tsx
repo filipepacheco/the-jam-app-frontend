@@ -7,6 +7,7 @@ import React, {useState} from 'react'
 import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
 import {useFormState} from '../hooks'
 import {useTranslation} from 'react-i18next'
+import {INSTRUMENTS} from '../lib/instruments'
 import {Alert} from './Alert'
 import {Modal} from './Modal'
 import {ModalFooter} from './ModalFooter'
@@ -127,15 +128,20 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
           <label className="label">
             <span className="label-text font-semibold">{t('musician_form.instrument_label')}</span>
           </label>
-          <input
-            type="text"
+          <select
             name="instrument"
             value={formData.instrument}
             onChange={handleInputChange}
-            className="input input-bordered"
-            placeholder={t('musician_form.instrument_placeholder')}
+            className="select select-bordered"
             disabled={isLoading}
-          />
+          >
+            <option value="">{t('musician_form.instrument_placeholder')}</option>
+            {INSTRUMENTS.map((inst) => (
+              <option key={inst} value={inst}>
+                {t(`schedule.instruments.${inst}`)}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Level */}

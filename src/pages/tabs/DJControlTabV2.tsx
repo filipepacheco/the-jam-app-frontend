@@ -9,6 +9,7 @@ import {useJamControl} from '../../hooks'
 import {Alert} from '../../components'
 import {DJControlActions, QueueStats, SongQueueTimeline,} from '../../components/dj-control'
 import {scheduleService} from '../../services'
+import {formatError} from '../../lib/api/errorHandler'
 
 interface DJControlTabV2Props {
   jamId: string
@@ -23,6 +24,7 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
   const { t } = useTranslation()
   const [actionLoading, setActionLoading] = useState(false)
   const [success, setSuccess] = useState<string | null>(null)
+  const [actionError, setActionError] = useState<string | null>(null)
 
   // Use the custom hook for jam control (live state)
   const { liveState, isLoading, error, start, stop, resume, pause, next, previous, refresh } =
@@ -38,12 +40,13 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
 
   const handleApproveSong = async (scheduleId: string) => {
     setActionLoading(true)
+    setActionError(null)
     try {
       await scheduleService.update(scheduleId, { status: 'SCHEDULED' })
       setSuccess(t('dj_control.song_approved'))
       await handleRefresh()
     } catch (err) {
-      console.error('Failed to approve song:', err)
+      setActionError(formatError(err))
     } finally {
       setActionLoading(false)
     }
@@ -52,12 +55,13 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
   const handleRemoveSong = async (scheduleId: string) => {
     if (!confirm(t('dj_control.confirm_remove'))) return
     setActionLoading(true)
+    setActionError(null)
     try {
       await scheduleService.remove(scheduleId)
       setSuccess(t('dj_control.song_removed'))
       await handleRefresh()
     } catch (err) {
-      console.error('Failed to remove song:', err)
+      setActionError(formatError(err))
     } finally {
       setActionLoading(false)
     }
@@ -77,6 +81,9 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
           }}
         />
       )}
+
+      {/* Action Error Alert */}
+      {actionError && <Alert type="error" message={actionError} onDismiss={() => setActionError(null)} />}
 
       {/* Success Alert */}
       {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}

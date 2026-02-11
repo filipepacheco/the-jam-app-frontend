@@ -131,7 +131,7 @@ export function HostMusicianRegistrationModal({
           <option value="">{t('schedule.choose_musician')}</option>
           {musicians.map((musician) => (
             <option key={musician.id} value={musician.id}>
-              {musician.name} ({musician.instrument || t('common.unknown')})
+              {musician.name} ({musician.instrument ? t(`schedule.instruments.${musician.instrument}`, musician.instrument) : t('common.unknown')})
             </option>
           ))}
         </select>

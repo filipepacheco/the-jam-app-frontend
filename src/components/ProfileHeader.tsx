@@ -5,12 +5,14 @@
 
 import type {AuthUser} from '../types/auth.types'
 import {getRoleLabel} from '../lib/auth'
+import {useTranslation} from 'react-i18next'
 
 interface ProfileHeaderProps {
   user: AuthUser
 }
 
 export function ProfileHeader({ user }: ProfileHeaderProps) {
+  const { t } = useTranslation()
   // Get role-based colors
   const getRoleBgColor = () => {
     switch (user.role) {
@@ -72,7 +74,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         {/* Additional Info Line */}
         {user.instrument && (
           <p className="text-sm opacity-90">
-            🎸 {user.instrument}
+            🎸 {t(`schedule.instruments.${user.instrument}`, user.instrument)}
             {user.level && ` • ${user.level}`}
           </p>
         )}

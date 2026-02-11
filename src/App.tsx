@@ -29,7 +29,6 @@ import {useAuth} from './hooks'
 const HostDashboardPage = lazy(() => import('./pages/host/HostDashboardPage.tsx'))
 const CreateJamPage = lazy(() => import('./pages/host/CreateJamPage.tsx'))
 const JamManagementPage = lazy(() => import('./pages/host/JamManagementPage.tsx'))
-const JamDJControlPage = lazy(() => import('./pages/host/JamDJControlPage.tsx'))
 const HostJamSongsPage = lazy(() => import('./pages/host/HostJamSongsPage.tsx'))
 const FeedbackPage = lazy(() => import('./pages/host/FeedbackPage.tsx'))
 
@@ -182,12 +181,6 @@ function AppContent() {
         <>
           <Navbar />
           <JamManagementPage />
-        </>
-      } />
-      <Route path="/host/jams/:id/dj-control" element={
-        <>
-          <Navbar />
-          <JamDJControlPage />
         </>
       } />
       <Route path="/host/feedback" element={

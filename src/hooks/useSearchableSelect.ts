@@ -98,9 +98,10 @@ export function useSearchableSelect<T extends { id: string }>({
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
       // Use setTimeout to ensure the element is rendered
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         searchInputRef.current?.focus()
       }, 0)
+      return () => clearTimeout(timer)
     }
   }, [isOpen])
 

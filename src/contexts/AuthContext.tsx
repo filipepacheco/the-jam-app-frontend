@@ -20,6 +20,14 @@ import {clearAuth} from '../lib/auth'
 import {apiClient} from '../lib/api'
 
 /**
+ * Derive user role from profile data.
+ * Uses explicit role field if set, otherwise falls back to isHost flag.
+ */
+function deriveRole(profile: { role?: UserRole; isHost?: boolean }): UserRole {
+  return profile.role || (profile.isHost ? 'host' : 'user')
+}
+
+/**
  * Create the Authentication Context
  */
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -81,9 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setUser(profile)
     
-    // Derive role: use profile.role if available, otherwise determine from isHost flag
-    const derivedRole: UserRole = profile.role || (profile.isHost ? 'host' : 'user')
-    setRoleState(derivedRole)
+    setRoleState(deriveRole(profile))
     
     setIsAuthenticated(true)
     setIsNewUser(profile.isNewUser || false)
@@ -107,9 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
           if (profile) {
             setUser(profile)
-            // Derive role from profile, with fallback to isHost flag
-            const derivedRole: UserRole = profile.role || (profile.isHost ? 'host' : 'user')
-            setRoleState(derivedRole)
+            setRoleState(deriveRole(profile))
             setIsAuthenticated(true)
             localStorage.setItem('auth_user', JSON.stringify(profile))
           }
@@ -130,9 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           const profile = await loadUserProfile()
           if (profile) {
             setUser(profile)
-            // Derive role from profile, with fallback to isHost flag
-            const derivedRole: UserRole = profile.role || (profile.isHost ? 'host' : 'user')
-            setRoleState(derivedRole)
+            setRoleState(deriveRole(profile))
             setIsAuthenticated(true)
             setIsNewUser(profile.isNewUser || false)
             localStorage.setItem('auth_user', JSON.stringify(profile))
@@ -330,9 +332,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const updatedUser = { ...user, ...fields }
       localStorage.setItem('auth_user', JSON.stringify(updatedUser))
       setUser(updatedUser)
-      // Derive role from updated user, with fallback to isHost flag
-      const derivedRole: UserRole = updatedUser.role || (updatedUser.isHost ? 'host' : 'user')
-      setRoleState(derivedRole)
+      setRoleState(deriveRole(updatedUser))
     }
   }, [user])
 
@@ -394,9 +394,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const updatedUser = { ...user, ...response.data }
         localStorage.setItem('auth_user', JSON.stringify(updatedUser))
         setUser(updatedUser)
-        // Derive role from updated user, with fallback to isHost flag
-        const derivedRole: UserRole = updatedUser.role || (updatedUser.isHost ? 'host' : 'user')
-        setRoleState(derivedRole)
+        setRoleState(deriveRole(updatedUser))
       }
 
       return response

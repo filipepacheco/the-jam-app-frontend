@@ -42,7 +42,6 @@ export {
   ScheduleActionButtons,
   SongInfo,
   RegistrationList,
-  NeededMusiciansDisplay,
   ScheduleDisplayItem,
   ScheduleEnrollmentModal,
 } from './schedule'

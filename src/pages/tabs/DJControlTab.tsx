@@ -5,6 +5,7 @@ import {scheduleService} from "../../services";
 import {Alert} from '../../components';
 import {DJControlActions, QueueStats, SongQueueTimeline} from "../../components/dj-control";
 import {useJamControl} from "../../hooks";
+import {formatError} from "../../lib/api/errorHandler";
 
 /**
  * DJ Control Tab Component
@@ -14,6 +15,7 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
     const {t} = useTranslation()
     const [actionLoading, setActionLoading] = useState(false)
     const [success, setSuccess] = useState<string | null>(null)
+    const [actionError, setActionError] = useState<string | null>(null)
 
     // Use the new jam control hook with auto-refresh
     const { liveState, isLoading, error, start, stop, resume, pause, next, previous, refresh } =
@@ -30,12 +32,13 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
     const handleRemoveSong = async (scheduleId: string) => {
         if (!confirm(t('dj_control.confirm_remove'))) return
         setActionLoading(true)
+        setActionError(null)
         try {
             await scheduleService.remove(scheduleId)
             setSuccess(t('dj_control.song_removed'))
             await handleRefresh()
         } catch (err) {
-            console.error('Failed to remove song:', err)
+            setActionError(formatError(err))
         } finally {
             setActionLoading(false)
         }
@@ -43,12 +46,13 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
 
     const handleApproveSong = async (scheduleId: string) => {
         setActionLoading(true)
+        setActionError(null)
         try {
             await scheduleService.update(scheduleId, {status: 'SCHEDULED'})
             setSuccess(t('dj_control.song_approved'))
             await handleRefresh()
         } catch (err) {
-            console.error('Failed to approve song:', err)
+            setActionError(formatError(err))
         } finally {
             setActionLoading(false)
         }
@@ -61,6 +65,7 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
             </div>
 
             {error && <Alert type="error" message={error} onDismiss={() => {/* Error is auto-cleared on next state update */}}/>}
+            {actionError && <Alert type="error" message={actionError} onDismiss={() => setActionError(null)}/>}
             {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)}/>}
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

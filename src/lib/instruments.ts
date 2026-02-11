@@ -4,12 +4,12 @@
  */
 
 export const INSTRUMENTS = [
-  'Vocals',
-  'Guitar',
-  'Bass',
-  'Drums',
-  'Keyboard/Piano',
-  'Other',
+  'vocals',
+  'guitars',
+  'bass',
+  'drums',
+  'keys',
+  'other',
 ]
 
 export type Instrument = (typeof INSTRUMENTS)[number]
