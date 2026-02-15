@@ -9,44 +9,37 @@ interface SEOProps {
   ogType?: 'website' | 'article'
   noindex?: boolean
   canonical?: string
+  jsonLd?: Record<string, unknown>
 }
 
 export function SEO({
   title,
   description,
   keywords,
-  ogImage = '/og-image.jpg', // Default OG image
+  ogImage = '/og-image.jpg',
   ogType = 'website',
   noindex = false,
   canonical,
+  jsonLd,
 }: SEOProps) {
   const { currentLang } = useAppLanguage()
 
-  // Build full title with site name
-  const fullTitle = title ? `${title} | Let's Jam` : "The Jam APP"
-
-  // Build canonical URL
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jamapp.app' // Configure in .env
+  const fullTitle = title ? `${title} | The Jam App` : "The Jam App"
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jamapp.com.br'
   const canonicalUrl = canonical || siteUrl
-
-  // Build OG image URL (absolute)
   const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
 
   return (
     <Helmet>
-      {/* Basic Meta Tags */}
       <html lang={currentLang} />
       <title>{fullTitle}</title>
       {description && <meta name="description" content={description} />}
       {keywords && <meta name="keywords" content={keywords} />}
 
-      {/* Canonical URL */}
       <link rel="canonical" href={canonicalUrl} />
 
-      {/* Robots */}
       {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-      {/* Open Graph (Facebook, LinkedIn) */}
       <meta property="og:title" content={fullTitle} />
       {description && <meta property="og:description" content={description} />}
       <meta property="og:type" content={ogType} />
@@ -54,11 +47,16 @@ export function SEO({
       <meta property="og:image" content={ogImageUrl} />
       <meta property="og:locale" content={currentLang === 'pt' ? 'pt_BR' : currentLang} />
 
-      {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       {description && <meta name="twitter:description" content={description} />}
       <meta name="twitter:image" content={ogImageUrl} />
+
+      {jsonLd && (
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd)}
+        </script>
+      )}
     </Helmet>
   )
 }

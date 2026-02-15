@@ -39,3 +39,8 @@ export { useReducedMotion } from './useReducedMotion'
 
 // Searchable select hook
 export { useSearchableSelect } from './useSearchableSelect'
+
+// Dashboard carousel hooks
+export { useCarouselCycle } from './useCarouselCycle'
+export { useDashboardLayout } from './useDashboardLayout'
+export type { DashboardLayout } from './useDashboardLayout'

@@ -7,6 +7,7 @@ import {useState} from 'react'
 interface TimelineUser {
   id: string
   name?: string | null
+  instrument?: string | null
 }
 
 interface TimelineShowcaseV2Props {

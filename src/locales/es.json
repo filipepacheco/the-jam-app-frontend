@@ -96,11 +96,11 @@
     "logout": "Cerrar Sesión",
     "login_register": "Iniciar Sesión/Registrarse",
     "join": "Unirse",
-    "toggle_menu": "Alternar menu de navegacion",
+    "toggle_menu": "Alternar menu de navegación",
     "user_menu": "Menu del usuario",
-    "mobile_menu": "Menu de navegacion",
+    "mobile_menu": "Menu de navegación",
     "close_menu": "Cerrar menu",
-    "login": "Iniciar sesion",
+    "login": "Iniciar sesión",
     "greeting": "Hola, {{name}}"
   },
   "auth": {
@@ -113,8 +113,8 @@
     "phone_hint": "Los números deben tener al menos 10 dígitos",
     "auth_failed": "Autenticación fallida",
     "oauth_failed": "Fallo inicio con OAuth",
-    "logging_in": "Iniciando sesion...",
-    "logging_out": "Cerrando sesion...",
+    "logging_in": "Iniciando sesión...",
+    "logging_out": "Cerrando sesión...",
     "signing_in": "Iniciando sesión...",
     "creating_account": "Creando cuenta...",
     "already_have_account": "¿Ya tienes cuenta? Iniciar Sesión",
@@ -157,7 +157,9 @@
       "subtitle": "La Plataforma Moderna para Músicos, Anfitriones y Locales",
       "description": "Optimiza tus eventos musicales con coordinación en tiempo real. Los anfitriones gestionan el repertorio, los músicos se inscriben en las canciones y el público sigue todo en paneles en vivo. Sin más hojas de cálculo, solo sesiones de jam sin problemas.",
       "cta_button": "Únete a Jam App",
-      "cta_secondary": "Explorar Sesiones de Jam"
+      "cta_secondary": "Explorar Sesiones de Jam",
+      "live_label": "EN VIVO",
+      "mock_jam_name": "Jam del Viernes"
     },
     "stats": {
       "title": "Confiado por la Comunidad Musical",
@@ -219,7 +221,7 @@
       "finished": "🏁 Finalizado"
     },
     "songs_count": {
-      "one": "{{count}} cancion",
+      "one": "{{count}} canción",
       "other": "{{count}} canciones"
     },
     "no_name": "Jam sin nombre",
@@ -371,8 +373,8 @@
       "status": "Estado",
       "performances": "Actuaciones",
       "duration": "Duración",
-      "musicians": "personas ya registradas",
-      "musician": "persona ya registrada",
+      "musicians": "registros",
+      "musician": "registro",
       "jam_details": "Detalles del Jam",
       "performances_count": "{{count}} actuaciones",
       "full_address": "Dirección completa"
@@ -393,9 +395,7 @@
   "registration": {
     "statuses": {
       "pending": "Pendiente",
-      "confirmed": "Confirmado",
       "approved": "Aprobado",
-      "canceled": "Cancelado",
       "rejected": "Rechazado"
     }
   },
@@ -436,6 +436,8 @@
     "now_playing": "Reproduciendo Ahora",
     "no_musicians_yet": "No hay músicos aún",
     "no_musicians_registered": "No hay músicos registrados aún",
+    "empty_slot": "Vacante",
+    "empty_slots_count": "{{count}} vacantes",
     "musicians_count": "{{count}} personas ya registradas",
     "required_instruments": "Instrumentos Requeridos",
     "no_instruments_required": "No se requieren instrumentos",
@@ -480,7 +482,16 @@
       "PROFESSIONAL": "Profesional"
     },
     "choose_level": "Selecciona un nivel...",
-    "registration_pending_agreement": "Entiendo que mi participacion esta sujeta a aprobacion"
+    "registration_pending_agreement": "Entiendo que mi participación esta sujeta a aprobación",
+    "batch": {
+      "add_to_queue": "Agregar",
+      "queue_count": "{{count}} en cola",
+      "submit_all": "Agregar Todos ({{count}})",
+      "submitting_progress": "Agregando {{completed}}/{{total}}...",
+      "partial_error": "{{success}} agregados, {{failed}} fallaron",
+      "all_failed": "Todos los registros fallaron",
+      "duplicate_in_queue": "Ya esta en cola para este instrumento"
+    }
   },
   "errors": {
     "generic_error": "Ocurrió un error. Inténtalo de nuevo.",
@@ -514,6 +525,7 @@
     "reordered_feedback": "Cola reordenada",
     "executing_action": "Ejecutando acción…",
     "saving_order": "Guardando orden…",
+    "reorder_hint_mobile": "Mantene presionado un item y arrastra para reordenar",
     "start_to_begin": "Inicia la primera canción para comenzar",
     "no_more_songs": "No hay más canciones programadas",
     "drag_to_reorder": "Arrastra para reordenar",
@@ -901,10 +913,16 @@
     "scanToJoin": "Escanea para unirte",
     "preparingSetlist": "Preparando la lista de canciones...",
     "jamFinished": "Eso es todo!",
-    "thankYou": "Gracias por tocar con nosotros!"
+    "thankYou": "Gracias por tocar con nosotros!",
+    "layoutClassic": "Clásico",
+    "layoutCarousel": "Carrusel",
+    "layoutLabel": "Diseño",
+    "slideDuration": "Duración del slide",
+    "enterCode": "o ingresa el código",
+    "joinAt": "Únete en"
   },
   "searchableSelect": {
-    "placeholder": "Selecciona una opcion...",
+    "placeholder": "Selecciona una opción...",
     "noResults": "No se encontraron resultados",
     "search": "Buscar..."
   },
@@ -934,10 +952,10 @@
     "button_label": "Enviar comentarios sobre la app",
     "modal_title": "Comparte tu Opinion",
     "modal_subtitle": "Ayudanos a mejorar compartiendo tu experiencia",
-    "rating_label": "Como calificarias tu experiencia?",
-    "rating_required": "Por favor selecciona una calificacion",
+    "rating_label": "Como calificarías tu experiencia?",
+    "rating_required": "Por favor selecciona una calificación",
     "comment_label": "Comentarios adicionales (opcional)",
-    "comment_placeholder": "Cuentanos que te gusto o que podriamos mejorar...",
+    "comment_placeholder": "Cuéntanos que te gusto o que podríamos mejorar...",
     "character_count": "{{count}}/500",
     "submit_button": "Enviar Comentarios",
     "submitting": "Enviando...",
@@ -960,7 +978,7 @@
     "anonymous": "Anonimo",
     "stats": {
       "total": "Total de Comentarios",
-      "average": "Calificacion Promedio"
+      "average": "Calificación Promedio"
     },
     "pagination": "Pagina {{page}} de {{totalPages}}"
   },
@@ -977,10 +995,10 @@
       "override_section": "Detalles Opcionales",
       "name_label": "Nombre del Jam",
       "name_placeholder": "Reemplazar nombre de la playlist",
-      "description_label": "Descripcion",
-      "description_placeholder": "Reemplazar descripcion de la playlist",
+      "description_label": "Descripción",
+      "description_placeholder": "Reemplazar descripción de la playlist",
       "date_label": "Fecha",
-      "location_label": "Ubicacion",
+      "location_label": "Ubicación",
       "location_placeholder": "Donde se realizara el jam?",
       "importing": "Importando...",
       "import_button": "Importar Playlist",
@@ -1010,9 +1028,9 @@
         "not_found": "Playlist o jam no encontrado. Verifica e intenta de nuevo.",
         "rate_limit": "Demasiadas solicitudes. Espera un momento e intenta de nuevo.",
         "network_error": "No se pudo conectar con Spotify. Intenta mas tarde.",
-        "not_configured": "La integracion con Spotify no esta configurada en el servidor.",
+        "not_configured": "La integración con Spotify no esta configurada en el servidor.",
         "import_failed": "Error al importar playlist. Intenta de nuevo.",
-        "forbidden": "Debes ser el anfitrion del jam para agregar pistas.",
+        "forbidden": "Debes ser el anfitrión del jam para agregar pistas.",
         "validation": "Solicitud invalida. Verifica los datos e intenta de nuevo."
       }
     },
@@ -1020,8 +1038,8 @@
       "title": "Exportar a Spotify",
       "subtitle": "Crea una playlist de Spotify con las canciones de este jam",
       "name_label": "Nombre de la Playlist",
-      "description_label": "Descripcion",
-      "description_placeholder": "Agrega una descripcion para la playlist",
+      "description_label": "Descripción",
+      "description_placeholder": "Agrega una descripción para la playlist",
       "public_label": "Playlist publica",
       "exporting": "Exportando...",
       "export_button": "Crear Playlist",
@@ -1032,7 +1050,7 @@
       "skipped_tracks": "Pistas omitidas",
       "errors": {
         "no_valid_tracks": "No se encontraron pistas validas para exportar.",
-        "invalid_token": "La autorizacion de Spotify expiro. Intenta de nuevo.",
+        "invalid_token": "La autorización de Spotify expiro. Intenta de nuevo.",
         "not_found": "Jam no encontrado.",
         "rate_limit": "Demasiadas solicitudes. Espera un momento e intenta de nuevo.",
         "network_error": "No se pudo conectar con Spotify. Intenta mas tarde.",
@@ -1041,16 +1059,16 @@
     },
     "callback": {
       "processing": "Conectando con Spotify...",
-      "auth_failed": "La autorizacion de Spotify fallo",
-      "invalid_state": "Estado de autorizacion invalido. Intenta de nuevo.",
-      "code_exchange_failed": "Error al completar la autorizacion de Spotify.",
-      "user_denied": "La autorizacion de Spotify fue denegada.",
+      "auth_failed": "La autorización de Spotify fallo",
+      "invalid_state": "Estado de autorización invalido. Intenta de nuevo.",
+      "code_exchange_failed": "Error al completar la autorización de Spotify.",
+      "user_denied": "La autorización de Spotify fue denegada.",
       "retry": "Reintentar"
     }
   },
   "promoVideo": {
     "appName": "Jam App",
-    "tagline": "Conecta. Actua. Conquista el escenario.",
+    "tagline": "Conecta. Actúa. Conquista el escenario.",
     "features": {
       "title": "Para Todos",
       "hosts": {
@@ -1058,7 +1076,7 @@
         "description": "Crea jams, gestiona colas y controla presentaciones en tiempo real"
       },
       "musicians": {
-        "title": "Musicos",
+        "title": "Músicos",
         "description": "Registrate en jams, elige tu instrumento y sube al escenario"
       },
       "audience": {
@@ -1070,14 +1088,14 @@
       "title": "Como Funciona",
       "step1": {
         "title": "Crea un Jam",
-        "description": "Configura tu sesion con listas de canciones"
+        "description": "Configura tu sesión con listas de canciones"
       },
       "step2": {
-        "title": "Musicos se Registran",
+        "title": "Músicos se Registran",
         "description": "Eligen instrumentos y se unen a la fila"
       },
       "step3": {
-        "title": "Actua en Vivo",
+        "title": "Actúa en Vivo",
         "description": "Sube al escenario y arrasa"
       }
     },
@@ -1101,35 +1119,46 @@
     "spotify_import_desc": "Crea un jam automaticamente desde una playlist de Spotify",
     "spotify_import_btn": "Importar Playlist",
     "or_manually": "o completa manualmente",
+    "sections": {
+      "details": "Detalles y Descripción",
+      "advanced": "Configuración Avanzada"
+    },
+    "spotify_import_inline": "Tienes una playlist de Spotify? Importala para crear tu jam.",
     "form": {
       "jam_name": "Nombre del Jam",
-      "description": "Descripcion",
+      "description": "Descripción",
       "date": "Fecha",
       "time": "Hora",
-      "location": "Ubicacion",
-      "host_name": "Nombre del Anfitrion",
-      "host_contact": "Contacto del Anfitrion",
+      "location": "Ubicación",
+      "host_name": "Nombre del Anfitrión",
+      "host_contact": "Contacto del Anfitrión",
       "status": "Estado",
       "placeholder_name": "ej., Noche de Jazz 2025",
-      "placeholder_description": "Breve descripcion de tu sesion de jam...",
+      "placeholder_description": "Breve descripción de tu sesión de jam...",
       "placeholder_location": "ej., Estudio A, Calle Musica 123",
       "placeholder_contact": "Email o telefono",
       "status_active": "Activo",
       "status_inactive": "Inactivo",
-      "status_finished": "Finalizado"
+      "status_live": "En Vivo",
+      "status_finished": "Finalizado",
+      "slug": "URL personalizada",
+      "slug_hint": "Dejar vacío para generar automaticamente",
+      "placeholder_slug": "noche-de-jazz"
     },
     "actions": {
       "cancel": "Cancelar",
       "delete": "Eliminar Jam",
       "create": "Crear Jam",
       "update": "Actualizar Jam",
-      "saving": "Guardando..."
+      "saving": "Guardando...",
+      "confirm_delete": "Si, Eliminar"
     },
     "validation": {
       "name_required": "El nombre del jam es obligatorio",
-      "location_required": "La ubicacion es obligatoria",
-      "host_id_required": "El ID del anfitrion es obligatorio",
-      "time_required": "La hora es obligatoria cuando se especifica una fecha"
+      "location_required": "La ubicación es obligatoria",
+      "host_id_required": "El ID del anfitrión es obligatorio",
+      "time_required": "La hora es obligatoria cuando se especifica una fecha",
+      "date_required_with_time": "La fecha es obligatoria cuando se especifica una hora"
     },
     "messages": {
       "create_success": "Jam \"{{name}}\" creado exitosamente!",
@@ -1138,10 +1167,11 @@
       "load_error": "Error al cargar el jam",
       "save_error": "Error al guardar el jam",
       "delete_error": "Error al eliminar el jam",
-      "confirm_delete": "Estas seguro de que quieres eliminar este jam? Esta accion no se puede deshacer."
+      "confirm_delete": "Estas seguro de que quieres eliminar este jam? Esta acción no se puede deshacer.",
+      "confirm_delete_title": "Eliminar Jam"
     },
     "info": {
-      "create_hint": "Crea una nueva sesion de jam. Podras agregar canciones y gestionar inscripciones despues.",
+      "create_hint": "Crea una nueva sesión de jam. Podrás agregar canciones y gestionar inscripciones después.",
       "edit_hint": "Actualiza los detalles del jam. Los cambios se guardaran inmediatamente."
     }
   }

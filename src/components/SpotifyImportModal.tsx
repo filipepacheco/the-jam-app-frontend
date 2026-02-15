@@ -47,6 +47,7 @@ export function SpotifyImportModal({
   const [description, setDescription] = useState('')
   const [date, setDate] = useState('')
   const [location, setLocation] = useState('')
+  const [slug, setSlug] = useState('')
   const [showOverrides, setShowOverrides] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -76,6 +77,7 @@ export function SpotifyImportModal({
       setDescription('')
       setDate('')
       setLocation('')
+      setSlug('')
       setShowOverrides(false)
       setError(null)
       setImportResult(null)
@@ -134,6 +136,7 @@ export function SpotifyImportModal({
         description: description.trim() || undefined,
         date: date || undefined,
         location: location.trim() || undefined,
+        slug: slug.trim() || undefined,
       }),
     })
 
@@ -146,7 +149,7 @@ export function SpotifyImportModal({
       const errorMessage = result.error || t('spotify.import_modal.errors.import_failed')
       setError(errorMessage)
     }
-  }, [playlistUrl, name, description, date, location, mode, selectedJamId, t])
+  }, [playlistUrl, name, description, date, location, slug, mode, selectedJamId, t])
 
   if (!isOpen) return null
 
@@ -287,10 +290,8 @@ export function SpotifyImportModal({
         )}
 
         {/* Playlist URL - Always required */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-medium">{t('spotify.import_modal.url_label')}</span>
-          </label>
+        <fieldset className="fieldset">
+          <label className="fieldset-legend">{t('spotify.import_modal.url_label')}</label>
           <input
             type="url"
             className="input input-bordered w-full"
@@ -299,16 +300,13 @@ export function SpotifyImportModal({
             onChange={(e) => setPlaylistUrl(e.target.value)}
             disabled={isSubmitting}
           />
-        </div>
+        </fieldset>
 
         {/* Existing Jam Selector */}
         {mode === 'existing' && (
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">{t('spotify.import_modal.select_jam_label')}</span>
-            </label>
+          <fieldset className="fieldset">
+            <label className="fieldset-legend">{t('spotify.import_modal.select_jam_label')}</label>
             {preselectedJamId ? (
-              // Pre-selected jam (read-only display)
               <input
                 type="text"
                 className="input input-bordered w-full bg-base-200"
@@ -316,7 +314,6 @@ export function SpotifyImportModal({
                 disabled
               />
             ) : (
-              // Dropdown to select jam
               <select
                 className="select select-bordered w-full"
                 value={selectedJamId}
@@ -334,7 +331,7 @@ export function SpotifyImportModal({
             {loadingJams && (
               <span className="loading loading-spinner loading-xs mt-2"></span>
             )}
-          </div>
+          </fieldset>
         )}
 
         {/* New Jam Fields */}
@@ -352,10 +349,8 @@ export function SpotifyImportModal({
 
             {showOverrides && (
               <div className="space-y-3">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">{t('spotify.import_modal.name_label')}</span>
-                  </label>
+                <fieldset className="fieldset">
+                  <label className="fieldset-legend">{t('spotify.import_modal.name_label')}</label>
                   <input
                     type="text"
                     className="input input-bordered w-full"
@@ -364,25 +359,21 @@ export function SpotifyImportModal({
                     onChange={(e) => setName(e.target.value)}
                     disabled={isSubmitting}
                   />
-                </div>
+                </fieldset>
 
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">{t('spotify.import_modal.description_label')}</span>
-                  </label>
+                <fieldset className="fieldset">
+                  <label className="fieldset-legend">{t('spotify.import_modal.description_label')}</label>
                   <textarea
-                    className="textarea textarea-bordered h-20 resize-none"
+                    className="textarea textarea-bordered h-20 resize-none w-full"
                     placeholder={t('spotify.import_modal.description_placeholder')}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     disabled={isSubmitting}
                   />
-                </div>
+                </fieldset>
 
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">{t('spotify.import_modal.date_label')}</span>
-                  </label>
+                <fieldset className="fieldset">
+                  <label className="fieldset-legend">{t('spotify.import_modal.date_label')}</label>
                   <input
                     type="datetime-local"
                     className="input input-bordered w-full"
@@ -390,12 +381,10 @@ export function SpotifyImportModal({
                     onChange={(e) => setDate(e.target.value)}
                     disabled={isSubmitting}
                   />
-                </div>
+                </fieldset>
 
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text">{t('spotify.import_modal.location_label')}</span>
-                  </label>
+                <fieldset className="fieldset">
+                  <label className="fieldset-legend">{t('spotify.import_modal.location_label')}</label>
                   <input
                     type="text"
                     className="input input-bordered w-full"
@@ -404,7 +393,28 @@ export function SpotifyImportModal({
                     onChange={(e) => setLocation(e.target.value)}
                     disabled={isSubmitting}
                   />
-                </div>
+                </fieldset>
+
+                <fieldset className="fieldset">
+                  <label className="fieldset-legend">{t('create_jam.form.slug')}</label>
+                  <div className="flex items-stretch">
+                    <span className="inline-flex items-center px-3 bg-base-300 border border-r-0 border-base-content/20 rounded-l-lg text-xs text-base-content/70 select-none whitespace-nowrap">
+                      jamapp.com.br/jams/
+                    </span>
+                    <input
+                      type="text"
+                      className="input input-bordered rounded-l-none font-mono text-sm flex-1 min-w-0"
+                      placeholder={t('create_jam.form.placeholder_slug')}
+                      value={slug}
+                      onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''))}
+                      disabled={isSubmitting}
+                      maxLength={80}
+                    />
+                  </div>
+                  <p className="fieldset-label text-base-content/50">
+                    {t('create_jam.form.slug_hint')}
+                  </p>
+                </fieldset>
               </div>
             )}
           </>

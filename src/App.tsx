@@ -19,6 +19,8 @@ import {SEO} from './components/SEO'
 import {LoginPage} from './pages/LoginPage'
 import {BrowseJamsPage} from './pages/BrowseJamsPage'
 import {JamRegisterPage} from './pages/JamRegisterPage'
+import {JamShortRedirect} from './pages/JamShortRedirect'
+import {SlugRedirect} from './pages/SlugRedirect'
 import {PublicDashboardPage} from './pages/PublicDashboardPage'
 import AuthCallbackPage from "./pages/tabs/AuthCallbackPage.tsx"
 import {AuthProvider, JamProvider} from './contexts'
@@ -113,6 +115,9 @@ function AppContent() {
         <SpotifyCallbackPage />
       } />
 
+      {/* Short Code Redirect */}
+      <Route path="/j/:code" element={<JamShortRedirect />} />
+
       {/* Jam Routes */}
       <Route path="/jams" element={
         <>
@@ -189,6 +194,9 @@ function AppContent() {
           <FeedbackPage />
         </>
       } />
+
+      {/* Root-level slug redirect (jamapp.com.br/my-slug -> /jams/my-slug) */}
+      <Route path="/:slug" element={<SlugRedirect />} />
 
       {/* Catch-all - redirect to home */}
       <Route path="*" element={<Navigate to="/" replace />} />

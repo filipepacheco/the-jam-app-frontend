@@ -8,6 +8,8 @@ import {useAuth} from '../../hooks'
 import useSWR from 'swr'
 import {useCallback, useMemo, useState, useEffect} from 'react'
 import {useTranslation} from 'react-i18next'
+import {SEO} from '../../components/SEO'
+import {getJamPath} from '../../utils/jamUrl'
 
 // Constants
 const SUCCESS_TOAST_DURATION = 3000
@@ -217,8 +219,36 @@ export function JamDetailPageV2() {
         )
     }
 
+    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jamapp.com.br'
+    const canonicalUrl = `${siteUrl}${getJamPath(jam)}`
+    const jamJsonLd: Record<string, unknown> = {
+        '@context': 'https://schema.org',
+        '@type': 'MusicEvent',
+        name: jam.name,
+        ...(jam.description && { description: jam.description }),
+        ...(jam.date && {
+            startDate: jam.date,
+        }),
+        ...(jam.location && {
+            location: {
+                '@type': 'Place',
+                name: jam.location,
+            },
+        }),
+        url: canonicalUrl,
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    }
+
     return (
         <div className="min-h-screen bg-linear-to-br from-base-100 to-base-200">
+            <SEO
+                title={jam.name}
+                description={jam.description || undefined}
+                canonical={canonicalUrl}
+                ogType="article"
+                jsonLd={jamJsonLd}
+            />
             {/* Success Alerts */}
             {enrollSuccess && (
                 <div

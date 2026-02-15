@@ -148,7 +148,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
                 {t('nav.browse_jams')}
               </a>
             </li>
-            {user?.isHost && (
+            {isAuthenticated && user?.isHost && (
               <li>
                 <a
                   href="/musicians"
@@ -158,7 +158,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
                 </a>
               </li>
             )}
-            {!isViewer() && (
+            {isAuthenticated && !isViewer() && (
               <li>
                 <a
                   href="/music"
@@ -168,7 +168,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
                 </a>
               </li>
             )}
-            {user?.isHost && (
+            {isAuthenticated && user?.isHost && (
               <li>
                 <a
                   href="/host/dashboard"

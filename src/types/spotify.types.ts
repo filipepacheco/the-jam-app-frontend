@@ -5,6 +5,7 @@ export interface SpotifyImportRequest {
   description?: string     // Ignored if jamId provided
   date?: string            // Ignored if jamId provided
   location?: string        // Ignored if jamId provided
+  slug?: string            // Ignored if jamId provided
 }
 
 export interface SpotifyImportResponse {

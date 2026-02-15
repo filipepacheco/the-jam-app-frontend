@@ -2,8 +2,9 @@ import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from "../
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {registrationService, scheduleService} from "../../services";
-import {Alert, ScheduleCardManagement} from '../../components';
+import {Alert} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
+import {ScheduleCompactCard} from "../../components/schedule/ScheduleCompactCard";
 
 /**
  * Schedule Tab Component - Full management with nested registrations
@@ -156,7 +157,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                 ✨ {t('jam_management.schedule.suggested_songs')}
                             </h3>
                             {suggestedSchedules.map((schedule) => (
-                                <ScheduleCardManagement
+                                <ScheduleCompactCard
                                     key={schedule.id}
                                     schedule={schedule}
                                     loading={loading}
@@ -180,11 +181,10 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     📋 {t('jam_management.schedule.title')}
                                 </h3>
                             )}
-                            {nonSuggestedSchedules.map((schedule, index) => (
-                                <ScheduleCardManagement
+                            {nonSuggestedSchedules.map((schedule) => (
+                                <ScheduleCompactCard
                                     key={schedule.id}
                                     schedule={schedule}
-                                    index={index}
                                     loading={loading}
                                     isSuggested={false}
                                     onStatusChange={handleStatusChange}

@@ -4,9 +4,9 @@
  */
 
 import {apiClient, withLegacyResponse} from '../lib/api'
-import type {JamResponseDto, PaginatedResponse} from '../types/api.types'
+import type {JamResponseDto, JamStatus, PaginatedResponse} from '../types/api.types'
 
-interface SpecialtySlot {
+export interface SpecialtySlot {
   specialty: string
   required: number
   registered: number
@@ -14,15 +14,49 @@ interface SpecialtySlot {
 
 export interface JamDetails {
   id: string
-  nome: string
-  descricao?: string
-  data?: string
-  status: 'ACTIVE' | 'INACTIVE' | 'FINISHED'
-  specialtySlots: SpecialtySlot[]
+  name: string
+  description?: string
+  date?: string
+  status: JamStatus
   hostId?: string
   hostName?: string
   songCount?: number
   musicianCount?: number
+  specialtySlots: SpecialtySlot[]
+}
+
+/**
+ * Build specialty slots from a JamResponseDto by examining neededX fields
+ * on each music item and counting approved registrations per instrument.
+ */
+function buildSpecialtySlots(jam: JamResponseDto): SpecialtySlot[] {
+  const required: Record<string, number> = {}
+  const registered: Record<string, number> = {}
+
+  // Sum up needed instrument counts from all jam musics
+  for (const jm of jam.jamMusics ?? []) {
+    const m = jm.music
+    if (m.neededDrums) required['drums'] = (required['drums'] ?? 0) + m.neededDrums
+    if (m.neededGuitars) required['guitars'] = (required['guitars'] ?? 0) + m.neededGuitars
+    if (m.neededVocals) required['vocals'] = (required['vocals'] ?? 0) + m.neededVocals
+    if (m.neededBass) required['bass'] = (required['bass'] ?? 0) + m.neededBass
+    if (m.neededKeys) required['keys'] = (required['keys'] ?? 0) + m.neededKeys
+  }
+
+  // Count approved registrations per instrument
+  for (const reg of jam.registrations ?? []) {
+    if (reg.status === 'APPROVED' && reg.instrument) {
+      const inst = reg.instrument.toLowerCase()
+      registered[inst] = (registered[inst] ?? 0) + 1
+    }
+  }
+
+  const allInstruments = new Set([...Object.keys(required), ...Object.keys(registered)])
+  return Array.from(allInstruments).map((specialty) => ({
+    specialty,
+    required: required[specialty] ?? 0,
+    registered: registered[specialty] ?? 0,
+  }))
 }
 
 /**
@@ -83,17 +117,26 @@ export function create(jamData: Partial<JamResponseDto>) {
 
 /**
  * Get jam details by ID
- * Returns raw data - not wrapped with withLegacyResponse
+ * Fetches the raw JamResponseDto and maps to JamDetails with computed specialty slots.
  */
 export async function getJamDetails(jamId: string): Promise<JamDetails> {
   try {
-    const response = await apiClient.get<JamDetails>(`/jams/${jamId}`)
+    const response = await apiClient.get<JamResponseDto>(`/jams/${jamId}`)
 
     if (!response.success) {
       throw new Error(response.error || 'Failed to load jam details')
     }
 
-    return response.data as JamDetails
+    const jam = response.data as JamResponseDto
+    return {
+      id: jam.id,
+      name: jam.name,
+      description: jam.description,
+      date: jam.date,
+      status: jam.status,
+      hostName: jam.hostName,
+      specialtySlots: buildSpecialtySlots(jam),
+    }
   } catch (err) {
     if (err instanceof Error) {
       throw err
@@ -142,7 +185,7 @@ export function update(id: string, jamData: Partial<JamResponseDto>) {
  */
 export function deleteFn(id: string) {
   return withLegacyResponse(
-    () => apiClient.delete<{ success: boolean }>(`/jams/${id}`),
+    () => apiClient.delete<JamResponseDto>(`/jams/${id}`),
     'Failed to delete jam',
   )
 }

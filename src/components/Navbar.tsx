@@ -35,13 +35,13 @@ function Navbar() {
         <ul className="menu menu-horizontal px-1">
           <li><a href="/">{t('nav.home')}</a></li>
           <li><a href="/jams">{t('nav.jams')}</a></li>
-          {user?.isHost && (
+          {isAuthenticated && user?.isHost && (
             <li><a href="/musicians">{t('nav.musicians')}</a></li>
           )}
-          {!isViewer() && (
+          {isAuthenticated && !isViewer() && (
             <li><a href="/music">{t('nav.music')}</a></li>
           )}
-          {user?.isHost && (
+          {isAuthenticated && user?.isHost && (
             <li><a href="/host/dashboard">{t('nav.host_dashboard')}</a></li>
           )}
         </ul>
@@ -56,7 +56,7 @@ function Navbar() {
         <DesktopUserMenu className="hidden lg:inline-flex" />
 
         {/* Create Jam Button - Host Only */}
-        {user?.isHost && (
+        {isAuthenticated && user?.isHost && (
           <a href="/host/create-jam" className="btn btn-primary btn-sm whitespace-nowrap">
             {t('nav.create_jam')}
           </a>

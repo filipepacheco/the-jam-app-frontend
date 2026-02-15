@@ -5,6 +5,7 @@ import {useState} from "react";
 import {Pencil, Eye, ExternalLink, Play, Square, RotateCcw, Upload, Download} from "lucide-react";
 import {initiateSpotifyAuth} from "../../lib/spotify/pkce";
 import {SpotifyImportModal} from "../../components/SpotifyImportModal";
+import {getJamPath, getJamDashboardPath} from "../../utils/jamUrl";
 
 /**
  * Overview Tab Component
@@ -103,8 +104,8 @@ export function OverviewTab({
                                 </button>
 
                                 {/* View Public */}
-                                <button 
-                                    onClick={() => navigate(`/jams/${jam.id}`)}
+                                <button
+                                    onClick={() => navigate(getJamPath(jam))}
                                     className="btn btn-sm btn-secondary gap-2"
                                 >
                                     <Eye className="size-4" />
@@ -191,7 +192,7 @@ export function OverviewTab({
 
                 {/* Public Dashboard Link */}
                 <a
-                    href={`/jams/${jam.id}/dashboard`}
+                    href={getJamDashboardPath(jam)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn btn-outline w-full gap-2"

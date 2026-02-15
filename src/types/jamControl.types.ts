@@ -3,7 +3,7 @@
  * Types for the new /control endpoints and live state management
  */
 
-import type {PlaybackState, RegistrationResponseDto, ScheduleStatus} from './api.types'
+import type {PlaybackState, ScheduleStatus} from './api.types'
 
 export type { PlaybackState, ScheduleStatus }
 
@@ -12,70 +12,48 @@ export type { PlaybackState, ScheduleStatus }
 // ============================================================================
 
 /**
- * Music data for live state display
+ * Slim music data - only fields used by the DJ control UI
  */
 export interface LiveStateMusic {
-  id: string
   title: string
   artist: string
-  duration?: number
-  genre?: string
-  description?: string
-  link?: string
-  status?: 'APPROVED' | 'SUGGESTED'
+  duration?: number | null
+}
+
+/**
+ * Flattened musician (matches backend DashboardMusicianDto)
+ */
+export interface LiveStateMusicianDto {
+  id: string
+  name: string | null
+  instrument: string
 }
 
 /**
  * Song in the live state response
- * Contains performance data with timestamps
+ * Contains only performance-relevant data with timestamps
  */
 export interface LiveStateSongDto {
   id: string
-  jamId: string
-  musicId: string
   order: number
   status: ScheduleStatus
-  createdAt: string
-  startedAt: string | null
-  pausedAt: string | null
-  completedAt: string | null
+  startedAt?: string | null
+  completedAt?: string | null
   music: LiveStateMusic
-  registrations: RegistrationResponseDto[]
+  musicians: LiveStateMusicianDto[]
 }
 
 /**
  * Live state response from GET /jams/{id}/live/state
- * Provides pre-organized current, next, and previous songs
- * Eliminates need for client-side filtering and sorting
+ * Lean payload optimized for polling (5-10s intervals)
  */
 export interface LiveStateResponseDto {
-  // Current song being performed (status: IN_PROGRESS)
   currentSong: LiveStateSongDto | null
-
-  // Next songs in queue (status: SCHEDULED)
-  // Typically includes up to 3 songs
   nextSongs: LiveStateSongDto[]
-
-  // Previously completed songs (status: COMPLETED)
-  // Typically includes up to 3 songs
   previousSongs: LiveStateSongDto[]
-
   suggestedSongs: LiveStateSongDto[]
-
-  // Jam status
   jamStatus: 'ACTIVE' | 'INACTIVE' | 'FINISHED'
-
-  // Current playback state
   playbackState: PlaybackState
-
-  // Timestamp when current song started playback
-  currentSongStartedAt: string | null
-
-  // Timestamp when current song was paused
-  currentSongPausedAt: string | null
-
-  // Server timestamp for snapshot reference
-  timestamp: number
 }
 
 // ============================================================================

@@ -159,7 +159,9 @@
       "subtitle": "The Modern Platform for Musicians, Hosts, and Venues",
       "description": "Streamline your music events with real-time coordination. Hosts manage the repertoire, musicians register for songs, and the audience follows along on live dashboards. No more spreadsheets, just seamless jam sessions.",
       "cta_button": "Join the Jam App",
-      "cta_secondary": "Browse Jam Sessions"
+      "cta_secondary": "Browse Jam Sessions",
+      "live_label": "LIVE",
+      "mock_jam_name": "Friday Night Jam"
     },
     "stats": {
       "title": "Trusted by the Music Community",
@@ -375,8 +377,8 @@
       "status": "Status",
       "performances": "Performances",
       "duration": "Duration",
-      "musicians": "people already registered",
-      "musician": "person already registered",
+      "musicians": "registrations",
+      "musician": "registration",
       "jam_details": "Jam Details",
       "performances_count": "{{count}} performances",
       "full_address": "Full address"
@@ -395,9 +397,7 @@
   "registration": {
     "statuses": {
       "pending": "Pending",
-      "confirmed": "Confirmed",
       "approved": "Approved",
-      "canceled": "Canceled",
       "rejected": "Rejected"
     }
   },
@@ -438,6 +438,8 @@
     "now_playing": "Now Playing",
     "no_musicians_yet": "No musicians yet",
     "no_musicians_registered": "No musicians registered for this performance yet",
+    "empty_slot": "Open slot",
+    "empty_slots_count": "{{count}} open slots",
     "musicians_count": "{{count}} people already registered",
     "required_instruments": "Required Instruments",
     "no_instruments_required": "No instruments required",
@@ -482,7 +484,16 @@
       "PROFESSIONAL": "Professional"
     },
     "choose_level": "Select a level...",
-    "registration_pending_agreement": "I understand my registration is pending host approval"
+    "registration_pending_agreement": "I understand my registration is pending host approval",
+    "batch": {
+      "add_to_queue": "Add",
+      "queue_count": "{{count}} queued",
+      "submit_all": "Add All ({{count}})",
+      "submitting_progress": "Adding {{completed}}/{{total}}...",
+      "partial_error": "{{success}} added, {{failed}} failed",
+      "all_failed": "All registrations failed",
+      "duplicate_in_queue": "Already queued for this instrument"
+    }
   },
   "errors": {
     "generic_error": "An error occurred. Please try again.",
@@ -516,6 +527,7 @@
     "reordered_feedback": "Queue reordered",
     "executing_action": "Executing action…",
     "saving_order": "Saving order…",
+    "reorder_hint_mobile": "Hold an item for a moment, then drag to reorder",
     "start_to_begin": "Start the first song to begin",
     "no_more_songs": "No more songs scheduled",
     "drag_to_reorder": "Drag to reorder",
@@ -904,7 +916,13 @@
     "scanToJoin": "Scan to join",
     "preparingSetlist": "Setting up the setlist...",
     "jamFinished": "That's a wrap!",
-    "thankYou": "Thanks for jamming with us!"
+    "thankYou": "Thanks for jamming with us!",
+    "layoutClassic": "Classic",
+    "layoutCarousel": "Carousel",
+    "layoutLabel": "Layout",
+    "slideDuration": "Slide Duration",
+    "enterCode": "or enter code",
+    "joinAt": "Join at"
   },
   "searchableSelect": {
     "placeholder": "Select an option...",
@@ -1104,6 +1122,11 @@
     "spotify_import_desc": "Create a jam automatically from a Spotify playlist",
     "spotify_import_btn": "Import Playlist",
     "or_manually": "or fill in manually",
+    "sections": {
+      "details": "Details & Description",
+      "advanced": "Advanced Settings"
+    },
+    "spotify_import_inline": "Have a Spotify playlist? Import it to create your jam.",
     "form": {
       "jam_name": "Jam Name",
       "description": "Description",
@@ -1119,20 +1142,26 @@
       "placeholder_contact": "Email or phone",
       "status_active": "Active",
       "status_inactive": "Inactive",
-      "status_finished": "Finished"
+      "status_live": "Live",
+      "status_finished": "Finished",
+      "slug": "Custom URL",
+      "slug_hint": "Leave empty to auto-generate from the name",
+      "placeholder_slug": "friday-night-rock"
     },
     "actions": {
       "cancel": "Cancel",
       "delete": "Delete Jam",
       "create": "Create Jam",
       "update": "Update Jam",
-      "saving": "Saving..."
+      "saving": "Saving...",
+      "confirm_delete": "Yes, Delete"
     },
     "validation": {
       "name_required": "Jam name is required",
       "location_required": "Location is required",
       "host_id_required": "Host musician ID is required",
-      "time_required": "Time is required when date is specified"
+      "time_required": "Time is required when date is specified",
+      "date_required_with_time": "Date is required when time is specified"
     },
     "messages": {
       "create_success": "Jam \"{{name}}\" created successfully!",
@@ -1141,7 +1170,8 @@
       "load_error": "Failed to load jam",
       "save_error": "Failed to save jam",
       "delete_error": "Failed to delete jam",
-      "confirm_delete": "Are you sure you want to delete this jam? This action cannot be undone."
+      "confirm_delete": "Are you sure you want to delete this jam? This action cannot be undone.",
+      "confirm_delete_title": "Delete Jam"
     },
     "info": {
       "create_hint": "Create a new jam session. You can add songs and manage registrations later.",

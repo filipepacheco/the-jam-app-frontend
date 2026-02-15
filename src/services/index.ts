@@ -3,8 +3,6 @@
  * Central export point for all service functions
  */
 
-export { loginOrRegister, logout } from './authService'
-
 export * as jamService from './jamService'
 export { jamControlService } from './jamControlService'
 export { musicianService } from './musicianService'

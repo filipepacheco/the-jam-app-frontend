@@ -78,7 +78,8 @@ export interface RegistrationResponseDto {
   id: string
   musicianId: string
   jamId: string
-  scheduleId: string
+  jamMusicId?: string
+  scheduleId?: string
   instrument: string
   status?: string
   createdAt?: string
@@ -136,6 +137,8 @@ export interface JamResponseDto {
   date?: string
   location?: string
   qrCode?: string
+  slug?: string | null
+  shortCode?: string | null
   status: JamStatus
   createdAt: string
   updatedAt: string
@@ -156,7 +159,7 @@ export interface JamResponseDto {
  */
 export interface CreateMusicianDto {
   name: string
-  contact: string
+  contact?: string
   instrument: string
   level: MusicianLevel
 }
@@ -267,6 +270,8 @@ export interface LiveDashboardResponseDto {
   jamId: string
   jamName: string
   qrCode: string | null
+  slug: string | null
+  shortCode: string | null
   jamStatus: JamStatus
   currentSong: DashboardSongDto | null
   nextSongs: DashboardSongDto[]

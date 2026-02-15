@@ -9,6 +9,7 @@ import useSWR from 'swr'
 import {Alert} from '../components'
 import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
+import {SEO} from '../components/SEO'
 import type {JamStatus} from '../types/api.types'
 
 type DateSortOption = 'newest' | 'oldest' | 'upcoming'
@@ -88,6 +89,11 @@ export function BrowseJamsPage() {
 
   return (
     <div className="min-h-screen bg-base-100">
+      <SEO
+        title={t('jams.browse.title')}
+        description={t('jams.browse.subtitle')}
+        canonical={`${import.meta.env.VITE_SITE_URL || 'https://jamapp.com.br'}/jams`}
+      />
       {/* Hero Section */}
       <div className="bg-primary text-primary-content">
         <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 lg:py-12">

@@ -4,39 +4,24 @@
 
   <!-- Homepage -->
   <url>
-    <loc>https://letsjam.app/</loc>
+    <loc>https://jamapp.com.br/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <lastmod>2026-01-09</lastmod>
-    <!-- Multi-language alternates -->
-    <xhtml:link rel="alternate" hreflang="en" href="https://letsjam.app/?lng=en"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://letsjam.app/?lng=es"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://letsjam.app/?lng=pt"/>
+    <lastmod>2026-02-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jamapp.com.br/?lng=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://jamapp.com.br/?lng=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://jamapp.com.br/?lng=pt"/>
   </url>
 
   <!-- Browse Jams Page -->
   <url>
-    <loc>https://letsjam.app/jams</loc>
+    <loc>https://jamapp.com.br/jams</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://letsjam.app/jams?lng=en"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://letsjam.app/jams?lng=es"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://letsjam.app/jams?lng=pt"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://jamapp.com.br/jams?lng=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://jamapp.com.br/jams?lng=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://jamapp.com.br/jams?lng=pt"/>
   </url>
 
-  <!-- Login Page (public-facing) -->
-  <url>
-    <loc>https://letsjam.app/login</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- Register Page (public-facing) -->
-  <url>
-    <loc>https://letsjam.app/register</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <!-- Note: Individual jam pages (/jams/:id) would be added dynamically via a sitemap generator -->
+  <!-- Note: Individual jam pages (/jams/:slug) are dynamically discoverable via /jams listing -->
 </urlset>

@@ -45,7 +45,6 @@ export {
   ScheduleDisplayItem,
   ScheduleEnrollmentModal,
 } from './schedule'
-export { SimpleLoginForm } from './forms/SimpleLoginForm'
 export { SupabaseLoginForm } from './forms/SupabaseLoginForm'
 export { OAuthButton } from './forms/OAuthButton'
 export { JamRegistrationForm } from './forms/JamRegistrationForm'

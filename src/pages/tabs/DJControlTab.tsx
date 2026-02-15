@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {scheduleService} from "../../services";
 import {Alert} from '../../components';
-import {DJControlActions, QueueStats, SongQueueTimeline} from "../../components/dj-control";
+import {QueueStats, SongQueueTimeline} from "../../components/dj-control";
 import {useJamControl} from "../../hooks";
 import {formatError} from "../../lib/api/errorHandler";
 
@@ -18,7 +18,7 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
     const [actionError, setActionError] = useState<string | null>(null)
 
     // Use the new jam control hook with auto-refresh
-    const { liveState, isLoading, error, start, stop, resume, pause, next, previous, refresh } =
+    const { liveState, isLoading, error, start, stop, next, previous, refresh } =
         useJamControl(jam.id, {
             autoRefreshEnabled: true,
             autoRefreshInterval: 5000, // 5 seconds
@@ -95,25 +95,16 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
                     )}
                 </div>
 
-                {/* Sidebar */}
-                <div className="lg:col-span-1 space-y-4">
-                    {/* Queue Stats */}
-                    <QueueStats liveState={liveState}/>
-
-                    {/* Controls */}
-                    <DJControlActions
-                        jamId={jam.id}
+                {/* Sidebar: Stats + Controls */}
+                <div className="lg:col-span-1">
+                    <QueueStats
                         liveState={liveState}
+                        jamId={jam.id}
                         isLoading={isLoading}
-                        error={error}
                         onStart={start}
                         onStop={stop}
-                        onResume={resume}
-                        onPause={pause}
                         onNext={next}
                         onPrevious={previous}
-                        onRefresh={handleRefresh}
-                        onError={() => {/* Error is handled by hook */}}
                     />
                 </div>
             </div>

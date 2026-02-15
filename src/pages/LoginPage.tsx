@@ -7,8 +7,6 @@ import {useEffect, useState} from 'react'
 import {useAuth} from '../hooks'
 import {useNavigate} from 'react-router-dom'
 import {FullPageSpinner, ProfileSetupModal, SupabaseLoginForm} from '../components'
-import {isSupabaseConfigured} from '../lib/supabase'
-import SimpleLoginForm from '../components/forms/SimpleLoginForm'
 
 import {useTranslation} from 'react-i18next'
 import {getRedirectPath} from '../utils/navigationUtils'
@@ -43,8 +41,6 @@ export function LoginPage() {
     return null
   }
 
-  const useSupabase = isSupabaseConfigured()
-
   const handleProfileSetupClose = () => {
     setShowProfileSetup(false)
     // Redirect after profile setup is complete
@@ -58,12 +54,12 @@ export function LoginPage() {
         <div className="text-center mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3">{t('auth.login_page_title')}</h1>
           <p className="text-xs sm:text-sm lg:text-base text-base-content/70">
-            {useSupabase ? t('auth.login_page_supabase_desc') : t('auth.login_page_simple_desc')}
+            {t('auth.login_page_supabase_desc')}
           </p>
         </div>
 
-        {/* Login Form - Use Supabase if configured, otherwise fallback */}
-        {useSupabase ? <SupabaseLoginForm /> : <SimpleLoginForm />}
+        {/* Login Form */}
+        <SupabaseLoginForm />
 
         {/* Footer Links */}
         <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">

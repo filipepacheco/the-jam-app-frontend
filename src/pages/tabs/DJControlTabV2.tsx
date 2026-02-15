@@ -1,13 +1,13 @@
 /**
  * DJ Control Tab Component V2
- * Controls at top for easy access, timeline below
+ * Stats + controls in sidebar, timeline below (mobile) or beside (desktop)
  */
 
 import {useTranslation} from 'react-i18next'
 import {useState} from 'react'
 import {useJamControl} from '../../hooks'
 import {Alert} from '../../components'
-import {DJControlActions, QueueStats, SongQueueTimeline,} from '../../components/dj-control'
+import {QueueStats, SongQueueTimeline} from '../../components/dj-control'
 import {scheduleService} from '../../services'
 import {formatError} from '../../lib/api/errorHandler'
 
@@ -18,7 +18,7 @@ interface DJControlTabV2Props {
 
 /**
  * DJ Control Tab V2
- * Controls at top for better UX on mobile
+ * Stats card includes control buttons at the bottom
  */
 export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
   const { t } = useTranslation()
@@ -27,7 +27,7 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
   const [actionError, setActionError] = useState<string | null>(null)
 
   // Use the custom hook for jam control (live state)
-  const { liveState, isLoading, error, start, stop, resume, pause, next, previous, refresh } =
+  const { liveState, isLoading, error, start, stop, next, previous, refresh } =
     useJamControl(jamId, {
       autoRefreshEnabled: true,
       autoRefreshInterval: 5000, // 5 seconds
@@ -67,133 +67,68 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
     }
   }
 
+  const timelineContent = isLoading && !liveState ? (
+    <div className="card bg-base-200 shadow">
+      <div className="card-body text-center">
+        <p className="text-sm text-base-content/70">{t('common.loading')}</p>
+        <progress className="progress progress-primary w-full mt-2"></progress>
+      </div>
+    </div>
+  ) : liveState ? (
+    <SongQueueTimeline
+      liveState={liveState}
+      suggestedSongs={liveState.suggestedSongs}
+      onRemoveSong={handleRemoveSong}
+      onApproveSong={handleApproveSong}
+      loading={isLoading || actionLoading}
+    />
+  ) : (
+    <Alert
+      type="error"
+      message={t('dj_control.errors.failed_to_load')}
+      onDismiss={() => {}}
+    />
+  )
+
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">{t('dj_control.title_with_emoji')}</h2>
 
-      {/* Error Alert */}
       {error && (
-        <Alert
-          type="error"
-          message={error}
-          onDismiss={() => {
-            /* Error is auto-cleared on next state update */
-          }}
-        />
+        <Alert type="error" message={error} onDismiss={() => {}} />
       )}
-
-      {/* Action Error Alert */}
       {actionError && <Alert type="error" message={actionError} onDismiss={() => setActionError(null)} />}
-
-      {/* Success Alert */}
       {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
 
-      {/* Mobile Layout: Actions and Stats at top */}
+      {/* Mobile Layout: Stats+Controls at top, timeline below */}
       <div className="lg:hidden space-y-4">
-        {/* Controls */}
-        <div className="card bg-base-200 shadow-sm">
-          <div className="card-body p-3 sm:p-4">
-            <DJControlActions
-              jamId={jamId}
-              liveState={liveState}
-              isLoading={isLoading}
-              error={error}
-              onStart={start}
-              onStop={stop}
-              onResume={resume}
-              onPause={pause}
-              onNext={next}
-              onPrevious={previous}
-              onRefresh={handleRefresh}
-              onError={() => {
-                /* Error is handled by hook */
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Queue Stats */}
-        <QueueStats liveState={liveState} />
-
-        {/* Timeline */}
-        {isLoading && !liveState ? (
-          <div className="card bg-base-200 shadow">
-            <div className="card-body text-center">
-              <p className="text-sm text-base-content/70">{t('common.loading')}</p>
-              <progress className="progress progress-primary w-full mt-2"></progress>
-            </div>
-          </div>
-        ) : liveState ? (
-          <SongQueueTimeline
-            liveState={liveState}
-            suggestedSongs={liveState.suggestedSongs}
-            onRemoveSong={handleRemoveSong}
-            onApproveSong={handleApproveSong}
-            loading={isLoading || actionLoading}
-          />
-        ) : (
-          <Alert
-            type="error"
-            message={t('dj_control.errors.failed_to_load')}
-            onDismiss={() => {}}
-          />
-        )}
+        <QueueStats
+          liveState={liveState}
+          jamId={jamId}
+          isLoading={isLoading}
+          onStart={start}
+          onStop={stop}
+          onNext={next}
+          onPrevious={previous}
+        />
+        {timelineContent}
       </div>
 
-      {/* Desktop Layout: Timeline left, Actions+Stats right */}
+      {/* Desktop Layout: Timeline left, Stats+Controls right */}
       <div className="hidden lg:grid lg:grid-cols-4 gap-4">
-        {/* Timeline - Main Content */}
         <div className="lg:col-span-3 min-w-0">
-          {isLoading && !liveState ? (
-            <div className="card bg-base-200 shadow">
-              <div className="card-body text-center">
-                <p className="text-sm text-base-content/70">{t('common.loading')}</p>
-                <progress className="progress progress-primary w-full mt-2"></progress>
-              </div>
-            </div>
-          ) : liveState ? (
-            <SongQueueTimeline
-              liveState={liveState}
-              suggestedSongs={liveState.suggestedSongs}
-              onRemoveSong={handleRemoveSong}
-              onApproveSong={handleApproveSong}
-              loading={isLoading || actionLoading}
-            />
-          ) : (
-            <Alert
-              type="error"
-              message={t('dj_control.errors.failed_to_load')}
-              onDismiss={() => {}}
-            />
-          )}
+          {timelineContent}
         </div>
-
-        {/* Sidebar - Actions + Stats */}
-        <div className="lg:col-span-1 space-y-4">
-          {/* Controls */}
-          <div className="card bg-base-200 shadow-sm">
-            <div className="card-body p-3 sm:p-4">
-              <DJControlActions
-                jamId={jamId}
-                liveState={liveState}
-                isLoading={isLoading}
-                error={error}
-                onStart={start}
-                onStop={stop}
-                onResume={resume}
-                onPause={pause}
-                onNext={next}
-                onPrevious={previous}
-                onRefresh={handleRefresh}
-                onError={() => {
-                  /* Error is handled by hook */
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Queue Stats */}
-          <QueueStats liveState={liveState} />
+        <div className="lg:col-span-1">
+          <QueueStats
+            liveState={liveState}
+            jamId={jamId}
+            isLoading={isLoading}
+            onStart={start}
+            onStop={stop}
+            onNext={next}
+            onPrevious={previous}
+          />
         </div>
       </div>
     </div>

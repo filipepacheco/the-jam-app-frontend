@@ -9,6 +9,7 @@ import type {JamResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../lib/i18nUtils'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../lib/statusUtils'
+import {getJamPath, getJamDashboardPath} from '../utils/jamUrl'
 
 interface JamCardProps {
   jam: JamResponseDto
@@ -69,10 +70,10 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
 
         {/* Action Buttons */}
         <div className="card-actions justify-end gap-2 mt-4 sm:mt-6">
-            <Link to={`/jams/${jam.id}/dashboard`} className="btn btn-outline btn-sm text-xs sm:text-sm" title="View live dashboard">
+            <Link to={getJamDashboardPath(jam)} className="btn btn-outline btn-sm text-xs sm:text-sm" title="View live dashboard">
               📡 {t('jams.live_dashboard', 'Dashboard ao vivo')}
             </Link>
-          <Link to={`/jams/${jam.id}`} className="btn btn-primary btn-sm text-xs sm:text-sm">
+          <Link to={getJamPath(jam)} className="btn btn-primary btn-sm text-xs sm:text-sm">
             {t('common.details')}
           </Link>
         </div>

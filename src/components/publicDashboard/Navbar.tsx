@@ -2,18 +2,26 @@ import React, { useMemo } from 'react'
 import {motion} from 'framer-motion'
 import {useReducedMotion} from '../../hooks'
 import {LanguageSelector} from './LanguageSelector'
+import {useTranslation} from 'react-i18next'
+import type {DashboardLayout} from '../../hooks'
 
 interface Props {
   visible: boolean
   jamId?: string
+  jamSlug?: string | null
   onClose: () => void
   currentLang: string
   onChangeLanguage: (lang: string) => void
   pollingMs?: number
   onPollingChange?: (ms: number) => void
+  layout?: DashboardLayout
+  onLayoutChange?: (layout: DashboardLayout) => void
+  carouselIntervalMs?: number
+  onCarouselIntervalChange?: (ms: number) => void
 }
 
-export default function Navbar({ visible, jamId, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange }: Props) {
+export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange, layout, onLayoutChange, carouselIntervalMs, onCarouselIntervalChange }: Props) {
+  const { t } = useTranslation()
   const { transition } = useReducedMotion()
 
   const navbarTransition = useMemo(() => ({
@@ -59,10 +67,49 @@ export default function Navbar({ visible, jamId, onClose, currentLang, onChangeL
         <div className="flex items-center justify-between flex-1">
           <div className="flex items-center gap-4">
             <a href="/" onClick={onClose} className="link link-hover">← Back to Home</a>
-            <a href={`/jams/${jamId}`} onClick={onClose} className="link link-hover">View Full Details →</a>
+            <a href={`/jams/${jamSlug || jamId}`} onClick={onClose} className="link link-hover">View Full Details →</a>
           </div>
 
               <LanguageSelector currentLang={currentLang} onChange={onChangeLanguage} onSelectClose={onClose} />
+
+        {onLayoutChange && (
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-base-content">{t('publicDashboard.layoutLabel', 'Layout')}:</span>
+            <div className="join">
+              <button
+                type="button"
+                className={`btn btn-sm join-item ${layout === 'classic' ? 'btn-primary' : 'btn-ghost'}`}
+                onClick={() => onLayoutChange('classic')}
+              >
+                {t('publicDashboard.layoutClassic', 'Classic')}
+              </button>
+              <button
+                type="button"
+                className={`btn btn-sm join-item ${layout === 'carousel' ? 'btn-primary' : 'btn-ghost'}`}
+                onClick={() => onLayoutChange('carousel')}
+              >
+                {t('publicDashboard.layoutCarousel', 'Carousel')}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {layout === 'carousel' && onCarouselIntervalChange && (
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-base-content">{t('publicDashboard.slideDuration', 'Slide Duration')}:</span>
+            <select
+              value={carouselIntervalMs}
+              onChange={(e) => onCarouselIntervalChange(Number(e.target.value))}
+              className="select select-sm bg-slate-800 text-white"
+            >
+              <option value={5000}>5s</option>
+              <option value={8000}>8s</option>
+              <option value={10000}>10s</option>
+              <option value={15000}>15s</option>
+              <option value={20000}>20s</option>
+            </select>
+          </div>
+        )}
 
         {onPollingChange && (
           <div className="flex items-center gap-3">

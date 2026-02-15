@@ -13,6 +13,7 @@ import {Alert, FullPageSpinner, PageAlerts, SpotifyImportModal} from '../../comp
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
+import {getJamPath} from '../../utils/jamUrl'
 
 interface JamCategory {
     planned: JamResponseDto[]
@@ -286,7 +287,7 @@ function JamCard({jam, onDelete, onNavigate, loading}: JamCardProps) {
             <div className="flex items-start justify-between gap-2">
                 <h3 className="card-title text-base sm:text-lg">{jam.name}</h3>
                 <div
-                    className={`badge badge-sm sm:badge-md ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
+                    className={`badge badge-sm sm:badge-md shrink-0 ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
             </div>
 
             <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm">
@@ -308,7 +309,7 @@ function JamCard({jam, onDelete, onNavigate, loading}: JamCardProps) {
             <div className="card-actions justify-between mt-4 sm:mt-6 flex-wrap gap-2">
                 <div className="flex gap-1 sm:gap-2">
                     <button
-                        onClick={() => onNavigate(`/jams/${jam.id}`)}
+                        onClick={() => onNavigate(getJamPath(jam))}
                         className="btn btn-xs sm:btn-sm btn-ghost"
                         disabled={loading}
                     >

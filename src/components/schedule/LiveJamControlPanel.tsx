@@ -7,8 +7,8 @@
 
 import React, {useState, useEffect, useCallback, useMemo} from 'react'
 import {GripVertical, Music, Loader2} from 'lucide-react'
-import type {RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
-import type {LiveStateSongDto} from '../../types/jamControl.types'
+import type {ScheduleResponseDto} from '../../types/api.types'
+import type {LiveStateSongDto, LiveStateMusicianDto} from '../../types/jamControl.types'
 import {formatDuration} from '../../lib/formatters'
 import {getInstrumentIcon} from './RegistrationList'
 import {useTranslation} from 'react-i18next'
@@ -22,22 +22,21 @@ interface LiveJamControlPanelProps {
 }
 
 /**
- * Group registrations by instrument
+ * Group musicians by instrument
  */
-const groupRegistrationsByInstrument = (
-  registrations: RegistrationResponseDto[] | undefined
-): Map<string, RegistrationResponseDto[]> => {
-  const grouped = new Map<string, RegistrationResponseDto[]>()
-  if (!registrations) return grouped
+const groupMusiciansByInstrument = (
+  musicians: LiveStateMusicianDto[] | undefined
+): Map<string, LiveStateMusicianDto[]> => {
+  const grouped = new Map<string, LiveStateMusicianDto[]>()
+  if (!musicians) return grouped
 
-  registrations.forEach((reg) => {
-    const instrument = reg.instrument || reg.musician?.instrument || ''
-    if (instrument) {
-      const normalized = normalizeInstrument(instrument)
+  musicians.forEach((m) => {
+    if (m.instrument) {
+      const normalized = normalizeInstrument(m.instrument)
       if (!grouped.has(normalized)) {
         grouped.set(normalized, [])
       }
-      grouped.get(normalized)!.push(reg)
+      grouped.get(normalized)!.push(m)
     }
   })
 
@@ -63,13 +62,16 @@ const getInstrumentOrder = (instrument: string): number => {
  */
 const liveSongToSchedule = (song: LiveStateSongDto): ScheduleResponseDto => ({
   id: song.id,
-  jamId: song.jamId,
-  musicId: song.musicId,
+  jamId: '',
+  musicId: '',
   order: song.order,
   status: song.status,
-  createdAt: song.createdAt,
+  createdAt: '',
   music: song.music as unknown as ScheduleResponseDto['music'],
-  registrations: song.registrations,
+  registrations: song.musicians?.map(m => ({
+    instrument: m.instrument,
+    musician: { id: m.id, name: m.name },
+  })) as unknown as ScheduleResponseDto['registrations'],
 })
 
 // ============================================================================
@@ -84,8 +86,8 @@ function NowPlayingCard({ currentSong }: NowPlayingCardProps) {
   const { t } = useTranslation()
 
   const groupedMusicians = useMemo(
-    () => groupRegistrationsByInstrument(currentSong.registrations),
-    [currentSong.registrations]
+    () => groupMusiciansByInstrument(currentSong.musicians),
+    [currentSong.musicians]
   )
 
   const sortedInstruments = useMemo(
@@ -118,7 +120,7 @@ function NowPlayingCard({ currentSong }: NowPlayingCardProps) {
               <div key={instrument} className="flex items-center gap-2 bg-white/10 rounded-full px-3 py-1">
                 <span className="text-lg">{getInstrumentIcon(instrument)}</span>
                 <span className="text-sm text-white/90">
-                  {musicians.map(m => m.musician?.name || t('common.unknown')).join(', ')}
+                  {musicians.map(m => m.name || t('common.unknown')).join(', ')}
                 </span>
               </div>
             ))}
@@ -139,9 +141,8 @@ interface QueueItemProps {
   isDragOver: boolean
   onDragStart: () => void
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void
-  onDragLeave: (e: React.DragEvent<HTMLDivElement>) => void
+  onDragEnd: () => void
   onDrop: (e: React.DragEvent<HTMLDivElement>) => void
-  onTouchStart: (e: React.TouchEvent<HTMLDivElement>) => void
   onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void
   itemRef: (el: HTMLDivElement | null) => void
 }
@@ -156,23 +157,19 @@ const QueueItem = React.memo(function QueueItem({
   isDragOver,
   onDragStart,
   onDragOver,
-  onDragLeave,
+  onDragEnd,
   onDrop,
-  onTouchStart,
   onKeyDown,
   itemRef,
 }: QueueItemProps) {
   const { t } = useTranslation()
 
-  const groupedMusicians = useMemo(
-    () => groupRegistrationsByInstrument(schedule.registrations),
-    [schedule.registrations]
-  )
-
-  const sortedInstruments = useMemo(
-    () => Array.from(groupedMusicians.entries()).sort(([a], [b]) => getInstrumentOrder(a) - getInstrumentOrder(b)),
-    [groupedMusicians]
-  )
+  const musicianNames = useMemo(() => {
+    if (!schedule.registrations?.length) return ''
+    return schedule.registrations
+      .map(r => r.musician?.name?.split(' ')[0] || t('common.unknown'))
+      .join(', ')
+  }, [schedule.registrations, t])
 
   return (
     <div
@@ -180,75 +177,48 @@ const QueueItem = React.memo(function QueueItem({
       draggable={!isReordering}
       onDragStart={onDragStart}
       onDragOver={onDragOver}
-      onDragLeave={onDragLeave}
+      onDragEnd={onDragEnd}
       onDrop={onDrop}
-      onTouchStart={onTouchStart}
       onKeyDown={onKeyDown}
+      data-schedule-id={schedule.id}
       className={`
-        rounded-lg p-4 flex items-start gap-3 border-2 transition-all duration-200 select-none touch-none
+        rounded-lg p-2 sm:p-3 flex items-center gap-2 border-2 transition-all duration-200 select-none
         ${isReorderingThisItem
           ? 'bg-primary/5 border-primary/30 cursor-wait'
           : 'bg-base-200 border-transparent cursor-move hover:bg-base-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
         }
         ${isDragOver ? 'bg-primary/10 border-primary' : ''}
-        ${isDragging && isDragActive ? 'opacity-50 border-primary border-dashed scale-105 shadow-lg z-10 relative' : 'opacity-100'}
+        ${isDragging && isDragActive ? 'opacity-50 border-primary border-dashed z-10 relative' : 'opacity-100'}
       `}
       role="listitem"
       tabIndex={0}
-      aria-label={`${index + 1}. ${schedule.music?.title || t('schedule.song_tba')} - ${t('live_control.drag_to_reorder')}`}
+      aria-label={`${schedule.order}. ${schedule.music?.title || t('schedule.song_tba')} - ${t('live_control.drag_to_reorder')}`}
       aria-busy={isReorderingThisItem}
     >
       {/* Drag Handle */}
       <div
-        className={`pt-1 transition-colors ${isReorderingThisItem ? 'text-primary/50' : 'text-base-content/40'}`}
+        className={`shrink-0 transition-colors ${isReorderingThisItem ? 'text-primary/50' : 'text-base-content/40'}`}
         aria-hidden="true"
       >
         {isReorderingThisItem ? (
-          <Loader2 className="size-5 animate-spin" />
+          <Loader2 className="size-4 animate-spin" />
         ) : (
-          <GripVertical className="size-5" />
+          <GripVertical className="size-4" />
         )}
       </div>
 
-      {/* Song Info + Musicians */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <p className={`font-bold text-balance ${isReorderingThisItem ? 'text-base-content/70' : 'text-base-content'}`}>
-              {index + 1}. {schedule.music?.title || t('schedule.song_tba')}
-            </p>
-            <p className="text-sm text-base-content/70 text-pretty">
-              {schedule.music?.artist || t('schedule.artist_tba')}
-            </p>
-            {schedule.music?.duration && (
-              <p className="text-xs text-base-content/60 mt-1 tabular-nums">
-                <span aria-hidden="true">⏱️</span> {formatDuration(schedule.music.duration)}
-              </p>
-            )}
-          </div>
+      {/* Order number */}
+      <span className={`text-sm font-bold tabular-nums shrink-0 w-6 text-right ${isReorderingThisItem ? 'text-base-content/50' : 'text-base-content/70'}`}>
+        {schedule.order}.
+      </span>
 
-          {/* Musicians Count Badge */}
-          {schedule.registrations && schedule.registrations.length > 0 && (
-            <div className="badge badge-outline text-xs shrink-0">
-              {t('schedule.musicians_count', { count: schedule.registrations.length })}
-            </div>
-          )}
-        </div>
-
-        {/* Musicians by Instrument */}
-        {sortedInstruments.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2">
-            {sortedInstruments.map(([instrument, musicians]) => (
-              <div key={instrument} className="flex items-center gap-1 bg-base-300/60 rounded-full px-2 py-0.5 text-xs">
-                <span className="text-sm">{getInstrumentIcon(instrument)}</span>
-                <span className="text-base-content/80">
-                  {musicians.map(m => m.musician?.name || t('common.unknown')).join(', ')}
-                </span>
-              </div>
-            ))}
-          </div>
+      {/* Song title and musicians - single line */}
+      <p className={`text-sm truncate min-w-0 ${isReorderingThisItem ? 'text-base-content/70' : 'text-base-content'}`}>
+        <span className="font-semibold">{schedule.music?.title || t('schedule.song_tba')}</span>
+        {musicianNames && (
+          <span className="text-base-content/60"> - {musicianNames}</span>
         )}
-      </div>
+      </p>
     </div>
   )
 })
@@ -283,6 +253,15 @@ export function LiveJamControlPanel({
   const itemRefs = React.useRef<Map<string, HTMLDivElement>>(new Map())
   const containerRef = React.useRef<HTMLDivElement>(null)
 
+  // Refs for native touch event handlers (avoid stale closures)
+  const touchDragItemRef = React.useRef<string | null>(null)
+  const isDragActiveRef = React.useRef(false)
+  const touchOverIndexRef = React.useRef<number | null>(null)
+  const localQueueRef = React.useRef(localQueue)
+  const reorderQueueRef = React.useRef<(q: ScheduleResponseDto[]) => void>(() => {})
+  const isReorderingRef = React.useRef(false)
+  const touchCleanupRef = React.useRef<(() => void) | null>(null)
+
   // Memoize derived state
   const currentSong = liveState?.currentSong ?? null
   const nextSongs = localQueue
@@ -293,12 +272,12 @@ export function LiveJamControlPanel({
     [touchDragItem, localQueue]
   )
 
-  // Sync local queue with live state when it changes
+  // Sync local queue with live state when it changes (skip during drag/reorder)
   useEffect(() => {
-    if (liveState?.nextSongs && !reorderingItemId) {
+    if (liveState?.nextSongs && !reorderingItemId && !touchDragItem && !draggedItem) {
       setLocalQueue(liveState.nextSongs.map(liveSongToSchedule))
     }
-  }, [liveState?.nextSongs, reorderingItemId])
+  }, [liveState?.nextSongs, reorderingItemId, touchDragItem, draggedItem])
 
   // Handle errors from live state
   useEffect(() => {
@@ -306,6 +285,11 @@ export function LiveJamControlPanel({
       onActionError(error)
     }
   }, [error, onActionError])
+
+  // Clean up native touch listeners on unmount
+  useEffect(() => {
+    return () => { touchCleanupRef.current?.() }
+  }, [])
 
   // Reorder callbacks - defined before hook for clarity
   const handleReorderSuccess = useCallback((updatedSchedules: ScheduleResponseDto[]) => {
@@ -334,6 +318,11 @@ export function LiveJamControlPanel({
     handleReorderRollback
   )
 
+  // Keep refs in sync for native touch handlers
+  localQueueRef.current = localQueue
+  reorderQueueRef.current = reorderQueue
+  isReorderingRef.current = isReordering
+
   // Ref callback - memoized
   const setItemRef = useCallback((id: string) => (el: HTMLDivElement | null) => {
     if (el) {
@@ -353,7 +342,8 @@ export function LiveJamControlPanel({
     setDragOverItem(scheduleId)
   }, [])
 
-  const handleDragLeave = useCallback(() => {
+  const handleDragEnd = useCallback(() => {
+    setDraggedItem(null)
     setDragOverItem(null)
   }, [])
 
@@ -382,115 +372,149 @@ export function LiveJamControlPanel({
     reorderQueue(newQueue)
   }, [draggedItem, localQueue, reorderQueue])
 
-  // Touch handlers - immediate drag on the grip handle area
-  const handleTouchStart = useCallback((e: React.TouchEvent<HTMLDivElement>, scheduleId: string) => {
-    if (isReordering) return
+  // Native touch drag: passive listeners only during normal scrolling.
+  // Non-passive touchmove registered dynamically only when drag is active,
+  // then removed when drag ends - so normal page scroll is never blocked.
+  const setupTouchListeners = useCallback((node: HTMLDivElement | null) => {
+    touchCleanupRef.current?.()
+    touchCleanupRef.current = null
+    containerRef.current = node
+    if (!node) return
 
-    // Prevent scrolling immediately when touching a draggable item
-    e.preventDefault()
+    let longPressTimer: ReturnType<typeof setTimeout> | null = null
+    let startPos: { x: number; y: number } | null = null
 
-    setTouchDragItem(scheduleId)
-    setIsDragActive(true)
-
-    // Vibrate on supported devices
-    if (navigator.vibrate) {
-      navigator.vibrate(30)
+    const clearLongPress = () => {
+      if (longPressTimer) {
+        clearTimeout(longPressTimer)
+        longPressTimer = null
+      }
+      startPos = null
     }
-  }, [isReordering])
 
-  // Container-level touch move handler
-  const handleContainerTouchMove = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
-    if (!touchDragItem || !isDragActive) return
+    // Non-passive drag move handler - only attached while dragging
+    const onDragTouchMove = (e: TouchEvent) => {
+      if (!touchDragItemRef.current || !isDragActiveRef.current) return
 
-    // Prevent scrolling
-    e.preventDefault()
+      e.preventDefault()
 
-    const touch = e.touches[0]
-    const touchY = touch.clientY
-    let newOverIndex: number | null = null
+      const touch = e.touches[0]
+      const touchY = touch.clientY
+      let newOverIndex: number | null = null
+      const queue = localQueueRef.current
 
-    localQueue.forEach((schedule, index) => {
-      const element = itemRefs.current.get(schedule.id)
-      if (element) {
-        const rect = element.getBoundingClientRect()
-        const itemMiddle = rect.top + rect.height / 2
+      queue.forEach((schedule, index) => {
+        const element = itemRefs.current.get(schedule.id)
+        if (element) {
+          const rect = element.getBoundingClientRect()
+          const itemMiddle = rect.top + rect.height / 2
+          if (touchY >= rect.top && touchY <= rect.bottom) {
+            newOverIndex = touchY < itemMiddle ? index : index + 1
+          }
+        }
+      })
 
-        if (touchY >= rect.top && touchY <= rect.bottom) {
-          newOverIndex = touchY < itemMiddle ? index : index + 1
+      if (newOverIndex === null && queue.length > 0) {
+        const firstItem = itemRefs.current.get(queue[0].id)
+        const lastItem = itemRefs.current.get(queue[queue.length - 1].id)
+        if (firstItem && touchY < firstItem.getBoundingClientRect().top) {
+          newOverIndex = 0
+        } else if (lastItem && touchY > lastItem.getBoundingClientRect().bottom) {
+          newOverIndex = queue.length
         }
       }
-    })
 
-    // Handle touch outside items
-    if (newOverIndex === null && localQueue.length > 0) {
-      const firstItem = itemRefs.current.get(localQueue[0].id)
-      const lastItem = itemRefs.current.get(localQueue[localQueue.length - 1].id)
+      touchOverIndexRef.current = newOverIndex
+      setTouchOverIndex(newOverIndex)
+    }
 
-      if (firstItem && touchY < firstItem.getBoundingClientRect().top) {
-        newOverIndex = 0
-      } else if (lastItem && touchY > lastItem.getBoundingClientRect().bottom) {
-        newOverIndex = localQueue.length
+    const resetTouchState = () => {
+      clearLongPress()
+      // Remove non-passive drag handler when drag ends
+      node.removeEventListener('touchmove', onDragTouchMove)
+      touchDragItemRef.current = null
+      isDragActiveRef.current = false
+      touchOverIndexRef.current = null
+      setTouchDragItem(null)
+      setIsDragActive(false)
+      setTouchOverIndex(null)
+    }
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (isReorderingRef.current) return
+      const itemEl = (e.target as HTMLElement).closest('[data-schedule-id]') as HTMLElement | null
+      if (!itemEl?.dataset.scheduleId) return
+
+      const scheduleId = itemEl.dataset.scheduleId
+      const touch = e.touches[0]
+      startPos = { x: touch.clientX, y: touch.clientY }
+
+      longPressTimer = setTimeout(() => {
+        longPressTimer = null
+        touchDragItemRef.current = scheduleId
+        isDragActiveRef.current = true
+        setTouchDragItem(scheduleId)
+        setIsDragActive(true)
+        if (navigator.vibrate) navigator.vibrate(30)
+        // Attach non-passive touchmove only now that drag is active
+        node.addEventListener('touchmove', onDragTouchMove, { passive: false })
+      }, 400)
+    }
+
+    // Passive touchmove: only cancels long press if finger moves during detection window
+    const onPassiveTouchMove = (e: TouchEvent) => {
+      if (!longPressTimer || !startPos) return
+      const touch = e.touches[0]
+      const dx = touch.clientX - startPos.x
+      const dy = touch.clientY - startPos.y
+      if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+        clearLongPress()
       }
     }
 
-    setTouchOverIndex(newOverIndex)
-  }, [touchDragItem, isDragActive, localQueue])
+    const onTouchEnd = () => {
+      clearLongPress()
+      const dragItem = touchDragItemRef.current
+      const dragActive = isDragActiveRef.current
+      const overIndex = touchOverIndexRef.current
+      const queue = localQueueRef.current
 
-  const handleTouchEnd = useCallback(() => {
-    if (!touchDragItem || !isDragActive) {
-      setTouchDragItem(null)
-      setTouchOverIndex(null)
-      setIsDragActive(false)
-      return
+      resetTouchState()
+
+      if (!dragItem || !dragActive || overIndex === null) return
+
+      const fromIndex = queue.findIndex(s => s.id === dragItem)
+      if (fromIndex === -1) return
+
+      let targetIndex = overIndex
+      if (targetIndex > fromIndex) targetIndex -= 1
+      if (targetIndex === fromIndex) return
+
+      setReorderingItemId(dragItem)
+      const newQueue = [...queue]
+      const [draggedSchedule] = newQueue.splice(fromIndex, 1)
+      newQueue.splice(targetIndex, 0, draggedSchedule)
+
+      setLocalQueue(newQueue)
+      reorderQueueRef.current(newQueue)
     }
 
-    // If no valid drop target, just cancel
-    if (touchOverIndex === null) {
-      setTouchDragItem(null)
-      setTouchOverIndex(null)
-      setIsDragActive(false)
-      return
+    // Only passive listeners on mount - page scroll is never blocked
+    node.addEventListener('touchstart', onTouchStart, { passive: true })
+    node.addEventListener('touchmove', onPassiveTouchMove, { passive: true })
+    node.addEventListener('touchend', onTouchEnd, { passive: true })
+    node.addEventListener('touchcancel', resetTouchState, { passive: true })
+
+    touchCleanupRef.current = () => {
+      clearLongPress()
+      node.removeEventListener('touchstart', onTouchStart)
+      node.removeEventListener('touchmove', onPassiveTouchMove)
+      node.removeEventListener('touchmove', onDragTouchMove)
+      node.removeEventListener('touchend', onTouchEnd)
+      node.removeEventListener('touchcancel', resetTouchState)
     }
-
-    const fromIndex = localQueue.findIndex((s) => s.id === touchDragItem)
-    if (fromIndex === -1) {
-      setTouchDragItem(null)
-      setTouchOverIndex(null)
-      setIsDragActive(false)
-      return
-    }
-
-    let targetIndex = touchOverIndex
-    if (targetIndex > fromIndex) {
-      targetIndex -= 1
-    }
-
-    if (targetIndex === fromIndex) {
-      setTouchDragItem(null)
-      setTouchOverIndex(null)
-      setIsDragActive(false)
-      return
-    }
-
-    setReorderingItemId(touchDragItem)
-
-    const newQueue = [...localQueue]
-    const [draggedSchedule] = newQueue.splice(fromIndex, 1)
-    newQueue.splice(targetIndex, 0, draggedSchedule)
-
-    setLocalQueue(newQueue)
-    setTouchDragItem(null)
-    setTouchOverIndex(null)
-    setIsDragActive(false)
-    reorderQueue(newQueue)
-  }, [touchDragItem, isDragActive, touchOverIndex, localQueue, reorderQueue])
-
-  // Cancel drag on touch cancel
-  const handleTouchCancel = useCallback(() => {
-    setTouchDragItem(null)
-    setTouchOverIndex(null)
-    setIsDragActive(false)
-  }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Stable: all state access via refs, setState functions are stable
 
   // Keyboard handler for accessibility
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLDivElement>, index: number) => {
@@ -566,15 +590,18 @@ export function LiveJamControlPanel({
           )}
         </div>
 
+        {nextSongs.length > 1 && (
+          <p className="text-xs text-base-content/50 mb-2 md:hidden">
+            {t('live_control.reorder_hint_mobile')}
+          </p>
+        )}
+
         {nextSongs.length > 0 ? (
           <div
-            ref={containerRef}
-            className={`space-y-2 ${isDragActive ? 'touch-none' : ''}`}
+            ref={setupTouchListeners}
+            className="space-y-2"
             role="list"
             aria-label={t('live_control.up_next')}
-            onTouchMove={handleContainerTouchMove}
-            onTouchEnd={handleTouchEnd}
-            onTouchCancel={handleTouchCancel}
           >
             {nextSongs.map((schedule, index) => {
               const isReorderingThisItem = reorderingItemId === schedule.id
@@ -597,9 +624,8 @@ export function LiveJamControlPanel({
                     isDragOver={dragOverItem === schedule.id}
                     onDragStart={() => handleDragStart(schedule.id)}
                     onDragOver={(e) => handleDragOver(e, schedule.id)}
-                    onDragLeave={handleDragLeave}
+                    onDragEnd={handleDragEnd}
                     onDrop={(e) => handleDrop(e, schedule)}
-                    onTouchStart={(e) => handleTouchStart(e, schedule.id)}
                     onKeyDown={(e) => handleKeyDown(e, index)}
                     itemRef={setItemRef(schedule.id)}
                   />

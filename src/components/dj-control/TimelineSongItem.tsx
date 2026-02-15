@@ -17,8 +17,8 @@ interface TimelineSongItemV2Props {
 export function TimelineSongItem({ song, status, onRemove, loading }: TimelineSongItemV2Props) {
   const { t } = useTranslation()
 
-  const musicians = song.registrations
-    ?.map((reg) => reg.musician?.name || reg.instrument)
+  const musicians = song.musicians
+    ?.map((m) => m.name || m.instrument)
     .filter(Boolean)
     .join(', ') || t('dj_control.timeline.no_musicians')
 

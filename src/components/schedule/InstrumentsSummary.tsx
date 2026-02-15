@@ -7,12 +7,14 @@
 import { useTranslation } from 'react-i18next'
 import type { InstrumentOption } from '../../utils/scheduleUtils'
 import { getInstrumentIcon } from '../../lib/schedule/instrumentHelpers'
+import { normalizeInstrument } from '../../utils/musicianUtils'
 
 interface InstrumentsSummaryProps {
   instrumentOptions: InstrumentOption[]
+  highlightInstrument?: string | null
 }
 
-export function InstrumentsSummary({ instrumentOptions }: InstrumentsSummaryProps) {
+export function InstrumentsSummary({ instrumentOptions, highlightInstrument }: InstrumentsSummaryProps) {
   const { t } = useTranslation()
 
   // Check if this is an "open" song with no requirements defined (-1 means unlimited)
@@ -35,16 +37,23 @@ export function InstrumentsSummary({ instrumentOptions }: InstrumentsSummaryProp
     )
   }
 
+  const normalizedHighlight = highlightInstrument ? normalizeInstrument(highlightInstrument) : null
+
   return (
     <div className="text-sm text-base-content/70 mb-2 px-2.5 py-1.5 bg-base-200/50 rounded">
       <p className="font-medium mb-1 text-xs text-base-content/50">{t('schedule.instruments_needed')}</p>
       <div className="flex flex-wrap gap-1.5">
         {availableOptions.map((option) => {
           const remaining = option.needed - option.registered
+          const isHighlighted = normalizedHighlight === option.key
           return (
             <span
               key={option.key}
-              className="badge badge-sm badge-warning gap-1"
+              className={`badge badge-sm gap-1 ${
+                isHighlighted
+                  ? 'badge-primary animate-pulse ring-2 ring-primary/50'
+                  : 'badge-warning'
+              }`}
               title={option.label}
             >
               {getInstrumentIcon(option.key)} {t('schedule.left_count', { count: remaining })}

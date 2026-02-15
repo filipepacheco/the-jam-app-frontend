@@ -1,3 +1,8 @@
+/**
+ * @deprecated This Remotion-based promo video has been replaced by the lightweight
+ * HeroDashboardMockup component in src/components/hero/HeroDashboardMockup.tsx.
+ * This directory and its remotion dependencies are scheduled for removal in a follow-up cleanup.
+ */
 import React from "react";
 import { AbsoluteFill, Sequence, interpolate, useCurrentFrame } from "remotion";
 import { karaokeJamSchema } from "./schema";

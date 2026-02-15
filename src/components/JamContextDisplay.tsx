@@ -3,13 +3,20 @@
  * Displays jam information at top of registration form
  */
 
-import type {JamMusicResponseDto, JamResponseDto} from '../types/api.types'
-
+import type {JamMusicResponseDto, JamResponseDto, JamStatus} from '../types/api.types'
 
 import {useTranslation} from 'react-i18next'
 
 interface JamContextDisplayProps {
-  jam: JamResponseDto
+  jam: JamResponseDto | {
+    id: string
+    name: string
+    date?: string
+    hostName?: string
+    status: JamStatus
+    qrCode?: string
+    jamMusics?: JamMusicResponseDto[]
+  }
 }
 
 export function JamContextDisplay({ jam }: JamContextDisplayProps) {

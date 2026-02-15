@@ -92,7 +92,7 @@ export function JamRegisterPage() {
           >
             {t('jams.back_to_jam')}
           </button>
-          <h1 className="text-3xl font-bold">{t('jams.register_for_name', { name: jam.nome })}</h1>
+          <h1 className="text-3xl font-bold">{t('jams.register_for_name', { name: jam.name })}</h1>
         </div>
       </div>
 
@@ -100,7 +100,7 @@ export function JamRegisterPage() {
       <div className="container mx-auto max-w-2xl px-4 py-8">
         <div className="space-y-6">
           {/* Jam Context */}
-          <JamContextDisplay jam={jam as any} />
+          <JamContextDisplay jam={jam} />
 
           {/* User Info */}
           <div className="card bg-base-200">

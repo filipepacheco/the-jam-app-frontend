@@ -3,7 +3,7 @@
  * React Context for managing role-based authentication state with Supabase
  */
 
-import {createContext, type ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
+import {createContext, type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import type {AuthContextType, AuthUser, UpdateProfileDto, UserRole} from '../types/auth.types'
 import type {OAuthProvider} from '../lib/supabase'
 import {
@@ -64,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   })
   const [isNewUser, setIsNewUser] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const authenticatedUserIdRef = useRef<string | null>(null)
 
   /**
    * Load user profile from backend via API client
@@ -116,7 +117,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setRoleState(deriveRole(profile))
             setIsAuthenticated(true)
             localStorage.setItem('auth_user', JSON.stringify(profile))
+            authenticatedUserIdRef.current = session.user.id
           }
+        } else {
+          // No valid session - clear any stale localStorage data
+          setUser(null)
+          setRoleState('viewer')
+          setIsAuthenticated(false)
+          localStorage.removeItem('auth_user')
+          authenticatedUserIdRef.current = null
         }
       } catch (err) {
         console.error('Auth initialization error:', err)
@@ -131,6 +140,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (isSupabaseConfigured()) {
       const { unsubscribe } = onAuthStateChange(async (event, session) => {
         if (event === 'SIGNED_IN' && session) {
+          // Supabase v2 fires SIGNED_IN on every token refresh (tab focus).
+          // Skip redundant /auth/me calls when we already have this user loaded.
+          if (authenticatedUserIdRef.current === session.user.id) {
+            return
+          }
           const profile = await loadUserProfile()
           if (profile) {
             setUser(profile)
@@ -138,6 +152,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setIsAuthenticated(true)
             setIsNewUser(profile.isNewUser || false)
             localStorage.setItem('auth_user', JSON.stringify(profile))
+            authenticatedUserIdRef.current = session.user.id
           }
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
@@ -145,6 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setIsAuthenticated(false)
           setIsNewUser(false)
           localStorage.removeItem('auth_user')
+          authenticatedUserIdRef.current = null
         } else if (event === 'TOKEN_REFRESHED') {
           // No action needed - Supabase handles refresh internally
         }
@@ -170,6 +186,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       if (result.session) {
+        authenticatedUserIdRef.current = result.session.user.id
         const profile = await loadUserProfile()
         return handleAuthSuccess(profile)
       }
@@ -199,6 +216,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       // If email confirmation is required, session might be null
       if (result.session) {
+        authenticatedUserIdRef.current = result.session.user.id
         const profile = await loadUserProfile()
         return handleAuthSuccess(profile)
       }
@@ -255,6 +273,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setRoleState('viewer')
       setIsAuthenticated(false)
       setIsNewUser(false)
+      authenticatedUserIdRef.current = null
 
       return { success: true }
     } catch (err) {
@@ -266,6 +285,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setRoleState('viewer')
       setIsAuthenticated(false)
       setIsNewUser(false)
+      authenticatedUserIdRef.current = null
 
       const errorMessage = err instanceof Error ? err.message : 'Logout failed'
       return { success: false, error: errorMessage }

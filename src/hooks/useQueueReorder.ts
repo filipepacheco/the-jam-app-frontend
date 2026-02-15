@@ -47,10 +47,11 @@ export function useQueueReorder(
         return
       }
 
-      // Build updates array with explicit 1-based order values
+      // Build updates array preserving offset from played/current songs
+      const baseOrder = Math.min(...newQueue.map(s => s.order))
       const updates: ScheduleOrderUpdate[] = newQueue.map((schedule, index) => ({
         scheduleId: schedule.id,
-        order: index + 1
+        order: baseOrder + index
       }))
 
       // Show loading immediately on drop
@@ -59,27 +60,34 @@ export function useQueueReorder(
 
       // Debounce the API call
       debounceTimerRef.current = setTimeout(async () => {
-        const response = await jamControlService.reorderQueue(jamId, updates)
+        try {
+          const response = await jamControlService.reorderQueue(jamId, updates)
 
-        setIsReordering(false)
+          setIsReordering(false)
 
-        if (response.success) {
-          if (response.data?.schedules) {
-            // Server returned full jam - use server state
-            const sortedSchedules = response.data.schedules
-              .filter(s => s.status === 'SCHEDULED' || s.status === 'IN_PROGRESS')
-              .sort((a, b) => (a.order || 0) - (b.order || 0))
-            onSuccess(sortedSchedules)
+          if (response.success) {
+            if (response.data?.schedules) {
+              // Server returned full jam - use server state
+              const sortedSchedules = response.data.schedules
+                .filter(s => s.status === 'SCHEDULED' || s.status === 'IN_PROGRESS')
+                .sort((a, b) => (a.order || 0) - (b.order || 0))
+              onSuccess(sortedSchedules)
+            } else {
+              // Server returned true - keep optimistic update already applied
+              onSuccess(newQueue)
+            }
           } else {
-            // Server returned true - keep optimistic update already applied
-            onSuccess(newQueue)
+            // Failure: rollback and show error
+            const errorMessage = response.error?.message || 'Failed to reorder queue'
+            setError(errorMessage)
+            onError(errorMessage)
+            onRollback?.(previousQueueRef.current)
           }
-        } else {
-          // Failure: rollback and show error
-          const errorMessage = response.error?.message || 'Failed to reorder queue'
+        } catch (err) {
+          setIsReordering(false)
+          const errorMessage = err instanceof Error ? err.message : 'Failed to reorder queue'
           setError(errorMessage)
           onError(errorMessage)
-          // Rollback via separate callback to avoid triggering success alert
           onRollback?.(previousQueueRef.current)
         }
       }, 300) // 300ms debounce

@@ -294,6 +294,16 @@
   animation: text-glow 2s ease-in-out infinite;
 }
 
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-ticker {
+  display: inline-block;
+  animation: ticker 60s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-spin-slow,
   .animate-wave-pulse,
@@ -304,7 +314,8 @@
   .animate-pulse-subtle,
   .animate-gradient-shift,
   .radial-glow,
-  .animate-text-glow {
+  .animate-text-glow,
+  .animate-ticker {
     animation: none;
   }
   

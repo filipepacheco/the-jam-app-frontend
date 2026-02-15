@@ -4,12 +4,13 @@
  * Routes: /host/create-jam (create) and /host/jams/:id/edit (edit)
  */
 
-import React, {useEffect, useState, useCallback} from 'react'
+import React, {useEffect, useState, useCallback, useMemo, useRef, useId} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import {Alert, FullPageSpinner, PageAlerts, SpotifyImportModal} from '../../components'
+import {Alert, FullPageSpinner, Modal, PageAlerts, SpotifyImportModal} from '../../components'
+import {ListMusic} from 'lucide-react'
 
 interface FormData {
   name: string
@@ -17,10 +18,11 @@ interface FormData {
   date: string
   time: string
   location: string
+  slug: string
   hostMusicianId: string
   hostName?: string
   hostContact?: string
-  status: 'ACTIVE' | 'INACTIVE' | 'FINISHED'
+  status: 'ACTIVE' | 'INACTIVE' | 'LIVE' | 'FINISHED'
 }
 
 export function CreateJamPage() {
@@ -28,21 +30,44 @@ export function CreateJamPage() {
   const { id: jamId } = useParams<{ id: string }>()
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
   const { t } = useTranslation()
+  const formId = useId()
+  const navTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
 
   const [mode, setMode] = useState<'create' | 'edit'>('create')
   const [loading, setLoading] = useState(false)
   const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [spotifyModalOpen, setSpotifyModalOpen] = useState(false)
-
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     name: '',
     description: '',
     date: '',
     time: '',
     location: '',
+    slug: '',
     hostMusicianId: user?.id || '',
     status: 'ACTIVE',
   })
+
+  // Cleanup navigation timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (navTimeoutRef.current) clearTimeout(navTimeoutRef.current)
+    }
+  }, [])
+
+  // Preview slug derived from name (shows as placeholder when custom slug is empty)
+  const slugPreview = useMemo(() => {
+    if (!formData.name.trim()) return ''
+    return formData.name
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 60)
+  }, [formData.name])
 
   // Initialize on mount
   const loadJamData = useCallback(async (id: string) => {
@@ -53,7 +78,7 @@ export function CreateJamPage() {
       const result = await jamService.findOne(id)
       const jam = result.data
 
-      // Parse date and time
+      // Parse date and time from UTC to local
       const dateObj = jam.date ? new Date(jam.date) : null
       const dateString = dateObj ? dateObj.toISOString().split('T')[0] : ''
       const timeString = dateObj
@@ -65,9 +90,13 @@ export function CreateJamPage() {
         description: jam.description || '',
         date: dateString,
         time: timeString,
-        location: '',
+        location: jam.location || '',
+        slug: jam.slug || '',
         hostMusicianId: user?.id || '',
-        status: jam.status as 'ACTIVE' | 'INACTIVE' | 'FINISHED',
+        hostName: jam.hostName || '',
+        // hostContact not in JamResponseDto - backend DTO needs updating
+        hostContact: (jam as Record<string, unknown>).hostContact as string || '',
+        status: jam.status as FormData['status'],
       })
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.load_error')
@@ -76,7 +105,7 @@ export function CreateJamPage() {
     } finally {
       setLoading(false)
     }
-  }, [user?.id, t])
+  }, [user?.id, t, setError])
 
   useEffect(() => {
     if (authLoading) {
@@ -84,7 +113,7 @@ export function CreateJamPage() {
     }
 
     if (!isAuthenticated) {
-      navigate('/login')
+      void navigate('/login')
       return
     }
 
@@ -111,23 +140,42 @@ export function CreateJamPage() {
       ...prev,
       [name]: value,
     }))
+    // Clear field error on input
+    if (fieldErrors[name]) {
+      setFieldErrors((prev) => {
+        const next = { ...prev }
+        delete next[name]
+        return next
+      })
+    }
   }
 
   const validateForm = (): boolean => {
+    const errors: Record<string, string> = {}
+
     if (!formData.name.trim()) {
-      setError(t('create_jam.validation.name_required'))
-      return false
+      errors.name = t('create_jam.validation.name_required')
     }
     if (!formData.location.trim()) {
-      setError(t('create_jam.validation.location_required'))
-      return false
+      errors.location = t('create_jam.validation.location_required')
     }
     if (!formData.hostMusicianId) {
-      setError(t('create_jam.validation.host_id_required'))
-      return false
+      errors.hostMusicianId = t('create_jam.validation.host_id_required')
     }
     if (formData.date && !formData.time) {
-      setError(t('create_jam.validation.time_required'))
+      errors.time = t('create_jam.validation.time_required')
+    }
+    if (formData.time && !formData.date) {
+      errors.date = t('create_jam.validation.date_required_with_time')
+    }
+
+    setFieldErrors(errors)
+
+    if (Object.keys(errors).length > 0) {
+      setError(Object.values(errors)[0])
+      // Focus the first field with an error
+      const firstField = Object.keys(errors)[0]
+      document.getElementById(`${formId}-${firstField}`)?.focus()
       return false
     }
     return true
@@ -145,29 +193,36 @@ export function CreateJamPage() {
     setLoading(true)
 
     try {
-      // Combine date and time
-      let dateTimeString = ''
+      // Combine date and time as local time, then convert to UTC ISO string
+      let dateTimeString: string | undefined
       if (formData.date && formData.time) {
-        dateTimeString = `${formData.date}T${formData.time}:00Z`
+        dateTimeString = new Date(`${formData.date}T${formData.time}`).toISOString()
       }
+
+      // In create mode, auto-fill host info from auth profile
+      const hostName = formData.hostName?.trim() || user?.name || undefined
+      const hostContact = formData.hostContact?.trim() || user?.contact || user?.email || undefined
 
       const jamPayload = {
         name: formData.name,
         description: formData.description || undefined,
-        date: dateTimeString || undefined,
+        date: dateTimeString,
         location: formData.location,
+        slug: formData.slug.trim() || undefined,
         hostMusicianId: formData.hostMusicianId,
-        status: formData.status,
+        hostName,
+        hostContact,
+        status: mode === 'create' ? 'ACTIVE' as const : formData.status,
       }
 
       if (mode === 'create') {
         const result = await jamService.create(jamPayload)
         setSuccess(t('create_jam.messages.create_success', { name: result.data.name }))
-        setTimeout(() => navigate('/host/dashboard'), 1500)
+        navTimeoutRef.current = setTimeout(() => navigate('/host/dashboard'), 1500)
       } else if (jamId) {
         const result = await jamService.update(jamId, jamPayload)
         setSuccess(t('create_jam.messages.update_success', { name: result.data.name }))
-        setTimeout(() => navigate('/host/dashboard'), 1500)
+        navTimeoutRef.current = setTimeout(() => navigate('/host/dashboard'), 1500)
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.save_error')
@@ -178,12 +233,9 @@ export function CreateJamPage() {
     }
   }
 
-  const handleDelete = async () => {
+  const handleDeleteConfirm = async () => {
+    setDeleteConfirmOpen(false)
     if (!jamId) return
-
-    if (!confirm(t('create_jam.messages.confirm_delete'))) {
-      return
-    }
 
     setLoading(true)
     setError(null)
@@ -191,7 +243,7 @@ export function CreateJamPage() {
     try {
       await jamService.deleteFn(jamId)
       setSuccess(t('create_jam.messages.delete_success'))
-      setTimeout(() => navigate('/host/dashboard'), 1500)
+      navTimeoutRef.current = setTimeout(() => navigate('/host/dashboard'), 1500)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.delete_error')
       console.error('Error deleting jam:', err)
@@ -202,7 +254,7 @@ export function CreateJamPage() {
   }
 
   const handleSpotifySuccess = (newJamId: string) => {
-    navigate(`/host/jams/${newJamId}/manage`)
+    void navigate(`/host/jams/${newJamId}/manage`)
   }
 
   // Show loading spinner while auth is initializing
@@ -218,222 +270,281 @@ export function CreateJamPage() {
     <div className="min-h-screen bg-base-100 p-4">
       <div className="container mx-auto max-w-2xl">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <button
-            onClick={() => navigate('/host/dashboard')}
+            onClick={() => { void navigate('/host/dashboard') }}
             className="btn btn-ghost btn-sm mb-4"
           >
             ← {t('create_jam.back_to_dashboard')}
           </button>
-          <h1 className="text-4xl font-bold">{title}</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold">{title}</h1>
         </div>
 
         {/* Alerts */}
         <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} />
 
-        {/* Spotify Import Section - only in create mode */}
-        {mode === 'create' && (
-          <>
-            <div className="card bg-base-200 shadow-lg mb-6">
-              <div className="card-body items-center text-center">
-                <h2 className="card-title">{t('create_jam.spotify_import_title')}</h2>
-                <p className="text-base-content/70">{t('create_jam.spotify_import_desc')}</p>
-                <div className="card-actions mt-2">
-                  <button
-                    className="btn btn-success"
-                    onClick={() => setSpotifyModalOpen(true)}
-                  >
-                    {t('create_jam.spotify_import_btn')}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="divider">{t('create_jam.or_manually')}</div>
-          </>
-        )}
-
-        {/* Form Card */}
+        {/* Single unified card */}
         <div className="card bg-base-200 shadow-lg">
           <div className="card-body">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={(e) => { void handleSubmit(e) }} noValidate className="space-y-5">
+              {/* Spotify inline banner - create mode only */}
+              {mode === 'create' && (
+                <button
+                  type="button"
+                  onClick={() => setSpotifyModalOpen(true)}
+                  className="flex items-center gap-3 w-full p-3 rounded-lg bg-success/10 hover:bg-success/20 transition-colors text-left"
+                >
+                  <ListMusic className="size-5 shrink-0 text-success" />
+                  <span className="text-sm flex-1">{t('create_jam.spotify_import_inline')}</span>
+                  <span className="text-sm font-medium text-success">{t('create_jam.spotify_import_btn')} →</span>
+                </button>
+              )}
+
               {/* Jam Name */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold">
-                    {t('create_jam.form.jam_name')} <span className="text-error">*</span>
-                  </span>
+              <fieldset className="fieldset">
+                <label className="fieldset-legend" htmlFor={`${formId}-name`}>
+                  {t('create_jam.form.jam_name')} <span className="text-error">*</span>
                 </label>
                 <input
+                  id={`${formId}-name`}
                   type="text"
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder={t('create_jam.form.placeholder_name')}
-                  className="input input-bordered"
+                  className={`input input-bordered w-full ${fieldErrors.name ? 'input-error' : ''}`}
                   required
                   disabled={loading}
+                  aria-invalid={!!fieldErrors.name || undefined}
+                  aria-describedby={fieldErrors.name ? `${formId}-name-error` : undefined}
                 />
-              </div>
-
-              {/* Description */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold">{t('create_jam.form.description')}</span>
-                </label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  placeholder={t('create_jam.form.placeholder_description')}
-                  className="textarea textarea-bordered h-24"
-                  disabled={loading}
-                />
-              </div>
-
-              {/* Date and Time */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold">{t('create_jam.form.date')}</span>
-                  </label>
-                  <input
-                    type="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleInputChange}
-                    className="input input-bordered"
-                    disabled={loading}
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold">{t('create_jam.form.time')}</span>
-                  </label>
-                  <input
-                    type="time"
-                    name="time"
-                    value={formData.time}
-                    onChange={handleInputChange}
-                    className="input input-bordered"
-                    disabled={loading}
-                  />
-                </div>
-              </div>
+                {fieldErrors.name && (
+                  <p id={`${formId}-name-error`} className="fieldset-label text-error">
+                    {fieldErrors.name}
+                  </p>
+                )}
+              </fieldset>
 
               {/* Location */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold">
-                    {t('create_jam.form.location')} <span className="text-error">*</span>
-                  </span>
+              <fieldset className="fieldset">
+                <label className="fieldset-legend" htmlFor={`${formId}-location`}>
+                  {t('create_jam.form.location')} <span className="text-error">*</span>
                 </label>
                 <input
+                  id={`${formId}-location`}
                   type="text"
                   name="location"
                   value={formData.location}
                   onChange={handleInputChange}
                   placeholder={t('create_jam.form.placeholder_location')}
-                  className="input input-bordered"
+                  className={`input input-bordered w-full ${fieldErrors.location ? 'input-error' : ''}`}
                   required
                   disabled={loading}
+                  aria-invalid={!!fieldErrors.location || undefined}
+                  aria-describedby={fieldErrors.location ? `${formId}-location-error` : undefined}
                 />
-              </div>
+                {fieldErrors.location && (
+                  <p id={`${formId}-location-error`} className="fieldset-label text-error">
+                    {fieldErrors.location}
+                  </p>
+                )}
+              </fieldset>
 
-              {/* Host Name and Contact */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold">
-                      {t('create_jam.form.host_name')} <span className="text-error">*</span>
-                    </span>
-                  </label>
-                  <input
-                    type="text"
-                    name="hostName"
-                    value={formData.hostName}
-                    onChange={handleInputChange}
-                    className="input input-bordered"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-                <div className="form-control">
-                  <label className="label">
-                    <span className="label-text font-semibold">
-                      {t('create_jam.form.host_contact')} <span className="text-error">*</span>
-                    </span>
-                  </label>
-                  <input
-                    type="text"
-                    name="hostContact"
-                    value={formData.hostContact}
-                    onChange={handleInputChange}
-                    placeholder={t('create_jam.form.placeholder_contact')}
-                    className="input input-bordered"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-
-              {/* Status */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold">{t('create_jam.form.status')}</span>
+              {/* URL Slug */}
+              <fieldset className="fieldset">
+                <label className="fieldset-legend" htmlFor={`${formId}-slug`}>
+                  {t('create_jam.form.slug')}
                 </label>
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleInputChange}
-                  className="select select-bordered"
-                  disabled={loading}
-                >
-                  <option value="ACTIVE">{t('create_jam.form.status_active')}</option>
-                  <option value="INACTIVE">{t('create_jam.form.status_inactive')}</option>
-                  <option value="FINISHED">{t('create_jam.form.status_finished')}</option>
-                </select>
+                <div className="flex items-stretch">
+                  <span className="inline-flex items-center px-3 bg-base-300 border border-r-0 border-base-content/20 rounded-l-lg text-xs text-base-content/70 select-none whitespace-nowrap">
+                    jamapp.com.br/jams/
+                  </span>
+                  <input
+                    id={`${formId}-slug`}
+                    type="text"
+                    name="slug"
+                    value={formData.slug}
+                    onChange={(e) => {
+                      const value = e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+                      setFormData((prev) => ({ ...prev, slug: value }))
+                      if (fieldErrors.slug) {
+                        setFieldErrors((prev) => {
+                          const next = { ...prev }
+                          delete next.slug
+                          return next
+                        })
+                      }
+                    }}
+                    placeholder={slugPreview || t('create_jam.form.placeholder_slug')}
+                    className="input input-bordered rounded-l-none font-mono text-sm flex-1 min-w-0"
+                    disabled={loading}
+                    maxLength={80}
+                  />
+                </div>
+                <p className="fieldset-label text-base-content/50">
+                  {t('create_jam.form.slug_hint')}
+                </p>
+              </fieldset>
+
+              {/* Date and Time */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <fieldset className="fieldset">
+                  <label className="fieldset-legend" htmlFor={`${formId}-date`}>
+                    {t('create_jam.form.date')}
+                  </label>
+                  <input
+                    id={`${formId}-date`}
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    className={`input input-bordered w-full ${fieldErrors.date ? 'input-error' : ''}`}
+                    disabled={loading}
+                    aria-invalid={!!fieldErrors.date || undefined}
+                    aria-describedby={fieldErrors.date ? `${formId}-date-error` : undefined}
+                  />
+                  {fieldErrors.date && (
+                    <p id={`${formId}-date-error`} className="fieldset-label text-error">
+                      {fieldErrors.date}
+                    </p>
+                  )}
+                </fieldset>
+                <fieldset className="fieldset">
+                  <label className="fieldset-legend" htmlFor={`${formId}-time`}>
+                    {t('create_jam.form.time')}
+                  </label>
+                  <input
+                    id={`${formId}-time`}
+                    type="time"
+                    name="time"
+                    value={formData.time}
+                    onChange={handleInputChange}
+                    className={`input input-bordered w-full ${fieldErrors.time ? 'input-error' : ''}`}
+                    disabled={loading}
+                    aria-invalid={!!fieldErrors.time || undefined}
+                    aria-describedby={fieldErrors.time ? `${formId}-time-error` : undefined}
+                  />
+                  {fieldErrors.time && (
+                    <p id={`${formId}-time-error`} className="fieldset-label text-error">
+                      {fieldErrors.time}
+                    </p>
+                  )}
+                </fieldset>
               </div>
+
+              {/* Description */}
+              <fieldset className="fieldset">
+                <label className="fieldset-legend" htmlFor={`${formId}-description`}>
+                  {t('create_jam.form.description')}
+                </label>
+                <textarea
+                  id={`${formId}-description`}
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder={t('create_jam.form.placeholder_description')}
+                  className="textarea textarea-bordered resize-y w-full"
+                  rows={2}
+                  disabled={loading}
+                />
+              </fieldset>
+
+              {/* Host Name and Contact - edit mode only */}
+              {mode === 'edit' && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <fieldset className="fieldset">
+                    <label className="fieldset-legend" htmlFor={`${formId}-hostName`}>
+                      {t('create_jam.form.host_name')}
+                    </label>
+                    <input
+                      id={`${formId}-hostName`}
+                      type="text"
+                      name="hostName"
+                      value={formData.hostName}
+                      onChange={handleInputChange}
+                      className="input input-bordered w-full"
+                      disabled={loading}
+                    />
+                  </fieldset>
+                  <fieldset className="fieldset">
+                    <label className="fieldset-legend" htmlFor={`${formId}-hostContact`}>
+                      {t('create_jam.form.host_contact')}
+                    </label>
+                    <input
+                      id={`${formId}-hostContact`}
+                      type="text"
+                      name="hostContact"
+                      value={formData.hostContact}
+                      onChange={handleInputChange}
+                      placeholder={t('create_jam.form.placeholder_contact')}
+                      className="input input-bordered w-full"
+                      disabled={loading}
+                    />
+                  </fieldset>
+                </div>
+              )}
+
+              {/* Status - edit mode only */}
+              {mode === 'edit' && (
+                <fieldset className="fieldset">
+                  <label className="fieldset-legend" htmlFor={`${formId}-status`}>
+                    {t('create_jam.form.status')}
+                  </label>
+                  <select
+                    id={`${formId}-status`}
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                    className="select select-bordered w-full"
+                    disabled={loading}
+                  >
+                    <option value="ACTIVE">{t('create_jam.form.status_active')}</option>
+                    <option value="INACTIVE">{t('create_jam.form.status_inactive')}</option>
+                    <option value="LIVE">{t('create_jam.form.status_live')}</option>
+                    <option value="FINISHED">{t('create_jam.form.status_finished')}</option>
+                  </select>
+                </fieldset>
+              )}
 
               {/* Action Buttons */}
-              <div className="card-actions justify-between mt-6 pt-4 border-t border-base-300">
+              <div className="divider my-1" />
+              <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
                 <button
                   type="button"
-                  onClick={() => navigate('/host/dashboard')}
+                  onClick={() => { void navigate('/host/dashboard') }}
                   className="btn btn-ghost"
                   disabled={loading}
                 >
                   {t('create_jam.actions.cancel')}
                 </button>
 
-                <div className="flex gap-2">
-                  {mode === 'edit' && (
-                    <button
-                      type="button"
-                      onClick={handleDelete}
-                      className="btn btn-error btn-outline"
-                      disabled={loading}
-                    >
-                      {t('create_jam.actions.delete')}
-                    </button>
-                  )}
+                {mode === 'edit' && (
                   <button
-                    type="submit"
-                    className="btn btn-primary"
+                    type="button"
+                    onClick={() => setDeleteConfirmOpen(true)}
+                    className="btn btn-error btn-outline"
                     disabled={loading}
                   >
-                    {loading ? (
-                      <>
-                        <span className="loading loading-spinner loading-sm"></span>
-                        {t('create_jam.actions.saving')}
-                      </>
-                    ) : mode === 'create' ? (
-                      t('create_jam.actions.create')
-                    ) : (
-                      t('create_jam.actions.update')
-                    )}
+                    {t('create_jam.actions.delete')}
                   </button>
-                </div>
+                )}
+
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="loading loading-spinner loading-sm"></span>
+                      {t('create_jam.actions.saving')}
+                    </>
+                  ) : mode === 'create' ? (
+                    t('create_jam.actions.create')
+                  ) : (
+                    t('create_jam.actions.update')
+                  )}
+                </button>
               </div>
             </form>
           </div>
@@ -455,6 +566,35 @@ export function CreateJamPage() {
         onClose={() => setSpotifyModalOpen(false)}
         onSuccess={handleSpotifySuccess}
       />
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        title={t('create_jam.messages.confirm_delete_title')}
+        size="sm"
+        role="alertdialog"
+        footer={
+          <>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => setDeleteConfirmOpen(false)}
+            >
+              {t('common.cancel')}
+            </button>
+            <button
+              type="button"
+              className="btn btn-error"
+              onClick={() => { void handleDeleteConfirm() }}
+            >
+              {t('create_jam.actions.confirm_delete')}
+            </button>
+          </>
+        }
+      >
+        <p>{t('create_jam.messages.confirm_delete')}</p>
+      </Modal>
     </div>
   )
 }

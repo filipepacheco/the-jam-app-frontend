@@ -7,6 +7,7 @@ Disallow: /host/
 Disallow: /login
 Disallow: /register
 Disallow: /profile
+Disallow: /auth/
 
 # Sitemap location
-Sitemap: https://letsjam.app/sitemap.xml
+Sitemap: https://jamapp.com.br/sitemap.xml

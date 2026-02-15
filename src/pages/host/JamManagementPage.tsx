@@ -16,6 +16,7 @@ import {SpotifyExportModal} from '../../components/SpotifyExportModal'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
 import {ExternalLink} from 'lucide-react'
+import {getJamDashboardPath} from '../../utils/jamUrl'
 import {DJControlTab} from "../tabs/DJControlTab.tsx";
 import {DJControlTabV2} from "../tabs/DJControlTabV2.tsx";
 import {AnalyticsTab} from "../tabs/AnalyticsTab.tsx";
@@ -197,7 +198,7 @@ export function JamManagementPage() {
                         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">🎭 {jam.name}</h1>
                         <div className="flex items-center gap-2">
                             <a
-                                href={`/jams/${jamId}/dashboard`}
+                                href={jam ? getJamDashboardPath(jam) : `/jams/${jamId}/dashboard`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="btn btn-sm btn-outline gap-1"

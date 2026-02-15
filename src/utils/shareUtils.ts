@@ -3,13 +3,21 @@
  * Functions for sharing jam links via various platforms
  */
 
+import {getJamShareUrl as getJamShareUrlFromJam} from './jamUrl'
+
 /**
  * Get the shareable URL for a jam
+ * @deprecated Use getJamShareUrl from jamUrl.ts with a jam object instead
  */
 export function getJamShareUrl(jamId: string): string {
   const baseUrl = import.meta.env.VITE_SITE_URL || window.location.origin
   return `${baseUrl}/jams/${jamId}`
 }
+
+/**
+ * Get the shareable URL for a jam object (prefers slug)
+ */
+export { getJamShareUrlFromJam }
 
 /**
  * Copy text to clipboard

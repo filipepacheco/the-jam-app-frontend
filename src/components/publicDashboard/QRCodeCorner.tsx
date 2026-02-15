@@ -4,9 +4,20 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 type Position = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 
-export default function QRCodeCorner({ jamId, position = 'bottom-left' }: { jamId?: string; position?: Position }) {
+interface QRCodeCornerProps {
+  jamId?: string
+  shortCode?: string | null
+  position?: Position
+}
+
+export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left' }: QRCodeCornerProps) {
   const [isExpanded, setIsExpanded] = useState(false)
-  const url = `${typeof window !== 'undefined' ? window.location.origin : ''}/jams/${jamId || ''}`
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+
+  // Use short URL if shortCode available, otherwise fall back to jam detail URL
+  const url = shortCode
+    ? `${origin}/j/${shortCode}`
+    : `${origin}/jams/${jamId || ''}`
 
   const positionClasses: Record<Position, string> = {
     'top-left': 'fixed top-6 left-6',
@@ -66,7 +77,14 @@ export default function QRCodeCorner({ jamId, position = 'bottom-left' }: { jamI
                 <QRCodeSVG value={url} size={280} fgColor="#000000" bgColor="#ffffff" />
               </div>
 
-              <p className="text-center text-base-content mb-2">Scan the QR code with your phone</p>
+              {shortCode && (
+                <p className="text-center text-base-content font-mono text-2xl font-bold tracking-widest mb-2">
+                  {shortCode}
+                </p>
+              )}
+              <p className="text-center text-base-content mb-2">
+                {shortCode ? 'Scan the QR code or type the code above' : 'Scan the QR code with your phone'}
+              </p>
               <p className="text-sm text-base-content/70 text-center">{url}</p>
 
               <button

@@ -7,6 +7,7 @@ interface HeaderProps {
   isFullscreen: boolean
   onToggleFullscreen: () => void
   ariaToggleLabel?: string
+  tickerText?: string | null
 }
 
 export default function Header({
@@ -16,13 +17,14 @@ export default function Header({
   isFullscreen,
   onToggleFullscreen,
   ariaToggleLabel,
+  tickerText,
 }: HeaderProps) {
   return (
     <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 pointer-events-none">
       <button
         type="button"
         onClick={() => setShowNavbar(!showNavbar)}
-        className="btn btn-sm btn-ghost text-white pointer-events-auto min-h-10 min-w-10"
+        className="btn btn-sm btn-ghost text-white pointer-events-auto min-h-10 min-w-10 shrink-0 z-10"
         title={ariaToggleLabel || 'Toggle navbar'}
         aria-expanded={showNavbar}
         aria-controls="public-dashboard-navbar"
@@ -31,11 +33,19 @@ export default function Header({
         ☰
       </button>
 
-      <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg sm:text-2xl md:text-3xl font-bold pointer-events-none max-w-[60%] truncate">
-        🎤 <span className="pointer-events-none">{title}</span>
-      </h1>
+      {tickerText ? (
+        <div className="absolute inset-x-14 top-0 bottom-0 overflow-hidden flex items-center pointer-events-none">
+          <div className="whitespace-nowrap text-lg sm:text-2xl md:text-3xl font-bold animate-ticker">
+            {`${tickerText}     ·     `.repeat(6)}
+          </div>
+        </div>
+      ) : (
+        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg sm:text-2xl md:text-3xl font-bold pointer-events-none max-w-[60%] truncate">
+          🎤 <span className="pointer-events-none">{title}</span>
+        </h1>
+      )}
 
-      <div className="flex items-center gap-2 pointer-events-auto">
+      <div className="flex items-center gap-2 pointer-events-auto shrink-0 z-10">
         <button
           onClick={onToggleFullscreen}
           className="btn btn-sm btn-ghost text-white pointer-events-auto min-h-10 min-w-10"
