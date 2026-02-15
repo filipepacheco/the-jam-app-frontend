@@ -31,7 +31,7 @@ export function CreateJamPage() {
   const { user, isAuthenticated, isLoading: authLoading } = useAuth()
   const { t } = useTranslation()
   const formId = useId()
-  const navTimeoutRef = useRef<ReturnType<typeof setTimeout>>()
+  const navTimeoutRef = useRef<ReturnType<typeof setTimeout>>(null)
 
   const [mode, setMode] = useState<'create' | 'edit'>('create')
   const [loading, setLoading] = useState(false)
@@ -95,7 +95,7 @@ export function CreateJamPage() {
         hostMusicianId: user?.id || '',
         hostName: jam.hostName || '',
         // hostContact not in JamResponseDto - backend DTO needs updating
-        hostContact: (jam as Record<string, unknown>).hostContact as string || '',
+        hostContact: (jam as unknown as Record<string, unknown>).hostContact as string || '',
         status: jam.status as FormData['status'],
       })
     } catch (err) {

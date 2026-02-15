@@ -131,7 +131,7 @@ export function HostMusicianRegistrationModal({
       {
         id: crypto.randomUUID(),
         musicianId: selectedMusicianId,
-        musicianName: musician.name,
+        musicianName: musician.name || '',
         instrument: selectedInstrument,
         instrumentLabel: instrumentOption.label,
       },
