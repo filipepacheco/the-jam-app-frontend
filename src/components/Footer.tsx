@@ -8,6 +8,9 @@ function Footer() {
         <p className="text-xs sm:text-sm">
           {t('common.copyright')} © {new Date().getFullYear()} - {t('common.app_name')}. {t('common.all_rights_reserved')}
         </p>
+        <a href="/privacy.html" className="link link-hover text-xs opacity-70">
+          {t('common.privacy_policy')}
+        </a>
       </aside>
     </footer>
   )
