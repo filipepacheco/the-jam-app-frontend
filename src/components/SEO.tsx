@@ -72,7 +72,10 @@ export function SEO({
       <meta property="og:type" content={ogType} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="og:image" content={ogImageUrl} />
-      <meta property="og:locale" content={currentLang === 'pt' ? 'pt_BR' : currentLang} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:locale" content={currentLang === 'pt' ? 'pt_BR' : currentLang === 'es' ? 'es_ES' : 'en_US'} />
+      <meta property="og:site_name" content="The Jam App" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />

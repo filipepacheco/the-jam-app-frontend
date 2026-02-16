@@ -954,6 +954,11 @@
       "description": "Organize sessões de jam com setlist ao vivo, inscrição de músicos e painel público para a plateia. Grátis para anfitriões e músicos.",
       "description_enhanced": "O jeito mais fácil de organizar uma noite de jam. O anfitrião monta o setlist, os músicos se inscrevem e o público acompanha tudo numa tela ao vivo.",
       "keywords": "sessão de jam, noite de jam, música ao vivo, setlist, inscrição de músicos, organizador de jam, evento musical"
+    },
+    "browse": {
+      "title": "Encontre Jam Sessions Perto de Você",
+      "description": "Encontre e participe de jam sessions ao vivo, open mics e eventos musicais na sua região. Veja as próximas jams, inscreva-se em musicas e conecte-se com músicos locais.",
+      "keywords": "jam sessions, eventos musicais, open mic, noite de jam, encontrar jam sessions, eventos de musica ao vivo"
     }
   },
   "feedback": {

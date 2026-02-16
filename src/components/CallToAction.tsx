@@ -1,11 +1,10 @@
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { Zap, Search } from 'lucide-react'
 
 function CallToAction() {
-  const navigate = useNavigate()
   const { t } = useTranslation()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
@@ -30,20 +29,20 @@ function CallToAction() {
             {t('homepage.call_to_action.description')}
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <button
+            <Link
+              to="/register"
               className="btn btn-lg bg-base-100 text-primary hover:bg-base-200 border-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
-              onClick={() => navigate('/register')}
             >
               <Zap className="size-5" aria-hidden="true" />
               {t('homepage.call_to_action.cta_button')}
-            </button>
-            <button
+            </Link>
+            <Link
+              to="/jams"
               className="btn btn-lg btn-outline text-white border-white hover:bg-white hover:text-black focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
-              onClick={() => navigate('/jams')}
             >
               <Search className="size-5" aria-hidden="true" />
               {t('homepage.call_to_action.browse_jams')}
-            </button>
+            </Link>
           </div>
         </div>
       </motion.div>

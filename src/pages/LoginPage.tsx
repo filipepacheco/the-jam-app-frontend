@@ -7,7 +7,7 @@ import {useEffect, useState} from 'react'
 import {useAuth} from '../hooks'
 import {useNavigate} from 'react-router-dom'
 import {FullPageSpinner, ProfileSetupModal, SupabaseLoginForm} from '../components'
-
+import {SEO} from '../components/SEO'
 import {useTranslation} from 'react-i18next'
 import {getRedirectPath} from '../utils/navigationUtils'
 
@@ -49,6 +49,7 @@ export function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
+      <SEO title={t('auth.login_page_title')} noindex={true} />
       <div className="w-full max-w-sm sm:max-w-md">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8">
