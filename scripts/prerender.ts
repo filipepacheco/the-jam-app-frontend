@@ -33,9 +33,19 @@ function startServer(): Promise<ReturnType<typeof createServer>> {
     }
 
     const server = createServer((req, res2) => {
-      let filePath = join(DIST_DIR, req.url || '/')
+      let url = req.url || '/'
+      // Strip query strings
+      url = url.split('?')[0]
+      let filePath = join(DIST_DIR, url)
+
+      // If it's a directory or no extension, try index.html in that dir first
       if (!extname(filePath)) {
-        filePath = join(DIST_DIR, 'index.html')
+        const dirIndex = join(filePath, 'index.html')
+        if (existsSync(dirIndex)) {
+          filePath = dirIndex
+        } else {
+          filePath = join(DIST_DIR, 'index.html')
+        }
       }
 
       try {
@@ -65,26 +75,35 @@ async function prerenderRoute(
   const page = await browser.newPage()
 
   try {
+    // Capture console errors for debugging
+    const errors: string[] = []
+    page.on('console', msg => {
+      if (msg.type() === 'error') {
+        errors.push(msg.text())
+      }
+    })
+    page.on('pageerror', err => {
+      errors.push(err.message)
+    })
+
     await page.goto(`http://localhost:${PORT}${route}`, {
       waitUntil: 'networkidle0',
       timeout: 30000,
     })
 
-    // Wait for the app-rendered event or a timeout
-    await page.evaluate(() => {
-      return new Promise<void>((resolve) => {
-        // Check if already rendered (event already fired)
-        if (document.querySelector('#root')?.children.length) {
-          resolve()
-          return
-        }
-        document.addEventListener('app-rendered', () => resolve(), { once: true })
-        setTimeout(() => resolve(), 5000)
-      })
-    })
+    // Wait for content to appear in #root
+    const rendered = await page.waitForFunction(
+      () => (document.querySelector('#root')?.children.length ?? 0) > 0,
+      { timeout: 10000 }
+    ).then(() => true).catch(() => false)
 
-    // Small extra delay for any async rendering
-    await new Promise(r => setTimeout(r, 500))
+    if (!rendered) {
+      console.warn(`  WARNING: #root empty for ${route}. Errors:`)
+      errors.forEach(e => console.warn(`    ${e}`))
+    }
+
+    // Extra delay for async rendering to settle
+    await new Promise(r => setTimeout(r, 1000))
 
     let html = await page.content()
 
@@ -102,7 +121,8 @@ async function prerenderRoute(
     }
 
     writeFileSync(outputPath, html, 'utf-8')
-    console.log(`  Prerendered: ${route} -> ${outputPath}`)
+    const sizeKb = (Buffer.byteLength(html) / 1024).toFixed(1)
+    console.log(`  Prerendered: ${route} -> ${sizeKb} KB ${rendered ? '(OK)' : '(EMPTY)'}`)
   } finally {
     await page.close()
   }
@@ -124,7 +144,12 @@ async function main() {
   const puppeteer = await import('puppeteer')
   const browser = await puppeteer.default.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-web-security',
+      '--disable-features=IsolateOrigins,site-per-process',
+    ],
   })
 
   try {
@@ -139,6 +164,7 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error('Prerender failed:', err)
-  process.exit(1)
+  console.error('Prerender failed (non-fatal):', err.message || err)
+  console.error('The build will continue with non-prerendered HTML.')
+  // Exit 0 so the build continues - prerendering is an enhancement, not a requirement
 })

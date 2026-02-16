@@ -19,10 +19,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
 /**
  * Supabase client instance
  * Configured with auth persistence to localStorage
+ * Uses a placeholder URL when env vars are missing (prerendering/SSG)
  */
 export const supabase: SupabaseClient = createClient(
-  supabaseUrl || '',
-  supabaseAnonKey || '',
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key',
   {
     auth: {
       // Persist session to localStorage
@@ -50,4 +51,3 @@ export function isSupabaseConfigured(): boolean {
 export function getSupabaseUrl(): string {
   return supabaseUrl || ''
 }
-
