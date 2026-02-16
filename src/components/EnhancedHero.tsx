@@ -50,7 +50,7 @@ export function EnhancedHero() {
           </motion.h1>
 
           <motion.p
-            className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-white/90"
+            className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-white/90 whitespace-pre-line"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}

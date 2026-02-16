@@ -2,11 +2,20 @@ import { useEffect, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { X } from 'lucide-react'
+import {
+  X,
+  Home,
+  Search,
+  Users,
+  Music,
+  LayoutDashboard,
+  UserCircle,
+  MessageSquareHeart,
+  LogOut,
+} from 'lucide-react'
 import { useAuth } from '../hooks'
-import ThemeSwitcher from './ThemeSwitcher'
-import LanguageSwitcher from './LanguageSwitcher'
-import { FeedbackButton } from './FeedbackButton'
+import { FeedbackModal } from './FeedbackModal'
+import { useState } from 'react'
 
 interface MobileDrawerProps {
   isOpen: boolean
@@ -14,12 +23,27 @@ interface MobileDrawerProps {
   hamburgerRef: React.RefObject<HTMLButtonElement | null>
 }
 
+const languages = [
+  { code: 'en', label: 'English' },
+  { code: 'es', label: 'Espanol' },
+  { code: 'pt', label: 'Portugues' },
+]
+
+const themes = [
+  'light', 'dark', 'cupcake', 'bumblebee', 'emerald', 'corporate',
+  'synthwave', 'retro', 'cyberpunk', 'valentine', 'halloween', 'garden',
+  'forest', 'aqua', 'lofi', 'pastel', 'fantasy', 'wireframe', 'black',
+  'luxury', 'dracula', 'cmyk', 'autumn', 'business', 'acid', 'lemonade',
+  'night', 'coffee', 'winter',
+]
+
 export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const { isAuthenticated, user, logout, isViewer } = useAuth()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const hasBeenOpened = useRef(false)
+  const [feedbackOpen, setFeedbackOpen] = useState(false)
   const prefersReducedMotion = useRef(
     typeof window !== 'undefined'
       ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -37,6 +61,27 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
     navigate(path)
   }, [onClose, navigate])
 
+  const changeLanguage = (lng: string) => {
+    void i18n.changeLanguage(lng)
+    try {
+      localStorage.setItem('i18nextLng', lng)
+    } catch {
+      // ignore
+    }
+  }
+
+  const setTheme = (theme: string) => {
+    document.documentElement.setAttribute('data-theme', theme)
+    try {
+      localStorage.setItem('theme', theme)
+    } catch {
+      // ignore
+    }
+  }
+
+  const currentLang = (i18n.language || i18n.resolvedLanguage || 'pt').split('-')[0]
+  const currentTheme = (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) || 'dark'
+
   // Body scroll lock
   useEffect(() => {
     if (isOpen) {
@@ -44,36 +89,46 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
     } else {
       document.body.style.overflow = ''
     }
-    return () => {
-      document.body.style.overflow = ''
-    }
+    return () => { document.body.style.overflow = '' }
   }, [isOpen])
 
-  // Focus management - only restore focus after drawer has been opened at least once
+  // Focus management
   useEffect(() => {
     if (isOpen) {
       hasBeenOpened.current = true
-      const timeout = setTimeout(() => {
-        closeButtonRef.current?.focus()
-      }, 50)
+      const timeout = setTimeout(() => { closeButtonRef.current?.focus() }, 50)
       return () => clearTimeout(timeout)
     } else if (hasBeenOpened.current) {
       hamburgerRef.current?.focus()
     }
   }, [isOpen, hamburgerRef])
 
-  // Escape key handler
+  // Escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose()
-      }
+      if (e.key === 'Escape' && isOpen) onClose()
     }
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
   const durationClass = prefersReducedMotion.current ? 'duration-0' : 'duration-300'
+
+  // Build nav items based on auth state
+  const navItems: { label: string; path: string; icon: React.ReactNode }[] = [
+    { label: t('nav.home'), path: '/', icon: <Home className="size-5" /> },
+    { label: t('nav.browse_jams'), path: '/jams', icon: <Search className="size-5" /> },
+  ]
+
+  if (isAuthenticated && user?.isHost) {
+    navItems.push({ label: t('nav.musicians'), path: '/musicians', icon: <Users className="size-5" /> })
+  }
+  if (isAuthenticated && !isViewer()) {
+    navItems.push({ label: t('nav.music_library'), path: '/music', icon: <Music className="size-5" /> })
+  }
+  if (isAuthenticated && user?.isHost) {
+    navItems.push({ label: t('nav.host_dashboard'), path: '/host/dashboard', icon: <LayoutDashboard className="size-5" /> })
+  }
 
   return createPortal(
     <div
@@ -84,21 +139,34 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
     >
       {/* Backdrop */}
       <div
-        className={`absolute inset-0 bg-black/50 transition-opacity ${durationClass} ${
-          isOpen ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`absolute inset-0 bg-black/50 transition-opacity ${durationClass} ${isOpen ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
         aria-hidden="true"
       />
 
       {/* Drawer panel */}
       <nav
-        className={`fixed top-0 right-0 h-dvh w-72 bg-base-100 shadow-xl transition-transform ${durationClass} ${
-          isOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed top-0 right-0 h-dvh w-80 bg-base-100 shadow-xl flex flex-col transition-transform ${durationClass} ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        {/* Close button */}
-        <div className="flex justify-end p-4 pt-[max(1rem,env(safe-area-inset-top))]">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-3">
+          {isAuthenticated && user ? (
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center shrink-0">
+                <span className="text-lg font-bold leading-none">{user.name?.charAt(0)?.toUpperCase() || '?'}</span>
+              </div>
+              <div className="min-w-0">
+                <p className="text-base font-semibold text-base-content truncate">
+                  {user.name || ''}
+                </p>
+                <p className="text-xs text-base-content/50 truncate">
+                  {user.isHost ? t('roles.host') : t('roles.user')}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <span className="text-base font-semibold text-base-content">{t('common.app_name')}</span>
+          )}
           <button
             ref={closeButtonRef}
             onClick={onClose}
@@ -109,128 +177,121 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
           </button>
         </div>
 
-        <div className="flex flex-col gap-1 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] overflow-y-auto overscroll-contain h-[calc(100%-64px)]">
-          {/* Greeting / Login */}
-          {isAuthenticated && user ? (
-            <p className="text-base-content font-medium px-2 pb-2 truncate">
-              {t('nav.greeting', { name: user.name?.split(' ')[0] || '' })}
-            </p>
-          ) : (
-            <a
-              href="/register"
-              onClick={(e) => {
-                e.preventDefault()
-                handleNavClick('/register')
-              }}
-              className="btn btn-primary btn-sm mb-2"
-            >
-              {t('nav.login_register')}
-            </a>
+        <div className="divider my-0 px-5"></div>
+
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto overscroll-contain px-3 py-2 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          {/* Login CTA for unauthenticated */}
+          {!isAuthenticated && (
+            <div className="px-2 pb-3">
+              <a
+                href="/register"
+                onClick={(e) => { e.preventDefault(); handleNavClick('/register') }}
+                className="btn btn-primary w-full"
+              >
+                {t('nav.login_register')}
+              </a>
+            </div>
           )}
 
-          <div className="divider my-0"></div>
-
-          {/* Navigation links */}
-          <ul className="menu menu-sm p-0 gap-0.5">
-            <li>
-              <a
-                href="/"
-                onClick={(e) => { e.preventDefault(); handleNavClick('/') }}
-              >
-                {t('nav.home')}
-              </a>
-            </li>
-            <li>
-              <a
-                href="/jams"
-                onClick={(e) => { e.preventDefault(); handleNavClick('/jams') }}
-              >
-                {t('nav.browse_jams')}
-              </a>
-            </li>
-            {isAuthenticated && user?.isHost && (
-              <li>
+          {/* Navigation */}
+          <ul className="menu gap-0.5 p-0">
+            {navItems.map((item) => (
+              <li key={item.path}>
                 <a
-                  href="/musicians"
-                  onClick={(e) => { e.preventDefault(); handleNavClick('/musicians') }}
+                  href={item.path}
+                  onClick={(e) => { e.preventDefault(); handleNavClick(item.path) }}
+                  className="flex items-center gap-3 py-3 text-base"
                 >
-                  {t('nav.musicians')}
+                  {item.icon}
+                  {item.label}
                 </a>
               </li>
-            )}
-            {isAuthenticated && !isViewer() && (
-              <li>
-                <a
-                  href="/music"
-                  onClick={(e) => { e.preventDefault(); handleNavClick('/music') }}
-                >
-                  {t('nav.music_library')}
-                </a>
-              </li>
-            )}
-            {isAuthenticated && user?.isHost && (
-              <li>
-                <a
-                  href="/host/dashboard"
-                  onClick={(e) => { e.preventDefault(); handleNavClick('/host/dashboard') }}
-                >
-                  {t('nav.host_dashboard')}
-                </a>
-              </li>
-            )}
-          </ul>
+            ))}
 
-          <div className="divider my-0"></div>
-
-          {/* Profile */}
-          <ul className="menu menu-sm p-0 gap-0.5">
+            {/* Profile */}
             {isAuthenticated && user && (
               <li>
                 <a
                   href="/profile"
                   onClick={(e) => { e.preventDefault(); handleNavClick('/profile') }}
+                  className="flex items-center gap-3 py-3 text-base"
                 >
+                  <UserCircle className="size-5" />
                   {t('nav.my_profile')}
                 </a>
               </li>
             )}
+
+            {/* Feedback */}
+            <li>
+              <button
+                type="button"
+                onClick={() => setFeedbackOpen(true)}
+                className="flex items-center gap-3 py-3 text-base"
+              >
+                <MessageSquareHeart className="size-5" />
+                {t('feedback.button_text')}
+              </button>
+            </li>
           </ul>
 
-          {/* Feedback - standalone to avoid nested interactive elements */}
-          <FeedbackButton className="justify-start" />
-
-          <div className="divider my-0"></div>
-
           {/* Settings */}
-          <div className="flex flex-col gap-2 px-2">
-            <div className="flex items-center gap-2" role="group" aria-label={t('common.select_language')}>
-              <span className="text-sm" aria-hidden="true">🌐</span>
-              <LanguageSwitcher className="flex-1" />
+          <div className="divider my-2 px-2"></div>
+
+          <div className="flex flex-col gap-3 px-2">
+            <div role="group" aria-label={t('common.select_language')}>
+              <label className="text-xs font-medium text-base-content/50 uppercase tracking-wide mb-1 block">
+                {t('common.select_language')}
+              </label>
+              <select
+                onChange={(e) => changeLanguage(e.target.value)}
+                value={currentLang}
+                className="select select-bordered w-full"
+                aria-label={t('common.select_language')}
+              >
+                {languages.map((lang) => (
+                  <option key={lang.code} value={lang.code}>{lang.label}</option>
+                ))}
+              </select>
             </div>
+
             <div role="group" aria-label={t('common.select_theme')}>
-              <ThemeSwitcher className="w-full" />
+              <label className="text-xs font-medium text-base-content/50 uppercase tracking-wide mb-1 block">
+                {t('common.select_theme')}
+              </label>
+              <select
+                onChange={(e) => setTheme(e.target.value)}
+                defaultValue={currentTheme}
+                className="select select-bordered w-full"
+                aria-label={t('common.select_theme')}
+              >
+                {themes.map((theme) => (
+                  <option key={theme} value={theme}>
+                    {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
-
-          {/* Logout */}
-          {isAuthenticated && (
-            <>
-              <div className="divider my-0"></div>
-              <ul className="menu menu-sm p-0">
-                <li>
-                  <button
-                    type="button"
-                    onClick={() => { handleLogout().catch(console.error) }}
-                    className="text-error"
-                  >
-                    {t('nav.logout')}
-                  </button>
-                </li>
-              </ul>
-            </>
-          )}
         </div>
+
+        {/* Logout - pinned to bottom */}
+        {isAuthenticated && (
+          <div className="border-t border-base-300 px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+            <button
+              type="button"
+              onClick={() => { handleLogout().catch(console.error) }}
+              className="btn btn-ghost btn-block justify-start gap-3 text-error text-base"
+            >
+              <LogOut className="size-5" />
+              {t('nav.logout')}
+            </button>
+          </div>
+        )}
       </nav>
+
+      <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </div>,
     document.body
   )

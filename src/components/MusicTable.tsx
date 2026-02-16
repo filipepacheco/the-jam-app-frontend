@@ -42,19 +42,20 @@ export const MusicTableRow = memo(function MusicTableRow({
       <td className="hidden sm:table-cell tabular-nums text-sm">{formatDuration(music.duration)}</td>
       <td>
         <div className="flex items-center gap-1">
-          {isSpotifyTrackLink(music.link) ? (
-            <SpotifyPlayButton link={music.link} title={music.title} />
-          ) : null}
           {music.link ? (
-            <a
-              href={music.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-ghost btn-xs"
-              title={music.link}
-            >
-              🔗
-            </a>
+            isSpotifyTrackLink(music.link) ? (
+              <SpotifyPlayButton link={music.link} title={music.title} />
+            ) : (
+              <a
+                href={music.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost btn-xs"
+                title={music.link}
+              >
+                🔗
+              </a>
+            )
           ) : (
             <span className="text-xs text-base-content/40">-</span>
           )}
@@ -147,7 +148,7 @@ function MusicActionButtons({
       {isSuggested && isHost ? (
         <>
           <button
-            onClick={() => onApprove?.(music)}
+            onClick={() => { void onApprove?.(music) }}
             className="btn btn-xs btn-success gap-1"
             title={t('common.approve')}
           >

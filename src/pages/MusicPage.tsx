@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import useSWR from 'swr'
 import { useAuth, usePageAlerts } from '../hooks'
 import { musicService } from '../services'
-import type { MusicResponseDto } from '../types/api.types'
+import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import { API_ENDPOINTS } from '../lib/api/config'
 import {
   Alert,
@@ -20,7 +20,6 @@ import {
   MusicEmptyState,
   MusicFilters,
   MusicModal,
-  MusicTableRow,
   PageAlerts,
 } from '../components'
 import { filterAndSortMusic } from '../lib/musicUtils'
@@ -54,8 +53,11 @@ export function MusicPage() {
   // Filter states
   const [searchTerm, setSearchTerm] = useState('')
   const [genreFilter, setGenreFilter] = useState<string>('')
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('approved')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('suggested')
   const [sortBy, setSortBy] = useState<SortBy>('title')
+
+  // Quick edit expanded card
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
 
   // Modal state (single state object instead of multiple booleans)
   const [modalState, setModalState] = useState<ModalState>({
@@ -111,35 +113,50 @@ export function MusicPage() {
   }, [musicList, searchTerm, genreFilter, statusFilter, sortBy])
 
   const handleEdit = useCallback((music: MusicResponseDto) => {
+    setExpandedCardId(null)
     setModalState({ mode: 'edit', editingMusic: music })
   }, [])
 
+  const handleToggleExpand = useCallback((musicId: string) => {
+    setExpandedCardId((prev: string | null) => prev === musicId ? null : musicId)
+  }, [])
+
+  const handleQuickSave = useCallback(async (id: string, data: UpdateMusicDto): Promise<boolean> => {
+    try {
+      const result = await musicService.update(id, data)
+      if (!result.success) {
+        setError(result.error || t('music_library.errors.failed_to_update'))
+        return false
+      }
+      setExpandedCardId(null)
+      await mutate()
+      setSuccess(t('music_library.feedback.update_success', { title: result.data?.title || '' }))
+      return true
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_update'))
+      return false
+    }
+  }, [t, mutate, setError, setSuccess])
+
   const handleApprove = useCallback(
-    (music: MusicResponseDto) => {
-      openConfirm(
-        t('common.approve'),
-        t('music_library.feedback.approve_confirm', { title: music.title, artist: music.artist }),
-        'default',
-        async () => {
-          setActionLoading(true)
-          setError(null)
-          try {
-            const result = await musicService.update(music.id, { status: 'APPROVED' })
-            if (!result.success) {
-              setError(result.error || t('music_library.errors.failed_to_approve'))
-            } else {
-              setSuccess(t('music_library.feedback.approve_success', { title: music.title }))
-              await mutate()
-            }
-          } catch (err) {
-            setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_approve'))
-          } finally {
-            setActionLoading(false)
-          }
+    async (music: MusicResponseDto) => {
+      setActionLoading(true)
+      setError(null)
+      try {
+        const result = await musicService.update(music.id, { status: 'APPROVED' })
+        if (!result.success) {
+          setError(result.error || t('music_library.errors.failed_to_approve'))
+        } else {
+          setSuccess(t('music_library.feedback.approve_success', { title: music.title }))
+          await mutate()
         }
-      )
+      } catch (err) {
+        setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_approve'))
+      } finally {
+        setActionLoading(false)
+      }
     },
-    [t, openConfirm, mutate],
+    [t, mutate, setError, setSuccess],
   )
 
   const handleReject = useCallback(
@@ -316,50 +333,22 @@ export function MusicPage() {
       <div className="container mx-auto max-w-7xl px-4 pb-8">
         {filteredAndSortedMusic.length > 0 ? (
           <>
-            {/* Mobile: Card Layout */}
-            <div className="block lg:hidden space-y-2">
+            {/* Card Layout - all screen sizes */}
+            <div className="space-y-2">
               {filteredAndSortedMusic.map((music) => (
                 <MusicCard
                   key={music.id}
                   music={music}
                   isHost={user?.isHost || false}
+                  isExpanded={expandedCardId === music.id}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
+                  onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
+                  onQuickSave={user?.isHost ? handleQuickSave : undefined}
                   onApprove={user?.isHost ? handleApprove : undefined}
                   onReject={user?.isHost ? handleReject : undefined}
                 />
               ))}
-            </div>
-
-            {/* Desktop: Table Layout */}
-            <div className="hidden lg:block overflow-x-auto bg-base-200 rounded-lg shadow">
-              <table className="table table-zebra w-full table-fixed">
-                <thead>
-                  <tr className="bg-base-300">
-                    <th className="text-sm w-[22%]">{t('common.form_labels.title')}</th>
-                    <th className="text-sm w-[14%]">{t('common.form_labels.artist')}</th>
-                    <th className="text-sm w-[10%]">{t('common.form_labels.genre')}</th>
-                    <th className="text-sm w-[8%]">{t('music_library.table.duration')}</th>
-                    <th className="text-sm w-[6%]">{t('music_library.table.link')}</th>
-                    <th className="text-sm w-[12%]">{t('music_library.table.status')}</th>
-                    <th className="text-sm w-[14%]">{t('music_library.table.musicians_needed')}</th>
-                    <th className="text-sm w-[14%]">{t('music_library.table.actions')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAndSortedMusic.map((music) => (
-                    <MusicTableRow
-                      key={music.id}
-                      music={music}
-                      isHost={user?.isHost || false}
-                      onEdit={handleEdit}
-                      onDelete={handleDelete}
-                      onApprove={user?.isHost ? handleApprove : undefined}
-                      onReject={user?.isHost ? handleReject : undefined}
-                    />
-                  ))}
-                </tbody>
-              </table>
             </div>
           </>
         ) : (

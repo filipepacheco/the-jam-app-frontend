@@ -153,48 +153,48 @@
   },
   "homepage": {
     "hero": {
-      "title": "Organiza Sesiones de Jam en Vivo en Tiempo Real",
-      "subtitle": "La Plataforma Moderna para Músicos, Anfitriones y Locales",
-      "description": "Optimiza tus eventos musicales con coordinación en tiempo real. Los anfitriones gestionan el repertorio, los músicos se inscriben en las canciones y el público sigue todo en paneles en vivo. Sin más hojas de cálculo, solo sesiones de jam sin problemas.",
-      "cta_button": "Únete a Jam App",
-      "cta_secondary": "Explorar Sesiones de Jam",
+      "title": "Organiza tu Noche de Jam sin Caos",
+      "subtitle": "Para anfitriones, músicos y locales",
+      "description": "El anfitrión arma el setlist.\nLos músicos se inscriben en las canciones.\nEl público lo sigue todo en una pantalla en vivo.\nSin grupos de WhatsApp. Sin planillas. Solo música.",
+      "cta_button": "Empezar",
+      "cta_secondary": "Explorar Jams",
       "live_label": "EN VIVO",
       "mock_jam_name": "Jam del Viernes"
     },
     "stats": {
-      "title": "Confiado por la Comunidad Musical",
-      "sessions": "Sesiones de Jam",
+      "title": "Ya se usa en noches de jam",
+      "sessions": "Jams Creados",
       "musicians": "Músicos",
-      "songs": "Canciones Interpretadas"
+      "songs": "Canciones Tocadas"
     },
     "how_it_works": {
       "title": "Cómo Funciona",
-      "subtitle": "Tres pasos simples para organizar tu próxima sesión de jam",
-      "step1_title": "Crear o Unirse",
-      "step1_desc": "Los anfitriones crean sesiones de jam con listas de canciones. Los músicos exploran y se unen a eventos que coinciden con sus habilidades.",
-      "step2_title": "Registrarse para Canciones",
-      "step2_desc": "Los músicos se inscriben en canciones específicas e instrumentos. Los anfitriones aprueban registros en tiempo real.",
-      "step3_title": "Actuar en Directo",
-      "step3_desc": "Sigue el panel en vivo durante el evento. Todos permanecen sincronizados con actualizaciones en tiempo real."
+      "subtitle": "De la creación al escenario en tres pasos",
+      "step1_title": "Crea un Jam",
+      "step1_desc": "Elige una fecha, agrega canciones y comparte el link. Los músicos pueden encontrar tu jam y ver qué puestos están libres.",
+      "step2_title": "Los Músicos se Inscriben",
+      "step2_desc": "Eligen una canción, su instrumento, y vos aprobás quién toca qué. Todo antes de que empiece la noche.",
+      "step3_title": "Dale Play",
+      "step3_desc": "El panel en vivo muestra qué suena ahora, qué sigue y quién está en escena. Ponelo en una pantalla para el público."
     },
     "testimonials": {
-      "title": "Lo que Dice Nuestra Comunidad",
-      "subtitle": "Únete a miles de músicos y anfitriones que han transformado sus sesiones de jam",
-      "host_quote": "¡Esta plataforma transformó cómo organizamos nuestras sesiones de jam semanales! Sin más hojas de cálculo caóticas.",
-      "host_name": "Sarah M.",
-      "host_role": "Anfitriona de Sesión de Jam",
-      "musician_quote": "¡Finalmente puedo ver qué canciones necesitan mi instrumento e inscribirme instantáneamente! Un cambio de juego.",
-      "musician_name": "Mike D.",
-      "musician_role": "Guitarrista y Vocalista",
-      "venue_quote": "A nuestra audiencia le encanta el panel en vivo. Pueden seguir y ver quién actúa a continuación.",
-      "venue_name": "Alex K.",
-      "venue_role": "Propietario del Local"
+      "title": "Por qué lo usan",
+      "subtitle": "Opiniones reales de anfitriones y músicos",
+      "host_quote": "Antes gastaba 30 minutos antes de cada jam organizando quién toca qué. Ahora ya está todo listo cuando llego.",
+      "host_name": "Anfitrión de jam",
+      "host_role": "Organizador semanal",
+      "musician_quote": "Puedo ver qué canciones necesitan guitarrista e inscribirme desde el celular. Mucho mejor que andar preguntando.",
+      "musician_name": "Músico",
+      "musician_role": "Guitarrista",
+      "venue_quote": "Pusimos el panel en vivo en la tele del bar. A la gente le encanta ver qué viene después.",
+      "venue_name": "Dueño de local",
+      "venue_role": "Bar"
     },
     "call_to_action": {
-      "title": "¿Listo para Organizar tu Sesión de Jam?",
-      "description": "Deja de usar hojas de cálculo y procesos manuales. Comienza a gestionar tus sesiones de jam como un profesional con coordinación en tiempo real y comunicación fluida.",
-      "cta_button": "Comienza Ahora",
-      "browse_jams": "Explorar Sesiones de Jam"
+      "title": "Listo para probarlo?",
+      "description": "Crea tu primer jam en un par de minutos. Agrega las canciones, comparte el link y dejá que los músicos se inscriban.",
+      "cta_button": "Crear un Jam",
+      "browse_jams": "Explorar Jams"
     }
   },
   "jams": {
@@ -226,14 +226,14 @@
     },
     "no_name": "Jam sin nombre",
     "features": {
-      "title": "Creado para todos en el Jam",
-      "description": "Ya seas anfitrión, intérprete o espectador, nuestra plataforma hace que las sesiones de jam sean organizadas y atractivas.",
+      "title": "Hecho para todos en el Jam",
+      "description": "Una herramienta para tres roles diferentes",
       "hosts_title": "Para Anfitriones",
-      "hosts_desc": "Crea jams, registra canciones con espacios requeridos, aprueba registros de músicos y gestiona el orden de la lista en tiempo real.",
+      "hosts_desc": "Agrega canciones, define qué instrumentos necesitas, aprueba quién toca qué y controla el setlist en vivo durante el evento.",
       "musicians_title": "Para Músicos",
-      "musicians_desc": "Regístrate con tus especialidades, elige canciones para participar y sigue tus próximas actuaciones desde tu panel personal.",
+      "musicians_desc": "Explora jams abiertos, elige canciones que necesiten tu instrumento e inscribite. Vas a ver tu agenda y saber exactamente cuándo tocas.",
       "audience_title": "Para el Público",
-      "audience_desc": "Visualiza el lineup completo en paneles públicos proyectados en pantallas o mediante un enlace, con actualizaciones en tiempo real."
+      "audience_desc": "Una pantalla en vivo muestra qué suena ahora y qué viene después. Se comparte por link o código QR, sin descargar nada."
     },
     "how_it_works": {
       "title": "🎭 Cómo funciona este Jam",
@@ -479,7 +479,8 @@
       "BEGINNER": "Principiante",
       "INTERMEDIATE": "Intermedio",
       "ADVANCED": "Avanzado",
-      "PROFESSIONAL": "Profesional"
+      "PROFESSIONAL": "Profesional",
+      "not_specified": "No especificado"
     },
     "choose_level": "Selecciona un nivel...",
     "registration_pending_agreement": "Entiendo que mi participación esta sujeta a aprobación",
@@ -670,6 +671,11 @@
       "title_required": "El título es obligatorio",
       "artist_required": "El artista es obligatorio",
       "genre_required": "El género es obligatorio"
+    },
+    "quick_edit": {
+      "minutes": "Minutos",
+      "seconds": "Segundos",
+      "more_options": "Mas opciones"
     },
     "errors": {
       "failed_to_load": "Error al cargar música",
@@ -941,10 +947,10 @@
   },
   "seo": {
     "homepage": {
-      "title": "Plataforma de Gestión de Sesiones de Jam",
-      "description": "Crea, gestiona y únete a sesiones de jam. Organiza presentaciones, rastrea músicos y gestiona tus eventos musicales con facilidad.",
-      "description_enhanced": "Gestión profesional de sesiones de jam para músicos, anfitriones y locales. Coordinación en tiempo real, tableros en vivo y registro fluido de músicos. Transforma tus eventos musicales.",
-      "keywords": "karaoke, sesión de jam, gestión musical, programación de presentaciones, coordinación de músicos, eventos de música en vivo, gestor de listas, colaboración de bandas"
+      "title": "Jam App - Organiza Sesiones de Jam en Vivo",
+      "description": "Organiza sesiones de jam con setlist en vivo, inscripción de músicos y un panel público para el público. Gratis para anfitriones y músicos.",
+      "description_enhanced": "La forma más fácil de organizar una noche de jam. El anfitrión arma el setlist, los músicos se inscriben y el público sigue todo en una pantalla en vivo.",
+      "keywords": "sesión de jam, noche de jam, música en vivo, setlist, inscripción de músicos, organizador de jam, evento musical"
     }
   },
   "feedback": {

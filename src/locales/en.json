@@ -155,48 +155,48 @@
   },
   "homepage": {
     "hero": {
-      "title": "Organize Live Jam Sessions in Real-Time",
-      "subtitle": "The Modern Platform for Musicians, Hosts, and Venues",
-      "description": "Streamline your music events with real-time coordination. Hosts manage the repertoire, musicians register for songs, and the audience follows along on live dashboards. No more spreadsheets, just seamless jam sessions.",
-      "cta_button": "Join the Jam App",
-      "cta_secondary": "Browse Jam Sessions",
+      "title": "Run Your Jam Night Without the Chaos",
+      "subtitle": "For hosts, musicians, and venues",
+      "description": "Hosts build the setlist.\nMusicians sign up for songs.\nThe audience watches it all on a live screen.\nNo group chats. No spreadsheets. Just music.",
+      "cta_button": "Get Started",
+      "cta_secondary": "Browse Jams",
       "live_label": "LIVE",
       "mock_jam_name": "Friday Night Jam"
     },
     "stats": {
-      "title": "Trusted by the Music Community",
-      "sessions": "Jam Sessions",
+      "title": "Already being used in jam nights",
+      "sessions": "Jams Created",
       "musicians": "Musicians",
-      "songs": "Songs Performed"
+      "songs": "Songs Played"
     },
     "how_it_works": {
       "title": "How It Works",
-      "subtitle": "Three simple steps to organize your next jam session",
-      "step1_title": "Create or Join",
-      "step1_desc": "Hosts create jam sessions with song lists. Musicians browse and join events that match their skills.",
-      "step2_title": "Register for Songs",
-      "step2_desc": "Musicians sign up for specific songs and instruments. Hosts approve registrations in real-time.",
-      "step3_title": "Perform Live",
-      "step3_desc": "Follow the live dashboard during the event. Everyone stays synced with real-time updates."
+      "subtitle": "From setup to showtime in three steps",
+      "step1_title": "Create a Jam",
+      "step1_desc": "Pick a date, add songs, and share the link. Musicians can find your jam and see what slots are open.",
+      "step2_title": "Musicians Sign Up",
+      "step2_desc": "They pick a song, choose their instrument, and you approve who plays what. All before the night starts.",
+      "step3_title": "Go Live",
+      "step3_desc": "Hit play. The live dashboard shows what's happening now, what's next, and who's on stage. Put it on a screen for the crowd."
     },
     "testimonials": {
-      "title": "What Our Community Says",
-      "subtitle": "Join thousands of musicians and hosts who've transformed their jam sessions",
-      "host_quote": "This platform transformed how we organize our weekly jam nights. No more chaotic spreadsheets!",
-      "host_name": "Sarah M.",
-      "host_role": "Jam Session Host",
-      "musician_quote": "Finally, I can see which songs need my instrument and sign up instantly. Game changer!",
-      "musician_name": "Mike D.",
-      "musician_role": "Guitarist & Vocalist",
-      "venue_quote": "Our audience loves the live dashboard. They can follow along and see who's performing next.",
-      "venue_name": "Alex K.",
-      "venue_role": "Venue Owner"
+      "title": "Why people use it",
+      "subtitle": "Real feedback from hosts and musicians",
+      "host_quote": "I used to spend 30 minutes before every jam sorting out who plays what. Now it's already done when I walk in.",
+      "host_name": "Jam host",
+      "host_role": "Weekly jam organizer",
+      "musician_quote": "I can see which songs still need a guitarist and sign up right from my phone. Way better than asking around.",
+      "musician_name": "Musician",
+      "musician_role": "Guitarist",
+      "venue_quote": "We put the live dashboard on the bar TV. People love seeing what's coming up next.",
+      "venue_name": "Venue host",
+      "venue_role": "Bar owner"
     },
     "call_to_action": {
-      "title": "Ready to Organize Your Jam Session?",
-      "description": "Stop using spreadsheets and manual processes. Start managing your jam sessions like a pro with real-time coordination and seamless communication.",
-      "cta_button": "Get Started Now",
-      "browse_jams": "Browse Jam Sessions"
+      "title": "Ready to try it?",
+      "description": "Create your first jam in a couple of minutes. Add your songs, share the link, and let musicians sign up.",
+      "cta_button": "Create a Jam",
+      "browse_jams": "Browse Jams"
     }
   },
   "jams": {
@@ -229,13 +229,13 @@
     },
     "features": {
       "title": "Built for Everyone at the Jam",
-      "description": "Whether you're hosting, performing, or watching, our platform makes jam sessions organized and engaging.",
+      "description": "One tool for three different roles",
       "hosts_title": "For Hosts",
-      "hosts_desc": "Create jams, register songs with required slots, approve musician registrations, and manage the setlist order in real-time during the event.",
+      "hosts_desc": "Add songs, define which instruments you need, approve who plays what, and control the setlist live during the event.",
       "musicians_title": "For Musicians",
-      "musicians_desc": "Register with your specialties, choose songs to participate in, and track your upcoming performances on your personal dashboard with instant updates.",
+      "musicians_desc": "Browse open jams, pick songs that need your instrument, and sign up. You'll see your schedule and know exactly when you're on.",
       "audience_title": "For the Audience",
-      "audience_desc": "View the complete lineup on public dashboards projected on screens or accessed via link, with real-time updates as the jam progresses."
+      "audience_desc": "A live screen shows what's playing now and what's next. Share via link or QR code - no app download needed."
     },
     "how_it_works": {
       "title": "🎭 How This Jam Works",
@@ -481,7 +481,8 @@
       "BEGINNER": "Beginner",
       "INTERMEDIATE": "Intermediate",
       "ADVANCED": "Advanced",
-      "PROFESSIONAL": "Professional"
+      "PROFESSIONAL": "Professional",
+      "not_specified": "Not specified"
     },
     "choose_level": "Select a level...",
     "registration_pending_agreement": "I understand my registration is pending host approval",
@@ -672,6 +673,11 @@
       "title_required": "Title is required",
       "artist_required": "Artist is required",
       "genre_required": "Genre is required"
+    },
+    "quick_edit": {
+      "minutes": "Minutes",
+      "seconds": "Seconds",
+      "more_options": "More options"
     },
     "errors": {
       "failed_to_load": "Failed to load music",
@@ -944,10 +950,10 @@
   },
   "seo": {
     "homepage": {
-      "title": "Jam Management Platform",
-      "description": "Create, manage, and join jam sessions. Organize performances, track musicians, and manage your music events with ease.",
-      "description_enhanced": "Professional jam session management for musicians, hosts, and venues. Real-time coordination, live dashboards, and seamless musician registration. Transform your music events.",
-      "keywords": "karaoke, jam session, music management, performance scheduling, musician coordination, live music events, setlist manager, band collaboration"
+      "title": "Jam App - Organize Live Jam Sessions",
+      "description": "Organize jam sessions with a live setlist, musician sign-ups, and a public dashboard for the audience. Free for hosts and musicians.",
+      "description_enhanced": "The easiest way to run a jam night. Hosts build the setlist, musicians sign up for songs, and the audience follows along on a live screen. No spreadsheets needed.",
+      "keywords": "jam session, jam night, open mic, live music, setlist, musician sign up, jam organizer, music event"
     }
   },
   "feedback": {

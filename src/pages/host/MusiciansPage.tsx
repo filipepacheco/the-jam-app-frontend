@@ -13,112 +13,138 @@ import type {MusicianLevel, MusicianResponseDto} from '../../types/api.types.ts'
 import {EditMusicianModal} from '../../components/EditMusicianModal.tsx'
 import {Alert, FullPageSpinner} from '../../components'
 import {useTranslation} from 'react-i18next'
-import {API_ENDPOINTS} from "../../lib/api";
+import {API_ENDPOINTS} from "../../lib/api"
+import {Music, Search} from 'lucide-react'
+
+/** Map level values to badge color variants */
+function getLevelBadgeClass(level: string | null | undefined): string {
+  switch (level) {
+    case 'BEGINNER': return 'badge-info'
+    case 'INTERMEDIATE': return 'badge-success'
+    case 'ADVANCED': return 'badge-warning'
+    case 'PROFESSIONAL': return 'badge-primary'
+    default: return 'badge-ghost'
+  }
+}
+
+/** Format level for display, handling null/undefined */
+function formatLevel(level: string | null | undefined, t: (key: string) => string): string {
+  if (!level) return t('schedule.levels.not_specified')
+  return t(`schedule.levels.${level}`)
+}
 
 export function MusiciansPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
-   const { user, isLoading: authLoading } = useAuth()
+  const { user, isLoading: authLoading } = useAuth()
 
-   // State
-   const [searchQuery, setSearchQuery] = useState('')
-   const [selectedLevel, setSelectedLevel] = useState<MusicianLevel | 'ALL'>('ALL')
-   const [editingMusician, setEditingMusician] = useState<MusicianResponseDto | null>(null)
-   const [success, setSuccess] = useState<string | null>(null)
+  // State
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedLevel, setSelectedLevel] = useState<MusicianLevel | 'ALL'>('ALL')
+  const [editingMusician, setEditingMusician] = useState<MusicianResponseDto | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
-   // Fetch musicians with SWR (only when user is host)
-   const { data: musicians = [], error: swrError, isLoading, mutate: mutateMusicians } = useSWR<MusicianResponseDto[]>(
-     user?.isHost ? API_ENDPOINTS.musicians : null
-   )
-   const error = swrError?.message ?? null
+  // Fetch musicians with SWR (only when user is host)
+  const { data: musicians = [], error: swrError, isLoading, mutate: mutateMusicians } = useSWR<MusicianResponseDto[]>(
+    user?.isHost ? API_ENDPOINTS.musicians : null
+  )
+  const error = swrError?.message ?? null
 
-   // Role guard - redirect if not host
-   useEffect(() => {
-     if (!authLoading && !user?.isHost) {
-       navigate('/')
-     }
-   }, [user?.isHost, authLoading, navigate])
+  // Date formatter using user's locale
+  const dateFormatter = useMemo(
+    () => new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }),
+    [i18n.language]
+  )
 
-   // Apply search and filter with memoization
-   const filteredMusicians = useMemo(() => {
-     let filtered = musicians
+  // Role guard - redirect if not host
+  useEffect(() => {
+    if (!authLoading && !user?.isHost) {
+      navigate('/')
+    }
+  }, [user?.isHost, authLoading, navigate])
 
-     // Apply search filter
-     if (searchQuery.trim()) {
-       const query = searchQuery.toLowerCase()
-       filtered = filtered.filter(
-         (m) =>
-           (m.name?.toLowerCase().includes(query) ?? false) ||
-           (m.instrument?.toLowerCase().includes(query) ?? false) ||
-           (m.contact?.toLowerCase().includes(query) ?? false)
-       )
-     }
+  // Apply search and filter with memoization
+  const filteredMusicians = useMemo(() => {
+    let filtered = musicians
 
-     // Apply level filter
-     if (selectedLevel !== 'ALL') {
-       filtered = filtered.filter((m) => m.level === selectedLevel)
-     }
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase()
+      filtered = filtered.filter(
+        (m) =>
+          (m.name?.toLowerCase().includes(query) ?? false) ||
+          (m.instrument?.toLowerCase().includes(query) ?? false) ||
+          (m.contact?.toLowerCase().includes(query) ?? false)
+      )
+    }
 
-     return filtered
-   }, [searchQuery, selectedLevel, musicians])
+    // Apply level filter
+    if (selectedLevel !== 'ALL') {
+      filtered = filtered.filter((m) => m.level === selectedLevel)
+    }
 
-   const handleEditMusician = useCallback((musician: MusicianResponseDto) => {
-     setEditingMusician(musician)
-   }, [])
+    return filtered
+  }, [searchQuery, selectedLevel, musicians])
 
-   const handleUpdateMusician = useCallback(async (updatedMusician: MusicianResponseDto) => {
-     try {
-       await musicianService.update(updatedMusician.id, {
-         name: updatedMusician.name ?? undefined,
-         instrument: updatedMusician.instrument ?? undefined,
-         level: updatedMusician.level ?? undefined,
-         contact: updatedMusician.contact ?? undefined,
-       })
+  const handleEditMusician = useCallback((musician: MusicianResponseDto) => {
+    setEditingMusician(musician)
+  }, [])
 
-       // Refresh musicians data from API
-       await mutateMusicians()
+  const handleUpdateMusician = useCallback(async (updatedMusician: MusicianResponseDto) => {
+    try {
+      await musicianService.update(updatedMusician.id, {
+        name: updatedMusician.name ?? undefined,
+        instrument: updatedMusician.instrument ?? undefined,
+        level: updatedMusician.level ?? undefined,
+        contact: updatedMusician.contact ?? undefined,
+      })
 
-       setSuccess(t('jam_management.musicians.update_success'))
-       setEditingMusician(null)
+      // Refresh musicians data from API
+      await mutateMusicians()
 
-       // Clear success message after 3 seconds
-       setTimeout(() => setSuccess(null), 3000)
-     } catch (err) {
-       // Error is handled by SWR's swrError, but we can show a toast if needed
-     }
-   }, [mutateMusicians, t])
+      setSuccess(t('jam_management.musicians.update_success'))
+      setEditingMusician(null)
 
-   const handleCloseEditModal = () => {
-     setEditingMusician(null)
-   }
+      // Clear success message after 3 seconds
+      setTimeout(() => setSuccess(null), 3000)
+    } catch (err) {
+      // Error is handled by SWR's swrError, but we can show a toast if needed
+    }
+  }, [mutateMusicians, t])
 
-   // Ensure translations for the active language (or its base) are loaded before rendering
-   const currentLang = (i18n.language || i18n.resolvedLanguage || '').toString()
-   const baseLang = currentLang.split('-')[0]
-   const hasBundle = (typeof i18n.hasResourceBundle === 'function')
-     ? (i18n.hasResourceBundle(currentLang, 'translation') || i18n.hasResourceBundle(baseLang, 'translation'))
-     : true
+  const handleCloseEditModal = () => {
+    setEditingMusician(null)
+  }
 
-   if (!hasBundle) {
-     // Show a small loader until translations are ready to avoid i18next missingKey logs
-     return <FullPageSpinner />
-   }
+  // Ensure translations for the active language (or its base) are loaded before rendering
+  const currentLang = (i18n.language || i18n.resolvedLanguage || '').toString()
+  const baseLang = currentLang.split('-')[0]
+  const hasBundle = (typeof i18n.hasResourceBundle === 'function')
+    ? (i18n.hasResourceBundle(currentLang, 'translation') || i18n.hasResourceBundle(baseLang, 'translation'))
+    : true
 
-   if (authLoading) {
-     return <FullPageSpinner />
-   }
+  if (!hasBundle) {
+    return <FullPageSpinner />
+  }
 
-   if (!user?.isHost) {
-     return null
-   }
+  if (authLoading) {
+    return <FullPageSpinner />
+  }
 
-   return (
-     <div className="min-h-screen bg-base-100 p-4 md:p-8">
-       <div className="max-w-7xl mx-auto">
+  if (!user?.isHost) {
+    return null
+  }
+
+  return (
+    <div className="min-h-screen bg-base-100 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">🎵 {t('jam_management.musicians.title')}</h1>
-          <p className="text-base-content/70">{t('jam_management.musicians.subtitle')}</p>
+          <h1 className="text-3xl font-bold mb-1 flex items-center gap-3">
+            <Music className="size-8 text-primary" aria-hidden="true" />
+            {t('jam_management.musicians.title')}
+          </h1>
+          <p className="text-base-content/60">{t('jam_management.musicians.subtitle')}</p>
         </div>
 
         {/* Alerts */}
@@ -127,29 +153,30 @@ export function MusiciansPage() {
 
         {/* Search and Filter Bar */}
         <div className="card bg-base-200 mb-6">
-          <div className="card-body">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="card-body py-4">
+            <div className="flex flex-col md:flex-row md:items-end gap-4">
               {/* Search Input */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold">{t('jam_management.musicians.search_label')}</span>
+              <fieldset className="fieldset flex-1">
+                <legend className="fieldset-legend">{t('jam_management.musicians.search_label')}</legend>
+                <label className="input w-full">
+                  <Search className="size-4 opacity-50" aria-hidden="true" />
+                  <input
+                    type="search"
+                    name="search"
+                    autoComplete="off"
+                    placeholder={t('jam_management.musicians.search_placeholder')}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </label>
-                <input
-                  type="text"
-                  placeholder={t('jam_management.musicians.search_placeholder')}
-                  className="input input-bordered"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
+              </fieldset>
 
               {/* Level Filter */}
-              <div className="form-control">
-                <label className="label">
-                  <span className="label-text font-semibold">{t('jam_management.musicians.filter_label')}</span>
-                </label>
+              <fieldset className="fieldset md:w-64">
+                <legend className="fieldset-legend">{t('jam_management.musicians.filter_label')}</legend>
                 <select
-                  className="select select-bordered"
+                  className="select w-full"
+                  name="level"
                   value={selectedLevel}
                   onChange={(e) => setSelectedLevel(e.target.value as MusicianLevel | 'ALL')}
                 >
@@ -159,11 +186,11 @@ export function MusiciansPage() {
                   <option value="ADVANCED">{t('schedule.levels.ADVANCED')}</option>
                   <option value="PROFESSIONAL">{t('schedule.levels.PROFESSIONAL')}</option>
                 </select>
-              </div>
+              </fieldset>
             </div>
 
             {/* Results count */}
-            <div className="text-sm text-base-content/70 mt-4">
+            <div className="text-sm text-base-content/60 mt-2" style={{ fontVariantNumeric: 'tabular-nums' }}>
               {t('jam_management.musicians.results_count', { shown: filteredMusicians.length, total: musicians.length })}
             </div>
           </div>
@@ -177,7 +204,7 @@ export function MusiciansPage() {
         ) : filteredMusicians.length === 0 ? (
           <div className="card bg-base-200">
             <div className="card-body text-center">
-              <p className="text-base-content/70">
+              <p className="text-base-content/60">
                 {musicians.length === 0
                   ? t('jam_management.musicians.no_musicians')
                   : t('jam_management.musicians.no_match')}
@@ -186,7 +213,7 @@ export function MusiciansPage() {
           </div>
         ) : (
           /* Musicians Table */
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-box">
             <table className="table table-zebra w-full bg-base-200">
               <thead>
                 <tr className="bg-base-300">
@@ -202,23 +229,26 @@ export function MusiciansPage() {
               <tbody>
                 {filteredMusicians.map((musician) => (
                   <tr key={musician.id} className="hover">
-                    <td className="font-semibold">{musician.name}</td>
-                    <td>{musician.instrument}</td>
+                    <td className="font-semibold">{musician.name || '—'}</td>
+                    <td>{musician.instrument || '—'}</td>
                     <td>
-                      <div className="badge badge-primary">
-                        {t(`schedule.levels.${musician.level}`)}
-                      </div>
+                      <span className={`badge ${getLevelBadgeClass(musician.level)}`}>
+                        {formatLevel(musician.level, t)}
+                      </span>
                     </td>
-                    <td>{musician.contact}</td>
+                    <td>{musician.contact || '—'}</td>
                     <td>{musician.phone || '—'}</td>
-                    <td>{new Date(musician.createdAt).toLocaleDateString()}</td>
+                    <td style={{ fontVariantNumeric: 'tabular-nums' }}>
+                      {musician.createdAt ? dateFormatter.format(new Date(musician.createdAt)) : '—'}
+                    </td>
                     <td>
                       <button
                         className="btn btn-primary btn-xs"
                         onClick={() => handleEditMusician(musician)}
+                        aria-label={`${t('jam_management.musicians.actions.edit')} ${musician.name || ''}`}
                       >
                         {t('jam_management.musicians.actions.edit')}
-                       </button>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -238,6 +268,6 @@ export function MusiciansPage() {
       )}
     </div>
   )
- }
+}
 
- export default MusiciansPage
+export default MusiciansPage

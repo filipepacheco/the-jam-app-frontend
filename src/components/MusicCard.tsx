@@ -1,30 +1,35 @@
 /**
  * Music Card Component
  * Compact mobile-friendly card view for music library
+ * Supports inline quick editing via expandable panel
  */
 
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pencil, Trash2 } from 'lucide-react'
-import type { MusicResponseDto } from '../types/api.types'
+import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import { formatDuration } from '../lib/formatters'
 import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
 import { SpotifyPreview, isSpotifyTrackLink } from './SpotifyPreview'
+import { QuickEditPanel } from './QuickEditPanel'
 
 interface MusicCardProps {
   music: MusicResponseDto
   isHost: boolean
+  isExpanded?: boolean
   onEdit: (music: MusicResponseDto) => void
   onDelete: (music: MusicResponseDto) => void
+  onToggleExpand?: (musicId: string) => void
+  onQuickSave?: (id: string, data: UpdateMusicDto) => Promise<boolean>
   onApprove?: (music: MusicResponseDto) => void
   onReject?: (music: MusicResponseDto) => void
 }
 
 // Spotify icon SVG
 const SpotifyIcon = () => (
-  <svg 
-    viewBox="0 0 24 24" 
-    className="size-4" 
+  <svg
+    viewBox="0 0 24 24"
+    className="size-4"
     fill="currentColor"
     aria-label="Spotify"
   >
@@ -35,8 +40,11 @@ const SpotifyIcon = () => (
 export const MusicCard = memo(function MusicCard({
   music,
   isHost,
+  isExpanded = false,
   onEdit,
   onDelete,
+  onToggleExpand,
+  onQuickSave,
   onApprove,
   onReject,
 }: MusicCardProps) {
@@ -56,28 +64,71 @@ export const MusicCard = memo(function MusicCard({
   // Check if link is any Spotify URL (for icon display)
   const isSpotifyLink = music.link?.includes('spotify.com')
 
+  // For approved cards with quick edit support, pencil toggles expand
+  const handlePencilClick = () => {
+    if (!isSuggested && onToggleExpand) {
+      onToggleExpand(music.id)
+    } else {
+      onEdit(music)
+    }
+  }
+
+  const metaInfo = (
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+      {music.genre && (
+        <span className="badge badge-outline badge-xs">{music.genre}</span>
+      )}
+      {music.duration && (
+        <span className="text-xs text-base-content/60">
+          ⏱️ {formatDuration(music.duration)}
+        </span>
+      )}
+      {instrumentCounts.map((inst) => (
+        <span key={inst.key} className="text-xs text-base-content/60">
+          {getInstrumentIcon(inst.key)} {inst.count}
+        </span>
+      ))}
+      {hasSpotifyPreview ? (
+        <SpotifyPreview link={music.link} title={music.title} size="sm" />
+      ) : music.link ? (
+        <a
+          href={music.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="link link-primary flex items-center gap-1 text-xs"
+          title={isSpotifyLink ? 'Spotify' : t('common.link')}
+        >
+          {isSpotifyLink ? <SpotifyIcon /> : '🔗'}
+        </a>
+      ) : null}
+    </div>
+  )
+
   return (
     <div className="card bg-base-100 border border-base-200 shadow-sm compact">
       <div className="card-body p-3">
-        {/* Header: Title, Artist & Status + Actions */}
-        <div className="flex items-start gap-2">
-          {/* Title & Artist */}
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-base leading-tight text-balance">{music.title}</h3>
-            <p className="text-sm text-base-content/70 text-pretty">{music.artist}</p>
+        {/* Main row: content + actions */}
+        <div className="flex items-center gap-2">
+          {/* Title, Artist & Meta - flows horizontally on tablet */}
+          <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:gap-3">
+            <div className="min-w-0 shrink-0 sm:shrink">
+              <h3 className="font-bold text-base leading-tight truncate">{music.title}</h3>
+              <p className="text-sm text-base-content/70 truncate">{music.artist}</p>
+            </div>
+            <div className="hidden sm:block">{metaInfo}</div>
           </div>
-          
+
           {/* Status Badge + Action Buttons */}
           {isHost && (
-            <div className="flex flex-col items-center gap-1 shrink-0">
+            <div className="flex items-center gap-1 shrink-0">
               <div className={`badge badge-sm ${isSuggested ? 'badge-warning' : 'badge-success'}`}>
                 {isSuggested ? '💡' : '✅'}
               </div>
-              
+
               {isSuggested ? (
                 <>
                   <button
-                    onClick={() => onApprove?.(music)}
+                    onClick={() => { void onApprove?.(music) }}
                     className="btn btn-xs btn-success btn-circle"
                     title={t('common.approve')}
                     aria-label={t('common.approve')}
@@ -96,10 +147,11 @@ export const MusicCard = memo(function MusicCard({
               ) : (
                 <>
                   <button
-                    onClick={() => onEdit(music)}
-                    className="btn btn-xs btn-ghost btn-circle"
+                    onClick={handlePencilClick}
+                    className={`btn btn-xs btn-ghost btn-circle ${isExpanded ? 'btn-active' : ''}`}
                     title={t('common.edit')}
                     aria-label={t('common.edit')}
+                    aria-expanded={isExpanded}
                   >
                     <Pencil className="size-3.5" />
                   </button>
@@ -115,7 +167,7 @@ export const MusicCard = memo(function MusicCard({
               )}
             </div>
           )}
-          
+
           {/* Non-host: just show status */}
           {!isHost && (
             <div className={`badge badge-sm shrink-0 ${isSuggested ? 'badge-warning' : 'badge-success'}`}>
@@ -124,40 +176,21 @@ export const MusicCard = memo(function MusicCard({
           )}
         </div>
 
-        {/* Meta Info Row: Genre, Duration, Instruments, Link - directly below artist */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-          {music.genre && (
-            <span className="badge badge-outline badge-xs">{music.genre}</span>
-          )}
+        {/* Meta info below title on small screens only */}
+        <div className="sm:hidden">{metaInfo}</div>
 
-          {music.duration && (
-            <span className="text-xs text-base-content/60">
-              ⏱️ {formatDuration(music.duration)}
-            </span>
-          )}
-
-          {/* Instrument counts inline with duration */}
-          {instrumentCounts.map((inst) => (
-            <span key={inst.key} className="text-xs text-base-content/60">
-              {getInstrumentIcon(inst.key)} {inst.count}
-            </span>
-          ))}
-
-          {/* Spotify Preview or Link */}
-          {hasSpotifyPreview ? (
-            <SpotifyPreview link={music.link} title={music.title} size="sm" />
-          ) : music.link ? (
-            <a
-              href={music.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="link link-primary flex items-center gap-1 text-xs"
-              title={isSpotifyLink ? 'Spotify' : t('common.link')}
-            >
-              {isSpotifyLink ? <SpotifyIcon /> : '🔗'}
-            </a>
-          ) : null}
-        </div>
+        {/* Quick Edit Panel - shown when expanded */}
+        {isExpanded && onQuickSave && (
+          <QuickEditPanel
+            music={music}
+            onSave={onQuickSave}
+            onCancel={() => onToggleExpand?.(music.id)}
+            onOpenFullEdit={(m) => {
+              onToggleExpand?.(music.id)
+              onEdit(m)
+            }}
+          />
+        )}
       </div>
     </div>
   )

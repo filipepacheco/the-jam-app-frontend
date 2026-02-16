@@ -5,16 +5,55 @@
 
 import { useAuth } from '../hooks'
 import { useState, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { FeedbackButton } from './FeedbackButton'
 import { useTranslation } from 'react-i18next'
 import { DesktopUserMenu } from './DesktopUserMenu'
 import { MobileDrawer } from './MobileDrawer'
+import { Home, Search, Users, Music, LayoutDashboard } from 'lucide-react'
+
+function NavLink({ href, icon, label, isActive, onClick }: {
+  href: string
+  icon: React.ReactNode
+  label: string
+  isActive: boolean
+  onClick: (e: React.MouseEvent) => void
+}) {
+  return (
+    <li>
+      <a
+        href={href}
+        onClick={onClick}
+        className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+          isActive
+            ? 'bg-primary/10 text-primary'
+            : 'text-base-content/70 hover:bg-base-200 hover:text-base-content'
+        }`}
+      >
+        {icon}
+        {label}
+      </a>
+    </li>
+  )
+}
 
 function Navbar() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const { isAuthenticated, user, isViewer } = useAuth()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
+  const location = useLocation()
+
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/'
+    return location.pathname === path || location.pathname.startsWith(path + '/')
+  }
+
+  const handleNavClick = (path: string) => (e: React.MouseEvent) => {
+    e.preventDefault()
+    navigate(path)
+  }
 
   return (
     <nav className="navbar bg-base-100 shadow-lg px-2 sm:px-4 py-2 sm:py-3 gap-1 sm:gap-2 md:gap-3">
@@ -31,18 +70,18 @@ function Navbar() {
       </div>
 
       {/* Navbar Center - Desktop Menu */}
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
-          <li><a href="/">{t('nav.home')}</a></li>
-          <li><a href="/jams">{t('nav.jams')}</a></li>
+      <div className="navbar-center hidden xl:flex">
+        <ul className="flex items-center gap-1">
+          <NavLink href="/" icon={<Home className="size-4" />} label={t('nav.home')} isActive={isActive('/')} onClick={handleNavClick('/')} />
+          <NavLink href="/jams" icon={<Search className="size-4" />} label={t('nav.jams')} isActive={isActive('/jams')} onClick={handleNavClick('/jams')} />
           {isAuthenticated && user?.isHost && (
-            <li><a href="/musicians">{t('nav.musicians')}</a></li>
+            <NavLink href="/musicians" icon={<Users className="size-4" />} label={t('nav.musicians')} isActive={isActive('/musicians')} onClick={handleNavClick('/musicians')} />
           )}
           {isAuthenticated && !isViewer() && (
-            <li><a href="/music">{t('nav.music')}</a></li>
+            <NavLink href="/music" icon={<Music className="size-4" />} label={t('nav.music')} isActive={isActive('/music')} onClick={handleNavClick('/music')} />
           )}
           {isAuthenticated && user?.isHost && (
-            <li><a href="/host/dashboard">{t('nav.host_dashboard')}</a></li>
+            <NavLink href="/host/dashboard" icon={<LayoutDashboard className="size-4" />} label={t('nav.host_dashboard')} isActive={isActive('/host/dashboard')} onClick={handleNavClick('/host/dashboard')} />
           )}
         </ul>
       </div>
@@ -50,10 +89,10 @@ function Navbar() {
       {/* Navbar End - Actions */}
       <div className="navbar-end gap-1 sm:gap-2 md:gap-3 flex-wrap md:flex-nowrap justify-end">
         {/* Feedback Button - Desktop only */}
-        <FeedbackButton className="hidden lg:flex" />
+        <FeedbackButton className="hidden xl:flex" />
 
         {/* Desktop User Menu */}
-        <DesktopUserMenu className="hidden lg:inline-flex" />
+        <DesktopUserMenu className="hidden xl:inline-flex" />
 
         {/* Create Jam Button - Host Only */}
         {isAuthenticated && user?.isHost && (
@@ -72,7 +111,7 @@ function Navbar() {
         {/* Mobile Hamburger */}
         <button
           ref={hamburgerRef}
-          className="btn btn-ghost lg:hidden"
+          className="btn btn-ghost xl:hidden"
           onClick={() => setIsDrawerOpen(true)}
           aria-label={t('nav.toggle_menu')}
         >
