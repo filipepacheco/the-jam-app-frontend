@@ -87,18 +87,35 @@ export function BrowseJamsPage() {
   // Check if any filters are active
   const hasActiveFilters = searchQuery.trim() !== '' || statusFilter !== 'ALL'
 
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
+
+  const browseJsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: t('jams.browse.title'),
+    description: t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') }),
+    url: `${siteUrl}/jams`,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'The Jam App',
+      url: siteUrl,
+    },
+  }
+
   return (
     <div className="min-h-screen bg-base-100">
       <SEO
-        title={t('jams.browse.title')}
-        description={t('jams.browse.subtitle')}
-        canonical={`${import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'}/jams`}
+        title={t('seo.browse.title', { defaultValue: t('jams.browse.title') })}
+        description={t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') })}
+        keywords={t('seo.browse.keywords', { defaultValue: 'jam sessions, live music events, open mic, jam night, music meetup' })}
+        canonical={`${siteUrl}/jams`}
+        jsonLd={browseJsonLd}
       />
       {/* Hero Section */}
       <div className="bg-primary text-primary-content">
         <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 lg:py-12">
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4">
-            🎸 {t('jams.browse.title')}
+            <span aria-hidden="true">🎸 </span>{t('jams.browse.title')}
           </h1>
           <p className="text-base sm:text-lg lg:text-xl opacity-95">
             {t('jams.browse.subtitle')}

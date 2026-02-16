@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks'
 import { useTranslation } from 'react-i18next'
 import { HeroDashboardMockup } from './hero/HeroDashboardMockup'
@@ -9,7 +9,8 @@ export function EnhancedHero() {
   const navigate = useNavigate()
   const { isAuthenticated, role } = useAuth()
 
-  const handleCTAClick = () => {
+  const handleCTAClick = (e: React.MouseEvent) => {
+    e.preventDefault()
     if (isAuthenticated) {
       if (role === 'host') {
         navigate('/host/dashboard')
@@ -64,18 +65,19 @@ export function EnhancedHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
           >
-            <button
+            <Link
+              to="/register"
               className="btn btn-lg bg-base-100 text-primary hover:bg-base-200 border-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
               onClick={handleCTAClick}
             >
               {t('homepage.hero.cta_button')}
-            </button>
-            <button
+            </Link>
+            <Link
+              to="/jams"
               className="btn btn-lg btn-outline text-white border-white hover:bg-white hover:text-black focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white"
-              onClick={() => navigate('/jams')}
             >
               {t('homepage.hero.cta_secondary')}
-            </button>
+            </Link>
           </motion.div>
         </div>
 

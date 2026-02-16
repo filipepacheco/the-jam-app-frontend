@@ -955,6 +955,11 @@
       "description": "Organize jam sessions with a live setlist, musician sign-ups, and a public dashboard for the audience. Free for hosts and musicians.",
       "description_enhanced": "The easiest way to run a jam night. Hosts build the setlist, musicians sign up for songs, and the audience follows along on a live screen. No spreadsheets needed.",
       "keywords": "jam session, jam night, open mic, live music, setlist, musician sign up, jam organizer, music event"
+    },
+    "browse": {
+      "title": "Browse Jam Sessions Near You",
+      "description": "Find and join live jam sessions, open mics, and music events in your area. Browse upcoming jams, sign up for songs, and connect with local musicians.",
+      "keywords": "jam sessions, live music events, open mic nights, music meetups, jam night, find jam sessions, local music events"
     }
   },
   "feedback": {
