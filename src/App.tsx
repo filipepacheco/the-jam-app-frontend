@@ -1,5 +1,5 @@
-import {lazy, Suspense} from 'react'
-import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
+import {lazy, Suspense, useEffect} from 'react'
+import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
 import {useTranslation} from 'react-i18next'
@@ -26,6 +26,7 @@ import AuthCallbackPage from "./pages/tabs/AuthCallbackPage.tsx"
 import {AuthProvider, JamProvider} from './contexts'
 import {FullPageSpinner, OnboardingModal} from './components'
 import {useAuth} from './hooks'
+import {NotFoundPage} from './pages/NotFoundPage'
 
 // Lazy-loaded pages - Priority 1 (Host-only)
 const HostDashboardPage = lazy(() => import('./pages/host/HostDashboardPage.tsx'))
@@ -69,9 +70,38 @@ function RouteLoadingFallback() {
  * Home Page Component
  * Main landing page with hero, features, and call-to-action
  */
-function
-HomePage() {
+function HomePage() {
   const { t } = useTranslation()
+
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
+
+  const homeJsonLd: Record<string, unknown>[] = [
+    {
+      '@type': 'WebSite',
+      name: 'The Jam App',
+      url: siteUrl,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${siteUrl}/jams?q={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'WebApplication',
+      name: 'The Jam App',
+      url: siteUrl,
+      applicationCategory: 'EntertainmentApplication',
+      operatingSystem: 'Any',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'BRL',
+      },
+    },
+  ]
 
   return (
     <>
@@ -80,6 +110,7 @@ HomePage() {
         description={t('seo.homepage.description_enhanced')}
         keywords={t('seo.homepage.keywords')}
         ogImage="/og-image.jpg"
+        jsonLd={homeJsonLd}
       />
       <div className="min-h-screen">
         <Navbar />
@@ -198,8 +229,8 @@ function AppContent() {
       {/* Root-level slug redirect (jamapp.com.br/my-slug -> /jams/my-slug) */}
       <Route path="/:slug" element={<SlugRedirect />} />
 
-      {/* Catch-all - redirect to home */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* Catch-all - 404 page */}
+      <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   )
@@ -225,6 +256,10 @@ function OnboardingWrapper() {
  * Root component with AuthProvider, SWRConfig, and BrowserRouter wrapper
  */
 function App() {
+  useEffect(() => {
+    document.dispatchEvent(new Event('app-rendered'))
+  }, [])
+
   return (
     <BrowserRouter>
       <SWRConfig

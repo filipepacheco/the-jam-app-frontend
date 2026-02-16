@@ -10,4 +10,4 @@ Disallow: /profile
 Disallow: /auth/
 
 # Sitemap location
-Sitemap: https://jamapp.com.br/sitemap.xml
+Sitemap: https://www.jamapp.com.br/sitemap.xml

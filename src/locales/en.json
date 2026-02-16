@@ -1183,5 +1183,12 @@
       "create_hint": "Create a new jam session. You can add songs and manage registrations later.",
       "edit_hint": "Update the jam details. Changes will be saved immediately."
     }
-  }
+  },
+  "notFound": {
+  "title": "Page Not Found",
+  "heading": "Page Not Found",
+  "message": "The page you're looking for doesn't exist or has been moved.",
+  "goHome": "Go Home",
+  "browseJams": "Browse Jams"
+}
 }

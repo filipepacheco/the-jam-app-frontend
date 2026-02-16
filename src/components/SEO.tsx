@@ -9,8 +9,14 @@ interface SEOProps {
   ogType?: 'website' | 'article'
   noindex?: boolean
   canonical?: string
-  jsonLd?: Record<string, unknown>
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[]
 }
+
+const SUPPORTED_LANGS = [
+  { code: 'pt-BR', param: 'pt' },
+  { code: 'en', param: 'en' },
+  { code: 'es', param: 'es' },
+]
 
 export function SEO({
   title,
@@ -25,13 +31,23 @@ export function SEO({
   const { currentLang } = useAppLanguage()
 
   const fullTitle = title ? `${title} | The Jam App` : "The Jam App"
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jamapp.com.br'
+  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
   const canonicalUrl = canonical || siteUrl
   const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
 
+  // Build base URL without query params for hreflang
+  const baseUrl = canonicalUrl.split('?')[0]
+
+  // Determine JSON-LD content
+  const jsonLdContent = jsonLd
+    ? Array.isArray(jsonLd)
+      ? JSON.stringify({ '@context': 'https://schema.org', '@graph': jsonLd })
+      : JSON.stringify(jsonLd)
+    : null
+
   return (
     <Helmet>
-      <html lang={currentLang} />
+      <html lang={currentLang === 'pt' ? 'pt-BR' : currentLang} />
       <title>{fullTitle}</title>
       {description && <meta name="description" content={description} />}
       {keywords && <meta name="keywords" content={keywords} />}
@@ -39,6 +55,17 @@ export function SEO({
       <link rel="canonical" href={canonicalUrl} />
 
       {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+      {/* Hreflang tags for language alternatives */}
+      {SUPPORTED_LANGS.map(({ code, param }) => (
+        <link
+          key={code}
+          rel="alternate"
+          hrefLang={code}
+          href={`${baseUrl}${baseUrl.includes('?') ? '&' : '?'}lng=${param}`}
+        />
+      ))}
+      <link rel="alternate" hrefLang="x-default" href={baseUrl} />
 
       <meta property="og:title" content={fullTitle} />
       {description && <meta property="og:description" content={description} />}
@@ -52,9 +79,9 @@ export function SEO({
       {description && <meta name="twitter:description" content={description} />}
       <meta name="twitter:image" content={ogImageUrl} />
 
-      {jsonLd && (
+      {jsonLdContent && (
         <script type="application/ld+json">
-          {JSON.stringify(jsonLd)}
+          {jsonLdContent}
         </script>
       )}
     </Helmet>

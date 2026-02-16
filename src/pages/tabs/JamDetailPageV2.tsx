@@ -28,8 +28,8 @@ import {
     TimelineShowcaseV2Waveform,
 } from '../../components/jam-detail-v2/'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
-import {getInstrumentIcon} from "../../components/schedule/RegistrationList.tsx";
-import {registrationService} from '../../services/registrationService'
+import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
+import {registrationService} from '../../services'
 
 export function JamDetailPageV2() {
     const {t} = useTranslation()
@@ -219,7 +219,7 @@ export function JamDetailPageV2() {
         )
     }
 
-    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://jamapp.com.br'
+    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
     const canonicalUrl = `${siteUrl}${getJamPath(jam)}`
     const jamJsonLd: Record<string, unknown> = {
         '@context': 'https://schema.org',
@@ -236,8 +236,25 @@ export function JamDetailPageV2() {
             },
         }),
         url: canonicalUrl,
+        image: `${siteUrl}/og-image.jpg`,
         eventStatus: 'https://schema.org/EventScheduled',
         eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        organizer: {
+            '@type': 'Organization',
+            name: 'The Jam App',
+            url: siteUrl,
+        },
+        performer: {
+            '@type': 'PerformingGroup',
+            name: jam.name,
+        },
+        offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'BRL',
+            availability: 'https://schema.org/InStock',
+            url: canonicalUrl,
+        },
     }
 
     return (

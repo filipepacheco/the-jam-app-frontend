@@ -92,7 +92,7 @@ export function BrowseJamsPage() {
       <SEO
         title={t('jams.browse.title')}
         description={t('jams.browse.subtitle')}
-        canonical={`${import.meta.env.VITE_SITE_URL || 'https://jamapp.com.br'}/jams`}
+        canonical={`${import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'}/jams`}
       />
       {/* Hero Section */}
       <div className="bg-primary text-primary-content">

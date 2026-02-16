@@ -4,24 +4,27 @@
 
   <!-- Homepage -->
   <url>
-    <loc>https://jamapp.com.br/</loc>
+    <loc>https://www.jamapp.com.br/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <lastmod>2026-02-13</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://jamapp.com.br/?lng=en"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://jamapp.com.br/?lng=es"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://jamapp.com.br/?lng=pt"/>
+    <lastmod>2026-02-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.jamapp.com.br/?lng=pt"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jamapp.com.br/?lng=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.jamapp.com.br/?lng=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.jamapp.com.br/"/>
   </url>
 
   <!-- Browse Jams Page -->
   <url>
-    <loc>https://jamapp.com.br/jams</loc>
+    <loc>https://www.jamapp.com.br/jams</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://jamapp.com.br/jams?lng=en"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://jamapp.com.br/jams?lng=es"/>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://jamapp.com.br/jams?lng=pt"/>
+    <lastmod>2026-02-15</lastmod>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.jamapp.com.br/jams?lng=pt"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.jamapp.com.br/jams?lng=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.jamapp.com.br/jams?lng=es"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.jamapp.com.br/jams"/>
   </url>
 
-  <!-- Note: Individual jam pages (/jams/:slug) are dynamically discoverable via /jams listing -->
+  <!-- Note: Individual jam pages (/jams/:slug) are added dynamically at build time -->
 </urlset>

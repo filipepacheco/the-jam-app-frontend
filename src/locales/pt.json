@@ -677,7 +677,7 @@
     "quick_edit": {
       "minutes": "Minutos",
       "seconds": "Segundos",
-      "more_options": "Mais opcoes"
+      "more_options": "Mais opções"
     },
     "errors": {
       "failed_to_load": "Falha ao carregar músicas",
@@ -689,7 +689,6 @@
       "failed_to_update": "Falha ao atualizar música"
     }
   },
-
   "jam_management": {
     "loading_jam": "Carregando detalhes do jam...",
     "error_loading": "Erro ao carregar o Jam",
@@ -1183,5 +1182,12 @@
       "create_hint": "Crie uma nova sessão de jam. Você pode adicionar músicas e gerenciar inscrições depois.",
       "edit_hint": "Atualize os detalhes do jam. As alterações serão salvas imediatamente."
     }
-  }
+  },
+  "notFound": {
+  "title": "Pagina nao encontrada",
+  "heading": "Pagina nao encontrada",
+  "message": "A pagina que voce procura nao existe ou foi movida.",
+  "goHome": "Ir para o inicio",
+  "browseJams": "Explorar Jams"
+}
 }

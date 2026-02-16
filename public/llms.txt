@@ -1,0 +1,36 @@
+# The Jam App
+
+> The easiest way to organize and run live jam sessions - no spreadsheets needed.
+
+## What is The Jam App?
+
+The Jam App is a free web application for organizing in-person jam sessions and open mic nights. Hosts create events, musicians sign up for songs and instrument slots, and audiences follow the live schedule on a public dashboard.
+
+## Key Features
+
+- Create and manage jam sessions with custom schedules
+- Musicians register for songs and pick instrument slots (vocals, guitar, bass, drums, keys)
+- Live public dashboard for venue screens and audience members
+- QR code sharing for quick event access
+- Spotify playlist import to build jam setlists
+- Real-time schedule updates with DJ control panel
+- Multi-language support (Portuguese, English, Spanish)
+
+## How It Works
+
+1. A host creates a jam session on the platform
+2. Musicians browse available jams and register for songs
+3. The host approves registrations and builds the performance schedule
+4. During the event, the host controls playback order via the DJ panel
+5. The audience follows along on the live public dashboard
+
+## Links
+
+- Homepage: https://www.jamapp.com.br
+- Browse Jams: https://www.jamapp.com.br/jams
+
+## Technical Details
+
+- Built with React, TypeScript, and NestJS
+- Hosted on Vercel
+- Available in Portuguese (Brazil), English, and Spanish

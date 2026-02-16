@@ -675,7 +675,7 @@
     "quick_edit": {
       "minutes": "Minutos",
       "seconds": "Segundos",
-      "more_options": "Mas opciones"
+      "more_options": "Más opciones"
     },
     "errors": {
       "failed_to_load": "Error al cargar música",
@@ -1180,5 +1180,12 @@
       "create_hint": "Crea una nueva sesión de jam. Podrás agregar canciones y gestionar inscripciones después.",
       "edit_hint": "Actualiza los detalles del jam. Los cambios se guardaran inmediatamente."
     }
-  }
+  },
+  "notFound": {
+  "title": "Pagina no encontrada",
+  "heading": "Pagina no encontrada",
+  "message": "La pagina que buscas no existe o ha sido movida.",
+  "goHome": "Ir al inicio",
+  "browseJams": "Explorar Jams"
+}
 }
