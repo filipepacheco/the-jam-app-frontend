@@ -1,8 +1,11 @@
 /**
  * Post-build Prerendering Script
  *
- * Serves the dist/ directory locally, visits each route with Puppeteer,
+ * Serves the dist/ directory locally, visits each route with headless Chrome,
  * and saves the fully-rendered HTML back to disk.
+ *
+ * Uses @sparticuz/chromium for Vercel/serverless compatibility,
+ * falls back to local Chrome for development.
  *
  * Usage: npx tsx scripts/prerender.ts
  */
@@ -69,7 +72,7 @@ function startServer(): Promise<ReturnType<typeof createServer>> {
 }
 
 async function prerenderRoute(
-  browser: import('puppeteer').Browser,
+  browser: import('puppeteer-core').Browser,
   route: string
 ): Promise<void> {
   const page = await browser.newPage()
@@ -128,6 +131,56 @@ async function prerenderRoute(
   }
 }
 
+async function launchLocalChrome(puppeteer: typeof import('puppeteer-core')) {
+  const paths = [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium-browser',
+    '/usr/bin/chromium',
+  ]
+  const localChrome = paths.find(p => existsSync(p))
+  if (!localChrome) {
+    throw new Error('No Chrome/Chromium found locally.')
+  }
+  console.log(`Using local Chrome: ${localChrome}`)
+  return puppeteer.default.launch({
+    executablePath: localChrome,
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-web-security',
+      '--disable-features=IsolateOrigins,site-per-process',
+    ],
+  })
+}
+
+async function getBrowser() {
+  const puppeteer = await import('puppeteer-core')
+
+  // Try @sparticuz/chromium first (works on Vercel/serverless)
+  try {
+    const chromium = await import('@sparticuz/chromium')
+    const executablePath = await chromium.default.executablePath()
+    console.log(`Using @sparticuz/chromium: ${executablePath}`)
+    const browser = await puppeteer.default.launch({
+      args: [
+        ...chromium.default.args,
+        '--disable-web-security',
+        '--disable-features=IsolateOrigins,site-per-process',
+      ],
+      defaultViewport: chromium.default.defaultViewport,
+      executablePath,
+      headless: true,
+    })
+    return browser
+  } catch (err) {
+    console.log(`@sparticuz/chromium failed: ${(err as Error).message}`)
+    console.log('Falling back to local Chrome...')
+    return launchLocalChrome(puppeteer)
+  }
+}
+
 async function main() {
   console.log('Starting prerender...')
   console.log(`Dist directory: ${DIST_DIR}`)
@@ -140,17 +193,7 @@ async function main() {
   }
 
   const server = await startServer()
-
-  const puppeteer = await import('puppeteer')
-  const browser = await puppeteer.default.launch({
-    headless: true,
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox',
-      '--disable-web-security',
-      '--disable-features=IsolateOrigins,site-per-process',
-    ],
-  })
+  const browser = await getBrowser()
 
   try {
     for (const route of ROUTES) {
