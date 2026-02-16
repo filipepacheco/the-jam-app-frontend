@@ -3,24 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, UserCircle, LogOut, Globe, Palette } from 'lucide-react'
 import { useAuth } from '../hooks'
+import { LANGUAGES, THEMES } from '../lib/uiConstants'
 
 interface DesktopUserMenuProps {
   className?: string
 }
-
-const languages = [
-  { code: 'en', label: 'English' },
-  { code: 'es', label: 'Espanol' },
-  { code: 'pt', label: 'Portugues' },
-]
-
-const themes = [
-  'light', 'dark', 'cupcake', 'bumblebee', 'emerald', 'corporate',
-  'synthwave', 'retro', 'cyberpunk', 'valentine', 'halloween', 'garden',
-  'forest', 'aqua', 'lofi', 'pastel', 'fantasy', 'wireframe', 'black',
-  'luxury', 'dracula', 'cmyk', 'autumn', 'business', 'acid', 'lemonade',
-  'night', 'coffee', 'winter',
-]
 
 export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
   const { t, i18n } = useTranslation()
@@ -124,7 +111,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
               className="select select-bordered select-sm flex-1"
               aria-label={t('common.select_language')}
             >
-              {languages.map((lang) => (
+              {LANGUAGES.map((lang) => (
                 <option key={lang.code} value={lang.code}>{lang.label}</option>
               ))}
             </select>
@@ -133,11 +120,11 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
             <Palette className="size-4 text-base-content/50 shrink-0" />
             <select
               onChange={(e) => setTheme(e.target.value)}
-              defaultValue={currentTheme}
+              value={currentTheme}
               className="select select-bordered select-sm flex-1"
               aria-label={t('common.select_theme')}
             >
-              {themes.map((theme) => (
+              {THEMES.map((theme) => (
                 <option key={theme} value={theme}>
                   {theme.charAt(0).toUpperCase() + theme.slice(1)}
                 </option>

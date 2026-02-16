@@ -16,26 +16,13 @@ import {
 import { useAuth } from '../hooks'
 import { FeedbackModal } from './FeedbackModal'
 import { useState } from 'react'
+import { LANGUAGES, THEMES } from '../lib/uiConstants'
 
 interface MobileDrawerProps {
   isOpen: boolean
   onClose: () => void
   hamburgerRef: React.RefObject<HTMLButtonElement | null>
 }
-
-const languages = [
-  { code: 'en', label: 'English' },
-  { code: 'es', label: 'Espanol' },
-  { code: 'pt', label: 'Portugues' },
-]
-
-const themes = [
-  'light', 'dark', 'cupcake', 'bumblebee', 'emerald', 'corporate',
-  'synthwave', 'retro', 'cyberpunk', 'valentine', 'halloween', 'garden',
-  'forest', 'aqua', 'lofi', 'pastel', 'fantasy', 'wireframe', 'black',
-  'luxury', 'dracula', 'cmyk', 'autumn', 'business', 'acid', 'lemonade',
-  'night', 'coffee', 'winter',
-]
 
 export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProps) {
   const { t, i18n } = useTranslation()
@@ -250,7 +237,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
                 className="select select-bordered w-full"
                 aria-label={t('common.select_language')}
               >
-                {languages.map((lang) => (
+                {LANGUAGES.map((lang) => (
                   <option key={lang.code} value={lang.code}>{lang.label}</option>
                 ))}
               </select>
@@ -262,11 +249,11 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
               </label>
               <select
                 onChange={(e) => setTheme(e.target.value)}
-                defaultValue={currentTheme}
+                value={currentTheme}
                 className="select select-bordered w-full"
                 aria-label={t('common.select_theme')}
               >
-                {themes.map((theme) => (
+                {THEMES.map((theme) => (
                   <option key={theme} value={theme}>
                     {theme.charAt(0).toUpperCase() + theme.slice(1)}
                   </option>
