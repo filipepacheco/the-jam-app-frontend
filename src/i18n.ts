@@ -68,8 +68,9 @@ try {
   // ignore storage access errors
 }
 
-// Only use the language detector if we don't have a persisted language
-const i18nBuilder = initialLang ? i18n : i18n.use(LanguageDetector);
+// Always use the language detector so querystring (?lng=en) works,
+// but default to Portuguese when no explicit choice exists.
+const i18nBuilder = i18n.use(LanguageDetector);
 
 // pass the i18n instance to react-i18next.
 i18nBuilder.use(initReactI18next)
@@ -77,9 +78,9 @@ i18nBuilder.use(initReactI18next)
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
     fallbackLng: 'pt',
-    // If an initial language was found in localStorage, use it to initialize i18n.
-    // Otherwise, leave i18n to detect the language via LanguageDetector.
-    lng: initialLang,
+    // Use persisted language if available; otherwise let detection run
+    // (localStorage > querystring). If nothing is found, default to Portuguese.
+    lng: initialLang || undefined,
     debug: import.meta.env.DEV,
 
     ns: ['translation'],
@@ -94,7 +95,12 @@ i18nBuilder.use(initReactI18next)
       useSuspense: false,
     },
     detection: {
-      order: ['localStorage', 'navigator'],
+      // Portuguese is the default (via fallbackLng). Only override if user
+      // explicitly chose a language (localStorage) or via URL param (?lng=en).
+      // Navigator is intentionally excluded so crawlers and first-time visitors
+      // see Portuguese content (target audience is Brazilian).
+      order: ['localStorage', 'querystring'],
+      lookupQuerystring: 'lng',
       caches: ['localStorage'],
     },
     resources: {
