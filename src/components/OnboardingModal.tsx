@@ -29,7 +29,7 @@ const isEmailPrefix = (name: string): boolean => {
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const { t } = useTranslation()
-  const { user, completeOnboarding, clearNewUserFlag } = useAuth()
+  const { user, completeOnboarding } = useAuth()
   // Don't prefill if name looks like an email prefix
   const initialName = user?.name && !isEmailPrefix(user.name) ? user.name : ''
   const [name, setName] = useState(initialName)
@@ -110,11 +110,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
   }
 
-  const handleSkip = () => {
-    clearNewUserFlag()
-    onClose()
-  }
-
   if (!isOpen) return null
 
   return (
@@ -125,14 +120,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       closeDisabled={true}
       footer={
         <>
-        {/*  <button*/}
-        {/*    type="button"*/}
-        {/*    className="btn btn-ghost"*/}
-        {/*    onClick={handleSkip}*/}
-        {/*    disabled={isLoading}*/}
-        {/*  >*/}
-        {/*    Skip for now*/}
-        {/*  </button>*/}
           <button
             type="button"
             className={`btn btn-primary ${isLoading ? 'loading' : ''}`}

@@ -4,7 +4,7 @@
  */
 
 import {createContext, type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import type {AuthContextType, AuthUser, UpdateProfileDto, UserRole} from '../types/auth.types'
+import type {AuthContextType, AuthUser, SkillLevel, UpdateProfileDto, UserRole} from '../types/auth.types'
 import type {OAuthProvider} from '../lib/supabase'
 import {
   getCurrentSession,
@@ -18,6 +18,7 @@ import {
 } from '../lib/supabase'
 import {clearAuth} from '../lib/auth'
 import {apiClient} from '../lib/api'
+import {getOfflineQueueManager} from '../services/offlineQueue'
 
 /**
  * Derive user role from profile data.
@@ -269,6 +270,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Clear local state
       clearAuth()
       localStorage.removeItem('auth_user')
+      getOfflineQueueManager().clearAll()
       setUser(null)
       setRoleState('viewer')
       setIsAuthenticated(false)
@@ -281,6 +283,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Still clear local state even if unexpected errors occur
       clearAuth()
       localStorage.removeItem('auth_user')
+      getOfflineQueueManager().clearAll()
       setUser(null)
       setRoleState('viewer')
       setIsAuthenticated(false)
@@ -334,15 +337,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * Switch user role
    */
   const setRole = useCallback((newRole: UserRole) => {
-    if (user) {
-      const updatedUser = { ...user, role: newRole }
-      localStorage.setItem('auth_user', JSON.stringify(updatedUser))
-      setUser(updatedUser)
-      setRoleState(newRole)
-    } else {
-      setRoleState(newRole)
-    }
-  }, [user])
+    setUser(prev => {
+      if (prev) {
+        const updatedUser = { ...prev, role: newRole }
+        localStorage.setItem('auth_user', JSON.stringify(updatedUser))
+        return updatedUser
+      }
+      return prev
+    })
+    setRoleState(newRole)
+  }, [])
 
   /**
    * Update user profile
@@ -359,14 +363,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Complete onboarding - update instrument, skill level, and contact info
    */
-  const completeOnboarding = useCallback(async (instrument: string, level: string, profileData?: { name?: string; phone?: string; contact?: string }): Promise<{ success: boolean; error?: string }> => {
+  const completeOnboarding = useCallback(async (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }): Promise<{ success: boolean; error?: string }> => {
     if (!user) {
       return { success: false, error: 'Not authenticated' }
     }
 
     try {
       // Prepare update object with required fields (instrument and level are required for registrationComplete)
-      const updatePayload: UpdateProfileDto = { instrument, level: level as any }
+      const updatePayload: UpdateProfileDto = { instrument, level }
       if (profileData?.name) updatePayload.name = profileData.name
       if (profileData?.phone) updatePayload.phone = profileData.phone
       if (profileData?.contact) updatePayload.contact = profileData.contact

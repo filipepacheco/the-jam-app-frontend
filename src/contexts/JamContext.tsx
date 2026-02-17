@@ -100,8 +100,11 @@ export function JamProvider({ children }: { children: ReactNode }) {
     (jamData: JamResponseDto | null | undefined): UserRole => {
       if (!user || !jamData) return 'public'
 
-      // Check if host (assuming hostName matches user name)
-      if (jamData.hostName && jamData.hostName === user.name) {
+      // Check if host by musician ID (primary) or name fallback
+      if (jamData.hostMusicianId && jamData.hostMusicianId === user.id) {
+        return 'host'
+      }
+      if (!jamData.hostMusicianId && jamData.hostName && jamData.hostName === user.name) {
         return 'host'
       }
 

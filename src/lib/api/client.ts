@@ -131,12 +131,13 @@ class ApiClient {
           // Prevent multiple simultaneous refreshes
           if (!isRefreshing) {
             isRefreshing = true
-            refreshPromise = refreshAccessToken()
+            refreshPromise = refreshAccessToken().finally(() => {
+              isRefreshing = false
+              refreshPromise = null
+            })
           }
 
           const newToken = await refreshPromise
-          isRefreshing = false
-          refreshPromise = null
 
           if (newToken && error.config) {
             // Retry request with new token

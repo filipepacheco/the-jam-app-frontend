@@ -1,4 +1,4 @@
-import {lazy, Suspense, useEffect} from 'react'
+import {lazy, Suspense, useEffect, useMemo} from 'react'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
@@ -26,6 +26,7 @@ import {PublicDashboardPage} from './pages/PublicDashboardPage'
 import AuthCallbackPage from "./pages/tabs/AuthCallbackPage.tsx"
 import {AuthProvider, JamProvider} from './contexts'
 import {FullPageSpinner, OnboardingModal} from './components'
+import {ErrorBoundary} from './components/ErrorBoundary'
 import {useAuth} from './hooks'
 import {NotFoundPage} from './pages/NotFoundPage'
 
@@ -77,7 +78,7 @@ function HomePage() {
 
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
 
-  const homeJsonLd: Record<string, unknown>[] = [
+  const homeJsonLd: Record<string, unknown>[] = useMemo(() => [
     {
       '@type': 'WebSite',
       name: 'Jam App',
@@ -130,7 +131,7 @@ function HomePage() {
       url: siteUrl,
       logo: `${siteUrl}/og-image.jpg`,
     },
-  ]
+  ], [t, siteUrl, currentLang])
 
   return (
     <>
@@ -159,9 +160,6 @@ function HomePage() {
  * Routes and page rendering
  */
 function AppContent() {
-  // Check URL params for different test modes FIRST
-  new URLSearchParams(window.location.search);
-
     // Normal app routing
   return (
     <Suspense fallback={<RouteLoadingFallback />}>
@@ -290,6 +288,7 @@ function App() {
   }, [])
 
   return (
+    <ErrorBoundary>
     <BrowserRouter>
       <SWRConfig
         value={{
@@ -307,6 +306,7 @@ function App() {
       <SpeedInsights />
       <Analytics/>
     </BrowserRouter>
+    </ErrorBoundary>
   )
 }
 

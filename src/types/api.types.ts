@@ -133,6 +133,7 @@ export interface JamResponseDto {
   id: string
   name: string
   hostName: string
+  hostMusicianId?: string | null
   description?: string
   date?: string
   location?: string
