@@ -76,7 +76,7 @@ export function PublicDashboardPage() {
   // Build ticker text for carousel header
   const tickerText = (() => {
     if (layout !== 'carousel' || !jamName) return null
-    const host = typeof window !== 'undefined' ? window.location.host : ''
+    const host = typeof window !== 'undefined' ? window.location.host.replace(/^www\./, '') : ''
     const slug = dashboardData?.slug
     const shortCode = dashboardData?.shortCode
     // Use short root-level URL: jamapp.com.br/slug
