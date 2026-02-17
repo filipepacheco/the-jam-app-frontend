@@ -12,7 +12,7 @@ interface DesktopUserMenuProps {
 export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
-  const { isAuthenticated, user, logout } = useAuth()
+  const { isAuthenticated, user, logout, isLoading } = useAuth()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const currentLang = (i18n.language || i18n.resolvedLanguage || 'pt').split('-')[0]
@@ -49,6 +49,15 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
     } catch {
       // ignore
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className={`flex items-center gap-2 ${className}`}>
+        <div className="w-7 h-7 rounded-full bg-base-300 animate-pulse" />
+        <div className="w-16 h-4 rounded bg-base-300 animate-pulse" />
+      </div>
+    )
   }
 
   if (!isAuthenticated || !user) {

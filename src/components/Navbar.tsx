@@ -40,7 +40,7 @@ function NavLink({ href, icon, label, isActive, onClick }: {
 function Navbar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { isAuthenticated, user, isViewer } = useAuth()
+  const { isAuthenticated, user, isViewer, isLoading } = useAuth()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
@@ -102,7 +102,7 @@ function Navbar() {
         )}
 
         {/* Register Button - Viewer/Anonymous Only */}
-        {isViewer() && !isAuthenticated && (
+        {!isLoading && isViewer() && !isAuthenticated && (
           <a href="/register" className="btn btn-primary btn-sm whitespace-nowrap">
             {t('nav.join')}
           </a>

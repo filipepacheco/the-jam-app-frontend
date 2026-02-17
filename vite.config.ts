@@ -26,11 +26,26 @@ export default defineConfig({
   },
   build: {
     cssMinify: 'lightningcss',
-    // Increase chunk size warning limit (we have code splitting already)
-    chunkSizeWarningLimit: 1000, // 1000 KB (main bundle is mostly vendor code)
-    // Suppress CSS warnings from DaisyUI's modern CSS features
+    chunkSizeWarningLimit: 300,
     rollupOptions: {
-
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            // Core React runtime - changes rarely, caches well
+            if (id.includes('react-dom') || id.includes('react-router') || id.includes('/react/'))
+              return 'vendor-react'
+            // Auth + API layer
+            if (id.includes('@supabase') || id.includes('axios') || id.includes('/swr/'))
+              return 'vendor-api'
+            // UI libraries
+            if (id.includes('framer-motion') || id.includes('lucide-react'))
+              return 'vendor-ui'
+            // i18n
+            if (id.includes('i18next'))
+              return 'vendor-i18n'
+          }
+        },
+      },
     },
   },
 })
