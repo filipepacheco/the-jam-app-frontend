@@ -3,6 +3,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
 import {useTranslation} from 'react-i18next'
+import {useAppLanguage} from './hooks'
 import {SWRConfig} from 'swr'
 import {SWR_POLLING_DEFAULTS} from './config/swrDefaults'
 import {apiClient} from './lib/api'
@@ -72,14 +73,18 @@ function RouteLoadingFallback() {
  */
 function HomePage() {
   const { t } = useTranslation()
+  const { currentLang } = useAppLanguage()
 
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
 
   const homeJsonLd: Record<string, unknown>[] = [
     {
       '@type': 'WebSite',
-      name: 'The Jam App',
+      name: 'Jam App',
+      alternateName: 'The Jam App',
       url: siteUrl,
+      description: t('seo.homepage.description_enhanced'),
+      inLanguage: currentLang === 'pt' ? 'pt-BR' : currentLang,
       potentialAction: {
         '@type': 'SearchAction',
         target: {
@@ -91,15 +96,39 @@ function HomePage() {
     },
     {
       '@type': 'WebApplication',
-      name: 'The Jam App',
+      name: 'Jam App',
+      alternateName: 'The Jam App',
       url: siteUrl,
+      description: t('seo.homepage.description_enhanced'),
       applicationCategory: 'EntertainmentApplication',
       operatingSystem: 'Any',
+      browserRequirements: 'Requires JavaScript',
+      inLanguage: ['pt-BR', 'en', 'es'],
+      image: `${siteUrl}/og-image.jpg`,
       offers: {
         '@type': 'Offer',
         price: '0',
         priceCurrency: 'BRL',
       },
+      featureList: [
+        t('seo.features.create_jams'),
+        t('seo.features.live_dashboard'),
+        t('seo.features.musician_registration'),
+        t('seo.features.setlist_control'),
+        t('seo.features.qr_sharing'),
+        t('seo.features.spotify_import'),
+      ],
+      author: {
+        '@type': 'Organization',
+        name: 'Jam App',
+        url: siteUrl,
+      },
+    },
+    {
+      '@type': 'Organization',
+      name: 'Jam App',
+      url: siteUrl,
+      logo: `${siteUrl}/og-image.jpg`,
     },
   ]
 

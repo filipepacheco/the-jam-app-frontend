@@ -148,6 +148,7 @@ function buildOgHtml(opts: {
   image?: string;
   type?: string;
   locale?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }): string {
   const {
     title,
@@ -156,6 +157,7 @@ function buildOgHtml(opts: {
     image = '',
     type = 'website',
     locale = 'pt_BR',
+    jsonLd,
   } = opts;
 
   const esc = (s: string) =>
@@ -163,6 +165,14 @@ function buildOgHtml(opts: {
 
   const imageTag = image
     ? `<meta property="og:image" content="${esc(image)}" />\n    <meta property="og:image:width" content="1200" />\n    <meta property="og:image:height" content="630" />\n    <meta name="twitter:image" content="${esc(image)}" />`
+    : '';
+
+  const jsonLdTag = jsonLd
+    ? `<script type="application/ld+json">${JSON.stringify(
+        Array.isArray(jsonLd)
+          ? { '@context': 'https://schema.org', '@graph': jsonLd }
+          : { '@context': 'https://schema.org', ...jsonLd },
+      )}</script>`
     : '';
 
   return `<!DOCTYPE html>
@@ -186,6 +196,8 @@ function buildOgHtml(opts: {
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(description)}" />
 
+  ${jsonLdTag}
+
   <!-- Redirect real browsers immediately -->
   <meta http-equiv="refresh" content="0;url=${esc(url)}" />
 </head>
@@ -193,6 +205,66 @@ function buildOgHtml(opts: {
   <p>Redirecionando para <a href="${esc(url)}">${esc(title)}</a>...</p>
 </body>
 </html>`;
+}
+
+// --- Structured data ---
+
+function homeStructuredData(siteUrl: string, ogImage: string): Record<string, unknown>[] {
+  return [
+    {
+      '@type': 'WebSite',
+      name: 'Jam App',
+      alternateName: 'The Jam App',
+      url: siteUrl,
+      description: PT.homeDescription,
+      inLanguage: 'pt-BR',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${siteUrl}/jams?q={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'WebApplication',
+      name: 'Jam App',
+      alternateName: 'The Jam App',
+      url: siteUrl,
+      description: PT.homeDescription,
+      applicationCategory: 'EntertainmentApplication',
+      operatingSystem: 'Any',
+      browserRequirements: 'Requires JavaScript',
+      inLanguage: ['pt-BR', 'en', 'es'],
+      image: ogImage,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'BRL',
+      },
+      featureList: [
+        'Criar e gerenciar jam sessions ao vivo',
+        'Painel publico em tempo real para o publico',
+        'Inscricao de musicos por instrumento',
+        'Controle de setlist e ordem das musicas',
+        'QR code para compartilhar jams',
+        'Importar playlists do Spotify',
+      ],
+      author: {
+        '@type': 'Organization',
+        name: 'Jam App',
+        url: siteUrl,
+      },
+    },
+    {
+      '@type': 'Organization',
+      name: 'Jam App',
+      url: siteUrl,
+      logo: ogImage,
+      sameAs: [],
+    },
+  ];
 }
 
 // --- Middleware handler ---
@@ -216,6 +288,7 @@ export default function middleware(request: Request) {
           description: PT.homeDescription,
           url: siteUrl,
           image: ogImage,
+          jsonLd: homeStructuredData(siteUrl, ogImage),
         }),
         { headers: htmlHeaders() },
       );

@@ -959,6 +959,14 @@
       "title": "Encontre Jam Sessions Perto de Você",
       "description": "Encontre e participe de jam sessions ao vivo, open mics e eventos musicais na sua região. Veja as próximas jams, inscreva-se em musicas e conecte-se com músicos locais.",
       "keywords": "jam sessions, eventos musicais, open mic, noite de jam, encontrar jam sessions, eventos de musica ao vivo"
+    },
+    "features": {
+      "create_jams": "Criar e gerenciar jam sessions ao vivo",
+      "live_dashboard": "Painel publico em tempo real para o publico",
+      "musician_registration": "Inscrição de músicos por instrumento",
+      "setlist_control": "Controle de setlist e ordem das musicas",
+      "qr_sharing": "QR code para compartilhar jams",
+      "spotify_import": "Importar playlists do Spotify"
     }
   },
   "feedback": {
