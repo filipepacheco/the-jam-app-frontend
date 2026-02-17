@@ -162,7 +162,7 @@ function buildOgHtml(opts: {
     s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   const imageTag = image
-    ? `<meta property="og:image" content="${esc(image)}" />\n    <meta name="twitter:image" content="${esc(image)}" />`
+    ? `<meta property="og:image" content="${esc(image)}" />\n    <meta property="og:image:width" content="1200" />\n    <meta property="og:image:height" content="630" />\n    <meta name="twitter:image" content="${esc(image)}" />`
     : '';
 
   return `<!DOCTYPE html>
@@ -206,6 +206,7 @@ export default function middleware(request: Request) {
   if (!route) return next();
 
   const siteUrl = process.env.SITE_URL || url.origin;
+  const ogImage = `${siteUrl}/og-image.jpg`;
 
   switch (route.type) {
     case 'home':
@@ -214,6 +215,7 @@ export default function middleware(request: Request) {
           title: PT.homeTitle,
           description: PT.homeDescription,
           url: siteUrl,
+          image: ogImage,
         }),
         { headers: htmlHeaders() },
       );
@@ -224,6 +226,7 @@ export default function middleware(request: Request) {
           title: PT.browseTitle,
           description: PT.browseDescription,
           url: `${siteUrl}/jams`,
+          image: ogImage,
         }),
         { headers: htmlHeaders() },
       );
@@ -231,13 +234,13 @@ export default function middleware(request: Request) {
     case 'jam-detail':
     case 'jam-dashboard':
     case 'jam-register':
-      return handleJamRoute(route.identifier, route.type, siteUrl, url.pathname);
+      return handleJamRoute(route.identifier, route.type, siteUrl, ogImage, url.pathname);
 
     case 'short-code':
-      return handleJamRoute(route.code, 'jam-detail', siteUrl, url.pathname);
+      return handleJamRoute(route.code, 'jam-detail', siteUrl, ogImage, url.pathname);
 
     case 'slug':
-      return handleJamRoute(route.slug, 'jam-detail', siteUrl, url.pathname);
+      return handleJamRoute(route.slug, 'jam-detail', siteUrl, ogImage, url.pathname);
   }
 }
 
@@ -245,6 +248,7 @@ async function handleJamRoute(
   identifier: string,
   variant: 'jam-detail' | 'jam-dashboard' | 'jam-register',
   siteUrl: string,
+  ogImage: string,
   pathname: string,
 ): Promise<Response> {
   const jam = await fetchJam(identifier);
@@ -285,7 +289,7 @@ async function handleJamRoute(
   }
 
   return new Response(
-    buildOgHtml({ title, description, url: canonicalUrl }),
+    buildOgHtml({ title, description, url: canonicalUrl, image: ogImage }),
     { headers: htmlHeaders() },
   );
 }
