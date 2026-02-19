@@ -43,10 +43,12 @@ export function getJamShortPath(jam: JamLike): string {
 
 /**
  * Get the full shareable URL for a jam.
+ * Uses /:slug directly (shortest readable URL) when available, falls back to /jams/:id.
  */
 export function getJamShareUrl(jam: JamLike): string {
   const baseUrl = import.meta.env.VITE_SITE_URL || window.location.origin
-  return `${baseUrl}${getJamPath(jam)}`
+  if (jam.slug) return `${baseUrl}/${jam.slug}`
+  return `${baseUrl}/jams/${jam.id}`
 }
 
 /**

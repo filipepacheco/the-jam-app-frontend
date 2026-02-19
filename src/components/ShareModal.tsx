@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { QRCodeSVG } from 'qrcode.react'
 import { Share2, Copy, Check } from 'lucide-react'
 import {
-  getJamShareUrl,
+  getJamShareUrlFromJam,
   copyToClipboard,
   shareViaWhatsApp,
   canUseNativeShare,
@@ -20,15 +20,16 @@ interface ShareModalProps {
   isOpen: boolean
   onClose: () => void
   jamId: string
+  jamSlug?: string | null
   jamName?: string
 }
 
 type FeedbackType = 'success' | 'instagram' | null
 
-export function ShareModal({ isOpen, onClose, jamId, jamName }: ShareModalProps) {
+export function ShareModal({ isOpen, onClose, jamId, jamSlug, jamName }: ShareModalProps) {
   const { t } = useTranslation()
   const [feedback, setFeedback] = useState<FeedbackType>(null)
-  const shareUrl = getJamShareUrl(jamId)
+  const shareUrl = getJamShareUrlFromJam({ id: jamId, slug: jamSlug })
   const showNativeShare = canUseNativeShare()
 
   // Reset feedback when modal opens

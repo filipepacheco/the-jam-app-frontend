@@ -62,9 +62,62 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
 
   if (!isAuthenticated || !user) {
     return (
-      <a href="/register" className={`btn btn-ghost btn-sm ${className}`}>
-        {t('nav.login')}
-      </a>
+      <div className={`dropdown dropdown-end ${className}`}>
+        <button
+          tabIndex={0}
+          className="btn btn-ghost gap-1"
+          aria-label={t('nav.settings', { defaultValue: 'Settings' })}
+        >
+          <Globe className="size-4" />
+          <ChevronDown className="size-4" aria-hidden="true" />
+        </button>
+        <div
+          tabIndex={0}
+          className="dropdown-content z-50 shadow-lg bg-base-100 rounded-box w-64 border border-base-300"
+        >
+          {/* Settings */}
+          <div className="px-4 py-3 flex flex-col gap-2.5">
+            <div className="flex items-center gap-2">
+              <Globe className="size-4 text-base-content/50 shrink-0" />
+              <select
+                onChange={(e) => changeLanguage(e.target.value)}
+                value={currentLang}
+                className="select select-bordered select-sm flex-1"
+                aria-label={t('common.select_language')}
+              >
+                {LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>{lang.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-center gap-2">
+              <Palette className="size-4 text-base-content/50 shrink-0" />
+              <select
+                onChange={(e) => setTheme(e.target.value)}
+                value={currentTheme}
+                className="select select-bordered select-sm flex-1"
+                aria-label={t('common.select_theme')}
+              >
+                {THEMES.map((theme) => (
+                  <option key={theme} value={theme}>
+                    {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Login */}
+          <div className="border-t border-base-300 p-2">
+            <a
+              href="/login"
+              className="btn btn-ghost btn-sm btn-block justify-start gap-2"
+            >
+              {t('nav.login')}
+            </a>
+          </div>
+        </div>
+      </div>
     )
   }
 

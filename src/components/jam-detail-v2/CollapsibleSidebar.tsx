@@ -75,6 +75,7 @@ export function CollapsibleSidebar({
           isOpen={isShareModalOpen}
           onClose={() => setIsShareModalOpen(false)}
           jamId={jam.id}
+          jamSlug={jam.slug}
           jamName={jam.name}
         />
       )}

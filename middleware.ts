@@ -139,6 +139,38 @@ const PT = {
   fallbackJamDescription: 'Participe desta jam session no The Jam App.',
 };
 
+const HOME_BODY = `
+  <main>
+    <h1>The Jam App - Organize suas Jam Sessions</h1>
+    <p>Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, musicos se inscrevem em musicas e o publico acompanha tudo em tempo real.</p>
+    <section>
+      <h2>Como funciona</h2>
+      <ul>
+        <li>Hosts criam jam sessions com data, local e setlist</li>
+        <li>Musicos se inscrevem por instrumento (guitarra, baixo, bateria, teclado, vocais)</li>
+        <li>O publico acompanha ao vivo pelo painel publico em tempo real</li>
+        <li>Controle de setlist e ordem das musicas durante o evento</li>
+        <li>Compartilhe a jam via QR code ou link curto</li>
+        <li>Importe playlists do Spotify para montar o setlist</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Para quem e?</h2>
+      <ul>
+        <li><strong>Hosts</strong>: organize eventos musicais, aprove inscricoes e controle o setlist ao vivo</li>
+        <li><strong>Musicos</strong>: encontre jams, inscreva-se em musicas e gerencie sua agenda de performances</li>
+        <li><strong>Publico</strong>: acompanhe qual musica esta tocando agora e quem esta no palco</li>
+      </ul>
+    </section>
+  </main>`;
+
+const BROWSE_BODY = `
+  <main>
+    <h1>Jam Sessions - The Jam App</h1>
+    <p>Encontre jam sessions perto de voce. Participe como musico ou acompanhe ao vivo pelo painel publico.</p>
+    <p>Navegue pelas jam sessions ativas, veja o setlist, os musicos inscritos e acompanhe o evento em tempo real.</p>
+  </main>`;
+
 // --- HTML generation ---
 
 function buildOgHtml(opts: {
@@ -149,6 +181,7 @@ function buildOgHtml(opts: {
   type?: string;
   locale?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  bodyHtml?: string;
 }): string {
   const {
     title,
@@ -158,6 +191,7 @@ function buildOgHtml(opts: {
     type = 'website',
     locale = 'pt_BR',
     jsonLd,
+    bodyHtml,
   } = opts;
 
   const esc = (s: string) =>
@@ -174,6 +208,8 @@ function buildOgHtml(opts: {
           : { '@context': 'https://schema.org', ...jsonLd },
       )}</script>`
     : '';
+
+  const body = bodyHtml ?? `<p>Redirecionando para <a href="${esc(url)}">${esc(title)}</a>...</p>`;
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -202,7 +238,7 @@ function buildOgHtml(opts: {
   <meta http-equiv="refresh" content="0;url=${esc(url)}" />
 </head>
 <body>
-  <p>Redirecionando para <a href="${esc(url)}">${esc(title)}</a>...</p>
+  ${body}
 </body>
 </html>`;
 }
@@ -289,6 +325,7 @@ export default function middleware(request: Request) {
           url: siteUrl,
           image: ogImage,
           jsonLd: homeStructuredData(siteUrl, ogImage),
+          bodyHtml: HOME_BODY,
         }),
         { headers: htmlHeaders() },
       );
@@ -300,6 +337,7 @@ export default function middleware(request: Request) {
           description: PT.browseDescription,
           url: `${siteUrl}/jams`,
           image: ogImage,
+          bodyHtml: BROWSE_BODY,
         }),
         { headers: htmlHeaders() },
       );
@@ -330,6 +368,8 @@ async function handleJamRoute(
   let description: string;
   let canonicalUrl: string;
 
+  let bodyHtml: string | undefined;
+
   if (jam) {
     const baseName = jam.name;
     const jamPath = jam.slug ? `/${jam.slug}` : `/jams/${identifier}`;
@@ -354,6 +394,22 @@ async function handleJamRoute(
     if (jam.location) parts.push(`Local: ${jam.location}`);
     if (jam.hostName) parts.push(`Host: ${jam.hostName}`);
     description = parts.length > 0 ? parts.join(' | ') : PT.fallbackJamDescription;
+
+    const esc = (s: string) =>
+      s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const details: string[] = [];
+    if (jam.location) details.push(`<li>Local: ${esc(jam.location)}</li>`);
+    if (jam.date) details.push(`<li>Data: ${esc(new Date(jam.date).toLocaleDateString('pt-BR'))}</li>`);
+    if (jam.hostName) details.push(`<li>Host: ${esc(jam.hostName)}</li>`);
+    if (jam.status) details.push(`<li>Status: ${esc(jam.status)}</li>`);
+
+    bodyHtml = `
+  <main>
+    <h1>${esc(title)}</h1>
+    <p>${esc(description)}</p>
+    ${details.length > 0 ? `<ul>${details.join('')}</ul>` : ''}
+  </main>`;
   } else {
     // API failed or jam not found - use generic Portuguese fallback
     title = `Jam Session - ${PT.siteName}`;
@@ -362,7 +418,7 @@ async function handleJamRoute(
   }
 
   return new Response(
-    buildOgHtml({ title, description, url: canonicalUrl, image: ogImage }),
+    buildOgHtml({ title, description, url: canonicalUrl, image: ogImage, bodyHtml }),
     { headers: htmlHeaders() },
   );
 }

@@ -4,6 +4,7 @@
  */
 
 import {useNavigate, useParams} from 'react-router-dom'
+import {formatJamDuration} from '../../lib/formatters'
 import {useAuth} from '../../hooks'
 import useSWR from 'swr'
 import {useCallback, useMemo, useState, useEffect} from 'react'
@@ -354,7 +355,7 @@ export function JamDetailPageV2() {
                                 icon: '⏱️',
                                 label: t('jams.info.duration'),
                                 value: totalDurationSeconds > 0
-                                    ? `${Math.floor(totalDurationSeconds / 60)}m`
+                                    ? formatJamDuration(totalDurationSeconds)
                                     : `${totalDurationSeconds}s`,
                             },
                             {

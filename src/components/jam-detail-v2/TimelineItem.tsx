@@ -2,6 +2,7 @@ import type {ScheduleResponseDto} from '../../types/api.types'
 import type {AuthUser} from '../../types/auth.types'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentIcon} from '../schedule/RegistrationList'
+import {formatJamDuration} from '../../lib/formatters'
 
 interface TimelineItemProps {
   schedule: ScheduleResponseDto
@@ -61,7 +62,7 @@ export function TimelineItem({
           {/* Duration */}
           <div>
             <p className="text-xs text-base-content/60 font-semibold">{t('jams.info.duration')}</p>
-            <p className="font-bold tabular-nums"><span aria-hidden="true">⏱️</span> {Math.floor((schedule.music?.duration || 0) / 60)}m</p>
+            <p className="font-bold tabular-nums"><span aria-hidden="true">⏱️</span> {formatJamDuration(schedule.music?.duration || 0)}</p>
           </div>
 
           {/* Musicians Registered */}

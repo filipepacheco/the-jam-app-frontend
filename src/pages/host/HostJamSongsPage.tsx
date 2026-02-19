@@ -8,6 +8,7 @@
 
 import {useCallback, useMemo, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
+import {formatJamDuration} from '../../lib/formatters'
 import useSWR from 'swr'
 import {musicService} from '../../services'
 import type {JamResponseDto, MusicResponseDto} from '../../types/api.types.ts'
@@ -368,13 +369,13 @@ export function HostJamSongsPage() {
             <div className="stat">
               <div className="stat-title">{t('jams.total_duration')}</div>
               <div className="stat-value text-primary">
-                {Math.floor(songs.reduce((sum, s) => sum + (s.duration || 0), 0) / 60)}m
+                {formatJamDuration(songs.reduce((sum, s) => sum + (s.duration || 0), 0))}
               </div>
             </div>
             <div className="stat">
               <div className="stat-title">{t('jams.average_song')}</div>
               <div className="stat-value text-primary">
-                {Math.round(songs.reduce((sum, s) => sum + (s.duration || 0), 0) / songs.length / 60)}m
+                {formatJamDuration(Math.round(songs.reduce((sum, s) => sum + (s.duration || 0), 0) / songs.length))}
               </div>
             </div>
           </div>

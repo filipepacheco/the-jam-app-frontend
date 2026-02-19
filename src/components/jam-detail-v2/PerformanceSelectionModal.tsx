@@ -6,6 +6,7 @@
 import { useTranslation } from 'react-i18next'
 import type { ScheduleResponseDto, RegistrationResponseDto } from '../../types/api.types'
 import { Modal } from '../Modal'
+import { formatJamDuration } from '../../lib/formatters'
 
 interface PerformanceSelectionModalProps {
   performances: ScheduleResponseDto[]
@@ -92,7 +93,7 @@ export function PerformanceSelectionModal({
                   <div className="flex items-center gap-3 mt-2 text-xs text-base-content/60">
                     <span>
                       <span aria-hidden="true">⏱️</span>{' '}
-                      {Math.floor((schedule.music?.duration || 0) / 60)}m
+                      {formatJamDuration(schedule.music?.duration || 0)}
                     </span>
                     <span>
                       <span aria-hidden="true">👥</span>{' '}
