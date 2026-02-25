@@ -26,24 +26,41 @@ interface ApiResponse {
 }
 
 async function fetchPublicJams(): Promise<JamResponse[]> {
-  try {
-    const response = await fetch(`${API_URL}/jams?skip=0&take=500`)
-    if (!response.ok) {
-      console.warn(`API returned ${response.status} - using static sitemap only`)
-      return []
-    }
-    const json: ApiResponse = await response.json()
-    if (!json.success) return []
+  const PAGE_SIZE = 100
+  const all: JamResponse[] = []
+  let skip = 0
 
-    // Handle both paginated and array responses
-    const data = json.data
-    if (Array.isArray(data)) return data
-    if (data && 'data' in data && Array.isArray(data.data)) return data.data
-    return []
+  try {
+    while (true) {
+      const response = await fetch(`${API_URL}/jams?skip=${skip}&take=${PAGE_SIZE}`)
+      if (!response.ok) {
+        console.warn(`API returned ${response.status} - using static sitemap only`)
+        return []
+      }
+      const json: ApiResponse = await response.json()
+      if (!json.success) return []
+
+      // Handle both paginated ({ data: [...] }) and plain array responses
+      const data = json.data
+      let page: JamResponse[]
+      if (Array.isArray(data)) {
+        page = data
+      } else if (data && 'data' in data && Array.isArray(data.data)) {
+        page = data.data
+      } else {
+        break
+      }
+
+      all.push(...page)
+      if (page.length < PAGE_SIZE) break
+      skip += PAGE_SIZE
+    }
   } catch (err) {
     console.warn('Failed to fetch jams from API:', (err as Error).message)
     return []
   }
+
+  return all
 }
 
 function buildJamUrl(jam: JamResponse): string {
