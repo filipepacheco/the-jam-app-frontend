@@ -140,7 +140,7 @@ async function fetchJam(identifier: string): Promise<JamData | null> {
 
 const PT = {
   siteName: 'Jam App',
-  homeTitle: 'Organize sua Jam Night | Jam App',
+  homeTitle: 'Organize sua Jam | Jam App',
   homeDescription:
     'Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, musicos se inscrevem em musicas e o publico acompanha tudo em tempo real.',
   browseTitle: 'Jam Sessions e Open Mics | Jam App',
@@ -153,8 +153,8 @@ const PT = {
 
 const HOME_BODY = `
   <main>
-    <h1>Organize sua Jam Night | Jam App</h1>
-    <p>Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, musicos se inscrevem em musicas e o publico acompanha tudo em tempo real.</p>
+    <h1>Organize sua Jam | Jam App</h1>
+    <p>Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, músicos se inscrevem em músicas e o público acompanha tudo em tempo real.</p>
     <section>
       <h2>Como funciona</h2>
       <ul>
@@ -312,13 +312,13 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
         'Plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem e o publico acompanha em tempo real.',
       logo: {
         '@type': 'ImageObject',
-        url: ogImage,
-        width: 1200,
-        height: 630,
+        url: `${siteUrl}/web/icons8-concert-color-96.png`,
+        width: 96,
+        height: 96,
       },
       contactPoint: {
         '@type': 'ContactPoint',
-        contactType: 'customer support',
+        contactType: 'customer service',
         url: siteUrl,
       },
     },
@@ -342,12 +342,8 @@ function browseStructuredData(siteUrl: string): Record<string, unknown>[] {
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'Jam Sessions',
-          item: `${siteUrl}/jams`,
-        },
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Jam Sessions', item: `${siteUrl}/jams` },
       ],
     },
   ];
@@ -373,7 +369,10 @@ function jamStructuredData(
     description:
       jam.description ?? 'Jam session no Jam App. Participe como musico ou acompanhe ao vivo.',
     eventStatus: eventStatusMap[jam.status] ?? 'https://schema.org/EventScheduled',
-    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    // attendanceMode matches location type: offline only when a physical venue is known
+    eventAttendanceMode: jam.location
+      ? 'https://schema.org/OfflineEventAttendanceMode'
+      : 'https://schema.org/OnlineEventAttendanceMode',
     image: ogImage,
     organizer: {
       '@type': 'Organization',

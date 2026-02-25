@@ -107,7 +107,7 @@ export function BrowseJamsPage() {
       <SEO
         title={t('seo.browse.title', { defaultValue: t('jams.browse.title') })}
         description={t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') })}
-        keywords={t('seo.browse.keywords', { defaultValue: 'jam sessions, live music events, open mic, jam night, music meetup' })}
+        keywords={t('seo.browse.keywords', { defaultValue: 'jam sessions, live music events, open mic, jam, jams, music meetup' })}
         canonical={`${siteUrl}/jams`}
         jsonLd={browseJsonLd}
       />

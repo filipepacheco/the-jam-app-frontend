@@ -156,7 +156,7 @@
   },
   "homepage": {
     "hero": {
-      "title": "Run Your Jam Night Without the Chaos",
+      "title": "Run Your Jam Without the Chaos",
       "subtitle": "For hosts, musicians, and venues",
       "description": "Hosts build the setlist.\nMusicians sign up for songs.\nThe audience watches it all on a live screen.\nNo group chats. No spreadsheets. Just music.",
       "cta_button": "Get Started",
@@ -165,7 +165,7 @@
       "mock_jam_name": "Friday Night Jam"
     },
     "stats": {
-      "title": "Already being used in jam nights",
+      "title": "Already being used in jam",
       "sessions": "Jams Created",
       "musicians": "Musicians",
       "songs": "Songs Played"
@@ -953,13 +953,13 @@
     "homepage": {
       "title": "Organize your Jams | Jam App",
       "description": "Organize jam sessions with a live setlist, musician sign-ups, and a public dashboard for the audience. Free for hosts and musicians.",
-      "description_enhanced": "The easiest way to run a jam night. Hosts build the setlist, musicians sign up for songs, and the audience follows along on a live screen. No spreadsheets needed.",
-      "keywords": "jam session, jam night, open mic, live music, setlist, musician sign up, jam organizer, music event"
+      "description_enhanced": "The easiest way to run a jam. Hosts build the setlist, musicians sign up for songs, and the audience follows along on a live screen. No spreadsheets needed.",
+      "keywords": "jam session, jam, open mic, live music, setlist, musician sign up, jam organizer, music event"
     },
     "browse": {
       "title": "Browse Jam Sessions Near You",
       "description": "Find and join live jam sessions, open mics, and music events in your area. Browse upcoming jams, sign up for songs, and connect with local musicians.",
-      "keywords": "jam sessions, live music events, open mic nights, music meetups, jam night, find jam sessions, local music events"
+      "keywords": "jam sessions, live music events, open mic nights, music meetups, jam, find jam sessions, local music events"
     },
     "features": {
       "create_jams": "Criar e gerenciar jam sessions ao vivo",
