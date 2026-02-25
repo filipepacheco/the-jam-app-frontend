@@ -19,6 +19,7 @@ interface FormData {
   time: string
   location: string
   slug: string
+  spotifyPlaylistUrl: string
   hostMusicianId: string
   hostName?: string
   hostContact?: string
@@ -46,6 +47,7 @@ export function CreateJamPage() {
     time: '',
     location: '',
     slug: '',
+    spotifyPlaylistUrl: '',
     hostMusicianId: user?.id || '',
     status: 'ACTIVE',
   })
@@ -92,6 +94,7 @@ export function CreateJamPage() {
         time: timeString,
         location: jam.location || '',
         slug: jam.slug || '',
+        spotifyPlaylistUrl: jam.spotifyPlaylistUrl || '',
         hostMusicianId: user?.id || '',
         hostName: jam.hostName || '',
         // hostContact not in JamResponseDto - backend DTO needs updating
@@ -117,7 +120,7 @@ export function CreateJamPage() {
       return
     }
 
-    // Auto-fill host musician ID from auth context
+    // Autofill host musician ID from auth context
     setFormData((prev) => ({
       ...prev,
       hostMusicianId: user?.id || '',
@@ -199,7 +202,7 @@ export function CreateJamPage() {
         dateTimeString = new Date(`${formData.date}T${formData.time}`).toISOString()
       }
 
-      // In create mode, auto-fill host info from auth profile
+      // In create mode, autofill host info from auth profile
       const hostName = formData.hostName?.trim() || user?.name || undefined
       const hostContact = formData.hostContact?.trim() || user?.contact || user?.email || undefined
 
@@ -209,6 +212,7 @@ export function CreateJamPage() {
         date: dateTimeString,
         location: formData.location,
         slug: formData.slug.trim() || undefined,
+        spotifyPlaylistUrl: formData.spotifyPlaylistUrl.trim() || null,
         hostMusicianId: formData.hostMusicianId,
         hostName,
         hostContact,
@@ -445,6 +449,23 @@ export function CreateJamPage() {
                   placeholder={t('create_jam.form.placeholder_description')}
                   className="textarea textarea-bordered resize-y w-full"
                   rows={2}
+                  disabled={loading}
+                />
+              </fieldset>
+
+              {/* Spotify Playlist URL */}
+              <fieldset className="fieldset">
+                <label className="fieldset-legend" htmlFor={`${formId}-spotifyPlaylistUrl`}>
+                  {t('create_jam.form.spotify_playlist_url')}
+                </label>
+                <input
+                  id={`${formId}-spotifyPlaylistUrl`}
+                  type="url"
+                  name="spotifyPlaylistUrl"
+                  value={formData.spotifyPlaylistUrl}
+                  onChange={handleInputChange}
+                  placeholder={t('create_jam.form.placeholder_spotify_playlist_url')}
+                  className="input input-bordered w-full"
                   disabled={loading}
                 />
               </fieldset>

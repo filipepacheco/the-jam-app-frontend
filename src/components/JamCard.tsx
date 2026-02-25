@@ -68,6 +68,19 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
           </div>
         </div>
 
+        {/* Spotify Link */}
+        {jam.spotifyPlaylistUrl && (
+          <a
+            href={jam.spotifyPlaylistUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-success hover:underline flex items-center gap-1 mt-2"
+            onClick={(e) => e.stopPropagation()}
+          >
+            🎵 {t('jams.listen_on_spotify')}
+          </a>
+        )}
+
         {/* Action Buttons */}
         <div className="card-actions justify-end gap-2 mt-4 sm:mt-6">
             <Link to={getJamDashboardPath(jam)} className="btn btn-outline btn-sm text-xs sm:text-sm" title="View live dashboard">

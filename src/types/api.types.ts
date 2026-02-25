@@ -1,6 +1,6 @@
 /**
  * API Type Definitions
- * Generated from Swagger specification (.github/swagger.json)
+ * Generated from Swagger specification (.GitHub/swagger.json)
  *
  * This file contains all TypeScript interfaces and types matching the backend API
  */
@@ -140,6 +140,7 @@ export interface JamResponseDto {
   qrCode?: string
   slug?: string | null
   shortCode?: string | null
+  spotifyPlaylistUrl?: string | null
   status: JamStatus
   createdAt: string
   updatedAt: string
