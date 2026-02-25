@@ -105,6 +105,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="input input-sm input-bordered w-full"
+          placeholder={t('music_form.title_placeholder')}
           required
         />
       </div>
@@ -119,6 +120,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
           value={artist}
           onChange={(e) => setArtist(e.target.value)}
           className="input input-sm input-bordered w-full"
+          placeholder={t('music_form.artist_placeholder')}
           required
         />
       </div>
@@ -132,6 +134,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="textarea textarea-bordered textarea-sm w-full"
+          placeholder={t('music_form.description_placeholder')}
           rows={3}
         />
       </div>
@@ -146,7 +149,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
           value={link}
           onChange={(e) => setLink(e.target.value)}
           className="input input-sm input-bordered w-full"
-          placeholder="https://open.spotify.com/track/..."
+          placeholder={t('music_form.link_placeholder')}
         />
       </div>
 
@@ -199,7 +202,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
       {/* Instruments - icon only, compact row */}
       <div>
         <label className="text-xs text-base-content/60 mb-2 block">
-          {t('music_form.needed_musicians')}
+          {t('music_form.musicians_needed')}
         </label>
         <div className="flex flex-wrap gap-3">
           <InstrumentStepper instrumentKey="drums" label={t('schedule.instruments.drums')} value={drums} onChange={setDrums} />
