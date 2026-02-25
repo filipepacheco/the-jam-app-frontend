@@ -118,13 +118,9 @@ export const MusicCard = memo(function MusicCard({
             <div className="hidden sm:block">{metaInfo}</div>
           </div>
 
-          {/* Status Badge + Action Buttons */}
+          {/* Action Buttons */}
           {isHost && (
             <div className="flex items-center gap-1 shrink-0">
-              <div className={`badge badge-sm ${isSuggested ? 'badge-warning' : 'badge-success'}`}>
-                {isSuggested ? '💡' : '✅'}
-              </div>
-
               {isSuggested ? (
                 <>
                   <button
@@ -168,12 +164,6 @@ export const MusicCard = memo(function MusicCard({
             </div>
           )}
 
-          {/* Non-host: just show status */}
-          {!isHost && (
-            <div className={`badge badge-sm shrink-0 ${isSuggested ? 'badge-warning' : 'badge-success'}`}>
-              {isSuggested ? '💡' : '✅'}
-            </div>
-          )}
         </div>
 
         {/* Meta info below title on small screens only */}

@@ -26,7 +26,6 @@ import { filterAndSortMusic } from '../lib/musicUtils'
 import { GENRES } from '../lib/musicConstants'
 
 type SortBy = 'title' | 'artist' | 'date'
-type StatusFilter = 'all' | 'approved' | 'suggested'
 type ModalMode = 'add' | 'edit' | 'suggest' | null
 
 interface ModalState {
@@ -53,8 +52,8 @@ export function MusicPage() {
   // Filter states
   const [searchTerm, setSearchTerm] = useState('')
   const [genreFilter, setGenreFilter] = useState<string>('')
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('suggested')
   const [sortBy, setSortBy] = useState<SortBy>('title')
+  const [suggestedExpanded, setSuggestedExpanded] = useState(false)
 
   // Quick edit expanded card
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
@@ -105,12 +104,21 @@ export function MusicPage() {
 
   const filteredAndSortedMusic = useMemo(() => {
     return filterAndSortMusic(musicList, {
-      status: statusFilter,
+      status: 'all',
       searchTerm,
       genreFilter,
       sortBy,
     })
-  }, [musicList, searchTerm, genreFilter, statusFilter, sortBy])
+  }, [musicList, searchTerm, genreFilter, sortBy])
+
+  const suggestedMusic = useMemo(
+    () => filteredAndSortedMusic.filter((m) => m.status === 'SUGGESTED'),
+    [filteredAndSortedMusic],
+  )
+  const approvedMusic = useMemo(
+    () => filteredAndSortedMusic.filter((m) => m.status !== 'SUGGESTED'),
+    [filteredAndSortedMusic],
+  )
 
   const handleEdit = useCallback((music: MusicResponseDto) => {
     setExpandedCardId(null)
@@ -289,20 +297,6 @@ export function MusicPage() {
             </div>
           </div>
 
-          {/* Status Filter Tabs */}
-          <div className="flex gap-2 flex-wrap" role="tablist">
-            {(['approved', 'suggested', 'all'] as const).map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setStatusFilter(filter)}
-                className={`tab ${statusFilter === filter ? 'tab-active' : ''}`}
-                role="tab"
-                aria-selected={statusFilter === filter}
-              >
-                {t(`music_library.tabs.${filter}`)}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
@@ -329,30 +323,73 @@ export function MusicPage() {
         />
       </div>
 
-      {/* Music List - Responsive: Cards on mobile, Table on desktop */}
+      {/* Music List */}
       <div className="container mx-auto max-w-7xl px-4 pb-8">
-        {filteredAndSortedMusic.length > 0 ? (
-          <>
-            {/* Card Layout - all screen sizes */}
-            <div className="space-y-2">
-              {filteredAndSortedMusic.map((music) => (
-                <MusicCard
-                  key={music.id}
-                  music={music}
-                  isHost={user?.isHost || false}
-                  isExpanded={expandedCardId === music.id}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
-                  onQuickSave={user?.isHost ? handleQuickSave : undefined}
-                  onApprove={user?.isHost ? handleApprove : undefined}
-                  onReject={user?.isHost ? handleReject : undefined}
-                />
-              ))}
-            </div>
-          </>
-        ) : (
+        {filteredAndSortedMusic.length === 0 ? (
           <MusicEmptyState hasFilters={!!searchTerm || !!genreFilter} isHost={user?.isHost || false} />
+        ) : (
+          <div className="space-y-4">
+            {/* Suggested Songs - Collapsible, shown first */}
+            {suggestedMusic.length > 0 && (
+              <div>
+                <button
+                  onClick={() => setSuggestedExpanded(!suggestedExpanded)}
+                  className="flex items-center gap-2 mb-3 cursor-pointer group"
+                  type="button"
+                  aria-expanded={suggestedExpanded}
+                >
+                  <span
+                    className={`transform transition-transform motion-reduce:transition-none text-base-content/60 ${suggestedExpanded ? 'rotate-90' : ''}`}
+                    aria-hidden="true"
+                  >
+                    &#9654;
+                  </span>
+                  <h2 className="text-lg font-bold text-base-content group-hover:text-primary transition-colors">
+                    {t('music_library.tabs.suggested')}
+                  </h2>
+                  <span className="badge badge-warning badge-sm">{suggestedMusic.length}</span>
+                </button>
+                {suggestedExpanded && (
+                  <div className="space-y-2 animate-in fade-in duration-200">
+                    {suggestedMusic.map((music) => (
+                      <MusicCard
+                        key={music.id}
+                        music={music}
+                        isHost={user?.isHost || false}
+                        isExpanded={expandedCardId === music.id}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                        onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
+                        onQuickSave={user?.isHost ? handleQuickSave : undefined}
+                        onApprove={user?.isHost ? handleApprove : undefined}
+                        onReject={user?.isHost ? handleReject : undefined}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Approved Songs */}
+            {approvedMusic.length > 0 && (
+              <div className="space-y-2">
+                {approvedMusic.map((music) => (
+                  <MusicCard
+                    key={music.id}
+                    music={music}
+                    isHost={user?.isHost || false}
+                    isExpanded={expandedCardId === music.id}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
+                    onQuickSave={user?.isHost ? handleQuickSave : undefined}
+                    onApprove={user?.isHost ? handleApprove : undefined}
+                    onReject={user?.isHost ? handleReject : undefined}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         )}
       </div>
 
