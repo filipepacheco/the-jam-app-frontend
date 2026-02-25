@@ -26,12 +26,7 @@ import { filterAndSortMusic } from '../lib/musicUtils'
 import { GENRES } from '../lib/musicConstants'
 
 type SortBy = 'title' | 'artist' | 'date'
-type ModalMode = 'add' | 'edit' | 'suggest' | null
-
-interface ModalState {
-  mode: ModalMode
-  editingMusic: MusicResponseDto | null
-}
+type ModalMode = 'add' | 'suggest' | null
 
 export function MusicPage() {
   const navigate = useNavigate()
@@ -58,11 +53,7 @@ export function MusicPage() {
   // Quick edit expanded card
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
 
-  // Modal state (single state object instead of multiple booleans)
-  const [modalState, setModalState] = useState<ModalState>({
-    mode: null,
-    editingMusic: null,
-  })
+  const [modalState, setModalState] = useState<{ mode: ModalMode }>(({ mode: null }))
 
   // Confirm dialog state (without function - using ref instead)
   const [confirmOpen, setConfirmOpen] = useState(false)
@@ -119,11 +110,6 @@ export function MusicPage() {
     () => filteredAndSortedMusic.filter((m) => m.status !== 'SUGGESTED'),
     [filteredAndSortedMusic],
   )
-
-  const handleEdit = useCallback((music: MusicResponseDto) => {
-    setExpandedCardId(null)
-    setModalState({ mode: 'edit', editingMusic: music })
-  }, [])
 
   const handleToggleExpand = useCallback((musicId: string) => {
     setExpandedCardId((prev: string | null) => prev === musicId ? null : musicId)
@@ -224,20 +210,20 @@ export function MusicPage() {
   )
 
   const handleAdd = useCallback(() => {
-    setModalState({ mode: 'add', editingMusic: null })
+    setModalState({ mode: 'add' })
   }, [])
 
   const handleSuggest = useCallback(() => {
-    setModalState({ mode: 'suggest', editingMusic: null })
+    setModalState({ mode: 'suggest' })
   }, [])
 
   const handleModalSuccess = useCallback(async () => {
-    setModalState({ mode: null, editingMusic: null })
+    setModalState({ mode: null })
     await mutate()
   }, [mutate])
 
   const handleModalClose = useCallback(() => {
-    setModalState({ mode: null, editingMusic: null })
+    setModalState({ mode: null })
   }, [])
 
   // Loading skeleton
@@ -357,7 +343,7 @@ export function MusicPage() {
                         music={music}
                         isHost={user?.isHost || false}
                         isExpanded={expandedCardId === music.id}
-                        onEdit={handleEdit}
+
                         onDelete={handleDelete}
                         onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
                         onQuickSave={user?.isHost ? handleQuickSave : undefined}
@@ -379,7 +365,6 @@ export function MusicPage() {
                     music={music}
                     isHost={user?.isHost || false}
                     isExpanded={expandedCardId === music.id}
-                    onEdit={handleEdit}
                     onDelete={handleDelete}
                     onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
                     onQuickSave={user?.isHost ? handleQuickSave : undefined}
@@ -417,18 +402,6 @@ export function MusicPage() {
         />
       )}
 
-      {/* Edit Music Modal */}
-      {modalState.mode === 'edit' && modalState.editingMusic && (
-        <MusicModal
-          mode="edit"
-          music={modalState.editingMusic}
-          existingSongs={musicList}
-          onClose={handleModalClose}
-          onSuccess={handleModalSuccess}
-          setError={setError}
-          setSuccess={setSuccess}
-        />
-      )}
 
       {/* Confirm Dialog */}
       <ConfirmDialog

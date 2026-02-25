@@ -17,7 +17,6 @@ interface MusicCardProps {
   music: MusicResponseDto
   isHost: boolean
   isExpanded?: boolean
-  onEdit: (music: MusicResponseDto) => void
   onDelete: (music: MusicResponseDto) => void
   onToggleExpand?: (musicId: string) => void
   onQuickSave?: (id: string, data: UpdateMusicDto) => Promise<boolean>
@@ -41,7 +40,6 @@ export const MusicCard = memo(function MusicCard({
   music,
   isHost,
   isExpanded = false,
-  onEdit,
   onDelete,
   onToggleExpand,
   onQuickSave,
@@ -64,12 +62,9 @@ export const MusicCard = memo(function MusicCard({
   // Check if link is any Spotify URL (for icon display)
   const isSpotifyLink = music.link?.includes('spotify.com')
 
-  // For approved cards with quick edit support, pencil toggles expand
   const handlePencilClick = () => {
-    if (!isSuggested && onToggleExpand) {
+    if (onToggleExpand) {
       onToggleExpand(music.id)
-    } else {
-      onEdit(music)
     }
   }
 
@@ -175,10 +170,6 @@ export const MusicCard = memo(function MusicCard({
             music={music}
             onSave={onQuickSave}
             onCancel={() => onToggleExpand?.(music.id)}
-            onOpenFullEdit={(m) => {
-              onToggleExpand?.(music.id)
-              onEdit(m)
-            }}
           />
         )}
       </div>
