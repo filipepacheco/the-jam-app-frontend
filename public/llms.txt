@@ -1,36 +1,64 @@
-# The Jam App
+# Jam App
 
-> The easiest way to organize and run live jam sessions - no spreadsheets needed.
+> Free web platform for organizing in-person jam sessions and open mic nights. No spreadsheets, no group chats - just a clean interface for hosts, musicians, and audiences.
 
-## What is The Jam App?
+## What is Jam App?
 
-The Jam App is a free web application for organizing in-person jam sessions and open mic nights. Hosts create events, musicians sign up for songs and instrument slots, and audiences follow the live schedule on a public dashboard.
+Jam App (jamapp.com.br) is a free, browser-based tool for running live music events. A host creates a jam session on the platform, musicians browse and register for songs and instrument slots, and the audience follows the live schedule on a public dashboard - no app download required for the audience.
+
+The platform is used for jam sessions, open mic nights, and karaoke-style music events in Brazil, with multi-language support (Portuguese, English, Spanish).
+
+## Who It Serves
+
+**Hosts / Organizers**: Create jam sessions with a name, date, venue, and setlist. Approve musician registrations. Control playback order in real time via the DJ control panel. Share the event via QR code or short link.
+
+**Musicians**: Browse available jam sessions. Register for songs and pick instrument slots (vocals, guitar, bass, drums, keys). View the performance schedule and your own lineup.
+
+**Audience / Public**: Follow the live schedule on a public dashboard - see which song is playing now, who the musicians are, and what is coming up next. No login or account needed.
 
 ## Key Features
 
 - Create and manage jam sessions with custom schedules
-- Musicians register for songs and pick instrument slots (vocals, guitar, bass, drums, keys)
-- Live public dashboard for venue screens and audience members
-- QR code sharing for quick event access
-- Spotify playlist import to build jam setlists
-- Real-time schedule updates with DJ control panel
-- Multi-language support (Portuguese, English, Spanish)
+- Musician registration by instrument slot (vocals, guitar, bass, drums, keys)
+- Live public dashboard for venue screens - real-time updates every 5 seconds
+- DJ control panel: start, pause, skip, and reorder songs during the event
+- QR code and short-link sharing for quick audience access
+- Spotify playlist import to build jam setlists automatically
+- Multi-language: Portuguese (Brazil), English, Spanish
+- Free for hosts and musicians
 
-## How It Works
+## How It Works (5 steps)
 
-1. A host creates a jam session on the platform
-2. Musicians browse available jams and register for songs
-3. The host approves registrations and builds the performance schedule
-4. During the event, the host controls playback order via the DJ panel
-5. The audience follows along on the live public dashboard
+1. A host creates a jam session and adds songs to the setlist
+2. Musicians browse available jams and register for songs they want to play
+3. The host reviews and approves musician registrations
+4. During the event, the host manages playback order via the DJ control panel
+5. The audience watches the live public dashboard on a shared screen or their phone
+
+## Frequently Asked Questions
+
+**Is it free?** Yes. Jam App is completely free for hosts and musicians.
+
+**Do audience members need to create an account?** No. The public dashboard is accessible to anyone with the link or QR code - no login required.
+
+**What instruments are supported?** Vocals, guitar, bass, drums, and keys.
+
+**Can I import songs from Spotify?** Yes. Hosts can import a Spotify playlist to automatically add songs to the jam setlist.
+
+**What languages does it support?** Portuguese (Brazil), English, and Spanish. The interface auto-detects the browser language.
+
+**Is there a mobile app?** No. Jam App runs entirely in the browser on any device - desktop, tablet, or phone.
+
+## Technical Details
+
+- Built with React 19, TypeScript, NestJS
+- Hosted on Vercel (Brazil region-compatible CDN)
+- Authentication via Supabase (email/password and OAuth: Google, GitHub, Discord, Spotify)
+- Real-time updates via HTTP polling (no WebSocket required)
+- Available at: https://www.jamapp.com.br
 
 ## Links
 
 - Homepage: https://www.jamapp.com.br
-- Browse Jams: https://www.jamapp.com.br/jams
-
-## Technical Details
-
-- Built with React, TypeScript, and NestJS
-- Hosted on Vercel
-- Available in Portuguese (Brazil), English, and Spanish
+- Browse Jam Sessions: https://www.jamapp.com.br/jams
+- Register as a musician: https://www.jamapp.com.br/register

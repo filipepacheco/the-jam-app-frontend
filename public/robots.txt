@@ -8,6 +8,8 @@ Disallow: /login
 Disallow: /register
 Disallow: /profile
 Disallow: /auth/
+Disallow: /music
+Disallow: /musicians
 
 # Sitemap location
 Sitemap: https://www.jamapp.com.br/sitemap.xml

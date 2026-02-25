@@ -115,7 +115,7 @@ export function BrowseJamsPage() {
       <div className="bg-primary text-primary-content">
         <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 lg:py-12">
           <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4">
-            <span aria-hidden="true">🎸 </span>{t('jams.browse.title')}
+            {t('jams.browse.title')}
           </h1>
           <p className="text-base sm:text-lg lg:text-xl opacity-95">
             {t('jams.browse.subtitle')}

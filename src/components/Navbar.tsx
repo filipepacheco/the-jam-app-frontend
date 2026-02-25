@@ -103,7 +103,7 @@ function Navbar() {
 
         {/* Register Button - Viewer/Anonymous Only */}
         {!isLoading && isViewer() && !isAuthenticated && (
-          <a href="/register" className="btn btn-primary btn-sm whitespace-nowrap">
+          <a href="/register" className="btn btn-primary whitespace-nowrap min-h-[44px]">
             {t('nav.join')}
           </a>
         )}

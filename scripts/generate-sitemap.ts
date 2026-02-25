@@ -91,17 +91,26 @@ async function main() {
   ]
 
   // Dynamic jam pages
-  const jams = await fetchPublicJams()
-  const activeJams = jams.filter(j => !j.deletedAt && j.status !== 'FINISHED')
+  // Keep FINISHED jams for 30 days after completion so recently-indexed URLs
+  // remain in the sitemap and Google doesn't treat them as abandoned soft-404s.
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+  const activeJams = jams.filter(j => {
+    if (j.deletedAt) return false
+    if (j.status !== 'FINISHED') return true
+    // Include recently finished jams
+    const jamDate = j.date ? new Date(j.date) : null
+    return jamDate ? jamDate > thirtyDaysAgo : false
+  })
 
-  console.log(`Found ${activeJams.length} active jams for sitemap`)
+  console.log(`Found ${activeJams.length} jams for sitemap (includes recently finished)`)
 
   const jamEntries = activeJams.map(jam => {
     const url = buildJamUrl(jam)
     const lastmod = jam.date ? jam.date.split('T')[0] : today
+    const isFinished = jam.status === 'FINISHED'
     return generateUrlEntry(url, {
-      changefreq: 'weekly',
-      priority: 0.6,
+      changefreq: isFinished ? 'never' : 'weekly',
+      priority: isFinished ? 0.3 : 0.6,
       lastmod,
     })
   })

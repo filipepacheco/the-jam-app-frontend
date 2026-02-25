@@ -1,7 +1,7 @@
 import { next } from '@vercel/functions';
 
-// --- Crawler detection ---
-
+// --- Social media crawler detection ---
+// These bots parse OG tags for link previews. They do NOT follow meta-refresh redirects.
 const CRAWLER_UAS = [
   'WhatsApp',
   'facebookexternalhit',
@@ -12,6 +12,19 @@ const CRAWLER_UAS = [
   'Discordbot',
   'Slackbot',
   'Slackbot-LinkExpanding',
+];
+
+function isCrawler(ua: string): boolean {
+  const lower = ua.toLowerCase();
+  return CRAWLER_UAS.some((bot) => lower.includes(bot.toLowerCase()));
+}
+
+// --- Search engine crawler detection ---
+// Search engine bots follow meta-refresh redirects (causing infinite loops), so they receive
+// the same content-rich HTML as social bots but WITHOUT the meta-refresh tag.
+// This also fixes the duplicate-title/H1 issue: Googlebot gets a unique title and H1
+// per jam page instead of the generic SPA shell.
+const SEARCH_ENGINE_UAS = [
   'Googlebot',
   'bingbot',
   'Baiduspider',
@@ -22,9 +35,9 @@ const CRAWLER_UAS = [
   'Bytespider',
 ];
 
-function isCrawler(ua: string): boolean {
+function isSearchEngine(ua: string): boolean {
   const lower = ua.toLowerCase();
-  return CRAWLER_UAS.some((bot) => lower.includes(bot.toLowerCase()));
+  return SEARCH_ENGINE_UAS.some((bot) => lower.includes(bot.toLowerCase()));
 }
 
 // --- Route matching ---
@@ -117,7 +130,6 @@ async function fetchJam(identifier: string): Promise<JamData | null> {
     if (!res.ok) return null;
 
     const data = await res.json();
-    // Backend returns the jam object directly (no wrapper)
     return data as JamData;
   } catch {
     return null;
@@ -127,21 +139,21 @@ async function fetchJam(identifier: string): Promise<JamData | null> {
 // --- Portuguese default texts ---
 
 const PT = {
-  siteName: 'The Jam App',
-  homeTitle: 'The Jam App - Organize suas Jam Sessions',
+  siteName: 'Jam App',
+  homeTitle: 'Organize sua Jam Night | Jam App',
   homeDescription:
     'Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, musicos se inscrevem em musicas e o publico acompanha tudo em tempo real.',
-  browseTitle: 'Jam Sessions - The Jam App',
+  browseTitle: 'Jam Sessions e Open Mics | Jam App',
   browseDescription:
-    'Encontre jam sessions perto de voce. Participe como musico ou acompanhe ao vivo pelo painel publico.',
+    'Encontre jam sessions e open mics perto de voce. Participe como musico ou acompanhe ao vivo pelo painel publico.',
   dashboardSuffix: 'Painel Ao Vivo',
   registerSuffix: 'Inscreva-se',
-  fallbackJamDescription: 'Participe desta jam session no The Jam App.',
+  fallbackJamDescription: 'Participe desta jam session no Jam App.',
 };
 
 const HOME_BODY = `
   <main>
-    <h1>The Jam App - Organize suas Jam Sessions</h1>
+    <h1>Organize sua Jam Night | Jam App</h1>
     <p>Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, musicos se inscrevem em musicas e o publico acompanha tudo em tempo real.</p>
     <section>
       <h2>Como funciona</h2>
@@ -166,8 +178,8 @@ const HOME_BODY = `
 
 const BROWSE_BODY = `
   <main>
-    <h1>Jam Sessions - The Jam App</h1>
-    <p>Encontre jam sessions perto de voce. Participe como musico ou acompanhe ao vivo pelo painel publico.</p>
+    <h1>Jam Sessions e Open Mics | Jam App</h1>
+    <p>Encontre jam sessions e open mics perto de voce. Participe como musico ou acompanhe ao vivo pelo painel publico.</p>
     <p>Navegue pelas jam sessions ativas, veja o setlist, os musicos inscritos e acompanhe o evento em tempo real.</p>
   </main>`;
 
@@ -182,6 +194,7 @@ function buildOgHtml(opts: {
   locale?: string;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
   bodyHtml?: string;
+  noRedirect?: boolean;
 }): string {
   const {
     title,
@@ -192,6 +205,7 @@ function buildOgHtml(opts: {
     locale = 'pt_BR',
     jsonLd,
     bodyHtml,
+    noRedirect = false,
   } = opts;
 
   const esc = (s: string) =>
@@ -211,12 +225,19 @@ function buildOgHtml(opts: {
 
   const body = bodyHtml ?? `<p>Redirecionando para <a href="${esc(url)}">${esc(title)}</a>...</p>`;
 
+  // Only redirect real browsers (social bot UA edge case). Search engines follow
+  // meta-refresh and would create infinite redirect loops - omit for them.
+  const metaRefresh = noRedirect
+    ? ''
+    : `\n  <meta http-equiv="refresh" content="0;url=${esc(url)}" />`;
+
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}" />
+  <link rel="canonical" href="${esc(url)}" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="${esc(type)}" />
@@ -232,10 +253,7 @@ function buildOgHtml(opts: {
   <meta name="twitter:title" content="${esc(title)}" />
   <meta name="twitter:description" content="${esc(description)}" />
 
-  ${jsonLdTag}
-
-  <!-- Redirect real browsers immediately -->
-  <meta http-equiv="refresh" content="0;url=${esc(url)}" />
+  ${jsonLdTag}${metaRefresh}
 </head>
 <body>
   ${body}
@@ -256,10 +274,7 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
       inLanguage: 'pt-BR',
       potentialAction: {
         '@type': 'SearchAction',
-        target: {
-          '@type': 'EntryPoint',
-          urlTemplate: `${siteUrl}/jams?q={search_term_string}`,
-        },
+        target: `${siteUrl}/jams?q={search_term_string}`,
         'query-input': 'required name=search_term_string',
       },
     },
@@ -269,24 +284,19 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
       alternateName: 'The Jam App',
       url: siteUrl,
       description: PT.homeDescription,
-      applicationCategory: 'EntertainmentApplication',
+      applicationCategory: 'MultimediaApplication',
       operatingSystem: 'Any',
       browserRequirements: 'Requires JavaScript',
       inLanguage: ['pt-BR', 'en', 'es'],
       image: ogImage,
+      featureList:
+        'Criar e gerenciar jam sessions ao vivo, Painel publico em tempo real, Inscricao de musicos por instrumento, Controle de setlist e ordem das musicas, QR code para compartilhar jams, Importar playlists do Spotify',
       offers: {
         '@type': 'Offer',
         price: '0',
         priceCurrency: 'BRL',
+        availability: 'https://schema.org/OnlineOnly',
       },
-      featureList: [
-        'Criar e gerenciar jam sessions ao vivo',
-        'Painel publico em tempo real para o publico',
-        'Inscricao de musicos por instrumento',
-        'Controle de setlist e ordem das musicas',
-        'QR code para compartilhar jams',
-        'Importar playlists do Spotify',
-      ],
       author: {
         '@type': 'Organization',
         name: 'Jam App',
@@ -296,9 +306,101 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
     {
       '@type': 'Organization',
       name: 'Jam App',
+      alternateName: 'The Jam App',
       url: siteUrl,
-      logo: ogImage,
-      sameAs: [],
+      description:
+        'Plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem e o publico acompanha em tempo real.',
+      logo: {
+        '@type': 'ImageObject',
+        url: ogImage,
+        width: 1200,
+        height: 630,
+      },
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer support',
+        url: siteUrl,
+      },
+    },
+  ];
+}
+
+function browseStructuredData(siteUrl: string): Record<string, unknown>[] {
+  return [
+    {
+      '@type': 'CollectionPage',
+      name: 'Explorar Jam Sessions',
+      description:
+        'Encontre e participe de jam sessions ao vivo, open mics e eventos musicais na sua regiao.',
+      url: `${siteUrl}/jams`,
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'Jam App',
+        url: siteUrl,
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Jam Sessions',
+          item: `${siteUrl}/jams`,
+        },
+      ],
+    },
+  ];
+}
+
+function jamStructuredData(
+  jam: JamData,
+  canonicalUrl: string,
+  siteUrl: string,
+  ogImage: string,
+): Record<string, unknown>[] {
+  const eventStatusMap: Record<string, string> = {
+    ACTIVE: 'https://schema.org/EventScheduled',
+    INACTIVE: 'https://schema.org/EventPostponed',
+    LIVE: 'https://schema.org/EventScheduled',
+    FINISHED: 'https://schema.org/EventPast',
+  };
+
+  const event: Record<string, unknown> = {
+    '@type': 'MusicEvent',
+    name: jam.name,
+    url: canonicalUrl,
+    description:
+      jam.description ?? 'Jam session no Jam App. Participe como musico ou acompanhe ao vivo.',
+    eventStatus: eventStatusMap[jam.status] ?? 'https://schema.org/EventScheduled',
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    image: ogImage,
+    organizer: {
+      '@type': 'Organization',
+      name: jam.hostName ?? 'Jam App',
+      url: siteUrl,
+    },
+  };
+
+  if (jam.date) {
+    event.startDate = new Date(jam.date).toISOString();
+  }
+
+  // location is required for Google Event rich results; VirtualLocation is the fallback
+  if (jam.location) {
+    event.location = { '@type': 'Place', name: jam.location };
+  } else {
+    event.location = { '@type': 'VirtualLocation', url: canonicalUrl };
+  }
+
+  return [
+    event,
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Jam Sessions', item: `${siteUrl}/jams` },
+        { '@type': 'ListItem', position: 2, name: jam.name, item: canonicalUrl },
+      ],
     },
   ];
 }
@@ -307,7 +409,10 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
 
 export default function middleware(request: Request) {
   const ua = request.headers.get('user-agent') || '';
-  if (!isCrawler(ua)) return next();
+  const crawlerRequest = isCrawler(ua);
+  const searchEngineRequest = !crawlerRequest && isSearchEngine(ua);
+
+  if (!crawlerRequest && !searchEngineRequest) return next();
 
   const url = new URL(request.url);
   const route = matchRoute(url.pathname);
@@ -315,20 +420,26 @@ export default function middleware(request: Request) {
 
   const siteUrl = process.env.SITE_URL || url.origin;
   const ogImage = `${siteUrl}/og-image.jpg`;
+  // Search engines follow meta-refresh - skip the redirect to prevent infinite loops
+  const noRedirect = searchEngineRequest;
 
   switch (route.type) {
-    case 'home':
+    case 'home': {
+      // Ensure trailing slash on canonical home URL
+      const homeUrl = siteUrl.endsWith('/') ? siteUrl : `${siteUrl}/`;
       return new Response(
         buildOgHtml({
           title: PT.homeTitle,
           description: PT.homeDescription,
-          url: siteUrl,
+          url: homeUrl,
           image: ogImage,
           jsonLd: homeStructuredData(siteUrl, ogImage),
           bodyHtml: HOME_BODY,
+          noRedirect,
         }),
         { headers: htmlHeaders() },
       );
+    }
 
     case 'browse':
       return new Response(
@@ -337,7 +448,9 @@ export default function middleware(request: Request) {
           description: PT.browseDescription,
           url: `${siteUrl}/jams`,
           image: ogImage,
+          jsonLd: browseStructuredData(siteUrl),
           bodyHtml: BROWSE_BODY,
+          noRedirect,
         }),
         { headers: htmlHeaders() },
       );
@@ -345,13 +458,13 @@ export default function middleware(request: Request) {
     case 'jam-detail':
     case 'jam-dashboard':
     case 'jam-register':
-      return handleJamRoute(route.identifier, route.type, siteUrl, ogImage, url.pathname);
+      return handleJamRoute(route.identifier, route.type, siteUrl, ogImage, url.pathname, noRedirect);
 
     case 'short-code':
-      return handleJamRoute(route.code, 'jam-detail', siteUrl, ogImage, url.pathname);
+      return handleJamRoute(route.code, 'jam-detail', siteUrl, ogImage, url.pathname, noRedirect);
 
     case 'slug':
-      return handleJamRoute(route.slug, 'jam-detail', siteUrl, ogImage, url.pathname);
+      return handleJamRoute(route.slug, 'jam-detail', siteUrl, ogImage, url.pathname, noRedirect);
   }
 }
 
@@ -361,30 +474,30 @@ async function handleJamRoute(
   siteUrl: string,
   ogImage: string,
   pathname: string,
+  noRedirect: boolean,
 ): Promise<Response> {
   const jam = await fetchJam(identifier);
 
   let title: string;
   let description: string;
   let canonicalUrl: string;
-
   let bodyHtml: string | undefined;
+  let jsonLd: Record<string, unknown>[] | undefined;
 
   if (jam) {
-    const baseName = jam.name;
-    const jamPath = jam.slug ? `/${jam.slug}` : `/jams/${identifier}`;
+    const jamPath = jam.slug ? `/jams/${jam.slug}` : `/jams/${identifier}`;
 
     switch (variant) {
       case 'jam-dashboard':
-        title = `${baseName} - ${PT.dashboardSuffix} - ${PT.siteName}`;
+        title = `${jam.name} - ${PT.dashboardSuffix} | ${PT.siteName}`;
         canonicalUrl = `${siteUrl}${jamPath}/dashboard`;
         break;
       case 'jam-register':
-        title = `${PT.registerSuffix} - ${baseName} - ${PT.siteName}`;
+        title = `${PT.registerSuffix} - ${jam.name} | ${PT.siteName}`;
         canonicalUrl = `${siteUrl}${jamPath}/register`;
         break;
       default:
-        title = `${baseName} - ${PT.siteName}`;
+        title = `${jam.name} | ${PT.siteName}`;
         canonicalUrl = `${siteUrl}${jamPath}`;
         break;
     }
@@ -400,25 +513,31 @@ async function handleJamRoute(
 
     const details: string[] = [];
     if (jam.location) details.push(`<li>Local: ${esc(jam.location)}</li>`);
-    if (jam.date) details.push(`<li>Data: ${esc(new Date(jam.date).toLocaleDateString('pt-BR'))}</li>`);
+    if (jam.date)
+      details.push(`<li>Data: ${esc(new Date(jam.date).toLocaleDateString('pt-BR'))}</li>`);
     if (jam.hostName) details.push(`<li>Host: ${esc(jam.hostName)}</li>`);
     if (jam.status) details.push(`<li>Status: ${esc(jam.status)}</li>`);
 
+    // H1 is the jam name - not the full title string - so Googlebot sees unique content per page
     bodyHtml = `
   <main>
-    <h1>${esc(title)}</h1>
+    <h1>${esc(jam.name)}</h1>
     <p>${esc(description)}</p>
     ${details.length > 0 ? `<ul>${details.join('')}</ul>` : ''}
   </main>`;
+
+    // MusicEvent schema on detail and dashboard pages (not registration page)
+    if (variant !== 'jam-register') {
+      jsonLd = jamStructuredData(jam, canonicalUrl, siteUrl, ogImage);
+    }
   } else {
-    // API failed or jam not found - use generic Portuguese fallback
-    title = `Jam Session - ${PT.siteName}`;
+    title = `Jam Session | ${PT.siteName}`;
     description = PT.fallbackJamDescription;
     canonicalUrl = `${siteUrl}${pathname}`;
   }
 
   return new Response(
-    buildOgHtml({ title, description, url: canonicalUrl, image: ogImage, bodyHtml }),
+    buildOgHtml({ title, description, url: canonicalUrl, image: ogImage, bodyHtml, jsonLd, noRedirect }),
     { headers: htmlHeaders() },
   );
 }
@@ -434,11 +553,5 @@ function htmlHeaders(): Record<string, string> {
 // --- Vercel matcher config ---
 
 export const config = {
-  matcher: [
-    '/',
-    '/jams',
-    '/jams/:path*',
-    '/j/:path*',
-    '/:slug',
-  ],
+  matcher: ['/', '/jams', '/jams/:path*', '/j/:path*', '/:slug'],
 };
