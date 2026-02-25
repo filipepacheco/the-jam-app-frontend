@@ -38,7 +38,10 @@ async function fetchPublicJams(): Promise<JamResponse[]> {
         return []
       }
       const json: ApiResponse = await response.json()
-      if (!json.success) return []
+      if (!json.success) {
+        console.warn(`API success=false, data type=${typeof json.data}`)
+        return []
+      }
 
       // Handle both paginated ({ data: [...] }) and plain array responses
       const data = json.data
@@ -48,6 +51,7 @@ async function fetchPublicJams(): Promise<JamResponse[]> {
       } else if (data && 'data' in data && Array.isArray(data.data)) {
         page = data.data
       } else {
+        console.warn(`Unexpected data shape: ${JSON.stringify(data).slice(0, 200)}`)
         break
       }
 
@@ -109,6 +113,14 @@ async function main() {
 
   // Dynamic jam pages
   const jams = await fetchPublicJams()
+  console.log(`Fetched ${jams.length} total jams from API`)
+  if (jams.length > 0) {
+    const statusCounts = jams.reduce((acc, j) => {
+      acc[j.status] = (acc[j.status] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+    console.log(`Status breakdown: ${JSON.stringify(statusCounts)}`)
+  }
 
   // Keep FINISHED jams for 30 days after completion so recently-indexed URLs
   // remain in the sitemap and Google doesn't treat them as abandoned soft-404s.
