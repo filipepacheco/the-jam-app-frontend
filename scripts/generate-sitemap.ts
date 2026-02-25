@@ -21,8 +21,8 @@ interface JamResponse {
 }
 
 interface ApiResponse {
-  data: JamResponse[] | { data: JamResponse[] }
-  success: boolean
+  data: JamResponse[]
+  meta: { total: number; skip: number; take: number; hasMore: boolean }
 }
 
 async function fetchPublicJams(): Promise<JamResponse[]> {
@@ -38,25 +38,15 @@ async function fetchPublicJams(): Promise<JamResponse[]> {
         return []
       }
       const json: ApiResponse = await response.json()
-      if (!json.success) {
-        console.warn(`API success=false, data type=${typeof json.data}`)
+
+      if (!Array.isArray(json.data)) {
+        console.warn(`Unexpected response shape: ${JSON.stringify(json).slice(0, 200)}`)
         return []
       }
 
-      // Handle both paginated ({ data: [...] }) and plain array responses
-      const data = json.data
-      let page: JamResponse[]
-      if (Array.isArray(data)) {
-        page = data
-      } else if (data && 'data' in data && Array.isArray(data.data)) {
-        page = data.data
-      } else {
-        console.warn(`Unexpected data shape: ${JSON.stringify(data).slice(0, 200)}`)
-        break
-      }
+      all.push(...json.data)
 
-      all.push(...page)
-      if (page.length < PAGE_SIZE) break
+      if (!json.meta?.hasMore) break
       skip += PAGE_SIZE
     }
   } catch (err) {
@@ -114,13 +104,6 @@ async function main() {
   // Dynamic jam pages
   const jams = await fetchPublicJams()
   console.log(`Fetched ${jams.length} total jams from API`)
-  if (jams.length > 0) {
-    const statusCounts = jams.reduce((acc, j) => {
-      acc[j.status] = (acc[j.status] || 0) + 1
-      return acc
-    }, {} as Record<string, number>)
-    console.log(`Status breakdown: ${JSON.stringify(statusCounts)}`)
-  }
 
   // Keep FINISHED jams for 30 days after completion so recently-indexed URLs
   // remain in the sitemap and Google doesn't treat them as abandoned soft-404s.
