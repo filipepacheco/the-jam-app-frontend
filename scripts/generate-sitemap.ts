@@ -91,6 +91,8 @@ async function main() {
   ]
 
   // Dynamic jam pages
+  const jams = await fetchPublicJams()
+
   // Keep FINISHED jams for 30 days after completion so recently-indexed URLs
   // remain in the sitemap and Google doesn't treat them as abandoned soft-404s.
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
