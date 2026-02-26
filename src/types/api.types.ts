@@ -147,8 +147,6 @@ export interface JamResponseDto {
   playbackState?: PlaybackState
   currentScheduleId?: string
   _count?: JamCountDto
-  jamMusics?: JamMusicResponseDto[]
-  registrations?: RegistrationResponseDto[]
   schedules?: ScheduleResponseDto[]
 }
 

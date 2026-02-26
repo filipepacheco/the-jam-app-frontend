@@ -123,11 +123,12 @@ export function JamDetailPageV2() {
         return registrations
     }, [jam?.schedules, user?.id])
 
-    // Memoize unique musicians count to avoid creating Set on every render
+    // Memoize unique musicians count - derive from schedules
     const uniqueMusiciansCount = useMemo(() => {
-        if (!jam?.registrations) return 0
-        return new Set(jam.registrations.map((reg) => reg.musician?.id || reg.musician?.contact)).size
-    }, [jam?.registrations])
+        const allRegs = jam?.schedules?.flatMap(s => s.registrations || []) || []
+        if (allRegs.length === 0) return 0
+        return new Set(allRegs.map((reg) => reg.musician?.id || reg.musician?.contact)).size
+    }, [jam?.schedules])
 
     // Handle enrollment click
     const handleEnrollClick = useCallback((schedule: ScheduleResponseDto) => {

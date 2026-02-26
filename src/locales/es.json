@@ -199,6 +199,7 @@
     }
   },
   "jams": {
+    "listen_on_spotify": "Escuchar en Spotify",
     "register_for_jam_title": "🎭 Registrarse para este Jam",
     "join_this_jam": "Unirse a este Jam",
     "registering": "Registrando...",
@@ -1145,6 +1146,8 @@
     },
     "spotify_import_inline": "Tienes una playlist de Spotify? Importala para crear tu jam.",
     "form": {
+      "spotify_playlist_url": "URL de la Playlist de Spotify",
+      "placeholder_spotify_playlist_url": "https://open.spotify.com/playlist/...",
       "jam_name": "Nombre del Jam",
       "description": "Descripción",
       "date": "Fecha",

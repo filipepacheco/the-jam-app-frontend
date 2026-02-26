@@ -24,14 +24,14 @@ export function OverviewTab({
     const navigate = useNavigate()
     const [showImportModal, setShowImportModal] = useState(false)
 
-    // Calculate unique musicians - use array when available
+    // Derive registrations from schedules (single source of truth)
+    const allRegistrations = jam.schedules?.flatMap(s => s.registrations || []) || []
     const uniqueMusicians = new Set<string>()
-    jam.registrations?.forEach((reg) => uniqueMusicians.add(reg.musicianId))
+    allRegistrations.forEach((reg) => uniqueMusicians.add(reg.musicianId))
     const musicianCount = uniqueMusicians.size
 
-    // Use _count when available (list endpoint), fall back to array length (detail endpoint)
     const performanceCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
-    const registrationCount = jam._count?.registrations ?? jam.registrations?.length ?? 0
+    const registrationCount = jam._count?.registrations ?? allRegistrations.length
 
     // Get status control button config
     // New lifecycle: INACTIVE → ACTIVE → LIVE → FINISHED → INACTIVE

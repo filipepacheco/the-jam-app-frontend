@@ -5,6 +5,7 @@ import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {isScheduleReadyToPlay, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {InstrumentsSummary} from '../schedule/InstrumentsSummary'
 import {SpotifyPlayButton} from '../SpotifyPreview'
+import {FileText} from 'lucide-react'
 import React, {useCallback, useMemo} from "react"
 
 interface TimelineUser {
@@ -168,6 +169,14 @@ export function TimelineItemV2Waveform({
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Description row - only shown when description exists */}
+        {schedule.music?.description && (
+          <div className="flex items-center gap-1.5 border-t border-base-content/10 pt-1">
+            <FileText className="size-3 shrink-0 text-base-content/40" />
+            <p className="truncate text-xs text-base-content/50">{schedule.music.description}</p>
           </div>
         )}
 

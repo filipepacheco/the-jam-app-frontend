@@ -8,14 +8,14 @@ import {Alert} from "../../components";
 export function AnalyticsTab({jam}: { jam: JamResponseDto }) {
     const {t} = useTranslation()
 
-    // Calculate unique musicians - use array when available
+    // Derive registrations from schedules (single source of truth)
+    const allRegistrations = jam.schedules?.flatMap(s => s.registrations || []) || []
     const uniqueMusicians = new Set<string>()
-    jam.registrations?.forEach((reg) => uniqueMusicians.add(reg.musicianId))
+    allRegistrations.forEach((reg) => uniqueMusicians.add(reg.musicianId))
     const musicianCount = uniqueMusicians.size > 0 ? uniqueMusicians.size : (jam._count?.registrations ?? 0)
 
-    // Use _count when available (list endpoint), fall back to array length (detail endpoint)
-    const songCount = jam._count?.jamMusics ?? jam.jamMusics?.length ?? 0
-    const performanceCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
+    const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
+    const performanceCount = songCount
 
     return (
         <div className="space-y-4">

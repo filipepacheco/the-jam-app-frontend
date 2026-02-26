@@ -32,8 +32,7 @@ function formatDate(isoString: string): string {
  */
 export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
   const { t } = useTranslation()
-  // Use _count from API when available (list endpoint), fall back to array length (detail endpoint)
-  const songCount = jam._count?.schedules ?? jam.schedules?.length ?? jam._count?.jamMusics ?? jam.jamMusics?.length ?? 0
+  const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
 
 
   return (

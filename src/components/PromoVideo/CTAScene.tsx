@@ -168,7 +168,7 @@ export const CTAScene: React.FC<KaraokeJamProps> = ({
             opacity: buttonOpacity,
           }}
         >
-          karaokejam.app
+          jamapp
         </p>
       </div>
     </AbsoluteFill>

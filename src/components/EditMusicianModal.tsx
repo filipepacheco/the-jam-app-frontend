@@ -1,5 +1,5 @@
 /**
- * Edit Musician Modal
+ * Edit Musician
  * Modal form for editing musician details
  */
 

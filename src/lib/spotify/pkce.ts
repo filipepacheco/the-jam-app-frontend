@@ -32,7 +32,7 @@ function generateRandomString(length: number): string {
 }
 
 /**
- * Generate a SHA-256 hash and base64url-encode it
+ * Generate an SHA-256 hash and base64url-encode it
  */
 async function sha256Base64url(plain: string): Promise<string> {
   const encoder = new TextEncoder()

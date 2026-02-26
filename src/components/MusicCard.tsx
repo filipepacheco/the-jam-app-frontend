@@ -6,7 +6,7 @@
 
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pencil, Trash2 } from 'lucide-react'
+import { FileText, Pencil, Trash2 } from 'lucide-react'
 import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import { formatDuration } from '../lib/formatters'
 import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
@@ -163,6 +163,14 @@ export const MusicCard = memo(function MusicCard({
 
         {/* Meta info below title on small screens only */}
         <div className="sm:hidden">{metaInfo}</div>
+
+        {/* Description row - shown when description exists */}
+        {music.description && (
+          <div className="flex items-center gap-1.5 border-t border-base-200 pt-1">
+            <FileText className="size-3 shrink-0 text-base-content/40" />
+            <p className="truncate text-xs text-base-content/50">{music.description}</p>
+          </div>
+        )}
 
         {/* Quick Edit Panel - shown when expanded */}
         {isExpanded && onQuickSave && (

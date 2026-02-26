@@ -201,6 +201,7 @@
     }
   },
   "jams": {
+    "listen_on_spotify": "Ouça no Spotify",
     "register_for_jam_title": "🎭 Inscreva-se neste Jam",
     "join_this_jam": "Participar deste Jam",
     "registering": "Inscrevendo...",
@@ -540,6 +541,10 @@
     "no_song_playing": "Nenhuma música tocando atualmente"
   },
   "music_form": {
+    "title": "Título",
+    "artist": "Artista",
+    "description": "Descrição",
+    "link": "Link (Spotify)",
     "duration_label": "Duração (mm:ss)",
     "description_placeholder": "Opcional. Adicione notas sobre esta música (ex.: estilo, andamento, clima)",
     "description_hint": "Opcional. Uma breve descrição da música.",
@@ -1147,6 +1152,8 @@
     },
     "spotify_import_inline": "Tem uma playlist do Spotify? Importe para criar seu jam.",
     "form": {
+      "spotify_playlist_url": "URL da Playlist do Spotify",
+      "placeholder_spotify_playlist_url": "https://open.spotify.com/playlist/...",
       "jam_name": "Nome do Jam",
       "description": "Descrição",
       "date": "Data",

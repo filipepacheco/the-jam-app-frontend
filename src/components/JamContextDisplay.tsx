@@ -3,7 +3,7 @@
  * Displays jam information at top of registration form
  */
 
-import type {JamMusicResponseDto, JamResponseDto, JamStatus} from '../types/api.types'
+import type {JamResponseDto, JamStatus, ScheduleResponseDto} from '../types/api.types'
 
 import {useTranslation} from 'react-i18next'
 
@@ -15,7 +15,7 @@ interface JamContextDisplayProps {
     hostName?: string
     status: JamStatus
     qrCode?: string
-    jamMusics?: JamMusicResponseDto[]
+    schedules?: ScheduleResponseDto[]
   }
 }
 
@@ -59,15 +59,15 @@ export function JamContextDisplay({ jam }: JamContextDisplayProps) {
         <div>
           <h3 className="font-semibold mb-3">{t('jams.specialties_needed')}</h3>
           <div className="grid grid-cols-2 gap-2">
-            {jam.jamMusics && jam.jamMusics.length > 0 ? (
-              jam.jamMusics.map((jamMusic: JamMusicResponseDto) => (
+            {jam.schedules && jam.schedules.length > 0 ? (
+              jam.schedules.map((schedule) => (
                 <div
-                  key={jamMusic.id}
+                  key={schedule.id}
                   className="p-3 rounded-lg bg-primary/10 border border-primary/20"
                 >
-                  <p className="font-semibold text-sm">{jamMusic.music?.title || t('schedule.song_tba')}</p>
+                  <p className="font-semibold text-sm">{schedule.music?.title || t('schedule.song_tba')}</p>
                   <p className="text-xs text-base-content/70">
-                    {jamMusic.music?.artist || t('schedule.artist_tba')}
+                    {schedule.music?.artist || t('schedule.artist_tba')}
                   </p>
                 </div>
               ))

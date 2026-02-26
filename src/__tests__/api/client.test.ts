@@ -1,5 +1,5 @@
 /**
- * API Client Tests
+ * API Client
  * Tests for the centralized API client
  */
 

@@ -12,7 +12,7 @@ interface JamLike {
 
 /**
  * Get the internal path for a jam detail page.
- * Prefers slug over UUID for SEO-friendly URLs.
+ * Prefers slug to UUID for SEO-friendly URLs.
  */
 export function getJamPath(jam: JamLike): string {
   return `/jams/${jam.slug || jam.id}`

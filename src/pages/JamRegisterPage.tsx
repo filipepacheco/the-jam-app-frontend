@@ -1,5 +1,5 @@
 /**
- * Jam Register Page
+ * Jam Register
  * Page for registering to a specific jam with jam context
  */
 

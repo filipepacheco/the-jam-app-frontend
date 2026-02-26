@@ -201,6 +201,7 @@
     }
   },
   "jams": {
+    "listen_on_spotify": "Listen on Spotify",
     "register_for_jam_title": "🎭 Register for This Jam",
     "join_this_jam": "Join This Jam",
     "registering": "Registering...",
@@ -690,7 +691,6 @@
       "failed_to_update": "Failed to update song"
     }
   },
-
   "jam_management": {
     "loading_jam": "Loading jam details...",
     "error_loading": "Error Loading Jam",
@@ -1148,6 +1148,8 @@
     },
     "spotify_import_inline": "Have a Spotify playlist? Import it to create your jam.",
     "form": {
+      "spotify_playlist_url": "Spotify Playlist URL",
+      "placeholder_spotify_playlist_url": "https://open.spotify.com/playlist/...",
       "jam_name": "Jam Name",
       "description": "Description",
       "date": "Date",

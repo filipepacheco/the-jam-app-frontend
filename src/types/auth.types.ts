@@ -1,5 +1,5 @@
 /**
- * Authentication Type Definitions
+ * Authentication
  * Type definitions for role-based authentication system with Supabase integration
  */
 

@@ -40,12 +40,11 @@ export function HostJamSongsPage() {
     duration: 240,
   })
 
-  // Extract songs from jam data
+  // Extract songs from schedules
   const songs = useMemo(() => {
-    if (!jamData) return []
-    const jamMusics = jamData?.jamMusics || []
-    return jamMusics.map((jm) => jm.music)
-  }, [jamData])
+    if (!jamData?.schedules) return []
+    return jamData.schedules.map((s) => s.music).filter(Boolean)
+  }, [jamData?.schedules])
 
   const jamName = jamData?.name || t('common.app_name')
   const loading = jamLoading

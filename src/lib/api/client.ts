@@ -148,7 +148,7 @@ class ApiClient {
             return this.client.request(error.config)
           }
 
-          // Refresh failed - logout and redirect to login
+          // Refresh failed - logout and redirect to log in
           if (import.meta.env.DEV) {
             console.warn('🔐 Token refresh failed, clearing auth and redirecting to login')
           }

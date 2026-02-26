@@ -1,4 +1,4 @@
-import type {JamMusicResponseDto, JamResponseDto, ScheduleResponseDto} from "../../types/api.types.ts";
+import type {JamResponseDto, ScheduleResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {registrationService, scheduleService} from "../../services";
@@ -204,7 +204,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                         <div className="text-4xl mb-3">📋</div>
                         <h3 className="font-semibold mb-2">{t('jam_management.schedule.no_schedule_yet')}</h3>
                         <p className="text-sm text-base-content/70">
-                            {(jam._count?.jamMusics ?? jam.jamMusics?.length ?? 0) > 0
+                            {(jam._count?.schedules ?? jam.schedules?.length ?? 0) > 0
                                 ? t('jam_management.schedule.add_entry_hint')
                                 : t('jam_management.schedule.add_songs_first')}
 
@@ -248,9 +248,9 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                 aria-label={t('jam_management.schedule.song_label')}
                             >
                                 <option value="">{t('jam_management.schedule.select_song')}</option>
-                                {jam.jamMusics?.map((jm: JamMusicResponseDto) => (
-                                    <option key={jm.id} value={jm.music?.id || jm.musicId}>
-                                        {jm.music?.title || t('common.unknown')} - {jm.music?.artist || t('common.unknown')}
+                                {jam.schedules?.map((s) => (
+                                    <option key={s.id} value={s.music?.id || s.musicId}>
+                                        {s.music?.title || t('common.unknown')} - {s.music?.artist || t('common.unknown')}
                                     </option>
                                 ))}
                             </select>

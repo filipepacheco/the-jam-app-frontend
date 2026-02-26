@@ -68,12 +68,18 @@ export function JamProvider({ children }: { children: ReactNode }) {
 
 
 
+  // Derive all registrations from schedules (single source of truth)
+  const registrations = useMemo(
+    () => jam?.schedules?.flatMap(s => s.registrations || []) || [],
+    [jam?.schedules]
+  )
+
   // Memoize musicians calculation with Set-based deduplication (O(n) instead of O(n²))
   const musicians = useMemo(() => {
-    if (!jam?.registrations) return []
-    
+    if (registrations.length === 0) return []
+
     const seen = new Set<string>()
-    return jam.registrations.reduce((unique, reg) => {
+    return registrations.reduce((unique, reg) => {
       const musician = reg.musician
       if (musician?.id && !seen.has(musician.id)) {
         seen.add(musician.id)
@@ -81,12 +87,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
       }
       return unique
     }, [] as MusicianResponseDto[])
-  }, [jam?.registrations])
-
-  const registrations = useMemo(
-    () => jam?.registrations || [],
-    [jam?.registrations]
-  )
+  }, [registrations])
 
   const schedule = useMemo(
     () => jam?.schedules || [],
@@ -108,8 +109,9 @@ export function JamProvider({ children }: { children: ReactNode }) {
         return 'host'
       }
 
-      // Check if registered musician
-      const isMusician = jamData.registrations?.some(
+      // Check if registered musician (derive from schedules)
+      const allRegs = jamData.schedules?.flatMap(s => s.registrations || []) || []
+      const isMusician = allRegs.some(
         (reg) =>
           reg.musician?.id === user.id || reg.musician?.contact === user.contact
       )

@@ -52,7 +52,7 @@ export function HostDashboardPage() {
             return
         }
 
-        // If not authenticated after auth is loaded, redirect to login
+        // If not authenticated after auth is loaded, redirect to log in
         if (!isAuthenticated) {
             navigate('/login')
             return
@@ -86,9 +86,6 @@ export function HostDashboardPage() {
         // Count total registrations across all jams
         // Note: This is registration count, not unique musicians (one musician can have multiple registrations)
         const totalRegistrations = jams.reduce((sum, jam) => {
-            if (jam.registrations) {
-                return sum + jam.registrations.length
-            }
             return sum + (jam._count?.registrations ?? 0)
         }, 0)
 
@@ -276,8 +273,7 @@ interface JamCardProps {
 function JamCard({jam, onDelete, onNavigate, loading}: JamCardProps) {
     const {t} = useTranslation()
 
-    // Count registrations for this jam - use _count when available
-    const registrationCount = jam._count?.registrations ?? jam.registrations?.length ?? 0
+    const registrationCount = jam._count?.registrations ?? 0
 
     // Use _count when available (list endpoint), fall back to array length (detail endpoint)
     const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0

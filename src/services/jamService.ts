@@ -33,21 +33,20 @@ function buildSpecialtySlots(jam: JamResponseDto): SpecialtySlot[] {
   const required: Record<string, number> = {}
   const registered: Record<string, number> = {}
 
-  // Sum up needed instrument counts from all jam musics
-  for (const jm of jam.jamMusics ?? []) {
-    const m = jm.music
-    if (m.neededDrums) required['drums'] = (required['drums'] ?? 0) + m.neededDrums
-    if (m.neededGuitars) required['guitars'] = (required['guitars'] ?? 0) + m.neededGuitars
-    if (m.neededVocals) required['vocals'] = (required['vocals'] ?? 0) + m.neededVocals
-    if (m.neededBass) required['bass'] = (required['bass'] ?? 0) + m.neededBass
-    if (m.neededKeys) required['keys'] = (required['keys'] ?? 0) + m.neededKeys
-  }
+  // Sum up needed instrument counts and approved registrations from schedules
+  for (const s of jam.schedules ?? []) {
+    const m = s.music
+    if (m?.neededDrums) required['drums'] = (required['drums'] ?? 0) + m.neededDrums
+    if (m?.neededGuitars) required['guitars'] = (required['guitars'] ?? 0) + m.neededGuitars
+    if (m?.neededVocals) required['vocals'] = (required['vocals'] ?? 0) + m.neededVocals
+    if (m?.neededBass) required['bass'] = (required['bass'] ?? 0) + m.neededBass
+    if (m?.neededKeys) required['keys'] = (required['keys'] ?? 0) + m.neededKeys
 
-  // Count approved registrations per instrument
-  for (const reg of jam.registrations ?? []) {
-    if (reg.status === 'APPROVED' && reg.instrument) {
-      const inst = reg.instrument.toLowerCase()
-      registered[inst] = (registered[inst] ?? 0) + 1
+    for (const reg of s.registrations ?? []) {
+      if (reg.status === 'APPROVED' && reg.instrument) {
+        const inst = reg.instrument.toLowerCase()
+        registered[inst] = (registered[inst] ?? 0) + 1
+      }
     }
   }
 
