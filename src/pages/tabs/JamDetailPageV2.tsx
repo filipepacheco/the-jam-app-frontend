@@ -14,6 +14,13 @@ import {getJamPath} from '../../utils/jamUrl'
 
 // Constants
 const SUCCESS_TOAST_DURATION = 3000
+
+// Extract Spotify embed URL from a playlist URL or URI
+function getSpotifyEmbedUrl(playlistUrl: string): string | null {
+    const match = playlistUrl.match(/playlist\/([a-zA-Z0-9]+)/)
+    if (!match) return null
+    return `https://open.spotify.com/embed/playlist/${match[1]}?utm_source=generator`
+}
 import {
     Alert,
     ScheduleEnrollmentModal,
@@ -198,6 +205,9 @@ export function JamDetailPageV2() {
     // State for My Registrations section - default to expanded only if user has registrations
     const [isRegistrationsExpanded, setIsRegistrationsExpanded] = useState(false)
 
+    // State for Spotify player section
+    const [isSpotifyExpanded, setIsSpotifyExpanded] = useState(false)
+
     // Auto-expand registrations when user first has registrations
     useEffect(() => {
         if (userRegistrations.length > 0) {
@@ -294,19 +304,7 @@ export function JamDetailPageV2() {
             <div className="bg-linear-to-r from-base-200 to-base-300 border-b border-base-300">
                 <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-6 sm:py-8">
                     <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-balance">{jam.name}</h1>
-                    <p className="text-base-content/70 mb-4 text-pretty max-w-3xl">{jam.description}</p>
-
-                    {/* Spotify Playlist Link */}
-                    {jam.spotifyPlaylistUrl && (
-                        <a
-                            href={jam.spotifyPlaylistUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-sm btn-outline border-success text-success hover:bg-success hover:text-success-content hover:border-success gap-2 mb-6"
-                        >
-                            🎵 {t('jams.listen_on_spotify')}
-                        </a>
-                    )}
+                    <p className="text-base-content/70 mb-6 text-pretty max-w-3xl">{jam.description}</p>
 
                     {/* Jam Stats Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
@@ -405,6 +403,29 @@ export function JamDetailPageV2() {
 
                     {/* Timeline Column (70% width) - Second on mobile, first on desktop */}
                     <div className="lg:col-span-3 order-2 lg:order-1 space-y-6">
+                        {/* Spotify Player - Collapsible */}
+                        {jam.spotifyPlaylistUrl && getSpotifyEmbedUrl(jam.spotifyPlaylistUrl) && (
+                            <CollapsibleSection
+                                title={t('jams.listen_on_spotify')}
+                                isExpanded={isSpotifyExpanded}
+                                onToggle={() => setIsSpotifyExpanded(!isSpotifyExpanded)}
+                            >
+                                {isSpotifyExpanded && (
+                                    <iframe
+                                        style={{ borderRadius: '12px' }}
+                                        src={getSpotifyEmbedUrl(jam.spotifyPlaylistUrl)!}
+                                        width="100%"
+                                        height="352"
+                                        frameBorder="0"
+                                        allowFullScreen
+                                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                                        loading="lazy"
+                                        title={`${jam.name} - Spotify Playlist`}
+                                    />
+                                )}
+                            </CollapsibleSection>
+                        )}
+
                         {/* My Registrations - Collapsible */}
                         <CollapsibleSection
                             title={t('jams.my_registrations')}
