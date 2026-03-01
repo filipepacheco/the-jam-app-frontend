@@ -129,7 +129,12 @@ function HomePage() {
       '@type': 'Organization',
       name: 'Jam App',
       url: siteUrl,
-      logo: `${siteUrl}/og-image.jpg`,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/web/icons8-concert-color-96.png`,
+        width: 96,
+        height: 96,
+      },
     },
   ], [t, siteUrl, currentLang])
 

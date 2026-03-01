@@ -140,26 +140,26 @@ async function fetchJam(identifier: string): Promise<JamData | null> {
 
 const PT = {
   siteName: 'Jam App',
-  homeTitle: 'Organize sua Jam | Jam App',
+  homeTitle: 'Organize sua Jam Session ao Vivo | Jam App',
   homeDescription:
     'Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, musicos se inscrevem em musicas e o publico acompanha tudo em tempo real.',
-  browseTitle: 'Jam Sessions e Open Mics | Jam App',
+  browseTitle: 'Encontre Jam Sessions Perto de Voce | Jam App',
   browseDescription:
     'Encontre jam sessions e open mics perto de voce. Participe como musico ou acompanhe ao vivo pelo painel publico.',
   dashboardSuffix: 'Painel Ao Vivo',
   registerSuffix: 'Inscreva-se',
-  fallbackJamDescription: 'Participe desta jam session no Jam App.',
+  fallbackJamDescription: 'Participe desta jam session no Jam App. Inscreva-se como musico ou acompanhe ao vivo.',
 };
 
 const HOME_BODY = `
   <main>
-    <h1>Organize sua Jam | Jam App</h1>
-    <p>Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, músicos se inscrevem em músicas e o público acompanha tudo em tempo real.</p>
+    <h1>Organize sua Jam Session ao Vivo</h1>
+    <p>A forma mais facil de organizar uma noite de jam. O anfitriao monta o setlist, os musicos se inscrevem e o publico acompanha tudo numa tela ao vivo.</p>
     <section>
       <h2>Como funciona</h2>
       <ul>
         <li>Hosts criam jam sessions com data, local e setlist</li>
-        <li>Musicos se inscrevem por instrumento (guitarra, baixo, bateria, teclado, vocais)</li>
+        <li>Musicos se inscrevem por instrumento: guitarra, baixo, bateria, teclado, vocais</li>
         <li>O publico acompanha ao vivo pelo painel publico em tempo real</li>
         <li>Controle de setlist e ordem das musicas durante o evento</li>
         <li>Compartilhe a jam via QR code ou link curto</li>
@@ -167,20 +167,40 @@ const HOME_BODY = `
       </ul>
     </section>
     <section>
-      <h2>Para quem e?</h2>
+      <h2>Para quem e o Jam App?</h2>
       <ul>
-        <li><strong>Hosts</strong>: organize eventos musicais, aprove inscricoes e controle o setlist ao vivo</li>
+        <li><strong>Anfitrioes</strong>: organize eventos musicais, aprove inscricoes e controle o setlist ao vivo</li>
         <li><strong>Musicos</strong>: encontre jams, inscreva-se em musicas e gerencie sua agenda de performances</li>
         <li><strong>Publico</strong>: acompanhe qual musica esta tocando agora e quem esta no palco</li>
       </ul>
     </section>
+    <section>
+      <h2>Recursos</h2>
+      <ul>
+        <li>Criacao e gerenciamento de jam sessions ao vivo</li>
+        <li>Painel publico em tempo real para a plateia</li>
+        <li>Inscricao de musicos por instrumento</li>
+        <li>Controle completo de setlist e ordem das musicas</li>
+        <li>QR code e links curtos para compartilhamento rapido</li>
+        <li>Importacao de playlists do Spotify</li>
+        <li>Suporte a multiplos idiomas: portugues, ingles e espanhol</li>
+      </ul>
+    </section>
+    <nav>
+      <a href="/jams">Explorar Jam Sessions</a>
+      <a href="/register">Criar Conta Gratis</a>
+    </nav>
   </main>`;
 
 const BROWSE_BODY = `
   <main>
-    <h1>Jam Sessions e Open Mics | Jam App</h1>
-    <p>Encontre jam sessions e open mics perto de voce. Participe como musico ou acompanhe ao vivo pelo painel publico.</p>
-    <p>Navegue pelas jam sessions ativas, veja o setlist, os musicos inscritos e acompanhe o evento em tempo real.</p>
+    <h1>Encontre Jam Sessions Perto de Voce</h1>
+    <p>Explore jam sessions ao vivo, open mics e eventos musicais. Veja o setlist, os musicos inscritos e acompanhe o evento em tempo real.</p>
+    <p>Navegue pelas jam sessions ativas, filtre por status e encontre a proxima jam perto de voce. Inscricao gratuita para musicos.</p>
+    <nav>
+      <a href="/">Pagina Inicial</a>
+      <a href="/register">Criar Conta</a>
+    </nav>
   </main>`;
 
 // --- HTML generation ---
@@ -274,7 +294,10 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
       inLanguage: 'pt-BR',
       potentialAction: {
         '@type': 'SearchAction',
-        target: `${siteUrl}/jams?q={search_term_string}`,
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: `${siteUrl}/jams?q={search_term_string}`,
+        },
         'query-input': 'required name=search_term_string',
       },
     },
@@ -284,7 +307,7 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
       alternateName: 'The Jam App',
       url: siteUrl,
       description: PT.homeDescription,
-      applicationCategory: 'MultimediaApplication',
+      applicationCategory: 'EntertainmentApplication',
       operatingSystem: 'Any',
       browserRequirements: 'Requires JavaScript',
       inLanguage: ['pt-BR', 'en', 'es'],

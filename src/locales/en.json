@@ -131,13 +131,13 @@
     "password_hint": "Minimum 6 characters",
     "continue_with": "Continue with {{provider}}",
     "welcome_user": "Hi, {{name}}!",
-    "register_page_title": "🎸 Create Account",
+    "register_page_title": "Create Account",
     "register_page_subtitle": "Join the jam session community",
     "register_how_it_works": "How it works:",
     "register_how_it_works_desc": "Enter your email or phone to create your account. Your musician profile will be created automatically on your first login!",
     "login_here": "Login here →",
     "back_to_home": "← Back to Home",
-    "login_page_title": "The Jam App 🎸",
+    "login_page_title": "Jam App",
     "login_page_supabase_desc": "Sign in to your account with your email or social account",
     "login_page_simple_desc": "Login or create your musician account",
     "completing_sign_in": "Completing sign in...",
@@ -951,7 +951,7 @@
   },
   "seo": {
     "homepage": {
-      "title": "Organize your Jams | Jam App",
+      "title": "Organize your Jams",
       "description": "Organize jam sessions with a live setlist, musician sign-ups, and a public dashboard for the audience. Free for hosts and musicians.",
       "description_enhanced": "The easiest way to run a jam. Hosts build the setlist, musicians sign up for songs, and the audience follows along on a live screen. No spreadsheets needed.",
       "keywords": "jam session, jam, open mic, live music, setlist, musician sign up, jam organizer, music event"
@@ -962,12 +962,12 @@
       "keywords": "jam sessions, live music events, open mic nights, music meetups, jam, find jam sessions, local music events"
     },
     "features": {
-      "create_jams": "Criar e gerenciar jam sessions ao vivo",
-      "live_dashboard": "Painel publico em tempo real para o publico",
-      "musician_registration": "Inscrição de músicos por instrumento",
-      "setlist_control": "Controle de setlist e ordem das musicas",
-      "qr_sharing": "QR code para compartilhar jams",
-      "spotify_import": "Importar playlists do Spotify"
+      "create_jams": "Create and manage live jam sessions",
+      "live_dashboard": "Real-time public dashboard for the audience",
+      "musician_registration": "Musician registration by instrument",
+      "setlist_control": "Setlist control and song ordering",
+      "qr_sharing": "QR code sharing for jams",
+      "spotify_import": "Import playlists from Spotify"
     }
   },
   "feedback": {

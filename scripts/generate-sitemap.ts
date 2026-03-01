@@ -62,43 +62,45 @@ function buildJamUrl(jam: JamResponse): string {
   return `${SITE_URL}${path}`
 }
 
-function generateUrlEntry(loc: string, options: {
-  changefreq?: string
-  priority?: number
-  lastmod?: string
-  hreflang?: boolean
-} = {}): string {
-  const { changefreq = 'weekly', priority = 0.6, lastmod, hreflang = true } = options
-  const hreflangTags = hreflang ? `
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="${loc}${loc.includes('?') ? '&' : '?'}lng=pt"/>
-    <xhtml:link rel="alternate" hreflang="en" href="${loc}${loc.includes('?') ? '&' : '?'}lng=en"/>
-    <xhtml:link rel="alternate" hreflang="es" href="${loc}${loc.includes('?') ? '&' : '?'}lng=es"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${loc}"/>` : ''
+const LANGS = ['pt', 'en', 'es'] as const
+const HREFLANG_MAP: Record<string, string> = { pt: 'pt-BR', en: 'en', es: 'es' }
 
+function hreflangTags(loc: string): string {
+  return LANGS.map(
+    lng => `    <xhtml:link rel="alternate" hreflang="${HREFLANG_MAP[lng]}" href="${loc}${loc.includes('?') ? '&' : '?'}lng=${lng}"/>`
+  ).join('\n') + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${loc}"/>`
+}
+
+function generateUrlEntry(loc: string, options: {
+  lastmod?: string
+} = {}): string {
+  const { lastmod } = options
   return `
   <url>
-    <loc>${loc}</loc>
-    <changefreq>${changefreq}</changefreq>
-    <priority>${priority}</priority>${lastmod ? `
-    <lastmod>${lastmod}</lastmod>` : ''}${hreflangTags}
+    <loc>${loc}</loc>${lastmod ? `
+    <lastmod>${lastmod}</lastmod>` : ''}
+${hreflangTags(loc)}
   </url>`
+}
+
+function generateLangVariants(loc: string, options: {
+  lastmod?: string
+} = {}): string {
+  return LANGS.map(lng => {
+    const variantUrl = `${loc}${loc.includes('?') ? '&' : '?'}lng=${lng}`
+    return generateUrlEntry(variantUrl, options)
+  }).join('')
 }
 
 async function main() {
   const today = new Date().toISOString().split('T')[0]
 
-  // Static pages
+  // Static pages (canonical + language variants)
   const staticEntries = [
-    generateUrlEntry(`${SITE_URL}/`, {
-      changefreq: 'daily',
-      priority: 1.0,
-      lastmod: today,
-    }),
-    generateUrlEntry(`${SITE_URL}/jams`, {
-      changefreq: 'daily',
-      priority: 0.8,
-      lastmod: today,
-    }),
+    generateUrlEntry(`${SITE_URL}/`, { lastmod: today }),
+    generateLangVariants(`${SITE_URL}/`, { lastmod: today }),
+    generateUrlEntry(`${SITE_URL}/jams`, { lastmod: today }),
+    generateLangVariants(`${SITE_URL}/jams`, { lastmod: today }),
   ]
 
   // Dynamic jam pages
@@ -121,12 +123,7 @@ async function main() {
   const jamEntries = activeJams.map(jam => {
     const url = buildJamUrl(jam)
     const lastmod = jam.date ? jam.date.split('T')[0] : today
-    const isFinished = jam.status === 'FINISHED'
-    return generateUrlEntry(url, {
-      changefreq: isFinished ? 'never' : 'weekly',
-      priority: isFinished ? 0.3 : 0.6,
-      lastmod,
-    })
+    return generateUrlEntry(url, { lastmod }) + generateLangVariants(url, { lastmod })
   })
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

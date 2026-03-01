@@ -129,13 +129,13 @@
     "password_hint": "Mínimo 6 caracteres",
     "continue_with": "Continuar con {{provider}}",
     "welcome_user": "Hola, {{name}}!",
-    "register_page_title": "🎸 Crear Cuenta",
+    "register_page_title": "Crear Cuenta",
     "register_page_subtitle": "Únete a la comunidad de jam sessions",
     "register_how_it_works": "Cómo funciona:",
     "register_how_it_works_desc": "Ingresa tu correo o teléfono para crear tu cuenta. ¡Tu perfil de músico se creará automáticamente en tu primer inicio de sesión!",
     "login_here": "Inicia sesión aquí →",
     "back_to_home": "← Volver al Inicio",
-    "login_page_title": "The Jam App 🎸",
+    "login_page_title": "The Jam App",
     "login_page_supabase_desc": "Inicia sesión en tu cuenta con tu correo o red social",
     "login_page_simple_desc": "Inicia sesión o crea tu cuenta de músico",
     "completing_sign_in": "Completando inicio de sesión...",
@@ -949,7 +949,7 @@
   },
   "seo": {
     "homepage": {
-      "title": "Organiza tus Jams | Jam App",
+      "title": "Organiza tus Jams",
       "description": "Organiza sesiones de jam con setlist en vivo, inscripción de músicos y un panel público para el público. Gratis para anfitriones y músicos.",
       "description_enhanced": "La forma más fácil de organizar una noche de jam. El anfitrión arma el setlist, los músicos se inscriben y el público sigue todo en una pantalla en vivo.",
       "keywords": "sesión de jam, noche de jam, música en vivo, setlist, inscripción de músicos, organizador de jam, evento musical"
@@ -960,12 +960,12 @@
       "keywords": "jam sessions, eventos musicales, open mic, noche de jam, encontrar jam sessions, eventos de musica en vivo"
     },
     "features": {
-      "create_jams": "Criar e gerenciar jam sessions ao vivo",
-      "live_dashboard": "Painel publico em tempo real para o publico",
-      "musician_registration": "Inscrição de músicos por instrumento",
-      "setlist_control": "Controle de setlist e ordem das musicas",
-      "qr_sharing": "QR code para compartilhar jams",
-      "spotify_import": "Importar playlists do Spotify"
+      "create_jams": "Crear y gestionar jam sessions en vivo",
+      "live_dashboard": "Panel publico en tiempo real para el publico",
+      "musician_registration": "Registro de musicos por instrumento",
+      "setlist_control": "Control de setlist y orden de canciones",
+      "qr_sharing": "Codigo QR para compartir jams",
+      "spotify_import": "Importar playlists de Spotify"
     }
   },
   "feedback": {

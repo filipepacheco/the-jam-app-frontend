@@ -131,13 +131,13 @@
     "password_hint": "Mínimo 6 caracteres",
     "continue_with": "Continuar com {{provider}}",
     "welcome_user": "Olá, {{name}}!",
-    "register_page_title": "🎸 Criar Conta",
+    "register_page_title": "Criar Conta",
     "register_page_subtitle": "Junte-se à comunidade de jam sessions",
     "register_how_it_works": "Como funciona:",
     "register_how_it_works_desc": "Insira seu email ou telefone para criar sua conta. Seu perfil de músico será criado automaticamente no primeiro login!",
     "login_here": "Entrar aqui →",
     "back_to_home": "← Voltar ao Início",
-    "login_page_title": "The Jam App 🎸",
+    "login_page_title": "The Jam App",
     "login_page_supabase_desc": "Entre com seu email ou conta social",
     "login_page_simple_desc": "Entre ou crie sua conta de músico",
     "completing_sign_in": "Concluindo entrada...",
@@ -156,7 +156,7 @@
   },
   "homepage": {
     "hero": {
-      "title": "Organize sua Jam sem Bagunça",
+      "title": "Organize suas Jams sem Bagunça",
       "subtitle": "Para anfitriões, músicos e casas de show",
       "description": "O anfitrião monta o setlist.\nOs músicos se inscrevem nas músicas.\nO público acompanha tudo numa tela ao vivo.\nSem grupo de WhatsApp. Sem planilha. Só música.",
       "cta_button": "Começar",
@@ -955,7 +955,7 @@
   },
   "seo": {
     "homepage": {
-      "title": "Organize sua Jams | Jam App",
+      "title": "Organize suas Jams",
       "description": "Organize sessões de jam com setlist ao vivo, inscrição de músicos e painel público para a plateia. Grátis para anfitriões e músicos.",
       "description_enhanced": "O jeito mais fácil de organizar uma noite de jam. O anfitrião monta o setlist, os músicos se inscrevem e o público acompanha tudo numa tela ao vivo.",
       "keywords": "sessão de jam, noite de jam, música ao vivo, setlist, inscrição de músicos, organizador de jam, evento musical"

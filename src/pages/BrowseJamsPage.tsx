@@ -89,18 +89,26 @@ export function BrowseJamsPage() {
 
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
 
-  const browseJsonLd: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: t('jams.browse.title'),
-    description: t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') }),
-    url: `${siteUrl}/jams`,
-    isPartOf: {
-      '@type': 'WebSite',
-      name: 'The Jam App',
-      url: siteUrl,
+  const browseJsonLd: Record<string, unknown>[] = [
+    {
+      '@type': 'CollectionPage',
+      name: t('jams.browse.title'),
+      description: t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') }),
+      url: `${siteUrl}/jams`,
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'Jam App',
+        url: siteUrl,
+      },
     },
-  }
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: t('jams.browse.title'), item: `${siteUrl}/jams` },
+      ],
+    },
+  ]
 
   return (
     <div className="min-h-screen bg-base-100">
@@ -137,7 +145,7 @@ export function BrowseJamsPage() {
                 <input
                   type="text"
                   placeholder={t('jams.browse.search_placeholder')}
-                  className="input input-bordered w-full input-sm sm:input-md text-xs sm:text-sm"
+                  className="input input-bordered w-full input-sm sm:input-md text-xs sm:text-sm min-h-[44px]"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   aria-label="Search jams"
@@ -151,7 +159,7 @@ export function BrowseJamsPage() {
                   <span className="label-text font-semibold text-xs sm:text-sm">{t('jams.browse.sort_label')}</span>
                 </label>
                 <select
-                  className="select select-bordered w-full select-sm sm:select-md text-xs sm:text-sm"
+                  className="select select-bordered w-full select-sm sm:select-md text-xs sm:text-sm min-h-[44px]"
                   value={dateSort}
                   onChange={(e) => setDateSort(e.target.value as DateSortOption)}
                   disabled={isLoading}
@@ -168,7 +176,7 @@ export function BrowseJamsPage() {
               <label className="label">
                 <span className="label-text font-semibold text-xs sm:text-sm">{t('jams.browse.filter_label')}</span>
               </label>
-              <div className="tabs tabs-boxed text-xs sm:text-sm flex-wrap overflow-x-auto" role="tablist">
+              <div className="tabs tabs-boxed text-xs sm:text-sm flex-wrap overflow-x-auto [&_.tab]:min-h-[44px]" role="tablist">
                 <button
                   className={`tab ${statusFilter === 'ALL' ? 'tab-active' : ''}`}
                   onClick={() => setStatusFilter('ALL')}

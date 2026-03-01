@@ -233,41 +233,50 @@ export function JamDetailPageV2() {
 
     const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
     const canonicalUrl = `${siteUrl}${getJamPath(jam)}`
-    const jamJsonLd: Record<string, unknown> = {
-        '@context': 'https://schema.org',
-        '@type': 'MusicEvent',
-        name: jam.name,
-        ...(jam.description && { description: jam.description }),
-        ...(jam.date && {
-            startDate: jam.date,
-        }),
-        ...(jam.location && {
-            location: {
-                '@type': 'Place',
-                name: jam.location,
-            },
-        }),
-        url: canonicalUrl,
-        image: `${siteUrl}/og-image.jpg`,
-        eventStatus: 'https://schema.org/EventScheduled',
-        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-        organizer: {
-            '@type': 'Organization',
-            name: 'The Jam App',
-            url: siteUrl,
-        },
-        performer: {
-            '@type': 'PerformingGroup',
-            name: jam.name,
-        },
-        offers: {
-            '@type': 'Offer',
-            price: '0',
-            priceCurrency: 'BRL',
-            availability: 'https://schema.org/InStock',
-            url: canonicalUrl,
-        },
+
+    const eventStatusMap: Record<string, string> = {
+        ACTIVE: 'https://schema.org/EventScheduled',
+        INACTIVE: 'https://schema.org/EventPostponed',
+        LIVE: 'https://schema.org/EventScheduled',
+        FINISHED: 'https://schema.org/EventPast',
     }
+
+    const jamJsonLd: Record<string, unknown>[] = [
+        {
+            '@type': 'MusicEvent',
+            name: jam.name,
+            description: jam.description || t('seo.jam.fallback_description', { defaultValue: 'Jam session on Jam App. Join as a musician or watch live.' }),
+            ...(jam.date && { startDate: jam.date }),
+            location: jam.location
+                ? { '@type': 'Place', name: jam.location }
+                : { '@type': 'VirtualLocation', url: canonicalUrl },
+            url: canonicalUrl,
+            image: `${siteUrl}/og-image.jpg`,
+            eventStatus: eventStatusMap[jam.status] || 'https://schema.org/EventScheduled',
+            eventAttendanceMode: jam.location
+                ? 'https://schema.org/OfflineEventAttendanceMode'
+                : 'https://schema.org/OnlineEventAttendanceMode',
+            organizer: {
+                '@type': 'Organization',
+                name: jam.hostName || 'Jam App',
+                url: siteUrl,
+            },
+            offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'BRL',
+                availability: 'https://schema.org/InStock',
+                url: canonicalUrl,
+            },
+        },
+        {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Jam Sessions', item: `${siteUrl}/jams` },
+                { '@type': 'ListItem', position: 2, name: jam.name, item: canonicalUrl },
+            ],
+        },
+    ]
 
     return (
         <div className="min-h-screen bg-linear-to-br from-base-100 to-base-200">
@@ -275,7 +284,7 @@ export function JamDetailPageV2() {
                 title={jam.name}
                 description={jam.description || undefined}
                 canonical={canonicalUrl}
-                ogType="article"
+                ogType="website"
                 jsonLd={jamJsonLd}
             />
             {/* Success Alerts */}

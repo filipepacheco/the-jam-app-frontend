@@ -30,9 +30,9 @@ export function SEO({
 }: SEOProps) {
   const { currentLang } = useAppLanguage()
 
-  const fullTitle = title ? `${title} | The Jam App` : "The Jam App"
+  const fullTitle = title ? `${title} | Jam App` : 'Jam App'
   const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
-  const canonicalUrl = canonical || siteUrl
+  const canonicalUrl = canonical || (typeof window !== 'undefined' ? `${siteUrl}${window.location.pathname}` : siteUrl)
   const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
 
   // Build base URL without query params for hreflang
@@ -75,7 +75,7 @@ export function SEO({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:locale" content={currentLang === 'pt' ? 'pt_BR' : currentLang === 'es' ? 'es_ES' : 'en_US'} />
-      <meta property="og:site_name" content="The Jam App" />
+      <meta property="og:site_name" content="Jam App" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
