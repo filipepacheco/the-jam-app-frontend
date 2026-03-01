@@ -47,7 +47,8 @@ claude.md
 **/claude.md
 **/**/claude.md
 
-.github
+.github/*
+!.github/workflows/
 .cursor
 .claude
 .serena
