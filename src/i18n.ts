@@ -77,7 +77,11 @@ i18nBuilder.use(initReactI18next)
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    fallbackLng: 'pt',
+    fallbackLng: {
+      'pt-BR': ['pt'],
+      'pt-PT': ['pt'],
+      default: ['pt'],
+    },
     // Use persisted language if available; otherwise let detection run
     // (localStorage > querystring). If nothing is found, default to Portuguese.
     lng: initialLang || undefined,
@@ -104,24 +108,10 @@ i18nBuilder.use(initReactI18next)
       caches: ['localStorage'],
     },
     resources: {
-      en: {
-        translation: {
-          ...en
-        }
-      },
-      es: {
-        translation: {
-          ...es
-        }
-      },
-      pt: {
-        translation: {
-          ...pt
-        }
-      },
-      // ensure common Portuguese dialects are available
-      'pt-BR': { translation: { ...pt } },
-      'pt-PT': { translation: { ...pt } },
+      en: { translation: en },
+      es: { translation: es },
+      pt: { translation: pt },
+      // pt-BR and pt-PT fall back to pt via fallbackLng config above
     },
     // attach the missing key handler so QA can collect unresolved keys
     missingKeyHandler: missingKeyHandler,

@@ -11,8 +11,6 @@ import React from "react"
 import {groupRegistrationsByInstrument} from '../../utils/musicianUtils';
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 
-// Re-export from centralized helper for backwards compatibility
-export { getInstrumentIcon } from '../../lib/schedule/instrumentHelpers'
 
 const getInstrumentDisplayName = (instrument: string, t: (key: string) => string): string => {
     const lower = instrument.toLowerCase()

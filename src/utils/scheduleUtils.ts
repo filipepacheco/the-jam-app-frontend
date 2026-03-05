@@ -4,31 +4,16 @@
  */
 
 import type { ScheduleResponseDto } from '../types/api.types'
+import { normalizeInstrument as normalizeInstrumentBase } from './musicianUtils'
+
+const KNOWN_INSTRUMENTS = new Set(['drums', 'guitars', 'bass', 'vocals', 'keys'])
 
 /**
- * Normalize instrument name to canonical key
- * Handles EN, PT, and ES variations
+ * Normalize instrument name to canonical key, returning null for unknown instruments.
  */
 function normalizeInstrument(instrument?: string): string | null {
-  if (!instrument) return null
-  const lower = instrument.toLowerCase()
-
-  // Drums - EN: Drums, PT: Bateria, ES: Batería
-  if (['drums', 'bateria', 'batería'].includes(lower)) return 'drums'
-
-  // Vocals - EN: Vocals, PT: Voz, ES: Voces
-  if (['vocals', 'vocal', 'vozes', 'voz', 'voces'].includes(lower)) return 'vocals'
-
-  // Guitar - EN: Guitars, PT: Guitarras, ES: Guitarras
-  if (['guitar', 'guitars', 'guitarra', 'guitarras'].includes(lower)) return 'guitars'
-
-  // Bass - EN: Bass, PT: Baixo, ES: Bajo
-  if (['bass', 'baixo', 'bajo'].includes(lower)) return 'bass'
-
-  // Keys - EN: Keys, PT: Teclados, ES: Teclados
-  if (['keys', 'keyboard', 'teclado', 'teclados'].includes(lower)) return 'keys'
-
-  return null
+  const result = normalizeInstrumentBase(instrument)
+  return KNOWN_INSTRUMENTS.has(result) ? result : null
 }
 
 /**

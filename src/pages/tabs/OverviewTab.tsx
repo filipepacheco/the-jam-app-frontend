@@ -1,7 +1,7 @@
 import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import {Pencil, Eye, ExternalLink, Play, Square, RotateCcw, Upload, Download} from "lucide-react";
 import {initiateSpotifyAuth} from "../../lib/spotify/pkce";
 import {SpotifyImportModal} from "../../components/SpotifyImportModal";
@@ -24,14 +24,17 @@ export function OverviewTab({
     const navigate = useNavigate()
     const [showImportModal, setShowImportModal] = useState(false)
 
-    // Derive registrations from schedules (single source of truth)
-    const allRegistrations = jam.schedules?.flatMap(s => s.registrations || []) || []
-    const uniqueMusicians = new Set<string>()
-    allRegistrations.forEach((reg) => uniqueMusicians.add(reg.musicianId))
-    const musicianCount = uniqueMusicians.size
+    const { musicianCount, performanceCount, registrationCount } = useMemo(() => {
+        const allRegistrations = jam.schedules?.flatMap(s => s.registrations || []) || []
+        const uniqueMusicians = new Set<string>()
+        allRegistrations.forEach((reg) => uniqueMusicians.add(reg.musicianId))
 
-    const performanceCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
-    const registrationCount = jam._count?.registrations ?? allRegistrations.length
+        return {
+            musicianCount: uniqueMusicians.size,
+            performanceCount: jam._count?.schedules ?? jam.schedules?.length ?? 0,
+            registrationCount: jam._count?.registrations ?? allRegistrations.length,
+        }
+    }, [jam.schedules, jam._count])
 
     // Get status control button config
     // New lifecycle: INACTIVE → ACTIVE → LIVE → FINISHED → INACTIVE

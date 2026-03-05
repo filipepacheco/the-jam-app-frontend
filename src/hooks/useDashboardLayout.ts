@@ -11,7 +11,7 @@ function readLayout(): DashboardLayout {
     const stored = localStorage.getItem(LAYOUT_KEY)
     if (stored === 'carousel') return 'carousel'
   } catch { /* ignore */ }
-  return 'classic'
+  return 'carousel'
 }
 
 function readInterval(): number {

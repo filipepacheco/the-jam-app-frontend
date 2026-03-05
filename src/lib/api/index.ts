@@ -4,17 +4,10 @@
  */
 
 export { apiClient, ApiClient } from './client'
-export { API_CONFIG, API_ENDPOINTS, validateEnvironment, getApiBaseUrl } from './config'
+export { API_CONFIG, API_ENDPOINTS, SITE_URL } from './config'
 export { withLegacyResponse } from './serviceWrapper'
 export {
   handleApiError,
-  isNetworkError,
-  isAuthError,
-  isPermissionError,
-  isValidationError,
-  isNotFoundError,
-  isServerError,
-  getErrorDetails,
   formatError,
 } from './errorHandler'
 

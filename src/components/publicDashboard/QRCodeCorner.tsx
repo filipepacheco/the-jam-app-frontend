@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { useTranslation } from 'react-i18next'
+import { getJamShortUrl } from '../../utils/jamUrl'
 
 type Position = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 
@@ -11,13 +13,22 @@ interface QRCodeCornerProps {
 }
 
 export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left' }: QRCodeCornerProps) {
+  const { t } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
-  const origin = typeof window !== 'undefined' ? window.location.origin : ''
 
-  // Use short URL if shortCode available, otherwise fall back to jam detail URL
-  const url = shortCode
-    ? `${origin}/j/${shortCode}`
-    : `${origin}/jams/${jamId || ''}`
+  const url = getJamShortUrl({ id: jamId || '', shortCode })
+
+  // Close on Escape key
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === 'Escape') setIsExpanded(false)
+  }, [])
+
+  useEffect(() => {
+    if (isExpanded) {
+      document.addEventListener('keydown', handleKeyDown)
+      return () => document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isExpanded, handleKeyDown])
 
   const positionClasses: Record<Position, string> = {
     'top-left': 'fixed top-6 left-6',
@@ -34,13 +45,12 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         onClick={() => setIsExpanded(true)}
-        className={`${positionClasses[position]} bg-white/10 hover:bg-white/20 backdrop-blur border border-white/20 rounded-lg p-5 z-40 transition-all cursor-pointer hidden md:block`}
+        className={`${positionClasses[position]} bg-base-content/10 hover:bg-base-content/20 backdrop-blur border border-base-content/20 rounded-lg p-5 z-40 transition-colors cursor-pointer hidden md:block`}
         type="button"
-        title="Click to expand QR code"
-        aria-label="Expand QR code"
+        aria-label={t('publicDashboard.expandQrCode', 'Expand QR code')}
       >
-        <QRCodeSVG value={url} size={150} fgColor="#ffffff" bgColor="transparent" />
-        <p className="text-xs text-center mt-2 text-slate-300">Scan to join</p>
+        <QRCodeSVG value={url} size={150} fgColor="#ffffff" bgColor="transparent" aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')} />
+        <p className="text-xs text-center mt-2 text-base-content/60">{t('publicDashboard.scanToJoin', 'Scan to join')}</p>
       </motion.button>
 
       {/* Expanded QR Code Modal */}
@@ -52,7 +62,10 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
             onClick={() => setIsExpanded(false)}
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-neutral/70 z-50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label={t('publicDashboard.joinTheJam', 'Join the Jam')}
           >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
@@ -60,21 +73,12 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-base-100 rounded-2xl p-8 max-w-md w-full flex flex-col items-center justify-center"
+              className="relative bg-base-100 rounded-2xl p-8 max-w-md w-full flex flex-col items-center justify-center"
             >
-              <button
-                onClick={() => setIsExpanded(false)}
-                className="absolute top-4 right-4 btn btn-sm btn-ghost text-base-content"
-                aria-label="Close QR code"
-                type="button"
-              >
-                ✕
-              </button>
-
-              <h2 className="text-2xl font-bold mb-6 text-base-content">Join the Jam</h2>
+              <h2 className="text-2xl font-bold mb-6 text-base-content">{t('publicDashboard.joinTheJam', 'Join the Jam')}</h2>
 
               <div className="bg-white p-6 rounded-lg mb-4">
-                <QRCodeSVG value={url} size={280} fgColor="#000000" bgColor="#ffffff" />
+                <QRCodeSVG value={url} size={280} fgColor="#000000" bgColor="#ffffff" aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')} />
               </div>
 
               {shortCode && (
@@ -83,7 +87,7 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
                 </p>
               )}
               <p className="text-center text-base-content mb-2">
-                {shortCode ? 'Scan the QR code or type the code above' : 'Scan the QR code with your phone'}
+                {shortCode ? t('publicDashboard.scanOrTypeCode', 'Scan the QR code or type the code above') : t('publicDashboard.scanWithPhone', 'Scan the QR code with your phone')}
               </p>
               <p className="text-sm text-base-content/70 text-center">{url}</p>
 
@@ -92,7 +96,7 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
                 className="btn btn-primary mt-6 w-full"
                 type="button"
               >
-                Close
+                {t('common.close', 'Close')}
               </button>
             </motion.div>
           </motion.div>

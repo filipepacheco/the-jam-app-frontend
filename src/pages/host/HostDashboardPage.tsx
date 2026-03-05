@@ -4,7 +4,7 @@
  * Route: /host/dashboard
  */
 
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
@@ -62,7 +62,7 @@ export function HostDashboardPage() {
         void loadJams()
     }, [authLoading, isAuthenticated, navigate, loadJams])
 
-    const categorizeJams = (): JamCategory => {
+    const categories = useMemo((): JamCategory => {
         const categorized: JamCategory = {
             planned: [], inProgress: [], past: [],
         }
@@ -78,22 +78,17 @@ export function HostDashboardPage() {
         })
 
         return categorized
-    }
+    }, [jams])
 
-    const calculateStats = () => {
+    const stats = useMemo(() => {
         const totalJams = jams.length
-
-        // Count total registrations across all jams
-        // Note: This is registration count, not unique musicians (one musician can have multiple registrations)
         const totalRegistrations = jams.reduce((sum, jam) => {
             return sum + (jam._count?.registrations ?? 0)
         }, 0)
-
-        // Count schedules for total songs - use _count when available
         const totalSongs = jams.reduce((sum, jam) => sum + (jam._count?.schedules ?? jam.schedules?.length ?? 0), 0)
 
         return {totalJams, totalRegistrations, totalSongs}
-    }
+    }, [jams])
 
     const handleDeleteJam = async (jamId: string) => {
         if (!confirm(t('jam_management.host_dashboard.confirm_delete'))) {
@@ -113,9 +108,6 @@ export function HostDashboardPage() {
             setLoading(false)
         }
     }
-
-    const categories = categorizeJams()
-    const stats = calculateStats()
 
     // Show loading spinner while auth is initializing
     if (authLoading) {

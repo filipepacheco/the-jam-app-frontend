@@ -7,6 +7,7 @@ import {useAppLanguage} from './hooks'
 import {SWRConfig} from 'swr'
 import {SWR_POLLING_DEFAULTS} from './config/swrDefaults'
 import {apiClient} from './lib/api'
+import {SITE_URL} from './lib/api/config'
 import Navbar from './components/Navbar'
 import {EnhancedHero} from './components/EnhancedHero'
 import Features from './components/Features'
@@ -76,7 +77,7 @@ function HomePage() {
   const { t } = useTranslation()
   const { currentLang } = useAppLanguage()
 
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
+  const siteUrl = SITE_URL
 
   const homeJsonLd: Record<string, unknown>[] = useMemo(() => [
     {

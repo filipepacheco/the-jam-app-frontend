@@ -7,6 +7,12 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001'
 
 /**
+ * Site URL for canonical links, SEO, and social sharing.
+ * Uses VITE_SITE_URL env var with production fallback.
+ */
+export const SITE_URL: string = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
+
+/**
  * API Configuration object
  * Contains base URL and timeout settings
  */
@@ -63,23 +69,4 @@ export const API_ENDPOINTS = {
   },
 }
 
-/**
- * Helper function to get API base URL
- * @returns API base URL
- */
-export function getApiBaseUrl(): string {
-  return API_CONFIG.baseURL
-}
-
-/**
- * Validate that required environment variables are set
- * @throws Error if VITE_API_URL is invalid
- */
-export function validateEnvironment(): void {
-  if (!API_CONFIG.baseURL) {
-    throw new Error('API_BASE_URL is not configured. Please set VITE_API_URL environment variable.')
-  }
-}
-
-export { API_BASE_URL }
 

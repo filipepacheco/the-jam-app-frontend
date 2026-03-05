@@ -13,7 +13,7 @@ import type {
 import {jamService} from '../services'
 import {useAuth} from '../hooks'
 
-export type UserRole = 'host' | 'musician' | 'public' | null
+export type JamRole = 'host' | 'musician' | 'public' | null
 
 export interface JamContextType {
   // State
@@ -25,7 +25,7 @@ export interface JamContextType {
   schedule: ScheduleResponseDto[]
   isLoading: boolean
   error: Error | null
-  userRole: UserRole
+  userRole: JamRole
   isConnected: boolean
 
   // Actions
@@ -55,7 +55,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
   const [isConnected, setIsConnected] = useState(false)
-  const [userRole, setUserRole] = useState<UserRole>(null)
+  const [userRole, setUserRole] = useState<JamRole>(null)
 
   const activeJamIdRef = useRef<string | null>(null)
 
@@ -98,7 +98,7 @@ export function JamProvider({ children }: { children: ReactNode }) {
    * Determine user role in jam
    */
   const determineUserRole = useCallback(
-    (jamData: JamResponseDto | null | undefined): UserRole => {
+    (jamData: JamResponseDto | null | undefined): JamRole => {
       if (!user || !jamData) return 'public'
 
       // Check if host by musician ID (primary) or name fallback

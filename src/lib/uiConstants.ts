@@ -2,11 +2,9 @@
  * Shared UI constants for language and theme selectors
  */
 
-export const LANGUAGES = [
-  { code: 'en', label: 'English' },
-  { code: 'es', label: 'Espanol' },
-  { code: 'pt', label: 'Portugues' },
-] as const
+import { SUPPORTED_LANGUAGES } from '../config/languages.config'
+
+export const LANGUAGES = SUPPORTED_LANGUAGES.map(l => ({ code: l.code, label: l.name }))
 
 export const THEMES = [
   'light', 'dark', 'cupcake', 'bumblebee', 'emerald', 'corporate',

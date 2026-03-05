@@ -40,9 +40,15 @@ export function JamRegisterPage() {
         const jamData = await jamService.getJamDetails(jamId)
         setJam(jamData)
 
-        // Get most needed specialty for pre-selection
-        const mostNeeded = await jamService.getMostNeededSpecialty(jamId)
-        setMostNeededSpecialty(mostNeeded)
+        // Compute most needed specialty from already-fetched data
+        const available = jamData.specialtySlots
+          .map((slot) => ({
+            specialty: slot.specialty,
+            availableSlots: Math.max(0, slot.required - slot.registered),
+          }))
+          .filter((item) => item.availableSlots > 0)
+          .sort((a, b) => b.availableSlots - a.availableSlots)
+        setMostNeededSpecialty(available.length > 0 ? available[0].specialty : null)
       } catch (err) {
         const message = err instanceof Error ? err.message : t('errors.failed_to_load_jam')
         setError(message)

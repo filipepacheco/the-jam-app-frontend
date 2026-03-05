@@ -1,7 +1,7 @@
 import type {ScheduleResponseDto} from '../../types/api.types'
 import type {AuthUser} from '../../types/auth.types'
 import {useTranslation} from 'react-i18next'
-import {getInstrumentIcon} from '../schedule/RegistrationList'
+import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {formatJamDuration} from '../../lib/formatters'
 
 interface TimelineItemProps {

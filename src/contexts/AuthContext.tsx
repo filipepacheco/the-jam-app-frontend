@@ -16,7 +16,7 @@ import {
   signOut as supabaseSignOut,
   signUpWithEmail as supabaseSignUp,
 } from '../lib/supabase'
-import {clearAuth} from '../lib/auth'
+import {clearTokenCache} from '../lib/auth'
 import {apiClient} from '../lib/api'
 import {getOfflineQueueManager} from '../services/offlineQueue'
 
@@ -46,7 +46,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return null
     }
   })
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [role, setRoleState] = useState<UserRole>(() => {
     try {
@@ -66,6 +65,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isNewUser, setIsNewUser] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const authenticatedUserIdRef = useRef<string | null>(null)
+
+  const isAuthenticated = user !== null
 
   /**
    * Load user profile from backend via API client
@@ -93,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     setRoleState(deriveRole(profile))
     
-    setIsAuthenticated(true)
+
     setIsNewUser(profile.isNewUser || false)
     localStorage.setItem('auth_user', JSON.stringify(profile))
 
@@ -116,7 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (profile) {
             setUser(profile)
             setRoleState(deriveRole(profile))
-            setIsAuthenticated(true)
+        
             localStorage.setItem('auth_user', JSON.stringify(profile))
             authenticatedUserIdRef.current = session.user.id
           }
@@ -124,7 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // No valid session - clear any stale localStorage data
           setUser(null)
           setRoleState('viewer')
-          setIsAuthenticated(false)
+    
           localStorage.removeItem('auth_user')
           authenticatedUserIdRef.current = null
         }
@@ -150,7 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (profile) {
             setUser(profile)
             setRoleState(deriveRole(profile))
-            setIsAuthenticated(true)
+        
             setIsNewUser(profile.isNewUser || false)
             localStorage.setItem('auth_user', JSON.stringify(profile))
             authenticatedUserIdRef.current = session.user.id
@@ -158,7 +159,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
           setRoleState('viewer')
-          setIsAuthenticated(false)
+    
           setIsNewUser(false)
           localStorage.removeItem('auth_user')
           authenticatedUserIdRef.current = null
@@ -260,41 +261,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    */
   const logout = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
     setIsLoggingOut(true)
+    let error: string | undefined
 
     try {
-      // Logout from Supabase
       if (isSupabaseConfigured()) {
         await supabaseSignOut()
       }
-
-      // Clear local state
-      clearAuth()
-      localStorage.removeItem('auth_user')
-      getOfflineQueueManager().clearAll()
-      setUser(null)
-      setRoleState('viewer')
-      setIsAuthenticated(false)
-      setIsNewUser(false)
-      authenticatedUserIdRef.current = null
-
-      return { success: true }
     } catch (err) {
       console.error('Logout error:', err)
-      // Still clear local state even if unexpected errors occur
-      clearAuth()
+      error = err instanceof Error ? err.message : 'Logout failed'
+    } finally {
+      // Always clear local state regardless of Supabase signout result
+      clearTokenCache()
       localStorage.removeItem('auth_user')
       getOfflineQueueManager().clearAll()
       setUser(null)
       setRoleState('viewer')
-      setIsAuthenticated(false)
       setIsNewUser(false)
       authenticatedUserIdRef.current = null
-
-      const errorMessage = err instanceof Error ? err.message : 'Logout failed'
-      return { success: false, error: errorMessage }
-    } finally {
       setIsLoggingOut(false)
     }
+
+    return error ? { success: false, error } : { success: true }
   }, [])
 
   /**
@@ -327,7 +315,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem('auth_user', JSON.stringify(authUser))
       setUser(authUser)
       setRoleState(authUser.role)
-      setIsAuthenticated(true)
+  
     } catch (err) {
       console.error('Login failed:', err)
     }
@@ -352,13 +340,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * Update user profile
    */
   const updateUser = useCallback((fields: Partial<AuthUser>) => {
-    if (user) {
-      const updatedUser = { ...user, ...fields }
+    setUser(prev => {
+      if (!prev) return prev
+      const updatedUser = { ...prev, ...fields }
       localStorage.setItem('auth_user', JSON.stringify(updatedUser))
-      setUser(updatedUser)
       setRoleState(deriveRole(updatedUser))
-    }
-  }, [user])
+      return updatedUser
+    })
+  }, [])
 
   /**
    * Complete onboarding - update instrument, skill level, and contact info

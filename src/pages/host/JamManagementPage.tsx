@@ -17,6 +17,7 @@ import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
 import {ExternalLink} from 'lucide-react'
 import {getJamDashboardPath} from '../../utils/jamUrl'
+import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
 import {DJControlTab} from "../tabs/DJControlTab.tsx";
 import {DJControlTabV2} from "../tabs/DJControlTabV2.tsx";
 import {AnalyticsTab} from "../tabs/AnalyticsTab.tsx";
@@ -147,25 +148,14 @@ export function JamManagementPage() {
         return null
     }
 
-    const getStatusBadgeColor = () => {
-        switch (jam.status) {
-            case 'LIVE':
-                return 'badge-success'  // Live/playing
-            case 'ACTIVE':
-                return 'badge-info'     // Active/ready
-            case 'INACTIVE':
-                return 'badge-warning'
-            case 'FINISHED':
-                return 'badge-error'
-            default:
-                return 'badge-outline'
-        }
-    }
-
     const tabs: { id: TabType; label: string; icon: string }[] = [{
         id: 'overview',
         label: t('jam_management.tabs.overview'),
         icon: '📊'
+    }, {
+        id: 'registrations',
+        label: t('jam_management.tabs.registrations', 'Registrations'),
+        icon: '👥'
     }, {id: 'schedule', label: t('jam_management.tabs.schedule'), icon: '📋'}, {
         id: 'dj-control' as const,
         label: t('dj_control.title'),
@@ -174,6 +164,14 @@ export function JamManagementPage() {
         id: 'live' as const,
         label: t('jam_management.tabs.live_control'),
         icon: '🎙️'
+    }, {
+        id: 'dashboard',
+        label: t('jam_management.tabs.dashboard', 'Dashboard'),
+        icon: '📺'
+    }, {
+        id: 'analytics',
+        label: t('jam_management.tabs.analytics', 'Analytics'),
+        icon: '📈'
     }]
 
     return (<div className="min-h-screen bg-base-100">
@@ -207,7 +205,7 @@ export function JamManagementPage() {
                                 {t('jam_management.view_public_dashboard')}
                             </a>
                             <div
-                                className={`badge badge-sm sm:badge-md lg:badge-lg ${getStatusBadgeColor()}`}>{jam.status}</div>
+                                className={`badge badge-sm sm:badge-md lg:badge-lg ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
                         </div>
                     </div>
                 </div>
@@ -217,16 +215,20 @@ export function JamManagementPage() {
             {/* Tab Navigation */}
             <div className="border-b border-base-300 bg-base-200">
                 <div className="container mx-auto max-w-6xl px-2 sm:px-4">
-                    <div className="flex gap-1 sm:gap-2 py-2 overflow-x-auto">
+                    <div className="flex gap-1 sm:gap-2 py-2 overflow-x-auto" role="tablist" aria-label={t('jam_management.manage_title')}>
                         {tabs.map((tab) => (<button
                                 key={tab.id}
+                                role="tab"
+                                aria-selected={activeTab === tab.id}
+                                aria-controls={`tabpanel-${tab.id}`}
+                                id={`tab-${tab.id}`}
                                 onClick={() => handleTabChange(tab.id)}
                                 className={`
                                     btn btn-sm whitespace-nowrap shrink-0 gap-2
                                     ${activeTab === tab.id ? 'btn-primary' : 'btn-ghost'}
                                 `}
                             >
-                                <span>{tab.icon}</span>
+                                <span aria-hidden="true">{tab.icon}</span>
                                 <span>{tab.label}</span>
                             </button>))}
                     </div>
@@ -237,7 +239,7 @@ export function JamManagementPage() {
             <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} className="container sticky top-0 z-50 mx-auto max-w-6xl px-2 sm:px-4 mt-3 sm:mt-4" />
 
             {/* Tab Content */}
-            <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8">
+            <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8" role="tabpanel" id={`tabpanel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>
                 {activeTab === 'overview' && (
                     <OverviewTab jam={jam} onStatusChange={handleStatusChange} loading={jamLoading}/>)}
                 {activeTab === 'registrations' && (<RegistrationsTab jam={jam}/>)}

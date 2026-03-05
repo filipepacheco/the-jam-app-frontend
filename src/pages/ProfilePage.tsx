@@ -5,7 +5,6 @@
  */
 
 import React, {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../hooks'
 import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import {ProfileHeader} from '../components/ProfileHeader'
@@ -16,8 +15,7 @@ import {useTranslation} from 'react-i18next'
 
 export function ProfilePage() {
   const { t } = useTranslation()
-  useNavigate();
-    const { user, isAuthenticated, isLoading: authLoading, updateProfile } = useAuth()
+  const { user, isAuthenticated, isLoading: authLoading, updateProfile } = useAuth()
 
   // State
   const [isEditMode, setIsEditMode] = useState(false)

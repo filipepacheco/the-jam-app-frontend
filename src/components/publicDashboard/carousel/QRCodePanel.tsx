@@ -1,5 +1,6 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { useTranslation } from 'react-i18next'
+import { getJamShortUrl } from '../../../utils/jamUrl'
 
 interface QRCodePanelProps {
   jamId?: string
@@ -8,11 +9,8 @@ interface QRCodePanelProps {
 
 export function QRCodePanel({ jamId, shortCode }: QRCodePanelProps) {
   const { t } = useTranslation()
-  const origin = typeof window !== 'undefined' ? window.location.origin : ''
 
-  const url = shortCode
-    ? `${origin}/j/${shortCode}`
-    : `${origin}/jams/${jamId || ''}`
+  const url = getJamShortUrl({ id: jamId || '', shortCode })
 
   return (
     <div className="flex flex-col items-center justify-center text-center px-6 py-8">
@@ -26,12 +24,12 @@ export function QRCodePanel({ jamId, shortCode }: QRCodePanelProps) {
         </p>
       )}
 
-      <p className="text-2xl md:text-3xl text-slate-300">
+      <p className="text-2xl md:text-3xl text-base-content/60">
         {t('publicDashboard.scanToJoin', 'Scan to join')}
       </p>
 
       {shortCode && (
-        <p className="text-lg md:text-xl text-slate-400 mt-2">
+        <p className="text-lg md:text-xl text-base-content/50 mt-2">
           {t('publicDashboard.enterCode', 'or enter code')}
         </p>
       )}

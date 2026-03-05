@@ -7,7 +7,7 @@ import type {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 import axios, {AxiosError} from 'axios'
 import {API_CONFIG} from './config'
 import type {ApiError, ApiResponse} from '../../types/api.types'
-import {clearAuth, getAccessToken, refreshAccessToken} from '../auth'
+import {clearTokenCache, getAccessToken, refreshAccessToken} from '../auth'
 
 /**
  * API Client class
@@ -152,7 +152,7 @@ class ApiClient {
           if (import.meta.env.DEV) {
             console.warn('🔐 Token refresh failed, clearing auth and redirecting to login')
           }
-          clearAuth()
+          clearTokenCache()
           localStorage.removeItem('auth_user')
           window.location.href = '/login'
 

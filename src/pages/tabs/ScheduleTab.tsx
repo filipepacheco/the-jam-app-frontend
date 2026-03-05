@@ -1,6 +1,6 @@
 import type {JamResponseDto, ScheduleResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import {registrationService, scheduleService} from "../../services";
 import {Alert} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
@@ -19,9 +19,14 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
     const [showHostRegistrationModal, setShowHostRegistrationModal] = useState(false)
     const [selectedScheduleForRegistration, setSelectedScheduleForRegistration] = useState<ScheduleResponseDto | null>(null)
 
-    const sortedSchedules = [...(jam.schedules || [])].sort((a, b) => a.order - b.order)
-    const nonSuggestedSchedules = sortedSchedules.filter(s => s.status !== 'SUGGESTED')
-    const suggestedSchedules = sortedSchedules.filter(s => s.status === 'SUGGESTED')
+    const { sortedSchedules, nonSuggestedSchedules, suggestedSchedules } = useMemo(() => {
+        const sorted = [...(jam.schedules || [])].sort((a, b) => a.order - b.order)
+        return {
+            sortedSchedules: sorted,
+            nonSuggestedSchedules: sorted.filter(s => s.status !== 'SUGGESTED'),
+            suggestedSchedules: sorted.filter(s => s.status === 'SUGGESTED'),
+        }
+    }, [jam.schedules])
 
     // Handle schedule status change
     const handleStatusChange = async (scheduleId: string, newStatus: string) => {
@@ -134,7 +139,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         <div className="space-y-4">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                <p className="text-2xl sm:text-3xl font-bold">📋 {t('jam_management.schedule.title')}</p>
+                <h2 className="text-2xl sm:text-3xl font-bold"><span aria-hidden="true">📋</span> {t('jam_management.schedule.title')}</h2>
                 <button
                     onClick={() => setShowAddModal(true)}
                     className="btn btn-primary btn-sm sm:btn-md w-full sm:w-auto"
@@ -153,8 +158,8 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                     {/* Suggested Schedules */}
                     {suggestedSchedules.length > 0 && (
                         <div className="space-y-4">
-                            <h3 className="text-3xl font-semibold flex items-center gap-2">
-                                ✨ {t('jam_management.schedule.suggested_songs')}
+                            <h3 className="text-xl font-semibold flex items-center gap-2">
+                                <span aria-hidden="true">✨</span> {t('jam_management.schedule.suggested_songs')}
                             </h3>
                             {suggestedSchedules.map((schedule) => (
                                 <ScheduleCompactCard
@@ -177,8 +182,8 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                     {nonSuggestedSchedules.length > 0 && (
                         <div className={`space-y-4 ${suggestedSchedules.length > 0 ? 'mt-6 pt-6 border-t-2 border-primary/30' : ''}`}>
                             {suggestedSchedules.length > 0 && (
-                                <h3 className="text-3xl font-semibold flex items-center gap-2">
-                                    📋 {t('jam_management.schedule.title')}
+                                <h3 className="text-xl font-semibold flex items-center gap-2">
+                                    <span aria-hidden="true">📋</span> {t('jam_management.schedule.title')}
                                 </h3>
                             )}
                             {nonSuggestedSchedules.map((schedule) => (

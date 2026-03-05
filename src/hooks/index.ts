@@ -6,9 +6,6 @@
 // Authentication hook
 export { useAuth } from './useAuth'
 
-// Base hook
-export { useQuery, type UseQueryResult } from './useQuery'
-
 // Jam state hook
 export { useJamState } from './useJamState'
 

@@ -7,6 +7,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import useSWR from 'swr'
 import {Alert} from '../components'
+import {SITE_URL} from '../lib/api/config'
 import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
 import {SEO} from '../components/SEO'
@@ -87,7 +88,7 @@ export function BrowseJamsPage() {
   // Check if any filters are active
   const hasActiveFilters = searchQuery.trim() !== '' || statusFilter !== 'ALL'
 
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
+  const siteUrl = SITE_URL
 
   const browseJsonLd: Record<string, unknown>[] = [
     {

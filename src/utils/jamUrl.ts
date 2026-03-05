@@ -4,6 +4,8 @@
  * All internal links should use these helpers instead of hardcoding paths.
  */
 
+import { SITE_URL } from '../lib/api/config'
+
 interface JamLike {
   id: string
   slug?: string | null
@@ -46,7 +48,7 @@ export function getJamShortPath(jam: JamLike): string {
  * Uses /:slug directly (shortest readable URL) when available, falls back to /jams/:id.
  */
 export function getJamShareUrl(jam: JamLike): string {
-  const baseUrl = import.meta.env.VITE_SITE_URL || window.location.origin
+  const baseUrl = SITE_URL || window.location.origin
   if (jam.slug) return `${baseUrl}/${jam.slug}`
   return `${baseUrl}/jams/${jam.id}`
 }
@@ -55,6 +57,6 @@ export function getJamShareUrl(jam: JamLike): string {
  * Get the full short URL for a jam (for QR codes).
  */
 export function getJamShortUrl(jam: JamLike): string {
-  const baseUrl = import.meta.env.VITE_SITE_URL || window.location.origin
+  const baseUrl = SITE_URL || window.location.origin
   return `${baseUrl}${getJamShortPath(jam)}`
 }

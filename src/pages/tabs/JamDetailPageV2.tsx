@@ -5,6 +5,7 @@
 
 import {useNavigate, useParams} from 'react-router-dom'
 import {formatJamDuration} from '../../lib/formatters'
+import {SITE_URL} from '../../lib/api/config'
 import {useAuth} from '../../hooks'
 import useSWR from 'swr'
 import {useCallback, useMemo, useState, useEffect} from 'react'
@@ -231,7 +232,7 @@ export function JamDetailPageV2() {
         )
     }
 
-    const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
+    const siteUrl = SITE_URL
     const canonicalUrl = `${siteUrl}${getJamPath(jam)}`
 
     const eventStatusMap: Record<string, string> = {

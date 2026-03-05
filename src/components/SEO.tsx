@@ -1,5 +1,6 @@
 import {Helmet} from 'react-helmet-async'
 import {useAppLanguage} from '../hooks'
+import {SITE_URL} from '../lib/api/config'
 
 interface SEOProps {
   title?: string
@@ -31,7 +32,7 @@ export function SEO({
   const { currentLang } = useAppLanguage()
 
   const fullTitle = title ? `${title} | Jam App` : 'Jam App'
-  const siteUrl = import.meta.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
+  const siteUrl = SITE_URL
   const canonicalUrl = canonical || (typeof window !== 'undefined' ? `${siteUrl}${window.location.pathname}` : siteUrl)
   const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
 

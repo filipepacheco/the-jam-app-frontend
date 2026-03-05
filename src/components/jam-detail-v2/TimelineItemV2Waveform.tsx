@@ -107,7 +107,7 @@ export function TimelineItemV2Waveform({
       aria-expanded={isExpanded}
       aria-label={`${schedule.music?.title} by ${schedule.music?.artist}. ${status.text}`}
     >
-      <div className="card-body p-3">
+      <div className="card-body p-3 overflow-hidden">
 
         {/* Header: Grid layout for proper text truncation with status */}
         <div className={`grid grid-cols-[auto_1fr_auto] items-start gap-2 ${isCompleted && !isExpanded ? '' : 'mb-1'}`}>
@@ -160,10 +160,10 @@ export function TimelineItemV2Waveform({
               {schedule.registrations.map((reg: RegistrationResponseDto) => (
                 <div
                   key={reg.id}
-                  className="inline-flex items-center gap-1.5 bg-base-200/50 px-2 py-1 rounded text-xs"
+                  className="inline-flex items-center gap-1.5 bg-base-200/50 px-2 py-1 rounded text-xs max-w-full"
                 >
-                  <span aria-hidden="true">{getInstrumentIcon(reg.instrument)}</span>
-                  <span className="font-medium">
+                  <span aria-hidden="true" className="shrink-0">{getInstrumentIcon(reg.instrument)}</span>
+                  <span className="font-medium truncate">
                     {reg.musician?.id === user?.id ? t('common.you') : reg.musician?.name}
                   </span>
                 </div>
@@ -174,9 +174,9 @@ export function TimelineItemV2Waveform({
 
         {/* Description row - only shown when description exists */}
         {schedule.music?.description && (
-          <div className="flex items-center gap-1.5 border-t border-base-content/10 pt-1">
-            <FileText className="size-3 shrink-0 text-base-content/40" />
-            <p className="truncate text-xs text-base-content/50">{schedule.music.description}</p>
+          <div className="flex items-start gap-1.5 border-t border-base-content/10 pt-1">
+            <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
+            <p className="text-xs text-base-content/50 line-clamp-2 break-words">{schedule.music.description}</p>
           </div>
         )}
 

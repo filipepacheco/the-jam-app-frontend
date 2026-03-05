@@ -40,11 +40,11 @@ export function groupMusiciansByInstrument<T extends HasInstrument>(
 export function normalizeInstrument(instrument?: string): string {
   if (!instrument) return ''
   const lower = instrument.toLowerCase()
-  if (lower === 'drums' || lower === 'bateria' || lower === 'baterias') return 'drums'
-  if (lower === 'guitar' || lower === 'guitars' || lower === 'guitarra' || lower === 'guitarras') return 'guitars'
-  if (lower === 'bass' || lower === 'baixo' || lower === 'baixos') return 'bass'
-  if (lower === 'vocals' || lower === 'vocal' || lower === 'vozes' || lower === 'voz') return 'vocals'
-  if (lower === 'keys' || lower === 'keyboard' || lower === 'teclado' || lower === 'teclados') return 'keys'
+  if (['drums', 'bateria', 'batería', 'baterias'].includes(lower)) return 'drums'
+  if (['guitar', 'guitars', 'guitarra', 'guitarras'].includes(lower)) return 'guitars'
+  if (['bass', 'baixo', 'baixos', 'bajo'].includes(lower)) return 'bass'
+  if (['vocals', 'vocal', 'vozes', 'voz', 'voces'].includes(lower)) return 'vocals'
+  if (['keys', 'keyboard', 'teclado', 'teclados'].includes(lower)) return 'keys'
   return lower
 }
 
