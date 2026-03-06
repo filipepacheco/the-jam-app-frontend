@@ -570,7 +570,20 @@
     "name_required": "Name is required",
     "instrument_required": "Instrument is required",
     "contact_required": "Contact is required",
-    "failed_to_update": "Failed to update musician"
+    "failed_to_update": "Failed to update musician",
+    "bio_label": "Bio",
+    "bio_placeholder": "What's your story? Bands, genres, how long you've been playing...",
+    "other_instruments_label": "Other instruments",
+    "other_instruments_placeholder": "e.g. piano, ukulele, harmonica"
+  },
+  "musician_profile": {
+    "title": "Musician Profile",
+    "bio": "About",
+    "other_instruments": "Other instruments",
+    "jams_played": "Jams",
+    "songs_played": "Songs",
+    "instruments_played": "Played on",
+    "member_since": "Member since {{date}}"
   },
   "host_songs": {
     "back_to_manage": "← Back to Jam Management",
@@ -613,7 +626,9 @@
     "host_name_label": "Host Name",
     "host_contact_label": "Host Contact",
     "name_required": "Name is required",
-    "phone_required": "Phone is required"
+    "phone_required": "Phone is required",
+    "bio_label": "Bio",
+    "other_instruments_label": "Other instruments"
   },
   "music_empty": {
     "no_songs_found": "No songs found",
@@ -1199,6 +1214,34 @@
       "create_hint": "Create a new jam session. You can add songs and manage registrations later.",
       "edit_hint": "Update the jam details. Changes will be saved immediately."
     }
+  },
+  "about": {
+    "seo_title": "About Jam App",
+    "seo_description": "Jam App is a free platform for organizing live jam sessions. Hosts manage events, musicians register for songs, and audiences follow along in real time.",
+    "breadcrumb_home": "Home",
+    "breadcrumb_about": "About",
+    "title": "About Jam App",
+    "intro": "Jam App is a free platform built for people who love live music. We make it easy to organize jam sessions, open mics, and music events - no spreadsheets, no group chats, just a clean tool that works.",
+    "mission_title": "Why We Built This",
+    "mission_p1": "Organizing a jam session should be fun, not frustrating. We saw hosts juggling WhatsApp groups, spreadsheets, and paper lists just to keep track of who plays what. Musicians had no easy way to browse events and sign up for songs. And audiences were left wondering what's playing next.",
+    "mission_p2": "Jam App solves all three problems in one place. The host builds a setlist, musicians register for songs and instruments, and the audience follows along on a live dashboard - all in real time, from any device.",
+    "who_title": "Built for Three Roles",
+    "who_hosts": "Hosts",
+    "who_hosts_desc": "Create events, manage setlists, approve registrations, and control playback live with the DJ panel.",
+    "who_musicians": "Musicians",
+    "who_musicians_desc": "Browse jams, register for songs by instrument, and see your performance schedule at a glance.",
+    "who_audience": "Audience",
+    "who_audience_desc": "Follow the live dashboard on any screen - see what's playing, who's on stage, and what's next. No account needed.",
+    "values_title": "What We Stand For",
+    "value_free": "Free for Everyone",
+    "value_free_desc": "Jam App is completely free for hosts, musicians, and audiences. No hidden fees, no premium tiers.",
+    "value_privacy": "Privacy First",
+    "value_privacy_desc": "We collect only what's needed to run the app. No third-party tracking cookies. Your data stays yours.",
+    "contact_title": "Get in Touch",
+    "contact_text": "Questions, feedback, or partnership ideas? We'd love to hear from you.",
+    "cta_title": "Ready to Jam?",
+    "cta_explore": "Explore Jams",
+    "cta_register": "Create an Account"
   },
   "notFound": {
   "title": "Page Not Found",

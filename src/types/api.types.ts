@@ -44,8 +44,21 @@ export interface MusicianResponseDto {
   phone?: string | null
   email?: string | null
   supabaseUserId?: string | null
+  bio?: string | null
+  otherInstruments?: string | null
   isHost: boolean
   createdAt: string
+}
+
+/**
+ * Musician profile with participation stats (from GET /musicos/:id)
+ */
+export interface MusicianProfileWithStats extends MusicianResponseDto {
+  stats: {
+    totalJams: number
+    totalSongs: number
+    instruments: string[]
+  }
 }
 
 /**
@@ -172,6 +185,8 @@ export interface UpdateMusicianDto {
   contact?: string
   instrument?: string
   level?: MusicianLevel
+  bio?: string
+  otherInstruments?: string
 }
 
 /**

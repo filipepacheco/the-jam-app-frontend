@@ -16,10 +16,11 @@ interface ScheduleDisplayItemProps {
     isSuggested?: boolean
     userRegisteredForSchedule?: boolean
     onEnrollClick?: () => void
+    onMusicianClick?: (musicianId: string) => void
 }
 
 export const ScheduleDisplayItem = memo(function ScheduleDisplayItem({
-                                        schedule, isSuggested = false, userRegisteredForSchedule = false, onEnrollClick,
+                                        schedule, isSuggested = false, userRegisteredForSchedule = false, onEnrollClick, onMusicianClick,
                                     }: ScheduleDisplayItemProps) {
     const { t } = useTranslation()
 
@@ -110,6 +111,7 @@ export const ScheduleDisplayItem = memo(function ScheduleDisplayItem({
         <RegistrationList
             registrations={schedule.registrations}
             showActions={false}
+            onMusicianClick={onMusicianClick}
             neededDrums={schedule.music?.neededDrums}
             neededGuitars={schedule.music?.neededGuitars}
             neededBass={schedule.music?.neededBass}

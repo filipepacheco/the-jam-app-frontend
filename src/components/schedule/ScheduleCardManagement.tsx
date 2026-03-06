@@ -20,6 +20,7 @@ interface ScheduleCardProps {
     onRejectRegistration?: (registrationId: string) => void
     onDeleteRegistration?: (registrationId: string) => void
     onAddMusician?: () => void
+    onMusicianClick?: (musicianId: string) => void
 }
 
 export function ScheduleCardManagement({
@@ -32,6 +33,7 @@ export function ScheduleCardManagement({
                                            onRejectRegistration,
                                            onDeleteRegistration,
                                            onAddMusician,
+                                           onMusicianClick,
                                        }: ScheduleCardProps) {
     return (
         <div
@@ -88,6 +90,7 @@ export function ScheduleCardManagement({
                             onDelete={onDeleteRegistration}
                             showActions={true}
                             onAddMusician={onAddMusician}
+                            onMusicianClick={onMusicianClick}
                             neededDrums={schedule.music?.neededDrums}
                             neededGuitars={schedule.music?.neededGuitars}
                             neededBass={schedule.music?.neededBass}

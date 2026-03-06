@@ -5,6 +5,7 @@ import {registrationService, scheduleService} from "../../services";
 import {Alert} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCompactCard} from "../../components/schedule/ScheduleCompactCard";
+import {MusicianProfileModal} from "../../components/MusicianProfileModal";
 
 /**
  * Schedule Tab Component - Full management with nested registrations
@@ -18,6 +19,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
     const [selectedMusicId, setSelectedMusicId] = useState('')
     const [showHostRegistrationModal, setShowHostRegistrationModal] = useState(false)
     const [selectedScheduleForRegistration, setSelectedScheduleForRegistration] = useState<ScheduleResponseDto | null>(null)
+    const [selectedMusicianId, setSelectedMusicianId] = useState<string | null>(null)
 
     const { sortedSchedules, nonSuggestedSchedules, suggestedSchedules } = useMemo(() => {
         const sorted = [...(jam.schedules || [])].sort((a, b) => a.order - b.order)
@@ -173,6 +175,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     onRejectRegistration={handleRejectRegistration}
                                     onDeleteRegistration={handleRejectRegistration}
                                     onAddMusician={() => handleAddMusician(schedule)}
+                                    onMusicianClick={setSelectedMusicianId}
                                 />
                             ))}
                         </div>
@@ -198,6 +201,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     onRejectRegistration={handleRejectRegistration}
                                     onDeleteRegistration={handleRejectRegistration}
                                     onAddMusician={() => handleAddMusician(schedule)}
+                                    onMusicianClick={setSelectedMusicianId}
                                 />
                             ))}
                         </div>
@@ -232,6 +236,14 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                         setSelectedScheduleForRegistration(null)
                         onReload()
                     }}
+                />
+            )}
+
+            {/* Musician Profile Modal */}
+            {selectedMusicianId && (
+                <MusicianProfileModal
+                    musicianId={selectedMusicianId}
+                    onClose={() => setSelectedMusicianId(null)}
                 />
             )}
 

@@ -16,6 +16,7 @@ interface MusicianSlotRowProps {
   onApprove?: (registrationId: string) => void
   onReject?: (registrationId: string) => void
   onDelete?: (registrationId: string) => void
+  onMusicianClick?: (musicianId: string) => void
 }
 
 const statusDotColor: Record<string, string> = {
@@ -31,6 +32,7 @@ export function MusicianSlotRow({
   onApprove,
   onReject,
   onDelete,
+  onMusicianClick,
 }: MusicianSlotRowProps) {
   const { t } = useTranslation()
   const status = registration.status || 'PENDING'
@@ -45,9 +47,14 @@ export function MusicianSlotRow({
       </span>
 
       {/* Musician name - flex-1 on mobile, natural width on lg+ (grid handles layout) */}
-      <span className="truncate flex-1 lg:flex-initial min-w-0 font-medium text-base-content">
+      <button
+        type="button"
+        className={`truncate flex-1 lg:flex-initial min-w-0 font-medium text-base-content text-left ${onMusicianClick ? 'hover:text-primary hover:underline cursor-pointer transition-colors' : ''}`}
+        onClick={() => registration.musician?.id && onMusicianClick?.(registration.musician.id)}
+        disabled={!onMusicianClick}
+      >
         {name}
-      </span>
+      </button>
       {registration.musician?.contact && (
         <span className="hidden lg:inline text-base-content/50 truncate max-w-[120px]">
           {registration.musician.contact}

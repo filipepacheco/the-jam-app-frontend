@@ -1,6 +1,6 @@
 {
   "common": {
-    "privacy_policy":  "Politica de Privacidade",
+    "privacy_policy":  "Política de Privacidade",
     "app_name": "Jam App",
     "continue": "Continuar",
     "cancel": "Cancelar",
@@ -104,7 +104,8 @@
     "mobile_menu": "Menu de navegação",
     "close_menu": "Fechar menu",
     "login": "Entrar",
-    "greeting": "Ola, {{name}}"
+    "greeting": "Ola, {{name}}",
+    "about": "Sobre o Jam App"
   },
   "auth": {
     "sign_in": "Entrar",
@@ -156,7 +157,7 @@
   },
   "homepage": {
     "hero": {
-      "title": "Organize suas Jams sem Bagunça",
+      "title": "Organize Jams sem Bagunça",
       "subtitle": "Para anfitriões, músicos e casas de show",
       "description": "O anfitrião monta o setlist.\nOs músicos se inscrevem nas músicas.\nO público acompanha tudo numa tela ao vivo.\nSem grupo de WhatsApp. Sem planilha. Só música.",
       "cta_button": "Começar",
@@ -495,7 +496,7 @@
       "submitting_progress": "Adicionando {{completed}}/{{total}}...",
       "partial_error": "{{success}} adicionados, {{failed}} falharam",
       "all_failed": "Todos os registros falharam",
-      "duplicate_in_queue": "Ja esta na fila para este instrumento"
+      "duplicate_in_queue": "Já está na fila para este instrumento"
     }
   },
   "errors": {
@@ -574,7 +575,20 @@
     "name_required": "Nome é obrigatório",
     "instrument_required": "Instrumento é obrigatório",
     "contact_required": "Contato é obrigatório",
-    "failed_to_update": "Falha ao atualizar músico"
+    "failed_to_update": "Falha ao atualizar músico",
+    "bio_label": "Biografia",
+    "bio_placeholder": "Sua história: bandas, gêneros, há quanto tempo toca...",
+    "other_instruments_label": "Outros instrumentos",
+    "other_instruments_placeholder": "ex. piano, ukulele, gaita"
+  },
+  "musician_profile": {
+    "title": "Perfil do Músico",
+    "bio": "Sobre",
+    "other_instruments": "Outros instrumentos",
+    "jams_played": "Jams",
+    "songs_played": "Músicas",
+    "instruments_played": "Já tocou",
+    "member_since": "Membro desde {{date}}"
   },
   "host_songs": {
     "back_to_manage": "← Voltar para Gestão do Jam",
@@ -617,7 +631,9 @@
     "host_name_label": "Nome do anfitrião",
     "host_contact_label": "Contato do anfitrião",
     "name_required": "Nome é obrigatório",
-    "phone_required": "Telefone é obrigatório"
+    "phone_required": "Telefone é obrigatório",
+    "bio_label": "Biografia",
+    "other_instruments_label": "Outros instrumentos"
   },
   "music_empty": {
     "no_songs_found": "Nenhuma música encontrada",
@@ -962,14 +978,14 @@
     },
     "browse": {
       "title": "Encontre Jam Sessions Perto de Você",
-      "description": "Encontre e participe de jam sessions ao vivo, open mics e eventos musicais na sua região. Veja as próximas jams, inscreva-se em musicas e conecte-se com músicos locais.",
-      "keywords": "jam sessions, eventos musicais, open mic, noite de jam, encontrar jam sessions, eventos de musica ao vivo"
+      "description": "Encontre e participe de jam sessions ao vivo, open mics e eventos musicais na sua região. Veja as próximas jams, inscreva-se em músicas e conecte-se com músicos locais.",
+      "keywords": "jam sessions, eventos musicais, open mic, noite de jam, encontrar jam sessions, eventos de música ao vivo"
     },
     "features": {
       "create_jams": "Criar e gerenciar jam sessions ao vivo",
-      "live_dashboard": "Painel publico em tempo real para o publico",
+      "live_dashboard": "Painel público em tempo real para o público",
       "musician_registration": "Inscrição de músicos por instrumento",
-      "setlist_control": "Controle de setlist e ordem das musicas",
+      "setlist_control": "Controle de setlist e ordem das músicas",
       "qr_sharing": "QR code para compartilhar jams",
       "spotify_import": "Importar playlists do Spotify"
     }
@@ -979,10 +995,10 @@
     "button_label": "Enviar feedback sobre o app",
     "modal_title": "Compartilhe sua Opinião",
     "modal_subtitle": "Ajude-nos a melhorar compartilhando sua experiencia",
-    "rating_label": "Como voce avalia sua experiencia?",
+    "rating_label": "Como você avalia sua experiencia?",
     "rating_required": "Por favor selecione uma avaliação",
     "comment_label": "Comentários adicionais (opcional)",
-    "comment_placeholder": "Conte-nos o que voce gostou ou o que podemos melhorar...",
+    "comment_placeholder": "Conte-nos o que você gostou ou o que podemos melhorar...",
     "character_count": "{{count}}/500",
     "submit_button": "Enviar Feedback",
     "submitting": "Enviando...",
@@ -1002,12 +1018,12 @@
     "loading": "Carregando feedback...",
     "load_error": "Falha ao carregar feedback",
     "no_feedback": "Nenhum feedback recebido ainda.",
-    "anonymous": "Anonimo",
+    "anonymous": "Anônimo",
     "stats": {
       "total": "Total de Feedback",
       "average": "Avaliação Media"
     },
-    "pagination": "Pagina {{page}} de {{totalPages}}"
+    "pagination": "Página {{page}} de {{totalPages}}"
   },
   "spotify": {
     "import_button": "Importar do Spotify",
@@ -1038,7 +1054,7 @@
       "reused_tracks": "Faixas reutilizadas",
       "skipped_tracks": "Faixas ignoradas",
       "added_tracks": "Faixas adicionadas",
-      "duplicate_tracks": "Ja no jam",
+      "duplicate_tracks": "Já no jam",
       "duplicate_tracks_desc": "Estas faixas foram ignoradas",
       "view_jam": "Ver Jam",
       "back_to_jam": "Voltar ao Jam",
@@ -1051,13 +1067,13 @@
       "songs_count": "músicas",
       "errors": {
         "invalid_url": "URL da playlist inválida. Verifique e tente novamente.",
-        "private_playlist": "Esta playlist e privada. Apenas playlists publicas podem ser importadas.",
-        "not_found": "Playlist ou jam nao encontrado. Verifique e tente novamente.",
+        "private_playlist": "Esta playlist é privada. Apenas playlists públicas podem ser importadas.",
+        "not_found": "Playlist ou jam não encontrado. Verifique e tente novamente.",
         "rate_limit": "Muitas solicitações. Aguarde um momento e tente novamente.",
-        "network_error": "Nao foi possível conectar ao Spotify. Tente novamente mais tarde.",
-        "not_configured": "A integração com Spotify nao esta configurada no servidor.",
+        "network_error": "Não foi possível conectar ao Spotify. Tente novamente mais tarde.",
+        "not_configured": "A integração com Spotify não está configurada no servidor.",
         "import_failed": "Falha ao importar playlist. Tente novamente.",
-        "forbidden": "Voce deve ser o anfitrião do jam para adicionar faixas.",
+        "forbidden": "Você deve ser o anfitrião do jam para adicionar faixas.",
         "validation": "Requisição inválida. Verifique os dados e tente novamente."
       }
     },
@@ -1078,16 +1094,16 @@
       "errors": {
         "no_valid_tracks": "Nenhuma faixa valida encontrada para exportar.",
         "invalid_token": "Autorização do Spotify expirou. Tente novamente.",
-        "not_found": "Jam nao encontrado.",
+        "not_found": "Jam não encontrado.",
         "rate_limit": "Muitas solicitações. Aguarde um momento e tente novamente.",
-        "network_error": "Nao foi possível conectar ao Spotify. Tente novamente mais tarde.",
+        "network_error": "Não foi possível conectar ao Spotify. Tente novamente mais tarde.",
         "export_failed": "Falha ao exportar playlist. Tente novamente."
       }
     },
     "callback": {
       "processing": "Conectando ao Spotify...",
       "auth_failed": "Autorização do Spotify falhou",
-      "invalid_state": "Estado de autorização invalido. Tente novamente.",
+      "invalid_state": "Estado de autorização inválido. Tente novamente.",
       "code_exchange_failed": "Falha ao completar autorização do Spotify.",
       "user_denied": "Autorização do Spotify foi negada.",
       "retry": "Tentar Novamente"
@@ -1107,7 +1123,7 @@
         "description": "Cadastre-se em jams, escolha seu instrumento e suba ao palco"
       },
       "audience": {
-        "title": "Publico",
+        "title": "Público",
         "description": "Acompanhe dashboards ao vivo mostrando o que toca agora e o que vem a seguir"
       }
     },
@@ -1130,11 +1146,11 @@
       "title": "Dashboard ao Vivo",
       "liveLabel": "Ao Vivo - Jam de Sexta",
       "nowPlaying": "Tocando Agora",
-      "upNext": "proxima",
+      "upNext": "próxima",
       "scanToJoin": "Escaneie para participar"
     },
     "cta": {
-      "tagline": "Seu palco esta esperando",
+      "tagline": "Seu palco está esperando",
       "button": "Comece de Graça"
     }
   },
@@ -1196,7 +1212,7 @@
       "load_error": "Falha ao carregar o jam",
       "save_error": "Falha ao salvar o jam",
       "delete_error": "Falha ao excluir o jam",
-      "confirm_delete": "Tem certeza de que deseja excluir este jam? Esta ação nao pode ser desfeita.",
+      "confirm_delete": "Tem certeza de que deseja excluir este jam? Esta ação não pode ser desfeita.",
       "confirm_delete_title": "Excluir Jam"
     },
     "info": {
@@ -1204,11 +1220,39 @@
       "edit_hint": "Atualize os detalhes do jam. As alterações serão salvas imediatamente."
     }
   },
+  "about": {
+    "seo_title": "Sobre o Jam App",
+    "seo_description": "O Jam App é uma plataforma gratuita para organizar jam sessions ao vivo. Anfitriões gerenciam eventos, músicos se inscrevem em músicas e o público acompanha tudo em tempo real.",
+    "breadcrumb_home": "Início",
+    "breadcrumb_about": "Sobre",
+    "title": "Sobre o Jam App",
+    "intro": "O Jam App é uma plataforma gratuita feita para quem ama música ao vivo. Facilitamos a organização de jam sessions, open mics e eventos musicais - sem planilhas, sem grupos de WhatsApp, apenas uma ferramenta simples que funciona.",
+    "mission_title": "Por que criamos isso?",
+    "mission_p1": "Organizar uma Jam Session deveria ser divertido, não frustrante. Víamos anfitriões fazendo malabarismos com grupos de WhatsApp, planilhas e listas de papel só para controlar quem toca o quê. Músicos não tinham uma forma fácil de encontrar eventos e se inscrever em músicas. E o público ficava sem saber o que vinha a seguir.",
+    "mission_p2": "O Jam App resolve esses três problemas em um só lugar. O anfitrião monta o setlist, os músicos se inscrevem por música e instrumento, e o público acompanha pelo painel ao vivo - tudo em tempo real, de qualquer dispositivo.",
+    "who_title": "Feito para os três papéis",
+    "who_hosts": "Anfitriões",
+    "who_hosts_desc": "Crie eventos, gerencie setlists, aprove inscrições e controle a reprodução ao vivo com o painel DJ.",
+    "who_musicians": "Músicos",
+    "who_musicians_desc": "Explore jams, inscreva-se em músicas por instrumento e veja sua agenda de performances de forma simples.",
+    "who_audience": "Público",
+    "who_audience_desc": "Acompanhe o painel ao vivo em qualquer tela - veja o que está tocando, quem está no palco e o que vem a seguir. Sem necessidade de conta.",
+    "values_title": "No que acreditamos",
+    "value_free": "Gratuito para todos",
+    "value_free_desc": "O Jam App é completamente gratuito para anfitriões, músicos e público. Sem taxas escondidas, sem planos premium.",
+    "value_privacy": "Privacidade em primeiro lugar",
+    "value_privacy_desc": "Coletamos apenas o necessário para o funcionamento do app. Sem cookies de rastreamento de terceiros. Seus dados são seus.",
+    "contact_title": "Entre em contato",
+    "contact_text": "Duvidas, sugestões ou ideias de parceria? Adoraríamos ouvir de você.",
+    "cta_title": "Pronto para tocar?",
+    "cta_explore": "Explorar Jams",
+    "cta_register": "Criar uma Conta"
+  },
   "notFound": {
-  "title": "Pagina nao encontrada",
-  "heading": "Pagina nao encontrada",
-  "message": "A pagina que voce procura nao existe ou foi movida.",
-  "goHome": "Ir para o inicio",
+  "title": "Página não encontrada",
+  "heading": "Página não encontrada",
+  "message": "A página que você procura não existe ou foi movida.",
+  "goHome": "Ir para o início",
   "browseJams": "Explorar Jams"
 }
 }

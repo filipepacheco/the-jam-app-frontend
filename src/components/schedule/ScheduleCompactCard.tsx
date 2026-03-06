@@ -25,6 +25,7 @@ interface ScheduleCompactCardProps {
   onRejectRegistration?: (registrationId: string) => void
   onDeleteRegistration?: (registrationId: string) => void
   onAddMusician?: () => void
+  onMusicianClick?: (musicianId: string) => void
 }
 
 export function ScheduleCompactCard({
@@ -37,6 +38,7 @@ export function ScheduleCompactCard({
   onRejectRegistration,
   onDeleteRegistration,
   onAddMusician,
+  onMusicianClick,
 }: ScheduleCompactCardProps) {
   const { t } = useTranslation()
   const music = schedule.music
@@ -129,6 +131,7 @@ export function ScheduleCompactCard({
           onReject={onRejectRegistration}
           onDelete={onDeleteRegistration}
           onAddMusician={onAddMusician}
+          onMusicianClick={onMusicianClick}
           neededDrums={music?.neededDrums}
           neededGuitars={music?.neededGuitars}
           neededBass={music?.neededBass}

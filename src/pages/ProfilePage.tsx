@@ -26,7 +26,7 @@ export function ProfilePage() {
 
   // ... (auth guard and init from user)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
@@ -45,6 +45,8 @@ export function ProfilePage() {
         contact: user?.contact || '',
         instrument: user?.instrument || '',
         level: user?.level,
+        bio: user?.bio || '',
+        otherInstruments: user?.otherInstruments || '',
       })
       setError(null)
     }
@@ -74,6 +76,8 @@ export function ProfilePage() {
         contact: formData.contact,
         instrument: formData.instrument,
         level: formData.level,
+        bio: formData.bio,
+        otherInstruments: formData.otherInstruments,
       }
 
       await updateProfile(updates)
@@ -180,6 +184,27 @@ export function ProfilePage() {
                   disabled: isLoading || !isEditMode,
                   readOnly: !isEditMode,
                   options: ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'PROFESSIONAL'],
+                },
+                {
+                  name: 'otherInstruments',
+                  label: t('profile.other_instruments_label'),
+                  type: 'text',
+                  value: formData.otherInstruments || '',
+                  onChange: handleInputChange,
+                  disabled: isLoading || !isEditMode,
+                  readOnly: !isEditMode,
+                  maxLength: 200,
+                },
+                {
+                  name: 'bio',
+                  label: t('profile.bio_label'),
+                  type: 'textarea',
+                  value: formData.bio || '',
+                  onChange: handleInputChange,
+                  disabled: isLoading || !isEditMode,
+                  readOnly: !isEditMode,
+                  maxLength: 500,
+                  fullWidth: true,
                 },
               ]}
             />

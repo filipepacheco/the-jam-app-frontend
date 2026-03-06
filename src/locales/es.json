@@ -568,7 +568,20 @@
     "name_required": "El nombre es obligatorio",
     "instrument_required": "El instrumento es obligatorio",
     "contact_required": "El contacto es obligatorio",
-    "failed_to_update": "Error al actualizar músico"
+    "failed_to_update": "Error al actualizar músico",
+    "bio_label": "Biografía",
+    "bio_placeholder": "Tu historia: bandas, géneros, cuánto tiempo llevas tocando...",
+    "other_instruments_label": "Otros instrumentos",
+    "other_instruments_placeholder": "ej. piano, ukulele, armónica"
+  },
+  "musician_profile": {
+    "title": "Perfil del Músico",
+    "bio": "Sobre",
+    "other_instruments": "Otros instrumentos",
+    "jams_played": "Jams",
+    "songs_played": "Canciones",
+    "instruments_played": "Ya tocó",
+    "member_since": "Miembro desde {{date}}"
   },
   "host_songs": {
     "back_to_manage": "← Volver a Gestión del Jam",
@@ -611,7 +624,9 @@
     "host_name_label": "Nombre del Anfitrión",
     "host_contact_label": "Contacto del Anfitrión",
     "name_required": "El nombre es obligatorio",
-    "phone_required": "El teléfono es obligatorio"
+    "phone_required": "El teléfono es obligatorio",
+    "bio_label": "Biografía",
+    "other_instruments_label": "Otros instrumentos"
   },
   "music_empty": {
     "no_songs_found": "No se encontraron canciones",
@@ -1197,6 +1212,34 @@
       "create_hint": "Crea una nueva sesión de jam. Podrás agregar canciones y gestionar inscripciones después.",
       "edit_hint": "Actualiza los detalles del jam. Los cambios se guardaran inmediatamente."
     }
+  },
+  "about": {
+    "seo_title": "Acerca de Jam App",
+    "seo_description": "Jam App es una plataforma gratuita para organizar jam sessions en vivo. Los anfitriones gestionan eventos, los musicos se inscriben en canciones y el publico sigue todo en tiempo real.",
+    "breadcrumb_home": "Inicio",
+    "breadcrumb_about": "Acerca de",
+    "title": "Acerca de Jam App",
+    "intro": "Jam App es una plataforma gratuita creada para quienes aman la musica en vivo. Facilitamos la organizacion de jam sessions, open mics y eventos musicales - sin hojas de calculo, sin grupos de chat, solo una herramienta simple que funciona.",
+    "mission_title": "Por Que Lo Creamos",
+    "mission_p1": "Organizar una jam session deberia ser divertido, no frustrante. Veiamos a anfitriones haciendo malabares con grupos de WhatsApp, hojas de calculo y listas en papel solo para controlar quien toca que. Los musicos no tenian una forma facil de encontrar eventos e inscribirse en canciones. Y el publico no sabia que venia despues.",
+    "mission_p2": "Jam App resuelve estos tres problemas en un solo lugar. El anfitrion arma el setlist, los musicos se inscriben por cancion e instrumento, y el publico sigue el panel en vivo - todo en tiempo real, desde cualquier dispositivo.",
+    "who_title": "Hecho para Tres Roles",
+    "who_hosts": "Anfitriones",
+    "who_hosts_desc": "Crea eventos, gestiona setlists, aprueba inscripciones y controla la reproduccion en vivo con el panel DJ.",
+    "who_musicians": "Musicos",
+    "who_musicians_desc": "Explora jams, inscribete en canciones por instrumento y consulta tu agenda de presentaciones facilmente.",
+    "who_audience": "Publico",
+    "who_audience_desc": "Sigue el panel en vivo en cualquier pantalla - ve que esta sonando, quien esta en el escenario y que viene despues. Sin necesidad de cuenta.",
+    "values_title": "Lo Que Defendemos",
+    "value_free": "Gratis para Todos",
+    "value_free_desc": "Jam App es completamente gratuito para anfitriones, musicos y publico. Sin cargos ocultos, sin planes premium.",
+    "value_privacy": "Privacidad Primero",
+    "value_privacy_desc": "Solo recopilamos lo necesario para que la app funcione. Sin cookies de seguimiento de terceros. Tus datos son tuyos.",
+    "contact_title": "Contactanos",
+    "contact_text": "Preguntas, comentarios o ideas de colaboracion? Nos encantaria saber de ti.",
+    "cta_title": "Listo para Tocar?",
+    "cta_explore": "Explorar Jams",
+    "cta_register": "Crear una Cuenta"
   },
   "notFound": {
   "title": "Pagina no encontrada",

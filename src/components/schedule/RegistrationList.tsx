@@ -63,6 +63,7 @@ interface RegistrationListProps {
     onDelete?: (registrationId: string) => void
     showActions?: boolean
     onAddMusician?: () => void
+    onMusicianClick?: (musicianId: string) => void
     neededDrums?: number
     neededGuitars?: number
     neededBass?: number
@@ -78,6 +79,7 @@ export function RegistrationList({
                                      onDelete,
                                      showActions = false,
                                      onAddMusician,
+                                     onMusicianClick,
                                      neededDrums,
                                      neededGuitars,
                                      neededBass,
@@ -129,7 +131,13 @@ export function RegistrationList({
                                             key={registration.id}
                                             className="bg-base-100 rounded-lg p-3 flex items-start gap-3 shadow-xs border border-base-200 hover:shadow-sm hover:border-primary/30 transition-all"
                                         >
-                                            {/* Avatar */}
+                                            {/* Avatar + Name (clickable) */}
+                                            <button
+                                                type="button"
+                                                className={`flex items-start gap-3 min-w-0 flex-1 text-left ${onMusicianClick ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''}`}
+                                                onClick={() => registration.musician?.id && onMusicianClick?.(registration.musician.id)}
+                                                disabled={!onMusicianClick}
+                                            >
                                             <Avatar
                                                 name={registration.musician?.name || t('common.unknown')}
                                                 size="sm"
@@ -141,9 +149,7 @@ export function RegistrationList({
                                                 <p className="text-xs font-bold line-clamp-2 text-base-content">
                                                     {registration.musician?.name || t('common.unknown')}
                                                     {registration.musician?.instrument && (
-                                                        // <span className="text-xs font-normal text-base-content/60 flex items-center gap-1 mt-0.5">
                                                             <>{' '}({getInstrumentIcon(registration.musician.instrument)})</>
-                                                        // </span>
                                                     )}
                                                 </p>
 
@@ -161,7 +167,7 @@ export function RegistrationList({
                                                             <span>{t('schedule.statuses.canceled')}</span>
                                                         </div>
                                                     )}
-                                                    {!registration.status || (registration.status !== 'APPROVED' && registration.status !== 'REJECTED') && (
+                                                    {(!registration.status || (registration.status !== 'APPROVED' && registration.status !== 'REJECTED')) && (
                                                         <div className="flex items-center gap-1 badge badge-sm bg-warning/10 text-warning border-warning">
                                                             <Clock className="w-3 h-3" />
                                                             <span>{t('common.statuses.pending')}</span>
@@ -185,6 +191,7 @@ export function RegistrationList({
                                                     </div>
                                                 )}
                                             </div>
+                                            </button>
 
                                             {/* Action Buttons - Right side */}
                                             {showActions && (

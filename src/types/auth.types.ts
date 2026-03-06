@@ -35,6 +35,8 @@ export interface AuthUser {
   instrument?: string
   level?: SkillLevel
   contact?: string
+  bio?: string
+  otherInstruments?: string
 
   // Timestamps
   createdAt?: Date
@@ -86,4 +88,6 @@ export interface UpdateProfileDto {
   level?: SkillLevel
   contact?: string
   phone?: string
+  bio?: string
+  otherInstruments?: string
 }

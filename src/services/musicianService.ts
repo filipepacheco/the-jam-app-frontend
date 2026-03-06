@@ -6,6 +6,7 @@
 import { apiClient, API_ENDPOINTS } from '../lib/api'
 import type {
   MusicianResponseDto,
+  MusicianProfileWithStats,
   CreateMusicianDto,
   UpdateMusicianDto,
   ApiResponse,
@@ -31,6 +32,10 @@ export const musicianService = {
    */
   async findAll(): Promise<ApiResponse<MusicianResponseDto[]>> {
     return apiClient.get<MusicianResponseDto[]>(API_ENDPOINTS.musicians as string)
+  },
+
+  async findOne(id: string): Promise<ApiResponse<MusicianProfileWithStats>> {
+    return apiClient.get<MusicianProfileWithStats>(API_ENDPOINTS.musicianById(id))
   },
 
   /**

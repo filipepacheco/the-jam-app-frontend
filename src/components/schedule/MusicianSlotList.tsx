@@ -18,6 +18,7 @@ interface MusicianSlotListProps {
   onReject?: (registrationId: string) => void
   onDelete?: (registrationId: string) => void
   onAddMusician?: () => void
+  onMusicianClick?: (musicianId: string) => void
   neededDrums?: number
   neededGuitars?: number
   neededBass?: number
@@ -38,6 +39,7 @@ export function MusicianSlotList({
   onReject,
   onDelete,
   onAddMusician,
+  onMusicianClick,
   neededDrums = 0,
   neededGuitars = 0,
   neededBass = 0,
@@ -104,6 +106,7 @@ export function MusicianSlotList({
               onApprove={onApprove}
               onReject={onReject}
               onDelete={onDelete}
+              onMusicianClick={onMusicianClick}
             />
           ) : (
             <EmptySlotRow

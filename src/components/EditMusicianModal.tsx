@@ -26,11 +26,13 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
     level: (musician.level ?? 'BEGINNER') as MusicianLevel,
     contact: musician.contact ?? '',
     phone: musician.phone ?? '',
+    bio: musician.bio ?? '',
+    otherInstruments: musician.otherInstruments ?? '',
   })
 
   const { error, setError, isLoading, setIsLoading } = useFormState({ navigateOnSuccess: false })
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
@@ -191,6 +193,40 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
             onChange={handleInputChange}
             className="input input-bordered"
             placeholder={t('musician_form.phone_placeholder')}
+            disabled={isLoading}
+          />
+        </div>
+
+        {/* Other Instruments */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('musician_form.other_instruments_label')}</span>
+          </label>
+          <input
+            type="text"
+            name="otherInstruments"
+            value={formData.otherInstruments}
+            onChange={handleInputChange}
+            className="input input-bordered"
+            placeholder={t('musician_form.other_instruments_placeholder')}
+            maxLength={200}
+            disabled={isLoading}
+          />
+        </div>
+
+        {/* Bio */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">{t('musician_form.bio_label')}</span>
+          </label>
+          <textarea
+            name="bio"
+            value={formData.bio}
+            onChange={handleInputChange}
+            className="textarea textarea-bordered"
+            placeholder={t('musician_form.bio_placeholder')}
+            rows={3}
+            maxLength={500}
             disabled={isLoading}
           />
         </div>

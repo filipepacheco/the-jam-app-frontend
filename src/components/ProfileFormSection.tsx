@@ -7,12 +7,14 @@ import React from "react";
 interface FormField {
   name: string
   label: string
-  type: 'text' | 'email' | 'tel' | 'select'
+  type: 'text' | 'email' | 'tel' | 'select' | 'textarea'
   value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
+  onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void
   disabled: boolean
   readOnly: boolean
   options?: string[]
+  maxLength?: number
+  fullWidth?: boolean
 }
 
 interface ProfileFormSectionProps {
@@ -40,7 +42,7 @@ export function ProfileFormSection({
         {/* Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {fields.map((field) => (
-            <div key={field.name} className="form-control">
+            <div key={field.name} className={`form-control ${field.fullWidth ? 'md:col-span-2' : ''}`}>
               <label className="label">
                 <span className="label-text font-semibold">{field.label}</span>
               </label>
@@ -61,21 +63,34 @@ export function ProfileFormSection({
                     </option>
                   ))}
                 </select>
+              ) : isEditMode && field.type === 'textarea' ? (
+                /* Edit Mode - Textarea */
+                <textarea
+                  name={field.name}
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={field.disabled}
+                  className="textarea textarea-bordered"
+                  placeholder={`Enter ${field.label.toLowerCase()}`}
+                  rows={3}
+                  maxLength={field.maxLength}
+                />
               ) : isEditMode ? (
                 /* Edit Mode - Text Input */
                 <input
-                  type={field.type}
+                  type={field.type === 'textarea' ? 'text' : field.type}
                   name={field.name}
                   value={field.value}
                   onChange={field.onChange}
                   disabled={field.disabled}
                   className="input input-bordered"
                   placeholder={`Enter ${field.label.toLowerCase()}`}
+                  maxLength={field.maxLength}
                 />
               ) : (
                 /* View Mode - Display Text */
                 <div className="bg-base-100 rounded-lg px-4 py-3 border border-base-300">
-                  <p className="text-base-content">
+                  <p className={`text-base-content ${field.type === 'textarea' ? 'whitespace-pre-line' : ''}`}>
                     {field.value || (
                       <span className="text-base-content/50 italic">
                         Not provided
