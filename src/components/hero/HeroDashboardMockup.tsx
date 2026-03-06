@@ -20,9 +20,9 @@ export function HeroDashboardMockup() {
   return (
     <motion.div
       className="w-full lg:perspective-[1200px]"
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.6, ease: 'easeOut' }}
+      transition={{ duration: 0.5, delay: 0.15, ease: 'easeOut' }}
     >
       <div className="lg:rotate-y-[-2deg] lg:transition-transform lg:duration-700 lg:hover:rotate-y-0">
         {/* Now Playing Card */}

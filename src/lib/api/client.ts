@@ -82,20 +82,8 @@ class ApiClient {
         // Get token from Supabase session
         const token = await getAccessToken()
 
-        if (import.meta.env.DEV) {
-          console.warn('🔵 API Request:', config.method?.toUpperCase(), config.url)
-          console.warn('🔐 Token from Supabase:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN')
-        }
-
         if (token && token.trim()) {
           config.headers.Authorization = `Bearer ${token}`
-          if (import.meta.env.DEV) {
-            console.warn('✅ Authorization header set')
-          }
-        } else {
-          if (import.meta.env.DEV) {
-            console.warn('⚠️ No token found - request will be sent without auth')
-          }
         }
 
         return config
@@ -140,18 +128,11 @@ class ApiClient {
           const newToken = await refreshPromise
 
           if (newToken && error.config) {
-            // Retry request with new token
             error.config.headers.Authorization = `Bearer ${newToken}`
-            if (import.meta.env.DEV) {
-              console.warn('✅ Token refreshed, retrying request')
-            }
             return this.client.request(error.config)
           }
 
-          // Refresh failed - logout and redirect to log in
-          if (import.meta.env.DEV) {
-            console.warn('🔐 Token refresh failed, clearing auth and redirecting to login')
-          }
+          // Refresh failed - logout and redirect to login
           clearTokenCache()
           localStorage.removeItem('auth_user')
           window.location.href = '/login'
@@ -208,14 +189,6 @@ class ApiClient {
         message: this.getErrorMessage(error),
         statusCode: error.response.status,
         error: error.response.statusText,
-        details: error.response.data,
-      }
-
-      console.error('❌ API Error:', apiError)
-
-      // 401 is handled in response interceptor above
-      if (error.response.status === 401) {
-        console.warn('🔐 Unauthorized - Token refresh attempted')
       }
 
       return Promise.reject(apiError)

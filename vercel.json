@@ -22,7 +22,7 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
         { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains; preload" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.supabase.co https://*.vercel-insights.com https://*.vercel-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://backend.jamapp.com.br https://*.vercel.app https://*.supabase.co https://*.vercel-insights.com https://*.vercel-analytics.com wss://*.supabase.co; font-src 'self'; object-src 'none'; upgrade-insecure-requests" }
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' https://*.supabase.co https://*.vercel-insights.com https://*.vercel-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://backend.jamapp.com.br https://*.vercel.app https://*.supabase.co https://*.vercel-insights.com https://*.vercel-analytics.com wss://*.supabase.co; font-src 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests" }
       ]
     }
   ],
@@ -36,6 +36,7 @@
     { "source": "/music", "destination": "/index.html" },
     { "source": "/musicians", "destination": "/index.html" },
     { "source": "/auth/:path*", "destination": "/index.html" },
+    { "source": "/about", "destination": "/index.html" },
     { "source": "/login", "destination": "/index.html" },
     { "source": "/register", "destination": "/index.html" },
     { "source": "/:slug", "destination": "/index.html" }

@@ -14,9 +14,9 @@
 export function getRedirectPath(): string {
   const params = new URLSearchParams(window.location.search)
 
-  // Check for explicit redirect param
+  // Check for explicit redirect param (validate to prevent open redirects)
   const redirectParam = params.get('redirect')
-  if (redirectParam) {
+  if (redirectParam && redirectParam.startsWith('/') && !redirectParam.startsWith('//')) {
     return redirectParam
   }
 

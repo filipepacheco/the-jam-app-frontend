@@ -27,11 +27,11 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
   const [name, setName] = useState('')
   const { error, setError, success: message, setSuccess: setMessage, isLoading, setIsLoading } = useFormState({ navigateOnSuccess: false })
 
-  // Get redirect path from URL params
+  // Get redirect path from URL params (validated to prevent open redirects)
   const getRedirectPath = () => {
     const params = new URLSearchParams(window.location.search)
     const redirectParam = params.get('redirect')
-    if (redirectParam) {
+    if (redirectParam && redirectParam.startsWith('/') && !redirectParam.startsWith('//')) {
       return redirectParam
     }
     const jamId = params.get('jamId')

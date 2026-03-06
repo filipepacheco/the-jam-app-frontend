@@ -33,6 +33,13 @@ const SEARCH_ENGINE_UAS = [
   'Applebot',
   'PetalBot',
   'Bytespider',
+  // AI crawlers - serve clean HTML so AI systems can cite content accurately
+  'GPTBot',
+  'ClaudeBot',
+  'Claude-Web',
+  'anthropic-ai',
+  'PerplexityBot',
+  'CCBot',
 ];
 
 function isSearchEngine(ua: string): boolean {
@@ -56,6 +63,7 @@ const STATIC_ROUTES = new Set([
   'llms.txt',
   'og-image.jpg',
   'jams',
+  'about',
 ]);
 
 type RouteMatch =
@@ -251,6 +259,15 @@ function buildOgHtml(opts: {
     ? ''
     : `\n  <meta http-equiv="refresh" content="0;url=${esc(url)}" />`;
 
+  // Hreflang tags for language alternatives
+  const baseUrl = url.split('?')[0];
+  const hreflangTags = [
+    `<link rel="alternate" hreflang="pt-BR" href="${esc(baseUrl)}?lng=pt" />`,
+    `<link rel="alternate" hreflang="en" href="${esc(baseUrl)}?lng=en" />`,
+    `<link rel="alternate" hreflang="es" href="${esc(baseUrl)}?lng=es" />`,
+    `<link rel="alternate" hreflang="x-default" href="${esc(baseUrl)}" />`,
+  ].join('\n  ');
+
   return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -258,6 +275,9 @@ function buildOgHtml(opts: {
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}" />
   <link rel="canonical" href="${esc(url)}" />
+
+  <!-- Hreflang -->
+  ${hreflangTags}
 
   <!-- Open Graph -->
   <meta property="og:type" content="${esc(type)}" />
@@ -335,9 +355,9 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
         'Plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem e o publico acompanha em tempo real.',
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/web/icons8-concert-color-96.png`,
-        width: 96,
-        height: 96,
+        url: `${siteUrl}/web/icons8-concert-color-512.png`,
+        width: 512,
+        height: 512,
       },
       contactPoint: {
         '@type': 'ContactPoint',
@@ -404,9 +424,30 @@ function jamStructuredData(
     },
   };
 
-  if (jam.date) {
-    event.startDate = new Date(jam.date).toISOString();
+  // startDate is required for Google Event rich results - skip MusicEvent if missing
+  if (!jam.date) {
+    return [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+          { '@type': 'ListItem', position: 2, name: 'Jam Sessions', item: `${siteUrl}/jams` },
+          { '@type': 'ListItem', position: 3, name: jam.name, item: canonicalUrl },
+        ],
+      },
+    ];
   }
+
+  event.startDate = new Date(jam.date).toISOString();
+
+  // Free event - helps Google show pricing in rich results
+  event.offers = {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'BRL',
+    availability: 'https://schema.org/InStock',
+    url: canonicalUrl,
+  };
 
   // location is required for Google Event rich results; VirtualLocation is the fallback
   if (jam.location) {
@@ -420,8 +461,9 @@ function jamStructuredData(
     {
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Jam Sessions', item: `${siteUrl}/jams` },
-        { '@type': 'ListItem', position: 2, name: jam.name, item: canonicalUrl },
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Jam Sessions', item: `${siteUrl}/jams` },
+        { '@type': 'ListItem', position: 3, name: jam.name, item: canonicalUrl },
       ],
     },
   ];
@@ -549,13 +591,30 @@ async function handleJamRoute(
   </main>`;
 
     // MusicEvent schema on detail and dashboard pages (not registration page)
+    // Always use the canonical jam detail URL for the event, not dashboard/register variants
     if (variant !== 'jam-register') {
-      jsonLd = jamStructuredData(jam, canonicalUrl, siteUrl, ogImage);
+      const jamCanonicalUrl = `${siteUrl}${jamPath}`;
+      jsonLd = jamStructuredData(jam, jamCanonicalUrl, siteUrl, ogImage);
     }
   } else {
-    title = `Jam Session | ${PT.siteName}`;
+    // Jam not found - return 404 to prevent soft 404 issues with search engines
+    title = `Pagina nao encontrada | ${PT.siteName}`;
     description = PT.fallbackJamDescription;
     canonicalUrl = `${siteUrl}${pathname}`;
+    bodyHtml = `
+  <main>
+    <h1>Pagina nao encontrada</h1>
+    <p>A jam session que voce procura nao foi encontrada.</p>
+    <nav>
+      <a href="/">Pagina Inicial</a>
+      <a href="/jams">Explorar Jam Sessions</a>
+    </nav>
+  </main>`;
+
+    return new Response(
+      buildOgHtml({ title, description, url: canonicalUrl, image: ogImage, bodyHtml, noRedirect }),
+      { status: 404, headers: htmlHeaders() },
+    );
   }
 
   return new Response(
