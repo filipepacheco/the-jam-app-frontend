@@ -597,7 +597,8 @@ async function handleJamRoute(
       jsonLd = jamStructuredData(jam, jamCanonicalUrl, siteUrl, ogImage);
     }
   } else {
-    // Jam not found - return 404 to prevent soft 404 issues with search engines
+    // Jam not found - return 404 to prevent soft 404 issues with search engines.
+    // Always set noRedirect: true for 404 pages to prevent meta-refresh self-redirect loops.
     title = `Pagina nao encontrada | ${PT.siteName}`;
     description = PT.fallbackJamDescription;
     canonicalUrl = `${siteUrl}${pathname}`;
@@ -612,7 +613,7 @@ async function handleJamRoute(
   </main>`;
 
     return new Response(
-      buildOgHtml({ title, description, url: canonicalUrl, image: ogImage, bodyHtml, noRedirect }),
+      buildOgHtml({ title, description, url: canonicalUrl, image: ogImage, bodyHtml, noRedirect: true }),
       { status: 404, headers: htmlHeaders() },
     );
   }

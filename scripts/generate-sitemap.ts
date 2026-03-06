@@ -66,9 +66,11 @@ const LANGS = ['pt', 'en', 'es'] as const
 const HREFLANG_MAP: Record<string, string> = { pt: 'pt-BR', en: 'en', es: 'es' }
 
 function hreflangTags(loc: string): string {
+  // Strip any existing ?lng= param to get the base URL, then build clean alternates
+  const baseUrl = loc.replace(/[?&]lng=[^&]*/g, '').replace(/\?$/, '')
   return LANGS.map(
-    lng => `    <xhtml:link rel="alternate" hreflang="${HREFLANG_MAP[lng]}" href="${loc}${loc.includes('?') ? '&' : '?'}lng=${lng}"/>`
-  ).join('\n') + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${loc}"/>`
+    lng => `    <xhtml:link rel="alternate" hreflang="${HREFLANG_MAP[lng]}" href="${baseUrl}${baseUrl.includes('?') ? '&' : '?'}lng=${lng}"/>`
+  ).join('\n') + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}"/>`
 }
 
 function generateUrlEntry(loc: string, options: {
