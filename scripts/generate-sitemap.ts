@@ -101,6 +101,8 @@ async function main() {
     generateLangVariants(`${SITE_URL}/`, { lastmod: today }),
     generateUrlEntry(`${SITE_URL}/jams`, { lastmod: today }),
     generateLangVariants(`${SITE_URL}/jams`, { lastmod: today }),
+    generateUrlEntry(`${SITE_URL}/about`, { lastmod: today }),
+    generateLangVariants(`${SITE_URL}/about`, { lastmod: today }),
   ]
 
   // Dynamic jam pages

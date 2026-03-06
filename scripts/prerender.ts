@@ -16,7 +16,7 @@ import { resolve, join, extname } from 'path'
 
 const DIST_DIR = resolve(import.meta.dirname, '..', 'dist')
 const PORT = 45678
-const ROUTES = ['/', '/jams', '/login', '/register']
+const ROUTES = ['/', '/jams', '/login', '/register', '/about']
 const NOINDEX_ROUTES = ['/login', '/register']
 
 // Simple static file server for the dist directory

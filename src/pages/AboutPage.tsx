@@ -1,0 +1,178 @@
+import {useTranslation} from 'react-i18next'
+import {Link} from 'react-router-dom'
+import {Music, Users, Monitor, Globe, Mail, Shield} from 'lucide-react'
+import {SEO} from '../components/SEO'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+import {SITE_URL} from '../lib/api/config'
+
+export function AboutPage() {
+  const {t} = useTranslation()
+  const siteUrl = SITE_URL
+
+  const aboutJsonLd = [
+    {
+      '@type': 'AboutPage',
+      name: t('about.seo_title'),
+      description: t('about.seo_description'),
+      url: `${siteUrl}/about`,
+      mainEntity: {
+        '@type': 'Organization',
+        '@id': `${siteUrl}/#organization`,
+        name: 'Jam App',
+        alternateName: 'The Jam App',
+        url: siteUrl,
+        description: t('about.seo_description'),
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/web/icons8-concert-color-512.png`,
+          width: 512,
+          height: 512,
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'customer service',
+          email: 'contato@jamapp.com.br',
+          availableLanguage: ['Portuguese', 'English', 'Spanish'],
+        },
+        areaServed: 'BR',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {'@type': 'ListItem', position: 1, name: t('about.breadcrumb_home'), item: siteUrl},
+        {'@type': 'ListItem', position: 2, name: t('about.breadcrumb_about'), item: `${siteUrl}/about`},
+      ],
+    },
+  ]
+
+  return (
+    <>
+      <SEO
+        title={t('about.seo_title')}
+        description={t('about.seo_description')}
+        canonical={`${siteUrl}/about`}
+        jsonLd={aboutJsonLd}
+      />
+      <Navbar />
+      <main className="min-h-screen bg-base-100">
+        {/* Hero */}
+        <section className="py-16 sm:py-24 px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-base-content mb-6">
+              {t('about.title')}
+            </h1>
+            <p className="text-lg sm:text-xl text-base-content/70 leading-relaxed">
+              {t('about.intro')}
+            </p>
+          </div>
+        </section>
+
+        {/* Mission */}
+        <section className="py-12 px-4 bg-base-200/50">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-base-content mb-6">
+              {t('about.mission_title')}
+            </h2>
+            <p className="text-base-content/70 text-lg leading-relaxed mb-4">
+              {t('about.mission_p1')}
+            </p>
+            <p className="text-base-content/70 text-lg leading-relaxed">
+              {t('about.mission_p2')}
+            </p>
+          </div>
+        </section>
+
+        {/* Who it's for */}
+        <section className="py-12 px-4">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-base-content mb-8">
+              {t('about.who_title')}
+            </h2>
+            <div className="grid gap-6 sm:grid-cols-3">
+              <div className="flex flex-col items-center text-center p-6 rounded-xl bg-base-200/50">
+                <Music className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-bold text-base-content mb-2">{t('about.who_hosts')}</h3>
+                <p className="text-sm text-base-content/70">{t('about.who_hosts_desc')}</p>
+              </div>
+              <div className="flex flex-col items-center text-center p-6 rounded-xl bg-base-200/50">
+                <Users className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-bold text-base-content mb-2">{t('about.who_musicians')}</h3>
+                <p className="text-sm text-base-content/70">{t('about.who_musicians_desc')}</p>
+              </div>
+              <div className="flex flex-col items-center text-center p-6 rounded-xl bg-base-200/50">
+                <Monitor className="w-8 h-8 text-primary mb-3" />
+                <h3 className="font-bold text-base-content mb-2">{t('about.who_audience')}</h3>
+                <p className="text-sm text-base-content/70">{t('about.who_audience_desc')}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Values */}
+        <section className="py-12 px-4 bg-base-200/50">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl font-bold text-base-content mb-8">
+              {t('about.values_title')}
+            </h2>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="flex gap-4">
+                <Globe className="w-6 h-6 text-primary shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-bold text-base-content mb-1">{t('about.value_free')}</h3>
+                  <p className="text-sm text-base-content/70">{t('about.value_free_desc')}</p>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                <Shield className="w-6 h-6 text-primary shrink-0 mt-1" />
+                <div>
+                  <h3 className="font-bold text-base-content mb-1">{t('about.value_privacy')}</h3>
+                  <p className="text-sm text-base-content/70">{t('about.value_privacy_desc')}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact */}
+        <section className="py-12 px-4">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold text-base-content mb-4">
+              {t('about.contact_title')}
+            </h2>
+            <p className="text-base-content/70 mb-6">
+              {t('about.contact_text')}
+            </p>
+            <a
+              href="mailto:contato@jamapp.com.br"
+              className="btn btn-primary gap-2"
+            >
+              <Mail className="w-4 h-4" />
+              contato@jamapp.com.br
+            </a>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-12 px-4 bg-base-200/50">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-2xl font-bold text-base-content mb-4">
+              {t('about.cta_title')}
+            </h2>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link to="/jams" className="btn btn-primary">
+                {t('about.cta_explore')}
+              </Link>
+              <Link to="/register" className="btn btn-outline">
+                {t('about.cta_register')}
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <Footer />
+      </main>
+    </>
+  )
+}

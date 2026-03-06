@@ -46,6 +46,7 @@ const MusicPage = lazy(() => import('./pages/MusicPage'))
 const ProfilePage = lazy(() => import('./pages/ProfilePage'))
 const MusiciansPage = lazy(() => import('./pages/host/MusiciansPage.tsx'))
 const JamDetailPage = lazy(() => import('./pages/tabs/JamDetailPageV2.tsx'))
+const AboutPage = lazy(() => import('./pages/AboutPage').then(m => ({ default: m.AboutPage })))
 
 /**
  * SWR Fetcher Function
@@ -132,9 +133,9 @@ function HomePage() {
       url: siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/web/icons8-concert-color-96.png`,
-        width: 96,
-        height: 96,
+        url: `${siteUrl}/web/icons8-concert-color-512.png`,
+        width: 512,
+        height: 512,
       },
     },
   ], [t, siteUrl, currentLang])
@@ -258,6 +259,9 @@ function AppContent() {
           <FeedbackPage />
         </>
       } />
+
+      {/* About page */}
+      <Route path="/about" element={<AboutPage />} />
 
       {/* Root-level slug redirect (jamapp.com.br/my-slug -> /jams/my-slug) */}
       <Route path="/:slug" element={<SlugRedirect />} />
