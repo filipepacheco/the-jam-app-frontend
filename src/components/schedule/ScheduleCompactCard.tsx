@@ -8,8 +8,10 @@
  * ~110-130px per card vs ~350-400px for ScheduleCardManagement
  */
 
+import { useState, useEffect } from 'react'
 import type { ScheduleResponseDto } from '../../types/api.types'
 import { useTranslation } from 'react-i18next'
+import { FileText, Pencil } from 'lucide-react'
 import { ScheduleStatusBadge } from './ScheduleStatusBadge'
 import { InstrumentBadges } from './InstrumentBadges'
 import { ScheduleOverflowMenu } from './ScheduleOverflowMenu'
@@ -19,6 +21,8 @@ interface ScheduleCompactCardProps {
   schedule: ScheduleResponseDto
   loading?: boolean
   isSuggested?: boolean
+  notes?: string | null
+  jamMusicId?: string
   onStatusChange?: (scheduleId: string, status: string) => void
   onDelete?: (scheduleId: string) => void
   onApproveRegistration?: (registrationId: string) => void
@@ -26,6 +30,7 @@ interface ScheduleCompactCardProps {
   onDeleteRegistration?: (registrationId: string) => void
   onAddMusician?: () => void
   onMusicianClick?: (musicianId: string) => void
+  onSaveNotes?: (jamMusicId: string, notes: string) => void
 }
 
 export function ScheduleCompactCard({
@@ -39,9 +44,18 @@ export function ScheduleCompactCard({
   onDeleteRegistration,
   onAddMusician,
   onMusicianClick,
+  notes,
+  jamMusicId,
+  onSaveNotes,
 }: ScheduleCompactCardProps) {
   const { t } = useTranslation()
   const music = schedule.music
+  const [editingNotes, setEditingNotes] = useState(false)
+  const [notesValue, setNotesValue] = useState(notes || '')
+
+  useEffect(() => {
+    if (!editingNotes) setNotesValue(notes || '')
+  }, [notes, editingNotes])
 
   // Card border style based on status
   const borderClass = schedule.status === 'IN_PROGRESS'
@@ -121,6 +135,65 @@ export function ScheduleCompactCard({
           duration={music?.duration}
           badgeSize="badge-sm"
         />
+
+        {/* Arrangement notes */}
+        {(notes || onSaveNotes) && jamMusicId && (
+          <div className="mt-0.5">
+            {editingNotes ? (
+              <div className="space-y-1">
+                <textarea
+                  value={notesValue}
+                  onChange={(e) => setNotesValue(e.target.value)}
+                  className="textarea textarea-bordered textarea-xs w-full text-xs"
+                  rows={2}
+                  maxLength={2000}
+                  placeholder={t('schedule.notes_placeholder')}
+                  autoFocus
+                />
+                <div className="flex gap-1 justify-end">
+                  <button
+                    className="btn btn-xs btn-ghost"
+                    onClick={() => { setEditingNotes(false); setNotesValue(notes || '') }}
+                  >
+                    {t('common.cancel')}
+                  </button>
+                  <button
+                    className="btn btn-xs btn-primary"
+                    disabled={loading}
+                    onClick={() => {
+                      onSaveNotes?.(jamMusicId, notesValue)
+                      setEditingNotes(false)
+                    }}
+                  >
+                    {t('common.save')}
+                  </button>
+                </div>
+              </div>
+            ) : notes ? (
+              <div className="flex items-start gap-1 text-xs text-base-content/70 bg-base-100 rounded px-2 py-1">
+                <FileText className="w-3 h-3 mt-0.5 flex-shrink-0 text-base-content/40" />
+                <p className="whitespace-pre-line flex-1 min-w-0">{notes}</p>
+                {onSaveNotes && (
+                  <button
+                    className="btn btn-ghost btn-xs btn-circle flex-shrink-0"
+                    onClick={() => setEditingNotes(true)}
+                    title={t('schedule.edit_notes')}
+                  >
+                    <Pencil className="w-3 h-3" />
+                  </button>
+                )}
+              </div>
+            ) : onSaveNotes ? (
+              <button
+                className="btn btn-xs btn-ghost text-base-content/40 gap-1"
+                onClick={() => setEditingNotes(true)}
+              >
+                <FileText className="w-3 h-3" />
+                {t('schedule.add_notes')}
+              </button>
+            ) : null}
+          </div>
+        )}
 
         {/* Row 3+: Musician slot rows */}
         <MusicianSlotList

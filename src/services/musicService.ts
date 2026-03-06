@@ -6,6 +6,7 @@
 import { apiClient, API_ENDPOINTS } from '../lib/api'
 import type {
   MusicResponseDto,
+  JamMusicResponseDto,
   CreateMusicDto,
   UpdateMusicDto,
   ApiResponse,
@@ -41,6 +42,10 @@ export const musicService = {
    */
   async linkToJam(musicId: string, jamId: string): Promise<ApiResponse<Record<string, unknown>>> {
     return apiClient.patch<Record<string, unknown>>(API_ENDPOINTS.linkMusicToJam(musicId, jamId), {})
+  },
+
+  async updateJamMusic(jamMusicId: string, jamId: string, data: { notes?: string }): Promise<ApiResponse<JamMusicResponseDto>> {
+    return apiClient.patch<JamMusicResponseDto>(API_ENDPOINTS.updateJamMusic(jamMusicId, jamId), data)
   },
 
   /**

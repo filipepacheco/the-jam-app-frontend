@@ -49,6 +49,7 @@ export const API_ENDPOINTS = {
   music: '/musicas',
   musicById: (id: string) => `/musicas/${id}`,
   linkMusicToJam: (musicId: string, jamId: string) => `/musicas/${musicId}/link-jam/${jamId}`,
+  updateJamMusic: (jamMusicId: string, jamId: string) => `/musicas/jam-music/${jamMusicId}/jam/${jamId}`,
 
   // Registrations (Inscrições) endpoints
   registrations: '/inscricoes',

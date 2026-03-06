@@ -1,7 +1,7 @@
 import type {JamResponseDto, ScheduleResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useMemo, useState} from "react";
-import {registrationService, scheduleService} from "../../services";
+import {registrationService, scheduleService, musicService} from "../../services";
 import {Alert} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCompactCard} from "../../components/schedule/ScheduleCompactCard";
@@ -29,6 +29,28 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             suggestedSchedules: sorted.filter(s => s.status === 'SUGGESTED'),
         }
     }, [jam.schedules])
+
+    // Build lookup: musicId -> { jamMusicId, notes }
+    const jamMusicMap = useMemo(() => {
+        const map = new Map<string, { id: string; notes?: string | null }>()
+        for (const jm of jam.jamMusics || []) {
+            map.set(jm.musicId, { id: jm.id, notes: jm.notes })
+        }
+        return map
+    }, [jam.jamMusics])
+
+    const handleSaveNotes = async (jamMusicId: string, notes: string) => {
+        setLoading(true)
+        setError(null)
+        try {
+            await musicService.updateJamMusic(jamMusicId, jam.id, { notes })
+            onReload()
+        } catch (err) {
+            setError(err instanceof Error ? err.message : t('errors.failed_to_execute_action'))
+        } finally {
+            setLoading(false)
+        }
+    }
 
     // Handle schedule status change
     const handleStatusChange = async (scheduleId: string, newStatus: string) => {
@@ -163,12 +185,15 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                             <h3 className="text-xl font-semibold flex items-center gap-2">
                                 <span aria-hidden="true">✨</span> {t('jam_management.schedule.suggested_songs')}
                             </h3>
-                            {suggestedSchedules.map((schedule) => (
-                                <ScheduleCompactCard
+                            {suggestedSchedules.map((schedule) => {
+                                const jm = jamMusicMap.get(schedule.musicId)
+                                return <ScheduleCompactCard
                                     key={schedule.id}
                                     schedule={schedule}
                                     loading={loading}
                                     isSuggested={true}
+                                    notes={jm?.notes}
+                                    jamMusicId={jm?.id}
                                     onStatusChange={handleStatusChange}
                                     onDelete={handleDeleteSchedule}
                                     onApproveRegistration={handleApproveRegistration}
@@ -176,8 +201,9 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     onDeleteRegistration={handleRejectRegistration}
                                     onAddMusician={() => handleAddMusician(schedule)}
                                     onMusicianClick={setSelectedMusicianId}
+                                    onSaveNotes={handleSaveNotes}
                                 />
-                            ))}
+                            })}
                         </div>
                     )}
 
@@ -189,12 +215,15 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     <span aria-hidden="true">📋</span> {t('jam_management.schedule.title')}
                                 </h3>
                             )}
-                            {nonSuggestedSchedules.map((schedule) => (
-                                <ScheduleCompactCard
+                            {nonSuggestedSchedules.map((schedule) => {
+                                const jm = jamMusicMap.get(schedule.musicId)
+                                return <ScheduleCompactCard
                                     key={schedule.id}
                                     schedule={schedule}
                                     loading={loading}
                                     isSuggested={false}
+                                    notes={jm?.notes}
+                                    jamMusicId={jm?.id}
                                     onStatusChange={handleStatusChange}
                                     onDelete={handleDeleteSchedule}
                                     onApproveRegistration={handleApproveRegistration}
@@ -202,8 +231,9 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     onDeleteRegistration={handleRejectRegistration}
                                     onAddMusician={() => handleAddMusician(schedule)}
                                     onMusicianClick={setSelectedMusicianId}
+                                    onSaveNotes={handleSaveNotes}
                                 />
-                            ))}
+                            })}
                         </div>
                     )}
                 </div>

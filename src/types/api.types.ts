@@ -122,7 +122,8 @@ export interface JamMusicResponseDto {
   id: string
   jamId: string
   musicId: string
-  music: MusicResponseDto
+  notes?: string | null
+  music?: MusicResponseDto
 }
 
 /**
@@ -161,6 +162,7 @@ export interface JamResponseDto {
   currentScheduleId?: string
   _count?: JamCountDto
   schedules?: ScheduleResponseDto[]
+  jamMusics?: JamMusicResponseDto[]
 }
 
 // ============================================================================
