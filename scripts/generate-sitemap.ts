@@ -85,26 +85,14 @@ ${hreflangTags(loc)}
   </url>`
 }
 
-function generateLangVariants(loc: string, options: {
-  lastmod?: string
-} = {}): string {
-  return LANGS.map(lng => {
-    const variantUrl = `${loc}${loc.includes('?') ? '&' : '?'}lng=${lng}`
-    return generateUrlEntry(variantUrl, options)
-  }).join('')
-}
-
 async function main() {
   const today = new Date().toISOString().split('T')[0]
 
-  // Static pages (canonical + language variants)
+  // Static pages (canonical URLs only - hreflang tags inside each entry handle language variants)
   const staticEntries = [
     generateUrlEntry(`${SITE_URL}/`, { lastmod: today }),
-    generateLangVariants(`${SITE_URL}/`, { lastmod: today }),
     generateUrlEntry(`${SITE_URL}/jams`, { lastmod: today }),
-    generateLangVariants(`${SITE_URL}/jams`, { lastmod: today }),
     generateUrlEntry(`${SITE_URL}/about`, { lastmod: today }),
-    generateLangVariants(`${SITE_URL}/about`, { lastmod: today }),
   ]
 
   // Dynamic jam pages
@@ -127,7 +115,7 @@ async function main() {
   const jamEntries = activeJams.map(jam => {
     const url = buildJamUrl(jam)
     const lastmod = jam.date ? jam.date.split('T')[0] : today
-    return generateUrlEntry(url, { lastmod }) + generateLangVariants(url, { lastmod })
+    return generateUrlEntry(url, { lastmod })
   })
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
