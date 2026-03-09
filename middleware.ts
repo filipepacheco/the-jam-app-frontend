@@ -63,12 +63,12 @@ const STATIC_ROUTES = new Set([
   'llms.txt',
   'og-image.jpg',
   'jams',
-  'about',
 ]);
 
 type RouteMatch =
   | { type: 'home' }
   | { type: 'browse' }
+  | { type: 'about' }
   | { type: 'jam-detail'; identifier: string }
   | { type: 'jam-dashboard'; identifier: string }
   | { type: 'jam-register'; identifier: string }
@@ -79,6 +79,7 @@ type RouteMatch =
 function matchRoute(pathname: string): RouteMatch {
   if (pathname === '/') return { type: 'home' };
   if (pathname === '/jams' || pathname === '/jams/') return { type: 'browse' };
+  if (pathname === '/about' || pathname === '/about/') return { type: 'about' };
 
   // /jams/:jamId/dashboard
   const dashboardMatch = pathname.match(/^\/jams\/([^/]+)\/dashboard\/?$/);
@@ -157,6 +158,9 @@ const PT = {
   dashboardSuffix: 'Painel Ao Vivo',
   registerSuffix: 'Inscreva-se',
   fallbackJamDescription: 'Participe desta jam session no Jam App. Inscreva-se como musico ou acompanhe ao vivo.',
+  aboutTitle: 'Sobre o Jam App | Jam App',
+  aboutDescription:
+    'O Jam App e uma plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem por instrumento e o publico acompanha em tempo real.',
 };
 
 const HOME_BODY = `
@@ -208,6 +212,36 @@ const BROWSE_BODY = `
     <nav>
       <a href="/">Pagina Inicial</a>
       <a href="/register">Criar Conta</a>
+    </nav>
+  </main>`;
+
+const ABOUT_BODY = `
+  <main>
+    <h1>Sobre o Jam App</h1>
+    <p>O Jam App e uma plataforma gratuita feita para quem ama musica ao vivo. Facilitamos a organizacao de jam sessions, open mics e eventos musicais - sem planilhas, sem grupos de WhatsApp, apenas uma ferramenta simples que funciona.</p>
+    <section>
+      <h2>Por que criamos isso?</h2>
+      <p>Viamos anfitrioes fazendo malabarismos com grupos de WhatsApp, planilhas e listas de papel para organizar uma noite de jam. Musicos nao sabiam que musicas iam tocar ate chegar no palco. O publico ficava perdido sem saber o que estava acontecendo. O Jam App resolve tudo isso num so lugar.</p>
+    </section>
+    <section>
+      <h2>Feito para tres papeis</h2>
+      <ul>
+        <li><strong>Anfitrioes</strong>: criem jams, montem o setlist, aprovem inscricoes e controlem o show ao vivo</li>
+        <li><strong>Musicos</strong>: encontrem jams, inscrevam-se por instrumento e acompanhem a agenda</li>
+        <li><strong>Publico</strong>: acompanhem ao vivo pelo painel publico, sem precisar de conta</li>
+      </ul>
+    </section>
+    <section>
+      <h2>No que acreditamos</h2>
+      <ul>
+        <li><strong>Gratuito para todos</strong>: sem planos pagos, sem limite de jams ou musicos</li>
+        <li><strong>Privacidade em primeiro lugar</strong>: coletamos apenas o necessario para o app funcionar</li>
+      </ul>
+    </section>
+    <nav>
+      <a href="/">Pagina Inicial</a>
+      <a href="/jams">Explorar Jam Sessions</a>
+      <p>Contato: contato@jamapp.com.br</p>
     </nav>
   </main>`;
 
@@ -332,8 +366,14 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
       browserRequirements: 'Requires JavaScript',
       inLanguage: ['pt-BR', 'en', 'es'],
       image: ogImage,
-      featureList:
-        'Criar e gerenciar jam sessions ao vivo, Painel publico em tempo real, Inscricao de musicos por instrumento, Controle de setlist e ordem das musicas, QR code para compartilhar jams, Importar playlists do Spotify',
+      featureList: [
+        'Criar e gerenciar jam sessions ao vivo',
+        'Painel publico em tempo real',
+        'Inscricao de musicos por instrumento',
+        'Controle de setlist e ordem das musicas',
+        'QR code para compartilhar jams',
+        'Importar playlists do Spotify',
+      ],
       offers: {
         '@type': 'Offer',
         price: '0',
@@ -387,6 +427,48 @@ function browseStructuredData(siteUrl: string): Record<string, unknown>[] {
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
         { '@type': 'ListItem', position: 2, name: 'Jam Sessions', item: `${siteUrl}/jams` },
+      ],
+    },
+  ];
+}
+
+function aboutStructuredData(siteUrl: string): Record<string, unknown>[] {
+  return [
+    {
+      '@type': 'AboutPage',
+      name: 'Sobre o Jam App',
+      description: PT.aboutDescription,
+      url: `${siteUrl}/about`,
+      mainEntity: {
+        '@type': 'Organization',
+        '@id': `${siteUrl}/#organization`,
+        name: 'Jam App',
+        alternateName: 'The Jam App',
+        url: siteUrl,
+        description: PT.aboutDescription,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/web/icons8-concert-color-512.png`,
+          width: 512,
+          height: 512,
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'customer service',
+          email: 'contato@jamapp.com.br',
+          availableLanguage: ['Portuguese', 'English', 'Spanish'],
+        },
+        areaServed: {
+          '@type': 'Country',
+          name: 'Brazil',
+        },
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
+        { '@type': 'ListItem', position: 2, name: 'Sobre', item: `${siteUrl}/about` },
       ],
     },
   ];
@@ -514,6 +596,20 @@ export default function middleware(request: Request) {
           image: ogImage,
           jsonLd: browseStructuredData(siteUrl),
           bodyHtml: BROWSE_BODY,
+          noRedirect,
+        }),
+        { headers: htmlHeaders() },
+      );
+
+    case 'about':
+      return new Response(
+        buildOgHtml({
+          title: PT.aboutTitle,
+          description: PT.aboutDescription,
+          url: `${siteUrl}/about`,
+          image: ogImage,
+          jsonLd: aboutStructuredData(siteUrl),
+          bodyHtml: ABOUT_BODY,
           noRedirect,
         }),
         { headers: htmlHeaders() },
