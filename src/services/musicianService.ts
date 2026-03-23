@@ -10,6 +10,7 @@ import type {
   CreateMusicianDto,
   UpdateMusicianDto,
   ApiResponse,
+  PaginatedResponse,
 } from '../types/api.types'
 
 /**
@@ -27,11 +28,16 @@ export const musicianService = {
   },
 
   /**
-   * Get all musicians
-   * @returns Promise with array of musicians
+   * Get musicians with pagination
    */
-  async findAll(): Promise<ApiResponse<MusicianResponseDto[]>> {
-    return apiClient.get<MusicianResponseDto[]>(API_ENDPOINTS.musicians as string)
+  async findAll(skip = 0, take = 20): Promise<PaginatedResponse<MusicianResponseDto>> {
+    const response = await apiClient.get<MusicianResponseDto[]>(
+      `${API_ENDPOINTS.musicians}?skip=${skip}&take=${take}`
+    )
+    return {
+      data: response.data,
+      meta: response.meta!,
+    }
   },
 
   async findOne(id: string): Promise<ApiResponse<MusicianProfileWithStats>> {

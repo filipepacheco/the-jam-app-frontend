@@ -73,6 +73,7 @@ export interface MusicResponseDto {
   duration?: number
   description?: string
   link?: string
+  info?: string
   status?: 'APPROVED' | 'SUGGESTED'
   createdAt: string
   registrations?: RegistrationResponseDto[]
@@ -200,6 +201,7 @@ export interface CreateMusicDto {
   genre?: string
   description?: string
   link?: string
+  info?: string
   duration?: number
   status?: 'APPROVED' | 'SUGGESTED'
   neededDrums?: number
@@ -218,6 +220,7 @@ export interface UpdateMusicDto {
   genre?: string
   description?: string
   link?: string
+  info?: string
   duration?: number
   status?: 'APPROVED' | 'SUGGESTED'
   neededDrums?: number
@@ -303,6 +306,7 @@ export interface ApiResponse<T> {
   success: boolean
   message?: string
   error?: string
+  meta?: PaginationMeta
 }
 
 /**

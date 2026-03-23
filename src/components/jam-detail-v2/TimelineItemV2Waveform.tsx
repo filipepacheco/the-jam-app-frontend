@@ -180,6 +180,14 @@ export function TimelineItemV2Waveform({
           </div>
         )}
 
+        {/* Info row - only shown when info exists */}
+        {schedule.music?.info && (
+          <div className="flex items-start gap-1.5 border-t border-base-content/10 pt-1">
+            <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
+            <p className="text-xs text-base-content/50 line-clamp-3 break-words whitespace-pre-line">{schedule.music.info}</p>
+          </div>
+        )}
+
         {/* Instruments still needed */}
         {!isCompleted && !isInProgress && (
           <InstrumentsSummary instrumentOptions={instrumentOptions} highlightInstrument={user?.instrument} />

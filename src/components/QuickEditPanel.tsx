@@ -59,6 +59,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
   const [artist, setArtist] = useState(music.artist)
   const [description, setDescription] = useState(music.description || '')
   const [link, setLink] = useState(music.link || '')
+  const [info, setInfo] = useState(music.info || '')
   const [genre, setGenre] = useState(music.genre || '')
 
   const initialMinutes = music.duration ? Math.floor(music.duration / 60) : 0
@@ -81,6 +82,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
       artist: artist.trim(),
       description: description.trim() || undefined,
       link: link.trim() || undefined,
+      info: info.trim() || undefined,
       genre: genre || undefined,
       duration: duration > 0 ? duration : undefined,
       neededDrums: drums,
@@ -91,7 +93,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
     }
     await onSave(music.id, data)
     setSaving(false)
-  }, [music.id, title, artist, description, link, genre, minutes, seconds, drums, guitars, vocals, bass, keys, onSave])
+  }, [music.id, title, artist, description, link, info, genre, minutes, seconds, drums, guitars, vocals, bass, keys, onSave])
 
   return (
     <div className="border-t border-base-300 pt-3 mt-2 space-y-3">
@@ -150,6 +152,20 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
           onChange={(e) => setLink(e.target.value)}
           className="input input-sm input-bordered w-full"
           placeholder={t('music_form.link_placeholder')}
+        />
+      </div>
+
+      {/* Info */}
+      <div>
+        <label className="text-xs text-base-content/60 mb-1 block">
+          {t('music_form.info_label')}
+        </label>
+        <textarea
+          value={info}
+          onChange={(e) => setInfo(e.target.value)}
+          className="textarea textarea-bordered textarea-sm w-full"
+          placeholder={t('music_form.info_placeholder')}
+          rows={3}
         />
       </div>
 

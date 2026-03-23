@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <!-- Homepage -->
   <url>
     <loc>https://www.jamapp.com.br/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
-    <lastmod>2026-02-15</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.jamapp.com.br/?lng=pt"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.jamapp.com.br/?lng=en"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.jamapp.com.br/?lng=es"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.jamapp.com.br/"/>
+    <lastmod>2026-03-23</lastmod>
   </url>
 
   <!-- Browse Jams Page -->
@@ -19,11 +14,15 @@
     <loc>https://www.jamapp.com.br/jams</loc>
     <changefreq>daily</changefreq>
     <priority>0.8</priority>
-    <lastmod>2026-02-15</lastmod>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="https://www.jamapp.com.br/jams?lng=pt"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://www.jamapp.com.br/jams?lng=en"/>
-    <xhtml:link rel="alternate" hreflang="es" href="https://www.jamapp.com.br/jams?lng=es"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.jamapp.com.br/jams"/>
+    <lastmod>2026-03-23</lastmod>
+  </url>
+
+  <!-- About Page -->
+  <url>
+    <loc>https://www.jamapp.com.br/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-03-23</lastmod>
   </url>
 
   <!-- Note: Individual jam pages (/jams/:slug) are added dynamically at build time -->

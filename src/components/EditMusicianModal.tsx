@@ -82,6 +82,8 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
       onClose={onClose}
       title={t('musician_form.edit_title')}
       size="md"
+      scrollable
+      responsive
       footer={
         <ModalFooter
           onCancel={onClose}
@@ -94,21 +96,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
         />
       }
     >
-      {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Musician ID (read-only) */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('musician_form.musician_id')}</span>
-          </label>
-          <input
-            type="text"
-            value={musician.id}
-            disabled
-            className="input input-bordered input-disabled"
-          />
-        </div>
-
         {/* Name */}
         <div className="form-control">
           <label className="label">
@@ -125,76 +113,78 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
           />
         </div>
 
-        {/* Instrument */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('musician_form.instrument_label')}</span>
-          </label>
-          <select
-            name="instrument"
-            value={formData.instrument}
-            onChange={handleInputChange}
-            className="select select-bordered"
-            disabled={isLoading}
-          >
-            <option value="">{t('musician_form.instrument_placeholder')}</option>
-            {INSTRUMENTS.map((inst) => (
-              <option key={inst} value={inst}>
-                {t(`schedule.instruments.${inst}`)}
-              </option>
-            ))}
-          </select>
+        {/* Instrument + Level (side by side on sm+) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">{t('musician_form.instrument_label')}</span>
+            </label>
+            <select
+              name="instrument"
+              value={formData.instrument}
+              onChange={handleInputChange}
+              className="select select-bordered"
+              disabled={isLoading}
+            >
+              <option value="">{t('musician_form.instrument_placeholder')}</option>
+              {INSTRUMENTS.map((inst) => (
+                <option key={inst} value={inst}>
+                  {t(`schedule.instruments.${inst}`)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">{t('schedule.levels.experience_level')}</span>
+            </label>
+            <select
+              name="level"
+              value={formData.level}
+              onChange={handleInputChange}
+              className="select select-bordered"
+              disabled={isLoading}
+            >
+              <option value="BEGINNER">{t('schedule.levels.beginner')}</option>
+              <option value="INTERMEDIATE">{t('schedule.levels.intermediate')}</option>
+              <option value="ADVANCED">{t('schedule.levels.advanced')}</option>
+              <option value="PROFESSIONAL">{t('schedule.levels.professional')}</option>
+            </select>
+          </div>
         </div>
 
-        {/* Level */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('schedule.levels.experience_level')}</span>
-          </label>
-          <select
-            name="level"
-            value={formData.level}
-            onChange={handleInputChange}
-            className="select select-bordered"
-            disabled={isLoading}
-          >
-            <option value="BEGINNER">{t('schedule.levels.beginner')}</option>
-            <option value="INTERMEDIATE">{t('schedule.levels.intermediate')}</option>
-            <option value="ADVANCED">{t('schedule.levels.advanced')}</option>
-            <option value="PROFESSIONAL">{t('schedule.levels.professional')}</option>
-          </select>
-        </div>
+        {/* Contact + Phone (side by side on sm+) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">{t('musician_form.contact_label')}</span>
+            </label>
+            <input
+              type="text"
+              name="contact"
+              value={formData.contact}
+              onChange={handleInputChange}
+              className="input input-bordered"
+              placeholder={t('musician_form.contact_placeholder')}
+              disabled={isLoading}
+            />
+          </div>
 
-        {/* Contact */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('musician_form.contact_label')}</span>
-          </label>
-          <input
-            type="text"
-            name="contact"
-            value={formData.contact}
-            onChange={handleInputChange}
-            className="input input-bordered"
-            placeholder={t('musician_form.contact_placeholder')}
-            disabled={isLoading}
-          />
-        </div>
-
-        {/* Phone */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('musician_form.phone_label')}</span>
-          </label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={handleInputChange}
-            className="input input-bordered"
-            placeholder={t('musician_form.phone_placeholder')}
-            disabled={isLoading}
-          />
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text font-semibold">{t('musician_form.phone_label')}</span>
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
+              className="input input-bordered"
+              placeholder={t('musician_form.phone_placeholder')}
+              disabled={isLoading}
+            />
+          </div>
         </div>
 
         {/* Other Instruments */}

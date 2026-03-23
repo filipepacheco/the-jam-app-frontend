@@ -165,6 +165,7 @@ class ApiClient {
           success: response.data.success ?? true,
           message: response.data.message,
           error: response.data.error,
+          meta: response.data.meta,
         }
       }
     }

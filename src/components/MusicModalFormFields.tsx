@@ -11,6 +11,7 @@ interface FormData {
   artist: string
   description: string
   link: string
+  info: string
   genre: string
   duration: string
   neededDrums: number
@@ -112,6 +113,23 @@ export function MusicModalFormFields({
           />
           <label className="label py-0">
             <span className="label-text-alt text-xs">{t('music_form.link_hint')}</span>
+          </label>
+        </div>
+
+        {/* Info */}
+        <div className="form-control">
+          <label className="label py-1" htmlFor="music-info">
+            <span className="label-text font-medium">{t('music_form.info_label')}</span>
+          </label>
+          <textarea
+            id="music-info"
+            value={formData.info}
+            onChange={(e) => onChange('info', e.target.value)}
+            className="textarea textarea-bordered w-full min-h-[80px]"
+            placeholder={t('music_form.info_placeholder')}
+          />
+          <label className="label py-0">
+            <span className="label-text-alt text-xs">{t('music_form.info_hint')}</span>
           </label>
         </div>
 

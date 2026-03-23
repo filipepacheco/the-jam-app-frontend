@@ -293,14 +293,8 @@ function buildOgHtml(opts: {
     ? ''
     : `\n  <meta http-equiv="refresh" content="0;url=${esc(url)}" />`;
 
-  // Hreflang tags for language alternatives
-  const baseUrl = url.split('?')[0];
-  const hreflangTags = [
-    `<link rel="alternate" hreflang="pt-BR" href="${esc(baseUrl)}?lng=pt" />`,
-    `<link rel="alternate" hreflang="en" href="${esc(baseUrl)}?lng=en" />`,
-    `<link rel="alternate" hreflang="es" href="${esc(baseUrl)}?lng=es" />`,
-    `<link rel="alternate" hreflang="x-default" href="${esc(baseUrl)}" />`,
-  ].join('\n  ');
+  // No hreflang tags: the middleware serves Portuguese to all crawlers regardless of ?lng=,
+  // so ?lng= alternates cause "alternative page with proper canonical tag" errors in GSC.
 
   return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -309,9 +303,6 @@ function buildOgHtml(opts: {
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}" />
   <link rel="canonical" href="${esc(url)}" />
-
-  <!-- Hreflang -->
-  ${hreflangTags}
 
   <!-- Open Graph -->
   <meta property="og:type" content="${esc(type)}" />

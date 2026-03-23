@@ -15,7 +15,7 @@ cp .env.example .env
 
 2. Update `.env` with your backend API URL:
 ```env
-VITE_API_URL=http://localhost:3000
+VITE_API_URL=http://localhost:3001
 ```
 
 See [ENVIRONMENT-SETUP.md](ENVIRONMENT-SETUP.md) for detailed environment configuration.
@@ -71,7 +71,7 @@ The project includes test pages for different modules:
 
 ## Backend Integration
 
-The frontend is configured to connect to a NestJS backend at `http://localhost:3000`.
+The frontend is configured to connect to a NestJS backend at `http://localhost:3001`.
 
 See `docs/STEP-7-COMPLETE.md` for error handling details.
 

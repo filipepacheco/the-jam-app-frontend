@@ -37,6 +37,7 @@ export function MusicModal({
     artist: music?.artist || '',
     description: music?.description || '',
     link: music?.link || '',
+    info: music?.info || '',
     genre: music?.genre || '',
     duration: music?.duration
       ? `${Math.floor(music.duration / 60)}:${String(music.duration % 60).padStart(2, '0')}`
@@ -87,6 +88,7 @@ export function MusicModal({
         artist: formData.artist.trim(),
         description: formData.description.trim() || undefined,
         link: formData.link.trim() || undefined,
+        info: formData.info.trim() || undefined,
         genre: formData.genre,
         duration: durationInSeconds || undefined,
         status,

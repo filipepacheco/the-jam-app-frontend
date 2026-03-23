@@ -62,17 +62,6 @@ function buildJamUrl(jam: JamResponse): string {
   return `${SITE_URL}${path}`
 }
 
-const LANGS = ['pt', 'en', 'es'] as const
-const HREFLANG_MAP: Record<string, string> = { pt: 'pt-BR', en: 'en', es: 'es' }
-
-function hreflangTags(loc: string): string {
-  // Strip any existing ?lng= param to get the base URL, then build clean alternates
-  const baseUrl = loc.replace(/[?&]lng=[^&]*/g, '').replace(/\?$/, '')
-  return LANGS.map(
-    lng => `    <xhtml:link rel="alternate" hreflang="${HREFLANG_MAP[lng]}" href="${baseUrl}${baseUrl.includes('?') ? '&' : '?'}lng=${lng}"/>`
-  ).join('\n') + `\n    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}"/>`
-}
-
 function generateUrlEntry(loc: string, options: {
   lastmod?: string
 } = {}): string {
@@ -81,14 +70,13 @@ function generateUrlEntry(loc: string, options: {
   <url>
     <loc>${loc}</loc>${lastmod ? `
     <lastmod>${lastmod}</lastmod>` : ''}
-${hreflangTags(loc)}
   </url>`
 }
 
 async function main() {
   const today = new Date().toISOString().split('T')[0]
 
-  // Static pages (canonical URLs only - hreflang tags inside each entry handle language variants)
+  // Static pages (canonical URLs only, no hreflang - SPA serves same content regardless of ?lng=)
   const staticEntries = [
     generateUrlEntry(`${SITE_URL}/`, { lastmod: today }),
     generateUrlEntry(`${SITE_URL}/jams`, { lastmod: today }),
@@ -119,8 +107,7 @@ async function main() {
   })
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticEntries.join('\n')}
 ${jamEntries.join('\n')}
 </urlset>

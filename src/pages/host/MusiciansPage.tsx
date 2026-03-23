@@ -8,13 +8,14 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import {musicianService} from '../../services'
-import useSWR from 'swr'
-import type {MusicianLevel, MusicianResponseDto} from '../../types/api.types.ts'
+import type {MusicianLevel, MusicianResponseDto, PaginationMeta} from '../../types/api.types.ts'
 import {EditMusicianModal} from '../../components/EditMusicianModal.tsx'
 import {Alert, FullPageSpinner} from '../../components'
 import {useTranslation} from 'react-i18next'
-import {API_ENDPOINTS} from "../../lib/api"
-import {Music, Search} from 'lucide-react'
+import {ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Music, Search} from 'lucide-react'
+
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const
+const DEFAULT_PAGE_SIZE = 20
 
 /** Map level values to badge color variants */
 function getLevelBadgeClass(level: string | null | undefined): string {
@@ -44,11 +45,41 @@ export function MusiciansPage() {
   const [editingMusician, setEditingMusician] = useState<MusicianResponseDto | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
 
-  // Fetch musicians with SWR (only when user is host)
-  const { data: musicians = [], error: swrError, isLoading, mutate: mutateMusicians } = useSWR<MusicianResponseDto[]>(
-    user?.isHost ? API_ENDPOINTS.musicians : null
-  )
-  const error = swrError?.message ?? null
+  // Pagination state
+  const [musicians, setMusicians] = useState<MusicianResponseDto[]>([])
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
+  const [page, setPage] = useState(0)
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const totalPages = meta ? Math.ceil(meta.total / pageSize) : 0
+
+  // Fetch musicians with pagination
+  const fetchMusicians = useCallback(async (pageNum: number, take: number) => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const response = await musicianService.findAll(pageNum * take, take)
+      setMusicians(response.data)
+      setMeta(response.meta)
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch musicians')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (user?.isHost) {
+      void fetchMusicians(page, pageSize)
+    }
+  }, [user?.isHost, page, pageSize, fetchMusicians])
+
+  const handlePageSizeChange = useCallback((newSize: number) => {
+    setPageSize(newSize)
+    setPage(0)
+  }, [])
 
   // Date formatter using user's locale
   const dateFormatter = useMemo(
@@ -74,6 +105,7 @@ export function MusiciansPage() {
         (m) =>
           (m.name?.toLowerCase().includes(query) ?? false) ||
           (m.instrument?.toLowerCase().includes(query) ?? false) ||
+          (m.otherInstruments?.toLowerCase().includes(query) ?? false) ||
           (m.contact?.toLowerCase().includes(query) ?? false)
       )
     }
@@ -99,18 +131,18 @@ export function MusiciansPage() {
         contact: updatedMusician.contact ?? undefined,
       })
 
-      // Refresh musicians data from API
-      await mutateMusicians()
+      // Refresh current page
+      await fetchMusicians(page, pageSize)
 
       setSuccess(t('jam_management.musicians.update_success'))
       setEditingMusician(null)
 
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(null), 3000)
-    } catch (err) {
-      // Error is handled by SWR's swrError, but we can show a toast if needed
+    } catch {
+      // Error shown via error state
     }
-  }, [mutateMusicians, t])
+  }, [fetchMusicians, page, pageSize, t])
 
   const handleCloseEditModal = () => {
     setEditingMusician(null)
@@ -191,7 +223,7 @@ export function MusiciansPage() {
 
             {/* Results count */}
             <div className="text-sm text-base-content/60 mt-2" style={{ fontVariantNumeric: 'tabular-nums' }}>
-              {t('jam_management.musicians.results_count', { shown: filteredMusicians.length, total: musicians.length })}
+              {t('jam_management.musicians.results_count', { shown: filteredMusicians.length, total: meta?.total ?? musicians.length })}
             </div>
           </div>
         </div>
@@ -205,56 +237,222 @@ export function MusiciansPage() {
           <div className="card bg-base-200">
             <div className="card-body text-center">
               <p className="text-base-content/60">
-                {musicians.length === 0
+                {(meta?.total ?? 0) === 0
                   ? t('jam_management.musicians.no_musicians')
                   : t('jam_management.musicians.no_match')}
               </p>
             </div>
           </div>
         ) : (
-          /* Musicians Table */
-          <div className="overflow-x-auto rounded-box">
-            <table className="table table-zebra w-full bg-base-200">
-              <thead>
-                <tr className="bg-base-300">
-                  <th>{t('jam_management.musicians.table.name')}</th>
-                  <th>{t('jam_management.musicians.table.instrument')}</th>
-                  <th>{t('jam_management.musicians.table.level')}</th>
-                  <th>{t('jam_management.musicians.table.contact')}</th>
-                  <th>{t('jam_management.musicians.table.phone')}</th>
-                  <th>{t('jam_management.musicians.table.joined')}</th>
-                  <th>{t('jam_management.musicians.table.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredMusicians.map((musician) => (
-                  <tr key={musician.id} className="hover">
-                    <td className="font-semibold">{musician.name || '—'}</td>
-                    <td>{musician.instrument || '—'}</td>
-                    <td>
-                      <span className={`badge ${getLevelBadgeClass(musician.level)}`}>
-                        {formatLevel(musician.level, t)}
-                      </span>
-                    </td>
-                    <td>{musician.contact || '—'}</td>
-                    <td>{musician.phone || '—'}</td>
-                    <td style={{ fontVariantNumeric: 'tabular-nums' }}>
-                      {musician.createdAt ? dateFormatter.format(new Date(musician.createdAt)) : '—'}
-                    </td>
-                    <td>
+          <>
+            {/* Mobile: Card List */}
+            <div className="md:hidden flex flex-col gap-2">
+              {filteredMusicians.map((musician) => (
+                <div key={musician.id} className="card bg-base-200">
+                  <div className="card-body py-3 px-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold">{musician.name || '—'}</span>
+                          <span className={`badge badge-sm ${getLevelBadgeClass(musician.level)}`}>
+                            {formatLevel(musician.level, t)}
+                          </span>
+                        </div>
+                        {(musician.instrument || musician.otherInstruments) && (
+                          <div className="text-sm text-base-content/70 mt-0.5">
+                            {[musician.instrument, musician.otherInstruments].filter(Boolean).join(' · ')}
+                          </div>
+                        )}
+                        {musician.bio && (
+                          <div className="text-xs text-base-content/50 line-clamp-1 mt-0.5">{musician.bio}</div>
+                        )}
+                        {(musician.contact || musician.phone) && (
+                          <div className="text-xs text-base-content/50 mt-1">
+                            {[musician.contact, musician.phone].filter(Boolean).join(' · ')}
+                          </div>
+                        )}
+                      </div>
                       <button
-                        className="btn btn-primary btn-xs"
+                        className="btn btn-primary btn-sm shrink-0"
                         onClick={() => handleEditMusician(musician)}
                         aria-label={`${t('jam_management.musicians.actions.edit')} ${musician.name || ''}`}
                       >
                         {t('jam_management.musicians.actions.edit')}
                       </button>
-                    </td>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop: Table */}
+            <div className="hidden md:block overflow-x-auto rounded-box">
+              <table className="table table-zebra w-full bg-base-200">
+                <thead>
+                  <tr className="bg-base-300">
+                    <th>{t('jam_management.musicians.table.name')}</th>
+                    <th>{t('jam_management.musicians.table.instrument')}</th>
+                    <th>{t('jam_management.musicians.table.level')}</th>
+                    <th>{t('jam_management.musicians.table.contact')}</th>
+                    <th>{t('jam_management.musicians.table.phone')}</th>
+                    <th>{t('jam_management.musicians.table.joined')}</th>
+                    <th>{t('jam_management.musicians.table.actions')}</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {filteredMusicians.map((musician) => (
+                    <tr key={musician.id} className="hover">
+                      <td>
+                        <div className="font-semibold">{musician.name || '—'}</div>
+                        {musician.bio && (
+                          <div className="text-xs text-base-content/50 line-clamp-1 max-w-48">{musician.bio}</div>
+                        )}
+                      </td>
+                      <td>
+                        <div>{musician.instrument || '—'}</div>
+                        {musician.otherInstruments && (
+                          <div className="text-xs text-base-content/50">{musician.otherInstruments}</div>
+                        )}
+                      </td>
+                      <td>
+                        <span className={`badge ${getLevelBadgeClass(musician.level)}`}>
+                          {formatLevel(musician.level, t)}
+                        </span>
+                      </td>
+                      <td>{musician.contact || '—'}</td>
+                      <td>{musician.phone || '—'}</td>
+                      <td style={{ fontVariantNumeric: 'tabular-nums' }}>
+                        {musician.createdAt ? dateFormatter.format(new Date(musician.createdAt)) : '—'}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-primary btn-xs"
+                          onClick={() => handleEditMusician(musician)}
+                          aria-label={`${t('jam_management.musicians.actions.edit')} ${musician.name || ''}`}
+                        >
+                          {t('jam_management.musicians.actions.edit')}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            {meta && meta.total > 0 && (
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
+                {/* Page size selector - hidden on mobile */}
+                <div className="hidden sm:flex items-center gap-2 text-sm">
+                  <select
+                    className="select select-sm select-bordered"
+                    value={pageSize}
+                    onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+                  >
+                    {PAGE_SIZE_OPTIONS.map((size) => (
+                      <option key={size} value={size}>{size}</option>
+                    ))}
+                  </select>
+                  <span className="text-base-content/60">/ {meta.total}</span>
+                </div>
+
+                {/* Page navigation */}
+                {totalPages > 1 && (
+                  <div className="flex items-center gap-2">
+                    {/* Mobile: prev / page-jump / next */}
+                    <div className="flex sm:hidden items-center gap-2">
+                      <button
+                        className="btn btn-sm"
+                        disabled={page === 0}
+                        onClick={() => setPage(p => p - 1)}
+                        aria-label={t('dj_control.previous')}
+                      >
+                        <ChevronLeft className="size-4" />
+                      </button>
+                      <div className="flex items-center gap-1 text-sm" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                        <input
+                          type="number"
+                          className="input input-sm input-bordered w-14 text-center"
+                          min={1}
+                          max={totalPages}
+                          value={page + 1}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value, 10)
+                            if (val >= 1 && val <= totalPages) setPage(val - 1)
+                          }}
+                        />
+                        <span className="text-base-content/60">/ {totalPages}</span>
+                      </div>
+                      <button
+                        className="btn btn-sm"
+                        disabled={!meta.hasMore}
+                        onClick={() => setPage(p => p + 1)}
+                        aria-label={t('dj_control.next')}
+                      >
+                        <ChevronRight className="size-4" />
+                      </button>
+                    </div>
+
+                    {/* Desktop: full navigation */}
+                    <div className="hidden sm:flex items-center gap-2">
+                      <div className="join">
+                        <button
+                          className="join-item btn btn-sm"
+                          disabled={page === 0}
+                          onClick={() => setPage(0)}
+                          aria-label={t('dj_control.previous')}
+                        >
+                          <ChevronsLeft className="size-4" />
+                        </button>
+                        <button
+                          className="join-item btn btn-sm"
+                          disabled={page === 0}
+                          onClick={() => setPage(p => p - 1)}
+                          aria-label={t('dj_control.previous')}
+                        >
+                          <ChevronLeft className="size-4" />
+                        </button>
+                      </div>
+
+                      <div className="flex items-center gap-1 text-sm" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                        <input
+                          type="number"
+                          className="input input-sm input-bordered w-16 text-center"
+                          min={1}
+                          max={totalPages}
+                          value={page + 1}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value, 10)
+                            if (val >= 1 && val <= totalPages) setPage(val - 1)
+                          }}
+                        />
+                        <span className="text-base-content/60">/ {totalPages}</span>
+                      </div>
+
+                      <div className="join">
+                        <button
+                          className="join-item btn btn-sm"
+                          disabled={!meta.hasMore}
+                          onClick={() => setPage(p => p + 1)}
+                          aria-label={t('dj_control.next')}
+                        >
+                          <ChevronRight className="size-4" />
+                        </button>
+                        <button
+                          className="join-item btn btn-sm"
+                          disabled={!meta.hasMore}
+                          onClick={() => setPage(totalPages - 1)}
+                          aria-label={t('dj_control.next')}
+                        >
+                          <ChevronsRight className="size-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         )}
       </div>
 

@@ -172,6 +172,14 @@ export const MusicCard = memo(function MusicCard({
           </div>
         )}
 
+        {/* Info row - shown when info exists */}
+        {music.info && (
+          <div className="flex items-start gap-1.5 border-t border-base-200 pt-1">
+            <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
+            <p className="text-xs text-base-content/50 line-clamp-3 break-words whitespace-pre-line">{music.info}</p>
+          </div>
+        )}
+
         {/* Quick Edit Panel - shown when expanded */}
         {isExpanded && onQuickSave && (
           <QuickEditPanel
