@@ -592,7 +592,7 @@ export function JamDetailPageV2() {
             )}
 
             <SuggestSongModal
-                jamId={jamId || ''}
+                jamId={jam?.id || ''}
                 isOpen={showSuggestModal}
                 onClose={() => setShowSuggestModal(false)}
                 onSuccess={handleSuggestSuccess}
@@ -600,7 +600,7 @@ export function JamDetailPageV2() {
             />
 
             <SuggestNewSongModal
-                jamId={jamId || ''}
+                jamId={jam?.id || ''}
                 isOpen={showNewSongModal}
                 onClose={() => setShowNewSongModal(false)}
                 onSuccess={handleNewSongSuccess}
