@@ -15,7 +15,7 @@ interface CarouselDashboardProps {
   currentSong: DashboardSongDto | null
   nextSongs: DashboardSongDto[]
   jamId?: string
-  shortCode?: string | null
+  slug?: string | null
   intervalMs: number
 }
 
@@ -29,7 +29,7 @@ export function CarouselDashboard({
   currentSong,
   nextSongs,
   jamId,
-  shortCode,
+  slug,
   intervalMs,
 }: CarouselDashboardProps) {
   const panels = useMemo<Panel[]>(() => {
@@ -43,7 +43,7 @@ export function CarouselDashboard({
       const result: Panel[] = [
         { key: 'starting', content: <StartingSoonPanel song={nextSongs[0] ?? null} /> },
       ]
-      result.push({ key: 'qr', content: <QRCodePanel jamId={jamId} shortCode={shortCode} /> })
+      result.push({ key: 'qr', content: <QRCodePanel jamId={jamId} slug={slug} /> })
       return result
     }
 
@@ -59,10 +59,10 @@ export function CarouselDashboard({
       })
     }
 
-    result.push({ key: 'qr', content: <QRCodePanel jamId={jamId} shortCode={shortCode} /> })
+    result.push({ key: 'qr', content: <QRCodePanel jamId={jamId} slug={slug} /> })
 
     return result
-  }, [jamStatus, currentSong, nextSongs, jamId, shortCode])
+  }, [jamStatus, currentSong, nextSongs, jamId, slug])
 
   const isFinished = jamStatus === 'FINISHED'
 

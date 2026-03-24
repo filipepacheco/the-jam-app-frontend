@@ -82,7 +82,7 @@ export function PublicDashboardPage() {
     // Use short root-level URL: jamapp.com.br/slug
     const path = slug ? `/${slug}` : shortCode ? `/j/${shortCode}` : ''
     const joinUrl = path ? `${host}${path}` : ''
-    const joinLabel = t('publicDashboard.joinAt', 'Join at')
+    const joinLabel =  '' //t('publicDashboard.joinAt', 'Join at')
     return joinUrl ? `${jamName}  |  ${joinLabel} ${joinUrl}` : jamName
   })()
 
@@ -150,7 +150,7 @@ export function PublicDashboardPage() {
           currentSong={currentSong}
           nextSongs={nextSongs}
           jamId={jamId}
-          shortCode={dashboardData?.shortCode}
+          slug={dashboardData?.slug}
           intervalMs={carouselIntervalMs}
         />
       ) : (
