@@ -381,8 +381,8 @@
       "status": "Status",
       "performances": "Apresentações",
       "duration": "Duração",
-      "musicians": "Músicos inscritos",
-      "musician": "Músico inscrito",
+      "musicians": "Inscritos",
+      "musician": "Inscrito",
       "jam_details": "Detalhes do Jam",
       "performances_count": "{{count}} apresentações",
       "full_address": "Endereço completo"
