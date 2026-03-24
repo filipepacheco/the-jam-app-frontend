@@ -315,7 +315,7 @@ export function JamDetailPageV2() {
             <div className="bg-linear-to-r from-base-200 to-base-300 border-b border-base-300">
                 <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-6 sm:py-8">
                     <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-balance">{jam.name}</h1>
-                    <p className="text-base-content/70 mb-6 text-pretty max-w-3xl">{jam.description}</p>
+                    <p className="text-base-content/70 mb-6 text-pretty max-w-3xl whitespace-pre-line">{jam.description}</p>
 
                     {/* Jam Stats Grid */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">

@@ -169,7 +169,7 @@ export function OverviewTab({
                             {hasDescription && (
                                 <div>
                                     <p className="text-sm text-base-content/60">{t('common.description')}</p>
-                                    <p className="text-base">{jam.description}</p>
+                                    <p className="text-base whitespace-pre-line">{jam.description}</p>
                                 </div>
                             )}
                             
