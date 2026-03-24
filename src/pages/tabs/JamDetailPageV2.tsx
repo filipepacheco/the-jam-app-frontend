@@ -503,65 +503,49 @@ export function JamDetailPageV2() {
                         {/* Suggested Songs Section */}
                         {suggestedSchedules.length > 0 && (
                             <CollapsibleSection
-                                title={t('jams.suggested_songs_title')}
+                                title={t('jams.suggested_songs_short', 'Sugeridas')}
                                 isExpanded={isSuggestedExpanded}
                                 onToggle={() => setIsSuggestedExpanded(!isSuggestedExpanded)}
                                 badge={`${suggestedSchedules.length}`}
                             >
-                                <div className="space-y-3">
+                                <p className="text-xs text-base-content/50 mb-2">{t('jams.suggested_songs_hint')}</p>
+                                <div className="divide-y divide-base-300/40">
                                     {suggestedSchedules.map((schedule) => (
                                         <div
                                             key={schedule.id}
-                                            className="p-3 bg-base-200/50 rounded-lg border border-dashed border-base-300"
+                                            className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
                                         >
-                                            <div className="flex items-start gap-3">
-                                                <div className="text-2xl shrink-0" aria-hidden="true">✨</div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="font-semibold text-sm">
-                                                        {schedule.music?.title}
-                                                    </p>
-                                                    <p className="text-xs text-base-content/60">
-                                                        {schedule.music?.artist}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                            {/* Registered Musicians */}
-                                            {schedule.registrations && schedule.registrations.length > 0 && (
-                                                <div className="mt-2 pt-2 border-t border-base-300/30">
-                                                    <p className="text-xs text-base-content/50 mb-1">{t('jams.registered_musicians')}:</p>
-                                                    <div className="flex flex-wrap gap-1">
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-sm truncate">
+                                                    {schedule.music?.title}
+                                                </p>
+                                                <p className="text-xs text-base-content/60 truncate">
+                                                    {schedule.music?.artist}
+                                                </p>
+                                                {schedule.registrations && schedule.registrations.length > 0 && (
+                                                    <div className="flex flex-wrap gap-1 mt-1">
                                                         {schedule.registrations.map((reg) => (
                                                             <span
                                                                 key={reg.id}
-                                                                className="badge badge-sm badge-ghost gap-1"
+                                                                className="inline-flex items-center gap-1 text-[11px] text-base-content/60"
                                                             >
-                                                                {getInstrumentIcon(reg.instrument || '')}
+                                                                <span aria-hidden="true">{getInstrumentIcon(reg.instrument || '')}</span>
                                                                 {reg.musician?.name || reg.musician?.contact}
                                                             </span>
                                                         ))}
                                                     </div>
-                                                </div>
-                                            )}
-
-                                            <div className="flex items-center justify-between mt-3 pt-3 border-t border-base-300/50">
-                                                <span className="badge badge-warning badge-sm">
-                                                    {t('jams.awaiting_approval')}
-                                                </span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => handleEnrollClick(schedule)}
-                                                    className="btn btn-primary btn-sm"
-                                                >
-                                                    {t('jams.register')}
-                                                </button>
+                                                )}
                                             </div>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleEnrollClick(schedule)}
+                                                className="btn btn-outline btn-primary btn-xs shrink-0"
+                                            >
+                                                + {t('jams.register')}
+                                            </button>
                                         </div>
                                     ))}
                                 </div>
-                                <p className="text-xs text-base-content/60 mt-3 text-center">
-                                    {t('jams.suggested_songs_hint')}
-                                </p>
                             </CollapsibleSection>
                         )}
                     </div>

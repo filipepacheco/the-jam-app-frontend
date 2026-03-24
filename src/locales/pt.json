@@ -421,7 +421,7 @@
     "select_instrument": "Selecionar instrumento *",
     "select_your_instrument": "Selecione seu instrumento *",
     "choose_instrument": "Escolha um instrumento...",
-    "instruments_needed": "Instrumentos necessários:",
+    "instruments_needed": "Vagas restantes",
     "any_instrument_welcome": "Qualquer instrumento é bem-vindo nesta música!",
     "slots_available": "vagas disponíveis",
     "slots_available_dynamic": "{{count}} vagas disponíveis",
@@ -459,8 +459,8 @@
       "in_progress": "Em andamento",
       "completed": "Concluída",
       "canceled": "Cancelada",
-      "awaiting_registrations": "Aguardando Inscrições",
-      "ready_to_play": "Pronto para Tocar"
+      "awaiting_registrations": "Vagas abertas",
+      "ready_to_play": "Banda completa"
     },
     "actions": {
       "start": "▶️ Iniciar",

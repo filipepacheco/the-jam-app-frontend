@@ -56,7 +56,7 @@ export function InstrumentsSummary({ instrumentOptions, highlightInstrument }: I
               }`}
               title={option.label}
             >
-              {getInstrumentIcon(option.key)} {t('schedule.left_count', { count: remaining })}
+              {getInstrumentIcon(option.key)} {remaining}
             </span>
           )
         })}

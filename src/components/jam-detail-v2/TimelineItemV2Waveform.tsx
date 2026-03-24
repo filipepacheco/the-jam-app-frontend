@@ -112,31 +112,33 @@ export function TimelineItemV2Waveform({
         {/* Header: Grid layout for proper text truncation with status */}
         <div className={`grid grid-cols-[auto_1fr_auto] items-start gap-2 ${isCompleted && !isExpanded ? '' : 'mb-1'}`}>
           {position !== undefined ? (
-            <div className="badge badge-neutral badge-sm font-bold shrink-0">
-              #{position}
+            <div className="badge badge-neutral badge-xs font-bold shrink-0 text-[11px] mt-auto mb-auto">
+              {position}
             </div>
           ) : <div />}
           <div className="min-w-0">
             <h3 className="text-sm sm:text-base md:text-lg font-bold text-base-content mb-0.5 truncate">
               {schedule.music?.title}
             </h3>
-            <div className="flex items-center gap-2 text-xs sm:text-sm">
-              <span className="text-base-content/70 truncate">{schedule.music?.artist}</span>
-              {schedule.registrations && schedule.registrations.length > 0 && (
-                <span className="text-base-content/50 font-medium shrink-0">
-                  · {schedule.registrations.length} {schedule.registrations.length === 1 ? t('jams.info.musician') : t('jams.info.musicians')}
-                  {isCompleted && <span className="text-[10px] ml-0.5" aria-hidden="true">{isExpanded ? '▲' : '▼'}</span>}
-                </span>
-              )}
-              <span className="shrink-0" onClick={(e) => e.stopPropagation()}>
-                <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
-              </span>
-            </div>
+            <p className="text-xs sm:text-sm text-base-content/70 truncate">{schedule.music?.artist}</p>
           </div>
-          {/* Status - in grid, always takes its natural width */}
-          <div className={`flex items-center gap-1 text-xs font-semibold ${status.color} shrink-0`}>
-            <span className={`text-sm ${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`} aria-hidden="true">{status.icon}</span>
-            <span className="whitespace-nowrap">{status.text}</span>
+          {/* Status + meta - right column */}
+          <div className="text-right">
+            <div className={`text-xs sm:text-sm font-semibold mb-0.5 ${status.color}`}>
+                <span className={`${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`} aria-hidden="true">{status.icon}</span>
+                <span className="whitespace-nowrap"> {status.text}</span>
+            </div>
+              <div className="flex items-center justify-end gap-2">
+            {schedule.registrations && schedule.registrations.length > 0 && (
+              <p className="text-xs sm:text-sm text-base-content/70 ">
+                {schedule.registrations.length} {schedule.registrations.length === 1 ? t('jams.info.musician') : t('jams.info.musicians')}
+                {isCompleted && <span className="text-[10px] ml-0.5" aria-hidden="true">{isExpanded ? '▲' : '▼'}</span>}
+              </p>
+            )}
+            <span onClick={(e) => e.stopPropagation()}>
+                <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
+            </span>
+              </div>
           </div>
         </div>
 
@@ -164,7 +166,7 @@ export function TimelineItemV2Waveform({
                 >
                   <span aria-hidden="true" className="shrink-0">{getInstrumentIcon(reg.instrument)}</span>
                   <span className="font-medium truncate">
-                    {reg.musician?.id === user?.id ? t('common.you') : reg.musician?.name}
+                    {reg.musician?.id === user?.id ? t('common.you') : (reg.musician?.name?.split(' ')[0] ?? reg.musician?.name)}
                   </span>
                 </div>
               ))}
