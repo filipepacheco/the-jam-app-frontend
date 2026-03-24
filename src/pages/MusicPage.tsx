@@ -5,16 +5,13 @@
  * Route: /music
  */
 
-import { useCallback, useMemo, useState, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import useSWR from 'swr'
 import { useAuth, usePageAlerts } from '../hooks'
 import { musicService } from '../services'
-import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
-import { API_ENDPOINTS } from '../lib/api/config'
+import type { MusicResponseDto, UpdateMusicDto, PaginationMeta } from '../types/api.types'
 import {
-  Alert,
   ConfirmDialog,
   MusicCard,
   MusicEmptyState,
@@ -24,6 +21,10 @@ import {
 } from '../components'
 import { filterAndSortMusic } from '../lib/musicUtils'
 import { GENRES } from '../lib/musicConstants'
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+
+const PAGE_SIZE_OPTIONS = [20, 50, 100] as const
+const DEFAULT_PAGE_SIZE = 50
 
 type SortBy = 'title' | 'artist' | 'date'
 type ModalMode = 'add' | 'suggest' | null
@@ -33,13 +34,67 @@ export function MusicPage() {
   const { t } = useTranslation()
   const { user, isAuthenticated } = useAuth()
 
-  // SWR data fetching
-  const {
-    data: musicList = [],
-    error: swrError,
-    isLoading,
-    mutate,
-  } = useSWR<MusicResponseDto[]>(API_ENDPOINTS.music)
+  // Paginated data fetching
+  const [musicList, setMusicList] = useState<MusicResponseDto[]>([])
+  const [meta, setMeta] = useState<PaginationMeta | null>(null)
+  const [page, setPage] = useState(0)
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
+  const [isLoading, setIsLoading] = useState(true)
+  const [fetchError, setFetchError] = useState<string | null>(null)
+
+  const totalPages = meta ? Math.ceil(meta.total / pageSize) : 0
+
+  const fetchMusic = useCallback(async (pageNum: number, take: number) => {
+    setIsLoading(true)
+    setFetchError(null)
+    try {
+      const response = await musicService.findAll(pageNum * take, take, 'APPROVED')
+      setMusicList(response.data)
+      setMeta(response.meta)
+    } catch (err: unknown) {
+      setFetchError(err instanceof Error ? err.message : 'Failed to fetch music')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    void fetchMusic(page, pageSize)
+  }, [page, pageSize, fetchMusic])
+
+  const mutate = useCallback(() => fetchMusic(page, pageSize), [fetchMusic, page, pageSize])
+
+  // Suggested songs modal
+  const [suggestedModalOpen, setSuggestedModalOpen] = useState(false)
+  const [suggestedSongs, setSuggestedSongs] = useState<MusicResponseDto[]>([])
+  const [suggestedCount, setSuggestedCount] = useState(0)
+  const [suggestedLoading, setSuggestedLoading] = useState(false)
+
+  const fetchSuggestedCount = useCallback(async () => {
+    try {
+      const response = await musicService.findAll(0, 1, 'SUGGESTED')
+      setSuggestedCount(response.meta.total)
+    } catch { /* ignore */ }
+  }, [])
+
+  useEffect(() => {
+    void fetchSuggestedCount()
+  }, [fetchSuggestedCount])
+
+  const openSuggestedModal = useCallback(async () => {
+    setSuggestedModalOpen(true)
+    setSuggestedLoading(true)
+    try {
+      const response = await musicService.findAll(0, 100, 'SUGGESTED')
+      setSuggestedSongs(response.data)
+    } catch { /* ignore */ }
+    setSuggestedLoading(false)
+  }, [])
+
+  const closeSuggestedModal = useCallback(() => {
+    setSuggestedModalOpen(false)
+    setSuggestedSongs([])
+  }, [])
 
   const [actionLoading, setActionLoading] = useState(false)
   const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
@@ -48,7 +103,6 @@ export function MusicPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [genreFilter, setGenreFilter] = useState<string>('')
   const [sortBy, setSortBy] = useState<SortBy>('title')
-  const [suggestedExpanded, setSuggestedExpanded] = useState(false)
 
   // Quick edit expanded card
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
@@ -102,15 +156,6 @@ export function MusicPage() {
     })
   }, [musicList, searchTerm, genreFilter, sortBy])
 
-  const suggestedMusic = useMemo(
-    () => filteredAndSortedMusic.filter((m) => m.status === 'SUGGESTED'),
-    [filteredAndSortedMusic],
-  )
-  const approvedMusic = useMemo(
-    () => filteredAndSortedMusic.filter((m) => m.status !== 'SUGGESTED'),
-    [filteredAndSortedMusic],
-  )
-
   const handleToggleExpand = useCallback((musicId: string) => {
     setExpandedCardId((prev: string | null) => prev === musicId ? null : musicId)
   }, [])
@@ -132,6 +177,14 @@ export function MusicPage() {
     }
   }, [t, mutate, setError, setSuccess])
 
+  const refreshSuggested = useCallback(async () => {
+    try {
+      const response = await musicService.findAll(0, 100, 'SUGGESTED')
+      setSuggestedSongs(response.data)
+      setSuggestedCount(response.meta.total)
+    } catch { /* ignore */ }
+  }, [])
+
   const handleApprove = useCallback(
     async (music: MusicResponseDto) => {
       setActionLoading(true)
@@ -142,7 +195,7 @@ export function MusicPage() {
           setError(result.error || t('music_library.errors.failed_to_approve'))
         } else {
           setSuccess(t('music_library.feedback.approve_success', { title: music.title }))
-          await mutate()
+          await Promise.all([mutate(), refreshSuggested()])
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_approve'))
@@ -150,7 +203,7 @@ export function MusicPage() {
         setActionLoading(false)
       }
     },
-    [t, mutate, setError, setSuccess],
+    [t, mutate, refreshSuggested, setError, setSuccess],
   )
 
   const handleReject = useCallback(
@@ -168,7 +221,7 @@ export function MusicPage() {
               setError(result.error || t('music_library.errors.failed_to_reject'))
             } else {
               setSuccess(t('music_library.feedback.reject_success', { title: music.title }))
-              await mutate()
+              await refreshSuggested()
             }
           } catch (err) {
             setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_reject'))
@@ -283,12 +336,22 @@ export function MusicPage() {
             </div>
           </div>
 
+          {/* Suggested songs button - hosts only */}
+          {user?.isHost && suggestedCount > 0 && (
+            <button
+              onClick={() => void openSuggestedModal()}
+              className="btn btn-warning btn-sm gap-2"
+            >
+              {t('music_library.suggested_songs')}
+              <span className="badge badge-sm">{suggestedCount}</span>
+            </button>
+          )}
         </div>
       </div>
 
       {/* Alerts */}
       <PageAlerts
-        error={error || swrError?.message || null}
+        error={error || fetchError || null}
         success={success}
         onDismissError={clearError}
         onDismissSuccess={clearSuccess}
@@ -314,69 +377,97 @@ export function MusicPage() {
         {filteredAndSortedMusic.length === 0 ? (
           <MusicEmptyState hasFilters={!!searchTerm || !!genreFilter} isHost={user?.isHost || false} />
         ) : (
-          <div className="space-y-4">
-            {/* Suggested Songs - Collapsible, shown first */}
-            {suggestedMusic.length > 0 && (
-              <div>
-                <button
-                  onClick={() => setSuggestedExpanded(!suggestedExpanded)}
-                  className="flex items-center gap-2 mb-3 cursor-pointer group"
-                  type="button"
-                  aria-expanded={suggestedExpanded}
-                >
-                  <span
-                    className={`transform transition-transform motion-reduce:transition-none text-base-content/60 ${suggestedExpanded ? 'rotate-90' : ''}`}
-                    aria-hidden="true"
-                  >
-                    &#9654;
-                  </span>
-                  <h2 className="text-lg font-bold text-base-content group-hover:text-primary transition-colors">
-                    {t('music_library.tabs.suggested')}
-                  </h2>
-                  <span className="badge badge-warning badge-sm">{suggestedMusic.length}</span>
-                </button>
-                {suggestedExpanded && (
-                  <div className="space-y-2 animate-in fade-in duration-200">
-                    {suggestedMusic.map((music) => (
-                      <MusicCard
-                        key={music.id}
-                        music={music}
-                        isHost={user?.isHost || false}
-                        isExpanded={expandedCardId === music.id}
-
-                        onDelete={handleDelete}
-                        onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
-                        onQuickSave={user?.isHost ? handleQuickSave : undefined}
-                        onApprove={user?.isHost ? handleApprove : undefined}
-                        onReject={user?.isHost ? handleReject : undefined}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Approved Songs */}
-            {approvedMusic.length > 0 && (
-              <div className="space-y-2">
-                {approvedMusic.map((music) => (
-                  <MusicCard
-                    key={music.id}
-                    music={music}
-                    isHost={user?.isHost || false}
-                    isExpanded={expandedCardId === music.id}
-                    onDelete={handleDelete}
-                    onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
-                    onQuickSave={user?.isHost ? handleQuickSave : undefined}
-                    onApprove={user?.isHost ? handleApprove : undefined}
-                    onReject={user?.isHost ? handleReject : undefined}
-                  />
-                ))}
-              </div>
-            )}
+          <div className="space-y-2">
+            {filteredAndSortedMusic.map((music) => (
+              <MusicCard
+                key={music.id}
+                music={music}
+                isHost={user?.isHost || false}
+                isExpanded={expandedCardId === music.id}
+                onDelete={handleDelete}
+                onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
+                onQuickSave={user?.isHost ? handleQuickSave : undefined}
+              />
+            ))}
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      {meta && totalPages > 1 && (
+        <div className="container mx-auto max-w-7xl px-4 pb-4">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 py-3 border-t border-base-300">
+            {/* Page size selector */}
+            <div className="flex items-center gap-2 text-sm text-base-content/60">
+              <span>{t('common.show')}</span>
+              <select
+                className="select select-sm select-bordered"
+                value={pageSize}
+                onChange={(e) => { setPageSize(Number(e.target.value)); setPage(0) }}
+              >
+                {PAGE_SIZE_OPTIONS.map(size => (
+                  <option key={size} value={size}>{size}</option>
+                ))}
+              </select>
+              <span style={{ fontVariantNumeric: 'tabular-nums' }}>
+                {t('common.of_total', { total: meta.total })}
+              </span>
+            </div>
+
+            {/* Navigation */}
+            <div className="flex items-center gap-2">
+              <div className="join">
+                <button
+                  className="join-item btn btn-sm"
+                  disabled={page === 0}
+                  onClick={() => setPage(0)}
+                >
+                  <ChevronsLeft className="size-4" />
+                </button>
+                <button
+                  className="join-item btn btn-sm"
+                  disabled={page === 0}
+                  onClick={() => setPage(p => p - 1)}
+                >
+                  <ChevronLeft className="size-4" />
+                </button>
+              </div>
+
+              <div className="flex items-center gap-1 text-sm" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                <input
+                  type="number"
+                  className="input input-sm input-bordered w-14 text-center"
+                  min={1}
+                  max={totalPages}
+                  value={page + 1}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10)
+                    if (val >= 1 && val <= totalPages) setPage(val - 1)
+                  }}
+                />
+                <span className="text-base-content/60">/ {totalPages}</span>
+              </div>
+
+              <div className="join">
+                <button
+                  className="join-item btn btn-sm"
+                  disabled={!meta.hasMore}
+                  onClick={() => setPage(p => p + 1)}
+                >
+                  <ChevronRight className="size-4" />
+                </button>
+                <button
+                  className="join-item btn btn-sm"
+                  disabled={!meta.hasMore}
+                  onClick={() => setPage(totalPages - 1)}
+                >
+                  <ChevronsRight className="size-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Add Music Modal */}
       {modalState.mode === 'add' && (
@@ -402,6 +493,56 @@ export function MusicPage() {
         />
       )}
 
+
+      {/* Suggested Songs Review Modal */}
+      {suggestedModalOpen && (
+        <dialog className="modal modal-open" onClick={(e) => { if (e.target === e.currentTarget) closeSuggestedModal() }}>
+          <div className="modal-box max-w-2xl max-h-[80vh]">
+            <h3 className="font-bold text-lg mb-4">{t('music_library.suggested_songs')}</h3>
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={closeSuggestedModal}>X</button>
+            {suggestedLoading ? (
+              <div className="flex justify-center py-8">
+                <span className="loading loading-spinner loading-lg" />
+              </div>
+            ) : suggestedSongs.length === 0 ? (
+              <p className="text-base-content/60 text-center py-8">{t('music_library.no_suggested')}</p>
+            ) : (
+              <div className="space-y-3 overflow-y-auto">
+                {suggestedSongs.map((music) => (
+                  <div key={music.id} className="card bg-base-200">
+                    <div className="card-body p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold">{music.title}</p>
+                          <p className="text-sm text-base-content/70">{music.artist}</p>
+                          {music.genre && <span className="badge badge-sm badge-outline mt-1">{music.genre}</span>}
+                          {music.description && <p className="text-xs text-base-content/50 mt-1 line-clamp-2">{music.description}</p>}
+                        </div>
+                        <div className="flex gap-2 shrink-0">
+                          <button
+                            className="btn btn-success btn-sm"
+                            disabled={actionLoading}
+                            onClick={() => void handleApprove(music)}
+                          >
+                            {t('common.approve')}
+                          </button>
+                          <button
+                            className="btn btn-error btn-sm"
+                            disabled={actionLoading}
+                            onClick={() => handleReject(music)}
+                          >
+                            {t('common.reject')}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </dialog>
+      )}
 
       {/* Confirm Dialog */}
       <ConfirmDialog

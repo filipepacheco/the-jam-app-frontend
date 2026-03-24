@@ -10,6 +10,7 @@ import type {
   CreateMusicDto,
   UpdateMusicDto,
   ApiResponse,
+  PaginatedResponse,
 } from '../types/api.types'
 
 /**
@@ -27,11 +28,18 @@ export const musicService = {
   },
 
   /**
-   * Get all music (independent of jam)
-   * @returns Promise with array of music
+   * Get music with pagination and optional status filter
    */
-  async findAll(): Promise<ApiResponse<MusicResponseDto[]>> {
-    return apiClient.get<MusicResponseDto[]>(API_ENDPOINTS.music as string)
+  async findAll(skip = 0, take = 50, status?: string): Promise<PaginatedResponse<MusicResponseDto>> {
+    const params = new URLSearchParams({ skip: String(skip), take: String(take) })
+    if (status) params.set('status', status)
+    const response = await apiClient.get<MusicResponseDto[]>(
+      `${API_ENDPOINTS.music}?${params.toString()}`
+    )
+    return {
+      data: response.data,
+      meta: response.meta!,
+    }
   },
 
   /**

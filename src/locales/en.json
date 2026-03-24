@@ -47,6 +47,8 @@
     "contact": "Contact",
     "copyright": "Copyright",
     "all_rights_reserved": "All rights reserved.",
+    "show": "Show",
+    "of_total": "of {{total}}",
     "connection": {
       "connected": "Connected",
       "connecting": "Connecting...",
@@ -645,6 +647,8 @@
     "page_title": "Music Library",
     "add_song": "+ Add Song",
     "suggest_song": "Suggest Song",
+    "suggested_songs": "Suggested Songs",
+    "no_suggested": "No suggested songs pending review.",
     "search_placeholder": "Search by title or artist...",
     "all_genres": "All Genres",
     "sort_title": "Sort by Title",

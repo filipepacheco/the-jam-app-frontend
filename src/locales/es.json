@@ -45,6 +45,8 @@
     "contact": "Contacto",
     "copyright": "Derechos de autor",
     "all_rights_reserved": "Todos los derechos reservados.",
+    "show": "Mostrar",
+    "of_total": "de {{total}}",
     "connection": {
       "connected": "Conectado",
       "connecting": "Conectando",
@@ -643,6 +645,8 @@
     "page_title": "Biblioteca de Música",
     "add_song": "+ Agregar Canción",
     "suggest_song": "Sugerir Canción",
+    "suggested_songs": "Canciones Sugeridas",
+    "no_suggested": "No hay canciones sugeridas pendientes de revisión.",
     "search_placeholder": "Buscar por título o artista...",
     "all_genres": "Todos los Géneros",
     "sort_title": "Ordenar por Título",
