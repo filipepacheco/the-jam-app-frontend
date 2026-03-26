@@ -152,10 +152,6 @@ export function JamManagementPage() {
         id: 'overview',
         label: t('jam_management.tabs.overview'),
         icon: '📊'
-    }, {
-        id: 'registrations',
-        label: t('jam_management.tabs.registrations', 'Registrations'),
-        icon: '👥'
     }, {id: 'schedule', label: t('jam_management.tabs.schedule'), icon: '📋'}, {
         id: 'dj-control' as const,
         label: t('dj_control.title'),
@@ -164,14 +160,6 @@ export function JamManagementPage() {
         id: 'live' as const,
         label: t('jam_management.tabs.live_control'),
         icon: '🎙️'
-    }, {
-        id: 'dashboard',
-        label: t('jam_management.tabs.dashboard', 'Dashboard'),
-        icon: '📺'
-    }, {
-        id: 'analytics',
-        label: t('jam_management.tabs.analytics', 'Analytics'),
-        icon: '📈'
     }]
 
     return (<div className="min-h-screen bg-base-100">
