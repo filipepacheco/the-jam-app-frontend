@@ -1,9 +1,10 @@
 /**
- * DJ Control V2 Components
- * New components using the /control endpoints
+ * DJ Control Components
  */
 
-export { DJControlActions } from './DJControlActions.tsx'
+export { NowPlayingBar } from './NowPlayingBar.tsx'
+export { PlaybackControls } from './PlaybackControls.tsx'
+export { CompactStats } from './CompactStats.tsx'
 export { SongQueueTimeline } from './SongQueueTimeline.tsx'
 export { TimelineSongItem } from './TimelineSongItem.tsx'
 export { QueueStats } from './QueueStats.tsx'

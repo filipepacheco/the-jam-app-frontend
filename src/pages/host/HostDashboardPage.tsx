@@ -71,7 +71,7 @@ export function HostDashboardPage() {
         jams.forEach((jam) => {
             if (jam.status === 'FINISHED') {
                 categorized.past.push(jam)
-            } else if (jam.status === 'ACTIVE') {
+            } else if (jam.status === 'ACTIVE' || jam.status === 'LIVE') {
                 categorized.inProgress.push(jam)
             } else {
                 categorized.planned.push(jam)

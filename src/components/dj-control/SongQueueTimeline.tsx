@@ -121,13 +121,10 @@ export function SongQueueTimeline({
       {currentSong && (
         <li>
           <hr className="bg-primary" />
-          <div className={`${getAlternatingClass()} timeline-box bg-linear-to-br from-primary/40 to-accent/40 shadow-2xl shadow-primary/50 border-2 border-primary animate-pulse`}>
+          <div className={`${getAlternatingClass()} timeline-box bg-primary/10 border-2 border-primary`}>
             <div className="font-bold text-sm mb-2 flex items-center gap-2">
-              <span className="badge badge-primary animate-pulse">
+              <span className="badge badge-primary badge-sm">
                 {t('dj_control.timeline.now_playing')}
-              </span>
-              <span className="text-xs text-primary/70">
-                {liveState?.playbackState === 'PLAYING' ? '▶️' : liveState?.playbackState === 'PAUSED' ? '⏸️' : '⏹️'}
               </span>
             </div>
             <TimelineSongItem
@@ -142,7 +139,7 @@ export function SongQueueTimeline({
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="text-primary h-8 w-8 animate-pulse"
+              className="text-primary h-6 w-6"
             >
               <path
                 fillRule="evenodd"

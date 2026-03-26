@@ -1,36 +1,34 @@
 /**
- * DJ Control Tab Component V2
- * Stats + controls in sidebar, timeline below (mobile) or beside (desktop)
+ * DJ Control Tab V2 - Mobile-first rework
+ * Layout: NowPlayingBar -> PlaybackControls -> CompactStats -> Timeline
  */
 
-import {useTranslation} from 'react-i18next'
-import {useState} from 'react'
-import {useJamControl} from '../../hooks'
-import {Alert} from '../../components'
-import {QueueStats, SongQueueTimeline} from '../../components/dj-control'
-import {scheduleService} from '../../services'
-import {formatError} from '../../lib/api/errorHandler'
+import { useTranslation } from 'react-i18next'
+import { useMemo, useState } from 'react'
+import { useJamControl } from '../../hooks'
+import { Alert } from '../../components'
+import { NowPlayingBar } from '../../components/dj-control/NowPlayingBar'
+import { PlaybackControls } from '../../components/dj-control/PlaybackControls'
+import { CompactStats } from '../../components/dj-control/CompactStats'
+import { SongQueueTimeline } from '../../components/dj-control'
+import { scheduleService } from '../../services'
+import { formatError } from '../../lib/api/errorHandler'
 
 interface DJControlTabV2Props {
   jamId: string
   onReload?: () => void
 }
 
-/**
- * DJ Control Tab V2
- * Stats card includes control buttons at the bottom
- */
 export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
   const { t } = useTranslation()
   const [actionLoading, setActionLoading] = useState(false)
   const [success, setSuccess] = useState<string | null>(null)
   const [actionError, setActionError] = useState<string | null>(null)
 
-  // Use the custom hook for jam control (live state)
-  const { liveState, isLoading, error, start, stop, next, previous, refresh } =
+  const { liveState, isLoading, error, start, stop, next, previous, pause, resume, refresh } =
     useJamControl(jamId, {
       autoRefreshEnabled: true,
-      autoRefreshInterval: 5000, // 5 seconds
+      autoRefreshInterval: 5000,
     })
 
   const handleRefresh = async () => {
@@ -67,12 +65,21 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
     }
   }
 
+  // Derived stats
+  const { totalCount, remainingDuration } = useMemo(() => {
+    if (!liveState) return { totalCount: 0, remainingDuration: 0 }
+    const { previousSongs, currentSong, nextSongs } = liveState
+    const total = previousSongs.length + (currentSong ? 1 : 0) + nextSongs.length
+    const remaining =
+      (currentSong?.music.duration || 0) +
+      nextSongs.reduce((acc, s) => acc + (s.music.duration || 0), 0)
+    return { totalCount: total, remainingDuration: remaining }
+  }, [liveState])
+
   const timelineContent = isLoading && !liveState ? (
-    <div className="card bg-base-200 shadow">
-      <div className="card-body text-center">
-        <p className="text-sm text-base-content/70">{t('common.loading')}</p>
-        <progress className="progress progress-primary w-full mt-2"></progress>
-      </div>
+    <div className="text-center py-8">
+      <p className="text-sm text-base-content/70">{t('common.loading')}</p>
+      <progress className="progress progress-primary w-48 mt-2" />
     </div>
   ) : liveState ? (
     <SongQueueTimeline
@@ -90,45 +97,52 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
     />
   )
 
-  return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">{t('dj_control.title_with_emoji')}</h2>
+  const controlBlock = liveState ? (
+    <>
+      <NowPlayingBar
+        currentSong={liveState.currentSong}
+        playbackState={liveState.playbackState}
+        nextSong={liveState.nextSongs[0] ?? null}
+      />
+      <PlaybackControls
+        playbackState={liveState.playbackState}
+        hasCurrentSong={!!liveState.currentSong}
+        hasNextSong={liveState.nextSongs.length > 0}
+        isLoading={isLoading}
+        onStart={start}
+        onStop={stop}
+        onNext={next}
+        onPrevious={previous}
+        onPause={pause}
+        onResume={resume}
+      />
+      <CompactStats
+        completedCount={liveState.previousSongs.length}
+        totalCount={totalCount}
+        remainingDuration={remainingDuration}
+      />
+    </>
+  ) : null
 
-      {error && (
-        <Alert type="error" message={error} onDismiss={() => {}} />
-      )}
+  return (
+    <div className="space-y-3">
+      {error && <Alert type="error" message={error} onDismiss={() => {}} />}
       {actionError && <Alert type="error" message={actionError} onDismiss={() => setActionError(null)} />}
       {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
 
-      {/* Mobile Layout: Stats+Controls at top, timeline below */}
-      <div className="lg:hidden space-y-4">
-        <QueueStats
-          liveState={liveState}
-          jamId={jamId}
-          isLoading={isLoading}
-          onStart={start}
-          onStop={stop}
-          onNext={next}
-          onPrevious={previous}
-        />
+      {/* Mobile: controls on top, timeline below */}
+      <div className="lg:hidden space-y-3">
+        {controlBlock}
         {timelineContent}
       </div>
 
-      {/* Desktop Layout: Timeline left, Stats+Controls right */}
+      {/* Desktop: timeline left, controls right */}
       <div className="hidden lg:grid lg:grid-cols-4 gap-4">
         <div className="lg:col-span-3 min-w-0">
           {timelineContent}
         </div>
-        <div className="lg:col-span-1">
-          <QueueStats
-            liveState={liveState}
-            jamId={jamId}
-            isLoading={isLoading}
-            onStart={start}
-            onStop={stop}
-            onNext={next}
-            onPrevious={previous}
-          />
+        <div className="lg:col-span-1 space-y-3">
+          {controlBlock}
         </div>
       </div>
     </div>

@@ -1,5 +1,7 @@
 {
   "common": {
+    "no_results": "Nenhum resultado encontrado",
+    "all": "Tudo",
     "privacy_policy":  "Política de Privacidade",
     "app_name": "Jam App",
     "continue": "Continuar",
@@ -422,6 +424,9 @@
     "select_your_instrument": "Selecione seu instrumento *",
     "choose_instrument": "Escolha um instrumento...",
     "instruments_needed": "Vagas restantes",
+    "search_placeholder": "Buscar músicas ou músicos...",
+    "needs_musicians": "Precisa de músicos",
+    "band_complete": "Banda completa",
     "any_instrument_welcome": "Qualquer instrumento é bem-vindo nesta música!",
     "slots_available": "vagas disponíveis",
     "slots_available_dynamic": "{{count}} vagas disponíveis",
@@ -919,6 +924,14 @@
     "confirm_remove": "Tem certeza de que deseja remover esta música da fila?",
     "song_removed": "Música removida com sucesso",
     "song_approved": "Música aprovada e adicionada à fila",
+    "now_playing": {
+      "ready_to_start": "Pronto para iniciar",
+      "next_up": "Próxima",
+      "idle": "Nenhuma música na fila",
+      "stopped": "Parado",
+      "playing": "Tocando",
+      "paused": "Pausado"
+    },
     "errors": {
       "no_jam_id": "Nenhum ID de jam fornecido",
       "failed_to_load": "Falha ao carregar estado do jam",

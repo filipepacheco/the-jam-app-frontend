@@ -4,8 +4,9 @@ import {useMemo, useState} from "react";
 import {registrationService, scheduleService, musicService} from "../../services";
 import {Alert} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
-import {ScheduleCompactCard} from "../../components/schedule/ScheduleCompactCard";
+import {ScheduleCollapsibleCard} from "../../components/schedule/ScheduleCollapsibleCard";
 import {MusicianProfileModal} from "../../components/MusicianProfileModal";
+import {Search, X} from "lucide-react";
 
 /**
  * Schedule Tab Component - Full management with nested registrations
@@ -20,6 +21,8 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
     const [showHostRegistrationModal, setShowHostRegistrationModal] = useState(false)
     const [selectedScheduleForRegistration, setSelectedScheduleForRegistration] = useState<ScheduleResponseDto | null>(null)
     const [selectedMusicianId, setSelectedMusicianId] = useState<string | null>(null)
+    const [searchQuery, setSearchQuery] = useState('')
+    const [statusFilter, setStatusFilter] = useState<'all' | 'needs_musicians' | 'complete'>('all')
 
     const { sortedSchedules, nonSuggestedSchedules, suggestedSchedules } = useMemo(() => {
         const sorted = [...(jam.schedules || [])].sort((a, b) => a.order - b.order)
@@ -29,6 +32,45 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             suggestedSchedules: sorted.filter(s => s.status === 'SUGGESTED'),
         }
     }, [jam.schedules])
+
+    // Helper: check if a schedule needs musicians
+    const needsMusicians = (s: ScheduleResponseDto) => {
+        const music = s.music
+        const totalNeeded = (music?.neededDrums || 0) + (music?.neededGuitars || 0)
+            + (music?.neededBass || 0) + (music?.neededVocals || 0) + (music?.neededKeys || 0)
+        if (totalNeeded === 0) return false
+        return (s.registrations?.length || 0) < totalNeeded
+    }
+
+    // Filtered schedules
+    const { filteredNonSuggested, filteredSuggested, needsCount, completeCount } = useMemo(() => {
+        const query = searchQuery.toLowerCase().trim()
+
+        const matchesSearch = (s: ScheduleResponseDto) => {
+            if (!query) return true
+            const title = s.music?.title?.toLowerCase() || ''
+            const artist = s.music?.artist?.toLowerCase() || ''
+            const musicians = s.registrations?.map(r => r.musician?.name?.toLowerCase() || '').join(' ') || ''
+            return title.includes(query) || artist.includes(query) || musicians.includes(query)
+        }
+
+        const matchesFilter = (s: ScheduleResponseDto) => {
+            if (statusFilter === 'all') return true
+            if (statusFilter === 'needs_musicians') return needsMusicians(s)
+            if (statusFilter === 'complete') return !needsMusicians(s)
+            return true
+        }
+
+        const allNonSuggested = nonSuggestedSchedules.filter(s => matchesSearch(s) && matchesFilter(s))
+        const allSuggested = suggestedSchedules.filter(matchesSearch)
+
+        // Counts for filter chips (unfiltered, search-only)
+        const searchedNonSuggested = nonSuggestedSchedules.filter(matchesSearch)
+        const needs = searchedNonSuggested.filter(needsMusicians).length
+        const complete = searchedNonSuggested.filter(s => !needsMusicians(s)).length
+
+        return { filteredNonSuggested: allNonSuggested, filteredSuggested: allSuggested, needsCount: needs, completeCount: complete }
+    }, [nonSuggestedSchedules, suggestedSchedules, searchQuery, statusFilter])
 
     // Build lookup: musicId -> { jamMusicId, notes }
     const jamMusicMap = useMemo(() => {
@@ -159,14 +201,35 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         setShowHostRegistrationModal(true)
     }
 
+    const renderCard = (schedule: ScheduleResponseDto, isSuggested: boolean) => {
+        const jm = jamMusicMap.get(schedule.musicId)
+        return <ScheduleCollapsibleCard
+            key={schedule.id}
+            schedule={schedule}
+            loading={loading}
+            isSuggested={isSuggested}
+            defaultExpanded={schedule.status === 'IN_PROGRESS'}
+            notes={jm?.notes}
+            jamMusicId={jm?.id}
+            onStatusChange={handleStatusChange}
+            onDelete={handleDeleteSchedule}
+            onApproveRegistration={handleApproveRegistration}
+            onRejectRegistration={handleRejectRegistration}
+            onDeleteRegistration={handleRejectRegistration}
+            onAddMusician={() => handleAddMusician(schedule)}
+            onMusicianClick={setSelectedMusicianId}
+            onSaveNotes={handleSaveNotes}
+        />
+    }
+
     return (
-        <div className="space-y-4">
+        <div className="space-y-3">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-                <h2 className="text-2xl sm:text-3xl font-bold"><span aria-hidden="true">📋</span> {t('jam_management.schedule.title')}</h2>
+            <div className="flex items-center justify-between gap-2">
+                <h2 className="text-lg sm:text-xl font-bold">{t('jam_management.schedule.title')}</h2>
                 <button
                     onClick={() => setShowAddModal(true)}
-                    className="btn btn-primary btn-sm sm:btn-md w-full sm:w-auto"
+                    className="btn btn-primary btn-sm"
                     disabled={loading}
                 >
                     {t('jam_management.schedule.add_new_song')}
@@ -176,77 +239,95 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             {/* Error Alert */}
             <Alert type="error" message={error} onDismiss={() => setError(null)} />
 
+            {/* Search + Filter Toolbar */}
+            {sortedSchedules.length > 3 && (
+                <div className="space-y-2">
+                    <div className="join w-full">
+                        <div className="join-item flex items-center px-2 bg-base-200">
+                            <Search className="size-4 text-base-content/40" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder={t('schedule.search_placeholder', 'Search songs or musicians...')}
+                            className="input input-sm input-bordered join-item flex-1"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        {searchQuery && (
+                            <button className="btn btn-sm btn-ghost join-item" onClick={() => setSearchQuery('')}>
+                                <X className="size-4" />
+                            </button>
+                        )}
+                    </div>
+                    <div className="flex gap-1 flex-wrap">
+                        <button
+                            className={`btn btn-xs ${statusFilter === 'all' ? 'btn-primary' : 'btn-ghost'}`}
+                            onClick={() => setStatusFilter('all')}
+                        >
+                            {t('common.all', 'All')} ({filteredNonSuggested.length + filteredSuggested.length})
+                        </button>
+                        <button
+                            className={`btn btn-xs ${statusFilter === 'needs_musicians' ? 'btn-warning' : 'btn-ghost'}`}
+                            onClick={() => setStatusFilter('needs_musicians')}
+                        >
+                            {t('schedule.needs_musicians', 'Needs musicians')} ({needsCount})
+                        </button>
+                        <button
+                            className={`btn btn-xs ${statusFilter === 'complete' ? 'btn-success' : 'btn-ghost'}`}
+                            onClick={() => setStatusFilter('complete')}
+                        >
+                            {t('schedule.band_complete', 'Band complete')} ({completeCount})
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Schedule List */}
             {sortedSchedules.length > 0 ? (
-                <div className="space-y-6">
+                <div className="space-y-3">
                     {/* Suggested Schedules */}
-                    {suggestedSchedules.length > 0 && (
-                        <div className="space-y-4">
-                            <h3 className="text-xl font-semibold flex items-center gap-2">
-                                <span aria-hidden="true">✨</span> {t('jam_management.schedule.suggested_songs')}
-                            </h3>
-                            {suggestedSchedules.map((schedule) => {
-                                const jm = jamMusicMap.get(schedule.musicId)
-                                return <ScheduleCompactCard
-                                    key={schedule.id}
-                                    schedule={schedule}
-                                    loading={loading}
-                                    isSuggested={true}
-                                    notes={jm?.notes}
-                                    jamMusicId={jm?.id}
-                                    onStatusChange={handleStatusChange}
-                                    onDelete={handleDeleteSchedule}
-                                    onApproveRegistration={handleApproveRegistration}
-                                    onRejectRegistration={handleRejectRegistration}
-                                    onDeleteRegistration={handleRejectRegistration}
-                                    onAddMusician={() => handleAddMusician(schedule)}
-                                    onMusicianClick={setSelectedMusicianId}
-                                    onSaveNotes={handleSaveNotes}
-                                />
-                            })}
+                    {filteredSuggested.length > 0 && (
+                        <div>
+                            <div className="flex items-center gap-2 py-1.5 text-xs font-semibold text-base-content/60 uppercase tracking-wide">
+                                <span>{t('jam_management.schedule.suggested_songs')} ({filteredSuggested.length})</span>
+                                <div className="flex-1 border-t border-base-300/30" />
+                            </div>
+                            <div className="space-y-1">
+                                {filteredSuggested.map((schedule) => renderCard(schedule, true))}
+                            </div>
                         </div>
                     )}
 
-                    {/* Scheduled Songs */}
-                    {nonSuggestedSchedules.length > 0 && (
-                        <div className={`space-y-4 ${suggestedSchedules.length > 0 ? 'mt-6 pt-6 border-t-2 border-primary/30' : ''}`}>
-                            {suggestedSchedules.length > 0 && (
-                                <h3 className="text-xl font-semibold flex items-center gap-2">
-                                    <span aria-hidden="true">📋</span> {t('jam_management.schedule.title')}
-                                </h3>
+                    {/* Scheduled/Active Songs */}
+                    {filteredNonSuggested.length > 0 && (
+                        <div>
+                            {filteredSuggested.length > 0 && (
+                                <div className="flex items-center gap-2 py-1.5 text-xs font-semibold text-base-content/60 uppercase tracking-wide">
+                                    <span>{t('jam_management.schedule.title')} ({filteredNonSuggested.length})</span>
+                                    <div className="flex-1 border-t border-base-300/30" />
+                                </div>
                             )}
-                            {nonSuggestedSchedules.map((schedule) => {
-                                const jm = jamMusicMap.get(schedule.musicId)
-                                return <ScheduleCompactCard
-                                    key={schedule.id}
-                                    schedule={schedule}
-                                    loading={loading}
-                                    isSuggested={false}
-                                    notes={jm?.notes}
-                                    jamMusicId={jm?.id}
-                                    onStatusChange={handleStatusChange}
-                                    onDelete={handleDeleteSchedule}
-                                    onApproveRegistration={handleApproveRegistration}
-                                    onRejectRegistration={handleRejectRegistration}
-                                    onDeleteRegistration={handleRejectRegistration}
-                                    onAddMusician={() => handleAddMusician(schedule)}
-                                    onMusicianClick={setSelectedMusicianId}
-                                    onSaveNotes={handleSaveNotes}
-                                />
-                            })}
+                            <div className="space-y-1">
+                                {filteredNonSuggested.map((schedule) => renderCard(schedule, false))}
+                            </div>
                         </div>
+                    )}
+
+                    {/* No results after filtering */}
+                    {filteredNonSuggested.length === 0 && filteredSuggested.length === 0 && (
+                        <p className="text-sm text-base-content/50 text-center py-4">
+                            {t('common.no_results', 'No results found')}
+                        </p>
                     )}
                 </div>
             ) : (
                 <div className="card bg-base-200">
                     <div className="card-body text-center py-8">
-                        <div className="text-4xl mb-3">📋</div>
                         <h3 className="font-semibold mb-2">{t('jam_management.schedule.no_schedule_yet')}</h3>
                         <p className="text-sm text-base-content/70">
                             {(jam._count?.schedules ?? jam.schedules?.length ?? 0) > 0
                                 ? t('jam_management.schedule.add_entry_hint')
                                 : t('jam_management.schedule.add_songs_first')}
-
                         </p>
                     </div>
                 </div>
