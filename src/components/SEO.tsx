@@ -13,12 +13,6 @@ interface SEOProps {
   jsonLd?: Record<string, unknown> | Record<string, unknown>[]
 }
 
-const SUPPORTED_LANGS = [
-  { code: 'pt-BR', param: 'pt' },
-  { code: 'en', param: 'en' },
-  { code: 'es', param: 'es' },
-]
-
 export function SEO({
   title,
   description,
@@ -36,7 +30,7 @@ export function SEO({
   const canonicalUrl = canonical || (typeof window !== 'undefined' ? `${siteUrl}${window.location.pathname}` : siteUrl)
   const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
 
-  // Build base URL without query params for hreflang
+  // Strip query params for x-default hreflang
   const baseUrl = canonicalUrl.split('?')[0]
 
   // Determine JSON-LD content
@@ -57,15 +51,6 @@ export function SEO({
 
       {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-      {/* Hreflang tags for language alternatives */}
-      {SUPPORTED_LANGS.map(({ code, param }) => (
-        <link
-          key={code}
-          rel="alternate"
-          hrefLang={code}
-          href={`${baseUrl}${baseUrl.includes('?') ? '&' : '?'}lng=${param}`}
-        />
-      ))}
       <link rel="alternate" hrefLang="x-default" href={baseUrl} />
 
       <meta property="og:title" content={fullTitle} />
