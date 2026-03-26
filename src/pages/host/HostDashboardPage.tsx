@@ -14,6 +14,7 @@ import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
 import {getJamPath} from '../../utils/jamUrl'
+import {EllipsisVertical} from 'lucide-react'
 
 interface JamCategory {
     planned: JamResponseDto[]
@@ -117,31 +118,34 @@ export function HostDashboardPage() {
     return (<div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
         <div className="container mx-auto max-w-6xl">
             {/* Header */}
-            <div className="mb-6 sm:mb-8">
-                <div className="flex items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6 flex-wrap">
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold">🎭 {t('jam_management.host_dashboard.title')}</h1>
-                    <div className="flex gap-2">
+            <div className="mb-3 sm:mb-6">
+                <div className="flex items-center justify-between gap-2 mb-3">
+                    <h1 className="text-lg sm:text-2xl font-bold">{t('jam_management.host_dashboard.title')}</h1>
+                    <div className="flex items-center gap-2">
                         <button
                             onClick={() => navigate('/host/feedback')}
-                            className="btn btn-outline btn-sm sm:btn-md"
+                            className="btn btn-ghost btn-sm hidden sm:inline-flex"
                             disabled={loading}
                         >
                             {t('feedback_page.title')}
                         </button>
                         <button
                             onClick={() => setShowImportModal(true)}
-                            className="btn btn-secondary btn-sm sm:btn-md"
+                            className="btn btn-outline btn-sm hidden sm:inline-flex"
                             disabled={loading}
                         >
                             {t('spotify.import_button')}
                         </button>
-                        <button
-                            onClick={() => navigate('/host/create-jam')}
-                            className="btn btn-primary btn-sm sm:btn-md"
-                            disabled={loading}
-                        >
-                            {t('jam_management.host_dashboard.create_jam_btn')}
-                        </button>
+                        {/* Mobile overflow for secondary actions */}
+                        <div className="dropdown dropdown-end sm:hidden">
+                            <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-square">
+                                <EllipsisVertical className="size-4" />
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-52 p-2 shadow-lg z-10">
+                                <li><button onClick={() => navigate('/host/feedback')}>{t('feedback_page.title')}</button></li>
+                                <li><button onClick={() => setShowImportModal(true)}>{t('spotify.import_button')}</button></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -149,42 +153,19 @@ export function HostDashboardPage() {
                 <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} />
             </div>
 
-            {/* Statistics Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
-                <div className="stats shadow bg-base-200 p-3 sm:p-6 w-full">
-                    <div className="stat w-full">
-                        <div
-                            className="stat-title text-xs sm:text-sm">{t('jam_management.host_dashboard.stats.total_jams')}</div>
-                        <div
-                            className="stat-value text-primary text-xl sm:text-2xl lg:text-3xl">{stats.totalJams}</div>
-                    </div>
+            {/* Stats - Single horizontal bar */}
+            <div className="stats stats-horizontal w-full bg-base-200 shadow-sm mb-3 sm:mb-6">
+                <div className="stat place-items-center py-2 px-3">
+                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.total_jams')}</div>
+                    <div className="stat-value text-lg">{stats.totalJams}</div>
                 </div>
-
-                <div className="stats shadow bg-base-200 p-3 sm:p-6 w-full">
-                    <div className="stat w-full">
-                        <div
-                            className="stat-title text-xs sm:text-sm">{t('jam_management.host_dashboard.stats.registrations')}</div>
-                        <div
-                            className="stat-value text-secondary text-xl sm:text-2xl lg:text-3xl">{stats.totalRegistrations}</div>
-                    </div>
+                <div className="stat place-items-center py-2 px-3">
+                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.registrations')}</div>
+                    <div className="stat-value text-lg">{stats.totalRegistrations}</div>
                 </div>
-
-                <div className="stats shadow bg-base-200 p-3 sm:p-6 w-full">
-                    <div className="stat w-full">
-                        <div
-                            className="stat-title text-xs sm:text-sm">{t('jam_management.host_dashboard.stats.songs')}</div>
-                        <div
-                            className="stat-value text-accent text-xl sm:text-2xl lg:text-3xl">{stats.totalSongs}</div>
-                    </div>
-                </div>
-
-                <div className="stats shadow bg-base-200 p-3 sm:p-6 w-full">
-                    <div className="stat w-full">
-                        <div
-                            className="stat-title text-xs sm:text-sm">{t('jam_management.host_dashboard.stats.upcoming')}</div>
-                        <div
-                            className="stat-value text-success text-xl sm:text-2xl lg:text-3xl">{categories.planned.length}</div>
-                    </div>
+                <div className="stat place-items-center py-2 px-3">
+                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.songs')}</div>
+                    <div className="stat-value text-lg">{stats.totalSongs}</div>
                 </div>
             </div>
 
@@ -198,8 +179,8 @@ export function HostDashboardPage() {
                 <Alert type="info" message={t('jam_management.host_dashboard.no_jams_desc')} className="mb-6 sm:mb-8" />
             ) : (<>
                 {/* In Progress Jams */}
-                {categories.inProgress.length > 0 && (<div className="mb-6 sm:mb-8">
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">{t('jam_management.host_dashboard.categories.in_progress')}</h2>
+                {categories.inProgress.length > 0 && (<div className="mb-3 sm:mb-6">
+                    <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.in_progress')}</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         {categories.inProgress.map((jam) => (<JamCard
                             key={jam.id}
@@ -212,8 +193,8 @@ export function HostDashboardPage() {
                 </div>)}
 
                 {/* Planned Jams */}
-                {categories.planned.length > 0 && (<div className="mb-6 sm:mb-8">
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">{t('jam_management.host_dashboard.categories.planned')}</h2>
+                {categories.planned.length > 0 && (<div className="mb-3 sm:mb-6">
+                    <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.planned')}</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         {categories.planned.map((jam) => (<JamCard
                             key={jam.id}
@@ -226,8 +207,8 @@ export function HostDashboardPage() {
                 </div>)}
 
                 {/* Past Jams */}
-                {categories.past.length > 0 && (<div className="mb-6 sm:mb-8">
-                    <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">{t('jam_management.host_dashboard.categories.past')}</h2>
+                {categories.past.length > 0 && (<div className="mb-3 sm:mb-6">
+                    <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.past')}</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         {categories.past.map((jam) => (<JamCard
                             key={jam.id}
@@ -262,63 +243,39 @@ interface JamCardProps {
     loading: boolean
 }
 
-function JamCard({jam, onDelete, onNavigate, loading}: JamCardProps) {
+function JamCard({jam, onDelete, onNavigate}: JamCardProps) {
     const {t} = useTranslation()
 
     const registrationCount = jam._count?.registrations ?? 0
-
-    // Use _count when available (list endpoint), fall back to array length (detail endpoint)
     const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
 
-    return (<div className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow">
-        <div className="card-body p-3 sm:p-6">
+    return (<div
+        className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+        onClick={() => onNavigate(`/host/jams/${jam.id}/manage`)}
+    >
+        <div className="card-body p-3 sm:p-4">
             <div className="flex items-start justify-between gap-2">
-                <h3 className="card-title text-base sm:text-lg">{jam.name}</h3>
-                <div
-                    className={`badge badge-sm sm:badge-md shrink-0 ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
-            </div>
-
-            <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm">
-                {jam.date && (<p className="text-base-content/70">
-                    📅 {new Date(jam.date).toLocaleDateString()}
-                </p>)}
-                {jam.description && (<p className="text-base-content/70 truncate">{jam.description}</p>)}
-            </div>
-
-            <div className="flex gap-2 mt-3 sm:mt-4 flex-wrap">
-          <span className="badge badge-outline badge-xs sm:badge-sm">
-            🎵 {safeT(t, 'jam_management.host_dashboard.songs_count', {count: songCount})}
-          </span>
-                <span className="badge badge-outline badge-xs sm:badge-sm">
-            👥 {safeT(t, 'jam_management.host_dashboard.registrations_count', {count: registrationCount})}
-          </span>
-            </div>
-
-            <div className="card-actions justify-between mt-4 sm:mt-6 flex-wrap gap-2">
-                <div className="flex gap-1 sm:gap-2">
-                    <button
-                        onClick={() => onNavigate(getJamPath(jam))}
-                        className="btn btn-xs sm:btn-sm btn-ghost"
-                        disabled={loading}
-                    >
-                        {t('jam_management.host_dashboard.view_public')}
-                    </button>
-                    <button
-                        onClick={() => onNavigate(`/host/jams/${jam.id}/manage`)}
-                        className="btn btn-xs sm:btn-sm btn-primary"
-                        disabled={loading}
-                    >
-                        {t('jam_management.host_dashboard.manage_btn')}
-                    </button>
+                <div className="min-w-0">
+                    <h3 className="font-bold text-base truncate">{jam.name}</h3>
+                    <div className="text-xs text-base-content/60 mt-0.5">
+                        {jam.date && <span>{new Date(jam.date).toLocaleDateString('pt-BR')} · </span>}
+                        <span>{songCount} {safeT(t, 'jam_management.host_dashboard.stats.songs').toLowerCase()} · {registrationCount} {safeT(t, 'jam_management.host_dashboard.stats.registrations').toLowerCase()}</span>
+                    </div>
                 </div>
-                <button
-                    onClick={() => onDelete(jam.id)}
-                    className="btn btn-xs sm:btn-sm btn-error btn-outline"
-                    disabled={loading}
-                >
-                    {t('jam_management.host_dashboard.delete_btn')}
-                </button>
+                <div className="flex items-center gap-1 shrink-0">
+                    <div className={`badge badge-xs ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
+                    <div className="dropdown dropdown-end" onClick={(e) => e.stopPropagation()}>
+                        <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-square">
+                            <EllipsisVertical className="size-4" />
+                        </div>
+                        <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-44 p-2 shadow-lg z-10">
+                            <li><button onClick={() => onNavigate(getJamPath(jam))}>{t('jam_management.host_dashboard.view_public')}</button></li>
+                            <li><button onClick={() => onDelete(jam.id)} className="text-error">{t('jam_management.host_dashboard.delete_btn')}</button></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+            {jam.description && <p className="text-xs text-base-content/50 truncate mt-1">{jam.description}</p>}
         </div>
     </div>)
 }

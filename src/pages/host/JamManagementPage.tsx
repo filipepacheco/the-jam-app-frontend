@@ -15,8 +15,6 @@ import {Alert, FullPageSpinner, PageAlerts} from '../../components'
 import {SpotifyExportModal} from '../../components/SpotifyExportModal'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
-import {ExternalLink} from 'lucide-react'
-import {getJamDashboardPath} from '../../utils/jamUrl'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
 import {DJControlTab} from "../tabs/DJControlTab.tsx";
 import {DJControlTabV2} from "../tabs/DJControlTabV2.tsx";
@@ -67,6 +65,13 @@ export function JamManagementPage() {
             setError(errorMessage)
         }
     }, [swrError, t])
+
+    // Auto-switch to DJ Control when jam goes LIVE
+    useEffect(() => {
+        if (jam?.status === 'LIVE' && activeTab === 'overview') {
+            setActiveTab('dj-control')
+        }
+    }, [jam?.status, activeTab])
 
     // Detect Spotify access token from redirect state
     useEffect(() => {
@@ -182,19 +187,8 @@ export function JamManagementPage() {
                     {/* Title and Status */}
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">🎭 {jam.name}</h1>
-                        <div className="flex items-center gap-2">
-                            <a
-                                href={jam ? getJamDashboardPath(jam) : `/jams/${jamId}/dashboard`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn btn-sm btn-outline gap-1"
-                            >
-                                <ExternalLink className="size-4" aria-hidden="true"/>
-                                {t('jam_management.view_public_dashboard')}
-                            </a>
-                            <div
-                                className={`badge badge-sm sm:badge-md lg:badge-lg ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
-                        </div>
+                        <div
+                            className={`badge badge-sm sm:badge-md lg:badge-lg ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
                     </div>
                 </div>
             </div>

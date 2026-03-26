@@ -737,7 +737,7 @@
       "edit_jam": "Editar Jam",
       "view_public": "Ver página pública",
       "activate_jam": "Ativar",
-      "start_jam": "Iniciar Live",
+      "start_jam": "Começar a Jam!",
       "end_jam": "Finalizar",
       "reactivate_jam": "Reativar Jam",
       "confirm_start": "Tem certeza de que deseja iniciar esta sessão de jam?",
@@ -815,7 +815,7 @@
       "songs_count": "{{count}} músicas",
       "musicians_count": "{{count}} músicos",
       "registrations_count": "{{count}} inscrições",
-      "view_public": "Ver público",
+      "view_public": "Ver página pública",
       "manage_btn": "Gerenciar",
       "delete_btn": "Excluir"
     },
