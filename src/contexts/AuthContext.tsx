@@ -117,7 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (profile) {
             setUser(profile)
             setRoleState(deriveRole(profile))
-        
+            setIsNewUser(profile.isNewUser || false)
             localStorage.setItem('auth_user', JSON.stringify(profile))
             authenticatedUserIdRef.current = session.user.id
           }
