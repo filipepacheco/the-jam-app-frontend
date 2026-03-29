@@ -3,6 +3,7 @@ import {useTranslation} from "react-i18next";
 import {useMemo, useState} from "react";
 import {registrationService, scheduleService, musicService} from "../../services";
 import {Alert} from '../../components';
+import {isScheduleReadyToPlay} from "../../utils/scheduleUtils";
 import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCollapsibleCard} from "../../components/schedule/ScheduleCollapsibleCard";
 import {MusicianProfileModal} from "../../components/MusicianProfileModal";
@@ -57,7 +58,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         const matchesFilter = (s: ScheduleResponseDto) => {
             if (statusFilter === 'all') return true
             if (statusFilter === 'needs_musicians') return needsMusicians(s)
-            if (statusFilter === 'complete') return !needsMusicians(s)
+            if (statusFilter === 'complete') return isScheduleReadyToPlay(s)
             return true
         }
 
@@ -67,7 +68,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         // Counts for filter chips (unfiltered, search-only)
         const searchedNonSuggested = nonSuggestedSchedules.filter(matchesSearch)
         const needs = searchedNonSuggested.filter(needsMusicians).length
-        const complete = searchedNonSuggested.filter(s => !needsMusicians(s)).length
+        const complete = searchedNonSuggested.filter(isScheduleReadyToPlay).length
 
         return { filteredNonSuggested: allNonSuggested, filteredSuggested: allSuggested, needsCount: needs, completeCount: complete }
     }, [nonSuggestedSchedules, suggestedSchedules, searchQuery, statusFilter])
