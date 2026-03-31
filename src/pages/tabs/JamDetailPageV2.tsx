@@ -8,7 +8,7 @@ import {formatJamDuration} from '../../lib/formatters'
 import {SITE_URL} from '../../lib/api/config'
 import {useAuth} from '../../hooks'
 import useSWR from 'swr'
-import {useCallback, useMemo, useState, useEffect} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
@@ -204,17 +204,15 @@ export function JamDetailPageV2() {
         }
     }, [mutateJam])
 
-    // State for My Registrations section - default to expanded only if user has registrations
+    // State for My Registrations section
     const [isRegistrationsExpanded, setIsRegistrationsExpanded] = useState(false)
 
     // State for Spotify player section
     const [isSpotifyExpanded, setIsSpotifyExpanded] = useState(false)
 
-    // Auto-expand registrations when user first has registrations
+    // Auto-expand when user's registrations arrive (async from SWR)
     useEffect(() => {
-        if (userRegistrations.length > 0) {
-            setIsRegistrationsExpanded(true)
-        }
+        if (userRegistrations.length > 0) setIsRegistrationsExpanded(true)
     }, [userRegistrations.length])
     // Loading state
     if (isLoading && !jam) {

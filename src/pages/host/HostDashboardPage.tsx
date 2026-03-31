@@ -47,21 +47,12 @@ export function HostDashboardPage() {
         }
     }, [t])
 
+    // Load jams once auth is ready
     useEffect(() => {
-        // Wait for auth to finish loading
-        if (authLoading) {
-            return
+        if (!authLoading && isAuthenticated) {
+            void loadJams()
         }
-
-        // If not authenticated after auth is loaded, redirect to log in
-        if (!isAuthenticated) {
-            navigate('/login')
-            return
-        }
-
-        // Auth is ready and user is authenticated, load jams
-        void loadJams()
-    }, [authLoading, isAuthenticated, navigate, loadJams])
+    }, [authLoading, isAuthenticated, loadJams])
 
     const categories = useMemo((): JamCategory => {
         const categorized: JamCategory = {
@@ -113,6 +104,12 @@ export function HostDashboardPage() {
     // Show loading spinner while auth is initializing
     if (authLoading) {
         return <FullPageSpinner label={t('common.loading')} />
+    }
+
+    // Redirect unauthenticated users
+    if (!isAuthenticated) {
+        navigate('/login')
+        return null
     }
 
     return (<div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8">

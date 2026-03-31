@@ -1,10 +1,11 @@
-import { motion, useInView } from 'framer-motion'
+import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ClipboardList, UserPlus, Play } from 'lucide-react'
 
 export function HowItWorks() {
   const { t } = useTranslation()
+  const prefersReducedMotion = useReducedMotion()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
 
@@ -46,8 +47,8 @@ export function HowItWorks() {
 
         <motion.div
           ref={ref}
-          className="relative grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
-          initial="hidden"
+          className="relative max-w-3xl mx-auto"
+          initial={prefersReducedMotion ? 'visible' : 'hidden'}
           animate={isInView ? 'visible' : 'hidden'}
           variants={{
             visible: {
@@ -55,33 +56,38 @@ export function HowItWorks() {
             },
           }}
         >
-          {/* Connecting line - desktop only */}
-          <div className="hidden md:block absolute top-14 left-[20%] right-[20%] h-px bg-base-300" aria-hidden="true" />
+          {/* Vertical connecting line */}
+          <div
+            className="absolute left-7 sm:left-7 top-7 bottom-7 w-px bg-base-300"
+            aria-hidden="true"
+          />
 
-          {steps.map((step) => (
+          {steps.map((step, index) => (
             <motion.div
               key={step.id}
-              className="relative flex flex-col items-center text-center"
+              className={`relative flex items-start gap-5 sm:gap-8 ${index < steps.length - 1 ? 'mb-8 sm:mb-12' : ''}`}
               variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0 },
+                hidden: { opacity: 0, x: -20 },
+                visible: { opacity: 1, x: 0 },
               }}
               transition={{ duration: 0.5 }}
             >
               {/* Step number circle */}
-              <div className="relative z-10 w-14 h-14 rounded-full bg-primary text-primary-content flex items-center justify-center mb-5 shadow-md">
+              <div className="relative z-10 shrink-0 w-14 h-14 rounded-full bg-primary text-primary-content flex items-center justify-center shadow-md">
                 <span className="text-xl font-bold leading-none">{step.number}</span>
               </div>
 
-              {/* Card */}
-              <div className="card bg-base-200 w-full">
-                <div className="card-body p-5 sm:p-6 items-center">
-                  <div className="text-primary mb-2">
-                    {step.icon}
+              {/* Content */}
+              <div className="card bg-base-200 flex-1 min-w-0">
+                <div className="card-body p-5 sm:p-6">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="text-primary">
+                      {step.icon}
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-bold text-base-content">
+                      {step.title}
+                    </h3>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold text-base-content mb-2">
-                    {step.title}
-                  </h3>
                   <p className="text-sm sm:text-base text-base-content/60 leading-relaxed">
                     {step.description}
                   </p>

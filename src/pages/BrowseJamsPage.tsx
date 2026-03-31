@@ -122,130 +122,118 @@ export function BrowseJamsPage() {
       />
       {/* Hero Section */}
       <div className="bg-primary text-primary-content">
-        <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-8 lg:py-12">
-          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold mb-2 sm:mb-4">
-            {t('jams.browse.title')}
-          </h1>
-          <p className="text-base sm:text-lg lg:text-xl opacity-95">
-            {t('jams.browse.subtitle')}
-          </p>
+        <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
+              {t('jams.browse.title')}
+            </h1>
+            <p className="text-sm sm:text-base opacity-95">
+              {t('jams.browse.subtitle')}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
-        {/* Filters & Search Panel */}
-        <div className="card bg-base-200 shadow-lg mb-6 sm:mb-8">
-          <div className="card-body p-3 sm:p-6">
-            <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
-              {/* Search Input */}
-              <div className="flex-1">
-                <label className="label">
-                  <span className="label-text font-semibold text-xs sm:text-sm">{t('jams.browse.search_label')}</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder={t('jams.browse.search_placeholder')}
-                  className="input input-bordered w-full input-sm sm:input-md text-xs sm:text-sm min-h-[44px]"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  aria-label="Search jams"
-                  disabled={isLoading}
-                />
-              </div>
+        {/* Filters & Search */}
+        <div className="mb-4 sm:mb-6 space-y-3">
+          {/* Search + Sort Row */}
+          <div className="flex gap-3">
+            <input
+              type="text"
+              placeholder={t('jams.browse.search_placeholder')}
+              className="input input-bordered flex-1 input-sm sm:input-md text-xs sm:text-sm min-h-[44px]"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search jams"
+              disabled={isLoading}
+            />
+            <select
+              className="select select-bordered w-40 sm:w-48 select-sm sm:select-md text-xs sm:text-sm min-h-[44px]"
+              value={dateSort}
+              onChange={(e) => setDateSort(e.target.value as DateSortOption)}
+              disabled={isLoading}
+            >
+              <option value="newest">{t('jams.browse.sort.newest')}</option>
+              <option value="oldest">{t('jams.browse.sort.oldest')}</option>
+              <option value="upcoming">{t('jams.browse.sort.upcoming')}</option>
+            </select>
+          </div>
 
-              {/* Date Sort */}
-              <div className="w-full sm:w-40 lg:w-48">
-                <label className="label">
-                  <span className="label-text font-semibold text-xs sm:text-sm">{t('jams.browse.sort_label')}</span>
-                </label>
-                <select
-                  className="select select-bordered w-full select-sm sm:select-md text-xs sm:text-sm min-h-[44px]"
-                  value={dateSort}
-                  onChange={(e) => setDateSort(e.target.value as DateSortOption)}
-                  disabled={isLoading}
-                >
-                  <option value="newest">{t('jams.browse.sort.newest')}</option>
-                  <option value="oldest">{t('jams.browse.sort.oldest')}</option>
-                  <option value="upcoming">{t('jams.browse.sort.upcoming')}</option>
-                </select>
-              </div>
+          {/* Status Filter Tabs */}
+          <div className="tabs tabs-boxed text-xs sm:text-sm flex-wrap overflow-x-auto [&_.tab]:min-h-[44px]" role="tablist">
+            <button
+              className={`tab ${statusFilter === 'ALL' ? 'tab-active' : ''}`}
+              onClick={() => setStatusFilter('ALL')}
+              role="tab"
+              aria-selected={statusFilter === 'ALL'}
+              disabled={isLoading}
+              title={t('jams.browse.tabs.all_hint', 'Show all jam sessions')}
+            >
+              {t('jams.browse.tabs.all')}
+            </button>
+            <button
+              className={`tab ${statusFilter === 'LIVE' ? 'tab-active' : ''}`}
+              onClick={() => setStatusFilter('LIVE')}
+              role="tab"
+              aria-selected={statusFilter === 'LIVE'}
+              disabled={isLoading}
+              title={t('jams.browse.tabs.live_hint', 'Currently performing live')}
+            >
+              {t('jams.browse.tabs.live')}
+            </button>
+            <button
+              className={`tab ${statusFilter === 'ACTIVE' ? 'tab-active' : ''}`}
+              onClick={() => setStatusFilter('ACTIVE')}
+              role="tab"
+              aria-selected={statusFilter === 'ACTIVE'}
+              disabled={isLoading}
+              title={t('jams.browse.tabs.active_hint', 'Scheduled and accepting musicians')}
+            >
+              {t('jams.browse.tabs.active')}
+            </button>
+            <button
+              className={`tab ${statusFilter === 'INACTIVE' ? 'tab-active' : ''}`}
+              onClick={() => setStatusFilter('INACTIVE')}
+              role="tab"
+              aria-selected={statusFilter === 'INACTIVE'}
+              disabled={isLoading}
+              title={t('jams.browse.tabs.inactive_hint', 'Created but not yet started')}
+            >
+              {t('jams.browse.tabs.inactive')}
+            </button>
+            <button
+              className={`tab ${statusFilter === 'FINISHED' ? 'tab-active' : ''}`}
+              onClick={() => { setStatusFilter('FINISHED'); setPastJamsExpanded(true) }}
+              role="tab"
+              aria-selected={statusFilter === 'FINISHED'}
+              disabled={isLoading}
+              title={t('jams.browse.tabs.finished_hint', 'Past sessions that have ended')}
+            >
+              {t('jams.browse.tabs.finished')}
+            </button>
+          </div>
+
+          {/* Results Count & Clear Filters */}
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <div className="badge badge-primary badge-sm sm:badge-md lg:badge-lg text-xs sm:text-sm">
+              {(() => {
+                const count = visibleCount
+                const key = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
+                return t(key, { count })
+              })()}
             </div>
 
-            {/* Status Filter Tabs */}
-            <div className="mt-3 sm:mt-4">
-              <label className="label">
-                <span className="label-text font-semibold text-xs sm:text-sm">{t('jams.browse.filter_label')}</span>
-              </label>
-              <div className="tabs tabs-boxed text-xs sm:text-sm flex-wrap overflow-x-auto [&_.tab]:min-h-[44px]" role="tablist">
-                <button
-                  className={`tab ${statusFilter === 'ALL' ? 'tab-active' : ''}`}
-                  onClick={() => setStatusFilter('ALL')}
-                  role="tab"
-                  aria-selected={statusFilter === 'ALL'}
-                  disabled={isLoading}
-                >
-                  {t('jams.browse.tabs.all')}
-                </button>
-                <button
-                  className={`tab ${statusFilter === 'LIVE' ? 'tab-active' : ''}`}
-                  onClick={() => setStatusFilter('LIVE')}
-                  role="tab"
-                  aria-selected={statusFilter === 'LIVE'}
-                  disabled={isLoading}
-                >
-                  {t('jams.browse.tabs.live')}
-                </button>
-                <button
-                  className={`tab ${statusFilter === 'ACTIVE' ? 'tab-active' : ''}`}
-                  onClick={() => setStatusFilter('ACTIVE')}
-                  role="tab"
-                  aria-selected={statusFilter === 'ACTIVE'}
-                  disabled={isLoading}
-                >
-                  {t('jams.browse.tabs.active')}
-                </button>
-                <button
-                  className={`tab ${statusFilter === 'INACTIVE' ? 'tab-active' : ''}`}
-                  onClick={() => setStatusFilter('INACTIVE')}
-                  role="tab"
-                  aria-selected={statusFilter === 'INACTIVE'}
-                  disabled={isLoading}
-                >
-                  {t('jams.browse.tabs.inactive')}
-                </button>
-                <button
-                  className={`tab ${statusFilter === 'FINISHED' ? 'tab-active' : ''}`}
-                  onClick={() => { setStatusFilter('FINISHED'); setPastJamsExpanded(true) }}
-                  role="tab"
-                  aria-selected={statusFilter === 'FINISHED'}
-                  disabled={isLoading}
-                >
-                  {t('jams.browse.tabs.finished')}
-                </button>
-              </div>
-            </div>
-
-            {/* Results Count & Clear Filters */}
-            <div className="flex items-center justify-between mt-3 sm:mt-4 flex-wrap gap-2">
-              <div className="badge badge-primary badge-sm sm:badge-md lg:badge-lg text-xs sm:text-sm">
-                {(() => {
-                  const count = visibleCount
-                  const key = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
-                  return t(key, { count })
-                })()}
-              </div>
-
-              {hasActiveFilters && (
-                <button
-                  onClick={clearFilters}
-                  className="btn btn-ghost btn-sm text-xs sm:text-sm"
-                  disabled={isLoading}
-                >
-                  {t('jams.browse.clear_filters')}
-                </button>
-              )}
-            </div>
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="btn btn-ghost btn-sm text-xs sm:text-sm"
+                disabled={isLoading}
+              >
+                {t('jams.browse.clear_filters')}
+              </button>
+            )}
           </div>
         </div>
 

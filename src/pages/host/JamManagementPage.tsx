@@ -58,13 +58,11 @@ export function JamManagementPage() {
         revalidateOnFocus: false,
     })
 
-    // Handle SWR errors
-    useEffect(() => {
-        if (swrError) {
-            const errorMessage = swrError instanceof Error ? swrError.message : t('jam_management.error_loading')
-            setError(errorMessage)
-        }
-    }, [swrError, t])
+    // Surface SWR errors to page alerts
+    const swrErrorMessage = swrError
+        ? (swrError instanceof Error ? swrError.message : t('jam_management.error_loading'))
+        : null
+    const displayError = swrErrorMessage || error
 
     // Auto-switch to DJ Control when jam goes LIVE
     useEffect(() => {
@@ -138,10 +136,10 @@ export function JamManagementPage() {
         return <FullPageSpinner label={t('jam_management.loading_jam')} />
     }
 
-    if (error && !jam) {
+    if (displayError && !jam) {
         return (<div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
                 <div className="container mx-auto max-w-6xl">
-                    <Alert type="error" message={error} title={t('jam_management.error_loading')}/>
+                    <Alert type="error" message={displayError} title={t('jam_management.error_loading')}/>
                     <button onClick={() => navigate('/host/dashboard')} className="btn btn-primary mt-4">
                         {t('jam_management.back_to_dashboard')}
                     </button>
@@ -218,7 +216,7 @@ export function JamManagementPage() {
             </div>
 
             {/* Alerts */}
-            <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} className="container sticky top-0 z-50 mx-auto max-w-6xl px-2 sm:px-4 mt-3 sm:mt-4" />
+            <PageAlerts error={displayError} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} className="container sticky top-0 z-50 mx-auto max-w-6xl px-2 sm:px-4 mt-3 sm:mt-4" />
 
             {/* Tab Content */}
             <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8" role="tabpanel" id={`tabpanel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>

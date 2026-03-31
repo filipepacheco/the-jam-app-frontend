@@ -1,7 +1,6 @@
 /**
  * MusicianSlotRow - Compact single-line row for a registered musician
  * Shows: instrument emoji + name (+ contact/level on desktop) + status dot + action buttons
- * ~22px tall per row for maximum density on mobile
  */
 
 import type { RegistrationResponseDto } from '../../types/api.types'
@@ -40,21 +39,26 @@ export function MusicianSlotRow({
   const name = registration.musician?.name || t('common.unknown')
 
   return (
-    <div className="group flex items-center gap-1.5 py-0.5 text-xs min-h-[22px]">
+    <div className="group flex items-center gap-1.5 py-1 text-xs min-h-[40px]">
       {/* Instrument icon */}
       <span className="flex-shrink-0 w-4 text-center text-sm leading-none">
         {getInstrumentIcon(instrument)}
       </span>
 
-      {/* Musician name - flex-1 on mobile, natural width on lg+ (grid handles layout) */}
-      <button
-        type="button"
-        className={`truncate flex-1 lg:flex-initial min-w-0 font-medium text-base-content text-left ${onMusicianClick ? 'hover:text-primary hover:underline cursor-pointer transition-colors' : ''}`}
-        onClick={() => registration.musician?.id && onMusicianClick?.(registration.musician.id)}
-        disabled={!onMusicianClick}
-      >
-        {name}
-      </button>
+      {/* Musician name */}
+      {onMusicianClick ? (
+        <button
+          type="button"
+          className="truncate flex-1 lg:flex-initial min-w-0 font-medium text-left text-primary/80 hover:text-primary hover:underline cursor-pointer transition-colors"
+          onClick={() => registration.musician?.id && onMusicianClick(registration.musician.id)}
+        >
+          {name}
+        </button>
+      ) : (
+        <span className="truncate flex-1 lg:flex-initial min-w-0 font-medium text-base-content">
+          {name}
+        </span>
+      )}
       {registration.musician?.contact && (
         <span className="hidden lg:inline text-base-content/50 truncate max-w-[120px]">
           {registration.musician.contact}
@@ -70,26 +74,30 @@ export function MusicianSlotRow({
       <span
         className={`flex-shrink-0 w-2 h-2 rounded-full ${statusDotColor[status] || 'bg-warning'}`}
         title={t(`registration.statuses.${status.toLowerCase()}`)}
+        role="img"
+        aria-label={t(`registration.statuses.${status.toLowerCase()}`)}
       />
 
       {/* Action buttons */}
       {showActions && (
-        <div className="flex-shrink-0 flex items-center gap-0.5">
+        <div className="flex-shrink-0 flex items-center gap-1">
           {status !== 'APPROVED' && status !== 'REJECTED' && (
             <>
               <button
                 onClick={() => onApprove?.(registration.id)}
-                className="btn btn-circle btn-ghost btn-xs"
+                className="btn btn-circle btn-ghost btn-sm"
                 disabled={loading}
                 title={t('common.approve')}
+                aria-label={t('common.approve')}
               >
                 <Check className="w-3 h-3 text-success" />
               </button>
               <button
                 onClick={() => onReject?.(registration.id)}
-                className="btn btn-circle btn-ghost btn-xs"
+                className="btn btn-circle btn-ghost btn-sm"
                 disabled={loading}
                 title={t('common.reject')}
+                aria-label={t('common.reject')}
               >
                 <X className="w-3 h-3 text-error" />
               </button>
@@ -98,11 +106,12 @@ export function MusicianSlotRow({
           {status === 'APPROVED' && (
             <button
               onClick={() => onDelete?.(registration.id)}
-              className="btn btn-circle btn-ghost btn-xs opacity-40 hover:opacity-100 transition-opacity"
+              className="btn btn-circle btn-ghost btn-sm text-error/40 hover:text-error transition-colors"
               disabled={loading}
               title={t('common.delete')}
+              aria-label={t('common.delete')}
             >
-              <Trash2 className="w-3 h-3 text-error" />
+              <Trash2 className="w-3 h-3" />
             </button>
           )}
         </div>

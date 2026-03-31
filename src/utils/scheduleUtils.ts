@@ -3,10 +3,13 @@
  * Shared functions for schedule management and instrument options
  */
 
-import type { ScheduleResponseDto } from '../types/api.types'
+import type { RegistrationResponseDto, ScheduleResponseDto } from '../types/api.types'
 import { normalizeInstrument as normalizeInstrumentBase } from './musicianUtils'
 
-const KNOWN_INSTRUMENTS = new Set(['drums', 'guitars', 'bass', 'vocals', 'keys'])
+export const KNOWN_INSTRUMENTS = new Set(['drums', 'guitars', 'bass', 'vocals', 'keys'])
+
+/** Core band instruments required for "banda completa" */
+export const CORE_BAND = ['drums', 'guitars', 'bass', 'vocals'] as const
 
 /**
  * Normalize instrument name to canonical key, returning null for unknown instruments.
@@ -17,20 +20,36 @@ function normalizeInstrument(instrument?: string): string | null {
 }
 
 /**
- * Check if a schedule has the core band instruments covered
- * @param schedule - The schedule with music and registration info
- * @returns true if drums, vocals, guitar, and bass are all registered
+ * Count non-rejected registrations grouped by canonical instrument.
+ * Returns counts per instrument and total active (non-rejected) count.
  */
-export function isScheduleReadyToPlay(schedule: ScheduleResponseDto): boolean {
-  if (!schedule.registrations || schedule.registrations.length === 0) return false
-
-  const coreInstruments = ['drums', 'vocals', 'guitars', 'bass']
-  const registeredInstruments = new Set(
-    schedule.registrations.map((reg) => normalizeInstrument(reg.instrument))
-  )
-
-  return coreInstruments.every((instrument) => registeredInstruments.has(instrument))
+export function countActiveRegistrationsByInstrument(
+  registrations: RegistrationResponseDto[] | undefined
+): { counts: Record<string, number>; activeCount: number } {
+  const counts: Record<string, number> = {}
+  let activeCount = 0
+  for (const reg of registrations || []) {
+    if (reg.status === 'REJECTED') continue
+    activeCount++
+    const raw = normalizeInstrumentBase(reg.instrument)
+    const inst = raw && KNOWN_INSTRUMENTS.has(raw) ? raw : null
+    if (inst) counts[inst] = (counts[inst] || 0) + 1
+  }
+  return { counts, activeCount }
 }
+
+/**
+ * Check if a schedule has the core band instruments covered (drums, guitar, bass, vocals).
+ * Excludes rejected registrations.
+ */
+export function hasCoreBand(schedule: ScheduleResponseDto): boolean {
+  if (!schedule.registrations || schedule.registrations.length === 0) return false
+  const { counts } = countActiveRegistrationsByInstrument(schedule.registrations)
+  return CORE_BAND.every((inst) => (counts[inst] || 0) >= 1)
+}
+
+/** @deprecated Use hasCoreBand instead */
+export const isScheduleReadyToPlay = hasCoreBand
 
 export interface InstrumentOption {
   key: string

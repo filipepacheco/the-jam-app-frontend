@@ -110,30 +110,19 @@ export function CreateJamPage() {
     }
   }, [user?.id, t, setError])
 
+  // Detect mode and load data if editing; set hostMusicianId once auth resolves
   useEffect(() => {
-    if (authLoading) {
-      return
-    }
+    if (authLoading || !isAuthenticated) return
 
-    if (!isAuthenticated) {
-      void navigate('/login')
-      return
-    }
+    setFormData((prev) => ({ ...prev, hostMusicianId: user?.id || '' }))
 
-    // Autofill host musician ID from auth context
-    setFormData((prev) => ({
-      ...prev,
-      hostMusicianId: user?.id || '',
-    }))
-
-    // Detect mode and load data if editing
     if (jamId) {
       setMode('edit')
       void loadJamData(jamId)
     } else {
       setMode('create')
     }
-  }, [jamId, isAuthenticated, authLoading, navigate, user, loadJamData])
+  }, [jamId, isAuthenticated, authLoading, user?.id, loadJamData])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -264,6 +253,11 @@ export function CreateJamPage() {
   // Show loading spinner while auth is initializing
   if (authLoading) {
     return <FullPageSpinner />
+  }
+
+  if (!isAuthenticated) {
+    navigate('/login')
+    return null
   }
 
   const title = mode === 'create'

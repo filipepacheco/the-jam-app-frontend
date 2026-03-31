@@ -36,21 +36,12 @@ export function FeedbackPage() {
     setLoading(false)
   }, [t])
 
+  // Load feedback once auth is ready
   useEffect(() => {
-    if (authLoading) return
-
-    if (!isAuthenticated) {
-      navigate('/login')
-      return
+    if (!authLoading && isAuthenticated && role === 'host') {
+      void loadFeedback(page)
     }
-
-    if (role !== 'host') {
-      navigate('/host/dashboard')
-      return
-    }
-
-    void loadFeedback(page)
-  }, [authLoading, isAuthenticated, role, navigate, loadFeedback, page])
+  }, [authLoading, isAuthenticated, role, loadFeedback, page])
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage)
@@ -68,6 +59,16 @@ export function FeedbackPage() {
 
   if (authLoading) {
     return <FullPageSpinner label={t('common.loading')} />
+  }
+
+  if (!isAuthenticated) {
+    navigate('/login')
+    return null
+  }
+
+  if (role !== 'host') {
+    navigate('/host/dashboard')
+    return null
   }
 
   return (

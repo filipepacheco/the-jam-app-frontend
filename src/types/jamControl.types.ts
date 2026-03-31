@@ -18,6 +18,11 @@ export interface LiveStateMusic {
   title: string
   artist: string
   duration?: number | null
+  neededDrums?: number
+  neededGuitars?: number
+  neededVocals?: number
+  neededBass?: number
+  neededKeys?: number
 }
 
 /**

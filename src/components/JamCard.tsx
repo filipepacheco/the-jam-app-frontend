@@ -10,17 +10,18 @@ import {useTranslation} from 'react-i18next'
 import {safeT} from '../lib/i18nUtils'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../lib/statusUtils'
 import {getJamPath, getJamDashboardPath} from '../utils/jamUrl'
+import {Calendar, Music, ExternalLink, Radio} from 'lucide-react'
 
 interface JamCardProps {
   jam: JamResponseDto
 }
 
 /**
- * Format ISO date string to readable format
+ * Format ISO date string to readable format using current locale
  */
-function formatDate(isoString: string): string {
+function formatDate(isoString: string, locale?: string): string {
   const date = new Date(isoString)
-  return date.toLocaleDateString('en-US', {
+  return date.toLocaleDateString(locale || navigator.language, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -31,7 +32,7 @@ function formatDate(isoString: string): string {
  * JamCard Component
  */
 export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
 
 
@@ -48,8 +49,9 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
 
         {/* Date */}
         {jam.date && (
-          <p className="text-sm sm:text-base text-base-content/70">
-            📅 {formatDate(jam.date)}
+          <p className="flex items-center gap-1.5 text-sm sm:text-base text-base-content/70">
+            <Calendar className="size-4 shrink-0" aria-hidden="true" />
+            {formatDate(jam.date, i18n.language)}
           </p>
         )}
 
@@ -61,10 +63,9 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
         )}
 
         {/* Song Count */}
-        <div className="flex items-center gap-2 mt-2">
-          <div className="text-sm sm:text-base text-base-content/60">
-            🎵 {safeT(t, 'jams.songs_count', { count: songCount })}
-          </div>
+        <div className="flex items-center gap-1.5 mt-2 text-sm sm:text-base text-base-content/60">
+          <Music className="size-4 shrink-0" aria-hidden="true" />
+          {safeT(t, 'jams.songs_count', { count: songCount })}
         </div>
 
         {/* Spotify Link */}
@@ -73,17 +74,19 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
             href={jam.spotifyPlaylistUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-success hover:underline flex items-center gap-1 mt-2"
+            className="flex items-center gap-1.5 text-sm text-success hover:underline mt-2"
             onClick={(e) => e.stopPropagation()}
           >
-            🎵 {t('jams.listen_on_spotify')}
+            <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" />
+            {t('jams.listen_on_spotify')}
           </a>
         )}
 
         {/* Action Buttons */}
         <div className="card-actions justify-end gap-2 mt-4 sm:mt-6">
-            <Link to={getJamDashboardPath(jam)} className="btn btn-outline btn-sm text-xs sm:text-sm" title="View live dashboard">
-              📡 {t('jams.live_dashboard', 'Dashboard ao vivo')}
+            <Link to={getJamDashboardPath(jam)} className="btn btn-outline btn-sm text-xs sm:text-sm gap-1.5" title="View live dashboard">
+              <Radio className="size-3.5" aria-hidden="true" />
+              {t('jams.live_dashboard', 'Dashboard ao vivo')}
             </Link>
           <Link to={getJamPath(jam)} className="btn btn-primary btn-sm text-xs sm:text-sm">
             {t('common.details')}

@@ -5,7 +5,6 @@
  */
 
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import {musicianService} from '../../services'
 import type {MusicianLevel, MusicianResponseDto, PaginationMeta} from '../../types/api.types.ts'
@@ -36,7 +35,6 @@ function formatLevel(level: string | null | undefined, t: (key: string) => strin
 
 export function MusiciansPage() {
   const { t, i18n } = useTranslation()
-  const navigate = useNavigate()
   const { user, isLoading: authLoading } = useAuth()
 
   // State
@@ -87,12 +85,6 @@ export function MusiciansPage() {
     [i18n.language]
   )
 
-  // Role guard - redirect if not host
-  useEffect(() => {
-    if (!authLoading && !user?.isHost) {
-      navigate('/')
-    }
-  }, [user?.isHost, authLoading, navigate])
 
   // Apply search and filter with memoization
   const filteredMusicians = useMemo(() => {

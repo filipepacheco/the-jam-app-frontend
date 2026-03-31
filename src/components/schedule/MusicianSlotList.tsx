@@ -17,7 +17,6 @@ interface MusicianSlotListProps {
   onApprove?: (registrationId: string) => void
   onReject?: (registrationId: string) => void
   onDelete?: (registrationId: string) => void
-  onAddMusician?: () => void
   onMusicianClick?: (musicianId: string) => void
   neededDrums?: number
   neededGuitars?: number
@@ -38,7 +37,6 @@ export function MusicianSlotList({
   onApprove,
   onReject,
   onDelete,
-  onAddMusician,
   onMusicianClick,
   neededDrums = 0,
   neededGuitars = 0,
@@ -118,15 +116,6 @@ export function MusicianSlotList({
         )}
       </div>
 
-      {/* Add Musician button */}
-      {onAddMusician && (
-        <button
-          onClick={onAddMusician}
-          className="btn btn-xs btn-ghost text-primary mt-1 w-full lg:w-auto"
-        >
-          {t('schedule.add_musician')}
-        </button>
-      )}
     </div>
   )
 }
