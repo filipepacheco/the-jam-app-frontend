@@ -212,6 +212,10 @@ html {
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
+.animate-wave-pulse {
+  animation: wave-pulse 2s ease-in-out infinite;
+}
+
 /* Phase 1 - Public Dashboard Animations */
 
 @keyframes gradient-shift {
