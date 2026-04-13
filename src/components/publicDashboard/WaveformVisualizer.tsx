@@ -42,7 +42,7 @@ export function WaveformVisualizer({ barCount = 12, className = '' }: WaveformVi
       {bars.map((bar) => (
         <motion.div
           key={bar.id}
-          className="w-2 bg-linear-to-t from-purple-500 to-blue-500 rounded-full"
+          className="w-2 bg-linear-to-t from-primary to-secondary rounded-full"
           style={{ height: `${bar.baseHeight}px` }}
           animate={prefersReducedMotion ? {} : WAVEFORM_ANIMATION}
           transition={{ ...WAVEFORM_TRANSITION, delay: bar.delay }}

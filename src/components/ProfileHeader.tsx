@@ -17,11 +17,11 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
   const getRoleBgColor = () => {
     switch (user.role) {
       case 'host':
-        return 'from-purple-500 to-purple-600'
+        return 'from-primary to-primary/80'
       case 'user':
-        return 'from-blue-500 to-blue-600'
+        return 'from-secondary to-secondary/80'
       default:
-        return 'from-gray-500 to-gray-600'
+        return 'from-neutral to-neutral/80'
     }
   }
 
@@ -49,7 +49,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
     : 'Recently joined'
 
   return (
-    <div className={`card bg-gradient-to-r ${getRoleBgColor()} text-white shadow-xl`}>
+    <div className={`card bg-gradient-to-r ${getRoleBgColor()} text-primary-content shadow-xl`}>
       <div className="card-body items-center text-center">
         {/* Avatar Circle */}
         <div className="avatar placeholder mb-4">

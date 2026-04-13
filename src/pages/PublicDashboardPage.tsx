@@ -26,7 +26,7 @@ import {useConfettiOnSongChange} from '../hooks'
 import {useFullscreen} from '../hooks'
 import {useOfflineQueue} from '../hooks'
 import {useDashboardLayout} from '../hooks'
-import {Alert, FullPageSpinner} from '../components'
+import {Alert} from '../components'
 import {useTranslation} from 'react-i18next'
 import type {LiveDashboardResponseDto} from '../types/api.types'
 
@@ -88,7 +88,31 @@ export function PublicDashboardPage() {
 
   // Show loading state
   if (isLoading && !currentSong) {
-    return <FullPageSpinner />
+    return (
+      <div className="min-h-screen bg-base-300 text-base-content">
+        <div className="pt-20 pb-8 px-4 md:px-8">
+          <div className="max-w-6xl mx-auto animate-pulse">
+            {/* Now Playing skeleton */}
+            <div className="bg-base-200 rounded-2xl p-6 sm:p-8 mb-8">
+              <div className="skeleton h-6 w-24 mb-4" />
+              <div className="skeleton h-10 w-3/4 mb-3" />
+              <div className="skeleton h-6 w-1/2 mb-6" />
+              <div className="flex gap-2">
+                <div className="skeleton h-8 w-20 rounded-full" />
+                <div className="skeleton h-8 w-20 rounded-full" />
+                <div className="skeleton h-8 w-20 rounded-full" />
+              </div>
+            </div>
+            {/* Up Next skeleton */}
+            <div className="bg-base-200 rounded-xl p-4">
+              <div className="skeleton h-4 w-16 mb-3" />
+              <div className="skeleton h-6 w-2/3 mb-2" />
+              <div className="skeleton h-4 w-1/3" />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   // Show error state
@@ -103,8 +127,7 @@ export function PublicDashboardPage() {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen animate-gradient-shift text-white overflow-hidden relative"
-      data-theme="dark"
+      className="min-h-screen animate-gradient-shift text-base-content overflow-hidden relative"
     >
       {/* Radial Glow Spotlight */}
       <div className="radial-glow" />
@@ -160,10 +183,10 @@ export function PublicDashboardPage() {
               {/* Current Song / Starting Soon Section */}
               {jamStatus === 'FINISHED' ? (
                 <div className="mb-12 text-center">
-                  <div className="bg-linear-to-br from-slate-800/40 to-slate-700/40 backdrop-blur border border-slate-500/30 rounded-2xl p-8 md:p-12">
+                  <div className="bg-base-200/80 border border-base-300 rounded-2xl p-8 md:p-12">
                     <p className="text-5xl md:text-7xl mb-6">👏</p>
                     <h2 className="text-4xl md:text-6xl font-black mb-4">{t('publicDashboard.jamFinished', 'That\'s a wrap!')}</h2>
-                    <p className="text-lg md:text-2xl text-slate-300">{t('publicDashboard.thankYou', 'Thanks for jamming with us!')}</p>
+                    <p className="text-lg md:text-2xl text-base-content/70">{t('publicDashboard.thankYou', 'Thanks for jamming with us!')}</p>
                   </div>
                 </div>
               ) : currentSong ? (

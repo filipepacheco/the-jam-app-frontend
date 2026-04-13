@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Music, Guitar, Star, Calendar } from 'lucide-react'
 import { Modal } from './Modal'
 import { Avatar } from './Avatar'
-import { musicianService } from '../services/musicianService'
+import { musicianService } from '../services'
 import type { MusicianProfileWithStats } from '../types/api.types'
 import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
 

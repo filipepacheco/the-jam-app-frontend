@@ -7,7 +7,7 @@
 import { type FormEvent, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { musicService, scheduleService } from '../../services'
-import { spotifyService } from '../../services/spotifyService'
+import { spotifyService } from '../../services'
 import { MusicModalFormFields } from '../MusicModalFormFields'
 import { parseDuration } from '../../lib/musicUtils'
 import { formatDuration } from '../../lib/formatters'
@@ -235,7 +235,7 @@ export function SuggestNewSongModal({
           </button>
           <button
             type="button"
-            onClick={(e) => {
+            onClick={() => {
               const syntheticEvent = { preventDefault: () => {} } as FormEvent
               void handleSubmit(syntheticEvent)
             }}

@@ -4,7 +4,7 @@
  * for searchable select components.
  */
 
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react'
+import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react'
 
 interface UseSearchableSelectOptions<T extends { id: string }> {
   items: T[]

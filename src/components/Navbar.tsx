@@ -4,7 +4,7 @@
  */
 
 import { useAuth } from '../hooks'
-import { useState, useRef } from 'react'
+import React, { useState, useRef, memo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FeedbackButton } from './FeedbackButton'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +12,7 @@ import { DesktopUserMenu } from './DesktopUserMenu'
 import { MobileDrawer } from './MobileDrawer'
 import { Home, Search, Users, Music, LayoutDashboard } from 'lucide-react'
 
-function NavLink({ href, icon, label, isActive, onClick }: {
+const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: {
   href: string
   icon: React.ReactNode
   label: string
@@ -35,7 +35,7 @@ function NavLink({ href, icon, label, isActive, onClick }: {
       </a>
     </li>
   )
-}
+})
 
 function Navbar() {
   const { t } = useTranslation()
@@ -90,24 +90,27 @@ function Navbar() {
 
       {/* Navbar End - Actions */}
       <div className="navbar-end gap-1 sm:gap-2 md:gap-3 flex-wrap md:flex-nowrap justify-end">
-        {/* Feedback Button - Desktop only */}
-        <FeedbackButton className="hidden xl:flex" />
+        {isLoading ? (
+          /* Skeleton placeholders while auth state loads */
+          <div className="hidden xl:flex items-center gap-2 animate-pulse">
+            <div className="skeleton h-6 w-20 rounded" />
+            <div className="skeleton h-8 w-8 rounded-full" />
+          </div>
+        ) : (
+          <>
+            {/* Feedback Button - Desktop only */}
+            <FeedbackButton className="hidden xl:flex" />
 
-        {/* Desktop User Menu */}
-        <DesktopUserMenu className="hidden xl:inline-flex" />
+            {/* Desktop User Menu */}
+            <DesktopUserMenu className="hidden xl:inline-flex" />
 
-        {/* Create Jam Button - Host Only */}
-        {isAuthenticated && user?.isHost && (
-          <a href="/host/create-jam" className="btn btn-primary btn-sm whitespace-nowrap">
-            {t('nav.create_jam')}
-          </a>
-        )}
-
-        {/* Register Button - Viewer/Anonymous Only */}
-        {!isLoading && isViewer() && !isAuthenticated && (
-          <a href="/register" className="btn btn-primary whitespace-nowrap min-h-[44px]">
-            {t('nav.join')}
-          </a>
+            {/* Register Button - Viewer/Anonymous Only */}
+            {isViewer() && !isAuthenticated && (
+              <a href="/register" className="btn btn-primary whitespace-nowrap min-h-[44px]">
+                {t('nav.join')}
+              </a>
+            )}
+          </>
         )}
 
         {/* Mobile Hamburger */}

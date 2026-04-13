@@ -48,9 +48,6 @@ export function hasCoreBand(schedule: ScheduleResponseDto): boolean {
   return CORE_BAND.every((inst) => (counts[inst] || 0) >= 1)
 }
 
-/** @deprecated Use hasCoreBand instead */
-export const isScheduleReadyToPlay = hasCoreBand
-
 export interface InstrumentOption {
   key: string
   label: string

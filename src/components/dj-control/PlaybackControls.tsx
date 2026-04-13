@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Play, Pause, Square, SkipBack, SkipForward } from 'lucide-react'
-import type { PlaybackState } from '../../types/jamControl.types'
+import { Play, Pause, SkipBack, SkipForward } from 'lucide-react'
+import type { PlaybackState } from '../../types/api.types.ts'
 import { Alert } from '../Alert'
 
 interface PlaybackControlsProps {
@@ -23,7 +23,6 @@ export function PlaybackControls({
   hasNextSong,
   isLoading,
   onStart,
-  onStop,
   onNext,
   onPrevious,
   onPause,
@@ -98,20 +97,7 @@ export function PlaybackControls({
         </button>
       </div>
 
-      {/* Stop button */}
-      {!isStopped && (
-        <div className="flex items-center">
-          <button
-            onClick={() => { void handleAction(onStop) }}
-            className="btn btn-xs btn-ghost text-error gap-1"
-            disabled={busy}
-            title={t('dj_control.actions.stop_tooltip', 'Parar')}
-          >
-            <Square className="size-3" />
-            {t('dj_control.actions.stop', 'Parar')}
-          </button>
-        </div>
-      )}
+      {/* Stop button - hidden for now */}
     </div>
   )
 }

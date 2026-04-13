@@ -9,7 +9,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import {Alert, FullPageSpinner, Modal, PageAlerts, SpotifyImportModal} from '../../components'
+import {Alert, Modal, PageAlerts, SpotifyImportModal} from '../../components'
 import {ListMusic} from 'lucide-react'
 
 interface FormData {
@@ -250,9 +250,57 @@ export function CreateJamPage() {
     void navigate(`/host/jams/${newJamId}/manage`)
   }
 
-  // Show loading spinner while auth is initializing
+  // Show skeleton while auth is initializing
   if (authLoading) {
-    return <FullPageSpinner />
+    return (
+      <div className="min-h-screen bg-base-100 p-4">
+        <div className="container mx-auto max-w-2xl animate-pulse">
+          {/* Header skeleton */}
+          <div className="mb-6">
+            <div className="skeleton h-8 w-48 mb-4 rounded-lg" />
+            <div className="skeleton h-10 w-72" />
+          </div>
+
+          {/* Card skeleton */}
+          <div className="card bg-base-200 shadow-lg">
+            <div className="card-body space-y-5">
+              {/* 6 form field skeletons */}
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="skeleton h-4 w-24" />
+                  <div className="skeleton h-10 w-full" />
+                </div>
+              ))}
+
+              {/* Textarea skeleton */}
+              <div className="space-y-2">
+                <div className="skeleton h-4 w-24" />
+                <div className="skeleton h-24 w-full" />
+              </div>
+
+              {/* Date/time 2-column grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="skeleton h-4 w-20" />
+                  <div className="skeleton h-10 w-full" />
+                </div>
+                <div className="space-y-2">
+                  <div className="skeleton h-4 w-20" />
+                  <div className="skeleton h-10 w-full" />
+                </div>
+              </div>
+
+              {/* Button row skeleton */}
+              <div className="divider my-1" />
+              <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+                <div className="skeleton h-10 w-24 rounded-lg" />
+                <div className="skeleton h-10 w-32 rounded-lg" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!isAuthenticated) {

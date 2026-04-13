@@ -16,7 +16,7 @@ export function FloatingRegisterButton({
   return (
     <button
       onClick={onClick}
-      className={`fixed bottom-6 right-6 btn btn-primary btn-circle btn-lg shadow-2xl transition-[opacity,transform] duration-300 motion-reduce:transition-none z-40 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 hover:shadow-xl ${
+      className={`fixed bottom-6 right-6 btn btn-primary btn-circle btn-lg shadow-2xl transition-[opacity,transform] duration-300 motion-reduce:transition-none z-40 will-change-transform focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 hover:shadow-xl ${
         isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-75 motion-reduce:scale-100 pointer-events-none'
       }`}
       aria-label={t('jams.register')}

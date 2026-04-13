@@ -38,13 +38,13 @@ export function NotesEditor({ notes, jamMusicId, loading = false, onSave }: Note
         />
         <div className="flex gap-1 justify-end">
           <button
-            className="btn btn-xs btn-ghost"
+            className="btn btn-sm min-h-[44px] min-w-[44px] btn-ghost"
             onClick={() => { setEditing(false); setEditValue(notes || '') }}
           >
             {t('common.cancel')}
           </button>
           <button
-            className="btn btn-xs btn-primary"
+            className="btn btn-sm min-h-[44px] min-w-[44px] btn-primary"
             disabled={loading}
             onClick={() => {
               onSave?.(jamMusicId, displayValue)
@@ -65,7 +65,7 @@ export function NotesEditor({ notes, jamMusicId, loading = false, onSave }: Note
         <p className="whitespace-pre-line flex-1 min-w-0">{notes}</p>
         {onSave && (
           <button
-            className="btn btn-ghost btn-xs btn-circle shrink-0"
+            className="btn btn-ghost btn-sm min-h-[44px] min-w-[44px] btn-circle shrink-0"
             onClick={() => { setEditValue(notes || ''); setEditing(true) }}
             title={t('schedule.edit_notes')}
             aria-label={t('schedule.edit_notes')}
@@ -80,7 +80,7 @@ export function NotesEditor({ notes, jamMusicId, loading = false, onSave }: Note
   if (onSave) {
     return (
       <button
-        className="btn btn-xs btn-ghost text-base-content/40 gap-1"
+        className="btn btn-sm min-h-[44px] min-w-[44px] btn-ghost text-base-content/40 gap-1"
         onClick={() => { setEditValue(''); setEditing(true) }}
       >
         <FileText className="w-3 h-3" />

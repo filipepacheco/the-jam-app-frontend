@@ -7,7 +7,7 @@ import type {RegistrationResponseDto} from '../../types/api.types'
 import {CheckCircle, Clock, Users, XCircle, Trash2} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {Avatar} from '../Avatar'
-import React from "react"
+import {memo} from "react"
 import {groupRegistrationsByInstrument} from '../../utils/musicianUtils';
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 
@@ -71,7 +71,7 @@ interface RegistrationListProps {
     neededKeys?: number
 }
 
-export function RegistrationList({
+export const RegistrationList = memo(function RegistrationList({
                                      registrations,
                                      loading = false,
                                      onApprove,
@@ -101,7 +101,7 @@ export function RegistrationList({
                 {showActions && onAddMusician && (
                     <button
                         onClick={onAddMusician}
-                        className="btn btn-xs btn-outline"
+                        className="btn btn-xs btn-outline min-h-[44px] min-w-[44px]"
                         title={t('schedule.add_musician_btn')}
                     >
                         {t('schedule.add_musician')}
@@ -200,7 +200,7 @@ export function RegistrationList({
                                                         <div className="flex gap-1 flex-shrink-0">
                                                             <button
                                                                 onClick={() => onApprove?.(registration.id)}
-                                                                className="btn btn-xs btn-success btn-outline"
+                                                                className="btn btn-xs btn-success btn-outline min-h-[44px] min-w-[44px]"
                                                                 disabled={loading}
                                                                 title={t('common.approve')}
                                                             >
@@ -208,7 +208,7 @@ export function RegistrationList({
                                                             </button>
                                                             <button
                                                                 onClick={() => onReject?.(registration.id)}
-                                                                className="btn btn-xs btn-error btn-outline"
+                                                                className="btn btn-xs btn-error btn-outline min-h-[44px] min-w-[44px]"
                                                                 disabled={loading}
                                                                 title={t('common.reject')}
                                                             >
@@ -219,7 +219,7 @@ export function RegistrationList({
                                                     {registration.status === 'APPROVED' && (
                                                         <button
                                                             onClick={() => onDelete?.(registration.id)}
-                                                            className="btn btn-xs btn-error btn-outline"
+                                                            className="btn btn-xs btn-error btn-outline min-h-[44px] min-w-[44px]"
                                                             disabled={loading}
                                                             title={t('common.delete')}
                                                         >
@@ -249,5 +249,4 @@ export function RegistrationList({
             )}
         </div>
     )
-}
-
+})

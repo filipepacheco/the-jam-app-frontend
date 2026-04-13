@@ -7,6 +7,7 @@ import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCollapsibleCard} from "../../components/schedule/ScheduleCollapsibleCard";
 import {MusicianProfileModal} from "../../components/MusicianProfileModal";
 import {Search, X, ListMusic} from "lucide-react";
+import {useNavigate} from "react-router-dom";
 import {hasCoreBand} from "../../utils/scheduleUtils";
 
 /**
@@ -15,6 +16,7 @@ import {hasCoreBand} from "../../utils/scheduleUtils";
  */
 export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: () => void }) {
     const {t} = useTranslation()
+    const navigate = useNavigate()
     const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set())
     const [error, setError] = useState<string | null>(null)
     const [showAddModal, setShowAddModal] = useState(false)
@@ -297,23 +299,12 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             onMusicianClick={setSelectedMusicianId}
             onSaveNotes={handleSaveNotes}
             onApproveAllRegistrations={handleApproveAllRegistrations}
+            onEditMusic={(musicId) => navigate(`/music?edit=${musicId}`)}
         />
     }
 
     return (
         <div className="space-y-3">
-            {/* Header */}
-            <div className="flex items-center justify-between gap-2">
-                <h2 className="text-2xl font-bold">{t('jam_management.schedule.title')}</h2>
-                <button
-                    onClick={() => setShowAddModal(true)}
-                    className="btn btn-primary btn-sm"
-                    disabled={loadingIds.has('add-schedule')}
-                >
-                    {t('jam_management.schedule.add_new_song')}
-                </button>
-            </div>
-
             {/* Alerts */}
             <Alert type="error" message={error} onDismiss={() => setError(null)} />
             <Alert type="success" message={success} onDismiss={() => setSuccess(null)} autoHide autoHideDelay={3000} />
@@ -321,42 +312,53 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             {/* Search + Filter Toolbar */}
             {sortedSchedules.length > 3 && (
                 <div className="space-y-2">
-                    <div className="join w-full">
-                        <div className="join-item flex items-center px-2 bg-base-200">
-                            <Search className="size-4 text-base-content/40" />
+                    <div className="flex gap-2">
+                        <div className="join flex-1">
+                            <div className="join-item flex items-center px-2 bg-base-200">
+                                <Search className="size-4 text-base-content/40" />
+                            </div>
+                            <input
+                                type="text"
+                                placeholder={t('schedule.search_placeholder', 'Search songs or musicians...')}
+                                className="input input-sm input-bordered join-item flex-1"
+                                value={rawSearch}
+                                onChange={(e) => setRawSearch(e.target.value)}
+                                aria-label={t('schedule.search_placeholder', 'Search songs or musicians...')}
+                            />
+                            {rawSearch && (
+                                <button className="btn btn-sm btn-ghost join-item" onClick={() => { setRawSearch(''); setSearchQuery('') }}>
+                                    <X className="size-4" />
+                                </button>
+                            )}
                         </div>
-                        <input
-                            type="text"
-                            placeholder={t('schedule.search_placeholder', 'Search songs or musicians...')}
-                            className="input input-sm input-bordered join-item flex-1"
-                            value={rawSearch}
-                            onChange={(e) => setRawSearch(e.target.value)}
-                            aria-label={t('schedule.search_placeholder', 'Search songs or musicians...')}
-                        />
-                        {rawSearch && (
-                            <button className="btn btn-sm btn-ghost join-item" onClick={() => { setRawSearch(''); setSearchQuery('') }}>
-                                <X className="size-4" />
-                            </button>
-                        )}
+                        <button
+                            onClick={() => setShowAddModal(true)}
+                            className="btn btn-primary btn-sm btn-square"
+                            disabled={loadingIds.has('add-schedule')}
+                            title={t('jam_management.schedule.add_new_song')}
+                            aria-label={t('jam_management.schedule.add_new_song')}
+                        >
+                            +
+                        </button>
                     </div>
                     <div className="flex gap-1 flex-wrap">
                         <button
-                            className={`btn btn-sm ${statusFilter === 'all' ? 'btn-primary' : 'btn-outline btn-primary'}`}
+                            className={`btn btn-sm ${statusFilter === 'all' ? 'btn-primary' : 'btn-ghost'}`}
                             onClick={() => setStatusFilter('all')}
                         >
                             {t('common.all', 'All')} ({totalCount})
                         </button>
                         <button
-                            className={`btn btn-sm ${statusFilter === 'needs_musicians' ? 'btn-warning' : 'btn-outline btn-warning'}`}
+                            className={`btn btn-sm ${statusFilter === 'needs_musicians' ? 'btn-warning' : 'btn-ghost'}`}
                             onClick={() => setStatusFilter('needs_musicians')}
                         >
-                            {t('schedule.needs_musicians', 'Needs musicians')} ({needsCount})
+                            {t('schedule.needs_musicians_short', 'Aguardando')} ({needsCount})
                         </button>
                         <button
-                            className={`btn btn-sm ${statusFilter === 'complete' ? 'btn-success' : 'btn-outline btn-success'}`}
+                            className={`btn btn-sm ${statusFilter === 'complete' ? 'btn-success' : 'btn-ghost'}`}
                             onClick={() => setStatusFilter('complete')}
                         >
-                            {t('schedule.band_complete', 'Band complete')} ({completeCount})
+                            {t('schedule.band_complete_short', 'Pronto')} ({completeCount})
                         </button>
                     </div>
                 </div>

@@ -9,7 +9,7 @@ import {useAuth} from '../../hooks'
 import {musicianService} from '../../services'
 import type {MusicianLevel, MusicianResponseDto, PaginationMeta} from '../../types/api.types.ts'
 import {EditMusicianModal} from '../../components/EditMusicianModal.tsx'
-import {Alert, FullPageSpinner} from '../../components'
+import {Alert} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Music, Search} from 'lucide-react'
 
@@ -147,12 +147,68 @@ export function MusiciansPage() {
     ? (i18n.hasResourceBundle(currentLang, 'translation') || i18n.hasResourceBundle(baseLang, 'translation'))
     : true
 
-  if (!hasBundle) {
-    return <FullPageSpinner />
-  }
+  if (!hasBundle || authLoading) {
+    return (
+      <div className="min-h-screen bg-base-100 p-4 md:p-8 animate-pulse">
+        <div className="max-w-7xl mx-auto">
+          {/* Header skeleton */}
+          <div className="mb-8">
+            <div className="flex items-center gap-3 mb-1">
+              <div className="skeleton size-8 rounded" />
+              <div className="skeleton h-8 w-56" />
+            </div>
+            <div className="skeleton h-4 w-72 mt-2" />
+          </div>
 
-  if (authLoading) {
-    return <FullPageSpinner />
+          {/* Search/filter bar skeleton */}
+          <div className="card bg-base-200 mb-6">
+            <div className="card-body py-4">
+              <div className="flex flex-col md:flex-row md:items-end gap-4">
+                <div className="flex-1">
+                  <div className="skeleton h-3 w-20 mb-2" />
+                  <div className="skeleton h-10 w-full rounded" />
+                </div>
+                <div className="md:w-64">
+                  <div className="skeleton h-3 w-16 mb-2" />
+                  <div className="skeleton h-10 w-full rounded" />
+                </div>
+              </div>
+              <div className="skeleton h-3 w-40 mt-3" />
+            </div>
+          </div>
+
+          {/* Table rows skeleton (desktop) */}
+          <div className="hidden md:block overflow-x-auto rounded-box">
+            <div className="bg-base-200 rounded-box p-4 space-y-3">
+              <div className="skeleton h-8 w-full rounded" />
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="skeleton h-12 w-full rounded" />
+              ))}
+            </div>
+          </div>
+
+          {/* Card list skeleton (mobile) */}
+          <div className="md:hidden flex flex-col gap-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="card bg-base-200">
+                <div className="card-body py-3 px-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1 space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="skeleton h-5 w-28" />
+                        <div className="skeleton h-4 w-16 rounded-full" />
+                      </div>
+                      <div className="skeleton h-3 w-36" />
+                    </div>
+                    <div className="skeleton h-8 w-14 rounded" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!user?.isHost) {

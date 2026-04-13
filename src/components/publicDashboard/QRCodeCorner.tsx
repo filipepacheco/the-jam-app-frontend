@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 import { getJamShortUrl } from '../../utils/jamUrl'
 
@@ -14,6 +14,7 @@ interface QRCodeCornerProps {
 
 export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left' }: QRCodeCornerProps) {
   const { t } = useTranslation()
+  const prefersReducedMotion = useReducedMotion()
   const [isExpanded, setIsExpanded] = useState(false)
 
   const url = getJamShortUrl({ id: jamId || '', shortCode })
@@ -41,11 +42,11 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
     <>
       {/* QR Code in Corner */}
       <motion.button
-        initial={{ opacity: 0, scale: 0.8 }}
+        initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, delay: 0.3 }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.5, delay: 0.3 }}
         onClick={() => setIsExpanded(true)}
-        className={`${positionClasses[position]} bg-base-content/10 hover:bg-base-content/20 backdrop-blur border border-base-content/20 rounded-lg p-5 z-40 transition-colors cursor-pointer hidden md:block`}
+        className={`${positionClasses[position]} bg-base-content/10 hover:bg-base-content/20 border border-base-content/20 rounded-lg p-5 z-40 transition-colors cursor-pointer hidden md:block`}
         type="button"
         aria-label={t('publicDashboard.expandQrCode', 'Expand QR code')}
       >
@@ -57,10 +58,10 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
       <AnimatePresence>
         {isExpanded && (
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            exit={prefersReducedMotion ? undefined : { opacity: 0 }}
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.3 }}
             onClick={() => setIsExpanded(false)}
             className="fixed inset-0 bg-neutral/70 z-50 flex items-center justify-center p-4"
             role="dialog"
@@ -68,16 +69,16 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
             aria-label={t('publicDashboard.joinTheJam', 'Join the Jam')}
           >
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={prefersReducedMotion ? false : { scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ duration: 0.3 }}
+              exit={prefersReducedMotion ? undefined : { scale: 0.8, opacity: 0 }}
+              transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
               className="relative bg-base-100 rounded-2xl p-8 max-w-md w-full flex flex-col items-center justify-center"
             >
               <h2 className="text-2xl font-bold mb-6 text-base-content">{t('publicDashboard.joinTheJam', 'Join the Jam')}</h2>
 
-              <div className="bg-white p-6 rounded-lg mb-4">
+              <div className="bg-base-100 p-6 rounded-lg mb-4">
                 <QRCodeSVG value={url} size={280} fgColor="#000000" bgColor="#ffffff" aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')} />
               </div>
 

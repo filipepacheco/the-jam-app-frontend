@@ -11,8 +11,8 @@ import {SWR_DEFAULTS} from '../../config/swrDefaults'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {Alert, FullPageSpinner, PageAlerts} from '../../components'
-import {SpotifyExportModal} from '../../components/SpotifyExportModal'
+import {Alert, PageAlerts} from '../../components'
+import {SpotifyExportModal} from '../../components'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
@@ -127,13 +127,57 @@ export function JamManagementPage() {
         }
     }
 
-    // Show loading spinner while auth is initializing
-    if (authLoading) {
-        return <FullPageSpinner label={t('common.loading')} />
-    }
+    // Show skeleton while auth or jam data is loading
+    if (authLoading || (jamLoading && !jam)) {
+        return (
+            <div className="min-h-screen bg-base-100 animate-pulse">
+                {/* Header skeleton */}
+                <div className="bg-base-200 border-b border-base-300">
+                    <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-3 sm:py-4">
+                        {/* Breadcrumb skeleton */}
+                        <div className="flex items-center gap-2 mb-2">
+                            <div className="skeleton h-3 w-20" />
+                            <div className="skeleton h-3 w-3" />
+                            <div className="skeleton h-3 w-32" />
+                            <div className="skeleton h-3 w-3" />
+                            <div className="skeleton h-3 w-16" />
+                        </div>
+                        {/* Title and status skeleton */}
+                        <div className="flex items-center justify-between gap-2">
+                            <div className="skeleton h-8 w-64" />
+                            <div className="skeleton h-6 w-20 rounded-full" />
+                        </div>
+                    </div>
+                </div>
 
-    if (jamLoading && !jam) {
-        return <FullPageSpinner label={t('jam_management.loading_jam')} />
+                {/* Tab bar skeleton */}
+                <div className="border-b border-base-300 bg-base-200">
+                    <div className="container mx-auto max-w-6xl px-2 sm:px-4">
+                        <div className="flex gap-2 py-2">
+                            {Array.from({ length: 4 }).map((_, i) => (
+                                <div key={i} className="skeleton h-8 w-24 rounded" />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Content area skeleton */}
+                <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8">
+                    <div className="card bg-base-200">
+                        <div className="card-body space-y-4">
+                            <div className="skeleton h-6 w-48" />
+                            <div className="skeleton h-4 w-full" />
+                            <div className="skeleton h-4 w-3/4" />
+                            <div className="skeleton h-32 w-full rounded" />
+                            <div className="flex gap-3">
+                                <div className="skeleton h-10 w-28 rounded" />
+                                <div className="skeleton h-10 w-28 rounded" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     if (displayError && !jam) {
@@ -161,7 +205,7 @@ export function JamManagementPage() {
         icon: '🎛️'
     }, {
         id: 'live' as const,
-        label: t('jam_management.tabs.live_control'),
+        label: t('jam_management.tabs.live_control_short', 'Ordem'),
         icon: '🎙️'
     }]
 

@@ -1,6 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
+import { useReducedMotion } from 'framer-motion'
+import { ClipboardList, Sparkles, X } from 'lucide-react'
 
 interface DualActionFABProps {
   isVisible: boolean
@@ -22,6 +24,7 @@ export function DualActionFAB({
   primaryAction = 'register',
 }: DualActionFABProps) {
   const { t } = useTranslation()
+  const prefersReducedMotion = useReducedMotion()
   const [isExpanded, setIsExpanded] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -42,7 +45,7 @@ export function DualActionFAB({
     onSuggestClick()
   }
 
-  const mainIcon = primaryAction === 'register' ? '📝' : '✨'
+  const MainIcon = primaryAction === 'register' ? ClipboardList : Sparkles
   const mainAriaLabel = primaryAction === 'register'
     ? t('jams.register')
     : t('jams.how_it_works.suggest_btn')
@@ -60,8 +63,9 @@ export function DualActionFAB({
             position: 'fixed',
             inset: 0,
             backgroundColor: 'rgba(0,0,0,0.2)',
-            backdropFilter: 'blur(2px)',
+            backdropFilter: prefersReducedMotion ? 'none' : 'blur(2px)',
             zIndex: 9998,
+            transition: prefersReducedMotion ? 'none' : undefined,
           }}
         />
       )}
@@ -92,7 +96,7 @@ export function DualActionFAB({
                 className="btn btn-secondary btn-circle btn-lg shadow-2xl"
                 type="button"
               >
-                <span className="text-2xl">✨</span>
+                <Sparkles className="size-6" />
               </button>
             </div>
 
@@ -107,7 +111,7 @@ export function DualActionFAB({
                 type="button"
               >
                 <div className="relative">
-                  <span className="text-2xl">📝</span>
+                  <ClipboardList className="size-6" />
                   {registrationCount > 0 && (
                     <span className="absolute -top-2 -right-2 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                       {registrationCount}
@@ -122,25 +126,23 @@ export function DualActionFAB({
         {/* Main FAB button */}
         <button
           onClick={toggleExpanded}
-          className="btn btn-primary btn-circle btn-lg shadow-2xl"
+          className={`btn btn-primary shadow-2xl ${isExpanded ? 'btn-circle btn-lg' : 'btn-lg rounded-full px-4 gap-2'}`}
           aria-label={isExpanded ? t('common.close') : mainAriaLabel}
           aria-expanded={isExpanded}
           type="button"
         >
-          <div className="relative">
-            {isExpanded ? (
-              <span className="text-2xl">✕</span>
-            ) : (
-              <>
-                <span className="text-2xl">{mainIcon}</span>
-                {primaryAction === 'register' && registrationCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-error text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                    {registrationCount}
-                  </span>
-                )}
-              </>
-            )}
-          </div>
+          {isExpanded ? (
+            <X className="size-6" />
+          ) : (
+            <>
+              <MainIcon className="size-5" />
+              {primaryAction === 'register' && registrationCount > 0 && (
+                <span className="badge badge-sm bg-white/20 text-primary-content border-0 tabular-nums">
+                  {registrationCount}
+                </span>
+              )}
+            </>
+          )}
         </button>
       </div>
     </>

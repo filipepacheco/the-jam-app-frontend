@@ -6,7 +6,7 @@
 import {useEffect, useState} from 'react'
 import {useAuth} from '../hooks'
 import {useNavigate} from 'react-router-dom'
-import {FullPageSpinner, ProfileSetupModal, SupabaseLoginForm} from '../components'
+import {ProfileSetupModal, SupabaseLoginForm} from '../components'
 import {SEO} from '../components/SEO'
 import {useTranslation} from 'react-i18next'
 import {getRedirectPath} from '../utils/navigationUtils'
@@ -33,7 +33,51 @@ export function LoginPage() {
 
 
   if (isLoading) {
-    return <FullPageSpinner label={t('common.loading')} />
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
+        <div className="w-full max-w-sm sm:max-w-md animate-pulse">
+          {/* Title skeleton */}
+          <div className="text-center mb-6 sm:mb-8">
+            <div className="skeleton h-8 w-48 mx-auto mb-2 sm:mb-3" />
+            <div className="skeleton h-4 w-64 mx-auto" />
+          </div>
+
+          {/* Form skeleton */}
+          <div className="space-y-4">
+            {/* Email field */}
+            <div>
+              <div className="skeleton h-4 w-20 mb-2" />
+              <div className="skeleton h-10 w-full rounded-lg" />
+            </div>
+            {/* Password field */}
+            <div>
+              <div className="skeleton h-4 w-20 mb-2" />
+              <div className="skeleton h-10 w-full rounded-lg" />
+            </div>
+            {/* Submit button */}
+            <div className="skeleton h-10 w-full rounded-lg" />
+          </div>
+
+          {/* Divider skeleton */}
+          <div className="flex items-center gap-4 my-6">
+            <div className="skeleton h-px flex-1" />
+            <div className="skeleton h-4 w-8" />
+            <div className="skeleton h-px flex-1" />
+          </div>
+
+          {/* OAuth buttons skeleton */}
+          <div className="space-y-3">
+            <div className="skeleton h-10 w-full rounded-lg" />
+            <div className="skeleton h-10 w-full rounded-lg" />
+          </div>
+
+          {/* Footer link skeleton */}
+          <div className="mt-6 sm:mt-8 flex justify-center">
+            <div className="skeleton h-4 w-32" />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   // If authenticated and not showing profile setup modal, redirect or return null

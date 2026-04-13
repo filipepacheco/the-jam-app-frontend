@@ -11,7 +11,7 @@ export function FinishedPanel() {
         {t('publicDashboard.jamFinished', "That's a wrap!")}
       </h2>
 
-      <p className="text-2xl md:text-4xl text-slate-300">
+      <p className="text-2xl md:text-4xl text-base-content/70">
         {t('publicDashboard.thankYou', 'Thanks for jamming with us!')}
       </p>
     </div>

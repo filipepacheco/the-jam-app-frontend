@@ -95,7 +95,7 @@ interface NowPlayingCardProps {
   currentSong: LiveStateSongDto
 }
 
-function NowPlayingCard({ currentSong }: NowPlayingCardProps) {
+const NowPlayingCard = React.memo(function NowPlayingCard({ currentSong }: NowPlayingCardProps) {
   const { t } = useTranslation()
 
   const groupedMusicians = useMemo(
@@ -109,37 +109,29 @@ function NowPlayingCard({ currentSong }: NowPlayingCardProps) {
   )
 
   return (
-    <div className="bg-primary rounded-xl p-6 text-primary-content shadow-lg">
-      <div className="mb-4">
-        <p className="text-sm font-semibold text-primary-content/70 mb-1">{t('live_control.now_playing')}</p>
-        <h2 className="text-2xl sm:text-3xl font-bold text-balance line-clamp-2">{currentSong.music?.title || t('schedule.song_tba')}</h2>
-        <p className="text-xl text-primary-content/80 mt-1 text-pretty">{currentSong.music?.artist || t('schedule.artist_tba')}</p>
+    <div className="bg-primary rounded-xl px-4 py-3 text-primary-content shadow-lg flex items-center gap-4">
+      <div className="flex-1 min-w-0">
+        <p className="text-xs font-semibold text-primary-content/60">{t('live_control.now_playing')}</p>
+        <p className="font-bold text-lg truncate">{currentSong.music?.title || t('schedule.song_tba')}</p>
+        <p className="text-sm text-primary-content/80 truncate">{currentSong.music?.artist || t('schedule.artist_tba')}</p>
       </div>
-
-      {currentSong.music?.duration && (
-        <p className="text-lg mb-4 tabular-nums">
-          <span aria-hidden="true">&#x23F1;&#xFE0F;</span> {formatDuration(currentSong.music.duration)}
-        </p>
-      )}
-
-      {sortedInstruments.length > 0 && (
-        <div className="mb-2 bg-primary-content/10 rounded-lg p-4">
-          <p className="text-sm font-semibold text-primary-content/80 mb-3">{t('nav.musicians')}</p>
-          <div className="flex flex-wrap gap-2">
+      <div className="shrink-0 text-right">
+        {currentSong.music?.duration && (
+          <p className="text-sm tabular-nums text-primary-content/70">{formatDuration(currentSong.music.duration)}</p>
+        )}
+        {sortedInstruments.length > 0 && (
+          <div className="flex gap-1 mt-1 justify-end">
             {sortedInstruments.map(([instrument, musicians]) => (
-              <div key={instrument} className="flex items-center gap-2 bg-primary-content/10 rounded-full px-3 py-1">
-                <span className="text-lg">{getInstrumentIcon(instrument)}</span>
-                <span className="text-sm text-primary-content/90">
-                  {musicians.map(m => m.name || t('common.unknown')).join(', ')}
-                </span>
-              </div>
+              <span key={instrument} className="text-base" title={musicians.map(m => m.name || t('common.unknown')).join(', ')}>
+                {getInstrumentIcon(instrument)}
+              </span>
             ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   )
-}
+})
 
 interface QueueItemProps {
   schedule: ScheduleResponseDto
@@ -636,7 +628,7 @@ export function LiveJamControlPanel({
       node.removeEventListener('touchend', onTouchEnd)
       node.removeEventListener('touchcancel', resetTouchState)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, []) // Stable: all state access via refs, setState functions are stable
 
   // Keyboard handler for accessibility
@@ -726,7 +718,7 @@ export function LiveJamControlPanel({
           ) : nextSongs.length > 1 ? (
             <button className="btn btn-ghost btn-sm gap-1" onClick={enterReorderMode}>
               <ArrowUpDown className="size-4" />
-              {t('live_control.reorder_toggle', 'Reorder')}
+              {t('live_control.reorder_drag', 'Arrastar')}
             </button>
           ) : null}
         </div>

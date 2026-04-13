@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {useMemo, useState} from "react";
 import {Pencil, ExternalLink, Play, Square, RotateCcw, Upload, Download, EllipsisVertical} from "lucide-react";
 import {initiateSpotifyAuth} from "../../lib/spotify/pkce";
-import {SpotifyImportModal} from "../../components/SpotifyImportModal";
+import {SpotifyImportModal} from "../../components";
 import {getJamDashboardPath} from "../../utils/jamUrl";
 
 /**

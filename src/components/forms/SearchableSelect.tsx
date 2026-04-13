@@ -5,7 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { useSearchableSelect } from '../../hooks/useSearchableSelect'
+import { useSearchableSelect } from '../../hooks'
 
 interface SearchableSelectProps<T extends { id: string }> {
   /** Unique identifier for the component */

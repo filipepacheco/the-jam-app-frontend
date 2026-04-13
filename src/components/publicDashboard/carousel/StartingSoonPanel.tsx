@@ -18,16 +18,16 @@ export function StartingSoonPanel({ song }: StartingSoonPanelProps) {
 
       {song ? (
         <div className="mt-4">
-          <p className="text-2xl md:text-3xl text-slate-300 mb-2">
+          <p className="text-2xl md:text-3xl text-base-content/70 mb-2">
             {t('publicDashboard.firstUp', 'First up:')}
           </p>
           <p className="text-4xl md:text-6xl font-bold mb-2">{song.title}</p>
-          <p className="text-2xl md:text-4xl text-slate-400">
+          <p className="text-2xl md:text-4xl text-base-content/60">
             {t('publicDashboard.by', 'by')} {song.artist}
           </p>
         </div>
       ) : (
-        <p className="text-2xl md:text-3xl text-slate-300 mt-4">
+        <p className="text-2xl md:text-3xl text-base-content/70 mt-4">
           {t('publicDashboard.preparingSetlist', 'Setting up the setlist...')}
         </p>
       )}

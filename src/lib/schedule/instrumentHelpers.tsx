@@ -4,31 +4,14 @@
  */
 
 import React from 'react'
-import {Music} from 'lucide-react'
-
-// Emoji font stack to ensure consistent emoji rendering across platforms
-const emojiStyle: React.CSSProperties = {
-  fontFamily: '"Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif',
-}
 
 /**
- * Get the emoji icon for a given instrument
+ * Get the Lucide icon for a given instrument
  * @param instrument - The instrument name (case-insensitive, supports multiple languages)
- * @returns React element with emoji or Lucide Music icon for unknown instruments
+ * @returns React element with Lucide icon
  */
 export function getInstrumentIcon(instrument?: string): React.ReactNode {
-  if (!instrument) return <Music className="w-4 h-4" />
-
-  const emoji = getInstrumentEmoji(instrument)
-  if (emoji === '🎵') return <Music className="w-4 h-4" />
-
-  // Special rendering for bass (subscript B marker)
-  const lower = instrument.toLowerCase().trim()
-  if (lower === 'bass' || lower === 'bass guitar' || lower === 'baixo' || lower === 'bajo') {
-    return <span style={emojiStyle} className="inline-flex items-baseline">🎸<sub className="text-[0.6em] font-bold">B</sub></span>
-  }
-
-  return <span style={emojiStyle}>{emoji}</span>
+  return getInstrumentEmoji(instrument)
 }
 
 /**
@@ -99,5 +82,38 @@ export function getInstrumentEmoji(instrument?: string): string {
   if (!instrument) return '🎵'
   const lower = instrument.toLowerCase().trim()
   return instrumentEmojiMap[lower] || '🎵'
+}
+
+/**
+ * Instrument slot fields present on music DTOs
+ */
+interface InstrumentSlots {
+  neededDrums?: number
+  neededGuitars?: number
+  neededVocals?: number
+  neededBass?: number
+  neededKeys?: number
+}
+
+export interface InstrumentCount {
+  count: number
+  key: string
+  label: string
+}
+
+/**
+ * Build the instrument counts array from a music DTO's needed* fields.
+ * @param music - Any object with neededDrums/Guitars/Vocals/Bass/Keys
+ * @param t - i18next t function for labels
+ * @returns Array of { count, key, label } for each instrument slot
+ */
+export function getInstrumentCounts(music: InstrumentSlots, t: (key: string) => string): InstrumentCount[] {
+  return [
+    { count: music.neededDrums || 0, key: 'drums', label: t('schedule.instruments.drums') },
+    { count: music.neededGuitars || 0, key: 'guitars', label: t('schedule.instruments.guitars') },
+    { count: music.neededVocals || 0, key: 'vocals', label: t('schedule.instruments.vocals') },
+    { count: music.neededBass || 0, key: 'bass', label: t('schedule.instruments.bass') },
+    { count: music.neededKeys || 0, key: 'keys', label: t('schedule.instruments.keys') },
+  ]
 }
 

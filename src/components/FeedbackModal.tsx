@@ -3,7 +3,7 @@
  * Allows users to submit star ratings and optional comments
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CheckCircle } from 'lucide-react'
 import { feedbackService } from '../services'

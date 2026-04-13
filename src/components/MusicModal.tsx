@@ -183,7 +183,7 @@ export function MusicModal({
           </button>
           <button
             type="button"
-            onClick={(e) => {
+            onClick={() => {
               const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
               void handleSubmit(syntheticEvent)
             }}

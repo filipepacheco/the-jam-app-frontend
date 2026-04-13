@@ -5,7 +5,7 @@
 
 import type { RegistrationResponseDto } from '../../types/api.types'
 import { Check, X, Trash2 } from 'lucide-react'
-import { getInstrumentIcon } from '../../lib/schedule/instrumentHelpers'
+import { getInstrumentEmoji } from '../../lib/schedule/instrumentHelpers'
 import { useTranslation } from 'react-i18next'
 
 interface MusicianSlotRowProps {
@@ -39,11 +39,19 @@ export function MusicianSlotRow({
   const name = registration.musician?.name || t('common.unknown')
 
   return (
-    <div className="group flex items-center gap-1.5 py-1 text-xs min-h-[40px]">
+    <div className="group flex items-center gap-1.5 py-1 text-xs min-h-[44px]">
       {/* Instrument icon */}
       <span className="flex-shrink-0 w-4 text-center text-sm leading-none">
-        {getInstrumentIcon(instrument)}
+        {getInstrumentEmoji(instrument)}
       </span>
+
+      {/* Status dot - informational, inline with identity */}
+      <span
+        className={`flex-shrink-0 w-2 h-2 rounded-full ${statusDotColor[status] || 'bg-warning'}`}
+        title={t(`registration.statuses.${status.toLowerCase()}`)}
+        role="img"
+        aria-label={t(`registration.statuses.${status.toLowerCase()}`)}
+      />
 
       {/* Musician name */}
       {onMusicianClick ? (
@@ -70,14 +78,6 @@ export function MusicianSlotRow({
         </span>
       )}
 
-      {/* Status dot */}
-      <span
-        className={`flex-shrink-0 w-2 h-2 rounded-full ${statusDotColor[status] || 'bg-warning'}`}
-        title={t(`registration.statuses.${status.toLowerCase()}`)}
-        role="img"
-        aria-label={t(`registration.statuses.${status.toLowerCase()}`)}
-      />
-
       {/* Action buttons */}
       {showActions && (
         <div className="flex-shrink-0 flex items-center gap-1">
@@ -85,7 +85,7 @@ export function MusicianSlotRow({
             <>
               <button
                 onClick={() => onApprove?.(registration.id)}
-                className="btn btn-circle btn-ghost btn-sm"
+                className="btn btn-circle btn-ghost btn-sm min-h-[44px] min-w-[44px]"
                 disabled={loading}
                 title={t('common.approve')}
                 aria-label={t('common.approve')}
@@ -94,7 +94,7 @@ export function MusicianSlotRow({
               </button>
               <button
                 onClick={() => onReject?.(registration.id)}
-                className="btn btn-circle btn-ghost btn-sm"
+                className="btn btn-circle btn-ghost btn-sm min-h-[44px] min-w-[44px]"
                 disabled={loading}
                 title={t('common.reject')}
                 aria-label={t('common.reject')}
@@ -106,7 +106,7 @@ export function MusicianSlotRow({
           {status === 'APPROVED' && (
             <button
               onClick={() => onDelete?.(registration.id)}
-              className="btn btn-circle btn-ghost btn-sm text-error/40 hover:text-error transition-colors"
+              className="btn btn-circle btn-ghost btn-sm min-h-[44px] min-w-[44px] text-error/40 hover:text-error transition-colors"
               disabled={loading}
               title={t('common.delete')}
               aria-label={t('common.delete')}

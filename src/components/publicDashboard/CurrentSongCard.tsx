@@ -52,25 +52,25 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
       className="mb-12"
     >
       <motion.div
-        className="bg-linear-to-br from-purple-900/40 to-blue-900/40 backdrop-blur border border-purple-500/30 rounded-2xl p-8 md:p-12"
+        className="bg-base-200/80 border border-primary/20 rounded-2xl p-8 md:p-12"
         animate={prefersReducedMotion ? {} : CARD_PULSE_ANIMATION}
         transition={pulseTransition}
       >
-        <p className="text-purple-200 text-sm md:text-lg font-semibold uppercase tracking-widest mb-4">
+        <p className="text-base-content/70 text-sm md:text-lg font-semibold uppercase tracking-widest mb-4">
           {t('publicDashboard.nowPlaying', 'Now Playing')}
         </p>
-        <h2 className="animate-text-glow text-5xl md:text-7xl lg:text-8xl font-black mb-4 text-wrap">{song.title}</h2>
+        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 text-wrap">{song.title}</h2>
         <WaveformVisualizer className="my-4" />
-        <p className="md:text-3xl text-purple-100 mb-2">
+        <p className="md:text-3xl text-base-content/80 mb-2">
           {t('publicDashboard.by', 'by')} {song.artist}
         </p>
         {song.duration && (
-          <p className="text-lg md:text-xl text-purple-200 mb-8">⏱️ {formatDuration(song.duration)}</p>
+          <p className="text-lg md:text-xl text-base-content/70 mb-8">⏱️ {formatDuration(song.duration)}</p>
         )}
 
         {song.musicians && song.musicians.length > 0 ? (
           <div className="mt-8">
-            <p className="text-lg md:text-2xl font-bold text-white mb-6">
+            <p className="text-lg md:text-2xl font-bold text-base-content mb-6">
               {t('publicDashboard.currentMusicians', 'Current Musicians')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -80,7 +80,7 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
             </div>
           </div>
         ) : (
-          <p className="text-purple-200 text-lg">{t('publicDashboard.noMusicians', 'No musicians registered yet')}</p>
+          <p className="text-base-content/70 text-lg">{t('publicDashboard.noMusicians', 'No musicians registered yet')}</p>
         )}
       </motion.div>
     </motion.div>

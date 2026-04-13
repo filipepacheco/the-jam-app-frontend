@@ -4,8 +4,8 @@
  * Single column on mobile, 2-column grid on lg+ to fill desktop width
  */
 
+import { useMemo } from 'react'
 import type { RegistrationResponseDto } from '../../types/api.types'
-import { useTranslation } from 'react-i18next'
 import { groupRegistrationsByInstrument } from '../../utils/musicianUtils'
 import { MusicianSlotRow } from './MusicianSlotRow'
 import { EmptySlotRow } from './EmptySlotRow'
@@ -44,51 +44,44 @@ export function MusicianSlotList({
   neededVocals = 0,
   neededKeys = 0,
 }: MusicianSlotListProps) {
-  const { t } = useTranslation()
-  const grouped = groupRegistrationsByInstrument(registrations)
-
-  // Build list of instruments that are needed
-  const instrumentSlots: InstrumentSlotConfig[] = [
-    { key: 'drums', needed: neededDrums },
-    { key: 'guitars', needed: neededGuitars },
-    { key: 'bass', needed: neededBass },
-    { key: 'vocals', needed: neededVocals },
-    { key: 'keys', needed: neededKeys },
-  ].filter((s) => s.needed > 0)
-
-  // Also include any instruments from registrations that aren't in the needed list
-  grouped.forEach((_regs, instrument) => {
-    if (!instrumentSlots.find((s) => s.key === instrument)) {
-      instrumentSlots.push({ key: instrument, needed: 0 })
-    }
-  })
-
-  const hasContent = instrumentSlots.length > 0 || (registrations && registrations.length > 0)
-
-  if (!hasContent) {
-    return (
-      <p className="text-xs text-base-content/40 italic py-1">
-        {t('schedule.no_musicians_registered')}
-      </p>
-    )
-  }
-
-  // Flatten all rows (registrations + empty slots) for grid layout
   type SlotItem =
     | { type: 'registration'; reg: RegistrationResponseDto }
     | { type: 'empty'; instrument: string; count: number }
 
-  const items: SlotItem[] = []
-  for (const { key, needed } of instrumentSlots) {
-    const regs = grouped.get(key) || []
-    for (const reg of regs) {
-      items.push({ type: 'registration', reg })
+  const items = useMemo(() => {
+    const grouped = groupRegistrationsByInstrument(registrations)
+
+    // Build list of instruments that are needed
+    const instrumentSlots: InstrumentSlotConfig[] = [
+      { key: 'drums', needed: neededDrums },
+      { key: 'guitars', needed: neededGuitars },
+      { key: 'bass', needed: neededBass },
+      { key: 'vocals', needed: neededVocals },
+      { key: 'keys', needed: neededKeys },
+    ].filter((s) => s.needed > 0)
+
+    // Also include any instruments from registrations that aren't in the needed list
+    grouped.forEach((_regs, instrument) => {
+      if (!instrumentSlots.find((s) => s.key === instrument)) {
+        instrumentSlots.push({ key: instrument, needed: 0 })
+      }
+    })
+
+    // Flatten all rows (registrations + empty slots) for grid layout
+    const items: SlotItem[] = []
+    for (const { key, needed } of instrumentSlots) {
+      const regs = grouped.get(key) || []
+      for (const reg of regs) {
+        items.push({ type: 'registration', reg })
+      }
+      const emptyCount = Math.max(0, needed - regs.length)
+      if (emptyCount > 0) {
+        items.push({ type: 'empty', instrument: key, count: emptyCount })
+      }
     }
-    const emptyCount = Math.max(0, needed - regs.length)
-    if (emptyCount > 0) {
-      items.push({ type: 'empty', instrument: key, count: emptyCount })
-    }
-  }
+
+    return items
+  }, [registrations, neededDrums, neededGuitars, neededBass, neededVocals, neededKeys])
 
   return (
     <div className="mt-1">

@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --font-display: 'Archivo', sans-serif;
+  --font-body: 'Nunito Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Apply body font globally */
+html {
+  font-family: var(--font-body);
+}
+
 /* Custom animations for Vinyl Record Timeline (Variation 1) */
 @keyframes spin-slow {
   from {
@@ -8,10 +18,6 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 8s linear infinite;
 }
 
 /* Custom animations for Waveform Pulse Timeline (Variation 2) */
@@ -184,68 +190,26 @@
   }
 }
 
-.animate-wave-pulse {
-  animation: wave-pulse 1s ease-in-out infinite;
+/* Timeline card staggered entrance */
+.animate-timeline-enter {
+  opacity: 0;
+  animation: fade-in 0.4s ease-out forwards;
 }
 
-.animate-wave-flow {
-  stroke-dasharray: 20 20;
-  animation: wave-flow 3s linear infinite;
+/* Soft breathing glow for in-progress cards - uses current primary color */
+@keyframes breathe-glow {
+  0%, 100% { outline: 2px solid transparent; outline-offset: 0px; }
+  50% { outline: 2px solid color-mix(in oklch, currentColor 20%, transparent); outline-offset: 2px; }
 }
 
-.animate-wave-flow-reverse {
-  stroke-dasharray: 20 20;
-  animation: wave-flow-reverse 3s linear infinite;
+.animate-breathe-glow {
+  animation: breathe-glow 3s ease-in-out infinite;
 }
 
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
-}
+/* reduced-motion: consolidated block is at end of file */
 
 .animate-ping-slow {
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-.animate-ping-slower {
-  animation: ping-slower 3s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.animate-timeline-draw {
-  animation: timeline-draw 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-timeline-glow {
-  animation: timeline-glow 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  animation-delay: 2s;
-}
-
-.animate-timeline-draw-vertical {
-  animation: timeline-draw-vertical 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-timeline-glow-vertical {
-  animation: timeline-glow-vertical 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  animation-delay: 2.5s;
-}
-
-.animate-timeline-grow {
-  animation: timeline-grow 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-timeline-pulse-vertical {
-  animation: timeline-pulse-vertical 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.animate-timeline-grow-horizontal {
-  animation: timeline-grow-horizontal 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.animate-timeline-pulse-horizontal {
-  animation: timeline-pulse-horizontal 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Phase 1 - Public Dashboard Animations */
@@ -256,7 +220,13 @@
 }
 
 .animate-gradient-shift {
-  background: linear-gradient(-45deg, #0f172a, #1e1b4b, #0c4a6e, #0f172a);
+  background: linear-gradient(
+    -45deg,
+    color-mix(in oklch, var(--color-base-300) 30%, black),
+    color-mix(in oklch, var(--color-primary) 40%, black),
+    color-mix(in oklch, var(--color-base-300) 35%, black),
+    color-mix(in oklch, var(--color-base-300) 30%, black)
+  );
   background-size: 400% 400%;
   animation: gradient-shift 20s ease infinite;
 }
@@ -274,15 +244,15 @@
   height: 800px;
   margin-left: -400px;
   margin-top: -400px;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%);
+  background: radial-gradient(circle, color-mix(in oklch, var(--color-primary) 30%, transparent) 0%, transparent 70%);
   pointer-events: none;
   animation: radial-pulse 4s ease-in-out infinite;
   z-index: 0;
 }
 
 .animate-text-glow {
-  text-shadow: 0 0 10px rgba(167, 139, 250, 0.3),
-               0 0 20px rgba(167, 139, 250, 0.15);
+  text-shadow: 0 0 10px color-mix(in oklch, var(--color-primary) 30%, transparent),
+               0 0 20px color-mix(in oklch, var(--color-primary) 15%, transparent);
 }
 
 @keyframes ticker {
@@ -296,17 +266,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .animate-spin-slow,
-  .animate-wave-pulse,
-  .animate-wave-flow,
-  .animate-wave-flow-reverse,
-  .animate-fade-in,
-  .animate-ping-slow,
-  .animate-pulse-subtle,
-  .animate-ticker,
-  .animate-gradient-shift,
-  .radial-glow {
-    animation: none;
+
+  .animate-timeline-enter {
+    opacity: 1;
   }
 
   .animate-gradient-shift {
@@ -318,7 +280,7 @@
   }
 
   .animate-text-glow {
-    text-shadow: none;
+    text-shadow: none !important;
   }
 }
 /*noinspection CssUnknownProperty*/

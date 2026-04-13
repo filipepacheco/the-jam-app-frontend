@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next'
 import { useMemo, useState } from 'react'
 import { useJamControl } from '../../hooks'
 import { Alert } from '../../components'
-import { NowPlayingBar } from '../../components/dj-control/NowPlayingBar'
-import { PlaybackControls } from '../../components/dj-control/PlaybackControls'
-import { CompactStats } from '../../components/dj-control/CompactStats'
-import { SongQueueTimeline } from '../../components/dj-control'
+import { NowPlayingBar } from '../../components/dj-control'
+import { PlaybackControls } from '../../components/dj-control'
+import { CompactStats } from '../../components/dj-control'
+import { SongQueueTimeline } from '../../components'
 import { scheduleService } from '../../services'
-import { formatError } from '../../lib/api/errorHandler'
+import { formatError } from '../../lib/api'
 
 interface DJControlTabV2Props {
   jamId: string
@@ -36,12 +36,12 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
     onReload?.()
   }
 
-  const handleApproveSong = async (scheduleId: string) => {
+  const executeAction = async (action: () => Promise<unknown>, successMsg: string) => {
     setActionLoading(true)
     setActionError(null)
     try {
-      await scheduleService.update(scheduleId, { status: 'SCHEDULED' })
-      setSuccess(t('dj_control.song_approved'))
+      await action()
+      setSuccess(successMsg)
       await handleRefresh()
     } catch (err) {
       setActionError(formatError(err))
@@ -50,19 +50,13 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
     }
   }
 
+  const handleApproveSong = async (scheduleId: string) => {
+    await executeAction(() => scheduleService.update(scheduleId, { status: 'SCHEDULED' }), t('dj_control.song_approved'))
+  }
+
   const handleRemoveSong = async (scheduleId: string) => {
     if (!confirm(t('dj_control.confirm_remove'))) return
-    setActionLoading(true)
-    setActionError(null)
-    try {
-      await scheduleService.remove(scheduleId)
-      setSuccess(t('dj_control.song_removed'))
-      await handleRefresh()
-    } catch (err) {
-      setActionError(formatError(err))
-    } finally {
-      setActionLoading(false)
-    }
+    await executeAction(() => scheduleService.remove(scheduleId), t('dj_control.song_removed'))
   }
 
   // Derived stats
@@ -76,11 +70,46 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
     return { totalCount: total, remainingDuration: remaining }
   }, [liveState])
 
-  const timelineContent = isLoading && !liveState ? (
-    <div className="text-center py-8">
-      <p className="text-sm text-base-content/70">{t('common.loading')}</p>
-      <progress className="progress progress-primary w-48 mt-2" />
+  const skeletonTimeline = (
+    <div className="space-y-3 animate-pulse">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="bg-base-200 rounded-lg p-3 space-y-2">
+          <div className="skeleton h-5 w-2/3 rounded" />
+          <div className="skeleton h-4 w-1/3 rounded" />
+          <div className="flex gap-2">
+            <div className="skeleton h-5 w-16 rounded-full" />
+            <div className="skeleton h-5 w-12 rounded-full" />
+          </div>
+        </div>
+      ))}
     </div>
+  )
+
+  const skeletonControls = (
+    <div className="space-y-3 animate-pulse">
+      {/* Now playing bar skeleton */}
+      <div className="bg-base-200 rounded-lg p-3 space-y-2">
+        <div className="skeleton h-4 w-24 rounded" />
+        <div className="skeleton h-6 w-3/4 rounded" />
+        <div className="skeleton h-4 w-1/2 rounded" />
+      </div>
+      {/* Playback controls skeleton */}
+      <div className="bg-base-200 rounded-lg p-3 flex justify-center gap-3">
+        <div className="skeleton h-10 w-10 rounded-full" />
+        <div className="skeleton h-10 w-10 rounded-full" />
+        <div className="skeleton h-10 w-10 rounded-full" />
+      </div>
+      {/* Compact stats skeleton */}
+      <div className="bg-base-200 rounded-lg p-3 flex justify-between">
+        <div className="skeleton h-4 w-16 rounded" />
+        <div className="skeleton h-4 w-16 rounded" />
+        <div className="skeleton h-4 w-16 rounded" />
+      </div>
+    </div>
+  )
+
+  const timelineContent = isLoading && !liveState ? (
+    skeletonTimeline
   ) : liveState ? (
     <SongQueueTimeline
       liveState={liveState}
@@ -97,7 +126,9 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
     />
   )
 
-  const controlBlock = liveState ? (
+  const controlBlock = isLoading && !liveState ? (
+    skeletonControls
+  ) : liveState ? (
     <>
       <NowPlayingBar
         currentSong={liveState.currentSong}

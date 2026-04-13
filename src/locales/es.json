@@ -27,6 +27,8 @@
     "link": "Enlace",
     "copy_address": "Copiar dirección",
     "copied": "Copiado!",
+    "show_more": "Mostrar más",
+    "show_less": "Mostrar menos",
     "none": "Ninguno",
     "play": "Reproducir",
     "pause": "Pausar",
@@ -202,7 +204,7 @@
   },
   "jams": {
     "listen_on_spotify": "Escuchar en Spotify",
-    "register_for_jam_title": "🎭 Registrarse para este Jam",
+    "register_for_jam_title": "Registrarse para este Jam",
     "join_this_jam": "Unirse a este Jam",
     "registering": "Registrando...",
     "registration_successful_title": "¡Registro Exitoso!",
@@ -219,10 +221,10 @@
     "specialties_needed": "🎸 Especialidades Necesarias",
     "no_songs_listed": "No hay canciones listadas aún",
     "statuses": {
-      "live": "🎉 En vivo",
-      "active": "✅ Activo",
-      "inactive": "⏸️ Próximamente",
-      "finished": "🏁 Finalizado"
+      "live": "En Vivo",
+      "active": "Activo",
+      "inactive": "Próximamente",
+      "finished": "Finalizado"
     },
     "songs_count": {
       "one": "{{count}} canción",
@@ -240,7 +242,7 @@
       "audience_desc": "Una pantalla en vivo muestra qué suena ahora y qué viene después. Se comparte por link o código QR, sin descargar nada."
     },
     "how_it_works": {
-      "title": "🎭 Cómo funciona este Jam",
+      "title": "Cómo funciona este Jam",
       "view_schedule": "Ver Programación",
       "view_schedule_desc": "Consulta el horario para ver todas las canciones y roles de músicos necesarios.",
       "register_songs": "Registrarse en Canciones",

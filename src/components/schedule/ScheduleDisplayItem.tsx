@@ -34,12 +34,12 @@ export const ScheduleDisplayItem = memo(function ScheduleDisplayItem({
 
 
     return (<div
-        className={`border-l-4 pl-4 py-2 rounded-lg ${
+        className={`pl-4 py-2 rounded-lg ${
             schedule.status === 'IN_PROGRESS'
-                ? 'bg-warning/10 border-warning ring-2 ring-warning ring-offset-2 ring-offset-base-100'
+                ? 'bg-warning/10 ring-2 ring-warning ring-offset-2 ring-offset-base-100'
                 : isSuggested
-                    ? 'border-info bg-info/5'
-                    : 'border-primary'
+                    ? 'bg-info/10'
+                    : 'bg-primary/10'
         }`}
     >
         {/* NOW PLAYING Banner for IN_PROGRESS */}

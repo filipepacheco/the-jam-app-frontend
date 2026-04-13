@@ -69,7 +69,7 @@ export function TimelineSongItem({ song, status, onRemove, loading }: TimelineSo
         <button
           onClick={() => onRemove(song.id)}
           disabled={loading}
-          className="btn btn-xs btn-ghost btn-outline text-error hover:bg-error/20 mt-1"
+          className="btn btn-xs btn-ghost btn-outline text-error hover:bg-error/20 mt-1 min-h-[44px] min-w-[44px]"
           title={t('dj_control.timeline.remove_song')}
         >
           ✕ {t('common.remove')}

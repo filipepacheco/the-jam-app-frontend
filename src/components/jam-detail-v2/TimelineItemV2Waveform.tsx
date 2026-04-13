@@ -1,11 +1,11 @@
 import type {RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {useTranslation} from 'react-i18next'
 import {useReducedMotion} from '../../hooks'
-import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
-import {isScheduleReadyToPlay, getInstrumentOptions} from '../../utils/scheduleUtils'
+import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
+import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {InstrumentsSummary} from '../schedule/InstrumentsSummary'
 import {SpotifyPlayButton} from '../SpotifyPreview'
-import {FileText} from 'lucide-react'
+import {FileText, Mic, ChevronDown} from 'lucide-react'
 import React, {useCallback, useMemo} from "react"
 
 interface TimelineUser {
@@ -21,6 +21,7 @@ interface TimelineItemV2Props {
   position?: number
   isExpanded?: boolean
   onToggleExpanded?: () => void
+  jamFinished?: boolean
 }
 
 export function TimelineItemV2Waveform({
@@ -30,6 +31,7 @@ export function TimelineItemV2Waveform({
   position,
   isExpanded = false,
   onToggleExpanded,
+  jamFinished = false,
 }: TimelineItemV2Props) {
   const { t } = useTranslation()
   const { prefersReducedMotion } = useReducedMotion()
@@ -62,25 +64,29 @@ export function TimelineItemV2Waveform({
     const inProgress = schedule.status === 'IN_PROGRESS'
     const suggested = schedule.status === 'SUGGESTED'
 
-    let bg = 'bg-linear-to-br from-base-100 to-base-200'
+    let bg = 'bg-base-100'
     let border = 'border border-base-300'
 
     if (completed) {
-      bg = 'bg-linear-to-br from-success/10 to-success/5'
-      border = 'border border-success/30'
+      bg = 'bg-success/5'
+      border = 'border border-success/20'
     } else if (inProgress) {
-      bg = 'bg-linear-to-br from-primary/15 to-primary/5'
+      bg = 'bg-primary/10'
       border = 'border-2 border-primary shadow-lg shadow-primary/20'
     } else if (suggested) {
-      bg = 'bg-linear-to-br from-info/10 to-info/5'
-      border = 'border border-info/30'
+      bg = 'bg-info/5'
+      border = 'border border-info/20'
     }
 
     return { bgClasses: bg, borderClasses: border, isCompleted: completed, isInProgress: inProgress, isSuggested: suggested }
   }, [schedule.status])
 
   // Check if schedule is ready to play (all musician slots filled)
-  const isReadyToPlay = !isCompleted && !isInProgress && !isSuggested && isScheduleReadyToPlay(schedule)
+  const isReadyToPlay = !isCompleted && !isInProgress && !isSuggested && hasCoreBand(schedule)
+
+  // Override card styling for ready-to-play songs
+  const finalBg = isReadyToPlay ? 'bg-success/8' : bgClasses
+  const finalBorder = isReadyToPlay ? 'border border-success/25' : borderClasses
 
   // Get instrument options for showing available slots
   const instrumentOptions = useMemo(
@@ -90,18 +96,18 @@ export function TimelineItemV2Waveform({
 
   // Memoize status object
   const status = useMemo(() => {
-    if (isCompleted) return { icon: '✓', text: t('schedule.statuses.completed'), color: 'text-success' }
-    if (isInProgress) return { icon: '▶', text: t('schedule.statuses.in_progress'), color: 'text-primary' }
-    if (isSuggested) return { icon: '✨', text: t('common.statuses.suggested'), color: 'text-info' }
-    if (isReadyToPlay) return { icon: '✓', text: t('schedule.statuses.ready_to_play'), color: 'text-success' }
-    return { icon: '○', text: t('schedule.statuses.awaiting_registrations'), color: 'text-base-content/60' }
+    if (isCompleted) return { icon: '✓', text: t('schedule.statuses.completed'), color: 'text-success', hint: '' }
+    if (isInProgress) return { icon: '▶', text: t('schedule.statuses.in_progress'), color: 'text-primary', hint: '' }
+    if (isSuggested) return { icon: '✨', text: t('common.statuses.suggested'), color: 'text-info', hint: '' }
+    if (isReadyToPlay) return { icon: '✓', text: t('schedule.statuses.ready_to_play'), color: 'text-success', hint: t('schedule.statuses.ready_to_play_hint') }
+    return { icon: '○', text: t('schedule.statuses.awaiting_registrations'), color: 'text-base-content/50', hint: '' }
   }, [isCompleted, isInProgress, isSuggested, isReadyToPlay, t])
 
   return (
     <div
       role="button"
       tabIndex={0}
-      className={`card w-full ${bgClasses} ${borderClasses} transition-shadow duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left`}
+      className={`card w-full ${finalBg} ${finalBorder} transition-shadow duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left ${isInProgress && !prefersReducedMotion ? 'animate-breathe-glow' : ''}`}
       onClick={handleCardClick}
       onKeyDown={handleCardKeyDown}
       aria-expanded={isExpanded}
@@ -112,20 +118,23 @@ export function TimelineItemV2Waveform({
         {/* Header: Grid layout for proper text truncation with status */}
         <div className={`grid grid-cols-[auto_1fr_auto] items-start gap-2 ${isCompleted && !isExpanded ? '' : 'mb-1'}`}>
           {position !== undefined ? (
-            <div className="badge badge-neutral badge-xs font-bold shrink-0 text-[11px] mt-auto mb-auto">
+            <span className="text-[11px] font-semibold text-base-content/40 tabular-nums shrink-0 mt-0.5 w-5 text-center">
               {position}
-            </div>
+            </span>
           ) : <div />}
           <div className="min-w-0">
             <h3 className="text-sm sm:text-base md:text-lg font-bold text-base-content mb-0.5 truncate">
               {schedule.music?.title}
             </h3>
-            <p className="text-xs sm:text-sm text-base-content/70 truncate">{schedule.music?.artist}</p>
+            <p className="text-xs sm:text-sm text-base-content/70 truncate flex items-center gap-1">
+              {schedule.music?.artist}
+              <ChevronDown className={`size-3 text-base-content/60 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+            </p>
           </div>
           {/* Status + meta - right column */}
           <div className="text-right">
-            <div className={`text-xs sm:text-sm font-semibold mb-0.5 ${status.color}`}>
-                <span className={`${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse' : ''}`} aria-hidden="true">{status.icon}</span>
+            <div className={`text-xs sm:text-sm font-semibold mb-0.5 ${status.color}`} title={status.hint || undefined}>
+                <span className={`${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse will-change-transform' : ''}`} aria-hidden="true">{status.icon}</span>
                 <span className="whitespace-nowrap"> {status.text}</span>
             </div>
               <div className="flex items-center justify-end gap-2">
@@ -142,12 +151,11 @@ export function TimelineItemV2Waveform({
           </div>
         </div>
 
-        {/* No registrations warning */}
+        {/* No registrations hint */}
         {!isCompleted && (!schedule.registrations || schedule.registrations.length === 0) && (
-          <div className="flex items-center gap-1 text-xs text-warning font-semibold mb-1.5">
-            <span aria-hidden="true">⚠</span>
-            <span>{t('common.no_registrations_yet')}</span>
-          </div>
+          <p className="text-xs text-base-content/40 mb-1.5">
+            {t('common.no_registrations_yet')}
+          </p>
         )}
 
         {/* Musicians list - collapsible for completed, always visible otherwise */}
@@ -162,9 +170,9 @@ export function TimelineItemV2Waveform({
               {schedule.registrations.map((reg: RegistrationResponseDto) => (
                 <div
                   key={reg.id}
-                  className="inline-flex items-center gap-1.5 bg-base-200/50 px-2 py-1 rounded text-xs max-w-full"
+                  className="inline-flex items-center gap-1.5 bg-base-200/60 px-2 py-1 rounded-md text-xs max-w-full"
                 >
-                  <span aria-hidden="true" className="shrink-0">{getInstrumentIcon(reg.instrument)}</span>
+                  <span aria-hidden="true" className="shrink-0" title={reg.instrument || undefined}>{getInstrumentEmoji(reg.instrument)}</span>
                   <span className="font-medium truncate">
                     {reg.musician?.id === user?.id ? t('common.you') : (reg.musician?.name?.split(' ')[0] ?? reg.musician?.name)}
                   </span>
@@ -195,35 +203,51 @@ export function TimelineItemV2Waveform({
           <InstrumentsSummary instrumentOptions={instrumentOptions} highlightInstrument={user?.instrument} />
         )}
 
-        {/* Register Button / Stage Call-to-Action */}
-        {!isCompleted && (
+        {/* Register Button / Stage Call-to-Action - hide when jam is finished */}
+        {!isCompleted && !jamFinished && (
           <>
-            {/* IN_PROGRESS: Only show if user is registered */}
             {isInProgress ? (
               userRegistered ? (
                 <div
-                  className="alert alert-info text-sm font-semibold"
+                  className="bg-primary/15 border border-primary/30 rounded-lg px-3 py-2.5 text-sm font-bold text-primary flex items-center gap-2"
                   role="status"
                   aria-live="polite"
                 >
-                  <span className="text-base" aria-hidden="true">🎤</span>
+                  <Mic className="size-4 shrink-0" />
                   {t('jams.go_to_stage')}
                 </div>
               ) : null
+            ) : isReadyToPlay ? (
+              instrumentOptions.some(opt => opt.needed > 0 && opt.registered < opt.needed) ? (
+                <button
+                  onClick={handleRegisterClick}
+                  className={`btn btn-xs w-full ${userRegistered ? 'btn-ghost text-base-content/40 border border-base-300/50' : 'btn-primary btn-outline'}`}
+                  type="button"
+                >
+                  {userRegistered ? t('schedule.register_another') : t('jams.register')}
+                </button>
+              ) : userRegistered ? (
+                <button
+                  onClick={handleRegisterClick}
+                  className="btn btn-ghost btn-xs w-full text-base-content/40 border border-base-300/50"
+                  type="button"
+                >
+                  {t('schedule.register_another')}
+                </button>
+              ) : null
             ) : (
-              /* OTHER STATUSES: Show register button (always enabled for multi-instrument registration) */
               <button
                 onClick={handleRegisterClick}
                 className={`btn btn-sm w-full ${
                   userRegistered
-                    ? 'btn-ghost border border-base-300'
+                    ? 'btn-ghost border border-base-300 text-base-content/60'
                     : isSuggested
                     ? 'btn-info'
                     : 'btn-primary btn-outline'
                 }`}
                 type="button"
               >
-                <span className="text-base" aria-hidden="true">+</span>
+                {!userRegistered && <span className="text-base" aria-hidden="true">+</span>}
                 {userRegistered ? t('schedule.register_another') : t('jams.register')}
               </button>
             )}

@@ -33,6 +33,8 @@
     "link": "Link",
     "copy_address": "Copiar endereço",
     "copied": "Copiado!",
+    "show_more": "Mostrar mais",
+    "show_less": "Mostrar menos",
     "none": "Nenhum",
     "by": "por",
     "select_theme": "Selecionar Tema",
@@ -207,7 +209,7 @@
   },
   "jams": {
     "listen_on_spotify": "Ouça no Spotify",
-    "register_for_jam_title": "🎭 Inscreva-se neste Jam",
+    "register_for_jam_title": "Inscreva-se neste Jam",
     "join_this_jam": "Participar deste Jam",
     "registering": "Inscrevendo...",
     "registration_successful_title": "Registro realizado com sucesso!",
@@ -229,10 +231,10 @@
       "other": "{{count}} músicas"
     },
     "statuses": {
-      "live": "🎉 Ao vivo",
-      "active": "✅ Programado",
-      "inactive": "⏸️ Em breve",
-      "finished": "🏁 Concluído"
+      "live": "Ao Vivo",
+      "active": "Programado",
+      "inactive": "Em Breve",
+      "finished": "Concluído"
     },
     "features": {
       "title": "Feito para todos no Jam",
@@ -245,7 +247,7 @@
       "audience_desc": "Uma tela ao vivo mostra o que tá tocando e o que vem a seguir. Compartilhe por link ou QR code, sem precisar baixar nada."
     },
     "how_it_works": {
-      "title": "🎭 Como as Jams funcionam",
+      "title": "Como as Jams funcionam",
       "view_schedule": "Veja a programação",
       "view_schedule_desc": "Confira todas as músicas e os músicos necessários para cada apresentação.",
       "register_songs": "Inscreva-se em músicas",
@@ -390,7 +392,7 @@
       "full_address": "Endereço completo"
     },
     "performance_schedule_title": "Programação",
-    "suggested_songs_title": "Músicas Sugeridas (Pendente de Aprovação)",
+    "suggested_songs_title": "Músicas Pendentes de Aprovação",
     "suggested_songs_hint": "Estas músicas estão aguardando aprovação do anfitrião.",
     "instruments": "Instrumentos",
     "scheduled": "Agendado",
@@ -892,7 +894,7 @@
     "timeline": {
       "now_playing": "TOCANDO AGORA",
       "suggestions_header": "⚠️ Sugestões",
-      "suggested_songs": "Músicas Sugeridas (Pendente de Aprovação)",
+      "suggested_songs": "Músicas Pendentes de Aprovação",
       "approve_song": "Aprovar música",
       "approve": "Aprovar",
       "empty_queue": "Nenhuma música na fila",

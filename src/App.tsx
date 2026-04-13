@@ -7,11 +7,9 @@ import {useAppLanguage} from './hooks'
 import {SWRConfig} from 'swr'
 import {SWR_POLLING_DEFAULTS} from './config/swrDefaults'
 import {apiClient} from './lib/api'
-import {SITE_URL} from './lib/api/config'
+import {SITE_URL} from './lib/api'
 import Navbar from './components/Navbar'
 import {EnhancedHero} from './components/EnhancedHero'
-import Features from './components/Features'
-
 import {HowItWorks} from './components/HowItWorks'
 import {Testimonials} from './components/Testimonials'
 import CallToAction from './components/CallToAction'
@@ -152,7 +150,6 @@ function HomePage() {
       <div className="min-h-screen">
         <Navbar />
         <EnhancedHero />
-        <Features />
         <HowItWorks />
         <Testimonials />
         <CallToAction />

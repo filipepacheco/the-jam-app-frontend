@@ -1,6 +1,6 @@
 import {Helmet} from 'react-helmet-async'
 import {useAppLanguage} from '../hooks'
-import {SITE_URL} from '../lib/api/config'
+import {SITE_URL} from '../lib/api'
 
 interface SEOProps {
   title?: string

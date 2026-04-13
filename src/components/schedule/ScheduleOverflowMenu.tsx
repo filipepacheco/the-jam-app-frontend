@@ -3,8 +3,8 @@
  * Replaces inline action buttons with a three-dot overflow menu
  */
 
-import { useRef } from 'react'
-import { MoreVertical, CheckCircle, Trash2, UserPlus, CheckCheck } from 'lucide-react'
+import React, { useRef } from 'react'
+import { MoreVertical, CheckCircle, Trash2, UserPlus, CheckCheck, Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 interface ScheduleOverflowMenuProps {
@@ -15,6 +15,7 @@ interface ScheduleOverflowMenuProps {
   onDelete?: () => void
   onAddMusician?: () => void
   onApproveAll?: () => void
+  onEditMusic?: () => void
 }
 
 export function ScheduleOverflowMenu({
@@ -25,6 +26,7 @@ export function ScheduleOverflowMenu({
   onDelete,
   onAddMusician,
   onApproveAll,
+  onEditMusic,
 }: ScheduleOverflowMenuProps) {
   const { t } = useTranslation()
   const triggerRef = useRef<HTMLDivElement>(null)
@@ -92,6 +94,20 @@ export function ScheduleOverflowMenu({
             >
               <CheckCheck className="w-3.5 h-3.5" />
               {t('schedule.approve_all', 'Approve all')}
+            </button>
+          </li>
+        )}
+
+        {/* Edit music details */}
+        {onEditMusic && (
+          <li>
+            <button
+              onClick={() => handleAction(onEditMusic)}
+              disabled={loading}
+              className="text-xs"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              {t('schedule.edit_music', 'Editar Música')}
             </button>
           </li>
         )}

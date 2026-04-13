@@ -72,7 +72,7 @@ export function CanvasWaveform({
 
   // Seeded random number generator for deterministic animations
   const seededRandom = (seed: number) => {
-    let x = Math.sin(seed++) * 10000
+    const x = Math.sin(seed++) * 10000
     return x - Math.floor(x)
   }
 

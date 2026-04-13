@@ -8,20 +8,23 @@ export function CarouselIndicator({ count, activeIndex, onSelect }: CarouselIndi
   if (count <= 1) return null
 
   return (
-    <div className="flex items-center justify-center gap-3 py-4">
+    <ul className="flex items-center justify-center gap-3 py-4" role="tablist">
       {Array.from({ length: count }, (_, i) => (
-        <button
-          key={i}
-          type="button"
-          onClick={() => onSelect(i)}
-          className={`rounded-full transition-all duration-300 ${
-            i === activeIndex
-              ? 'w-4 h-4 bg-white'
-              : 'w-3 h-3 bg-white/30 hover:bg-white/50'
-          }`}
-          aria-label={`Go to slide ${i + 1}`}
-        />
+        <li key={i} role="presentation">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={i === activeIndex}
+            onClick={() => onSelect(i)}
+            className={`rounded-full transition-all duration-300 ${
+              i === activeIndex
+                ? 'w-4 h-4 bg-primary'
+                : 'w-3 h-3 bg-base-content/30 hover:bg-base-content/50'
+            }`}
+            aria-label={`Go to slide ${i + 1}`}
+          />
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }

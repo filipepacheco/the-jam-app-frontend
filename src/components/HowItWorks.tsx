@@ -36,11 +36,11 @@ export function HowItWorks() {
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-base-100" aria-labelledby="how-it-works-title">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10 sm:mb-14">
-          <h2 id="how-it-works-title" className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 text-base-content text-wrap-balance">
+        <div className="text-left mb-10 sm:mb-14">
+          <h2 id="how-it-works-title" className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 text-base-content text-wrap-balance tracking-tight">
             {t('homepage.how_it_works.title')}
           </h2>
-          <p className="text-base sm:text-lg text-base-content/60">
+          <p className="text-base sm:text-lg text-base-content/60 max-w-xl">
             {t('homepage.how_it_works.subtitle')}
           </p>
         </div>

@@ -18,7 +18,7 @@ import {
 } from '../lib/supabase'
 import {clearTokenCache} from '../lib/auth'
 import {apiClient} from '../lib/api'
-import {getOfflineQueueManager} from '../services/offlineQueue'
+import {getOfflineQueueManager} from '../services'
 
 /**
  * Derive user role from profile data.
@@ -101,6 +101,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true, isNewUser: profile.isNewUser }
   }, [])
 
+  const applyProfile = async (userId: string) => {
+    const profile = await loadUserProfile()
+    if (profile) {
+      setUser(profile)
+      setRoleState(deriveRole(profile))
+      setIsNewUser(profile.isNewUser || false)
+      localStorage.setItem('auth_user', JSON.stringify(profile))
+      authenticatedUserIdRef.current = userId
+    }
+  }
+
   /**
    * Initialize auth state from Supabase session on mount
    */
@@ -112,15 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const session = await getCurrentSession()
 
         if (session?.user) {
-          const profile = await loadUserProfile()
-
-          if (profile) {
-            setUser(profile)
-            setRoleState(deriveRole(profile))
-            setIsNewUser(profile.isNewUser || false)
-            localStorage.setItem('auth_user', JSON.stringify(profile))
-            authenticatedUserIdRef.current = session.user.id
-          }
+          await applyProfile(session.user.id)
         } else {
           // No valid session - clear any stale localStorage data
           setUser(null)
@@ -147,15 +150,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (authenticatedUserIdRef.current === session.user.id) {
             return
           }
-          const profile = await loadUserProfile()
-          if (profile) {
-            setUser(profile)
-            setRoleState(deriveRole(profile))
-        
-            setIsNewUser(profile.isNewUser || false)
-            localStorage.setItem('auth_user', JSON.stringify(profile))
-            authenticatedUserIdRef.current = session.user.id
-          }
+          await applyProfile(session.user.id)
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
           setRoleState('viewer')

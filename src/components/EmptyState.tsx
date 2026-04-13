@@ -2,6 +2,7 @@
  * Empty State Component
  * Generic reusable empty state with icon, title, description, and optional action
  */
+import React from "react";
 
 interface EmptyStateProps {
   icon?: string

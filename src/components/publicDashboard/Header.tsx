@@ -1,5 +1,3 @@
-import React from 'react'
-
 interface HeaderProps {
   title: string
   showNavbar: boolean
@@ -24,7 +22,7 @@ export default function Header({
       <button
         type="button"
         onClick={() => setShowNavbar(!showNavbar)}
-        className="btn btn-sm btn-ghost text-white pointer-events-auto min-h-10 min-w-10 shrink-0 z-10"
+        className="btn btn-sm btn-ghost text-base-content pointer-events-auto min-h-[44px] min-w-[44px] shrink-0 z-10"
         title={ariaToggleLabel || 'Toggle navbar'}
         aria-expanded={showNavbar}
         aria-controls="public-dashboard-navbar"
@@ -48,7 +46,7 @@ export default function Header({
       <div className="flex items-center gap-2 pointer-events-auto shrink-0 z-10">
         <button
           onClick={onToggleFullscreen}
-          className="btn btn-sm btn-ghost text-white pointer-events-auto min-h-10 min-w-10"
+          className="btn btn-sm btn-ghost text-base-content pointer-events-auto min-h-[44px] min-w-[44px]"
           title={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
           aria-pressed={isFullscreen}
           aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}

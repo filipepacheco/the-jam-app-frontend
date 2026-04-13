@@ -4,31 +4,20 @@
  */
 
 import {useNavigate, useParams} from 'react-router-dom'
-import {formatJamDuration} from '../../lib/formatters'
-import {SITE_URL} from '../../lib/api/config'
+import {SITE_URL} from '../../lib/api'
 import {useAuth} from '../../hooks'
 import useSWR from 'swr'
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
-
-// Constants
-const SUCCESS_TOAST_DURATION = 3000
-
-// Extract Spotify embed URL from a playlist URL or URI
-function getSpotifyEmbedUrl(playlistUrl: string): string | null {
-    const match = playlistUrl.match(/playlist\/([a-zA-Z0-9]+)/)
-    if (!match) return null
-    return `https://open.spotify.com/embed/playlist/${match[1]}?utm_source=generator`
-}
 import {
     Alert,
     ScheduleEnrollmentModal,
 } from '../../components'
+import {ShareModal} from '../../components/ShareModal'
 import {
     CollapsibleSection,
-    CollapsibleSidebar,
     DualActionFAB,
     JamDetailLoadingSkeleton,
     PerformanceSelectionModal,
@@ -38,7 +27,10 @@ import {
 } from '../../components/jam-detail-v2/'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
-import {registrationService} from '../../services'
+import {MapPin, Calendar, Share2, ArrowLeft} from 'lucide-react'
+
+// Constants
+const SUCCESS_TOAST_DURATION = 3000
 
 export function JamDetailPageV2() {
     const {t} = useTranslation()
@@ -68,11 +60,17 @@ export function JamDetailPageV2() {
     // State for performance selection modal (from FAB)
     const [showPerformanceSelectModal, setShowPerformanceSelectModal] = useState(false)
 
-    // State for registration removal loading
-    const [removingRegistrationId, setRemovingRegistrationId] = useState<string | null>(null)
-
     // State for copy location feedback
     const [locationCopied, setLocationCopied] = useState(false)
+
+    // State for description truncation
+    const [descriptionExpanded, setDescriptionExpanded] = useState(false)
+
+    // State for share modal
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false)
+
+    // State for error feedback
+    const [errorMessage] = useState<string | null>(null)
 
     // Handle copy location to clipboard
     const handleCopyLocation = useCallback(async () => {
@@ -88,24 +86,20 @@ export function JamDetailPageV2() {
     }, [jam?.location])
 
     // Derive all schedule data in a single pass
-    const { allSchedules, nonSuggestedSchedules, suggestedSchedules, performanceCount, totalDurationSeconds } = useMemo(() => {
+    const { allSchedules, nonSuggestedSchedules, suggestedSchedules } = useMemo(() => {
         const all = jam?.schedules || []
-        let perfCount = 0
-        let totalSecs = 0
         const nonSuggested: ScheduleResponseDto[] = []
         const suggested: ScheduleResponseDto[] = []
 
         for (const s of all) {
             if (s.status !== 'SUGGESTED') {
                 nonSuggested.push(s)
-                perfCount++
-                totalSecs += s.music?.duration || 0
             } else {
                 suggested.push(s)
             }
         }
 
-        return { allSchedules: all, nonSuggestedSchedules: nonSuggested, suggestedSchedules: suggested, performanceCount: perfCount, totalDurationSeconds: totalSecs }
+        return { allSchedules: all, nonSuggestedSchedules: nonSuggested, suggestedSchedules: suggested }
     }, [jam?.schedules])
 
     // Get user's registrations with schedule data (supports multiple registrations per schedule)
@@ -123,13 +117,6 @@ export function JamDetailPageV2() {
         }
         return registrations
     }, [jam?.schedules, user?.id])
-
-    // Memoize unique musicians count - derive from schedules
-    const uniqueMusiciansCount = useMemo(() => {
-        const allRegs = jam?.schedules?.flatMap(s => s.registrations || []) || []
-        if (allRegs.length === 0) return 0
-        return new Set(allRegs.map((reg) => reg.musician?.id || reg.musician?.contact)).size
-    }, [jam?.schedules])
 
     // Handle enrollment click
     const handleEnrollClick = useCallback((schedule: ScheduleResponseDto) => {
@@ -189,31 +176,6 @@ export function JamDetailPageV2() {
         setTimeout(() => setSuggestSuccess(null), SUCCESS_TOAST_DURATION)
     }, [t, mutateJam])
 
-    // Handle remove registration
-    const handleRemoveRegistration = useCallback(async (registrationId: string) => {
-        setRemovingRegistrationId(registrationId)
-        try {
-            const result = await registrationService.remove(registrationId)
-            if (result.success) {
-                await mutateJam()
-            }
-        } catch (error) {
-            console.error('Failed to remove registration:', error)
-        } finally {
-            setRemovingRegistrationId(null)
-        }
-    }, [mutateJam])
-
-    // State for My Registrations section
-    const [isRegistrationsExpanded, setIsRegistrationsExpanded] = useState(false)
-
-    // State for Spotify player section
-    const [isSpotifyExpanded, setIsSpotifyExpanded] = useState(false)
-
-    // Auto-expand when user's registrations arrive (async from SWR)
-    useEffect(() => {
-        if (userRegistrations.length > 0) setIsRegistrationsExpanded(true)
-    }, [userRegistrations.length])
     // Loading state
     if (isLoading && !jam) {
         return <JamDetailLoadingSkeleton />
@@ -309,28 +271,67 @@ export function JamDetailPageV2() {
                 </div>
             )}
 
-            {/* Header */}
-            <div className="bg-linear-to-r from-base-200 to-base-300 border-b border-base-300">
-                <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-6 sm:py-8">
-                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 text-balance">{jam.name}</h1>
-                    <p className="text-base-content/70 mb-6 text-pretty max-w-3xl whitespace-pre-line">{jam.description}</p>
+            {/* Error Alert */}
+            {errorMessage && (
+                <div
+                    className="bg-error text-error-content sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none"
+                    role="alert" aria-live="assertive">
+                    <div className="container mx-auto max-w-4xl px-4 py-3 flex items-center justify-center gap-4">
+                        <p className="font-semibold text-sm">{errorMessage}</p>
+                    </div>
+                </div>
+            )}
 
-                    {/* Jam Stats Grid */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
-                        {/* Location Stat - Special handling with dropdown */}
-                        <div className="dropdown dropdown-bottom">
-                            <div
-                                tabIndex={0}
-                                role="button"
-                                className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 lg:p-4 bg-base-100/80 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer w-full"
+            {/* Header - compact: title + meta on one line, details muted below */}
+            <div className="bg-base-200 border-b border-base-300">
+                <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-4 sm:py-5">
+                    {/* Title row with back + share */}
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                        <div className="flex items-start gap-2 min-w-0">
+                            <button
+                                type="button"
+                                onClick={() => navigate('/jams')}
+                                className="btn btn-ghost btn-sm btn-square shrink-0 mt-0.5"
+                                aria-label={t('common.back')}
                             >
-                                <span className="text-base sm:text-lg lg:text-xl shrink-0" aria-hidden="true">📍</span>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-xs sm:text-sm text-base-content/60 font-medium line-clamp-1">{t('jams.info.location')}</p>
-                                    <p className="font-bold text-xs sm:text-sm lg:text-base truncate tabular-nums">{jam.location || t('jams.info.tba')}</p>
-                                </div>
-                            </div>
-                            {jam.location && (
+                                <ArrowLeft className="size-4" />
+                            </button>
+                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-balance leading-tight">{jam.name}</h1>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setIsShareModalOpen(true)}
+                            className="btn btn-ghost btn-sm btn-square shrink-0"
+                            aria-label={t('share.share_button')}
+                        >
+                            <Share2 className="size-4" />
+                        </button>
+                    </div>
+
+                    {/* Single metadata line: date, location, status */}
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-base-content/60">
+                        {jam.date && (
+                            <span className="inline-flex items-center gap-1">
+                                <Calendar className="size-3" />
+                                {new Intl.DateTimeFormat(navigator.language || 'pt-BR', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    timeZone: 'UTC',
+                                }).format(new Date(jam.date))}
+                            </span>
+                        )}
+                        {jam.location && (
+                            <div className="dropdown dropdown-bottom">
+                                <span
+                                    tabIndex={0}
+                                    role="button"
+                                    className="inline-flex items-center gap-1 hover:text-base-content transition-colors cursor-pointer"
+                                >
+                                    <MapPin className="size-3" />
+                                    <span className="truncate max-w-[180px]">{jam.location}</span>
+                                </span>
                                 <div tabIndex={0} className="dropdown-content z-50 menu p-3 shadow-lg bg-base-100 rounded-box w-72 max-w-[90vw]">
                                     <p className="text-sm font-semibold mb-2">{t('jams.info.full_address')}</p>
                                     <p className="text-sm text-base-content/80 mb-3 break-words">{jam.location}</p>
@@ -341,155 +342,72 @@ export function JamDetailPageV2() {
                                         {locationCopied ? t('common.copied') : t('common.copy_address')}
                                     </button>
                                 </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Spotify Playlist Link */}
+                    {jam.spotifyPlaylistUrl && (
+                        <a
+                            href={jam.spotifyPlaylistUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 text-xs text-success hover:text-success/80 transition-colors mt-2"
+                        >
+                            <span aria-hidden="true">🎧</span>
+                            {t('jams.listen_on_spotify', 'Playlist no Spotify')}
+                        </a>
+                    )}
+
+                    {/* Description - truncated, single line */}
+                    {jam.description && (
+                        <div className="mt-2">
+                            <p className={`text-base-content/70 text-xs text-pretty max-w-3xl whitespace-pre-line ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
+                                {jam.description}
+                            </p>
+                            {jam.description.length > 100 && (
+                                <button
+                                    onClick={() => setDescriptionExpanded(prev => !prev)}
+                                    className="btn btn-ghost btn-xs mt-1 text-primary"
+                                    type="button"
+                                >
+                                    {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
+                                </button>
                             )}
                         </div>
-
-                        {/* Other Stats */}
-                        {[
-                            {
-                                icon: '📅',
-                                label: t('jams.info.date'),
-                                value: jam.date
-                                    ? new Intl.DateTimeFormat(navigator.language || 'pt-BR', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                        year: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                        timeZone: 'UTC',
-                                    }).format(new Date(jam.date))
-                                    : t('jams.info.tba'),
-                            },
-                            {
-                                icon: '🎭',
-                                label: t('jams.info.status'),
-                                value: t(`jams.statuses.${jam.status.toLowerCase()}`),
-                            },
-                            {
-                                icon: '🎵',
-                                label: t('jams.info.performances'),
-                                value: performanceCount,
-                            },
-                            {
-                                icon: '⏱️',
-                                label: t('jams.info.duration'),
-                                value: totalDurationSeconds > 0
-                                    ? formatJamDuration(totalDurationSeconds)
-                                    : `${totalDurationSeconds}s`,
-                            },
-                            {
-                                icon: '👥',
-                                label: t('jams.info.musicians'),
-                                value: uniqueMusiciansCount,
-                            },
-                        ].map((stat, idx) => (
-                            <div key={idx}
-                                 className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 lg:p-4 bg-base-100/80 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                                <span className="text-base sm:text-lg lg:text-xl shrink-0"
-                                      aria-hidden="true">{stat.icon}</span>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-xs sm:text-sm text-base-content/60 font-medium line-clamp-1">{stat.label}</p>
-                                    <p className="font-bold text-xs sm:text-sm lg:text-base truncate tabular-nums">{stat.value}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    )}
                 </div>
             </div>
+
+            {/* Finished/Inactive banner */}
+            {(jam.status === 'FINISHED' || jam.status === 'INACTIVE') && (
+                <div className="bg-base-300/50 border-b border-base-300">
+                    <div className="container mx-auto max-w-4xl px-4 py-2 text-center">
+                        <p className="text-xs text-base-content/50 font-medium">
+                            {t(`jams.banner.${jam.status.toLowerCase()}`)}
+                        </p>
+                    </div>
+                </div>
+            )}
+
+            {/* Share Modal */}
+            {jam && (
+                <ShareModal
+                    isOpen={isShareModalOpen}
+                    onClose={() => setIsShareModalOpen(false)}
+                    jamId={jam.id}
+                    jamSlug={jam.slug}
+                    jamName={jam.name}
+                />
+            )}
 
             {/* Main Content */}
             <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 pb-24">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
-                    {/* Collapsible Sidebar (30% width) - First on mobile, second on desktop */}
-                    <aside className="lg:col-span-1 order-1 lg:order-2">
-                        <CollapsibleSidebar
-                            jam={jam}
-                            onSuggestClick={handleSuggestClick}
-                            isAuthenticated={isAuthenticated}
-                        />
-                    </aside>
-
-                    {/* Timeline Column (70% width) - Second on mobile, first on desktop */}
-                    <div className="lg:col-span-3 order-2 lg:order-1 space-y-6">
-                        {/* Spotify Player - Collapsible */}
-                        {jam.spotifyPlaylistUrl && getSpotifyEmbedUrl(jam.spotifyPlaylistUrl) && (
-                            <CollapsibleSection
-                                title={t('jams.listen_on_spotify')}
-                                isExpanded={isSpotifyExpanded}
-                                onToggle={() => setIsSpotifyExpanded(!isSpotifyExpanded)}
-                            >
-                                {isSpotifyExpanded && (
-                                    <iframe
-                                        style={{ borderRadius: '12px' }}
-                                        src={getSpotifyEmbedUrl(jam.spotifyPlaylistUrl)!}
-                                        width="100%"
-                                        height="352"
-                                        frameBorder="0"
-                                        allowFullScreen
-                                        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                                        loading="lazy"
-                                        title={`${jam.name} - Spotify Playlist`}
-                                    />
-                                )}
-                            </CollapsibleSection>
-                        )}
-
-                        {/* My Registrations - Collapsible */}
-                        <CollapsibleSection
-                            title={t('jams.my_registrations')}
-                            isExpanded={isRegistrationsExpanded}
-                            onToggle={() => setIsRegistrationsExpanded(!isRegistrationsExpanded)}
-                            badge={userRegistrations.length > 0 ? `${userRegistrations.length}` : undefined}
-                        >
-                            {userRegistrations.length > 0 ? (
-                                <div className="space-y-2">
-                                    {userRegistrations.map(({ schedule, registration }, idx) => {
-                                        const registrationStatus = registration.status?.toLowerCase() || 'pending'
-                                        return (
-                                            <div key={registration.id || idx} className="text-xs p-2 bg-base-300/30 rounded">
-                                                <div className="flex items-center gap-2 justify-between">
-                                                    <div className="flex items-center gap-2 min-w-0 flex-1">
-                                                        <span aria-hidden="true">{getInstrumentIcon(registration.instrument || '')}</span>
-                                                        <span className="truncate">
-                                                            <span className="font-semibold">{schedule.music?.title}</span>
-                                                            <span className="text-base-content/60"> - {schedule.music?.artist}</span>
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex items-center gap-1 flex-shrink-0">
-                                                        <span className="badge badge-xs badge-outline">
-                                                            {t(`registration.statuses.${registrationStatus}`)}
-                                                        </span>
-                                                        <button
-                                                            onClick={() => registration.id && handleRemoveRegistration(registration.id)}
-                                                            className="btn btn-ghost btn-xs px-1 text-base-content/50 hover:text-error"
-                                                            title={t('common.remove')}
-                                                            aria-label={t('common.remove')}
-                                                            type="button"
-                                                            disabled={removingRegistrationId === registration.id}
-                                                        >
-                                                            {removingRegistrationId === registration.id ? (
-                                                                <span className="loading loading-spinner loading-xs"></span>
-                                                            ) : (
-                                                                '✕'
-                                                            )}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            ) : (
-                                <div className="text-center py-6">
-                                    <div className="text-3xl mb-3" aria-hidden="true">🎵</div>
-                                    <p className="text-sm font-semibold mb-1">{t('common.no_registrations_yet')}</p>
-                                    <p className="text-xs text-base-content/60">{t('jams.click_register_to_start')}</p>
-                                </div>
-                            )}
-                        </CollapsibleSection>
-
-                        {/* Performance Schedule - V2 Waveform Timeline with Expandable Cards */}
+                    {/* Timeline Column - full width, schedule is the hero */}
+                    <div className="lg:col-span-4 space-y-6">
+                        {/* Performance Schedule - the centerpiece */}
                         <TimelineShowcaseV2Waveform
                             schedules={nonSuggestedSchedules}
                             user={user}
@@ -546,6 +464,7 @@ export function JamDetailPageV2() {
                                 </div>
                             </CollapsibleSection>
                         )}
+
                     </div>
 
                 </div>
@@ -553,7 +472,7 @@ export function JamDetailPageV2() {
 
             {/* Floating Action Button - Combined register + suggest */}
             <DualActionFAB
-                isVisible={isAuthenticated && nonSuggestedSchedules.length > 0}
+                isVisible={isAuthenticated && nonSuggestedSchedules.length > 0 && jam.status !== 'FINISHED' && jam.status !== 'INACTIVE'}
                 registrationCount={userRegistrations.length}
                 onRegisterClick={handleFABRegisterClick}
                 onSuggestClick={handleSuggestClick}

@@ -56,7 +56,7 @@ export const InstrumentGroup = memo(function InstrumentGroup({ instrument, music
       initial={MUSICIAN_INITIAL}
       animate={MUSICIAN_ANIMATE}
       transition={transitionConfig}
-      className={`bg-slate-700/50 hover:bg-slate-600/50 transition-colors rounded-lg ${classes.container} text-center`}
+      className={`bg-base-300/50 hover:bg-base-300/70 transition-colors rounded-lg ${classes.container} text-center`}
     >
       <p className={`mb-${size === 'lg' ? '3' : '2'} ${classes.emoji}`}>
         {getInstrumentEmoji(instrument)}
@@ -64,7 +64,7 @@ export const InstrumentGroup = memo(function InstrumentGroup({ instrument, music
       <div className="space-y-1">
         {musicians &&
           musicians.map((musician) => (
-            <p key={musician.id} className={`font-semibold text-white ${classes.text} truncate`} title={musician.name || t('common.unknown', 'Unknown')}>
+            <p key={musician.id} className={`font-semibold text-base-content ${classes.text} truncate`} title={musician.name || t('common.unknown', 'Unknown')}>
               {musician.name || t('common.unknown', 'Unknown')}
             </p>
           ))}

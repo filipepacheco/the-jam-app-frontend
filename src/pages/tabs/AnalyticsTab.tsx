@@ -15,12 +15,8 @@ export function AnalyticsTab({jam}: { jam: JamResponseDto }) {
     const musicianCount = uniqueMusicians.size > 0 ? uniqueMusicians.size : (jam._count?.registrations ?? 0)
 
     const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
-    const performanceCount = songCount
-
     return (
         <div className="space-y-4">
-            <h2 className="text-2xl font-bold">📈 {t('jam_management.analytics.title')}</h2>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="card bg-base-200 shadow">
                     <div className="card-body">
@@ -37,7 +33,7 @@ export function AnalyticsTab({jam}: { jam: JamResponseDto }) {
                 <div className="card bg-base-200 shadow">
                     <div className="card-body">
                         <h3 className="font-semibold">{t('jam_management.analytics.performances')}</h3>
-                        <p className="text-3xl font-bold">{performanceCount}</p>
+                        <p className="text-3xl font-bold">{songCount}</p>
                     </div>
                 </div>
             </div>

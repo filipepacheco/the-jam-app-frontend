@@ -145,31 +145,6 @@ export async function getJamDetails(jamId: string): Promise<JamDetails> {
 }
 
 /**
- * Get specialty slots for a jam
- */
-export async function getJamSpecialties(jamId: string): Promise<SpecialtySlot[]> {
-  const jam = await getJamDetails(jamId)
-  return jam.specialtySlots
-}
-
-/**
- * Get most needed specialty for a jam
- */
-export async function getMostNeededSpecialty(jamId: string): Promise<string | null> {
-  const slots = await getJamSpecialties(jamId)
-
-  const available = slots
-    .map((slot) => ({
-      specialty: slot.specialty,
-      availableSlots: Math.max(0, slot.required - slot.registered),
-    }))
-    .filter((item) => item.availableSlots > 0)
-    .sort((a, b) => b.availableSlots - a.availableSlots)
-
-  return available.length > 0 ? available[0].specialty : null
-}
-
-/**
  * Update a jam
  */
 export function update(id: string, jamData: Partial<JamResponseDto>) {

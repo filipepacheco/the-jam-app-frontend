@@ -3,9 +3,9 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import {scheduleService} from "../../services";
 import {Alert} from '../../components';
-import {QueueStats, SongQueueTimeline} from "../../components/dj-control";
+import {QueueStats, SongQueueTimeline} from "../../components";
 import {useJamControl} from "../../hooks";
-import {formatError} from "../../lib/api/errorHandler";
+import {formatError} from "../../lib/api";
 
 /**
  * DJ Control Tab Component
@@ -29,13 +29,12 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
         onReload()
     }
 
-    const handleRemoveSong = async (scheduleId: string) => {
-        if (!confirm(t('dj_control.confirm_remove'))) return
+    const executeAction = async (action: () => Promise<unknown>, successMsg: string) => {
         setActionLoading(true)
         setActionError(null)
         try {
-            await scheduleService.remove(scheduleId)
-            setSuccess(t('dj_control.song_removed'))
+            await action()
+            setSuccess(successMsg)
             await handleRefresh()
         } catch (err) {
             setActionError(formatError(err))
@@ -44,26 +43,17 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
         }
     }
 
+    const handleRemoveSong = async (scheduleId: string) => {
+        if (!confirm(t('dj_control.confirm_remove'))) return
+        await executeAction(() => scheduleService.remove(scheduleId), t('dj_control.song_removed'))
+    }
+
     const handleApproveSong = async (scheduleId: string) => {
-        setActionLoading(true)
-        setActionError(null)
-        try {
-            await scheduleService.update(scheduleId, {status: 'SCHEDULED'})
-            setSuccess(t('dj_control.song_approved'))
-            await handleRefresh()
-        } catch (err) {
-            setActionError(formatError(err))
-        } finally {
-            setActionLoading(false)
-        }
+        await executeAction(() => scheduleService.update(scheduleId, {status: 'SCHEDULED'}), t('dj_control.song_approved'))
     }
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold">{t('dj_control.title_with_emoji')}</h2>
-            </div>
-
             {error && <Alert type="error" message={error} onDismiss={() => {/* Error is auto-cleared on next state update */}}/>}
             {actionError && <Alert type="error" message={actionError} onDismiss={() => setActionError(null)}/>}
             {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)}/>}
@@ -72,11 +62,17 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
                 {/* Timeline */}
                 <div className="lg:col-span-3 min-w-0">
                     {isLoading && !liveState ? (
-                        <div className="card bg-base-200 shadow">
-                            <div className="card-body text-center">
-                                <p className="text-sm text-base-content/70">{t('common.loading')}</p>
-                                <progress className="progress progress-primary w-full mt-2"></progress>
-                            </div>
+                        <div className="space-y-3 animate-pulse">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="bg-base-200 rounded-lg p-3 space-y-2">
+                                    <div className="skeleton h-5 w-2/3 rounded" />
+                                    <div className="skeleton h-4 w-1/3 rounded" />
+                                    <div className="flex gap-2">
+                                        <div className="skeleton h-5 w-16 rounded-full" />
+                                        <div className="skeleton h-5 w-12 rounded-full" />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     ) : liveState ? (
                         <SongQueueTimeline
@@ -97,15 +93,27 @@ export function DJControlTab({jam, onReload}: { jam: JamResponseDto; onReload: (
 
                 {/* Sidebar: Stats + Controls */}
                 <div className="lg:col-span-1">
-                    <QueueStats
-                        liveState={liveState}
-                        jamId={jam.id}
-                        isLoading={isLoading}
-                        onStart={start}
-                        onStop={stop}
-                        onNext={next}
-                        onPrevious={previous}
-                    />
+                    {isLoading && !liveState ? (
+                        <div className="bg-base-200 rounded-lg p-4 space-y-3 animate-pulse">
+                            {[1, 2, 3].map((i) => (
+                                <div key={i} className="flex justify-between items-center">
+                                    <div className="skeleton h-4 w-20 rounded" />
+                                    <div className="skeleton h-4 w-10 rounded" />
+                                </div>
+                            ))}
+                            <div className="skeleton h-10 w-full rounded mt-2" />
+                        </div>
+                    ) : (
+                        <QueueStats
+                            liveState={liveState}
+                            jamId={jam.id}
+                            isLoading={isLoading}
+                            onStart={start}
+                            onStop={stop}
+                            onNext={next}
+                            onPrevious={previous}
+                        />
+                    )}
                 </div>
             </div>
         </div>

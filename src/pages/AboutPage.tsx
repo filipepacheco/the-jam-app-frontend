@@ -4,7 +4,7 @@ import {Music, Users, Monitor, Globe, Mail, Shield} from 'lucide-react'
 import {SEO} from '../components/SEO'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import {SITE_URL} from '../lib/api/config'
+import {SITE_URL} from '../lib/api'
 
 export function AboutPage() {
   const {t} = useTranslation()
@@ -90,20 +90,26 @@ export function AboutPage() {
             <h2 className="text-2xl sm:text-3xl font-bold text-base-content mb-8">
               {t('about.who_title')}
             </h2>
-            <div className="grid gap-6 sm:grid-cols-3">
-              <div className="flex flex-col items-center text-center p-6 rounded-xl bg-base-200/50">
-                <Music className="w-8 h-8 text-primary mb-3" />
-                <h3 className="font-bold text-base-content mb-2">{t('about.who_hosts')}</h3>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div className="sm:col-span-2 p-6 rounded-xl bg-base-200/50">
+                <h3 className="flex items-center gap-2 font-bold text-base-content mb-2">
+                  <Music className="w-5 h-5 text-primary" />
+                  {t('about.who_hosts')}
+                </h3>
                 <p className="text-sm text-base-content/70">{t('about.who_hosts_desc')}</p>
               </div>
-              <div className="flex flex-col items-center text-center p-6 rounded-xl bg-base-200/50">
-                <Users className="w-8 h-8 text-primary mb-3" />
-                <h3 className="font-bold text-base-content mb-2">{t('about.who_musicians')}</h3>
+              <div className="p-6 rounded-xl bg-base-200/30">
+                <h3 className="flex items-center gap-2 font-bold text-base-content mb-2">
+                  <Users className="w-5 h-5 text-secondary" />
+                  {t('about.who_musicians')}
+                </h3>
                 <p className="text-sm text-base-content/70">{t('about.who_musicians_desc')}</p>
               </div>
-              <div className="flex flex-col items-center text-center p-6 rounded-xl bg-base-200/50">
-                <Monitor className="w-8 h-8 text-primary mb-3" />
-                <h3 className="font-bold text-base-content mb-2">{t('about.who_audience')}</h3>
+              <div className="p-6 rounded-xl bg-base-200/30">
+                <h3 className="flex items-center gap-2 font-bold text-base-content mb-2">
+                  <Monitor className="w-5 h-5 text-accent" />
+                  {t('about.who_audience')}
+                </h3>
                 <p className="text-sm text-base-content/70">{t('about.who_audience_desc')}</p>
               </div>
             </div>

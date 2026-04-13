@@ -26,16 +26,16 @@ export function NextSongCard({ song }: NextSongCardProps) {
       transition={{ ...transition, delay: transition.duration === 0 ? 0 : 0.1 }}
       className="mb-8"
     >
-      <div className="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6 md:p-8">
-        <p className="text-slate-200 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">
+      <div className="bg-base-200/80 border border-base-300 rounded-xl p-6 md:p-8">
+        <p className="text-base-content/80 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">
           {t('publicDashboard.upNext')}
         </p>
-        <h3 className="text-3xl md:text-5xl font-bold text-white mb-2">{song.title}</h3>
-        <p className="text-lg md:text-2xl text-slate-200 mb-4">{song.artist}</p>
+        <h3 className="text-3xl md:text-5xl font-bold text-base-content mb-2">{song.title}</h3>
+        <p className="text-lg md:text-2xl text-base-content/80 mb-4">{song.artist}</p>
 
         {song.musicians && song.musicians.length > 0 && (
           <div className="mt-6">
-            <p className="text-base md:text-lg font-semibold text-white mb-4">
+            <p className="text-base md:text-lg font-semibold text-base-content mb-4">
               {t('publicDashboard.musiciansToBeCalled')}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">

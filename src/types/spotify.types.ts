@@ -42,10 +42,6 @@ export interface SpotifyPKCEState {
   redirectUri: string
 }
 
-export interface SpotifyTrackRequest {
-  trackUrl: string
-}
-
 export interface SpotifyTrackMetadata {
   id: string
   title: string

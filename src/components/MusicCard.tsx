@@ -4,12 +4,12 @@
  * Supports inline quick editing via expandable panel
  */
 
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileText, Pencil, Trash2 } from 'lucide-react'
 import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import { formatDuration } from '../lib/formatters'
-import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
+import { getInstrumentIcon, getInstrumentCounts } from '../lib/schedule/instrumentHelpers'
 import { SpotifyPreview, isSpotifyTrackLink } from './SpotifyPreview'
 import { QuickEditPanel } from './QuickEditPanel'
 
@@ -49,13 +49,10 @@ export const MusicCard = memo(function MusicCard({
   const { t } = useTranslation()
   const isSuggested = music.status === 'SUGGESTED'
 
-  const instrumentCounts = [
-    { count: music.neededDrums || 0, key: 'drums', label: t('schedule.instruments.drums') },
-    { count: music.neededGuitars || 0, key: 'guitars', label: t('schedule.instruments.guitars') },
-    { count: music.neededVocals || 0, key: 'vocals', label: t('schedule.instruments.vocals') },
-    { count: music.neededBass || 0, key: 'bass', label: t('schedule.instruments.bass') },
-    { count: music.neededKeys || 0, key: 'keys', label: t('schedule.instruments.keys') },
-  ].filter(inst => inst.count > 0)
+  const instrumentCounts = useMemo(
+    () => getInstrumentCounts(music, t).filter(inst => inst.count > 0),
+    [music.neededDrums, music.neededGuitars, music.neededVocals, music.neededBass, music.neededKeys, t],
+  )
 
   // Check if link is a Spotify track (playable preview)
   const hasSpotifyPreview = isSpotifyTrackLink(music.link)
@@ -120,7 +117,7 @@ export const MusicCard = memo(function MusicCard({
                 <>
                   <button
                     onClick={() => { void onApprove?.(music) }}
-                    className="btn btn-xs btn-success btn-circle"
+                    className="btn btn-xs btn-success btn-circle min-h-[44px] min-w-[44px]"
                     title={t('common.approve')}
                     aria-label={t('common.approve')}
                   >
@@ -128,7 +125,7 @@ export const MusicCard = memo(function MusicCard({
                   </button>
                   <button
                     onClick={() => onReject?.(music)}
-                    className="btn btn-xs btn-error btn-outline btn-circle"
+                    className="btn btn-xs btn-error btn-outline btn-circle min-h-[44px] min-w-[44px]"
                     title={t('common.reject')}
                     aria-label={t('common.reject')}
                   >
@@ -139,7 +136,7 @@ export const MusicCard = memo(function MusicCard({
                 <>
                   <button
                     onClick={handlePencilClick}
-                    className={`btn btn-xs btn-ghost btn-circle ${isExpanded ? 'btn-active' : ''}`}
+                    className={`btn btn-xs btn-ghost btn-circle min-h-[44px] min-w-[44px] ${isExpanded ? 'btn-active' : ''}`}
                     title={t('common.edit')}
                     aria-label={t('common.edit')}
                     aria-expanded={isExpanded}
@@ -148,7 +145,7 @@ export const MusicCard = memo(function MusicCard({
                   </button>
                   <button
                     onClick={() => onDelete(music)}
-                    className="btn btn-xs btn-error btn-outline btn-circle"
+                    className="btn btn-xs btn-error btn-outline btn-circle min-h-[44px] min-w-[44px]"
                     title={t('common.delete')}
                     aria-label={t('common.delete')}
                   >

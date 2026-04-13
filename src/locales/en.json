@@ -31,6 +31,8 @@
     "link": "Link",
     "copy_address": "Copy address",
     "copied": "Copied!",
+    "show_more": "Show more",
+    "show_less": "Show less",
     "none": "None",
     "by": "by",
     "select_theme": "Select Theme",
@@ -204,7 +206,7 @@
   },
   "jams": {
     "listen_on_spotify": "Listen on Spotify",
-    "register_for_jam_title": "🎭 Register for This Jam",
+    "register_for_jam_title": "Register for This Jam",
     "join_this_jam": "Join This Jam",
     "registering": "Registering...",
     "registration_successful_title": "Registration Successful!",
@@ -226,10 +228,10 @@
       "other": "{{count}} songs"
     },
     "statuses": {
-      "live": "🎉 Live Now",
-      "active": "✅ Active",
-      "inactive": "⏸️ Coming Soon",
-      "finished": "🏁 Completed"
+      "live": "Live Now",
+      "active": "Active",
+      "inactive": "Coming Soon",
+      "finished": "Completed"
     },
     "features": {
       "title": "Built for Everyone at the Jam",
@@ -242,7 +244,7 @@
       "audience_desc": "A live screen shows what's playing now and what's next. Share via link or QR code - no app download needed."
     },
     "how_it_works": {
-      "title": "🎭 How This Jam Works",
+      "title": "How This Jam Works",
       "view_schedule": "View Schedule",
       "view_schedule_desc": "Check the performance schedule to see all songs and available musician roles needed for each performance.",
       "register_songs": "Register for Songs",

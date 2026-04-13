@@ -19,7 +19,7 @@ interface MusicTableRowProps {
   onReject?: (music: MusicResponseDto) => void
 }
 
-export const MusicTableRow = memo(function MusicTableRow({
+memo(function MusicTableRow({
   music,
   isHost,
   onEdit,
@@ -50,7 +50,7 @@ export const MusicTableRow = memo(function MusicTableRow({
                 href={music.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-ghost btn-xs"
+                className="btn btn-ghost btn-xs min-h-[44px] min-w-[44px]"
                 title={music.link}
               >
                 🔗
@@ -83,7 +83,7 @@ export const MusicTableRow = memo(function MusicTableRow({
       </td>
     </tr>
   )
-})
+});
 
 /**
  * Musicians Badges Component
@@ -95,13 +95,7 @@ interface MusiciansBadgesProps {
 
 export const MusiciansBadges = memo(function MusiciansBadges({ music }: MusiciansBadgesProps) {
   const { t } = useTranslation()
-  const instrumentCounts = [
-    { count: music.neededDrums || 0, key: 'drums', label: t('schedule.instruments.drums') },
-    { count: music.neededGuitars || 0, key: 'guitars', label: t('schedule.instruments.guitars') },
-    { count: music.neededVocals || 0, key: 'vocals', label: t('schedule.instruments.vocals') },
-    { count: music.neededBass || 0, key: 'bass', label: t('schedule.instruments.bass') },
-    { count: music.neededKeys || 0, key: 'keys', label: t('schedule.instruments.keys') },
-  ]
+  const instrumentCounts = getInstrumentCounts(music, t)
 
   const hasInstruments = instrumentCounts.some((inst) => inst.count > 0)
 
@@ -149,14 +143,14 @@ function MusicActionButtons({
         <>
           <button
             onClick={() => { void onApprove?.(music) }}
-            className="btn btn-xs btn-success gap-1"
+            className="btn btn-xs btn-success gap-1 min-h-[44px] min-w-[44px]"
             title={t('common.approve')}
           >
             ✓ <span className="hidden xl:inline">{t('common.approve')}</span>
           </button>
           <button
             onClick={() => onReject?.(music)}
-            className="btn btn-xs btn-ghost text-error hover:bg-error/10 gap-1"
+            className="btn btn-xs btn-ghost text-error hover:bg-error/10 gap-1 min-h-[44px] min-w-[44px]"
             title={t('common.reject')}
           >
             ✕ <span className="hidden xl:inline">{t('common.reject')}</span>
@@ -166,14 +160,14 @@ function MusicActionButtons({
         <>
           <button
             onClick={() => onEdit(music)}
-            className="btn btn-xs btn-ghost gap-1"
+            className="btn btn-xs btn-ghost gap-1 min-h-[44px] min-w-[44px]"
             title={t('common.edit')}
           >
             ✏️ <span className="hidden xl:inline">{t('common.edit')}</span>
           </button>
           <button
             onClick={() => onDelete(music)}
-            className="btn btn-xs btn-ghost text-error hover:bg-error/10 gap-1"
+            className="btn btn-xs btn-ghost text-error hover:bg-error/10 gap-1 min-h-[44px] min-w-[44px]"
             title={t('common.delete')}
           >
             🗑️ <span className="hidden xl:inline">{t('common.delete')}</span>

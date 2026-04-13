@@ -18,16 +18,16 @@ export function EnhancedHero() {
     : t('homepage.hero.cta_button')
 
   return (
-    <section className="relative min-h-screen overflow-hidden" data-theme="dark">
+    <section className="relative min-h-screen overflow-hidden">
       {/* Animated gradient background */}
       <div className="absolute inset-0 animate-gradient-shift" />
       {/* Radial glow spotlight */}
       <div className="radial-glow" />
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 flex flex-col lg:flex-row items-center gap-10 lg:gap-12 min-h-screen justify-center">
         {/* Text content */}
-        <div className="lg:w-5/12 text-center lg:text-left">
+        <div className="lg:w-5/12 text-left">
           <motion.p
-            className="text-sm sm:text-base font-semibold uppercase tracking-wider mb-3 text-base-content/80"
+            className="text-sm sm:text-base font-semibold uppercase tracking-wider mb-3 text-white/80"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -36,7 +36,7 @@ export function EnhancedHero() {
           </motion.p>
 
           <motion.h1
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-base-content text-wrap-balance"
+            className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-white text-wrap-balance tracking-tight"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -45,7 +45,7 @@ export function EnhancedHero() {
           </motion.h1>
 
           <motion.p
-            className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-base-content/90 whitespace-pre-line"
+            className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-white/85 whitespace-pre-line"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
@@ -54,7 +54,7 @@ export function EnhancedHero() {
           </motion.p>
 
           <motion.div
-            className="flex gap-4 justify-center lg:justify-start flex-wrap"
+            className="flex gap-4 justify-start flex-wrap"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}

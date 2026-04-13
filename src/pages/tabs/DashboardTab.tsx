@@ -13,7 +13,6 @@ export function DashboardTab({jam}: { jam: JamResponseDto }) {
 
     return (
         <div className="space-y-4">
-            <h2 className="text-2xl font-bold">📺 {t('jam_management.dashboard.title')}</h2>
             <Alert type="info" message={t('jam_management.dashboard.description')} />
             <button
                 onClick={() => navigate(getJamPath(jam))}

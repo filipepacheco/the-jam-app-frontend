@@ -9,7 +9,7 @@ import {useNavigate} from 'react-router-dom'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {Alert, FullPageSpinner, PageAlerts, SpotifyImportModal} from '../../components'
+import {Alert, JamCardSkeleton, PageAlerts, SpotifyImportModal} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
@@ -101,9 +101,30 @@ export function HostDashboardPage() {
         }
     }
 
-    // Show loading spinner while auth is initializing
+    // Show skeleton while auth is initializing
     if (authLoading) {
-        return <FullPageSpinner label={t('common.loading')} />
+        return (
+            <div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8 animate-pulse">
+                <div className="container mx-auto max-w-6xl">
+                    <div className="flex items-center justify-between mb-3 sm:mb-6">
+                        <div className="skeleton h-7 sm:h-9 w-48 rounded" />
+                        <div className="skeleton h-8 w-24 rounded hidden sm:block" />
+                    </div>
+                    <div className="stats stats-horizontal w-full bg-base-200 shadow-sm mb-3 sm:mb-6">
+                        {[...Array(3)].map((_, i) => (
+                            <div key={i} className="stat place-items-center py-2 px-3">
+                                <div className="skeleton h-3 w-16 rounded mb-1" />
+                                <div className="skeleton h-6 w-8 rounded" />
+                            </div>
+                        ))}
+                    </div>
+                    <div className="skeleton h-6 w-32 rounded mb-3" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                        {[...Array(3)].map((_, i) => <JamCardSkeleton key={i} />)}
+                    </div>
+                </div>
+            </div>
+        )
     }
 
     // Redirect unauthenticated users
@@ -166,13 +187,14 @@ export function HostDashboardPage() {
                 </div>
             </div>
 
-            {loading && jams.length === 0 ? (<div className="flex justify-center py-8 sm:py-12">
-                <div className="flex flex-col items-center gap-3">
-                    <span className="loading loading-spinner loading-lg"></span>
-                    <span
-                        className="text-sm sm:text-base font-semibold text-base-content/70">{t('jam_management.host_dashboard.loading_jams')}</span>
+            {loading && jams.length === 0 ? (
+                <div className="animate-pulse">
+                    <div className="skeleton h-6 w-40 rounded mb-3" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                        {[...Array(3)].map((_, i) => <JamCardSkeleton key={i} />)}
+                    </div>
                 </div>
-            </div>) : jams.length === 0 ? (
+            ) : jams.length === 0 ? (
                 <Alert type="info" message={t('jam_management.host_dashboard.no_jams_desc')} className="mb-6 sm:mb-8" />
             ) : (<>
                 {/* In Progress Jams */}
@@ -222,7 +244,7 @@ export function HostDashboardPage() {
         <SpotifyImportModal
             isOpen={showImportModal}
             onClose={() => setShowImportModal(false)}
-            onSuccess={(jamId, isExistingJam) => {
+            onSuccess={(jamId) => {
                 setShowImportModal(false)
                 navigate(`/host/jams/${jamId}/manage`)
             }}

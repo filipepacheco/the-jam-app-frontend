@@ -30,6 +30,3 @@ export function getJamStatusLabel(status: JamStatus, t: TFunction): string {
       return t('common.unknown')
   }
 }
-
-// Re-export schedule status helpers for convenience
-export { getStatusColor as getScheduleStatusBadgeClass, getStatusLabel as getScheduleStatusLabel, getStatusIcon as getScheduleStatusIcon } from './schedule/statusHelpers'

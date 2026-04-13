@@ -100,7 +100,7 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
             <select
               value={carouselIntervalMs}
               onChange={(e) => onCarouselIntervalChange(Number(e.target.value))}
-              className="select select-sm bg-slate-800 text-white"
+              className="select select-sm bg-base-200 text-base-content"
             >
               <option value={5000}>5s</option>
               <option value={8000}>8s</option>
@@ -117,7 +117,7 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
             <select
               value={pollingMs}
               onChange={(e) => onPollingChange(Number(e.target.value))}
-              className="select select-sm bg-slate-800 text-white"
+              className="select select-sm bg-base-200 text-base-content"
             >
               <option value={0}>Off</option>
               <option value={5000}>5s</option>

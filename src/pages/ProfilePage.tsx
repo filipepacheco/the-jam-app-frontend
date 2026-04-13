@@ -9,7 +9,7 @@ import {useAuth} from '../hooks'
 import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import {ProfileHeader} from '../components/ProfileHeader'
 import {ProfileFormSection} from '../components/ProfileFormSection'
-import {Alert, FullPageSpinner} from '../components'
+import {Alert} from '../components'
 
 import {useTranslation} from 'react-i18next'
 
@@ -95,7 +95,49 @@ export function ProfilePage() {
   }
 
   if (authLoading) {
-    return <FullPageSpinner />
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-100 py-8 px-4">
+        <div className="max-w-2xl mx-auto animate-pulse">
+          {/* Profile header skeleton */}
+          <div className="flex flex-col items-center gap-4 mb-8">
+            <div className="skeleton h-24 w-24 rounded-full" />
+            <div className="skeleton h-6 w-48" />
+            <div className="skeleton h-4 w-32" />
+          </div>
+
+          {/* Form section 1 skeleton */}
+          <div className="card bg-base-200 shadow-lg mb-6">
+            <div className="card-body space-y-4">
+              <div className="skeleton h-5 w-36 mb-2" />
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="skeleton h-4 w-24" />
+                  <div className="skeleton h-10 w-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Form section 2 skeleton */}
+          <div className="card bg-base-200 shadow-lg mb-6">
+            <div className="card-body space-y-4">
+              <div className="skeleton h-5 w-36 mb-2" />
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="skeleton h-4 w-24" />
+                  <div className="skeleton h-10 w-full" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Button row skeleton */}
+          <div className="flex justify-center pt-6">
+            <div className="skeleton h-12 w-40 rounded-lg" />
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!isAuthenticated || !user) {

@@ -282,17 +282,36 @@ export function MusicPage() {
   // Loading skeleton
   if (isLoading && musicList.length === 0) {
     return (
-      <div className="min-h-screen bg-base-100">
+      <div className="min-h-screen bg-base-100 animate-pulse">
         <div className="bg-base-200 border-b border-base-300">
           <div className="container mx-auto max-w-7xl px-4 py-6">
-            <div className="h-10 w-48 bg-base-300 rounded animate-pulse" />
+            <div className="flex items-center justify-between">
+              <div className="skeleton h-9 w-48 rounded" />
+              <div className="skeleton h-9 w-28 rounded hidden sm:block" />
+            </div>
           </div>
         </div>
-        <div className="container mx-auto max-w-7xl px-4 py-8">
-          <div className="h-24 bg-base-200 rounded-lg animate-pulse mb-4" />
-          <div className="space-y-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-20 bg-base-200 rounded-lg animate-pulse" />
+        <div className="container mx-auto max-w-7xl px-4 py-6">
+          <div className="card bg-base-200 p-3 mb-4">
+            <div className="flex gap-3">
+              <div className="skeleton h-10 flex-1 rounded" />
+              <div className="skeleton h-10 w-32 rounded hidden sm:block" />
+            </div>
+          </div>
+          <div className="space-y-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="card bg-base-200 p-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 space-y-2">
+                    <div className="skeleton h-5 w-2/3 rounded" />
+                    <div className="skeleton h-4 w-1/3 rounded" />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="skeleton h-5 w-12 rounded-full" />
+                    <div className="skeleton h-5 w-10 rounded-full" />
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>

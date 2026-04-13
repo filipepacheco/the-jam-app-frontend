@@ -10,9 +10,9 @@
  * Usage: npx tsx scripts/prerender.ts
  */
 
-import { createServer } from 'http'
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
-import { resolve, join, extname } from 'path'
+import {createServer} from 'http'
+import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs'
+import {extname, join, resolve} from 'path'
 
 const DIST_DIR = resolve(import.meta.dirname, '..', 'dist')
 const PORT = 45678
@@ -163,7 +163,7 @@ async function getBrowser() {
     const chromium = await import('@sparticuz/chromium')
     const executablePath = await chromium.default.executablePath()
     console.log(`Using @sparticuz/chromium: ${executablePath}`)
-    const browser = await puppeteer.default.launch({
+    return await puppeteer.default.launch({
       args: [
         ...chromium.default.args,
         '--disable-web-security',
@@ -173,7 +173,6 @@ async function getBrowser() {
       executablePath,
       headless: true,
     })
-    return browser
   } catch (err) {
     console.log(`@sparticuz/chromium failed: ${(err as Error).message}`)
     console.log('Falling back to local Chrome...')

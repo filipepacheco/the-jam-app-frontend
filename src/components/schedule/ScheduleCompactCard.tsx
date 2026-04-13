@@ -52,10 +52,10 @@ export function ScheduleCompactCard({
 
   // Card border style based on status
   const borderClass = schedule.status === 'IN_PROGRESS'
-    ? 'border-l-4 border-l-warning bg-warning/10'
+    ? 'bg-warning/10'
     : isSuggested
-      ? 'border-l-4 border-l-info bg-info/5'
-      : 'border-l-4 border-l-primary/30 bg-base-200'
+      ? 'bg-info/10'
+      : 'bg-primary/10'
 
   return (
     <div className={`card shadow-sm ${borderClass}`}>

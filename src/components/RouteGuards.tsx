@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../hooks'
 import type { UserRole } from '../types/auth.types'
 import { Alert } from './Alert'
-import { FullPageSpinner } from './FullPageSpinner'
 
 /**
  * Props for route guard components
@@ -49,7 +48,14 @@ export function ProtectedRoute({
   const { role, isLoading } = useAuth()
 
   if (isLoading) {
-    return <FullPageSpinner />
+    return (
+      <div className="min-h-screen bg-base-100 animate-pulse">
+        <div className="container mx-auto max-w-6xl px-4 py-8">
+          <div className="skeleton h-8 w-48 rounded mb-6" />
+          <div className="skeleton h-64 w-full rounded" />
+        </div>
+      </div>
+    )
   }
 
   const isAuthorized = hasRequiredRole(role, requiredRole)

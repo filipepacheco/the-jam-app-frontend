@@ -35,18 +35,18 @@ function Features() {
 
   const colorStyles = {
     primary: {
-      border: 'border-t-primary',
       iconColor: 'text-primary',
+      bg: 'bg-base-200',
       hoverShadow: 'hover:shadow-xl hover:shadow-primary/10',
     },
     secondary: {
-      border: 'border-t-secondary',
       iconColor: 'text-secondary',
+      bg: 'bg-base-200/80',
       hoverShadow: 'hover:shadow-xl hover:shadow-secondary/10',
     },
     accent: {
-      border: 'border-t-accent',
       iconColor: 'text-accent',
+      bg: 'bg-base-200/60',
       hoverShadow: 'hover:shadow-xl hover:shadow-accent/10',
     },
   }
@@ -81,23 +81,21 @@ function Features() {
             return (
               <motion.div
                 key={card.id}
-                className={`card bg-base-200 border-t-4 ${styles.border} shadow-lg ${styles.hoverShadow} transition-shadow duration-300`}
+                className={`card ${styles.bg} shadow-lg ${styles.hoverShadow} transition-shadow duration-300`}
                 variants={{
                   hidden: { opacity: 0, y: 30 },
                   visible: { opacity: 1, y: 0 },
                 }}
                 transition={{ duration: 0.5 }}
               >
-                <div className="card-body p-5 sm:p-8 items-center lg:items-start">
-                  <div className="flex items-center gap-3 mb-1">
-                    <span className={styles.iconColor}>
+                <div className="card-body p-5 sm:p-8">
+                  <h3 className="card-title text-lg sm:text-xl font-bold flex items-center gap-2">
+                    <span className={`${styles.iconColor} shrink-0`}>
                       {card.icon}
                     </span>
-                    <h3 className="card-title text-lg sm:text-xl font-bold">
-                      {card.title}
-                    </h3>
-                  </div>
-                  <p className="text-sm sm:text-base text-base-content/70 text-center lg:text-left">
+                    {card.title}
+                  </h3>
+                  <p className="text-sm sm:text-base text-base-content/70">
                     {card.description}
                   </p>
                 </div>

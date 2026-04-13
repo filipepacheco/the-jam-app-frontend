@@ -3,7 +3,7 @@
  * Provides dialog wrapper with escape key, focus management, and backdrop handling
  */
 
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
@@ -21,6 +21,7 @@ interface ModalProps {
   portal?: boolean
   responsive?: boolean
   role?: 'dialog' | 'alertdialog'
+  headingLevel?: 'h2' | 'h3' | 'h4' | 'h5'
 }
 
 const SIZE_CLASSES = {
@@ -42,8 +43,10 @@ export function Modal({
   portal = false,
   responsive = false,
   role,
+  headingLevel,
 }: ModalProps) {
   const { t } = useTranslation()
+  const Heading = headingLevel || 'h3'
   const modalRef = useRef<HTMLDivElement>(null)
 
   // Focus management
@@ -87,9 +90,9 @@ export function Modal({
           <>
             {/* Fixed Header */}
             <div className="px-4 sm:px-6 py-4 border-b border-base-300 flex items-center justify-between shrink-0">
-              <h3 className="font-bold text-lg sm:text-xl">
+              <Heading className="font-bold text-lg sm:text-xl">
                 {title}
-              </h3>
+              </Heading>
               {!closeDisabled && (
                 <button
                   type="button"
@@ -116,9 +119,9 @@ export function Modal({
           <>
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-lg">
+              <Heading className="font-bold text-lg">
                 {title}
-              </h3>
+              </Heading>
               {!closeDisabled && (
                 <button
                   type="button"

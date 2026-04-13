@@ -4,7 +4,7 @@
  * Expanded: full details with instruments, musicians, notes, actions
  */
 
-import { useState, useEffect, useCallback, memo } from 'react'
+import React, { useState, useEffect, useCallback, memo } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { ScheduleResponseDto } from '../../types/api.types'
 import { useTranslation } from 'react-i18next'
@@ -33,6 +33,7 @@ interface ScheduleCollapsibleCardProps {
   onMusicianClick?: (musicianId: string) => void
   onSaveNotes?: (jamMusicId: string, notes: string) => void
   onApproveAllRegistrations?: (scheduleId: string) => void
+  onEditMusic?: (musicId: string) => void
 }
 
 export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
@@ -51,6 +52,7 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
   jamMusicId,
   onSaveNotes,
   onApproveAllRegistrations,
+  onEditMusic,
 }: ScheduleCollapsibleCardProps) {
   const { t } = useTranslation()
   const prefersReducedMotion = useReducedMotion()
@@ -77,22 +79,22 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
   // Readiness for scheduled items: ready (core band complete), partial, empty
   const getReadinessClass = () => {
     const { counts, activeCount } = countActiveRegistrationsByInstrument(schedule.registrations)
-    if (activeCount === 0) return 'border-l-4 border-l-base-300 bg-base-200'
+    if (activeCount === 0) return 'bg-base-200'
     const bandComplete = CORE_BAND.every(inst => (counts[inst] || 0) >= 1)
     return bandComplete
-      ? 'border-l-4 border-l-success bg-success/5'
-      : 'border-l-4 border-l-warning bg-warning/5'
+      ? 'bg-success/10'
+      : 'bg-warning/10'
   }
 
   // Border styling based on status, with readiness coloring for scheduled items
   const borderClass = schedule.status === 'IN_PROGRESS'
-    ? 'border-l-4 border-l-warning bg-warning/5'
+    ? 'bg-warning/10'
     : schedule.status === 'COMPLETED'
-      ? 'border-l-4 border-l-success/30 text-base-content/60'
+      ? 'bg-success/10 text-base-content/60'
       : schedule.status === 'CANCELED'
-        ? 'border-l-4 border-l-base-300 text-base-content/40'
+        ? 'bg-base-200 text-base-content/60'
         : isSuggested
-          ? 'border-l-4 border-l-info bg-info/5'
+          ? 'bg-info/10'
           : getReadinessClass()
 
   return (
@@ -119,7 +121,7 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
           <p className="truncate text-sm font-semibold leading-tight">
             {music?.title || t('schedule.song_tba')}
           </p>
-          <p className="truncate text-xs text-base-content/50 leading-tight">
+          <p className="truncate text-xs text-base-content/70 leading-tight">
             {music?.artist || t('schedule.artist_tba')}
           </p>
         </div>
@@ -166,7 +168,7 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
           </div>
         ) : (
           <ChevronDown
-            className={`size-4 text-base-content/40 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+            className={`size-4 text-base-content/60 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
           />
         )}
       </div>
@@ -175,11 +177,10 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
       <AnimatePresence initial={false}>
         {isExpanded && (
           <motion.div
-            initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1, overflow: 'visible' }}
-            exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0, overflow: 'hidden' }}
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0 }}
             transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.15, ease: 'easeInOut' }}
-            style={{ overflow: 'hidden' }}
           >
             <div className="px-2.5 pb-2.5 pt-1 border-t border-base-300/30 space-y-1.5">
               {/* Instrument badges */}
@@ -231,6 +232,7 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
                     onDelete={() => onDelete?.(schedule.id)}
                     onAddMusician={() => onAddMusician?.(schedule.id)}
                     onApproveAll={() => onApproveAllRegistrations?.(schedule.id)}
+                    onEditMusic={music?.id ? () => onEditMusic?.(music.id) : undefined}
                   />
                 </div>
               )}

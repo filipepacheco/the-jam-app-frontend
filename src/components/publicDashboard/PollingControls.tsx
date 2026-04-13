@@ -16,7 +16,7 @@ export function PollingControls({ value, onChange }: PollingControlsProps) {
   return (
     <div className="form-control px-4 md:px-8 mt-4 max-w-6xl mx-auto">
       <label htmlFor="polling-interval" className="label">
-        <span className="label-text text-slate-100">
+        <span className="label-text text-base-content">
           {t('publicDashboard.autoRefresh', 'Auto-refresh')}
         </span>
       </label>
@@ -24,7 +24,7 @@ export function PollingControls({ value, onChange }: PollingControlsProps) {
         id="polling-interval"
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="select select-sm bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-primary"
+        className="select select-sm bg-base-200 text-base-content focus:outline-none focus:ring-2 focus:ring-primary"
       >
         <option value={0}>{t('publicDashboard.off', 'Off')}</option>
         <option value={5000}>5s</option>

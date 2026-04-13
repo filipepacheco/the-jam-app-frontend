@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
-    <script>try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+    <script>try{
+      const t = localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
     <meta charset="UTF-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="google-site-verification" content="TI9Eit9N1OZq86OFo5kLqnIlhsg8ULI5X_aIoqr4pbo" />
@@ -10,6 +11,11 @@
     <meta name="description" content="Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, musicos se inscrevem e o publico acompanha tudo em tempo real. Gratis." />
     <!-- Theme color for mobile browsers -->
     <meta content="#3b82f6" name="theme-color" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Big+Shoulders+Display:wght@600;700;800&family=Archivo:wght@600;700;800&family=Chakra+Petch:wght@600;700&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" />
 
     <!-- DNS prefetch for external services -->
     <link rel="dns-prefetch" href="https://zgcfhsgcnuqgxvsycsmo.supabase.co" />
@@ -32,10 +38,23 @@
       .shell-nav-end{margin-left:auto;display:flex;gap:8px;align-items:center}
       .shell-avatar{width:32px;height:32px;border-radius:50%;background:#2a323c}
       .shell-btn{width:72px;height:32px;border-radius:8px;background:#2a323c}
-      .shell-content{max-width:1200px;margin:0 auto;padding:32px 16px}
-      .shell-hero{height:200px;border-radius:16px;background:#191e24;margin-bottom:24px}
-      .shell-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
-      .shell-card{height:160px;border-radius:12px;background:#191e24}
+      .shell-content{max-width:640px;margin:0 auto;padding:48px 20px;text-align:center}
+      .shell-eyebrow{height:12px;width:200px;border-radius:4px;background:#2a323c;margin:0 auto 16px}
+      .shell-heading{height:36px;width:85%;border-radius:6px;background:#2a323c;margin:0 auto 10px}
+      .shell-heading2{height:36px;width:70%;border-radius:6px;background:#2a323c;margin:0 auto 20px}
+      .shell-desc{height:14px;width:90%;border-radius:4px;background:#2a323c;margin:0 auto 8px}
+      .shell-desc2{height:14px;width:75%;border-radius:4px;background:#2a323c;margin:0 auto 8px}
+      .shell-desc3{height:14px;width:60%;border-radius:4px;background:#2a323c;margin:0 auto 24px}
+      .shell-btns{display:flex;gap:12px;justify-content:center;margin-bottom:48px}
+      .shell-btn-cta{height:44px;width:120px;border-radius:10px;background:#2a323c}
+      .shell-btn-sec{height:44px;width:140px;border-radius:10px;background:#2a323c}
+      .shell-live{max-width:400px;margin:0 auto;border-radius:20px;background:#191e24;padding:24px;display:flex;flex-direction:column;gap:10px;align-items:center}
+      .shell-live-badge{height:20px;width:72px;border-radius:10px;background:#7c3aed}
+      .shell-live-label{height:12px;width:100px;border-radius:4px;background:#2a323c}
+      .shell-live-title{height:24px;width:200px;border-radius:6px;background:#2a323c}
+      .shell-live-artist{height:14px;width:120px;border-radius:4px;background:#2a323c}
+      .shell-live-chips{display:flex;gap:8px;margin-top:8px}
+      .shell-chip{height:28px;width:64px;border-radius:14px;background:#2a323c}
       .shell-pulse{animation:shell-pulse 1.5s ease-in-out infinite}
       @keyframes shell-pulse{0%,100%{opacity:1}50%{opacity:.5}}
     </style>
@@ -52,12 +71,27 @@
             <div class="shell-avatar shell-pulse"></div>
           </div>
         </div>
-        <div class="shell-content">
-          <div class="shell-hero shell-pulse"></div>
-          <div class="shell-cards">
-            <div class="shell-card shell-pulse"></div>
-            <div class="shell-card shell-pulse"></div>
-            <div class="shell-card shell-pulse"></div>
+        <div class="shell-content shell-pulse">
+          <div class="shell-eyebrow"></div>
+          <div class="shell-heading"></div>
+          <div class="shell-heading2"></div>
+          <div class="shell-desc"></div>
+          <div class="shell-desc2"></div>
+          <div class="shell-desc3"></div>
+          <div class="shell-btns">
+            <div class="shell-btn-cta"></div>
+            <div class="shell-btn-sec"></div>
+          </div>
+          <div class="shell-live">
+            <div class="shell-live-badge"></div>
+            <div class="shell-live-label"></div>
+            <div class="shell-live-title"></div>
+            <div class="shell-live-artist"></div>
+            <div class="shell-live-chips">
+              <div class="shell-chip"></div>
+              <div class="shell-chip"></div>
+              <div class="shell-chip"></div>
+            </div>
           </div>
         </div>
       </div>

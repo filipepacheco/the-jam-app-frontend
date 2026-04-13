@@ -28,8 +28,8 @@ export function LanguageSelector({ currentLang, onChange, onSelectClose }: Langu
           aria-pressed={currentLang.startsWith(lang.code)}
           className={`px-3 py-1 rounded text-xs transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary ${
             currentLang.startsWith(lang.code)
-              ? 'bg-white text-slate-900 font-semibold focus-visible:ring-offset-white'
-              : 'bg-white/10 text-white hover:bg-white/20 focus-visible:ring-offset-slate-900'
+              ? 'bg-base-100 text-base-content font-semibold focus-visible:ring-offset-base-100'
+              : 'bg-base-content/10 text-base-content hover:bg-base-content/20 focus-visible:ring-offset-base-300'
           }`}
         >
           {lang.label}

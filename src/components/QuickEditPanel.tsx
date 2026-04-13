@@ -31,7 +31,7 @@ function InstrumentStepper({ instrumentKey, label, value, onChange }: Instrument
       <button
         type="button"
         onClick={() => onChange(Math.max(0, value - 1))}
-        className="btn btn-xs btn-square btn-ghost"
+        className="btn btn-sm min-h-[44px] min-w-[44px] btn-square btn-ghost"
         aria-label={`Decrease ${label}`}
         disabled={value <= 0}
       >
@@ -41,7 +41,7 @@ function InstrumentStepper({ instrumentKey, label, value, onChange }: Instrument
       <button
         type="button"
         onClick={() => onChange(Math.min(10, value + 1))}
-        className="btn btn-xs btn-square btn-ghost"
+        className="btn btn-sm min-h-[44px] min-w-[44px] btn-square btn-ghost"
         aria-label={`Increase ${label}`}
         disabled={value >= 10}
       >

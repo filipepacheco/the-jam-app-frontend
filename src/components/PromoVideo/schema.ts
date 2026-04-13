@@ -35,4 +35,3 @@ export const karaokeJamSchema = z.object({
   ctaButton: z.string(),
 });
 
-export type KaraokeJamProps = z.infer<typeof karaokeJamSchema>;

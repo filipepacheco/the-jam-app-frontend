@@ -9,9 +9,9 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Star, MessageSquare, User, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useAuth, usePageAlerts } from '../../hooks'
-import { feedbackService } from '../../services/feedbackService'
+import { feedbackService } from '../../services'
 import type { FeedbackListItemDto, FeedbackListResponseDto } from '../../types/feedback.types'
-import { Alert, FullPageSpinner } from '../../components'
+import { Alert } from '../../components'
 
 export function FeedbackPage() {
   const { t } = useTranslation()
@@ -58,7 +58,51 @@ export function FeedbackPage() {
   }, [feedbackData])
 
   if (authLoading) {
-    return <FullPageSpinner label={t('common.loading')} />
+    return (
+      <div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
+        <div className="container mx-auto max-w-4xl animate-pulse">
+          {/* Header skeleton */}
+          <div className="mb-6 sm:mb-8">
+            <div className="flex items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6">
+              <div className="skeleton h-7 w-40" />
+              <div className="skeleton h-8 w-24 rounded-lg" />
+            </div>
+          </div>
+
+          {/* Stats grid skeleton */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            {[0, 1].map((i) => (
+              <div key={i} className="bg-base-200 rounded-xl p-3 sm:p-6 shadow">
+                <div className="skeleton h-3 w-24 mb-3" />
+                <div className="skeleton h-8 w-16" />
+              </div>
+            ))}
+          </div>
+
+          {/* Feedback list skeleton */}
+          <div className="space-y-4">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="bg-base-200 rounded-xl p-4 sm:p-6 shadow">
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <div className="flex gap-1">
+                    {[0, 1, 2, 3, 4].map((s) => (
+                      <div key={s} className="skeleton h-4 w-4 rounded-full" />
+                    ))}
+                  </div>
+                  <div className="skeleton h-3 w-28" />
+                </div>
+                <div className="skeleton h-3 w-full mb-2" />
+                <div className="skeleton h-3 w-3/4 mb-3" />
+                <div className="flex gap-3">
+                  <div className="skeleton h-3 w-20" />
+                  <div className="skeleton h-3 w-16" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!isAuthenticated) {
@@ -115,13 +159,25 @@ export function FeedbackPage() {
 
         {/* Feedback List */}
         {loading && !feedbackData ? (
-          <div className="flex justify-center py-8 sm:py-12">
-            <div className="flex flex-col items-center gap-3">
-              <span className="loading loading-spinner loading-lg"></span>
-              <span className="text-sm sm:text-base font-semibold text-base-content/70">
-                {t('feedback_page.loading')}
-              </span>
-            </div>
+          <div className="space-y-4 animate-pulse">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="bg-base-200 rounded-xl p-4 sm:p-6 shadow">
+                <div className="flex items-start justify-between gap-4 mb-3">
+                  <div className="flex gap-1">
+                    {[0, 1, 2, 3, 4].map((s) => (
+                      <div key={s} className="skeleton h-4 w-4 rounded-full" />
+                    ))}
+                  </div>
+                  <div className="skeleton h-3 w-28" />
+                </div>
+                <div className="skeleton h-3 w-full mb-2" />
+                <div className="skeleton h-3 w-3/4 mb-3" />
+                <div className="flex gap-3">
+                  <div className="skeleton h-3 w-20" />
+                  <div className="skeleton h-3 w-16" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : feedbackData?.items.length === 0 ? (
           <Alert type="info" message={t('feedback_page.no_feedback')} className="mb-6 sm:mb-8" />

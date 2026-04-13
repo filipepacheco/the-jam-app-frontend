@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { jamService } from '../services'
-import { FullPageSpinner } from '../components'
 import { NotFoundPage } from './NotFoundPage'
 
 /**
@@ -34,5 +33,12 @@ export function SlugRedirect() {
   }, [slug, navigate])
 
   if (notFound) return <NotFoundPage />
-  return <FullPageSpinner />
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-base-100">
+      <div className="flex flex-col items-center gap-3 animate-pulse">
+        <div className="skeleton h-12 w-12 rounded-full" />
+        <div className="skeleton h-4 w-32 rounded" />
+      </div>
+    </div>
+  )
 }

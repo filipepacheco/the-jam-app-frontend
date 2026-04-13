@@ -16,7 +16,7 @@ export function QRCodePanel({ jamId, slug }: QRCodePanelProps) {
 
   return (
     <div className="flex flex-col items-center justify-center text-center px-6 py-8">
-      <div className="bg-white p-8 rounded-2xl mb-8">
+      <div className="bg-base-100 p-8 rounded-2xl mb-8">
         <QRCodeSVG value={url} size={400} fgColor="#000000" bgColor="#ffffff" />
       </div>
 

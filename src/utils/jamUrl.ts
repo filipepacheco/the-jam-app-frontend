@@ -4,7 +4,7 @@
  * All internal links should use these helpers instead of hardcoding paths.
  */
 
-import { SITE_URL } from '../lib/api/config'
+import { SITE_URL } from '../lib/api'
 
 interface JamLike {
   id: string
@@ -25,13 +25,6 @@ export function getJamPath(jam: JamLike): string {
  */
 export function getJamDashboardPath(jam: JamLike): string {
   return `/jams/${jam.slug || jam.id}/dashboard`
-}
-
-/**
- * Get the internal path for jam registration.
- */
-export function getJamRegisterPath(jam: JamLike): string {
-  return `/jams/${jam.slug || jam.id}/register`
 }
 
 /**
