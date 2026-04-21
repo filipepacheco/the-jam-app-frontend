@@ -46,7 +46,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return null
     }
   })
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(() => {
+    try {
+      return !localStorage.getItem('auth_user')
+    } catch {
+      return true
+    }
+  })
   const [role, setRoleState] = useState<UserRole>(() => {
     try {
       const stored = localStorage.getItem('auth_user')
@@ -117,7 +123,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    */
   useEffect(() => {
     const initializeAuth = async () => {
-      setIsLoading(true)
+      const hasCachedUser = (() => {
+        try { return !!localStorage.getItem('auth_user') } catch { return false }
+      })()
+
+      if (!hasCachedUser) setIsLoading(true)
 
       try {
         const session = await getCurrentSession()
@@ -125,10 +135,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           await applyProfile(session.user.id)
         } else {
-          // No valid session - clear any stale localStorage data
           setUser(null)
           setRoleState('viewer')
-    
           localStorage.removeItem('auth_user')
           authenticatedUserIdRef.current = null
         }

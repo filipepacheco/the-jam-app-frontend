@@ -28,36 +28,31 @@ export function EnhancedHero() {
         <div className="lg:w-5/12 text-left">
           <motion.p
             className="text-sm sm:text-base font-semibold uppercase tracking-wider mb-3 text-white/80"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.4 }}
           >
             {t('homepage.hero.subtitle')}
           </motion.p>
 
-          <motion.h1
-            className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-white text-wrap-balance tracking-tight"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
+          <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-white text-wrap-balance tracking-tight">
             {t('homepage.hero.title')}
-          </motion.h1>
+          </h1>
 
           <motion.p
             className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-white/85 whitespace-pre-line"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            transition={{ duration: 0.4, delay: 0.1 }}
           >
             {t('homepage.hero.description')}
           </motion.p>
 
           <motion.div
             className="flex gap-4 justify-start flex-wrap"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
           >
             <Link
               to={ctaTo}

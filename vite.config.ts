@@ -37,9 +37,15 @@ export default defineConfig({
             // Auth + API layer
             if (id.includes('@supabase') || id.includes('axios') || id.includes('/swr/'))
               return 'vendor-api'
-            // UI libraries
-            if (id.includes('framer-motion') || id.includes('lucide-react'))
-              return 'vendor-ui'
+            // Animation - loaded separately so homepage pays no cost until needed
+            if (id.includes('framer-motion'))
+              return 'vendor-motion'
+            // Icons
+            if (id.includes('lucide-react'))
+              return 'vendor-icons'
+            // Heavy dashboard-only libs: QR generation & confetti
+            if (id.includes('qrcode') || id.includes('react-confetti'))
+              return 'vendor-dashboard'
             // i18n
             if (id.includes('i18next'))
               return 'vendor-i18n'
