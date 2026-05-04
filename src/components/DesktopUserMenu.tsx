@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, UserCircle, LogOut, Globe, Palette } from 'lucide-react'
-import { useAuth } from '../hooks'
+import { useAuth, useTheme } from '../hooks'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
 
 interface DesktopUserMenuProps {
@@ -14,9 +14,9 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
   const navigate = useNavigate()
   const { isAuthenticated, user, logout, isLoading } = useAuth()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [currentTheme, setTheme] = useTheme()
 
   const currentLang = (i18n.language || i18n.resolvedLanguage || 'pt').split('-')[0]
-  const currentTheme = (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) || 'dark'
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
@@ -37,15 +37,6 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
     void i18n.changeLanguage(lng)
     try {
       localStorage.setItem('i18nextLng', lng)
-    } catch {
-      // ignore
-    }
-  }
-
-  const setTheme = (theme: string) => {
-    document.documentElement.setAttribute('data-theme', theme)
-    try {
-      localStorage.setItem('theme', theme)
     } catch {
       // ignore
     }

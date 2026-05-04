@@ -236,6 +236,10 @@
       "inactive": "Em Breve",
       "finished": "Concluído"
     },
+    "banner": {
+      "finished": "Esta jam já terminou",
+      "inactive": "Esta jam ainda não começou"
+    },
     "features": {
       "title": "Feito para todos no Jam",
       "description": "Uma ferramenta para três papéis diferentes",

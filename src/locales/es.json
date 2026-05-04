@@ -226,6 +226,10 @@
       "inactive": "Próximamente",
       "finished": "Finalizado"
     },
+    "banner": {
+      "finished": "Esta jam ya terminó",
+      "inactive": "Esta jam aún no ha comenzado"
+    },
     "songs_count": {
       "one": "{{count}} canción",
       "other": "{{count}} canciones"

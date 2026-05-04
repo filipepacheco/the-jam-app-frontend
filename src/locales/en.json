@@ -233,6 +233,10 @@
       "inactive": "Coming Soon",
       "finished": "Completed"
     },
+    "banner": {
+      "finished": "This jam has ended",
+      "inactive": "This jam hasn't started yet"
+    },
     "features": {
       "title": "Built for Everyone at the Jam",
       "description": "One tool for three different roles",

@@ -13,7 +13,7 @@ import {
   MessageSquareHeart,
   LogOut,
 } from 'lucide-react'
-import { useAuth } from '../hooks'
+import { useAuth, useTheme } from '../hooks'
 import { FeedbackModal } from './FeedbackModal'
 import { useState } from 'react'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
@@ -57,17 +57,9 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
     }
   }
 
-  const setTheme = (theme: string) => {
-    document.documentElement.setAttribute('data-theme', theme)
-    try {
-      localStorage.setItem('theme', theme)
-    } catch {
-      // ignore
-    }
-  }
+  const [currentTheme, setTheme] = useTheme()
 
   const currentLang = (i18n.language || i18n.resolvedLanguage || 'pt').split('-')[0]
-  const currentTheme = (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) || 'dark'
 
   // Body scroll lock
   useEffect(() => {
