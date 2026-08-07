@@ -99,26 +99,15 @@ export function MusicModal({
         neededKeys: formData.neededKeys,
       }
 
+      // Each call now throws on failure; the catch below surfaces the message.
       if (mode === 'add') {
-        const result = await musicService.create(payload as CreateMusicDto)
-        if (!result.success) {
-          setError(result.error || t('music_library.errors.failed_to_add'))
-          return
-        }
+        await musicService.create(payload as CreateMusicDto)
         setSuccess(t('music_library.feedback.add_success', { title: formData.title }))
       } else if (mode === 'suggest') {
-        const result = await musicService.create(payload as CreateMusicDto)
-        if (!result.success) {
-          setError(result.error || t('music_library.errors.failed_to_suggest'))
-          return
-        }
+        await musicService.create(payload as CreateMusicDto)
         setSuccess(t('music_library.feedback.suggest_success', { title: formData.title }))
       } else if (music) {
-        const result = await musicService.update(music.id, payload as UpdateMusicDto)
-        if (!result.success) {
-          setError(result.error || t('music_library.errors.failed_to_update'))
-          return
-        }
+        await musicService.update(music.id, payload as UpdateMusicDto)
         setSuccess(t('music_library.feedback.update_success', { title: formData.title }))
       }
 

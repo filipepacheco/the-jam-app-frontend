@@ -1,6 +1,6 @@
 /**
  * NotesEditor - Shared notes view/edit/add component
- * Used by both ScheduleCollapsibleCard and ScheduleCompactCard
+ * Used by ScheduleCollapsibleCard
  */
 
 import { useState } from 'react'

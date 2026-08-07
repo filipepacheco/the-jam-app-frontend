@@ -57,9 +57,9 @@ export function SpotifyImportModal({
   const loadUserJams = useCallback(async () => {
     setLoadingJams(true)
     try {
-      const result = await jamService.findAll()
+      const jams = await jamService.findAll()
       // Filter to only show jams that are not finished
-      const activeJams = result.data.filter(jam => jam.status !== 'FINISHED')
+      const activeJams = jams.filter(jam => jam.status !== 'FINISHED')
       setUserJams(activeJams)
     } catch (err) {
       console.error('Failed to load jams:', err)
@@ -126,28 +126,24 @@ export function SpotifyImportModal({
     setIsSubmitting(true)
     setError(null)
 
-    const result = await spotifyService.importPlaylist({
-      playlistUrl: playlistUrl.trim(),
-      // If existing jam mode, include jamId
-      ...(mode === 'existing' && { jamId: selectedJamId }),
-      // If new jam mode, include these fields
-      ...(mode === 'new' && {
-        name: name.trim() || undefined,
-        description: description.trim() || undefined,
-        date: date || undefined,
-        location: location.trim() || undefined,
-        slug: slug.trim() || undefined,
-      }),
-    })
-
-    setIsSubmitting(false)
-
-    if (result.success && result.data) {
-      setImportResult(result.data)
-    } else {
-      // Handle errors - the error is a string message from the service layer
-      const errorMessage = result.error || t('spotify.import_modal.errors.import_failed')
-      setError(errorMessage)
+    try {
+      setImportResult(await spotifyService.importPlaylist({
+        playlistUrl: playlistUrl.trim(),
+        // If existing jam mode, include jamId
+        ...(mode === 'existing' && { jamId: selectedJamId }),
+        // If new jam mode, include these fields
+        ...(mode === 'new' && {
+          name: name.trim() || undefined,
+          description: description.trim() || undefined,
+          date: date || undefined,
+          location: location.trim() || undefined,
+          slug: slug.trim() || undefined,
+        }),
+      }))
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('spotify.import_modal.errors.import_failed'))
+    } finally {
+      setIsSubmitting(false)
     }
   }, [playlistUrl, name, description, date, location, slug, mode, selectedJamId, t])
 

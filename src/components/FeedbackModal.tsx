@@ -55,17 +55,16 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
     setIsSubmitting(true)
     setError(null)
 
-    const result = await feedbackService.create({
-      rating,
-      comment: comment.trim() || undefined,
-    })
-
-    setIsSubmitting(false)
-
-    if (result.success) {
+    try {
+      await feedbackService.create({
+        rating,
+        comment: comment.trim() || undefined,
+      })
       setShowSuccess(true)
-    } else {
+    } catch {
       setError(t('feedback.submit_failed'))
+    } finally {
+      setIsSubmitting(false)
     }
   }, [rating, comment, t])
 

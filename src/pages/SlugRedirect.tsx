@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { jamService } from '../services'
+import {getJamPath} from '../utils/jamUrl'
 import { NotFoundPage } from './NotFoundPage'
 
 /**
@@ -19,10 +20,9 @@ export function SlugRedirect() {
       return
     }
 
-    jamService.findOne(slug).then(result => {
-      const jam = result.data
+    jamService.findOne(slug).then(jam => {
       if (jam) {
-        const target = jam.slug ? `/jams/${jam.slug}` : `/jams/${jam.id}`
+        const target = getJamPath(jam)
         navigate(target, { replace: true })
       } else {
         setNotFound(true)

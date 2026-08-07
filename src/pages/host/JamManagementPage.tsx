@@ -5,7 +5,7 @@
  */
 
 import {useCallback, useEffect, useState} from 'react'
-import {useLocation, useNavigate, useParams, useSearchParams} from 'react-router-dom'
+import {useLocation, useNavigate, useParams} from 'react-router-dom'
 import useSWR from 'swr'
 import {SWR_DEFAULTS} from '../../config/swrDefaults'
 import {useAuth, usePageAlerts} from '../../hooks'
@@ -16,7 +16,6 @@ import {SpotifyExportModal} from '../../components'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
-import {DJControlTab} from "../tabs/DJControlTab.tsx";
 import {DJControlTabV2} from "../tabs/DJControlTabV2.tsx";
 import {AnalyticsTab} from "../tabs/AnalyticsTab.tsx";
 import {DashboardTab} from "../tabs/DashboardTab.tsx";
@@ -28,8 +27,7 @@ type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analyt
 
 // SWR fetcher for jam data
 const jamFetcher = async (id: string): Promise<JamResponseDto> => {
-    const result = await jamService.findOne(id)
-    return result.data
+    return jamService.findOne(id)
 }
 
 export function JamManagementPage() {
@@ -37,11 +35,7 @@ export function JamManagementPage() {
     const navigate = useNavigate()
     const location = useLocation()
     const {id: jamId} = useParams<{ id: string }>()
-    const [searchParams] = useSearchParams()
     const {isAuthenticated, isLoading: authLoading} = useAuth()
-
-    // Check for legacy DJ control flag in URL: ?useLegacyDJ=true
-    const useLegacyDJ = searchParams.get('useLegacyDJ') === 'true'
 
     const [activeTab, setActiveTab] = useState<TabType>('overview')
     const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
@@ -268,9 +262,8 @@ export function JamManagementPage() {
                     <OverviewTab jam={jam} onStatusChange={handleStatusChange} loading={jamLoading}/>)}
                 {activeTab === 'registrations' && (<RegistrationsTab jam={jam}/>)}
                 {activeTab === 'schedule' && (<ScheduleTab jam={jam} onReload={() => refreshJam()}/>)}
-                {activeTab === 'dj-control' && (useLegacyDJ ? (
-                        <DJControlTab jam={jam} onReload={() => refreshJam()}/>) : (
-                        <DJControlTabV2 jamId={jamId!} onReload={() => refreshJam()}/>))}
+                {activeTab === 'dj-control' && (
+                        <DJControlTabV2 jamId={jamId!} onReload={() => refreshJam()}/>)}
                 {activeTab === 'live' && (<LiveJamControlPanel
                         jamId={jamId!}
                         onActionSuccess={(msg) => setSuccess(msg)}

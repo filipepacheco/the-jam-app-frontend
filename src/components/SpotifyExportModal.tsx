@@ -49,20 +49,18 @@ export function SpotifyExportModal({
     setIsSubmitting(true)
     setError(null)
 
-    const result = await spotifyService.exportPlaylist({
-      jamId,
-      spotifyAccessToken,
-      playlistName: playlistName.trim() || undefined,
-      playlistDescription: playlistDescription.trim() || undefined,
-      public: isPublic,
-    })
-
-    setIsSubmitting(false)
-
-    if (result.success && result.data) {
-      setExportResult(result.data)
-    } else {
-      setError(result.error || t('spotify.export_modal.errors.export_failed'))
+    try {
+      setExportResult(await spotifyService.exportPlaylist({
+        jamId,
+        spotifyAccessToken,
+        playlistName: playlistName.trim() || undefined,
+        playlistDescription: playlistDescription.trim() || undefined,
+        public: isPublic,
+      }))
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('spotify.export_modal.errors.export_failed'))
+    } finally {
+      setIsSubmitting(false)
     }
   }, [jamId, spotifyAccessToken, playlistName, playlistDescription, isPublic, t])
 

@@ -36,8 +36,7 @@ export function HostDashboardPage() {
         setError(null)
 
         try {
-            const result = await jamService.findAll()
-            setJams(result.data || [])
+            setJams(await jamService.findAll())
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : t('jam_management.host_dashboard.failed_to_load')
             console.error('❌ Error loading jams:', err)

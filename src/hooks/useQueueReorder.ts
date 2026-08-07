@@ -61,27 +61,19 @@ export function useQueueReorder(
       // Debounce the API call
       debounceTimerRef.current = setTimeout(async () => {
         try {
-          const response = await jamControlService.reorderQueue(jamId, updates)
+          const jam = await jamControlService.reorderQueue(jamId, updates)
 
           setIsReordering(false)
 
-          if (response.success) {
-            if (response.data?.schedules) {
-              // Server returned full jam - use server state
-              const sortedSchedules = response.data.schedules
-                .filter(s => s.status === 'SCHEDULED' || s.status === 'IN_PROGRESS')
-                .sort((a, b) => (a.order || 0) - (b.order || 0))
-              onSuccess(sortedSchedules)
-            } else {
-              // Server returned true - keep optimistic update already applied
-              onSuccess(newQueue)
-            }
+          if (jam?.schedules) {
+            // Server returned full jam - use server state
+            const sortedSchedules = jam.schedules
+              .filter(s => s.status === 'SCHEDULED' || s.status === 'IN_PROGRESS')
+              .sort((a, b) => (a.order || 0) - (b.order || 0))
+            onSuccess(sortedSchedules)
           } else {
-            // Failure: rollback and show error
-            const errorMessage = response.error?.message || 'Failed to reorder queue'
-            setError(errorMessage)
-            onError(errorMessage)
-            onRollback?.(previousQueueRef.current)
+            // Server returned true - keep optimistic update already applied
+            onSuccess(newQueue)
           }
         } catch (err) {
           setIsReordering(false)

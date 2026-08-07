@@ -3,7 +3,8 @@
  * Handles jam-related API calls
  */
 
-import {apiClient, withLegacyResponse} from '../lib/api'
+import {apiClient, unwrapResponse} from '../lib/api'
+import i18n from '../i18n'
 import type {JamResponseDto, JamStatus, PaginatedResponse} from '../types/api.types'
 
 export interface SpecialtySlot {
@@ -60,57 +61,46 @@ function buildSpecialtySlots(jam: JamResponseDto): SpecialtySlot[] {
 
 /**
  * Fetch all jams from the API
- * Has custom pagination logic - not wrapped with withLegacyResponse
+ * Has custom pagination logic - not wrapped with unwrapResponse (hand-rolled
+ * success-check + try/catch, same shape unwrapResponse now centralizes).
  */
-export async function findAll(skip = 0, take = 100) {
-  try {
-    const response = await apiClient.get<PaginatedResponse<JamResponseDto> | JamResponseDto[]>(
+export async function findAll(skip = 0, take = 100): Promise<JamResponseDto[]> {
+  const responseData = await unwrapResponse(
+    () => apiClient.get<PaginatedResponse<JamResponseDto> | JamResponseDto[]>(
       `/jams?skip=${skip}&take=${take}`
-    )
+    ),
+    i18n.t('errors.generic_error'),
+  )
 
-    if (!response.success) {
-      throw new Error(response.error || 'Failed to load jams')
-    }
-
-    // Handle both paginated response (new) and array response (legacy)
-    const responseData = response.data
-    let jams: JamResponseDto[]
-
-    if (responseData && 'data' in responseData && 'meta' in responseData) {
-      jams = responseData.data
-    } else if (Array.isArray(responseData)) {
-      jams = responseData
-    } else {
-      jams = []
-    }
-
-    return { data: jams, status: 200 }
-  } catch (err) {
-    if (err instanceof Error) {
-      throw err
-    }
-    throw new Error('Connection error. Please try again.')
+  // Normalisation kept deliberately: the live API returns the array directly
+  // (with pagination in the envelope's `meta`), but this also tolerates a
+  // nested {data, meta} body rather than throwing on an unexpected shape.
+  if (responseData && 'data' in responseData && 'meta' in responseData) {
+    return responseData.data
   }
+  if (Array.isArray(responseData)) {
+    return responseData
+  }
+  return []
 }
 
 /**
  * Fetch a single jam by ID
  */
-export function findOne(id: string) {
-  return withLegacyResponse(
+export function findOne(id: string): Promise<JamResponseDto> {
+  return unwrapResponse(
     () => apiClient.get<JamResponseDto>(`/jams/${id}`),
-    'Failed to load jam',
+    i18n.t('errors.failed_to_load_jam'),
   )
 }
 
 /**
  * Create a new jam
  */
-export function create(jamData: Partial<JamResponseDto>) {
-  return withLegacyResponse(
+export function create(jamData: Partial<JamResponseDto>): Promise<JamResponseDto> {
+  return unwrapResponse(
     () => apiClient.post<JamResponseDto>('/jams', jamData),
     'Failed to create jam',
-    201,
   )
 }
 
@@ -119,36 +109,27 @@ export function create(jamData: Partial<JamResponseDto>) {
  * Fetches the raw JamResponseDto and maps to JamDetails with computed specialty slots.
  */
 export async function getJamDetails(jamId: string): Promise<JamDetails> {
-  try {
-    const response = await apiClient.get<JamResponseDto>(`/jams/${jamId}`)
+  const jam = await unwrapResponse(
+    () => apiClient.get<JamResponseDto>(`/jams/${jamId}`),
+    i18n.t('errors.failed_to_load_jam'),
+  )
 
-    if (!response.success) {
-      throw new Error(response.error || 'Failed to load jam details')
-    }
-
-    const jam = response.data as JamResponseDto
-    return {
-      id: jam.id,
-      name: jam.name,
-      description: jam.description,
-      date: jam.date,
-      status: jam.status,
-      hostName: jam.hostName,
-      specialtySlots: buildSpecialtySlots(jam),
-    }
-  } catch (err) {
-    if (err instanceof Error) {
-      throw err
-    }
-    throw new Error('Connection error. Please try again.')
+  return {
+    id: jam.id,
+    name: jam.name,
+    description: jam.description,
+    date: jam.date,
+    status: jam.status,
+    hostName: jam.hostName,
+    specialtySlots: buildSpecialtySlots(jam),
   }
 }
 
 /**
  * Update a jam
  */
-export function update(id: string, jamData: Partial<JamResponseDto>) {
-  return withLegacyResponse(
+export function update(id: string, jamData: Partial<JamResponseDto>): Promise<JamResponseDto> {
+  return unwrapResponse(
     () => apiClient.patch<JamResponseDto>(`/jams/${id}`, jamData),
     'Failed to update jam',
   )
@@ -157,8 +138,8 @@ export function update(id: string, jamData: Partial<JamResponseDto>) {
 /**
  * Delete a jam
  */
-export function deleteFn(id: string) {
-  return withLegacyResponse(
+export function deleteFn(id: string): Promise<JamResponseDto> {
+  return unwrapResponse(
     () => apiClient.delete<JamResponseDto>(`/jams/${id}`),
     'Failed to delete jam',
   )

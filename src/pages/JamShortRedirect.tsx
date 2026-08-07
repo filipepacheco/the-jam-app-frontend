@@ -1,6 +1,7 @@
 import {useEffect} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {jamService} from '../services'
+import {getJamPath} from '../utils/jamUrl'
 
 /**
  * Redirect page for short code URLs (/j/:code).
@@ -17,10 +18,9 @@ export function JamShortRedirect() {
     }
 
     // Backend resolves short codes via the same /jams/:identifier endpoint
-    jamService.findOne(code).then(result => {
-      const jam = result.data
+    jamService.findOne(code).then(jam => {
       if (jam) {
-        const target = jam.slug ? `/jams/${jam.slug}` : `/jams/${jam.id}`
+        const target = getJamPath(jam)
         navigate(target, {replace: true})
       } else {
         navigate('/', {replace: true})

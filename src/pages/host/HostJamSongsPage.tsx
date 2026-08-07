@@ -10,7 +10,8 @@ import {useCallback, useMemo, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {formatJamDuration} from '../../lib/formatters'
 import useSWR from 'swr'
-import {musicService} from '../../services'
+import {musicService, scheduleService} from '../../services'
+import * as jamService from '../../services/jamService'
 import type {JamResponseDto, MusicResponseDto} from '../../types/api.types.ts'
 import {Alert} from '../../components'
 import {useTranslation} from 'react-i18next'
@@ -20,15 +21,21 @@ export function HostJamSongsPage() {
   const { id: jamId } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  // Fetch jam details with SWR
+  // Fetch through the service layer rather than by raw URL, so these reads go
+  // through the same success-check every other call does.
   const { data: jamData, isLoading: jamLoading, mutate: mutateJam } = useSWR<JamResponseDto>(
-    jamId ? `/jams/${jamId}` : null
+    jamId ? ['jam', jamId] : null,
+    () => jamService.findOne(jamId!)
   )
-  
-  // Fetch all songs with SWR
-  const { data: allSongs = [], mutate: mutateAllSongs } = useSWR<MusicResponseDto[]>('/music')
+
+  const { data: allSongsPage, mutate: mutateAllSongs } = useSWR(
+    ['music', 'all'],
+    () => musicService.findAll(0, 100)
+  )
+  const allSongs = useMemo<MusicResponseDto[]>(() => allSongsPage?.data ?? [], [allSongsPage])
 
   const [success, setSuccess] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [showAddSong, setShowAddSong] = useState(false)
   const [selectedSongId, setSelectedSongId] = useState<string>('')
 
@@ -40,11 +47,17 @@ export function HostJamSongsPage() {
     duration: 240,
   })
 
-  // Extract songs from schedules
-  const songs = useMemo(() => {
+  // Keep the schedule alongside its music: a "song in a jam" IS a schedule, and
+  // remove/reorder both act on the schedule id, not the music id.
+  const scheduledSongs = useMemo(() => {
     if (!jamData?.schedules) return []
-    return jamData.schedules.map((s) => s.music).filter(Boolean)
+    return jamData.schedules
+      .filter((s) => s.music)
+      .slice()
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
   }, [jamData?.schedules])
+
+  const songs = useMemo(() => scheduledSongs.map((s) => s.music), [scheduledSongs])
 
   const jamName = jamData?.name || t('common.app_name')
   const loading = jamLoading
@@ -55,6 +68,7 @@ export function HostJamSongsPage() {
       return
     }
 
+    setError(null)
     try {
       // Transform Portuguese field names to English for API
       const songData = {
@@ -67,9 +81,9 @@ export function HostJamSongsPage() {
       // Create the song
       const createdSong = await musicService.create(songData)
 
-      if (createdSong.data && jamId) {
+      if (jamId) {
         // Link it to the jam
-        await musicService.linkToJam(createdSong.data.id, jamId)
+        await musicService.linkToJam(createdSong.id, jamId)
 
         // Reset form and reload
         setNewSong({
@@ -84,8 +98,8 @@ export function HostJamSongsPage() {
         await mutateJam()
         await mutateAllSongs()
       }
-    } catch (err) {
-      // Error handling
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('errors.generic_error'))
     }
   }, [newSong, jamId, t, mutateJam, mutateAllSongs])
 
@@ -94,6 +108,7 @@ export function HostJamSongsPage() {
       return
     }
 
+    setError(null)
     try {
       await musicService.linkToJam(selectedSongId, jamId)
 
@@ -102,28 +117,51 @@ export function HostJamSongsPage() {
       setSelectedSongId('')
       setShowAddSong(false)
       await mutateJam()
-    } catch (err) {
-      // Error handling
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('errors.generic_error'))
     }
   }, [selectedSongId, jamId, allSongs, t, mutateJam])
 
-  const handleRemoveSong = useCallback(async (songId: string) => {
+  /**
+   * Removes the song's schedule - the row that links the music to this jam.
+   * Previously this only showed a success toast and refetched, so the song
+   * always came back.
+   */
+  const handleRemoveSong = useCallback(async (scheduleId: string) => {
     if (!confirm(t('host_songs.remove_confirm'))) return
 
+    setError(null)
     try {
-      // Note: If backend doesn't have a remove endpoint, we'll just reload
-      const song = songs.find((s) => s.id === songId)
-      setSuccess(t('host_songs.song_removed_success', { title: song?.title }))
+      const scheduled = scheduledSongs.find((s) => s.id === scheduleId)
+      await scheduleService.remove(scheduleId)
+      setSuccess(t('host_songs.song_removed_success', { title: scheduled?.music?.title }))
       await mutateJam()
-    } catch (err) {
-      // Error handling
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('errors.generic_error'))
     }
-  }, [songs, t, mutateJam])
+  }, [scheduledSongs, t, mutateJam])
 
+  /**
+   * Swaps the `order` of two schedules. Previously a TODO that reported success
+   * without calling anything.
+   */
   const handleReorder = useCallback(async (fromIndex: number, toIndex: number) => {
-    // TODO: Implement song reordering with backend API
-    setSuccess(t('host_songs.order_updated'))
-  }, [t])
+    const from = scheduledSongs[fromIndex]
+    const to = scheduledSongs[toIndex]
+    if (!from || !to) return
+
+    setError(null)
+    try {
+      await Promise.all([
+        scheduleService.update(from.id, { order: to.order }),
+        scheduleService.update(to.id, { order: from.order }),
+      ])
+      setSuccess(t('host_songs.order_updated'))
+      await mutateJam()
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('errors.generic_error'))
+    }
+  }, [scheduledSongs, t, mutateJam])
 
   const availableSongs = useMemo(() => {
     const linkedIds = new Set(songs.map((s) => s.id))
@@ -159,6 +197,7 @@ export function HostJamSongsPage() {
 
         {/* Alerts */}
         {success && <Alert type="success" message={success} onDismiss={() => setSuccess(null)} />}
+        {error && <Alert type="error" message={error} onDismiss={() => setError(null)} />}
 
         {/* Add Song Modal */}
         {showAddSong && (
@@ -306,8 +345,10 @@ export function HostJamSongsPage() {
           <Alert type="warning" message={t('jams.no_songs_yet')} />
         ) : (
           <div className="space-y-2">
-            {songs.map((song, index) => (
-              <div key={song.id} className="card bg-base-200 shadow-md">
+            {scheduledSongs.map((scheduled, index) => {
+              const song = scheduled.music
+              return (
+              <div key={scheduled.id} className="card bg-base-200 shadow-md">
                 <div className="card-body p-4 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-4 flex-1">
                     <div className="text-2xl font-bold text-primary">{index + 1}</div>
@@ -335,7 +376,7 @@ export function HostJamSongsPage() {
                         ↑
                       </button>
                     )}
-                    {index < songs.length - 1 && (
+                    {index < scheduledSongs.length - 1 && (
                       <button
                         onClick={() => handleReorder(index, index + 1)}
                         className="btn btn-sm btn-ghost"
@@ -345,7 +386,7 @@ export function HostJamSongsPage() {
                       </button>
                     )}
                     <button
-                      onClick={() => handleRemoveSong(song.id)}
+                      onClick={() => handleRemoveSong(scheduled.id)}
                       className="btn btn-sm btn-error btn-outline"
                       disabled={loading}
                     >
@@ -354,7 +395,8 @@ export function HostJamSongsPage() {
                   </div>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
 
