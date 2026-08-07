@@ -40,7 +40,7 @@ const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: 
 function Navbar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { isAuthenticated, user, isViewer, isLoading } = useAuth()
+  const { isAuthenticated, isViewer, isHost, isLoading } = useAuth()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
@@ -76,13 +76,13 @@ function Navbar() {
         <ul className="flex items-center gap-1">
           <NavLink href="/" icon={<Home className="size-4" />} label={t('nav.home')} isActive={isActive('/')} onClick={handleNavClick('/')} />
           <NavLink href="/jams" icon={<Search className="size-4" />} label={t('nav.jams')} isActive={isActive('/jams')} onClick={handleNavClick('/jams')} />
-          {isAuthenticated && user?.isHost && (
+          {isAuthenticated && isHost() && (
             <NavLink href="/musicians" icon={<Users className="size-4" />} label={t('nav.musicians')} isActive={isActive('/musicians')} onClick={handleNavClick('/musicians')} />
           )}
           {isAuthenticated && !isViewer() && (
             <NavLink href="/music" icon={<Music className="size-4" />} label={t('nav.music')} isActive={isActive('/music')} onClick={handleNavClick('/music')} />
           )}
-          {isAuthenticated && user?.isHost && (
+          {isAuthenticated && isHost() && (
             <NavLink href="/host/dashboard" icon={<LayoutDashboard className="size-4" />} label={t('nav.host_dashboard')} isActive={isActive('/host/dashboard')} onClick={handleNavClick('/host/dashboard')} />
           )}
         </ul>

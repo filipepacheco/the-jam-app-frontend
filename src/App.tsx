@@ -15,6 +15,7 @@ import {Testimonials} from './components/Testimonials'
 import CallToAction from './components/CallToAction'
 import Footer from './components/Footer'
 import {SEO} from './components/SEO'
+import {buildHomeJsonLd} from '../site.config'
 // Keep eager (critical path)
 import {LoginPage} from './pages/LoginPage'
 import {BrowseJamsPage} from './pages/BrowseJamsPage'
@@ -23,7 +24,7 @@ import {JamShortRedirect} from './pages/JamShortRedirect'
 import {SlugRedirect} from './pages/SlugRedirect'
 import {PublicDashboardPage} from './pages/PublicDashboardPage'
 import AuthCallbackPage from "./pages/tabs/AuthCallbackPage.tsx"
-import {AuthProvider, JamProvider} from './contexts'
+import {AuthProvider} from './contexts'
 import {FullPageSpinner, OnboardingModal} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {useAuth} from './hooks'
@@ -78,65 +79,19 @@ function HomePage() {
 
   const siteUrl = SITE_URL
 
-  const homeJsonLd: Record<string, unknown>[] = useMemo(() => [
-    {
-      '@type': 'WebSite',
-      name: 'Jam App',
-      alternateName: 'The Jam App',
-      url: siteUrl,
-      description: t('seo.homepage.description_enhanced'),
-      inLanguage: currentLang === 'pt' ? 'pt-BR' : currentLang,
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: {
-          '@type': 'EntryPoint',
-          urlTemplate: `${siteUrl}/jams?q={search_term_string}`,
-        },
-        'query-input': 'required name=search_term_string',
-      },
-    },
-    {
-      '@type': 'WebApplication',
-      name: 'Jam App',
-      alternateName: 'The Jam App',
-      url: siteUrl,
-      description: t('seo.homepage.description_enhanced'),
-      applicationCategory: 'EntertainmentApplication',
-      operatingSystem: 'Any',
-      browserRequirements: 'Requires JavaScript',
-      inLanguage: ['pt-BR', 'en', 'es'],
-      image: `${siteUrl}/og-image.jpg`,
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'BRL',
-      },
-      featureList: [
-        t('seo.features.create_jams'),
-        t('seo.features.live_dashboard'),
-        t('seo.features.musician_registration'),
-        t('seo.features.setlist_control'),
-        t('seo.features.qr_sharing'),
-        t('seo.features.spotify_import'),
-      ],
-      author: {
-        '@type': 'Organization',
-        name: 'Jam App',
-        url: siteUrl,
-      },
-    },
-    {
-      '@type': 'Organization',
-      name: 'Jam App',
-      url: siteUrl,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${siteUrl}/web/icons8-concert-color-512.png`,
-        width: 512,
-        height: 512,
-      },
-    },
-  ], [t, siteUrl, currentLang])
+  const homeJsonLd = useMemo(() => buildHomeJsonLd(siteUrl, {
+    description: t('seo.homepage.description_enhanced'),
+    organizationDescription: t('seo.homepage.description_enhanced'),
+    featureList: [
+      t('seo.features.create_jams'),
+      t('seo.features.live_dashboard'),
+      t('seo.features.musician_registration'),
+      t('seo.features.setlist_control'),
+      t('seo.features.qr_sharing'),
+      t('seo.features.spotify_import'),
+    ],
+    pageLanguage: currentLang === 'pt' ? 'pt-BR' : currentLang,
+  }), [t, siteUrl, currentLang])
 
   return (
     <>
@@ -304,10 +259,8 @@ function App() {
         }}
       >
         <AuthProvider>
-          <JamProvider>
-            <AppContent />
-            <OnboardingWrapper />
-          </JamProvider>
+          <AppContent />
+          <OnboardingWrapper />
         </AuthProvider>
       </SWRConfig>
       <SpeedInsights />

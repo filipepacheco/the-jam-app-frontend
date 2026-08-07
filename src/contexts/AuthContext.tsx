@@ -21,11 +21,33 @@ import {apiClient} from '../lib/api'
 import {getOfflineQueueManager} from '../services'
 
 /**
- * Derive user role from profile data.
+ * Derive user role from a real, successfully-fetched profile.
  * Uses explicit role field if set, otherwise falls back to isHost flag.
+ * Defaults to 'user' - a successfully-authenticated profile is at minimum a registered user.
  */
-function deriveRole(profile: { role?: UserRole; isHost?: boolean }): UserRole {
+export function deriveRole(profile: { role?: UserRole; isHost?: boolean }): UserRole {
   return profile.role || (profile.isHost ? 'host' : 'user')
+}
+
+/**
+ * Derive role from unverified localStorage data, before session verification completes.
+ * Defaults to 'viewer' (least-privileged) rather than deriveRole's 'user' default -
+ * stale or unverified local data shouldn't grant more access than an anonymous visitor.
+ */
+export function deriveInitialRole(parsed: { role?: UserRole; isHost?: boolean } | undefined): UserRole {
+  if (!parsed) return 'viewer'
+  if (parsed.role) return parsed.role
+  if (parsed.isHost === true) return 'host'
+  return 'viewer'
+}
+
+/**
+ * The predicate behind the isHost() context helper, extracted so it's directly
+ * unit-testable without rendering AuthProvider. Based on `role`, never the raw
+ * `user.isHost` field - see deriveRole for why role is the field of record.
+ */
+export function isHostRole(role: UserRole): boolean {
+  return role === 'host'
 }
 
 /**
@@ -50,17 +72,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<UserRole>(() => {
     try {
       const stored = localStorage.getItem('auth_user')
-      if (stored) {
-        const parsedUser = JSON.parse(stored)
-        // Derive role from user data - check role field first, then isHost
-        if (parsedUser.role) return parsedUser.role
-        if (parsedUser.isHost === true) return 'host'
-        return 'viewer'
-      }
+      return deriveInitialRole(stored ? JSON.parse(stored) : undefined)
     } catch (err) {
       console.error('Failed to parse stored auth_user:', err)
+      return 'viewer'
     }
-    return 'viewer'
   })
   const [isNewUser, setIsNewUser] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
@@ -303,48 +319,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   /**
-   * Legacy login method (for backward compatibility)
-   */
-  const login = useCallback((authUser: AuthUser) => {
-    try {
-      localStorage.setItem('auth_user', JSON.stringify(authUser))
-      setUser(authUser)
-      setRoleState(authUser.role)
-  
-    } catch (err) {
-      console.error('Login failed:', err)
-    }
-  }, [])
-
-  /**
-   * Switch user role
-   */
-  const setRole = useCallback((newRole: UserRole) => {
-    setUser(prev => {
-      if (prev) {
-        const updatedUser = { ...prev, role: newRole }
-        localStorage.setItem('auth_user', JSON.stringify(updatedUser))
-        return updatedUser
-      }
-      return prev
-    })
-    setRoleState(newRole)
-  }, [])
-
-  /**
-   * Update user profile
-   */
-  const updateUser = useCallback((fields: Partial<AuthUser>) => {
-    setUser(prev => {
-      if (!prev) return prev
-      const updatedUser = { ...prev, ...fields }
-      localStorage.setItem('auth_user', JSON.stringify(updatedUser))
-      setRoleState(deriveRole(updatedUser))
-      return updatedUser
-    })
-  }, [])
-
-  /**
    * Complete onboarding - update instrument, skill level, and contact info
    */
   const completeOnboarding = useCallback(async (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }): Promise<{ success: boolean; error?: string }> => {
@@ -426,6 +400,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return role === 'viewer'
   }, [role])
 
+  /**
+   * Helper method: Check if user is a host.
+   * Based on `role`, not the raw `user.isHost` field - role is the field of record
+   * (see deriveRole), so this is the only correct way to answer "is this user a host".
+   */
+  const isHost = useCallback(() => {
+    return isHostRole(role)
+  }, [role])
+
   const value: AuthContextType = useMemo(() => ({
     user,
     isAuthenticated,
@@ -438,14 +421,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loginWithOAuth,
     logout,
     resetPassword: resetPasswordFn,
-    login,
-    setRole,
-    updateUser,
     updateProfile,
     completeOnboarding,
     clearNewUserFlag,
     isUser: isUserRole,
     isViewer,
+    isHost,
   }), [
     user,
     isAuthenticated,
@@ -458,14 +439,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     loginWithOAuth,
     logout,
     resetPasswordFn,
-    login,
-    setRole,
-    updateUser,
     updateProfile,
     completeOnboarding,
     clearNewUserFlag,
     isUserRole,
     isViewer,
+    isHost,
   ])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

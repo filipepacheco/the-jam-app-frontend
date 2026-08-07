@@ -13,10 +13,11 @@
 import {createServer} from 'http'
 import {existsSync, mkdirSync, readFileSync, writeFileSync} from 'fs'
 import {extname, join, resolve} from 'path'
+import {ROUTES as SITE_ROUTES} from '../site.config'
 
 const DIST_DIR = resolve(import.meta.dirname, '..', 'dist')
 const PORT = 45678
-const ROUTES = ['/', '/jams', '/login', '/register', '/about']
+const ROUTES = SITE_ROUTES.filter((r) => r.prerender).map((r) => r.pattern)
 const NOINDEX_ROUTES = ['/login', '/register']
 
 // Simple static file server for the dist directory

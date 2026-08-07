@@ -5,7 +5,7 @@
 
 export { apiClient, ApiClient } from './client'
 export { API_CONFIG, API_ENDPOINTS, SITE_URL } from './config'
-export { withLegacyResponse } from './serviceWrapper'
+export { unwrapResponse, unwrapPaginatedResponse } from './serviceWrapper'
 export {
   handleApiError,
   formatError,

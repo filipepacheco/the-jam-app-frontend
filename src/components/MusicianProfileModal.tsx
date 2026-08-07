@@ -23,17 +23,13 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
     setLoading(true)
     setError(null)
 
-    musicianService.findOne(musicianId).then((res) => {
+    musicianService.findOne(musicianId).then((data) => {
       if (cancelled) return
-      if (res.success && res.data) {
-        setProfile(res.data)
-      } else {
-        setError(res.error || 'Error')
-      }
+      setProfile(data)
       setLoading(false)
-    }).catch(() => {
+    }).catch((err: unknown) => {
       if (!cancelled) {
-        setError('Error')
+        setError(err instanceof Error ? err.message : 'Error')
         setLoading(false)
       }
     })

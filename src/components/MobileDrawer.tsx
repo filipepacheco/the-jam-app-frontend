@@ -27,7 +27,7 @@ interface MobileDrawerProps {
 export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProps) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
-  const { isAuthenticated, user, logout, isViewer, isLoading } = useAuth()
+  const { isAuthenticated, user, logout, isViewer, isHost, isLoading } = useAuth()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const hasBeenOpened = useRef(false)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
@@ -99,13 +99,13 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
     { label: t('nav.browse_jams'), path: '/jams', icon: <Search className="size-5" /> },
   ]
 
-  if (isAuthenticated && user?.isHost) {
+  if (isAuthenticated && isHost()) {
     navItems.push({ label: t('nav.musicians'), path: '/musicians', icon: <Users className="size-5" /> })
   }
   if (isAuthenticated && !isViewer()) {
     navItems.push({ label: t('nav.music_library'), path: '/music', icon: <Music className="size-5" /> })
   }
-  if (isAuthenticated && user?.isHost) {
+  if (isAuthenticated && isHost()) {
     navItems.push({ label: t('nav.host_dashboard'), path: '/host/dashboard', icon: <LayoutDashboard className="size-5" /> })
   }
 
@@ -123,9 +123,15 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
         aria-hidden="true"
       />
 
-      {/* Drawer panel */}
+      {/* Drawer panel
+          Slides via `right` (a layout property), not `translate-x`. A non-`none`
+          transform on this ancestor - even the identity `translate-x-0` - creates
+          a new containing block that breaks position calculation for <select>
+          popups nested inside (both the classic native popup and daisyUI 5's
+          anchor-positioned ::picker(select)). See the language/theme selects
+          below. */}
       <nav
-        className={`fixed top-0 right-0 h-dvh w-80 bg-base-100 shadow-xl flex flex-col transition-transform ${durationClass} ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 h-dvh w-80 bg-base-100 shadow-xl flex flex-col transition-[right] ${durationClass} ${isOpen ? 'right-0' : 'right-[-20rem]'}`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-3">
@@ -147,7 +153,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
                   {user.name || ''}
                 </p>
                 <p className="text-xs text-base-content/50 truncate">
-                  {user.isHost ? t('roles.host') : t('roles.user')}
+                  {isHost() ? t('roles.host') : t('roles.user')}
                 </p>
               </div>
             </div>

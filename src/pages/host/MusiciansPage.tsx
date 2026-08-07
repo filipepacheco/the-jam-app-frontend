@@ -35,7 +35,7 @@ function formatLevel(level: string | null | undefined, t: (key: string) => strin
 
 export function MusiciansPage() {
   const { t, i18n } = useTranslation()
-  const { user, isLoading: authLoading } = useAuth()
+  const { isHost, isLoading: authLoading } = useAuth()
 
   // State
   const [searchQuery, setSearchQuery] = useState('')
@@ -69,10 +69,10 @@ export function MusiciansPage() {
   }, [])
 
   useEffect(() => {
-    if (user?.isHost) {
+    if (isHost()) {
       void fetchMusicians(page, pageSize)
     }
-  }, [user?.isHost, page, pageSize, fetchMusicians])
+  }, [isHost, page, pageSize, fetchMusicians])
 
   const handlePageSizeChange = useCallback((newSize: number) => {
     setPageSize(newSize)
@@ -115,6 +115,7 @@ export function MusiciansPage() {
   }, [])
 
   const handleUpdateMusician = useCallback(async (updatedMusician: MusicianResponseDto) => {
+    setError(null)
     try {
       await musicianService.update(updatedMusician.id, {
         name: updatedMusician.name ?? undefined,
@@ -131,8 +132,10 @@ export function MusiciansPage() {
 
       // Clear success message after 3 seconds
       setTimeout(() => setSuccess(null), 3000)
-    } catch {
-      // Error shown via error state
+    } catch (err: unknown) {
+      // Surface the failure: the update now throws, and previously this reported
+      // success even when the backend returned success:false.
+      setError(err instanceof Error ? err.message : t('errors.generic_error'))
     }
   }, [fetchMusicians, page, pageSize, t])
 
@@ -211,7 +214,7 @@ export function MusiciansPage() {
     )
   }
 
-  if (!user?.isHost) {
+  if (!isHost()) {
     return null
   }
 

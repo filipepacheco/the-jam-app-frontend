@@ -3,8 +3,8 @@
  * Handles all API operations related to Registrations (Inscrições)
  */
 
-import {API_ENDPOINTS, apiClient} from '../lib/api'
-import type {ApiResponse, CreateRegistrationDto, RegistrationResponseDto,} from '../types/api.types'
+import {API_ENDPOINTS, apiClient, unwrapResponse } from '../lib/api'
+import type {CreateRegistrationDto, RegistrationResponseDto,} from '../types/api.types'
 
 /**
  * Registration Service
@@ -16,8 +16,8 @@ export const registrationService = {
    * @param data - Registration creation data
    * @returns Promise with created registration
    */
-  async create(data: CreateRegistrationDto): Promise<ApiResponse<RegistrationResponseDto>> {
-    return apiClient.post<RegistrationResponseDto>(API_ENDPOINTS.registrations as string, data)
+  async create(data: CreateRegistrationDto): Promise<RegistrationResponseDto> {
+    return unwrapResponse(() => apiClient.post<RegistrationResponseDto>(API_ENDPOINTS.registrations as string, data))
   },
 
   /**
@@ -26,8 +26,8 @@ export const registrationService = {
    * @param data - Registration data to update
    * @returns Promise with updated registration
    */
-  async update(id: string, data: Partial<RegistrationResponseDto>): Promise<ApiResponse<RegistrationResponseDto>> {
-    return apiClient.patch<RegistrationResponseDto>(API_ENDPOINTS.registrationById(id), data)
+  async update(id: string, data: Partial<RegistrationResponseDto>): Promise<RegistrationResponseDto> {
+    return unwrapResponse(() => apiClient.patch<RegistrationResponseDto>(API_ENDPOINTS.registrationById(id), data))
   },
 
   /**
@@ -35,8 +35,8 @@ export const registrationService = {
    * @param id - Registration ID
    * @returns Promise with deletion confirmation
    */
-  async remove(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(API_ENDPOINTS.registrationById(id))
+  async remove(id: string): Promise<void> {
+    return unwrapResponse(() => apiClient.delete<void>(API_ENDPOINTS.registrationById(id)))
   },
 }
 

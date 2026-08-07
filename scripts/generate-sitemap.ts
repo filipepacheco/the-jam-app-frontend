@@ -7,6 +7,8 @@
  * Usage: npx tsx scripts/generate-sitemap.ts
  */
 
+import { ROUTES } from '../site.config'
+
 const SITE_URL = process.env.VITE_SITE_URL || 'https://www.jamapp.com.br'
 const API_URL = process.env.VITE_API_URL || 'https://karaoke-jam-backend.vercel.app'
 const DIST_DIR = './dist'
@@ -77,11 +79,10 @@ async function main() {
   const today = new Date().toISOString().split('T')[0]
 
   // Static pages (canonical URLs only, no hreflang - SPA serves same content regardless of ?lng=)
-  const staticEntries = [
-    generateUrlEntry(`${SITE_URL}/`, { lastmod: today }),
-    generateUrlEntry(`${SITE_URL}/jams`, { lastmod: today }),
-    generateUrlEntry(`${SITE_URL}/about`, { lastmod: today }),
-  ]
+  // Derived from site.config.ts's ROUTES so this list can't drift from the app's real routes.
+  const staticEntries = ROUTES
+    .filter((r) => r.sitemap)
+    .map((r) => generateUrlEntry(`${SITE_URL}${r.pattern}`, { lastmod: today }))
 
   // Dynamic jam pages
   const jams = await fetchPublicJams()

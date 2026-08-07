@@ -11,6 +11,7 @@ import {SITE_URL} from '../lib/api'
 import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
 import {SEO} from '../components/SEO'
+import {buildBrowseJsonLd} from '../../site.config'
 import type {JamStatus} from '../types/api.types'
 
 type DateSortOption = 'newest' | 'oldest' | 'upcoming'
@@ -90,26 +91,11 @@ export function BrowseJamsPage() {
 
   const siteUrl = SITE_URL
 
-  const browseJsonLd: Record<string, unknown>[] = [
-    {
-      '@type': 'CollectionPage',
-      name: t('jams.browse.title'),
-      description: t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') }),
-      url: `${siteUrl}/jams`,
-      isPartOf: {
-        '@type': 'WebSite',
-        name: 'Jam App',
-        url: siteUrl,
-      },
-    },
-    {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
-        { '@type': 'ListItem', position: 2, name: t('jams.browse.title'), item: `${siteUrl}/jams` },
-      ],
-    },
-  ]
+  const browseJsonLd = buildBrowseJsonLd(siteUrl, {
+    name: t('jams.browse.title'),
+    description: t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') }),
+    breadcrumbs: { home: t('nav.home'), browse: t('jams.browse.title') },
+  })
 
   return (
     <div className="min-h-screen bg-base-100">

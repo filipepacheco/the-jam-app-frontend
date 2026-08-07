@@ -77,8 +77,7 @@ export function CreateJamPage() {
     setError(null)
 
     try {
-      const result = await jamService.findOne(id)
-      const jam = result.data
+      const jam = await jamService.findOne(id)
 
       // Parse date and time from UTC to local
       const dateObj = jam.date ? new Date(jam.date) : null
@@ -210,11 +209,11 @@ export function CreateJamPage() {
 
       if (mode === 'create') {
         const result = await jamService.create(jamPayload)
-        setSuccess(t('create_jam.messages.create_success', { name: result.data.name }))
+        setSuccess(t('create_jam.messages.create_success', { name: result.name }))
         navTimeoutRef.current = setTimeout(() => navigate('/host/dashboard'), 1500)
       } else if (jamId) {
         const result = await jamService.update(jamId, jamPayload)
-        setSuccess(t('create_jam.messages.update_success', { name: result.data.name }))
+        setSuccess(t('create_jam.messages.update_success', { name: result.name }))
         navTimeoutRef.current = setTimeout(() => navigate('/host/dashboard'), 1500)
       }
     } catch (err) {

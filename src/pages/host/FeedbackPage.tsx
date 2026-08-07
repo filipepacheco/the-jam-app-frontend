@@ -27,13 +27,13 @@ export function FeedbackPage() {
     setLoading(true)
     setError(null)
 
-    const result = await feedbackService.list(pageNum, limit)
-    if (result.success && result.data) {
-      setFeedbackData(result.data)
-    } else {
-      setError(result.error || t('feedback_page.load_error'))
+    try {
+      setFeedbackData(await feedbackService.list(pageNum, limit))
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t('feedback_page.load_error'))
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }, [t])
 
   // Load feedback once auth is ready

@@ -105,23 +105,22 @@ export function SuggestNewSongModal({
     setImportError(null)
     setImportSuccess(false)
 
-    const result = await spotifyService.getTrackMetadata(spotifyUrl)
-
-    if (result.success && result.data) {
+    try {
+      const track = await spotifyService.getTrackMetadata(spotifyUrl)
       setFormData((prev) => ({
         ...prev,
-        title: result.data.title,
-        artist: result.data.artist,
-        link: result.data.spotifyUrl,
-        duration: formatDuration(result.data.durationMs, 'ms'),
+        title: track.title,
+        artist: track.artist,
+        link: track.spotifyUrl,
+        duration: formatDuration(track.durationMs, 'ms'),
       }))
       setImportSuccess(true)
       setImportError(null)
-    } else {
-      setImportError(result.error || t('jams.spotify_import_error'))
+    } catch (err: unknown) {
+      setImportError(err instanceof Error ? err.message : t('jams.spotify_import_error'))
+    } finally {
+      setImportLoading(false)
     }
-
-    setImportLoading(false)
   }, [spotifyUrl, t])
 
   // Handle form submission
@@ -168,32 +167,19 @@ export function SuggestNewSongModal({
         neededKeys: formData.neededKeys,
       }
 
-      const musicResult = await musicService.create(payload)
+      const createdMusic = await musicService.create(payload)
 
-      if (!musicResult.success || !musicResult.data) {
-        setError(musicResult.error || t('music_library.errors.failed_to_add'))
-        setSubmitting(false)
-        setSubmitStep('idle')
-        return
-      }
-
-      // Step 2: Link to jam via schedule
+      // Step 2: Link to jam via schedule.
+      // Not atomic: if this throws, the music row above already exists and is
+      // left orphaned. Surfaced as a failure to the user either way.
       setSubmitStep('linking')
 
-      const scheduleResult = await scheduleService.create({
+      await scheduleService.create({
         jamId,
-        musicId: musicResult.data.id,
+        musicId: createdMusic.id,
         order: 0,
         status: 'SUGGESTED',
-      } as any)
-
-      if (!scheduleResult.success) {
-        // Music was created but linking failed - still show partial success
-        setError(t('jams.suggest_failed'))
-        setSubmitting(false)
-        setSubmitStep('idle')
-        return
-      }
+      })
 
       // Success!
       onSuccess()
