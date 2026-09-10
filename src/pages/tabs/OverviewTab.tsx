@@ -2,7 +2,7 @@ import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {useMemo, useState} from "react";
-import {Pencil, ExternalLink, Play, Square, RotateCcw, Upload, Download, EllipsisVertical} from "lucide-react";
+import {Pencil, ExternalLink, Play, Square, RotateCcw, Upload, Download} from "lucide-react";
 import {initiateSpotifyAuth} from "../../lib/spotify/pkce";
 import {SpotifyImportModal} from "../../components";
 import {getJamDashboardPath} from "../../utils/jamUrl";
@@ -91,7 +91,7 @@ export function OverviewTab({
                 </button>
 
                 {/* Secondary Actions Row */}
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                     <button
                         onClick={() => navigate(`/host/jams/${jam.id}/edit`)}
                         className="btn btn-sm btn-ghost gap-2"
@@ -108,23 +108,20 @@ export function OverviewTab({
                         <ExternalLink className="size-4" />
                         {t('jam_management.view_public_dashboard')}
                     </a>
-                    <div className="dropdown dropdown-end ml-auto">
-                        <div tabIndex={0} role="button" className="btn btn-sm btn-ghost">
-                            <EllipsisVertical className="size-4" />
-                        </div>
-                        <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box shadow-lg z-10 w-52 p-2">
-                            <li>
-                                <button onClick={() => { void initiateSpotifyAuth(jam.id) }}>
-                                    <Upload className="size-4" /> {t('spotify.export_button')}
-                                </button>
-                            </li>
-                            <li>
-                                <button onClick={() => setShowImportModal(true)}>
-                                    <Download className="size-4" /> {t('spotify.import_button')}
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+                    <button
+                        onClick={() => { void initiateSpotifyAuth(jam.id) }}
+                        className="btn btn-sm btn-ghost gap-2"
+                    >
+                        <Upload className="size-4" />
+                        {t('spotify.export_button')}
+                    </button>
+                    <button
+                        onClick={() => setShowImportModal(true)}
+                        className="btn btn-sm btn-ghost gap-2"
+                    >
+                        <Download className="size-4" />
+                        {t('spotify.import_button')}
+                    </button>
                 </div>
 
                 {/* Stats - Single horizontal bar */}
