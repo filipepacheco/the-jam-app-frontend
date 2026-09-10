@@ -2,8 +2,7 @@ import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {useMemo, useState} from "react";
-import {Pencil, ExternalLink, Play, Square, RotateCcw, Upload, Download} from "lucide-react";
-import {initiateSpotifyAuth} from "../../lib/spotify/pkce";
+import {Pencil, ExternalLink, Play, Square, RotateCcw, Download} from "lucide-react";
 import {SpotifyImportModal} from "../../components";
 import {getJamDashboardPath} from "../../utils/jamUrl";
 
@@ -108,13 +107,6 @@ export function OverviewTab({
                         <ExternalLink className="size-4" />
                         {t('jam_management.view_public_dashboard')}
                     </a>
-                    <button
-                        onClick={() => { void initiateSpotifyAuth(jam.id) }}
-                        className="btn btn-sm btn-ghost gap-2"
-                    >
-                        <Upload className="size-4" />
-                        {t('spotify.export_button')}
-                    </button>
                     <button
                         onClick={() => setShowImportModal(true)}
                         className="btn btn-sm btn-ghost gap-2"
