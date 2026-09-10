@@ -64,12 +64,12 @@ export function JamManagementPage() {
         : null
     const displayError = swrErrorMessage || error
 
-    // Auto-switch to DJ Control when jam goes LIVE
+    // Auto-switch once when the jam goes LIVE, but preserve later manual tab choices.
     useEffect(() => {
-        if (jam?.status === 'LIVE' && activeTab === 'overview') {
-            setActiveTab('dj-control')
+        if (jam?.status === 'LIVE') {
+            setActiveTab((currentTab) => currentTab === 'overview' ? 'dj-control' : currentTab)
         }
-    }, [jam?.status, activeTab])
+    }, [jam?.status])
 
     // Detect Spotify access token from redirect state
     useEffect(() => {
