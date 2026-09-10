@@ -154,7 +154,14 @@ export function HostDashboardPage() {
                         >
                             {t('spotify.import_button')}
                         </button>
-                        {/* Mobile overflow for secondary actions */}
+                        <button
+                            onClick={() => navigate('/host/create-jam')}
+                            className="btn btn-primary btn-sm hidden sm:inline-flex"
+                            disabled={loading}
+                        >
+                            {t('jam_management.host_dashboard.create_jam_btn')}
+                        </button>
+                        {/* Mobile overflow actions */}
                         <div className="dropdown dropdown-end sm:hidden">
                             <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-square">
                                 <EllipsisVertical className="size-4" />
@@ -162,6 +169,7 @@ export function HostDashboardPage() {
                             <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-52 p-2 shadow-lg z-10">
                                 <li><button onClick={() => navigate('/host/feedback')}>{t('feedback_page.title')}</button></li>
                                 <li><button onClick={() => setShowImportModal(true)}>{t('spotify.import_button')}</button></li>
+                                <li><button onClick={() => navigate('/host/create-jam')}>{t('jam_management.host_dashboard.create_jam_btn')}</button></li>
                             </ul>
                         </div>
                     </div>
