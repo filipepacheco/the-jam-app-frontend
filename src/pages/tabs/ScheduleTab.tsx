@@ -1,4 +1,4 @@
-import type {JamResponseDto, ScheduleResponseDto, ScheduleStatus} from "../../types/api.types.ts";
+import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto, ScheduleStatus} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {registrationService, scheduleService, musicService} from "../../services";
@@ -6,6 +6,7 @@ import {Alert, ConfirmDialog, EmptyState, Modal, ModalFooter} from '../../compon
 import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCollapsibleCard} from "../../components/schedule/ScheduleCollapsibleCard";
 import {MusicianProfileModal} from "../../components/MusicianProfileModal";
+import {SearchableSelect} from "../../components/forms/SearchableSelect.tsx";
 import {Search, X, ListMusic} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {hasCoreBand} from "../../utils/scheduleUtils";
@@ -21,6 +22,8 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
     const [error, setError] = useState<string | null>(null)
     const [showAddModal, setShowAddModal] = useState(false)
     const [selectedMusicId, setSelectedMusicId] = useState('')
+    const [musicCatalog, setMusicCatalog] = useState<MusicResponseDto[]>([])
+    const [loadingMusicCatalog, setLoadingMusicCatalog] = useState(false)
     const [showHostRegistrationModal, setShowHostRegistrationModal] = useState(false)
     const [selectedScheduleForRegistration, setSelectedScheduleForRegistration] = useState<ScheduleResponseDto | null>(null)
     const [selectedMusicianId, setSelectedMusicianId] = useState<string | null>(null)
@@ -95,11 +98,47 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         return map
     }, [jam.jamMusics])
 
-    // Available songs for add-song modal (not yet scheduled)
+    // Available catalog songs for add-song modal (not yet scheduled)
     const availableSongs = useMemo(() => {
         const scheduledMusicIds = new Set((jam.schedules || []).map(s => s.musicId))
-        return (jam.jamMusics || []).filter(jm => !scheduledMusicIds.has(jm.musicId))
-    }, [jam.jamMusics, jam.schedules])
+        return musicCatalog.filter(music => !scheduledMusicIds.has(music.id))
+    }, [musicCatalog, jam.schedules])
+
+    // Load the searchable music catalog when the add-entry modal opens.
+    useEffect(() => {
+        if (!showAddModal) return
+
+        let cancelled = false
+        setLoadingMusicCatalog(true)
+        setError(null)
+
+        const loadMusicCatalog = async () => {
+            const songs: MusicResponseDto[] = []
+            let skip = 0
+            let hasMore = true
+
+            while (hasMore) {
+                const response = await musicService.findAll(skip, 100, 'APPROVED')
+                songs.push(...(response.data || []))
+                hasMore = response.meta.hasMore
+                skip += 100
+            }
+
+            if (!cancelled) setMusicCatalog(songs)
+        }
+
+        void loadMusicCatalog()
+            .catch(() => {
+                if (!cancelled) setError(t('jams.loading_songs_failed'))
+            })
+            .finally(() => {
+                if (!cancelled) setLoadingMusicCatalog(false)
+            })
+
+        return () => {
+            cancelled = true
+        }
+    }, [showAddModal, t])
 
     const handleSaveNotes = useCallback((jamMusicId: string, notes: string) => {
         void (async () => {
@@ -482,20 +521,25 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                         <label className="label" htmlFor="music-select">
                             <span className="label-text">{t('jam_management.schedule.song_label')}</span>
                         </label>
-                        <select
+                        <SearchableSelect<MusicResponseDto>
                             id="music-select"
+                            items={availableSongs}
                             value={selectedMusicId}
-                            onChange={(e) => setSelectedMusicId(e.target.value)}
-                            className="select select-bordered"
-                            aria-label={t('jam_management.schedule.song_label')}
-                        >
-                            <option value="">{t('jam_management.schedule.select_song')}</option>
-                            {availableSongs.map((jm) => (
-                                <option key={jm.id} value={jm.musicId}>
-                                    {jm.music?.title || t('common.unknown')} - {jm.music?.artist || t('common.unknown')}
-                                </option>
-                            ))}
-                        </select>
+                            onChange={setSelectedMusicId}
+                            getItemLabel={(music) => music.title}
+                            getItemSubLabel={(music) => music.artist}
+                            placeholder={t('jam_management.schedule.select_song')}
+                            searchPlaceholder={t('common.search')}
+                            emptyMessage={t('common.no_results')}
+                            disabled={loadingIds.has('add-schedule')}
+                            loading={loadingMusicCatalog}
+                            ariaLabel={t('jam_management.schedule.song_label')}
+                            filterFn={(music, term) => {
+                                const query = term.toLowerCase().trim()
+                                return music.title.toLowerCase().includes(query)
+                                    || music.artist.toLowerCase().includes(query)
+                            }}
+                        />
                     </div>
 
                     <div className="form-control mb-4">
