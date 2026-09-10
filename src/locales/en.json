@@ -557,6 +557,9 @@
     "description_hint": "Optional. A brief description of the song.",
     "link_placeholder": "e.g., https://www.youtube.com/watch?v=...",
     "link_hint": "Optional. Link to the song (e.g., YouTube, Spotify)",
+    "info_label": "Additional information",
+    "info_placeholder": "Optional. Add any other useful information about this song",
+    "info_hint": "Optional. Extra details for musicians and hosts.",
     "select_genre": "Select a genre...",
     "duration_placeholder": "e.g., 4:30",
     "duration_hint": "Optional. Format: minutes:seconds (e.g., 4:30)",
@@ -651,6 +654,7 @@
   "music_library": {
     "title": "Music Library",
     "page_title": "Music Library",
+    "create_new": "Create New Song",
     "add_song": "+ Add Song",
     "suggest_song": "Suggest Song",
     "suggested_songs": "Suggested Songs",
