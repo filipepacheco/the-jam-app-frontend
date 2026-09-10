@@ -16,7 +16,7 @@ interface MusicModalProps {
   music?: MusicResponseDto
   existingSongs: MusicResponseDto[]
   onClose: () => void
-  onSuccess: () => void
+  onSuccess: (music?: MusicResponseDto) => void
   setError: (error: string | null) => void
   setSuccess: (success: string | null) => void
 }
@@ -106,6 +106,7 @@ export function MusicModal({
           return
         }
         setSuccess(t('music_library.feedback.add_success', { title: formData.title }))
+        onSuccess(result.data)
       } else if (mode === 'suggest') {
         const result = await musicService.create(payload as CreateMusicDto)
         if (!result.success) {
@@ -113,6 +114,7 @@ export function MusicModal({
           return
         }
         setSuccess(t('music_library.feedback.suggest_success', { title: formData.title }))
+        onSuccess(result.data)
       } else if (music) {
         const result = await musicService.update(music.id, payload as UpdateMusicDto)
         if (!result.success) {
@@ -120,9 +122,8 @@ export function MusicModal({
           return
         }
         setSuccess(t('music_library.feedback.update_success', { title: formData.title }))
+        onSuccess(result.data)
       }
-
-      onSuccess()
     } catch (err) {
       setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_add'))
     } finally {

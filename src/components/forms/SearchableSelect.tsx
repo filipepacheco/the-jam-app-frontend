@@ -4,6 +4,8 @@
  * native <select> elements where search functionality is needed.
  */
 
+import { useCallback, useLayoutEffect, useState, type CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { useSearchableSelect } from '../../hooks'
 
@@ -55,6 +57,7 @@ export function SearchableSelect<T extends { id: string }>({
   filterFn,
 }: SearchableSelectProps<T>) {
   const { t } = useTranslation()
+  const [dropdownStyle, setDropdownStyle] = useState<CSSProperties>()
 
   const defaultPlaceholder = placeholder ?? t('searchableSelect.placeholder')
   const defaultSearchPlaceholder = searchPlaceholder ?? t('searchableSelect.search')
@@ -82,6 +85,42 @@ export function SearchableSelect<T extends { id: string }>({
     filterFn,
     onSelect: (item) => onChange(item.id),
   })
+
+  const updateDropdownPosition = useCallback(() => {
+    const trigger = containerRef.current
+    if (!trigger) return
+
+    const rect = trigger.getBoundingClientRect()
+    const gap = 4
+    const preferredHeight = 288
+    const viewportPadding = 8
+    const spaceBelow = window.innerHeight - rect.bottom - viewportPadding
+    const spaceAbove = rect.top - viewportPadding
+    const openAbove = spaceBelow < preferredHeight && spaceAbove > spaceBelow
+    const availableHeight = Math.max(120, Math.min(preferredHeight, openAbove ? spaceAbove : spaceBelow))
+
+    setDropdownStyle({
+      position: 'fixed',
+      left: rect.left,
+      top: openAbove ? undefined : rect.bottom + gap,
+      bottom: openAbove ? window.innerHeight - rect.top + gap : undefined,
+      width: rect.width,
+      maxHeight: availableHeight,
+    })
+  }, [containerRef])
+
+  useLayoutEffect(() => {
+    if (!isOpen) return
+
+    updateDropdownPosition()
+    window.addEventListener('resize', updateDropdownPosition)
+    window.addEventListener('scroll', updateDropdownPosition, true)
+
+    return () => {
+      window.removeEventListener('resize', updateDropdownPosition)
+      window.removeEventListener('scroll', updateDropdownPosition, true)
+    }
+  }, [isOpen, updateDropdownPosition])
 
   const handleTriggerClick = () => {
     if (!disabled && !loading) {
@@ -146,10 +185,12 @@ export function SearchableSelect<T extends { id: string }>({
       </button>
 
       {/* Dropdown */}
-      {isOpen && (
+      {isOpen && dropdownStyle && createPortal(
         <div
-          className="absolute z-50 w-full mt-1 bg-base-100 border border-base-300 rounded-box shadow-lg overflow-hidden"
+          className="z-[1000] flex flex-col bg-base-100 border border-base-300 rounded-box shadow-lg overflow-hidden"
           role="presentation"
+          style={dropdownStyle}
+          onMouseDown={(event) => event.stopPropagation()}
         >
           {/* Search Input */}
           <div className="p-2 border-b border-base-300">
@@ -170,7 +211,7 @@ export function SearchableSelect<T extends { id: string }>({
             ref={listRef}
             role="listbox"
             aria-labelledby={id}
-            className="max-h-60 overflow-y-auto py-1"
+            className="min-h-0 flex-1 overflow-y-auto py-1"
           >
             {filteredItems.length === 0 ? (
               <li className="px-4 py-3 text-base-content/50 text-center text-sm">
@@ -208,7 +249,8 @@ export function SearchableSelect<T extends { id: string }>({
               })
             )}
           </ul>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   )

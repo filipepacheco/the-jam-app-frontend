@@ -2,7 +2,7 @@ import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto, ScheduleStat
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {registrationService, scheduleService, musicService} from "../../services";
-import {Alert, ConfirmDialog, EmptyState, Modal, ModalFooter} from '../../components';
+import {Alert, ConfirmDialog, EmptyState, Modal, ModalFooter, MusicModal} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCollapsibleCard} from "../../components/schedule/ScheduleCollapsibleCard";
 import {MusicianProfileModal} from "../../components/MusicianProfileModal";
@@ -21,6 +21,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
     const [loadingIds, setLoadingIds] = useState<Set<string>>(new Set())
     const [error, setError] = useState<string | null>(null)
     const [showAddModal, setShowAddModal] = useState(false)
+    const [showCreateMusicModal, setShowCreateMusicModal] = useState(false)
     const [selectedMusicId, setSelectedMusicId] = useState('')
     const [musicCatalog, setMusicCatalog] = useState<MusicResponseDto[]>([])
     const [loadingMusicCatalog, setLoadingMusicCatalog] = useState(false)
@@ -540,6 +541,16 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     || music.artist.toLowerCase().includes(query)
                             }}
                         />
+                        <button
+                            type="button"
+                            onClick={() => {
+                                setShowAddModal(false)
+                                setShowCreateMusicModal(true)
+                            }}
+                            className="btn btn-ghost btn-sm w-full mt-2 text-base-content/70 hover:text-primary"
+                        >
+                            {t('music_library.create_new')}
+                        </button>
                     </div>
 
                     <div className="form-control mb-4">
@@ -558,6 +569,27 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
 
                     <Alert type="error" message={error} className="mb-4" />
                 </Modal>
+            )}
+
+            {showCreateMusicModal && (
+                <MusicModal
+                    mode="add"
+                    existingSongs={musicCatalog}
+                    onClose={() => {
+                        setShowCreateMusicModal(false)
+                        setShowAddModal(true)
+                    }}
+                    onSuccess={(music) => {
+                        setShowCreateMusicModal(false)
+                        if (music) {
+                            setMusicCatalog((songs) => [music, ...songs])
+                            setSelectedMusicId(music.id)
+                        }
+                        setShowAddModal(true)
+                    }}
+                    setError={setError}
+                    setSuccess={setSuccess}
+                />
             )}
 
             {/* Confirm Dialog for destructive actions */}

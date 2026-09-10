@@ -62,7 +62,13 @@ describe('ScheduleTab', () => {
         const searchInput = screen.getByPlaceholderText('common.search')
         await user.type(searchInput, 'psycho')
 
+        expect(screen.getByRole('listbox').closest('dialog')).toBeNull()
         expect(screen.getByText('Psycho Killer')).toBeInTheDocument()
         expect(screen.queryByText('Creep')).not.toBeInTheDocument()
+
+        const createMusicButton = screen.getByText('music_library.create_new').closest('button')
+        expect(createMusicButton).not.toBeNull()
+        await user.click(createMusicButton!)
+        expect(screen.getByText('music_library.modals.add_title')).toBeInTheDocument()
     })
 })
