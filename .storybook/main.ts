@@ -2,14 +2,11 @@ import type { StorybookConfig } from '@storybook/react-vite'
 
 const config: StorybookConfig = {
   stories: ['../src/workbench/stories/**/*.stories.@(ts|tsx)'],
-  staticDirs: ['../public'],
+  staticDirs: ['./public'],
   addons: ['@storybook/addon-a11y', '@storybook/addon-themes', '@storybook/addon-vitest', 'msw-storybook-addon'],
   framework: {
     name: '@storybook/react-vite',
     options: {},
-  },
-  docs: {
-    autodocs: 'tag',
   },
   core: {
     builder: {
