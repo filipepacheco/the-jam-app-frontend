@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'storybook-static', 'public/mockServiceWorker.js', 'node_modules', '.vite', 'src/__tests__'],
+    ignores: ['dist', 'storybook-static', '.storybook/public/mockServiceWorker.js', 'node_modules', '.vite', 'src/__tests__'],
   },
   {
     files: ['src/**/*.{ts,tsx}'],
@@ -24,7 +24,7 @@ export default tseslint.config(
         ecmaFeatures: {
           jsx: true,
         },
-        project: ['./tsconfig.app.json'],
+        project: ['./tsconfig.app.json', './tsconfig.workbench.json'],
         tsconfigRootDir: import.meta.dirname,
       },
     },

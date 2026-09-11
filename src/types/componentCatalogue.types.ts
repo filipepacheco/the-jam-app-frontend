@@ -71,6 +71,7 @@ export interface CatalogueComponent {
   visibility: 'exported' | 'local'
   exports: ComponentExport[]
   consumers: string[]
+  workbenchStories: string[]
   dependencies: ComponentDependencies
   metadata: ComponentMetadata
 }
@@ -101,13 +102,21 @@ export interface InlinePatternCandidate {
 }
 
 export interface ComponentCatalogue {
-  schemaVersion: 2
+  schemaVersion: 3
   components: CatalogueComponent[]
   ignored: IgnoredCatalogueSource[]
   coverage: {
     eligibleSources: number
     representedSources: number
     ignoredSources: number
+    workbench: {
+      activeReusableVisualComponents: number
+      ready: number
+      exempt: number
+      needsReview: number
+      unknown: number
+      readyWithoutStory: number
+    }
   }
   reviewCandidates: InlinePatternCandidate[]
 }

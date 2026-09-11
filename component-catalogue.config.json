@@ -1,5 +1,5 @@
 {
-  "project": "tsconfig.app.json",
+  "project": "tsconfig.catalogue.json",
   "include": ["src/**/*.tsx"],
   "metadata": "component-catalogue.metadata.json",
   "ignore": [
@@ -29,7 +29,10 @@
     {"source": "src/workbench/stories/ScheduleRegistration.stories.tsx", "reason": "Private Storybook composition for reviewed Schedule registration and card states; not product UI."},
     {"source": "src/workbench/stories/DJControl.stories.tsx", "reason": "Private Storybook composition for reviewed DJ playback and queue states; not product UI."},
     {"source": "src/workbench/stories/PublicDashboardCards.stories.tsx", "reason": "Private Storybook composition for reviewed Public Dashboard cards and display states; not product UI."},
-    {"source": "src/workbench/stories/PublicDashboardCarousel.stories.tsx", "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."}
+    {"source": "src/workbench/stories/PublicDashboardCarousel.stories.tsx", "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."},
+    {"source": "src/workbench/stories/Marketing.stories.tsx", "reason": "Private Storybook composition for reviewed marketing sections; not product UI."},
+    {"source": "src/workbench/stories/RemainingUI.stories.tsx", "reason": "Private Storybook composition for remaining reviewed product UI; not product UI itself."},
+    {"source": "src/workbench/stories/PageCompositions.stories.tsx", "reason": "Private Storybook composition for stable page-level visual review; not product UI itself."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",
