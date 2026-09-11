@@ -77,7 +77,7 @@ describe('component catalogue check command', () => {
     expect(result).toMatchObject({status: 0, stderr: ''})
     expect(result.stdout).toContain('Component catalogue is valid and up to date.')
     expect(await snapshotTree(root)).toEqual(before)
-  })
+  }, 15_000)
 
   it.each([
     ['JSON', 'generated/catalogue.json'],

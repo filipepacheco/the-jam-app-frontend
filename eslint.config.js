@@ -6,7 +6,7 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'node_modules', '.vite', 'src/__tests__'],
+    ignores: ['dist', 'storybook-static', 'public/mockServiceWorker.js', 'node_modules', '.vite', 'src/__tests__'],
   },
   {
     files: ['src/**/*.{ts,tsx}'],
@@ -80,5 +80,3 @@ export default tseslint.config(
     },
   },
 )
-
-
