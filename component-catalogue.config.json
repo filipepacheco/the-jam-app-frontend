@@ -21,7 +21,10 @@
     {"source": "src/workbench/stories/Feedback/ErrorBoundary.stories.tsx", "reason": "Private Storybook composition for reviewed recovery states; not product UI."},
     {"source": "src/workbench/stories/Navigation/Navbar.stories.tsx", "reason": "Private Storybook composition for reviewed responsive navigation and menu states; not product UI."},
     {"source": "src/workbench/stories/States/EmptyState.stories.tsx", "reason": "Private Storybook composition for reviewed empty states; not product UI."},
-    {"source": "src/workbench/stories/States/Loading.stories.tsx", "reason": "Private Storybook composition for reviewed loading and skeleton states; not product UI."}
+    {"source": "src/workbench/stories/States/Loading.stories.tsx", "reason": "Private Storybook composition for reviewed loading and skeleton states; not product UI."},
+    {"source": "src/workbench/stories/JamComponents.stories.tsx", "reason": "Private Storybook composition for reviewed Jam components; not product UI."},
+    {"source": "src/workbench/stories/JamTimeline.stories.tsx", "reason": "Private Storybook composition for reviewed Jam timeline components; not product UI."},
+    {"source": "src/workbench/stories/MusicLibrary.stories.tsx", "reason": "Private Storybook composition for reviewed Music components; not product UI."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",
