@@ -1,15 +1,12 @@
 {
   "project": "tsconfig.json",
-  "include": [
-    "src/NamedWidget.tsx",
-    "src/DefaultPanel.tsx",
-    "src/CataloguePage.tsx",
-    "src/DynamicSet.tsx",
-    "src/AnonymousView.tsx",
-    "src/AnonymousFunction.tsx",
-    "src/UnusedCard.tsx",
-    "src/WrappedMemo.tsx",
-    "src/WrappedForwardRef.tsx"
+  "include": ["src/**/*.tsx"],
+  "metadata": "catalogue.metadata.json",
+  "ignore": [
+    {
+      "source": "src/IgnoredScene.tsx",
+      "reason": "Empty retired promotional scene retained during cleanup."
+    }
   ],
   "output": {
     "json": "generated/catalogue.json",

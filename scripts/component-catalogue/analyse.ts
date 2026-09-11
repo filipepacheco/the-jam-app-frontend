@@ -1,12 +1,17 @@
 import path from 'node:path'
 import ts from 'typescript'
 
+import {matchesAny, metadataFor, validateMetadata} from './metadata.ts'
+import {inlinePatternCandidates} from './patterns.ts'
+
 import type {
   CatalogueComponent,
+  CatalogueMetadataConfig,
   ComponentContext,
   ComponentCatalogue,
   ComponentDeclarationKind,
   ComponentExport,
+  IgnoredCatalogueSource,
 } from '../../src/types/componentCatalogue.types.ts'
 
 interface DiscoveredComponent {
@@ -435,16 +440,15 @@ const collectConsumers = (
   return consumers
 }
 
-const stableId = (source: string, name: string): string =>
-  `${source.replace(/\.[^.]+$/, '').replace(/[^A-Za-z0-9]+/g, '.').replace(/^\.|\.$/g, '').toLowerCase()}.${name.toLowerCase()}`
-
 export interface AnalyseCatalogueOptions {
   root: string
   project: string
   include: string[]
+  ignore: IgnoredCatalogueSource[]
+  metadata: CatalogueMetadataConfig
 }
 
-export const analyseCatalogue = ({root, project, include}: AnalyseCatalogueOptions): ComponentCatalogue => {
+export const analyseCatalogue = ({root, project, include, ignore, metadata}: AnalyseCatalogueOptions): ComponentCatalogue => {
   const configPath = path.resolve(root, project)
   const config = ts.readConfigFile(configPath, ts.sys.readFile)
   if (config.error) {
@@ -464,7 +468,16 @@ export const analyseCatalogue = ({root, project, include}: AnalyseCatalogueOptio
   const components = discoverComponents(sourceFiles, root)
   const graph = buildExportGraph(sourceFiles, components, root, parsed.options)
   const consumers = collectConsumers(sourceFiles, components, graph, root, parsed.options)
-  const includedSources = new Set(include.map((source) => toPosix(source)))
+  const eligibleSources = sourceFiles
+    .map((sourceFile) => relativePath(root, sourceFile.fileName))
+    .filter((source) => matchesAny(source, include))
+    .sort(compareText)
+  const includedSources = new Set(eligibleSources)
+  const ignoredBySource = new Map(ignore.map((item) => [toPosix(item.source), item]))
+  for (const item of ignore) {
+    if (!item.reason.trim()) throw new Error(`${item.source}: ignored sources require a reason`)
+    if (!includedSources.has(toPosix(item.source))) throw new Error(`${item.source}: ignored source is not eligible`)
+  }
   const componentNodes = new Set([...components.values()].map((component) => component.node))
 
   const exportsByComponent = new Map<string, ComponentExport[]>()
@@ -480,8 +493,33 @@ export const analyseCatalogue = ({root, project, include}: AnalyseCatalogueOptio
     }
   }
 
-  const normalized: CatalogueComponent[] = [...components.values()]
-    .filter((component) => includedSources.has(component.source))
+  const includedComponents = [...components.values()]
+    .filter((component) => includedSources.has(component.source) && !ignoredBySource.has(component.source))
+  const identities = new Map<string, string>()
+  const identityIds = new Set<string>()
+  for (const identity of metadata.components) {
+    const key = `${toPosix(identity.source)}#${identity.name}`
+    if (identities.has(key)) throw new Error(`${key}: duplicate curated component selector`)
+    if (identityIds.has(identity.id)) throw new Error(`${identity.id}: duplicate curated stable identifier`)
+    identities.set(key, identity.id)
+    identityIds.add(identity.id)
+  }
+  const includedKeys = new Set(includedComponents.map((component) => component.key))
+  const staleIdentities = [...identities.keys()].filter((key) => !includedKeys.has(key))
+  if (staleIdentities.length > 0) throw new Error(`Curated component selectors are stale:\n${staleIdentities.join('\n')}`)
+  const missingIdentities = includedComponents.filter((component) => !identities.has(component.key))
+  if (missingIdentities.length > 0) {
+    throw new Error(`Components require curated stable identifiers:\n${missingIdentities.map((component) => component.key).join('\n')}`)
+  }
+  const representedSources = new Set(includedComponents.map((component) => component.source))
+  const missingSources = eligibleSources.filter(
+    (source) => !representedSources.has(source) && !ignoredBySource.has(source),
+  )
+  if (missingSources.length > 0) {
+    throw new Error(`Eligible sources contain no discovered component and require an explicit ignore reason:\n${missingSources.join('\n')}`)
+  }
+
+  const normalized: CatalogueComponent[] = includedComponents
     .map((component) => {
       const exports = (exportsByComponent.get(component.key) ?? []).sort(
         (left, right) =>
@@ -490,8 +528,10 @@ export const analyseCatalogue = ({root, project, include}: AnalyseCatalogueOptio
           compareText(left.kind, right.kind),
       )
       const visibility: CatalogueComponent['visibility'] = exports.length > 0 ? 'exported' : 'local'
+      const curatedMetadata = metadataFor(component, metadata)
+      validateMetadata(curatedMetadata, component)
       return {
-        id: stableId(component.source, component.name),
+        id: identities.get(component.key)!,
         name: component.name,
         source: component.source,
         declaration: component.declaration,
@@ -499,9 +539,20 @@ export const analyseCatalogue = ({root, project, include}: AnalyseCatalogueOptio
         exports,
         consumers: [...(consumers.get(component.key) ?? [])].sort(compareText),
         dependencies: componentDependencies(component, componentNodes, root, parsed.options),
+        metadata: curatedMetadata,
       }
     })
     .sort((left, right) => compareText(left.id, right.id))
 
-  return {schemaVersion: 1, components: normalized}
+  return {
+    schemaVersion: 2,
+    components: normalized,
+    ignored: [...ignoredBySource.values()].sort((left, right) => compareText(left.source, right.source)),
+    coverage: {
+      eligibleSources: eligibleSources.length,
+      representedSources: representedSources.size,
+      ignoredSources: ignoredBySource.size,
+    },
+    reviewCandidates: inlinePatternCandidates(includedComponents, componentNodes, identities),
+  }
 }
