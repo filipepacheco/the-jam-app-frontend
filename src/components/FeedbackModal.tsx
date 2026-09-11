@@ -14,11 +14,13 @@ import { ModalFooter } from './ModalFooter'
 interface FeedbackModalProps {
   isOpen: boolean
   onClose: () => void
+  portal?: boolean
+  portalTarget?: Element | DocumentFragment | null
 }
 
 const MAX_COMMENT_LENGTH = 500
 
-export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
+export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: FeedbackModalProps) {
   const { t } = useTranslation()
   const [rating, setRating] = useState<number>(0)
   const [comment, setComment] = useState('')
@@ -91,7 +93,8 @@ export function FeedbackModal({ isOpen, onClose }: FeedbackModalProps) {
       onClose={onClose}
       title={titleContent}
       size="md"
-      portal
+      portal={portal}
+      portalTarget={portalTarget}
       responsive
       closeDisabled={isSubmitting}
       footer={

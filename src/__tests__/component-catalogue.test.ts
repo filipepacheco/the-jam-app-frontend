@@ -39,10 +39,11 @@ describe('component catalogue command', () => {
       'AnonymousFunction',
       'AnonymousView',
       'CataloguePage',
-      'LocalBadge',
       'DefaultPanel',
       'DynamicDefault',
       'DynamicUnused',
+      'InlinePatterns',
+      'LocalBadge',
       'NamedWidget',
       'UnusedCard',
       'WrappedForwardRef',
@@ -76,6 +77,69 @@ describe('component catalogue command', () => {
         exports: [expect.objectContaining({kind: 'default', name: 'default'})],
       })
     }
+  })
+
+  it('represents every eligible source or records an explicit ignore reason', async () => {
+    const {catalogue, markdown} = await generate()
+
+    expect(catalogue.coverage).toEqual({eligibleSources: 11, representedSources: 10, ignoredSources: 1})
+    expect(catalogue.ignored).toEqual([
+      {
+        source: 'src/IgnoredScene.tsx',
+        reason: 'Empty retired promotional scene retained during cleanup.',
+      },
+    ])
+    expect(catalogue.components.find((component) => component.name === 'CataloguePage')).toMatchObject({
+      id: 'ui.fixture.catalogue-page',
+      metadata: {
+        category: 'page-composition',
+        layer: 'page-composition',
+        lifecycle: 'active',
+        productArea: 'jam',
+        viewportContexts: ['mobile', 'desktop'],
+      },
+    })
+    expect(catalogue.components.find((component) => component.name === 'UnusedCard')).toMatchObject({
+      metadata: {
+        lifecycle: 'uncertain',
+        productArea: 'uncertain',
+        readiness: {
+          workbench: 'needs-review',
+          accessibility: 'unknown',
+          internationalization: 'unknown',
+          theme: 'unknown',
+        },
+      },
+    })
+    expect(markdown).toContain('## Explicitly ignored sources')
+    expect(markdown).toContain('requires human review')
+  })
+
+  it('reports repeated inline UI families as unreviewed candidates', async () => {
+    const {catalogue, markdown} = await generate()
+
+    expect(catalogue.reviewCandidates.map((candidate) => candidate.family)).toEqual([
+      'action',
+      'badge',
+      'card',
+      'drawer',
+      'field',
+      'menu',
+      'modal',
+    ])
+    for (const candidate of catalogue.reviewCandidates) {
+      expect(candidate).toMatchObject({assessment: 'review-candidate', equivalence: 'unreviewed'})
+      expect(candidate.occurrences.length).toBeGreaterThanOrEqual(2)
+    }
+    expect(
+      catalogue.reviewCandidates
+        .find((candidate) => candidate.family === 'action')
+        ?.occurrences.some((occurrence) => occurrence.dynamicClasses),
+    ).toBe(true)
+    expect(markdown).toContain('Similarity is not equivalence')
+    expect(markdown).toMatch(/`src\/InlinePatterns\.tsx:\d+:\d+`/)
+    expect(markdown).toContain('owner `ui.fixture.inline-patterns`')
+    expect(markdown).toContain('equivalence: unreviewed')
   })
 
   it('reports consumers and context dependencies in both outputs', async () => {

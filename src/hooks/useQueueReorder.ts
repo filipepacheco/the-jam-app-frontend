@@ -18,8 +18,7 @@ export function useQueueReorder(
 ): UseQueueReorderReturn {
   const [isReordering, setIsReordering] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  // @ts-expect-error - Node.js timeout typing
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const previousQueueRef = useRef<ScheduleResponseDto[]>(currentQueue)
 
   const reorderQueue = useCallback(

@@ -1,0 +1,45 @@
+{
+  "candidateFamilies": ["overlay", "feedback", "empty-state"],
+  "defaults": {
+    "category": "product-ui",
+    "layer": "domain-component",
+    "lifecycle": "uncertain",
+    "productArea": "uncertain",
+    "viewportContexts": ["uncertain"],
+    "readiness": {
+      "workbench": "needs-review",
+      "accessibility": "unknown",
+      "internationalization": "unknown",
+      "theme": "unknown"
+    },
+    "uiStates": [],
+    "candidateFamily": null,
+    "notes": ["Fixture default requires human review."]
+  },
+  "rules": [
+    {
+      "source": "src/CataloguePage.tsx",
+      "metadata": {
+        "category": "page-composition",
+        "layer": "page-composition",
+        "lifecycle": "active",
+        "productArea": "jam",
+        "viewportContexts": ["mobile", "desktop"]
+      }
+    }
+  ],
+  "components": [
+    {"id": "ui.fixture.anonymous-function", "source": "src/AnonymousFunction.tsx", "name": "AnonymousFunction"},
+    {"id": "ui.fixture.anonymous-view", "source": "src/AnonymousView.tsx", "name": "AnonymousView"},
+    {"id": "ui.fixture.catalogue-page", "source": "src/CataloguePage.tsx", "name": "CataloguePage"},
+    {"id": "ui.fixture.local-badge", "source": "src/CataloguePage.tsx", "name": "LocalBadge"},
+    {"id": "ui.fixture.default-panel", "source": "src/DefaultPanel.tsx", "name": "DefaultPanel"},
+    {"id": "ui.fixture.dynamic-default", "source": "src/DynamicSet.tsx", "name": "DynamicDefault"},
+    {"id": "ui.fixture.dynamic-unused", "source": "src/DynamicSet.tsx", "name": "DynamicUnused"},
+    {"id": "ui.fixture.inline-patterns", "source": "src/InlinePatterns.tsx", "name": "InlinePatterns"},
+    {"id": "ui.fixture.named-widget", "source": "src/NamedWidget.tsx", "name": "NamedWidget"},
+    {"id": "ui.fixture.unused-card", "source": "src/UnusedCard.tsx", "name": "UnusedCard"},
+    {"id": "ui.fixture.wrapped-forward-ref", "source": "src/WrappedForwardRef.tsx", "name": "WrappedForwardRef"},
+    {"id": "ui.fixture.wrapped-memo", "source": "src/WrappedMemo.tsx", "name": "WrappedMemo"}
+  ]
+}
