@@ -33,3 +33,13 @@ The generated JSON and Markdown calculate workbench coverage directly from compo
 `!test` and `!autodocs` are forbidden by default. Record a temporary exemption in `component-catalogue.metadata.json` in the same change, including both the current technical reason and an exact removal condition. The generated catalogue is the authoritative exemption list; do not copy it into a hand-maintained table. A limitation in shared workbench infrastructure is not a valid permanent exemption and must be fixed at the shared seam.
 
 CI runs browser interactions and a deterministic private static build, but neither uploads nor deploys the generated output.
+
+## Isolation contract
+
+- **TypeScript:** production compilation excludes `.storybook/`, `src/workbench/`, stories, and fixtures. `npm run workbench:typecheck`, the browser tests, and the deterministic workbench build own those files instead; catalogue discovery uses `tsconfig.catalogue.json`. Do not add Storybook ambient types to `tsconfig.app.json`.
+- **Tailwind:** `src/index.css` lists the production source roots explicitly. Workbench composition markup is added only by `src/workbench/workbench.css`. When adding a new production UI source root, add it to the production list; never add `src/workbench` there.
+- **Static assets:** application assets live in `public/`; workbench-only assets live in `.storybook/public/` and are served through Storybook's `staticDirs`. Never place the MSW service worker or other internal tooling assets in the application public root.
+- **Dependencies:** Storybook, browser-test, Playwright, and mock-server packages remain in `devDependencies`. Production entry points must not import those packages, `.storybook/`, or `src/workbench/`.
+- **Output:** `npm run build` runs the application TypeScript build, Vite build, prerendering, sitemap generation, and the production-isolation assertion. The resulting `dist/` must not contain the MSW worker, private-workbench artifacts, or workbench-only Tailwind utilities.
+
+Before opening a pull request, run `npm run catalogue:check`, `npm run catalogue:baseline`, `npm run workbench:test`, `npm run workbench:verify-build`, `npm run build`, and `npm run test:run`. Catalogue, workbench, and production builds are independent CI checks. The aggregate stack also requires a green Vercel preview before merge.

@@ -6,6 +6,7 @@ import { join, relative, resolve } from 'node:path'
 
 const repositoryRoot = resolve(import.meta.dirname, '..')
 const storybookCli = resolve(repositoryRoot, 'node_modules/storybook/dist/bin/dispatcher.js')
+const workbenchCssSentinel = '--jamapp-workbench-sentinel'
 
 async function snapshotTree(root) {
   const entries = []
@@ -51,6 +52,18 @@ function build(outputDirectory) {
   }
 }
 
+async function assertWorkbenchCssSource(outputDirectory) {
+  const files = await snapshotTree(outputDirectory)
+  const cssFiles = files.filter(({ path }) => path.endsWith('.css'))
+
+  for (const { path } of cssFiles) {
+    const contents = await readFile(join(outputDirectory, path), 'utf8')
+    if (contents.includes(workbenchCssSentinel)) return
+  }
+
+  throw new Error(`Private workbench CSS is missing its source sentinel: ${workbenchCssSentinel}`)
+}
+
 const temporaryRoot = await mkdtemp(join(tmpdir(), 'jamapp-workbench-'))
 const firstBuild = join(temporaryRoot, 'first')
 const secondBuild = join(temporaryRoot, 'second')
@@ -58,6 +71,8 @@ const secondBuild = join(temporaryRoot, 'second')
 try {
   build(firstBuild)
   build(secondBuild)
+  await assertWorkbenchCssSource(firstBuild)
+  await assertWorkbenchCssSource(secondBuild)
 
   const firstSnapshot = await snapshotTree(firstBuild)
   const secondSnapshot = await snapshotTree(secondBuild)

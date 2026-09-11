@@ -15,7 +15,7 @@ import {
 import { createAuthFixture, type WorkbenchAuthRole } from '../src/workbench/fixtures'
 import { workbenchRequestHandlers } from '../src/workbench/mocks'
 import { installReducedMotionPreference } from '../src/workbench/reducedMotion'
-import '../src/index.css'
+import '../src/workbench/workbench.css'
 
 const preview: Preview = {
   tags: ['autodocs'],
@@ -44,8 +44,8 @@ const preview: Preview = {
       toolbar: {
         icon: 'accessibility',
         items: [
-          { value: false, title: 'Full motion' },
-          { value: true, title: 'Reduced motion' },
+          { value: 'false', title: 'Full motion' },
+          { value: 'true', title: 'Reduced motion' },
         ],
       },
     },
@@ -55,7 +55,7 @@ const preview: Preview = {
     locale: 'pt',
     route: '/',
     authRole: 'host',
-    reducedMotion: false,
+    reducedMotion: 'false',
   },
   parameters: {
     layout: 'padded',
@@ -84,7 +84,7 @@ const preview: Preview = {
       const authRole = String(context.globals.authRole || 'host') as WorkbenchAuthRole
 
       document.documentElement.dataset.theme = theme
-      installReducedMotionPreference(Boolean(context.globals.reducedMotion))
+      installReducedMotionPreference(String(context.globals.reducedMotion) === 'true')
 
       return (
         <MemoryRouter initialEntries={[route]} key={route}>

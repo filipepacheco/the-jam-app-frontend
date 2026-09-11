@@ -1,5 +1,5 @@
 {
-  "project": "tsconfig.app.json",
+  "project": "tsconfig.catalogue.json",
   "include": ["src/**/*.tsx"],
   "metadata": "component-catalogue.metadata.json",
   "ignore": [

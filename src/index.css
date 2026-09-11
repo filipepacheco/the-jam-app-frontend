@@ -1,4 +1,18 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
+
+/* Production source boundary. Private workbench files add their own source in workbench.css. */
+@source "../index.html";
+@source "./App.tsx";
+@source "./main.tsx";
+@source "./components";
+@source "./config";
+@source "./contexts";
+@source "./hooks";
+@source "./lib";
+@source "./pages";
+@source "./services";
+@source "./types";
+@source "./utils";
 
 @theme {
   --font-display: 'Archivo', sans-serif;
