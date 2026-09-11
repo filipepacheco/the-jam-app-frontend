@@ -32,3 +32,6 @@ jobs:
 
       - name: Check component catalogue
         run: npm run catalogue:check
+
+      - name: Enforce reviewed workbench baseline
+        run: npm run catalogue:baseline

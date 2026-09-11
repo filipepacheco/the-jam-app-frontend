@@ -26,6 +26,35 @@
         "productArea": "jam",
         "viewportContexts": ["mobile", "desktop"]
       }
+    },
+    {
+      "source": "src/NamedWidget.tsx",
+      "metadata": {
+        "lifecycle": "active",
+        "readiness": {"workbench": "ready"}
+      }
+    },
+    {
+      "source": "src/DefaultPanel.tsx",
+      "metadata": {
+        "lifecycle": "active",
+        "readiness": {"workbench": "exempt"},
+        "notes": ["Fixture exemption with a removal condition."]
+      }
+    },
+    {
+      "source": "src/AnonymousView.tsx",
+      "metadata": {
+        "lifecycle": "active",
+        "readiness": {"workbench": "needs-review"}
+      }
+    },
+    {
+      "source": "src/WrappedMemo.tsx",
+      "metadata": {
+        "lifecycle": "active",
+        "readiness": {"workbench": "unknown"}
+      }
     }
   ],
   "components": [

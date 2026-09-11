@@ -82,7 +82,19 @@ describe('component catalogue command', () => {
   it('represents every eligible source or records an explicit ignore reason', async () => {
     const {catalogue, markdown} = await generate()
 
-    expect(catalogue.coverage).toEqual({eligibleSources: 11, representedSources: 10, ignoredSources: 1})
+    expect(catalogue.coverage).toEqual({
+      eligibleSources: 11,
+      representedSources: 10,
+      ignoredSources: 1,
+      workbench: {
+        activeReusableVisualComponents: 4,
+        ready: 1,
+        exempt: 1,
+        needsReview: 1,
+        unknown: 1,
+        readyWithoutStory: 0,
+      },
+    })
     expect(catalogue.ignored).toEqual([
       {
         source: 'src/IgnoredScene.tsx',
@@ -112,6 +124,15 @@ describe('component catalogue command', () => {
       },
     })
     expect(markdown).toContain('## Explicitly ignored sources')
+    expect(markdown).toContain('## Workbench coverage baseline')
+    expect(markdown).toContain('| Ready | 1 |')
+    expect(markdown).toContain('| Needs review | 1 |')
+    expect(markdown).toContain('| Unknown | 1 |')
+    expect(markdown).toContain('| Exempt | 1 |')
+    expect(markdown).toContain('| Ready without story evidence | 0 |')
+    expect(catalogue.components.find((component) => component.name === 'NamedWidget')?.workbenchStories).toEqual([
+      'stories/NamedWidget.stories.tsx',
+    ])
     expect(markdown).toContain('requires human review')
   })
 
@@ -156,6 +177,7 @@ describe('component catalogue command', () => {
       'src/CataloguePage.tsx',
       'src/DefaultPanel.tsx',
       'src/NamedWidget.tsx',
+      'stories/NamedWidget.stories.tsx',
     ])
     expect(widget?.dependencies.contexts).toContain('internationalization')
     expect(widget?.dependencies.internal).toContain('src/Styled.css')
