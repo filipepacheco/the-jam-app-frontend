@@ -19,6 +19,7 @@ interface ModalProps {
   className?: string
   scrollable?: boolean
   portal?: boolean
+  portalTarget?: Element | DocumentFragment | null
   responsive?: boolean
   role?: 'dialog' | 'alertdialog'
   headingLevel?: 'h2' | 'h3' | 'h4' | 'h5'
@@ -41,6 +42,7 @@ export function Modal({
   className = '',
   scrollable = false,
   portal = false,
+  portalTarget,
   responsive = false,
   role,
   headingLevel,
@@ -158,5 +160,5 @@ export function Modal({
     </dialog>
   )
 
-  return portal ? createPortal(content, document.body) : content
+  return portal ? createPortal(content, portalTarget ?? document.body) : content
 }

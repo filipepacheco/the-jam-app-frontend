@@ -3,60 +3,19 @@ import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router-dom'
 import { setupWorker } from 'msw/browser'
 import { mswLoader } from 'msw-storybook-addon/csf3'
-import { withThemeByDataAttribute } from '@storybook/addon-themes'
+import { AuthContext } from '../src/contexts/AuthContext'
 import i18n from '../src/i18n'
-import { THEMES } from '../src/lib/uiConstants'
+import {
+  WORKBENCH_LOCALES,
+  WORKBENCH_ROLES,
+  WORKBENCH_ROUTES,
+  WORKBENCH_THEMES,
+  WORKBENCH_VIEWPORTS,
+} from '../src/workbench/config'
+import { createAuthFixture, type WorkbenchAuthRole } from '../src/workbench/fixtures'
+import { workbenchRequestHandlers } from '../src/workbench/mocks'
+import { installReducedMotionPreference } from '../src/workbench/reducedMotion'
 import '../src/index.css'
-
-const JAM_VIEWPORTS = {
-  phone: { name: 'Phone', styles: { width: '390px', height: '844px' }, type: 'mobile' },
-  tablet: { name: 'Tablet', styles: { width: '768px', height: '1024px' }, type: 'tablet' },
-  desktop: { name: 'Desktop', styles: { width: '1440px', height: '900px' }, type: 'desktop' },
-  venue: { name: 'Venue display', styles: { width: '1920px', height: '1080px' }, type: 'desktop' },
-} as const
-
-const reducedMotionMedia = '(prefers-reduced-motion: reduce)'
-const nativeMatchMedia = window.matchMedia.bind(window)
-const motionListeners = new Set<(event: MediaQueryListEvent) => void>()
-let reducedMotion = nativeMatchMedia(reducedMotionMedia).matches
-
-const simulatedMotionQuery: MediaQueryList = {
-  get matches() { return reducedMotion },
-  media: reducedMotionMedia,
-  onchange: null,
-  addListener: (listener) => motionListeners.add(listener),
-  removeListener: (listener) => motionListeners.delete(listener),
-  addEventListener: (_type, listener) => {
-    if (typeof listener === 'function') {
-      motionListeners.add(listener as (event: MediaQueryListEvent) => void)
-    }
-  },
-  removeEventListener: (_type, listener) => {
-    if (typeof listener === 'function') {
-      motionListeners.delete(listener as (event: MediaQueryListEvent) => void)
-    }
-  },
-  dispatchEvent: (event) => {
-    motionListeners.forEach((listener) => listener(event as MediaQueryListEvent))
-    return true
-  },
-}
-
-window.matchMedia = (query: string): MediaQueryList =>
-  query === reducedMotionMedia ? simulatedMotionQuery : nativeMatchMedia(query)
-
-function installMotionPreference(nextValue: boolean) {
-  if (nextValue === reducedMotion) return
-  reducedMotion = nextValue
-
-  const event = new Event('change') as MediaQueryListEvent
-  Object.defineProperties(event, {
-    matches: { value: reducedMotion },
-    media: { value: reducedMotionMedia },
-  })
-  simulatedMotionQuery.dispatchEvent(event)
-  simulatedMotionQuery.onchange?.call(simulatedMotionQuery, event)
-}
 
 const preview: Preview = {
   tags: ['autodocs'],
@@ -65,19 +24,20 @@ const preview: Preview = {
       description: 'DaisyUI theme',
       toolbar: {
         icon: 'paintbrush',
-        items: THEMES.map((theme) => ({ value: theme, title: theme })),
+        items: WORKBENCH_THEMES.map((theme) => ({ value: theme, title: theme })),
       },
     },
     locale: {
       description: 'Interface locale',
-      toolbar: {
-        icon: 'globe',
-        items: [
-          { value: 'pt', title: 'Português' },
-          { value: 'en', title: 'English' },
-          { value: 'es', title: 'Español' },
-        ],
-      },
+      toolbar: { icon: 'globe', items: [...WORKBENCH_LOCALES] },
+    },
+    route: {
+      description: 'Initial router location',
+      toolbar: { icon: 'location', items: [...WORKBENCH_ROUTES] },
+    },
+    authRole: {
+      description: 'Authentication role fixture',
+      toolbar: { icon: 'user', items: [...WORKBENCH_ROLES] },
     },
     reducedMotion: {
       description: 'Simulated motion preference',
@@ -93,13 +53,16 @@ const preview: Preview = {
   initialGlobals: {
     theme: 'light',
     locale: 'pt',
+    route: '/',
+    authRole: 'host',
     reducedMotion: false,
   },
   parameters: {
     layout: 'padded',
-    viewport: { options: JAM_VIEWPORTS },
+    viewport: { options: WORKBENCH_VIEWPORTS },
     a11y: { test: 'todo' },
     controls: { expanded: true },
+    msw: { handlers: workbenchRequestHandlers },
   },
   loaders: [
     mswLoader(async () => {
@@ -108,30 +71,29 @@ const preview: Preview = {
       return worker
     }),
     async (context) => {
-      await i18n.changeLanguage(String(context.globals.locale || 'pt'))
+      const locale = String(context.globals.locale || 'pt')
+      await i18n.changeLanguage(locale)
+      document.documentElement.lang = locale
       return {}
     },
   ],
   decorators: [
-    withThemeByDataAttribute({
-      themes: [...THEMES],
-      defaultTheme: 'light',
-      attributeName: 'data-theme',
-    }),
     (Story, context) => {
       const theme = String(context.globals.theme || 'light')
-      const locale = String(context.globals.locale || 'pt')
-      const reducedMotion = Boolean(context.globals.reducedMotion)
+      const route = String(context.globals.route || '/')
+      const authRole = String(context.globals.authRole || 'host') as WorkbenchAuthRole
 
       document.documentElement.dataset.theme = theme
-      installMotionPreference(reducedMotion)
+      installReducedMotionPreference(Boolean(context.globals.reducedMotion))
 
       return (
-        <MemoryRouter initialEntries={['/workbench-spike']}>
+        <MemoryRouter initialEntries={[route]} key={route}>
           <I18nextProvider i18n={i18n}>
-            <main data-theme={theme} className="min-h-screen bg-base-100 p-4 text-base-content">
-              <Story />
-            </main>
+            <AuthContext.Provider value={createAuthFixture(authRole)}>
+              <main data-theme={theme} className="min-h-screen bg-base-100 p-4 text-base-content">
+                <Story />
+              </main>
+            </AuthContext.Provider>
           </I18nextProvider>
         </MemoryRouter>
       )

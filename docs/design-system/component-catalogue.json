@@ -293,7 +293,7 @@
         "src/pages/tabs/DashboardTab.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
-        "src/workbench-spike/WorkbenchSpike.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1208,7 +1208,7 @@
       "consumers": [
         "src/components/FeedbackButton.tsx",
         "src/components/MobileDrawer.tsx",
-        "src/workbench-spike/WorkbenchSpike.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1315,7 +1315,7 @@
       ],
       "consumers": [
         "src/pages/JamRegisterPage.tsx",
-        "src/workbench-spike/WorkbenchSpike.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2824,7 +2824,7 @@
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/host/CreateJamPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
-        "src/workbench-spike/WorkbenchSpike.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3379,7 +3379,7 @@
         "src/App.tsx",
         "src/pages/AboutPage.tsx",
         "src/pages/NotFoundPage.tsx",
-        "src/workbench-spike/WorkbenchSpike.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4424,7 +4424,7 @@
       ],
       "consumers": [
         "src/pages/PublicDashboardPage.tsx",
-        "src/workbench-spike/WorkbenchSpike.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5712,7 +5712,7 @@
         }
       ],
       "consumers": [
-        "src/workbench-spike/WorkbenchSpike.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -8548,8 +8548,8 @@
       "reason": "Application bootstrap; renders the root but does not declare a component."
     },
     {
-      "source": "src/workbench-spike/WorkbenchSpike.stories.tsx",
-      "reason": "Private Storybook prototype composition; stories exercise catalogued production components but are not product UI."
+      "source": "src/workbench/stories/Environment.stories.tsx",
+      "reason": "Private Storybook composition; stories exercise catalogued production components but are not product UI."
     }
   ],
   "coverage": {
@@ -8879,9 +8879,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Modal.tsx:126:17:action",
+          "id": "src/components/Modal.tsx:128:17:action",
           "source": "src/components/Modal.tsx",
-          "line": 126,
+          "line": 128,
           "column": 17,
           "ownerComponentId": "ui.0055",
           "tag": "button",
@@ -8894,9 +8894,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Modal.tsx:150:9:action",
+          "id": "src/components/Modal.tsx:152:9:action",
           "source": "src/components/Modal.tsx",
-          "line": 150,
+          "line": 152,
           "column": 9,
           "ownerComponentId": "ui.0055",
           "tag": "button",
@@ -8904,9 +8904,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Modal.tsx:97:17:action",
+          "id": "src/components/Modal.tsx:99:17:action",
           "source": "src/components/Modal.tsx",
-          "line": 97,
+          "line": 99,
           "column": 17,
           "ownerComponentId": "ui.0055",
           "tag": "button",
@@ -13729,9 +13729,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/FeedbackModal.tsx:136:19:field",
+          "id": "src/components/FeedbackModal.tsx:139:19:field",
           "source": "src/components/FeedbackModal.tsx",
-          "line": 136,
+          "line": 139,
           "column": 19,
           "ownerComponentId": "ui.0024",
           "tag": "input",
@@ -13743,9 +13743,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/FeedbackModal.tsx:164:13:field",
+          "id": "src/components/FeedbackModal.tsx:167:13:field",
           "source": "src/components/FeedbackModal.tsx",
-          "line": 164,
+          "line": 167,
           "column": 13,
           "ownerComponentId": "ui.0024",
           "tag": "textarea",
@@ -15205,9 +15205,9 @@
       "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/Modal.tsx:84:5:modal",
+          "id": "src/components/Modal.tsx:86:5:modal",
           "source": "src/components/Modal.tsx",
-          "line": 84,
+          "line": 86,
           "column": 5,
           "ownerComponentId": "ui.0055",
           "tag": "dialog",

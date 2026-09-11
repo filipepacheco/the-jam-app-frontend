@@ -16,7 +16,7 @@ export default mergeConfig(
           plugins: [
             storybookTest({
               configDir: configDirectory,
-              storybookScript: 'npm run workbench:spike',
+              storybookScript: `"${process.execPath}" node_modules/storybook/dist/bin/dispatcher.js dev -p 6006 --no-open --disable-telemetry`,
             }),
           ],
           test: {

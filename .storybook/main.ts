@@ -1,8 +1,7 @@
 import type { StorybookConfig } from '@storybook/react-vite'
 
-/** PROTOTYPE: ticket #31 evaluates Storybook; ticket #32 owns the durable setup. */
 const config: StorybookConfig = {
-  stories: ['../src/workbench-spike/**/*.stories.@(ts|tsx)'],
+  stories: ['../src/workbench/stories/**/*.stories.@(ts|tsx)'],
   staticDirs: ['../public'],
   addons: ['@storybook/addon-a11y', '@storybook/addon-themes', '@storybook/addon-vitest', 'msw-storybook-addon'],
   framework: {
