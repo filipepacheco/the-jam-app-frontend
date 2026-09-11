@@ -8,6 +8,7 @@ The workbench is an internal-only Storybook environment for developing and revie
 - `npm run workbench:test` runs story interactions in headless Chromium.
 - `npm run workbench:build` creates the ignored local `storybook-static/` build.
 - `npm run workbench:verify-build` builds twice in temporary directories and requires byte-identical runtime output. It normalizes only Storybook's `generatedAt` and local `userSince` provenance timestamps in `project.json` before comparison.
+- `npm run catalogue:baseline` verifies generated catalogue freshness and rejects active reusable visual components whose workbench readiness is still `unknown` or `needs-review`.
 
 ## Shared environment
 
@@ -23,23 +24,22 @@ Stories must not call live services. Add fixed, typed data to `src/workbench/fix
 4. Add a `play` interaction for user-visible behavior. Query by accessible role or label and assert the outcome a user can observe.
 5. Keep stories deterministic: no current dates, randomness, timers that cannot be controlled, production imports that perform requests, or environment secrets.
 6. Keep accessibility feedback enabled. Existing violations may use `a11y.test: 'todo'`; new or changed components should use `a11y.test: 'error'` once their known violations are resolved.
+7. Catalogue every new active reusable visual component in the same change. Mark it `ready` once its durable story and applicable interaction coverage exist, or `exempt` with a specific reason and removal condition. `unknown` and `needs-review` fail CI.
+
+The generated JSON and Markdown calculate workbench coverage directly from component metadata. Do not maintain a second coverage count or checklist by hand.
 
 ## Exemptions
 
-`!test` and `!autodocs` are forbidden by default. A temporary exemption must be recorded in the table below in the same change, with its story, owner ticket, reason, and exact removal condition. A limitation in shared workbench infrastructure is not a valid permanent exemption and must be fixed at the shared seam.
-
-| Story | Owner ticket | Reason | Removal condition |
-| --- | --- | --- | --- |
-| `SuggestNewSongModal` | #33 | Cross-service Spotify, music, and schedule orchestration | Add injected adapters or complete request scenarios in #35 |
-| `SuggestSongModal` | #33 | Schedule-domain request orchestration | Add Jam request scenarios in #35 |
-| `MusicianProfileModal` | #33 | Fetches its profile internally | Add a typed profile request scenario in #36 |
-| `MusicModal` | #33 | Create/edit submit behavior belongs to the Music slice | Add create/edit scenarios in #35 |
-| `OnboardingModal` | #33 | Mutates authenticated profile state | Add deterministic auth mutation fixtures in #39 |
-| `ProfileSetupModal` | #33 | Mutates authenticated profile state | Add deterministic auth mutation fixtures in #39 |
-| `HostMusicianRegistrationModal` | #33 | Multi-registration queue orchestration | Add queue scenarios in #36 |
-| `ScheduleEnrollmentModal` | #33 | Enrollment mutation belongs to the Schedule slice | Add enrollment scenarios in #36 |
-| `ShareModal` | #33 | Clipboard and native-share capability branches | Add controlled browser capability fixtures in #39 |
-| `SpotifyExportModal` | #33 | Integration is currently hidden in product UI | Re-enable the integration and add scenarios in #35 |
-| `SpotifyImportModal` | #33 | Multi-mode Spotify and Jam orchestration | Add the integration request matrix in #35 |
+`!test` and `!autodocs` are forbidden by default. Record a temporary exemption in `component-catalogue.metadata.json` in the same change, including both the current technical reason and an exact removal condition. The generated catalogue is the authoritative exemption list; do not copy it into a hand-maintained table. A limitation in shared workbench infrastructure is not a valid permanent exemption and must be fixed at the shared seam.
 
 CI runs browser interactions and a deterministic private static build, but neither uploads nor deploys the generated output.
+
+## Isolation contract
+
+- **TypeScript:** production compilation excludes `.storybook/`, `src/workbench/`, stories, and fixtures. `npm run workbench:typecheck`, the browser tests, and the deterministic workbench build own those files instead; catalogue discovery uses `tsconfig.catalogue.json`. Do not add Storybook ambient types to `tsconfig.app.json`.
+- **Tailwind:** `src/index.css` lists the production source roots explicitly. Workbench composition markup is added only by `src/workbench/workbench.css`. When adding a new production UI source root, add it to the production list; never add `src/workbench` there.
+- **Static assets:** application assets live in `public/`; workbench-only assets live in `.storybook/public/` and are served through Storybook's `staticDirs`. Never place the MSW service worker or other internal tooling assets in the application public root.
+- **Dependencies:** Storybook, browser-test, Playwright, and mock-server packages remain in `devDependencies`. Production entry points must not import those packages, `.storybook/`, or `src/workbench/`.
+- **Output:** `npm run build` runs the application TypeScript build, Vite build, prerendering, sitemap generation, and the production-isolation assertion. The resulting `dist/` must not contain the MSW worker, private-workbench artifacts, or workbench-only Tailwind utilities.
+
+Before opening a pull request, run `npm run catalogue:check`, `npm run catalogue:baseline`, `npm run workbench:test`, `npm run workbench:verify-build`, `npm run build`, and `npm run test:run`. Catalogue, workbench, and production builds are independent CI checks. The aggregate stack also requires a green Vercel preview before merge.

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "components": [
     {
       "id": "ui.0001",
@@ -17,6 +17,7 @@
       "consumers": [
         "src/main.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/ErrorBoundary.tsx",
@@ -68,6 +69,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Navbar.tsx",
@@ -120,6 +122,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/CallToAction.tsx",
@@ -151,7 +154,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -159,7 +162,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Landing-page composition declared locally in the application shell."
+          "Local app-shell composition is covered through its exported marketing sections in Marketing/Current sections."
         ]
       }
     },
@@ -173,6 +176,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -213,6 +217,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts"
@@ -298,6 +303,17 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -352,7 +368,13 @@
       ],
       "consumers": [
         "src/components/MusicianProfileModal.tsx",
-        "src/components/schedule/RegistrationList.tsx"
+        "src/components/schedule/RegistrationList.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -369,14 +391,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "initials",
+          "image",
+          "sizes",
+          "long-name"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -393,7 +422,11 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -420,14 +453,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "reduced-motion",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -451,6 +491,9 @@
       "consumers": [
         "src/pages/MusicPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Overlays.stories.tsx"
       ],
       "dependencies": {
@@ -508,6 +551,11 @@
       "consumers": [
         "src/components/Navbar.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -575,6 +623,9 @@
         "src/pages/tabs/DJControlTabV2.tsx",
         "src/workbench/stories/DJControl.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/DJControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -631,6 +682,9 @@
       ],
       "consumers": [
         "src/pages/tabs/DJControlTabV2.tsx",
+        "src/workbench/stories/DJControl.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "dependencies": {
@@ -693,6 +747,9 @@
       ],
       "consumers": [
         "src/pages/tabs/DJControlTabV2.tsx",
+        "src/workbench/stories/DJControl.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "dependencies": {
@@ -764,6 +821,7 @@
       "consumers": [
         "src/pages/tabs/DJControlTab.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -829,6 +887,9 @@
         "src/pages/tabs/DJControlTabV2.tsx",
         "src/workbench/stories/DJControl.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/DJControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -881,6 +942,9 @@
       "exports": [],
       "consumers": [
         "src/components/dj-control/SongQueueTimeline.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/DJControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -950,6 +1014,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -996,6 +1061,9 @@
       ],
       "consumers": [
         "src/pages/host/MusiciansPage.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
@@ -1065,6 +1133,9 @@
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/States/EmptyState.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -1110,7 +1181,11 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1138,14 +1213,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "guest",
+          "host",
+          "desktop",
+          "mobile",
+          "reduced-motion",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections with shared auth contexts."
+        ]
       }
     },
     {
@@ -1163,6 +1247,9 @@
       ],
       "consumers": [
         "src/App.tsx",
+        "src/workbench/stories/Feedback/ErrorBoundary.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Feedback/ErrorBoundary.stories.tsx"
       ],
       "dependencies": {
@@ -1213,6 +1300,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -1262,7 +1350,14 @@
         }
       ],
       "consumers": [
-        "src/components/Navbar.tsx"
+        "src/components/Navbar.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1287,14 +1382,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "icon-only",
+          "modal-open",
+          "keyboard"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed with its already catalogued modal in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -1315,6 +1417,13 @@
         "src/components/MobileDrawer.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1376,7 +1485,12 @@
       ],
       "consumers": [
         "src/App.tsx",
-        "src/pages/AboutPage.tsx"
+        "src/pages/AboutPage.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Marketing.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1399,14 +1513,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -1429,6 +1549,10 @@
       ],
       "consumers": [
         "src/pages/JamRegisterPage.tsx",
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx"
       ],
@@ -1502,6 +1626,9 @@
         "src/components/forms/SupabaseLoginForm.tsx",
         "src/workbench/stories/Forms.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Forms.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/lib/musicUtils.tsx"
@@ -1555,6 +1682,9 @@
       "consumers": [
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
@@ -1622,6 +1752,9 @@
       ],
       "consumers": [
         "src/pages/LoginPage.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
@@ -1692,6 +1825,9 @@
         "src/App.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/States/Loading.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -1737,7 +1873,11 @@
         }
       ],
       "consumers": [
-        "src/components/EnhancedHero.tsx"
+        "src/components/EnhancedHero.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1760,14 +1900,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -1784,7 +1930,11 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1809,14 +1959,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "reduced-motion",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -1838,6 +1995,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -1890,6 +2048,9 @@
       "consumers": [
         "src/components/jam-detail-v2/CollapsibleSidebar.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
@@ -1945,6 +2106,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/jam-detail-v2/CollapsibleSection.tsx"
@@ -2001,6 +2163,9 @@
       ],
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
@@ -2065,6 +2230,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -2115,6 +2281,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -2166,6 +2333,9 @@
       ],
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/States/Loading.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
@@ -2220,6 +2390,9 @@
       ],
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
@@ -2284,6 +2457,7 @@
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -2328,7 +2502,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: orchestration couples Spotify import, music creation, and schedule linking; remove when service adapters can be injected or fully modeled with scenario handlers in #35."
+          "Spotify import, music creation, and schedule linking are coupled to internal services; remove the exemption when injectable adapters or deterministic request scenarios cover the complete orchestration."
         ]
       }
     },
@@ -2353,6 +2527,7 @@
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -2396,7 +2571,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: schedule-domain orchestration belongs to the Jam catalogue slice; remove when service scenarios are added in #35."
+          "Schedule-domain requests are performed through internal orchestration; remove the exemption when deterministic search and submission scenarios can be injected."
         ]
       }
     },
@@ -2420,6 +2595,9 @@
       ],
       "consumers": [
         "src/components/jam-detail-v2/TimelineShowcase.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
@@ -2483,6 +2661,9 @@
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/JamTimeline.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/SpotifyPreview.tsx",
@@ -2540,6 +2721,7 @@
       "consumers": [
         "src/components/jam-detail-v2/TimelineShowcase.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -2581,6 +2763,7 @@
       "consumers": [
         "src/components/jam-detail-v2/TimelineShowcase.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/jam-detail-v2/TimelineItem.tsx",
@@ -2631,6 +2814,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -2672,6 +2856,7 @@
       "consumers": [
         "src/components/jam-detail-v2/TimelineShowcase.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/jam-detail-v2/TimelineItem.tsx",
@@ -2712,6 +2897,9 @@
       "exports": [],
       "consumers": [
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2775,6 +2963,9 @@
       ],
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
@@ -2850,6 +3041,9 @@
         "src/pages/BrowseJamsPage.tsx",
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/JamComponents.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/lib/i18nUtils.ts",
@@ -2918,6 +3112,9 @@
         "src/pages/host/HostDashboardPage.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/States/Loading.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -2968,6 +3165,9 @@
       ],
       "consumers": [
         "src/pages/JamRegisterPage.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
@@ -3023,6 +3223,12 @@
       "consumers": [
         "src/components/Navbar.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3110,6 +3316,14 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -3182,6 +3396,14 @@
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -3238,6 +3460,9 @@
       ],
       "consumers": [
         "src/pages/MusicPage.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
@@ -3297,6 +3522,9 @@
       "consumers": [
         "src/components/MusicCard.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -3353,6 +3581,9 @@
       ],
       "consumers": [
         "src/pages/MusicPage.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
@@ -3414,6 +3645,10 @@
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -3468,6 +3703,7 @@
       "consumers": [
         "src/pages/tabs/ScheduleTab.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Avatar.tsx",
@@ -3508,7 +3744,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: profile retrieval is performed internally; remove when a typed musician-profile MSW scenario is added in #36."
+          "Profile retrieval is performed internally; remove the exemption when a typed musician-profile request scenario can be injected."
         ]
       }
     },
@@ -3534,6 +3770,7 @@
         "src/pages/MusicPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Modal.tsx",
@@ -3575,7 +3812,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: music-domain submit behavior is owned by the Music catalogue slice; remove when create/edit scenarios are added in #35."
+          "Create and edit submission use internal music services; remove the exemption when deterministic service adapters cover validation, success, and error outcomes."
         ]
       }
     },
@@ -3600,6 +3837,9 @@
       "consumers": [
         "src/components/MusicModal.tsx",
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
@@ -3650,6 +3890,9 @@
       "consumers": [
         "src/components/MusicTable.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -3699,6 +3942,9 @@
       ],
       "consumers": [
         "src/components/MusicTable.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
@@ -3758,6 +4004,11 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/DesktopUserMenu.tsx",
@@ -3812,6 +4063,11 @@
       "exports": [],
       "consumers": [
         "src/components/Navbar.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3868,6 +4124,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -3907,7 +4164,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: completion mutates authenticated profile state; remove when the shared auth fixture exposes deterministic mutation scenarios in #39."
+          "Completion mutates authenticated profile state through the live auth context; remove the exemption when the auth fixture exposes deterministic profile mutations."
         ]
       }
     },
@@ -3934,6 +4191,9 @@
         "src/pages/host/CreateJamPage.tsx",
         "src/pages/host/HostDashboardPage.tsx",
         "src/pages/host/JamManagementPage.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "dependencies": {
@@ -3989,6 +4249,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -4031,6 +4292,9 @@
       ],
       "consumers": [
         "src/pages/ProfilePage.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
@@ -4080,7 +4344,11 @@
         }
       ],
       "consumers": [
-        "src/pages/ProfilePage.tsx"
+        "src/pages/ProfilePage.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4104,14 +4372,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "needs-review",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "host",
+          "musician",
+          "long-name",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Product/Remaining reusable UI; member-since copy remains hardcoded English and needs i18n review."
+        ]
       }
     },
     {
@@ -4135,6 +4410,7 @@
       "consumers": [
         "src/pages/LoginPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -4173,7 +4449,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: profile setup mutates authenticated profile state; remove when the shared auth fixture exposes deterministic mutation scenarios in #39."
+          "Profile setup mutates authenticated state through the live auth context; remove the exemption when the auth fixture exposes deterministic profile mutations."
         ]
       }
     },
@@ -4202,6 +4478,9 @@
       ],
       "consumers": [
         "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
@@ -4270,6 +4549,9 @@
       "consumers": [
         "src/components/publicDashboard/carousel/CarouselDashboard.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -4322,6 +4604,9 @@
       ],
       "consumers": [
         "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
@@ -4380,6 +4665,9 @@
       ],
       "consumers": [
         "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
@@ -4443,6 +4731,9 @@
         "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/utils/jamUrl.ts"
@@ -4504,6 +4795,9 @@
         "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -4560,6 +4854,9 @@
       ],
       "consumers": [
         "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
@@ -4623,6 +4920,9 @@
         "src/pages/PublicDashboardPage.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -4684,6 +4984,9 @@
       ],
       "consumers": [
         "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
@@ -4760,6 +5063,9 @@
         "src/pages/PublicDashboardPage.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -4821,6 +5127,10 @@
         "src/components/publicDashboard/CurrentSongCard.tsx",
         "src/components/publicDashboard/NextSongCard.tsx",
         "src/components/publicDashboard/StartingSoonCard.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
@@ -4894,6 +5204,9 @@
         "src/components/publicDashboard/Navbar.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/config/languages.config.ts"
@@ -4955,6 +5268,9 @@
       ],
       "consumers": [
         "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
@@ -5026,6 +5342,10 @@
       ],
       "consumers": [
         "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
@@ -5101,6 +5421,10 @@
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/hooks/index.ts"
@@ -5166,6 +5490,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -5224,6 +5549,9 @@
       ],
       "consumers": [
         "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
@@ -5298,6 +5626,9 @@
         "src/pages/PublicDashboardPage.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/publicDashboard/InstrumentGroup.tsx",
@@ -5369,6 +5700,9 @@
         "src/components/publicDashboard/CurrentSongCard.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/hooks/index.ts"
@@ -5424,6 +5758,10 @@
       "exports": [],
       "consumers": [
         "src/components/QuickEditPanel.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5482,6 +5820,10 @@
       "consumers": [
         "src/components/MusicCard.tsx",
         "src/workbench/stories/Forms.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5545,6 +5887,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -5591,6 +5934,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -5639,6 +5983,7 @@
       "consumers": [
         "src/components/RouteGuards.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -5692,6 +6037,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -5738,6 +6084,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -5786,6 +6133,10 @@
       "consumers": [
         "src/components/schedule/MusicianSlotList.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5845,6 +6196,7 @@
       "consumers": [
         "src/pages/tabs/ScheduleTab.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -5921,6 +6273,11 @@
         "src/components/schedule/SongInfo.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/lib/formatters.ts",
@@ -5975,6 +6332,10 @@
         "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
@@ -6037,6 +6398,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/hooks/index.ts",
@@ -6075,7 +6437,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Polling and reorder hooks are internal; remove this Phase 3 exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
+          "Polling and reorder hooks are internal; remove the exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
         ]
       }
     },
@@ -6089,6 +6451,7 @@
       "consumers": [
         "src/components/schedule/LiveJamControlPanel.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/lib/formatters.ts",
@@ -6125,7 +6488,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Polling and reorder hooks are internal; remove this Phase 3 exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
+          "Polling and reorder hooks are internal; remove the exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
         ]
       }
     },
@@ -6139,6 +6502,7 @@
       "consumers": [
         "src/components/schedule/LiveJamControlPanel.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -6173,7 +6537,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Polling and reorder hooks are internal; remove this Phase 3 exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
+          "Polling and reorder hooks are internal; remove the exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
         ]
       }
     },
@@ -6198,6 +6562,9 @@
       "consumers": [
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
@@ -6263,6 +6630,9 @@
       "consumers": [
         "src/components/schedule/MusicianSlotList.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/lib/schedule/instrumentHelpers.tsx"
@@ -6321,6 +6691,10 @@
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
         "src/workbench/stories/Forms.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6388,6 +6762,10 @@
       "consumers": [
         "src/components/schedule/ScheduleCardManagement.tsx",
         "src/components/schedule/ScheduleDisplayItem.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
@@ -6461,6 +6839,10 @@
         "src/components/schedule/ScheduleCardManagement.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -6524,6 +6906,9 @@
       "consumers": [
         "src/workbench/stories/Environment.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/schedule/RegistrationList.tsx",
@@ -6571,6 +6956,9 @@
       ],
       "consumers": [
         "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
@@ -6645,6 +7033,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/schedule/InstrumentBadges.tsx",
@@ -6698,6 +7087,9 @@
       "consumers": [
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
+      "workbenchStories": [
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
@@ -6759,6 +7151,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/schedule/InstrumentBadges.tsx",
@@ -6822,6 +7215,7 @@
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -6865,7 +7259,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Enrollment mutation remains covered as a form overlay in #33 until its service is injectable."
+          "Enrollment mutation uses an internal service; remove the exemption when deterministic enrollment outcomes can be injected."
         ]
       }
     },
@@ -6891,6 +7285,10 @@
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6961,6 +7359,10 @@
         "src/components/schedule/ScheduleCompactCard.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/lib/schedule/statusHelpers.ts"
@@ -7016,6 +7418,10 @@
       "consumers": [
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -7081,6 +7487,10 @@
         "src/components/schedule/ScheduleCardManagement.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/schedule/InstrumentBadges.tsx"
@@ -7134,6 +7544,10 @@
       "consumers": [
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7192,6 +7606,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -7239,6 +7654,9 @@
         "src/pages/LoginPage.tsx",
         "src/pages/NotFoundPage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -7291,6 +7709,7 @@
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Modal.tsx",
@@ -7329,7 +7748,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: clipboard and native-share branches need controlled browser capability fixtures; remove when those capabilities are added in #39."
+          "Clipboard and native-share branches depend on browser capabilities; remove the exemption when those capabilities have deterministic workbench adapters."
         ]
       }
     },
@@ -7352,6 +7771,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [],
@@ -7400,6 +7820,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -7441,7 +7862,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: Spotify export is currently hidden in product UI; remove when the integration is re-enabled and modeled in #35."
+          "Spotify export is currently hidden in product UI; remove the exemption when the integration is re-enabled and deterministic export scenarios exist."
         ]
       }
     },
@@ -7468,6 +7889,7 @@
         "src/pages/host/HostDashboardPage.tsx",
         "src/pages/tabs/OverviewTab.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -7514,7 +7936,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: multi-mode Spotify and Jam orchestration requires a dedicated request scenario matrix; remove when integration scenarios are added in #35."
+          "Multi-mode Spotify and Jam orchestration uses internal services; remove the exemption when a deterministic request matrix covers every mode."
         ]
       }
     },
@@ -7527,6 +7949,11 @@
       "exports": [],
       "consumers": [
         "src/components/SpotifyPreview.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/JamTimeline.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7543,14 +7970,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "preview",
+          "icon-only",
+          "invalid-link",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "SpotifyPreview, SpotifyPlayButton and local SpotifyLogo are reviewed together in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -7573,7 +8008,13 @@
       ],
       "consumers": [
         "src/components/MusicTable.tsx",
-        "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx"
+        "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/JamTimeline.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7592,14 +8033,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "preview",
+          "icon-only",
+          "invalid-link",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "SpotifyPreview, SpotifyPlayButton and local SpotifyLogo are reviewed together in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -7621,7 +8070,12 @@
         }
       ],
       "consumers": [
-        "src/components/MusicCard.tsx"
+        "src/components/MusicCard.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7640,14 +8094,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "preview",
+          "icon-only",
+          "invalid-link",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "SpotifyPreview, SpotifyPlayButton and local SpotifyLogo are reviewed together in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -7664,6 +8126,7 @@
         }
       ],
       "consumers": [],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -7712,7 +8175,11 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7733,14 +8200,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -7764,6 +8237,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/lib/api/index.ts",
@@ -7824,6 +8298,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/hooks/index.ts",
@@ -7872,7 +8347,12 @@
           "module": "src/pages/AboutPage.tsx"
         }
       ],
-      "consumers": [],
+      "consumers": [
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Footer.tsx",
@@ -7901,14 +8381,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "long-localization",
+          "routing"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed as a stable page composition in Pages/Stable compositions."
+        ]
       }
     },
     {
@@ -7927,6 +8414,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/SEO.tsx",
@@ -7987,6 +8475,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8038,6 +8527,7 @@
       "consumers": [
         "src/pages/host/FeedbackPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [],
         "external": [
@@ -8058,7 +8548,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -8066,7 +8556,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Locally declared feedback card."
+          "Private route-local card has no exported render seam; promote it before direct isolated review."
         ]
       }
     },
@@ -8091,6 +8581,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8120,14 +8611,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Host route owns authenticated data fetching; reusable feedback patterns are catalogued directly."
+        ]
       }
     },
     {
@@ -8151,6 +8644,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8188,7 +8682,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Route-level composition, including its local JamCard, is deferred to page catalogue work."
+          "The route-local JamCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
         ]
       }
     },
@@ -8202,6 +8696,7 @@
       "consumers": [
         "src/pages/host/HostDashboardPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/lib/i18nUtils.ts",
@@ -8234,7 +8729,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Route-level composition, including its local JamCard, is deferred to page catalogue work."
+          "The route-local JamCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
         ]
       }
     },
@@ -8259,6 +8754,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8321,6 +8817,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8393,6 +8890,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/EditMusicianModal.tsx",
@@ -8449,6 +8947,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8505,6 +9004,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/services/index.ts"
@@ -8556,6 +9056,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/SEO.tsx",
@@ -8583,14 +9084,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Authentication route redirects and mutates session state; its reusable forms are catalogued by #33."
+        ]
       }
     },
     {
@@ -8614,6 +9117,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8672,7 +9176,11 @@
       ],
       "consumers": [
         "src/App.tsx",
-        "src/pages/SlugRedirect.tsx"
+        "src/pages/SlugRedirect.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -8699,14 +9207,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "not-found",
+          "mobile",
+          "routing"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed as a stable page composition in Pages/Stable compositions."
+        ]
       }
     },
     {
@@ -8730,6 +9244,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/ProfileFormSection.tsx",
@@ -8756,14 +9271,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Profile route owns authenticated mutations; ProfileHeader and form sections are catalogued directly."
+        ]
       }
     },
     {
@@ -8782,6 +9299,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8847,6 +9365,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/pages/NotFoundPage.tsx",
@@ -8904,6 +9423,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/lib/spotify/pkce.ts"
@@ -8928,14 +9448,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "OAuth callback has no stable visual output beyond catalogued loading and feedback patterns."
+        ]
       }
     },
     {
@@ -8954,6 +9476,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9009,6 +9532,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/hooks/index.ts"
@@ -9034,14 +9558,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Authentication callback is redirect infrastructure without standalone visual output."
+        ]
       }
     },
     {
@@ -9060,6 +9586,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9113,6 +9640,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9168,6 +9696,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/dj-control/index.ts",
@@ -9232,6 +9761,7 @@
       "consumers": [
         "src/App.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/SEO.tsx",
@@ -9296,6 +9826,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9352,6 +9883,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/types/api.types.ts"
@@ -9402,6 +9934,7 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/MusicianProfileModal.tsx",
@@ -9522,6 +10055,10 @@
       "reason": "Private Storybook composition for reviewed Jam timeline components; not product UI."
     },
     {
+      "source": "src/workbench/stories/Marketing.stories.tsx",
+      "reason": "Private Storybook composition for reviewed marketing sections; not product UI."
+    },
+    {
       "source": "src/workbench/stories/MusicLibrary.stories.tsx",
       "reason": "Private Storybook composition for reviewed Music components; not product UI."
     },
@@ -9534,12 +10071,20 @@
       "reason": "Private Storybook composition for catalogued overlay components; not product UI."
     },
     {
+      "source": "src/workbench/stories/PageCompositions.stories.tsx",
+      "reason": "Private Storybook composition for stable page-level visual review; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/PublicDashboardCards.stories.tsx",
       "reason": "Private Storybook composition for reviewed Public Dashboard cards and display states; not product UI."
     },
     {
       "source": "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
       "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/RemainingUI.stories.tsx",
+      "reason": "Private Storybook composition for remaining reviewed product UI; not product UI itself."
     },
     {
       "source": "src/workbench/stories/SchedulePrimitives.stories.tsx",
@@ -9559,9 +10104,17 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 167,
+    "eligibleSources": 170,
     "representedSources": 140,
-    "ignoredSources": 27
+    "ignoredSources": 30,
+    "workbench": {
+      "activeReusableVisualComponents": 104,
+      "ready": 87,
+      "exempt": 17,
+      "needsReview": 0,
+      "unknown": 0,
+      "readyWithoutStory": 0
+    }
   },
   "reviewCandidates": [
     {

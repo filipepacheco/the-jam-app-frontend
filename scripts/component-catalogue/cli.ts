@@ -5,6 +5,11 @@ import path from 'node:path'
 import {fileURLToPath} from 'node:url'
 
 import {analyseCatalogue} from './analyse.ts'
+import {
+  readyComponentsWithoutStories,
+  unreasonedWorkbenchExemptions,
+  unresolvedWorkbenchComponents,
+} from './coverage.ts'
 import {renderManifest, renderMarkdown} from './render.ts'
 import {isRecord, isSafeRelativePath, throwDiagnostics, validateInputs} from './validate.ts'
 import type {CatalogueConfig, CatalogueMetadataConfig} from '../../src/types/componentCatalogue.types.ts'
@@ -12,21 +17,27 @@ import type {CatalogueConfig, CatalogueMetadataConfig} from '../../src/types/com
 interface CatalogueArguments {
   configPath: string
   check: boolean
+  requireReviewedWorkbench: boolean
 }
 
 const parseArguments = (args: string[]): CatalogueArguments => {
   const index = args.indexOf('--config')
   if (index === -1 || !args[index + 1]) {
-    throw new Error('Usage: component-catalogue --config <path> [--check]')
+    throw new Error('Usage: component-catalogue --config <path> [--check] [--require-reviewed-workbench]')
   }
-  const supported = new Set(['--config', args[index + 1], '--check'])
+  const supported = new Set(['--config', args[index + 1], '--check', '--require-reviewed-workbench'])
   const unknown = args.filter((argument) => !supported.has(argument))
   if (unknown.length > 0) throw new Error(`Unknown argument: ${unknown[0]}`)
-  return {configPath: args[index + 1], check: args.includes('--check')}
+  const check = args.includes('--check')
+  const requireReviewedWorkbench = args.includes('--require-reviewed-workbench')
+  if (requireReviewedWorkbench && !check) {
+    throw new Error('--require-reviewed-workbench requires --check')
+  }
+  return {configPath: args[index + 1], check, requireReviewedWorkbench}
 }
 
 export const runCatalogueCommand = async (args: string[], cwd = process.cwd()): Promise<void> => {
-  const {configPath: configuredPath, check} = parseArguments(args)
+  const {configPath: configuredPath, check, requireReviewedWorkbench} = parseArguments(args)
   const configPath = path.resolve(cwd, configuredPath)
   const root = path.dirname(configPath)
   const config = JSON.parse(await readFile(configPath, 'utf8')) as CatalogueConfig
@@ -53,6 +64,29 @@ export const runCatalogueCommand = async (args: string[], cwd = process.cwd()): 
     diagnostics,
   })
   throwDiagnostics(diagnostics)
+  if (requireReviewedWorkbench) {
+    const unresolved = unresolvedWorkbenchComponents(catalogue.components)
+    const unreasonedExemptions = unreasonedWorkbenchExemptions(catalogue.components)
+    const readyWithoutStories = readyComponentsWithoutStories(catalogue.components)
+    const baselineDiagnostics = [
+      ...(unresolved.length > 0 ? [
+        `active reusable visual components are not reviewed: ${unresolved.map(
+          (component) => `${component.id} (${component.metadata.readiness.workbench})`,
+        ).join(', ')}`,
+      ] : []),
+      ...(unreasonedExemptions.length > 0 ? [
+        `active reusable visual component workbench exemptions require a reason: ${unreasonedExemptions.map(
+          (component) => component.id,
+        ).join(', ')}`,
+      ] : []),
+      ...(readyWithoutStories.length > 0 ? [
+        `active reusable visual components are marked ready without a reachable Storybook story: ${readyWithoutStories.map(
+          (component) => component.id,
+        ).join(', ')}`,
+      ] : []),
+    ]
+    throwDiagnostics(baselineDiagnostics)
+  }
   const outputs = [
     {label: config.output.json, path: path.resolve(root, config.output.json), expected: renderManifest(catalogue)},
     {label: config.output.markdown, path: path.resolve(root, config.output.markdown), expected: renderMarkdown(catalogue)},
@@ -74,7 +108,11 @@ export const runCatalogueCommand = async (args: string[], cwd = process.cwd()): 
       diagnostics.push('Run `npm run catalogue:generate`')
       throwDiagnostics(diagnostics)
     }
-    process.stdout.write('Component catalogue is valid and up to date.\n')
+    process.stdout.write(
+      requireReviewedWorkbench
+        ? 'Component catalogue is valid and up to date; the reviewed workbench baseline is complete.\n'
+        : 'Component catalogue is valid and up to date.\n',
+    )
     return
   }
 
