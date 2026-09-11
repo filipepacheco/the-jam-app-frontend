@@ -572,7 +572,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/DJControlTabV2.tsx"
+        "src/pages/tabs/DJControlTabV2.tsx",
+        "src/workbench/stories/DJControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -593,14 +594,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "empty",
+          "partial",
+          "completed",
+          "long-duration"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/DJ Control/Playback and queue."
+        ]
       }
     },
     {
@@ -622,7 +630,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/DJControlTabV2.tsx"
+        "src/pages/tabs/DJControlTabV2.tsx",
+        "src/workbench/stories/DJControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -644,14 +653,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "idle",
+          "ready",
+          "playing",
+          "paused",
+          "stopped",
+          "long-content",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/DJ Control/Playback and queue."
+        ]
       }
     },
     {
@@ -673,7 +692,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/DJControlTabV2.tsx"
+        "src/pages/tabs/DJControlTabV2.tsx",
+        "src/workbench/stories/DJControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -698,14 +718,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "ready",
+          "playing",
+          "paused",
+          "disabled",
+          "loading",
+          "error",
+          "rapid-operation"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed with user interactions in Domain/DJ Control/Playback and queue."
+        ]
       }
     },
     {
@@ -796,7 +826,8 @@
       ],
       "consumers": [
         "src/pages/tabs/DJControlTab.tsx",
-        "src/pages/tabs/DJControlTabV2.tsx"
+        "src/pages/tabs/DJControlTabV2.tsx",
+        "src/workbench/stories/DJControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -818,14 +849,27 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "empty",
+          "previous",
+          "current",
+          "upcoming",
+          "suggested",
+          "reordered",
+          "destructive",
+          "disabled",
+          "mobile",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "SongQueueTimeline and local SongRow are reviewed with interactions in Domain/DJ Control/Playback and queue."
+        ]
       }
     },
     {
@@ -859,14 +903,27 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "empty",
+          "previous",
+          "current",
+          "upcoming",
+          "suggested",
+          "reordered",
+          "destructive",
+          "disabled",
+          "mobile",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "SongQueueTimeline and local SongRow are reviewed with interactions in Domain/DJ Control/Playback and queue."
+        ]
       }
     },
     {
@@ -5750,10 +5807,15 @@
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loading",
+          "error",
+          "reorder",
+          "destructive"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Live playback control and its private children are catalogued by #37."
+          "Polling and reorder hooks are internal; remove this Phase 3 exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
         ]
       }
     },
@@ -5795,10 +5857,15 @@
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loading",
+          "error",
+          "reorder",
+          "destructive"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Live playback control and its private children are catalogued by #37."
+          "Polling and reorder hooks are internal; remove this Phase 3 exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
         ]
       }
     },
@@ -5838,10 +5905,15 @@
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loading",
+          "error",
+          "reorder",
+          "destructive"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Live playback control and its private children are catalogued by #37."
+          "Polling and reorder hooks are internal; remove this Phase 3 exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
         ]
       }
     },
@@ -8855,15 +8927,19 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loading",
+          "error",
+          "live"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Production-default DJ control tab."
+          "Route-level control orchestration has no injectable polling seam; DJ primitives are reviewed directly."
         ]
       }
     },
@@ -9146,6 +9222,10 @@
       "reason": "Application bootstrap; renders the root but does not declare a component."
     },
     {
+      "source": "src/workbench/stories/DJControl.stories.tsx",
+      "reason": "Private Storybook composition for reviewed DJ playback and queue states; not product UI."
+    },
+    {
       "source": "src/workbench/stories/Environment.stories.tsx",
       "reason": "Private Storybook composition; stories exercise catalogued production components but are not product UI."
     },
@@ -9203,9 +9283,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 164,
+    "eligibleSources": 165,
     "representedSources": 140,
-    "ignoredSources": 24
+    "ignoredSources": 25
   },
   "reviewCandidates": [
     {
