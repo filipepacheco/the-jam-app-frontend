@@ -1,8 +1,9 @@
 import path from 'node:path'
 import ts from 'typescript'
 
-import {matchesAny, metadataFor, validateMetadata} from './metadata.ts'
+import {globPattern, matchesAny, metadataFor} from './metadata.ts'
 import {inlinePatternCandidates} from './patterns.ts'
+import {isExactSource, isSafeRelativePath, validateResolvedMetadata} from './validate.ts'
 
 import type {
   CatalogueComponent,
@@ -446,9 +447,10 @@ export interface AnalyseCatalogueOptions {
   include: string[]
   ignore: IgnoredCatalogueSource[]
   metadata: CatalogueMetadataConfig
+  diagnostics?: string[]
 }
 
-export const analyseCatalogue = ({root, project, include, ignore, metadata}: AnalyseCatalogueOptions): ComponentCatalogue => {
+export const analyseCatalogue = ({root, project, include, ignore, metadata, diagnostics = []}: AnalyseCatalogueOptions): ComponentCatalogue => {
   const configPath = path.resolve(root, project)
   const config = ts.readConfigFile(configPath, ts.sys.readFile)
   if (config.error) {
@@ -473,10 +475,23 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata}: Ana
     .filter((source) => matchesAny(source, include))
     .sort(compareText)
   const includedSources = new Set(eligibleSources)
-  const ignoredBySource = new Map(ignore.map((item) => [toPosix(item.source), item]))
-  for (const item of ignore) {
-    if (!item.reason.trim()) throw new Error(`${item.source}: ignored sources require a reason`)
-    if (!includedSources.has(toPosix(item.source))) throw new Error(`${item.source}: ignored source is not eligible`)
+  const ignoredBySource = new Map<string, IgnoredCatalogueSource>()
+  for (const [index, item] of ignore.entries()) {
+    if (!isSafeRelativePath(item.source) || typeof item.reason !== 'string' || !item.reason.trim()) continue
+    const source = toPosix(item.source)
+    if (ignoredBySource.has(source)) {
+      diagnostics.push(`duplicate ignore source "${source}"`)
+      continue
+    }
+    if (!includedSources.has(source)) {
+      diagnostics.push(`ignore[${index}]: source "${source}" is not eligible`)
+      continue
+    }
+    if ([...components.values()].some((component) => component.source === source)) {
+      diagnostics.push(`ignore[${index}]: source is not eligible for ignoring because it declares React components`)
+      continue
+    }
+    ignoredBySource.set(source, {source, reason: item.reason})
   }
   const componentNodes = new Set([...components.values()].map((component) => component.node))
 
@@ -497,26 +512,56 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata}: Ana
     .filter((component) => includedSources.has(component.source) && !ignoredBySource.has(component.source))
   const identities = new Map<string, string>()
   const identityIds = new Set<string>()
-  for (const identity of metadata.components) {
+  for (const [index, identity] of metadata.components.entries()) {
+    if (!isSafeRelativePath(identity.source) || typeof identity.name !== 'string' || !identity.name.trim()) continue
     const key = `${toPosix(identity.source)}#${identity.name}`
-    if (identities.has(key)) throw new Error(`${key}: duplicate curated component selector`)
-    if (identityIds.has(identity.id)) throw new Error(`${identity.id}: duplicate curated stable identifier`)
+    if (identities.has(key)) {
+      diagnostics.push(`duplicate component selector "${key}"`)
+      continue
+    }
+    if (identityIds.has(identity.id)) {
+      diagnostics.push(`components[${index}].id: duplicate stable identifier "${identity.id}"`)
+      continue
+    }
     identities.set(key, identity.id)
     identityIds.add(identity.id)
   }
   const includedKeys = new Set(includedComponents.map((component) => component.key))
   const staleIdentities = [...identities.keys()].filter((key) => !includedKeys.has(key))
-  if (staleIdentities.length > 0) throw new Error(`Curated component selectors are stale:\n${staleIdentities.join('\n')}`)
+  for (const key of staleIdentities) diagnostics.push(`component selector "${key}" does not resolve`)
   const missingIdentities = includedComponents.filter((component) => !identities.has(component.key))
-  if (missingIdentities.length > 0) {
-    throw new Error(`Components require curated stable identifiers:\n${missingIdentities.map((component) => component.key).join('\n')}`)
+  for (const component of missingIdentities) {
+    diagnostics.push(`component "${component.key}" requires a curated stable identifier`)
+    identities.set(component.key, `missing.${component.key.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`)
+  }
+
+  for (const [index, rule] of metadata.rules.entries()) {
+    if (!isSafeRelativePath(rule.source)) continue
+    const exact = isExactSource(rule.source)
+    if (rule.component && !exact) {
+      diagnostics.push(`rules[${index}]: component-scoped rules require an exact source path`)
+      continue
+    }
+    const matchingComponents = includedComponents.filter(
+      (component) => globPattern(rule.source).test(component.source) &&
+        (!rule.component || component.name === rule.component),
+    )
+    if (matchingComponents.length === 0) {
+      if (rule.component) {
+        diagnostics.push(`rules[${index}]: component selector "${rule.source}#${rule.component}" does not resolve`)
+      } else if (exact) {
+        diagnostics.push(`rules[${index}]: exact source "${rule.source}" does not resolve`)
+      } else {
+        diagnostics.push(`rules[${index}]: source pattern "${rule.source}" is stale`)
+      }
+    }
   }
   const representedSources = new Set(includedComponents.map((component) => component.source))
   const missingSources = eligibleSources.filter(
     (source) => !representedSources.has(source) && !ignoredBySource.has(source),
   )
-  if (missingSources.length > 0) {
-    throw new Error(`Eligible sources contain no discovered component and require an explicit ignore reason:\n${missingSources.join('\n')}`)
+  for (const source of missingSources) {
+    diagnostics.push(`eligible source "${source}" contains no discovered component and requires an explicit ignore reason`)
   }
 
   const normalized: CatalogueComponent[] = includedComponents
@@ -529,7 +574,7 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata}: Ana
       )
       const visibility: CatalogueComponent['visibility'] = exports.length > 0 ? 'exported' : 'local'
       const curatedMetadata = metadataFor(component, metadata)
-      validateMetadata(curatedMetadata, component)
+      validateResolvedMetadata(curatedMetadata, component.key, metadata.candidateFamilies, diagnostics)
       return {
         id: identities.get(component.key)!,
         name: component.name,

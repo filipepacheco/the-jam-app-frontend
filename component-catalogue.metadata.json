@@ -1,4 +1,5 @@
 {
+  "candidateFamilies": ["overlay", "feedback", "empty-state"],
   "defaults": {
     "category": "product-ui",
     "layer": "domain-component",
@@ -23,7 +24,6 @@
     {"source": "src/components/RouteGuards.tsx", "metadata": {"category": "infrastructure", "layer": "infrastructure", "productArea": "account", "readiness": {"workbench": "exempt"}, "notes": ["Authentication and role infrastructure."]}},
     {"source": "src/components/ErrorBoundary.tsx", "metadata": {"category": "infrastructure", "layer": "infrastructure", "productArea": "app-shell", "notes": ["Application error boundary."]}},
     {"source": "src/components/SEO.tsx", "metadata": {"category": "infrastructure", "layer": "infrastructure", "productArea": "app-shell", "readiness": {"workbench": "exempt"}, "notes": ["Document metadata infrastructure."]}},
-    {"source": "src/components/PromoVideo/*.tsx", "metadata": {"category": "legacy-experimental", "layer": "domain-component", "lifecycle": "legacy", "productArea": "marketing", "viewportContexts": ["desktop"], "notes": ["Deprecated Remotion promotional implementation."]}},
     {"source": "src/components/hero/*.tsx", "metadata": {"category": "marketing", "productArea": "marketing", "viewportContexts": ["mobile", "desktop"], "notes": []}},
     {"source": "src/components/CallToAction.tsx", "metadata": {"category": "marketing", "productArea": "marketing", "notes": []}},
     {"source": "src/components/EnhancedHero.tsx", "metadata": {"category": "marketing", "productArea": "marketing", "notes": []}},
