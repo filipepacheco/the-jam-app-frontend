@@ -32,7 +32,7 @@ type ModalMode = 'add' | 'suggest' | null
 export function MusicPage() {
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const { user, isAuthenticated } = useAuth()
+  const { isAuthenticated, isHost } = useAuth()
 
   // Paginated data fetching
   const [musicList, setMusicList] = useState<MusicResponseDto[]>([])
@@ -162,14 +162,10 @@ export function MusicPage() {
 
   const handleQuickSave = useCallback(async (id: string, data: UpdateMusicDto): Promise<boolean> => {
     try {
-      const result = await musicService.update(id, data)
-      if (!result.success) {
-        setError(result.error || t('music_library.errors.failed_to_update'))
-        return false
-      }
+      const updated = await musicService.update(id, data)
       setExpandedCardId(null)
       await mutate()
-      setSuccess(t('music_library.feedback.update_success', { title: result.data?.title || '' }))
+      setSuccess(t('music_library.feedback.update_success', { title: updated.title || '' }))
       return true
     } catch (err) {
       setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_update'))
@@ -190,13 +186,9 @@ export function MusicPage() {
       setActionLoading(true)
       setError(null)
       try {
-        const result = await musicService.update(music.id, { status: 'APPROVED' })
-        if (!result.success) {
-          setError(result.error || t('music_library.errors.failed_to_approve'))
-        } else {
-          setSuccess(t('music_library.feedback.approve_success', { title: music.title }))
-          await Promise.all([mutate(), refreshSuggested()])
-        }
+        await musicService.update(music.id, { status: 'APPROVED' })
+        setSuccess(t('music_library.feedback.approve_success', { title: music.title }))
+        await Promise.all([mutate(), refreshSuggested()])
       } catch (err) {
         setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_approve'))
       } finally {
@@ -216,13 +208,9 @@ export function MusicPage() {
           setActionLoading(true)
           setError(null)
           try {
-            const result = await musicService.remove(music.id)
-            if (!result.success) {
-              setError(result.error || t('music_library.errors.failed_to_reject'))
-            } else {
-              setSuccess(t('music_library.feedback.reject_success', { title: music.title }))
-              await refreshSuggested()
-            }
+            await musicService.remove(music.id)
+            setSuccess(t('music_library.feedback.reject_success', { title: music.title }))
+            await refreshSuggested()
           } catch (err) {
             setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_reject'))
           } finally {
@@ -244,13 +232,9 @@ export function MusicPage() {
           setActionLoading(true)
           setError(null)
           try {
-            const result = await musicService.remove(music.id)
-            if (!result.success) {
-              setError(result.error || t('music_library.errors.failed_to_delete'))
-            } else {
-              setSuccess(t('music_library.feedback.delete_success', { title: music.title }))
-              await mutate()
-            }
+            await musicService.remove(music.id)
+            setSuccess(t('music_library.feedback.delete_success', { title: music.title }))
+            await mutate()
           } catch (err) {
             setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_delete'))
           } finally {
@@ -327,7 +311,7 @@ export function MusicPage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
             <h1 className="text-3xl sm:text-4xl font-bold text-balance">{t('music_library.page_title')}</h1>
             <div className="flex gap-2 w-full sm:w-auto">
-              {user?.isHost && (
+              {isHost() && (
                 <button
                   onClick={handleAdd}
                   className="btn btn-primary flex-1 sm:flex-none"
@@ -356,7 +340,7 @@ export function MusicPage() {
           </div>
 
           {/* Suggested songs button - hosts only */}
-          {user?.isHost && suggestedCount > 0 && (
+          {isHost() && suggestedCount > 0 && (
             <button
               onClick={() => void openSuggestedModal()}
               className="btn btn-warning btn-sm gap-2"
@@ -394,18 +378,18 @@ export function MusicPage() {
       {/* Music List */}
       <div className="container mx-auto max-w-7xl px-4 pb-8">
         {filteredAndSortedMusic.length === 0 ? (
-          <MusicEmptyState hasFilters={!!searchTerm || !!genreFilter} isHost={user?.isHost || false} />
+          <MusicEmptyState hasFilters={!!searchTerm || !!genreFilter} isHost={isHost()} />
         ) : (
           <div className="space-y-2">
             {filteredAndSortedMusic.map((music) => (
               <MusicCard
                 key={music.id}
                 music={music}
-                isHost={user?.isHost || false}
+                isHost={isHost()}
                 isExpanded={expandedCardId === music.id}
                 onDelete={handleDelete}
-                onToggleExpand={user?.isHost ? handleToggleExpand : undefined}
-                onQuickSave={user?.isHost ? handleQuickSave : undefined}
+                onToggleExpand={isHost() ? handleToggleExpand : undefined}
+                onQuickSave={isHost() ? handleQuickSave : undefined}
               />
             ))}
           </div>

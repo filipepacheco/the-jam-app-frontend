@@ -37,12 +37,7 @@ export { ConfirmDialog } from './ConfirmDialog'
 
 // Schedule Components
 export {
-  ScheduleCardManagement,
-  ScheduleStatusBadge,
-  ScheduleActionButtons,
-  SongInfo,
   RegistrationList,
-  ScheduleDisplayItem,
   ScheduleEnrollmentModal,
 } from './schedule'
 export { SupabaseLoginForm } from './forms/SupabaseLoginForm'
@@ -57,4 +52,4 @@ export { SpotifyExportModal } from './SpotifyExportModal'
 export { SpotifyPreview, SpotifyPlayButton, isSpotifyTrackLink } from './SpotifyPreview'
 
 // DJ Control Components
-export { SongQueueTimeline, TimelineSongItem, QueueStats } from './dj-control'
+export { SongQueueTimeline, TimelineSongItem } from './dj-control'

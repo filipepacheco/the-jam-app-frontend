@@ -117,20 +117,6 @@ export interface ReorderQueueRequest {
 }
 
 /**
- * Standardized response from reorder endpoint
- * Returns full jam object with updated schedules
- */
-export interface ReorderQueueResponse {
-  success: boolean
-  data?: import('./api.types').JamResponseDto
-  error?: {
-    message: string
-    code: string
-    status: number
-  }
-}
-
-/**
  * Hook return type for useQueueReorder
  * Provides reorder method and state management
  */

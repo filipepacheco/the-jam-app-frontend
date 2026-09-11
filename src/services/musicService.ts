@@ -3,13 +3,12 @@
  * Handles all API operations related to Music (Músicas)
  */
 
-import { apiClient, API_ENDPOINTS } from '../lib/api'
+import { apiClient, API_ENDPOINTS, unwrapResponse, unwrapPaginatedResponse } from '../lib/api'
 import type {
   MusicResponseDto,
   JamMusicResponseDto,
   CreateMusicDto,
   UpdateMusicDto,
-  ApiResponse,
   PaginatedResponse,
 } from '../types/api.types'
 
@@ -23,8 +22,8 @@ export const musicService = {
    * @param data - Music creation data
    * @returns Promise with created music
    */
-  async create(data: CreateMusicDto): Promise<ApiResponse<MusicResponseDto>> {
-    return apiClient.post<MusicResponseDto>(API_ENDPOINTS.music as string, data)
+  async create(data: CreateMusicDto): Promise<MusicResponseDto> {
+    return unwrapResponse(() => apiClient.post<MusicResponseDto>(API_ENDPOINTS.music as string, data))
   },
 
   /**
@@ -33,13 +32,9 @@ export const musicService = {
   async findAll(skip = 0, take = 50, status?: string): Promise<PaginatedResponse<MusicResponseDto>> {
     const params = new URLSearchParams({ skip: String(skip), take: String(take) })
     if (status) params.set('status', status)
-    const response = await apiClient.get<MusicResponseDto[]>(
-      `${API_ENDPOINTS.music}?${params.toString()}`
+    return unwrapPaginatedResponse(() =>
+      apiClient.get<MusicResponseDto[]>(`${API_ENDPOINTS.music}?${params.toString()}`)
     )
-    return {
-      data: response.data,
-      meta: response.meta!,
-    }
   },
 
   /**
@@ -48,12 +43,12 @@ export const musicService = {
    * @param jamId - Jam ID
    * @returns Promise with confirmation
    */
-  async linkToJam(musicId: string, jamId: string): Promise<ApiResponse<Record<string, unknown>>> {
-    return apiClient.patch<Record<string, unknown>>(API_ENDPOINTS.linkMusicToJam(musicId, jamId), {})
+  async linkToJam(musicId: string, jamId: string): Promise<Record<string, unknown>> {
+    return unwrapResponse(() => apiClient.patch<Record<string, unknown>>(API_ENDPOINTS.linkMusicToJam(musicId, jamId), {}))
   },
 
-  async updateJamMusic(jamMusicId: string, jamId: string, data: { notes?: string }): Promise<ApiResponse<JamMusicResponseDto>> {
-    return apiClient.patch<JamMusicResponseDto>(API_ENDPOINTS.updateJamMusic(jamMusicId, jamId), data)
+  async updateJamMusic(jamMusicId: string, jamId: string, data: { notes?: string }): Promise<JamMusicResponseDto> {
+    return unwrapResponse(() => apiClient.patch<JamMusicResponseDto>(API_ENDPOINTS.updateJamMusic(jamMusicId, jamId), data))
   },
 
   /**
@@ -62,8 +57,8 @@ export const musicService = {
    * @param data - Update data
    * @returns Promise with updated music
    */
-  async update(id: string, data: UpdateMusicDto): Promise<ApiResponse<MusicResponseDto>> {
-    return apiClient.patch<MusicResponseDto>(API_ENDPOINTS.musicById(id), data)
+  async update(id: string, data: UpdateMusicDto): Promise<MusicResponseDto> {
+    return unwrapResponse(() => apiClient.patch<MusicResponseDto>(API_ENDPOINTS.musicById(id), data))
   },
 
   /**
@@ -71,8 +66,8 @@ export const musicService = {
    * @param id - Music ID
    * @returns Promise with deletion confirmation
    */
-  async remove(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(API_ENDPOINTS.musicById(id))
+  async remove(id: string): Promise<void> {
+    return unwrapResponse(() => apiClient.delete<void>(API_ENDPOINTS.musicById(id)))
   },
 }
 

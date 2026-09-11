@@ -3,8 +3,7 @@
  * Handles playlist import and export via backend API
  */
 
-import { apiClient, API_ENDPOINTS } from '../lib/api'
-import type { ApiResponse } from '../types/api.types'
+import { apiClient, API_ENDPOINTS , unwrapResponse } from '../lib/api'
 import type {
   SpotifyImportRequest,
   SpotifyImportResponse,
@@ -14,15 +13,15 @@ import type {
 } from '../types/spotify.types'
 
 export const spotifyService = {
-  async importPlaylist(data: SpotifyImportRequest): Promise<ApiResponse<SpotifyImportResponse>> {
-    return apiClient.post<SpotifyImportResponse>(API_ENDPOINTS.spotify.import, data)
+  async importPlaylist(data: SpotifyImportRequest): Promise<SpotifyImportResponse> {
+    return unwrapResponse(() => apiClient.post<SpotifyImportResponse>(API_ENDPOINTS.spotify.import, data))
   },
 
-  async exportPlaylist(data: SpotifyExportRequest): Promise<ApiResponse<SpotifyExportResponse>> {
-    return apiClient.post<SpotifyExportResponse>(API_ENDPOINTS.spotify.export, data)
+  async exportPlaylist(data: SpotifyExportRequest): Promise<SpotifyExportResponse> {
+    return unwrapResponse(() => apiClient.post<SpotifyExportResponse>(API_ENDPOINTS.spotify.export, data))
   },
 
-  async getTrackMetadata(trackUrl: string): Promise<ApiResponse<SpotifyTrackMetadata>> {
-    return apiClient.post<SpotifyTrackMetadata>(API_ENDPOINTS.spotify.track, { trackUrl })
+  async getTrackMetadata(trackUrl: string): Promise<SpotifyTrackMetadata> {
+    return unwrapResponse(() => apiClient.post<SpotifyTrackMetadata>(API_ENDPOINTS.spotify.track, { trackUrl }))
   },
 }

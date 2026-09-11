@@ -2,39 +2,19 @@
  * Jam URL Utilities
  * Centralized functions for generating jam-related URLs.
  * All internal links should use these helpers instead of hardcoding paths.
+ *
+ * The path builders live in site.config.ts so the Edge middleware and the Node
+ * build scripts share one definition with the browser bundle; they are
+ * re-exported here so app code can keep importing from `utils/jamUrl`.
+ * The full-URL helpers below stay client-only: they read SITE_URL from
+ * `import.meta.env`, which is Vite-specific and unavailable in those runtimes.
  */
 
 import { SITE_URL } from '../lib/api'
+import { getJamPath, getJamShortPath, type JamLike } from '../../site.config'
 
-interface JamLike {
-  id: string
-  slug?: string | null
-  shortCode?: string | null
-}
-
-/**
- * Get the internal path for a jam detail page.
- * Prefers slug to UUID for SEO-friendly URLs.
- */
-export function getJamPath(jam: JamLike): string {
-  return `/jams/${jam.slug || jam.id}`
-}
-
-/**
- * Get the internal path for the jam dashboard.
- */
-export function getJamDashboardPath(jam: JamLike): string {
-  return `/jams/${jam.slug || jam.id}/dashboard`
-}
-
-/**
- * Get the short URL path for QR codes and manual typing.
- * Falls back to /jams/:id if no shortCode.
- */
-export function getJamShortPath(jam: JamLike): string {
-  if (jam.shortCode) return `/j/${jam.shortCode}`
-  return `/jams/${jam.id}`
-}
+export { getJamPath, getJamDashboardPath, getJamShortPath } from '../../site.config'
+export type { JamLike } from '../../site.config'
 
 /**
  * Get the full shareable URL for a jam.
@@ -43,7 +23,7 @@ export function getJamShortPath(jam: JamLike): string {
 export function getJamShareUrl(jam: JamLike): string {
   const baseUrl = SITE_URL || window.location.origin
   if (jam.slug) return `${baseUrl}/${jam.slug}`
-  return `${baseUrl}/jams/${jam.id}`
+  return `${baseUrl}${getJamPath(jam)}`
 }
 
 /**

@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && npx tsx scripts/prerender.ts && npx tsx scripts/generate-sitemap.ts",
+    "build": "tsc -b && vite build && npx tsx scripts/prerender.ts && npx tsx scripts/generate-sitemap.ts && npm run check:site-config",
+    "sync:site-config": "npx tsx scripts/sync-site-config.ts",
+    "check:site-config": "npx tsx scripts/sync-site-config.ts --check",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest",

@@ -30,8 +30,7 @@ export function useJamControl(jamId: string, options?: UseJamControlOptions): Us
 
   // Fetcher function for SWR
   const fetcher = async () => {
-    const response = await jamControlService.getLiveState(jamId)
-    return response.data
+    return jamControlService.getLiveState(jamId)
   }
 
   // Use SWR for data fetching with automatic revalidation

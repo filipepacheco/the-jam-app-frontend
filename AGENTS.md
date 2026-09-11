@@ -44,7 +44,7 @@ src/
 │   ├── schedule/         # Schedule management components
 │   ├── forms/            # Form components
 │   └── Alerts/           # Alert components
-├── contexts/             # React contexts (AuthContext, JamContext)
+├── contexts/             # React contexts (AuthContext)
 ├── hooks/                # Custom React hooks (barrel export: index.ts)
 ├── lib/                  # Core infrastructure
 │   ├── api/              # API client and configuration
@@ -116,8 +116,7 @@ VITE_SPOTIFY_CLIENT_ID=your-spotify-client-id
 BrowserRouter
   └── SWRConfig
       └── AuthProvider
-          └── JamProvider
-              └── Routes
+          └── Routes
 ```
 
 ### Two-Tier Authentication
@@ -241,7 +240,6 @@ Access via URL parameters during development:
 | `src/lib/api/client.ts` | Axios client with interceptors |
 | `src/types/api.types.ts` | API TypeScript definitions |
 | `src/contexts/AuthContext.tsx` | Authentication state management |
-| `src/contexts/JamContext.tsx` | Jam session state management |
 | `src/i18n.ts` | i18next configuration |
 
 ## Security Considerations
@@ -286,3 +284,13 @@ Access via URL parameters during development:
 - **Component CLAUDE.md files**: Component-specific guidelines throughout src/
 
 Always refer to existing documentation before making assumptions about the codebase.
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked as GitHub Issues in `filipepacheco/the-jam-app-frontend`. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context layout — `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.

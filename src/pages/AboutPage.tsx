@@ -5,47 +5,21 @@ import {SEO} from '../components/SEO'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import {SITE_URL} from '../lib/api'
+import {buildAboutJsonLd} from '../../site.config'
 
 export function AboutPage() {
   const {t} = useTranslation()
   const siteUrl = SITE_URL
 
-  const aboutJsonLd = [
-    {
-      '@type': 'AboutPage',
-      name: t('about.seo_title'),
-      description: t('about.seo_description'),
-      url: `${siteUrl}/about`,
-      mainEntity: {
-        '@type': 'Organization',
-        '@id': `${siteUrl}/#organization`,
-        name: 'Jam App',
-        alternateName: 'The Jam App',
-        url: siteUrl,
-        description: t('about.seo_description'),
-        logo: {
-          '@type': 'ImageObject',
-          url: `${siteUrl}/web/icons8-concert-color-512.png`,
-          width: 512,
-          height: 512,
-        },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          contactType: 'customer service',
-          email: 'contato@jamapp.com.br',
-          availableLanguage: ['Portuguese', 'English', 'Spanish'],
-        },
-        areaServed: 'BR',
-      },
+  const aboutJsonLd = buildAboutJsonLd(siteUrl, {
+    name: t('about.seo_title'),
+    description: t('about.seo_description'),
+    contactEmail: 'contato@jamapp.com.br',
+    breadcrumbs: {
+      home: t('about.breadcrumb_home'),
+      about: t('about.breadcrumb_about'),
     },
-    {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {'@type': 'ListItem', position: 1, name: t('about.breadcrumb_home'), item: siteUrl},
-        {'@type': 'ListItem', position: 2, name: t('about.breadcrumb_about'), item: `${siteUrl}/about`},
-      ],
-    },
-  ]
+  })
 
   return (
     <>

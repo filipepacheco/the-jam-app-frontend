@@ -11,6 +11,7 @@ import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
+import {buildJamJsonLd} from '../../../site.config'
 import {
     Alert,
     ScheduleEnrollmentModal,
@@ -195,49 +196,24 @@ export function JamDetailPageV2() {
     const siteUrl = SITE_URL
     const canonicalUrl = `${siteUrl}${getJamPath(jam)}`
 
-    const eventStatusMap: Record<string, string> = {
-        ACTIVE: 'https://schema.org/EventScheduled',
-        INACTIVE: 'https://schema.org/EventPostponed',
-        LIVE: 'https://schema.org/EventScheduled',
-        FINISHED: 'https://schema.org/EventPast',
-    }
-
-    const jamJsonLd: Record<string, unknown>[] = [
+    const jamJsonLd = buildJamJsonLd(
         {
-            '@type': 'MusicEvent',
             name: jam.name,
-            description: jam.description || t('seo.jam.fallback_description', { defaultValue: 'Jam session on Jam App. Join as a musician or watch live.' }),
-            ...(jam.date && { startDate: jam.date }),
-            location: jam.location
-                ? { '@type': 'Place', name: jam.location }
-                : { '@type': 'VirtualLocation', url: canonicalUrl },
-            url: canonicalUrl,
-            image: `${siteUrl}/og-image.jpg`,
-            eventStatus: eventStatusMap[jam.status] || 'https://schema.org/EventScheduled',
-            eventAttendanceMode: jam.location
-                ? 'https://schema.org/OfflineEventAttendanceMode'
-                : 'https://schema.org/OnlineEventAttendanceMode',
-            organizer: {
-                '@type': 'Organization',
-                name: jam.hostName || 'Jam App',
-                url: siteUrl,
-            },
-            offers: {
-                '@type': 'Offer',
-                price: '0',
-                priceCurrency: 'BRL',
-                availability: 'https://schema.org/InStock',
-                url: canonicalUrl,
-            },
+            description: jam.description ?? null,
+            slug: jam.slug ?? null,
+            shortCode: jam.shortCode ?? null,
+            status: jam.status,
+            hostName: jam.hostName ?? null,
+            location: jam.location ?? null,
+            date: jam.date ?? null,
         },
+        canonicalUrl,
+        siteUrl,
         {
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-                { '@type': 'ListItem', position: 1, name: 'Jam Sessions', item: `${siteUrl}/jams` },
-                { '@type': 'ListItem', position: 2, name: jam.name, item: canonicalUrl },
-            ],
+            fallbackDescription: t('seo.jam.fallback_description', { defaultValue: 'Jam session on Jam App. Join as a musician or watch live.' }),
+            breadcrumbs: { home: t('nav.home'), browse: t('nav.jams') },
         },
-    ]
+    )
 
     return (
         <div className="min-h-screen bg-linear-to-br from-base-100 to-base-200">

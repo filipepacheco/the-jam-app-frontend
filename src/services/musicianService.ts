@@ -3,13 +3,12 @@
  * Handles all API operations related to Musicians (Músicos)
  */
 
-import { apiClient, API_ENDPOINTS } from '../lib/api'
+import { apiClient, API_ENDPOINTS, unwrapResponse, unwrapPaginatedResponse } from '../lib/api'
 import type {
   MusicianResponseDto,
   MusicianProfileWithStats,
   CreateMusicianDto,
   UpdateMusicianDto,
-  ApiResponse,
   PaginatedResponse,
 } from '../types/api.types'
 
@@ -23,25 +22,21 @@ export const musicianService = {
    * @param data - Musician creation data
    * @returns Promise with created musician
    */
-  async create(data: CreateMusicianDto): Promise<ApiResponse<MusicianResponseDto>> {
-    return apiClient.post<MusicianResponseDto>(API_ENDPOINTS.musicians as string, data)
+  async create(data: CreateMusicianDto): Promise<MusicianResponseDto> {
+    return unwrapResponse(() => apiClient.post<MusicianResponseDto>(API_ENDPOINTS.musicians as string, data))
   },
 
   /**
    * Get musicians with pagination
    */
   async findAll(skip = 0, take = 20): Promise<PaginatedResponse<MusicianResponseDto>> {
-    const response = await apiClient.get<MusicianResponseDto[]>(
-      `${API_ENDPOINTS.musicians}?skip=${skip}&take=${take}`
+    return unwrapPaginatedResponse(() =>
+      apiClient.get<MusicianResponseDto[]>(`${API_ENDPOINTS.musicians}?skip=${skip}&take=${take}`)
     )
-    return {
-      data: response.data,
-      meta: response.meta!,
-    }
   },
 
-  async findOne(id: string): Promise<ApiResponse<MusicianProfileWithStats>> {
-    return apiClient.get<MusicianProfileWithStats>(API_ENDPOINTS.musicianById(id))
+  async findOne(id: string): Promise<MusicianProfileWithStats> {
+    return unwrapResponse(() => apiClient.get<MusicianProfileWithStats>(API_ENDPOINTS.musicianById(id)))
   },
 
   /**
@@ -50,17 +45,16 @@ export const musicianService = {
    * @param data - Update data
    * @returns Promise with updated musician
    */
-  async update(id: string, data: UpdateMusicianDto): Promise<ApiResponse<MusicianResponseDto>> {
-    return apiClient.patch<MusicianResponseDto>(API_ENDPOINTS.musicianById(id), data)
+  async update(id: string, data: UpdateMusicianDto): Promise<MusicianResponseDto> {
+    return unwrapResponse(() => apiClient.patch<MusicianResponseDto>(API_ENDPOINTS.musicianById(id), data))
   },
 
   /**
    * Delete a musician
    * @param id - Musician ID
-   * @returns Promise with deletion confirmation
    */
-  async remove(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(API_ENDPOINTS.musicianById(id))
+  async remove(id: string): Promise<void> {
+    return unwrapResponse(() => apiClient.delete<void>(API_ENDPOINTS.musicianById(id)))
   },
 }
 

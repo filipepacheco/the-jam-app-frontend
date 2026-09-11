@@ -3,12 +3,11 @@
  * Handles all API operations related to Schedules (Escalas)
  */
 
-import { apiClient, API_ENDPOINTS } from '../lib/api'
+import { apiClient, API_ENDPOINTS , unwrapResponse } from '../lib/api'
 import type {
   ScheduleResponseDto,
   CreateScheduleDto,
   UpdateScheduleDto,
-  ApiResponse,
 } from '../types/api.types'
 
 /**
@@ -21,8 +20,8 @@ export const scheduleService = {
    * @param data - Schedule creation data
    * @returns Promise with created schedule
    */
-  async create(data: CreateScheduleDto): Promise<ApiResponse<ScheduleResponseDto>> {
-    return apiClient.post<ScheduleResponseDto>(API_ENDPOINTS.schedules as string, data)
+  async create(data: CreateScheduleDto): Promise<ScheduleResponseDto> {
+    return unwrapResponse(() => apiClient.post<ScheduleResponseDto>(API_ENDPOINTS.schedules as string, data))
   },
 
   /**
@@ -31,8 +30,8 @@ export const scheduleService = {
    * @param data - Update data
    * @returns Promise with updated schedule
    */
-  async update(id: string, data: UpdateScheduleDto): Promise<ApiResponse<ScheduleResponseDto>> {
-    return apiClient.patch<ScheduleResponseDto>(API_ENDPOINTS.scheduleById(id), data)
+  async update(id: string, data: UpdateScheduleDto): Promise<ScheduleResponseDto> {
+    return unwrapResponse(() => apiClient.patch<ScheduleResponseDto>(API_ENDPOINTS.scheduleById(id), data))
   },
 
   /**
@@ -40,8 +39,8 @@ export const scheduleService = {
    * @param id - Schedule ID
    * @returns Promise with deletion confirmation
    */
-  async remove(id: string): Promise<ApiResponse<void>> {
-    return apiClient.delete<void>(API_ENDPOINTS.scheduleById(id))
+  async remove(id: string): Promise<void> {
+    return unwrapResponse(() => apiClient.delete<void>(API_ENDPOINTS.scheduleById(id)))
   },
   // Note: Reorder functionality moved to jamControlService.reorderQueue()
 }

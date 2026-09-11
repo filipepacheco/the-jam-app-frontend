@@ -6,9 +6,6 @@
 // Authentication hook
 export { useAuth } from './useAuth'
 
-// Jam state hook
-export { useJamState } from './useJamState'
-
 // Offline queue hook
 export { useOfflineQueue, type OfflineQueueState } from './useOfflineQueue'
 
@@ -25,9 +22,15 @@ export { useFormState } from './useFormState'
 export { useJamControl } from './useJamControl'
 export type { UseJamControlReturn } from '../types/jamControl.types'
 
-// Queue reorder hook
+// Queue reorder hooks
 export { useQueueReorder } from './useQueueReorder'
 export type { UseQueueReorderReturn } from '../types/jamControl.types'
+export { useMouseReorder } from './useMouseReorder'
+export type { UseMouseReorderReturn } from './useMouseReorder'
+export { useTouchReorder } from './useTouchReorder'
+export type { UseTouchReorderReturn } from './useTouchReorder'
+export { useKeyboardReorder } from './useKeyboardReorder'
+export type { UseKeyboardReorderReturn } from './useKeyboardReorder'
 
 // Page-level alert state hook
 export { usePageAlerts } from './usePageAlerts'

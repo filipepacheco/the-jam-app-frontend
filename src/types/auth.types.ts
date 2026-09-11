@@ -62,12 +62,7 @@ export interface AuthContextType {
   logout: () => Promise<{ success: boolean; error?: string }>
   resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>
 
-  // Legacy login method (for backward compatibility)
-  login: (user: AuthUser, token?: string) => void
-
   // Profile management
-  setRole: (role: UserRole) => void
-  updateUser: (fields: Partial<AuthUser>) => void
   updateProfile: (updates: UpdateProfileDto) => Promise<{ success: boolean; error?: string }>
   completeOnboarding: (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }) => Promise<{ success: boolean; error?: string }>
   clearNewUserFlag: () => void
@@ -75,6 +70,7 @@ export interface AuthContextType {
   // Helper methods
   isUser: () => boolean
   isViewer: () => boolean
+  isHost: () => boolean
 }
 
 

@@ -1,4 +1,5 @@
 import { next } from '@vercel/functions';
+import { matchRoute, buildHomeJsonLd, buildBrowseJsonLd, buildAboutJsonLd, buildJamJsonLd, type JamData } from './site.config';
 
 // --- Social media crawler detection ---
 // These bots parse OG tags for link previews. They do NOT follow meta-refresh redirects.
@@ -47,80 +48,7 @@ function isSearchEngine(ua: string): boolean {
   return SEARCH_ENGINE_UAS.some((bot) => lower.includes(bot.toLowerCase()));
 }
 
-// --- Route matching ---
-
-const STATIC_ROUTES = new Set([
-  'login',
-  'register',
-  'profile',
-  'music',
-  'musicians',
-  'host',
-  'auth',
-  'privacy',
-  'robots.txt',
-  'sitemap.xml',
-  'llms.txt',
-  'og-image.jpg',
-  'jams',
-]);
-
-type RouteMatch =
-  | { type: 'home' }
-  | { type: 'browse' }
-  | { type: 'about' }
-  | { type: 'jam-detail'; identifier: string }
-  | { type: 'jam-dashboard'; identifier: string }
-  | { type: 'jam-register'; identifier: string }
-  | { type: 'short-code'; code: string }
-  | { type: 'slug'; slug: string }
-  | null;
-
-function matchRoute(pathname: string): RouteMatch {
-  if (pathname === '/') return { type: 'home' };
-  if (pathname === '/jams' || pathname === '/jams/') return { type: 'browse' };
-  if (pathname === '/about' || pathname === '/about/') return { type: 'about' };
-
-  // /jams/:jamId/dashboard
-  const dashboardMatch = pathname.match(/^\/jams\/([^/]+)\/dashboard\/?$/);
-  if (dashboardMatch) return { type: 'jam-dashboard', identifier: dashboardMatch[1] };
-
-  // /jams/:jamId/register
-  const registerMatch = pathname.match(/^\/jams\/([^/]+)\/register\/?$/);
-  if (registerMatch) return { type: 'jam-register', identifier: registerMatch[1] };
-
-  // /jams/:jamId
-  const jamMatch = pathname.match(/^\/jams\/([^/]+)\/?$/);
-  if (jamMatch) return { type: 'jam-detail', identifier: jamMatch[1] };
-
-  // /j/:code
-  const shortMatch = pathname.match(/^\/j\/([^/]+)\/?$/);
-  if (shortMatch) return { type: 'short-code', code: shortMatch[1] };
-
-  // /:slug (exclude static routes and files with extensions)
-  const slugMatch = pathname.match(/^\/([^/]+)\/?$/);
-  if (slugMatch) {
-    const segment = slugMatch[1];
-    if (STATIC_ROUTES.has(segment)) return null;
-    if (segment.includes('.')) return null;
-    return { type: 'slug', slug: segment };
-  }
-
-  return null;
-}
-
 // --- API fetch ---
-
-interface JamData {
-  name: string;
-  description: string | null;
-  slug: string | null;
-  shortCode: string | null;
-  status: string;
-  hostName: string | null;
-  location: string | null;
-  date: string | null;
-}
 
 async function fetchJam(identifier: string): Promise<JamData | null> {
   const apiUrl = process.env.API_URL;
@@ -146,21 +74,46 @@ async function fetchJam(identifier: string): Promise<JamData | null> {
 }
 
 // --- Portuguese default texts ---
+// Deliberately not shared with the client's i18n text - middleware serves
+// Portuguese to all bots regardless of ?lng=, avoiding the "alternative page
+// with proper canonical tag" GSC errors ?lng= alternates used to cause.
 
 const PT = {
   siteName: 'Jam App',
   homeTitle: 'Organize sua Jam Session ao Vivo | Jam App',
   homeDescription:
     'Crie e gerencie jam sessions ao vivo. Hosts organizam eventos, musicos se inscrevem em musicas e o publico acompanha tudo em tempo real.',
+  homeFeatureList: [
+    'Criar e gerenciar jam sessions ao vivo',
+    'Painel publico em tempo real',
+    'Inscricao de musicos por instrumento',
+    'Controle de setlist e ordem das musicas',
+    'QR code para compartilhar jams',
+    'Importar playlists do Spotify',
+  ],
   browseTitle: 'Encontre Jam Sessions Perto de Voce | Jam App',
+  browseName: 'Explorar Jam Sessions',
+  // <meta name="description"> text for the browse page
   browseDescription:
     'Encontre jam sessions e open mics perto de voce. Participe como musico ou acompanhe ao vivo pelo painel publico.',
+  // CollectionPage.description in the JSON-LD - deliberately distinct from the
+  // meta description above; both are already indexed, so neither may drift.
+  browseCollectionDescription:
+    'Encontre e participe de jam sessions ao vivo, open mics e eventos musicais na sua regiao.',
+  homeOrganizationDescription:
+    'Plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem e o publico acompanha em tempo real.',
   dashboardSuffix: 'Painel Ao Vivo',
   registerSuffix: 'Inscreva-se',
   fallbackJamDescription: 'Participe desta jam session no Jam App. Inscreva-se como musico ou acompanhe ao vivo.',
   aboutTitle: 'Sobre o Jam App | Jam App',
+  aboutName: 'Sobre o Jam App',
   aboutDescription:
     'O Jam App e uma plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem por instrumento e o publico acompanha em tempo real.',
+  aboutContactEmail: 'contato@jamapp.com.br',
+  // Breadcrumb labels - Portuguese, matching the rest of the bot-facing text
+  breadcrumbHome: 'Inicio',
+  breadcrumbBrowse: 'Jam Sessions',
+  breadcrumbAbout: 'Sobre',
 };
 
 const HOME_BODY = `
@@ -326,222 +279,6 @@ function buildOgHtml(opts: {
 </html>`;
 }
 
-// --- Structured data ---
-
-function homeStructuredData(siteUrl: string, ogImage: string): Record<string, unknown>[] {
-  return [
-    {
-      '@type': 'WebSite',
-      name: 'Jam App',
-      alternateName: 'The Jam App',
-      url: siteUrl,
-      description: PT.homeDescription,
-      inLanguage: 'pt-BR',
-      potentialAction: {
-        '@type': 'SearchAction',
-        target: {
-          '@type': 'EntryPoint',
-          urlTemplate: `${siteUrl}/jams?q={search_term_string}`,
-        },
-        'query-input': 'required name=search_term_string',
-      },
-    },
-    {
-      '@type': 'WebApplication',
-      name: 'Jam App',
-      alternateName: 'The Jam App',
-      url: siteUrl,
-      description: PT.homeDescription,
-      applicationCategory: 'EntertainmentApplication',
-      operatingSystem: 'Any',
-      browserRequirements: 'Requires JavaScript',
-      inLanguage: ['pt-BR', 'en', 'es'],
-      image: ogImage,
-      featureList: [
-        'Criar e gerenciar jam sessions ao vivo',
-        'Painel publico em tempo real',
-        'Inscricao de musicos por instrumento',
-        'Controle de setlist e ordem das musicas',
-        'QR code para compartilhar jams',
-        'Importar playlists do Spotify',
-      ],
-      offers: {
-        '@type': 'Offer',
-        price: '0',
-        priceCurrency: 'BRL',
-        availability: 'https://schema.org/OnlineOnly',
-      },
-      author: {
-        '@type': 'Organization',
-        name: 'Jam App',
-        url: siteUrl,
-      },
-    },
-    {
-      '@type': 'Organization',
-      name: 'Jam App',
-      alternateName: 'The Jam App',
-      url: siteUrl,
-      description:
-        'Plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem e o publico acompanha em tempo real.',
-      logo: {
-        '@type': 'ImageObject',
-        url: `${siteUrl}/web/icons8-concert-color-512.png`,
-        width: 512,
-        height: 512,
-      },
-      contactPoint: {
-        '@type': 'ContactPoint',
-        contactType: 'customer service',
-        url: siteUrl,
-      },
-    },
-  ];
-}
-
-function browseStructuredData(siteUrl: string): Record<string, unknown>[] {
-  return [
-    {
-      '@type': 'CollectionPage',
-      name: 'Explorar Jam Sessions',
-      description:
-        'Encontre e participe de jam sessions ao vivo, open mics e eventos musicais na sua regiao.',
-      url: `${siteUrl}/jams`,
-      isPartOf: {
-        '@type': 'WebSite',
-        name: 'Jam App',
-        url: siteUrl,
-      },
-    },
-    {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
-        { '@type': 'ListItem', position: 2, name: 'Jam Sessions', item: `${siteUrl}/jams` },
-      ],
-    },
-  ];
-}
-
-function aboutStructuredData(siteUrl: string): Record<string, unknown>[] {
-  return [
-    {
-      '@type': 'AboutPage',
-      name: 'Sobre o Jam App',
-      description: PT.aboutDescription,
-      url: `${siteUrl}/about`,
-      mainEntity: {
-        '@type': 'Organization',
-        '@id': `${siteUrl}/#organization`,
-        name: 'Jam App',
-        alternateName: 'The Jam App',
-        url: siteUrl,
-        description: PT.aboutDescription,
-        logo: {
-          '@type': 'ImageObject',
-          url: `${siteUrl}/web/icons8-concert-color-512.png`,
-          width: 512,
-          height: 512,
-        },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          contactType: 'customer service',
-          email: 'contato@jamapp.com.br',
-          availableLanguage: ['Portuguese', 'English', 'Spanish'],
-        },
-        areaServed: {
-          '@type': 'Country',
-          name: 'Brazil',
-        },
-      },
-    },
-    {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
-        { '@type': 'ListItem', position: 2, name: 'Sobre', item: `${siteUrl}/about` },
-      ],
-    },
-  ];
-}
-
-function jamStructuredData(
-  jam: JamData,
-  canonicalUrl: string,
-  siteUrl: string,
-  ogImage: string,
-): Record<string, unknown>[] {
-  const eventStatusMap: Record<string, string> = {
-    ACTIVE: 'https://schema.org/EventScheduled',
-    INACTIVE: 'https://schema.org/EventPostponed',
-    LIVE: 'https://schema.org/EventScheduled',
-    FINISHED: 'https://schema.org/EventPast',
-  };
-
-  const event: Record<string, unknown> = {
-    '@type': 'MusicEvent',
-    name: jam.name,
-    url: canonicalUrl,
-    description:
-      jam.description ?? 'Jam session no Jam App. Participe como musico ou acompanhe ao vivo.',
-    eventStatus: eventStatusMap[jam.status] ?? 'https://schema.org/EventScheduled',
-    // attendanceMode matches location type: offline only when a physical venue is known
-    eventAttendanceMode: jam.location
-      ? 'https://schema.org/OfflineEventAttendanceMode'
-      : 'https://schema.org/OnlineEventAttendanceMode',
-    image: ogImage,
-    organizer: {
-      '@type': 'Organization',
-      name: jam.hostName ?? 'Jam App',
-      url: siteUrl,
-    },
-  };
-
-  // startDate is required for Google Event rich results - skip MusicEvent if missing
-  if (!jam.date) {
-    return [
-      {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
-          { '@type': 'ListItem', position: 2, name: 'Jam Sessions', item: `${siteUrl}/jams` },
-          { '@type': 'ListItem', position: 3, name: jam.name, item: canonicalUrl },
-        ],
-      },
-    ];
-  }
-
-  event.startDate = new Date(jam.date).toISOString();
-
-  // Free event - helps Google show pricing in rich results
-  event.offers = {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'BRL',
-    availability: 'https://schema.org/InStock',
-    url: canonicalUrl,
-  };
-
-  // location is required for Google Event rich results; VirtualLocation is the fallback
-  if (jam.location) {
-    event.location = { '@type': 'Place', name: jam.location };
-  } else {
-    event.location = { '@type': 'VirtualLocation', url: canonicalUrl };
-  }
-
-  return [
-    event,
-    {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Inicio', item: siteUrl },
-        { '@type': 'ListItem', position: 2, name: 'Jam Sessions', item: `${siteUrl}/jams` },
-        { '@type': 'ListItem', position: 3, name: jam.name, item: canonicalUrl },
-      ],
-    },
-  ];
-}
-
 // --- Middleware handler ---
 
 export default function middleware(request: Request) {
@@ -560,7 +297,7 @@ export default function middleware(request: Request) {
   // Search engines follow meta-refresh - skip the redirect to prevent infinite loops
   const noRedirect = searchEngineRequest;
 
-  switch (route.type) {
+  switch (route.kind) {
     case 'home': {
       // Ensure trailing slash on canonical home URL
       const homeUrl = siteUrl.endsWith('/') ? siteUrl : `${siteUrl}/`;
@@ -570,7 +307,12 @@ export default function middleware(request: Request) {
           description: PT.homeDescription,
           url: homeUrl,
           image: ogImage,
-          jsonLd: homeStructuredData(siteUrl, ogImage),
+          jsonLd: buildHomeJsonLd(siteUrl, {
+            description: PT.homeDescription,
+            organizationDescription: PT.homeOrganizationDescription,
+            featureList: PT.homeFeatureList,
+            pageLanguage: 'pt-BR',
+          }),
           bodyHtml: HOME_BODY,
           noRedirect,
         }),
@@ -585,7 +327,11 @@ export default function middleware(request: Request) {
           description: PT.browseDescription,
           url: `${siteUrl}/jams`,
           image: ogImage,
-          jsonLd: browseStructuredData(siteUrl),
+          jsonLd: buildBrowseJsonLd(siteUrl, {
+            name: PT.browseName,
+            description: PT.browseCollectionDescription,
+            breadcrumbs: { home: PT.breadcrumbHome, browse: PT.breadcrumbBrowse },
+          }),
           bodyHtml: BROWSE_BODY,
           noRedirect,
         }),
@@ -599,7 +345,12 @@ export default function middleware(request: Request) {
           description: PT.aboutDescription,
           url: `${siteUrl}/about`,
           image: ogImage,
-          jsonLd: aboutStructuredData(siteUrl),
+          jsonLd: buildAboutJsonLd(siteUrl, {
+            name: PT.aboutName,
+            description: PT.aboutDescription,
+            contactEmail: PT.aboutContactEmail,
+            breadcrumbs: { home: PT.breadcrumbHome, about: PT.breadcrumbAbout },
+          }),
           bodyHtml: ABOUT_BODY,
           noRedirect,
         }),
@@ -609,7 +360,7 @@ export default function middleware(request: Request) {
     case 'jam-detail':
     case 'jam-dashboard':
     case 'jam-register':
-      return handleJamRoute(route.identifier, route.type, siteUrl, ogImage, url.pathname, noRedirect);
+      return handleJamRoute(route.identifier, route.kind, siteUrl, ogImage, url.pathname, noRedirect);
 
     case 'short-code':
       return handleJamRoute(route.code, 'jam-detail', siteUrl, ogImage, url.pathname, noRedirect);
@@ -681,7 +432,10 @@ async function handleJamRoute(
     // Always use the canonical jam detail URL for the event, not dashboard/register variants
     if (variant !== 'jam-register') {
       const jamCanonicalUrl = `${siteUrl}${jamPath}`;
-      jsonLd = jamStructuredData(jam, jamCanonicalUrl, siteUrl, ogImage);
+      jsonLd = buildJamJsonLd(jam, jamCanonicalUrl, siteUrl, {
+        fallbackDescription: PT.fallbackJamDescription,
+        breadcrumbs: { home: PT.breadcrumbHome, browse: PT.breadcrumbBrowse },
+      });
     }
   } else {
     // Jam not found - return 404 to prevent soft 404 issues with search engines.
