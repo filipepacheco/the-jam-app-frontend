@@ -1832,7 +1832,8 @@
       ],
       "consumers": [
         "src/components/jam-detail-v2/CollapsibleSidebar.tsx",
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1852,14 +1853,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "collapsed",
+          "expanded",
+          "badged"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Jam/Summary and actions."
+        ]
       }
     },
     {
@@ -1936,7 +1943,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1963,14 +1971,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "collapsed",
+          "expanded",
+          "musician",
+          "registration-count",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Jam/Summary and actions."
+        ]
       }
     },
     {
@@ -2346,7 +2362,8 @@
         }
       ],
       "consumers": [
-        "src/components/jam-detail-v2/TimelineShowcase.tsx"
+        "src/components/jam-detail-v2/TimelineShowcase.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2370,14 +2387,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "scheduled",
+          "registration-available",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Jam/Performance timeline."
+        ]
       }
     },
     {
@@ -2399,7 +2423,8 @@
         }
       ],
       "consumers": [
-        "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx"
+        "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2429,14 +2454,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "scheduled",
+          "in-progress",
+          "completed",
+          "expanded",
+          "registered",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Jam/Performance timeline."
+        ]
       }
     },
     {
@@ -2642,14 +2676,26 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "needs-review",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "full-schedule",
+          "empty",
+          "live",
+          "finished",
+          "instrument-filter",
+          "guest",
+          "musician",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "The local EmptyTimelineState is covered through the exported showcase story; the workbench exposes existing missing hint and registration-filter translation keys."
+        ]
       }
     },
     {
@@ -2671,7 +2717,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2702,14 +2749,26 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "needs-review",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "full-schedule",
+          "empty",
+          "live",
+          "finished",
+          "instrument-filter",
+          "guest",
+          "musician",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "The local EmptyTimelineState is covered through the exported showcase story; the workbench exposes existing missing hint and registration-filter translation keys."
+        ]
       }
     },
     {
@@ -2731,7 +2790,8 @@
         }
       ],
       "consumers": [
-        "src/pages/BrowseJamsPage.tsx"
+        "src/pages/BrowseJamsPage.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2760,14 +2820,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "needs-review",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "active",
+          "live",
+          "long-content",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Jam/Summary and actions; the workbench exposes an existing missing live-dashboard translation key."
+        ]
       }
     },
     {
@@ -2842,7 +2910,8 @@
         }
       ],
       "consumers": [
-        "src/pages/JamRegisterPage.tsx"
+        "src/pages/JamRegisterPage.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2863,14 +2932,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "scheduled-songs",
+          "empty-songs",
+          "date-tba",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Jam/Summary and actions."
+        ]
       }
     },
     {
@@ -3103,7 +3180,8 @@
         }
       ],
       "consumers": [
-        "src/pages/MusicPage.tsx"
+        "src/pages/MusicPage.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3131,14 +3209,25 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "approved",
+          "suggested",
+          "host",
+          "viewer",
+          "long-content",
+          "spotify-link",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "The local SpotifyIcon is covered through the exported card composition in Domain/Music/Library."
+        ]
       }
     },
     {
@@ -3166,14 +3255,25 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "approved",
+          "suggested",
+          "host",
+          "viewer",
+          "long-content",
+          "spotify-link",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "The local SpotifyIcon is covered through the exported card composition in Domain/Music/Library."
+        ]
       }
     },
     {
@@ -3195,7 +3295,8 @@
         }
       ],
       "consumers": [
-        "src/pages/MusicPage.tsx"
+        "src/pages/MusicPage.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3216,14 +3317,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "filtered-results",
+          "empty-library",
+          "host",
+          "guest"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Music/Library."
+        ]
       }
     },
     {
@@ -3246,7 +3354,8 @@
       ],
       "consumers": [
         "src/pages/MusicPage.tsx",
-        "src/workbench/stories/Forms.stories.tsx"
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3268,19 +3377,21 @@
         ],
         "readiness": {
           "workbench": "ready",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "default",
-          "filtered",
-          "long-text",
-          "mobile"
+          "searching",
+          "genre-filtered",
+          "cleared",
+          "mobile",
+          "desktop"
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Forms/Current components."
+          "Reviewed in Domain/Music/Library."
         ]
       }
     },
@@ -3501,14 +3612,19 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "exempt",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "host-actions",
+          "viewer-permissions"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Local helper has no exported render seam because its owning table row is also unexported; revisit if that table seam becomes public."
+        ]
       }
     },
     {
@@ -3525,7 +3641,8 @@
         }
       ],
       "consumers": [
-        "src/components/MusicTable.tsx"
+        "src/components/MusicTable.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3549,14 +3666,19 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "instrument-requirements",
+          "no-requirements"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "MusiciansBadges is directly reviewed in Domain/Music/Library."
+        ]
       }
     },
     {
@@ -7369,14 +7491,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."
+        ]
       }
     },
     {
@@ -7429,14 +7553,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."
+        ]
       }
     },
     {
@@ -7591,14 +7717,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level composition, including its local JamCard, is deferred to page catalogue work."
+        ]
       }
     },
     {
@@ -7635,7 +7763,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -7643,7 +7771,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Locally declared host Jam summary card."
+          "Route-level composition, including its local JamCard, is deferred to page catalogue work."
         ]
       }
     },
@@ -7697,14 +7825,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level data composition is deferred to page catalogue work; reusable Music UI is covered here."
+        ]
       }
     },
     {
@@ -7767,14 +7897,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."
+        ]
       }
     },
     {
@@ -8046,14 +8178,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level data composition is deferred to page catalogue work; reusable Music UI is covered here."
+        ]
       }
     },
     {
@@ -8367,14 +8501,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level data composition is deferred to page catalogue work."
+        ]
       }
     },
     {
@@ -8474,14 +8610,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level data composition is deferred to page catalogue work."
+        ]
       }
     },
     {
@@ -8651,7 +8789,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -8659,7 +8797,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Production-default Jam detail page."
+          "Production page composition is deferred to page catalogue work; reusable Jam detail UI is covered here."
         ]
       }
     },
@@ -8707,14 +8845,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level data composition is deferred to page catalogue work."
+        ]
       }
     },
     {
@@ -8883,8 +9023,20 @@
       "reason": "Private Storybook composition for catalogued form components; not product UI."
     },
     {
+      "source": "src/workbench/stories/JamComponents.stories.tsx",
+      "reason": "Private Storybook composition for reviewed Jam components; not product UI."
+    },
+    {
       "source": "src/workbench/stories/JamOverlays.stories.tsx",
       "reason": "Private Storybook composition for catalogued Jam overlay components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/JamTimeline.stories.tsx",
+      "reason": "Private Storybook composition for reviewed Jam timeline components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/MusicLibrary.stories.tsx",
+      "reason": "Private Storybook composition for reviewed Music components; not product UI."
     },
     {
       "source": "src/workbench/stories/Navigation/Navbar.stories.tsx",
@@ -8904,9 +9056,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 159,
+    "eligibleSources": 162,
     "representedSources": 140,
-    "ignoredSources": 19
+    "ignoredSources": 22
   },
   "reviewCandidates": [
     {
