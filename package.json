@@ -15,6 +15,7 @@
     "test:i18n": "vitest run src/__tests__/i18n.smoke.test.tsx",
     "catalogue:generate": "tsx scripts/component-catalogue/cli.ts --config component-catalogue.config.json",
     "catalogue:check": "tsx scripts/component-catalogue/cli.ts --config component-catalogue.config.json --check",
+    "catalogue:baseline": "tsx scripts/component-catalogue/cli.ts --config component-catalogue.config.json --check --require-reviewed-workbench",
     "workbench": "storybook dev -p 6006 --no-open --disable-telemetry",
     "workbench:smoke": "storybook dev -p 6006 --ci --smoke-test --disable-telemetry",
     "workbench:build": "storybook build --output-dir storybook-static --disable-telemetry",

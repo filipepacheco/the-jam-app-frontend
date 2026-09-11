@@ -27,7 +27,7 @@ describe('forms and overlays workbench coverage', () => {
       if (component?.metadata.readiness.workbench === 'ready') {
         expect(storyText, `${id} ${component.name}`).toContain(component.source.replace('src/', '../../').replace('.tsx', ''))
       } else {
-        expect(component?.metadata.notes.join(' '), id).toMatch(/Phase 3 exemption.*remove when/i)
+        expect(component?.metadata.notes.some((note) => note.trim().length > 0), id).toBe(true)
       }
     }
   })

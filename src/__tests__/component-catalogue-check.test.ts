@@ -79,6 +79,90 @@ describe('component catalogue check command', () => {
     expect(await snapshotTree(root)).toEqual(before)
   }, 15_000)
 
+  it('rejects unresolved active reusable visual components at the reviewed baseline gate', async () => {
+    const root = await createFixture()
+    expect(run(root).status).toBe(0)
+    const before = await snapshotTree(root)
+
+    const result = run(root, '--check', '--require-reviewed-workbench')
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('active reusable visual components are not reviewed')
+    expect(result.stderr).toContain('ui.fixture.anonymous-view')
+    expect(result.stderr).toContain('ui.fixture.wrapped-memo')
+    expect(await snapshotTree(root)).toEqual(before)
+  })
+
+  it('accepts a reviewed workbench baseline made only of ready and exempt components', async () => {
+    const root = await createFixture()
+    const metadataPath = path.join(root, 'catalogue.metadata.json')
+    const metadata = await readJson<FixtureMetadata>(metadataPath)
+    for (const rule of metadata.rules) {
+      const readiness = rule.metadata.readiness as {workbench?: string} | undefined
+      if (readiness?.workbench === 'needs-review' || readiness?.workbench === 'unknown') {
+        readiness.workbench = 'exempt'
+      }
+    }
+    await writeJson(metadataPath, metadata)
+    expect(run(root).status).toBe(0)
+    const before = await snapshotTree(root)
+
+    const result = run(root, '--check', '--require-reviewed-workbench')
+
+    expect(result).toMatchObject({status: 0, stderr: ''})
+    expect(result.stdout).toContain('reviewed workbench baseline is complete')
+    expect(await snapshotTree(root)).toEqual(before)
+  })
+
+  it('requires active reusable workbench exemptions to include a reason', async () => {
+    const root = await createFixture()
+    const metadataPath = path.join(root, 'catalogue.metadata.json')
+    const metadata = await readJson<FixtureMetadata>(metadataPath)
+    for (const rule of metadata.rules) {
+      const readiness = rule.metadata.readiness as {workbench?: string} | undefined
+      if (readiness?.workbench === 'needs-review' || readiness?.workbench === 'unknown') {
+        readiness.workbench = 'ready'
+      }
+      if (readiness?.workbench === 'exempt') {
+        rule.metadata.notes = []
+        rule.metadata.productArea = 'shared'
+        rule.metadata.viewportContexts = ['desktop']
+      }
+    }
+    await writeJson(metadataPath, metadata)
+    expect(run(root).status).toBe(0)
+
+    const result = run(root, '--check', '--require-reviewed-workbench')
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('workbench exemptions require a reason')
+    expect(result.stderr).toContain('ui.fixture.default-panel')
+  })
+
+  it('rejects ready components without a reachable Storybook story', async () => {
+    const root = await createFixture()
+    const metadataPath = path.join(root, 'catalogue.metadata.json')
+    const metadata = await readJson<FixtureMetadata>(metadataPath)
+    for (const rule of metadata.rules) {
+      const readiness = rule.metadata.readiness as {workbench?: string} | undefined
+      if (readiness?.workbench === 'needs-review' || readiness?.workbench === 'unknown') {
+        readiness.workbench = 'exempt'
+      }
+    }
+    metadata.rules.push({
+      source: 'src/UnusedCard.tsx',
+      metadata: {lifecycle: 'active', readiness: {workbench: 'ready'}},
+    })
+    await writeJson(metadataPath, metadata)
+    expect(run(root).status).toBe(0)
+
+    const result = run(root, '--check', '--require-reviewed-workbench')
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('marked ready without a reachable Storybook story')
+    expect(result.stderr).toContain('ui.fixture.unused-card')
+  })
+
   it.each([
     ['JSON', 'generated/catalogue.json'],
     ['Markdown', 'generated/catalogue.md'],
@@ -147,6 +231,7 @@ describe('component catalogue check command', () => {
       {id: 'ui.fixture.missing', source: 'src/Missing.tsx', name: 'Missing'},
       {id: 'ui.fixture.duplicate-selector', source: 'src/NamedWidget.tsx', name: 'NamedWidget'},
     )
+    const firstNewRuleIndex = metadata.rules.length
     metadata.rules.push(
       {source: 'src/Missing.tsx', metadata: {productArea: 'jam'}},
       {source: 'src/*.tsx', component: 'NamedWidget', metadata: {productArea: 'jam'}},
@@ -164,9 +249,9 @@ describe('component catalogue check command', () => {
     expect(result.stderr).toContain('ignore[3]: source is not eligible for ignoring because it declares React components')
     expect(result.stderr).toContain('duplicate component selector "src/NamedWidget.tsx#NamedWidget"')
     expect(result.stderr).toContain('component selector "src/Missing.tsx#Missing" does not resolve')
-    expect(result.stderr).toContain('rules[1]: exact source "src/Missing.tsx" does not resolve')
-    expect(result.stderr).toContain('rules[2]: component-scoped rules require an exact source path')
-    expect(result.stderr).toContain('rules[3]: component selector "src/NamedWidget.tsx#Missing" does not resolve')
+    expect(result.stderr).toContain(`rules[${firstNewRuleIndex}]: exact source "src/Missing.tsx" does not resolve`)
+    expect(result.stderr).toContain(`rules[${firstNewRuleIndex + 1}]: component-scoped rules require an exact source path`)
+    expect(result.stderr).toContain(`rules[${firstNewRuleIndex + 2}]: component selector "src/NamedWidget.tsx#Missing" does not resolve`)
     expect(await snapshotTree(root)).toEqual(before)
   })
 
@@ -181,6 +266,7 @@ describe('component catalogue check command', () => {
     metadata.defaults.viewportContexts = 'mobile'
     metadata.defaults.uiStates = [1, '']
     metadata.defaults.readiness = {workbench: 'ready'}
+    const newRuleIndex = metadata.rules.length
     metadata.rules.push({source: 'src/NoMatch*.tsx', metadata: {notes: []}})
     await Promise.all([writeJson(configPath, config), writeJson(metadataPath, metadata)])
     const before = await snapshotTree(root)
@@ -194,7 +280,7 @@ describe('component catalogue check command', () => {
     expect(result.stderr).toContain('defaults.uiStates[0]: expected a string')
     expect(result.stderr).toContain('defaults.uiStates[1]: value must be non-blank')
     expect(result.stderr).toContain('defaults.readiness.accessibility: expected a string')
-    expect(result.stderr).toContain('rules[1]: source pattern "src/NoMatch*.tsx" is stale')
+    expect(result.stderr).toContain(`rules[${newRuleIndex}]: source pattern "src/NoMatch*.tsx" is stale`)
     expect(await snapshotTree(root)).toEqual(before)
   })
 
@@ -203,6 +289,7 @@ describe('component catalogue check command', () => {
     const metadataPath = path.join(root, 'catalogue.metadata.json')
     const metadata = await readJson<FixtureMetadata>(metadataPath)
     const rules = metadata.rules as unknown[]
+    const firstNewRuleIndex = rules.length
     rules.push(
       {source: 42, metadata: {productArea: 'jam'}},
       {source: 'src/NamedWidget.tsx', metadata: null},
@@ -213,8 +300,8 @@ describe('component catalogue check command', () => {
     const result = run(root, '--check')
 
     expect(result.status).toBe(1)
-    expect(result.stderr).toContain('rules[1].source: path must be normalized and stay inside the catalogue root')
-    expect(result.stderr).toContain('rules[2].metadata: expected an object')
+    expect(result.stderr).toContain(`rules[${firstNewRuleIndex}].source: path must be normalized and stay inside the catalogue root`)
+    expect(result.stderr).toContain(`rules[${firstNewRuleIndex + 1}].metadata: expected an object`)
     expect(result.stderr).not.toContain('TypeError')
     expect(await snapshotTree(root)).toEqual(before)
   })

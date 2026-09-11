@@ -3,6 +3,7 @@ import ts from 'typescript'
 
 import {globPattern, matchesAny, metadataFor} from './metadata.ts'
 import {inlinePatternCandidates} from './patterns.ts'
+import {deriveWorkbenchCoverage, deriveWorkbenchStorySources} from './coverage.ts'
 import {isExactSource, isSafeRelativePath, validateResolvedMetadata} from './validate.ts'
 
 import type {
@@ -583,20 +584,26 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata, diag
         visibility,
         exports,
         consumers: [...(consumers.get(component.key) ?? [])].sort(compareText),
+        workbenchStories: [],
         dependencies: componentDependencies(component, componentNodes, root, parsed.options),
         metadata: curatedMetadata,
       }
     })
     .sort((left, right) => compareText(left.id, right.id))
+  const withWorkbenchStories = normalized.map((component) => ({
+    ...component,
+    workbenchStories: deriveWorkbenchStorySources(normalized, component),
+  }))
 
   return {
-    schemaVersion: 2,
-    components: normalized,
+    schemaVersion: 3,
+    components: withWorkbenchStories,
     ignored: [...ignoredBySource.values()].sort((left, right) => compareText(left.source, right.source)),
     coverage: {
       eligibleSources: eligibleSources.length,
       representedSources: representedSources.size,
       ignoredSources: ignoredBySource.size,
+      workbench: deriveWorkbenchCoverage(withWorkbenchStories),
     },
     reviewCandidates: inlinePatternCandidates(includedComponents, componentNodes, identities),
   }
