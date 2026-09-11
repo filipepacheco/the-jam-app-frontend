@@ -2,7 +2,7 @@
 
 Status: **Adopt Storybook 10.6**
 
-This ticket is a bounded prototype for #31. The spike code under `src/workbench-spike/` proves the decision; #32 owns turning it into the durable private workbench. The static output is ignored by Git, has no deployment workflow, and must not be published.
+Ticket #31 was a bounded prototype. Ticket #32 replaced the spike with the durable private workbench under `src/workbench/`; the evidence below records the original selection decision. The static output is ignored by Git, has no deployment workflow, and must not be published.
 
 ## Decision
 
