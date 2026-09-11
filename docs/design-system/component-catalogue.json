@@ -292,7 +292,8 @@
         "src/pages/tabs/DJControlTabV2.tsx",
         "src/pages/tabs/DashboardTab.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
-        "src/pages/tabs/ScheduleTab.tsx"
+        "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench-spike/WorkbenchSpike.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1206,7 +1207,8 @@
       ],
       "consumers": [
         "src/components/FeedbackButton.tsx",
-        "src/components/MobileDrawer.tsx"
+        "src/components/MobileDrawer.tsx",
+        "src/workbench-spike/WorkbenchSpike.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1312,7 +1314,8 @@
         }
       ],
       "consumers": [
-        "src/pages/JamRegisterPage.tsx"
+        "src/pages/JamRegisterPage.tsx",
+        "src/workbench-spike/WorkbenchSpike.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2820,7 +2823,8 @@
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/host/CreateJamPage.tsx",
-        "src/pages/tabs/ScheduleTab.tsx"
+        "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench-spike/WorkbenchSpike.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3374,7 +3378,8 @@
       "consumers": [
         "src/App.tsx",
         "src/pages/AboutPage.tsx",
-        "src/pages/NotFoundPage.tsx"
+        "src/pages/NotFoundPage.tsx",
+        "src/workbench-spike/WorkbenchSpike.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4418,7 +4423,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench-spike/WorkbenchSpike.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5705,7 +5711,9 @@
           "module": "src/components/schedule/index.ts"
         }
       ],
-      "consumers": [],
+      "consumers": [
+        "src/workbench-spike/WorkbenchSpike.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/schedule/RegistrationList.tsx",
@@ -8538,12 +8546,16 @@
     {
       "source": "src/main.tsx",
       "reason": "Application bootstrap; renders the root but does not declare a component."
+    },
+    {
+      "source": "src/workbench-spike/WorkbenchSpike.stories.tsx",
+      "reason": "Private Storybook prototype composition; stories exercise catalogued production components but are not product UI."
     }
   ],
   "coverage": {
-    "eligibleSources": 150,
+    "eligibleSources": 151,
     "representedSources": 140,
-    "ignoredSources": 10
+    "ignoredSources": 11
   },
   "reviewCandidates": [
     {

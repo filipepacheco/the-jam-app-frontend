@@ -12,7 +12,8 @@
     {"source": "src/components/PromoVideo/HeroScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
     {"source": "src/components/PromoVideo/HowItWorksScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
     {"source": "src/components/PromoVideo/PromoVideoPlayer.tsx", "reason": "Empty retired promotional player retained pending legacy cleanup."},
-    {"source": "src/components/PromoVideo/index.tsx", "reason": "Deprecated schema-only barrel with no React component declaration."}
+    {"source": "src/components/PromoVideo/index.tsx", "reason": "Deprecated schema-only barrel with no React component declaration."},
+    {"source": "src/workbench-spike/WorkbenchSpike.stories.tsx", "reason": "Private Storybook prototype composition; stories exercise catalogued production components but are not product UI."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",
