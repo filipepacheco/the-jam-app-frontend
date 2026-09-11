@@ -27,7 +27,9 @@
     {"source": "src/workbench/stories/MusicLibrary.stories.tsx", "reason": "Private Storybook composition for reviewed Music components; not product UI."},
     {"source": "src/workbench/stories/SchedulePrimitives.stories.tsx", "reason": "Private Storybook composition for reviewed Schedule primitives and actions; not product UI."},
     {"source": "src/workbench/stories/ScheduleRegistration.stories.tsx", "reason": "Private Storybook composition for reviewed Schedule registration and card states; not product UI."},
-    {"source": "src/workbench/stories/DJControl.stories.tsx", "reason": "Private Storybook composition for reviewed DJ playback and queue states; not product UI."}
+    {"source": "src/workbench/stories/DJControl.stories.tsx", "reason": "Private Storybook composition for reviewed DJ playback and queue states; not product UI."},
+    {"source": "src/workbench/stories/PublicDashboardCards.stories.tsx", "reason": "Private Storybook composition for reviewed Public Dashboard cards and display states; not product UI."},
+    {"source": "src/workbench/stories/PublicDashboardCarousel.stories.tsx", "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",

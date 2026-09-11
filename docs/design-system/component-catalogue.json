@@ -4201,7 +4201,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4231,14 +4232,26 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "qr",
+          "carousel-selection",
+          "shared-screen",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Carousel and controls."
+        ]
       }
     },
     {
@@ -4272,14 +4285,26 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "qr",
+          "carousel-selection",
+          "shared-screen",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Carousel and controls."
+        ]
       }
     },
     {
@@ -4296,7 +4321,8 @@
         }
       ],
       "consumers": [
-        "src/components/publicDashboard/carousel/CarouselDashboard.tsx"
+        "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4317,14 +4343,26 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "qr",
+          "carousel-selection",
+          "shared-screen",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Carousel and controls."
+        ]
       }
     },
     {
@@ -4341,7 +4379,8 @@
         }
       ],
       "consumers": [
-        "src/components/publicDashboard/carousel/CarouselDashboard.tsx"
+        "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4365,14 +4404,26 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "qr",
+          "carousel-selection",
+          "shared-screen",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Carousel and controls."
+        ]
       }
     },
     {
@@ -4389,7 +4440,8 @@
         }
       ],
       "consumers": [
-        "src/components/publicDashboard/carousel/CarouselDashboard.tsx"
+        "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4413,14 +4465,26 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "qr",
+          "carousel-selection",
+          "shared-screen",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Carousel and controls."
+        ]
       }
     },
     {
@@ -4437,7 +4501,8 @@
         }
       ],
       "consumers": [
-        "src/components/publicDashboard/carousel/CarouselDashboard.tsx"
+        "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4458,14 +4523,26 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "qr",
+          "carousel-selection",
+          "shared-screen",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Carousel and controls."
+        ]
       }
     },
     {
@@ -4482,7 +4559,8 @@
         }
       ],
       "consumers": [
-        "src/components/publicDashboard/carousel/CarouselDashboard.tsx"
+        "src/components/publicDashboard/carousel/CarouselDashboard.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4506,14 +4584,26 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "qr",
+          "carousel-selection",
+          "shared-screen",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Carousel and controls."
+        ]
       }
     },
     {
@@ -4530,7 +4620,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4549,14 +4640,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -4578,7 +4683,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4608,14 +4714,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -4637,7 +4757,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4654,14 +4775,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -4685,7 +4820,8 @@
       "consumers": [
         "src/components/publicDashboard/CurrentSongCard.tsx",
         "src/components/publicDashboard/NextSongCard.tsx",
-        "src/components/publicDashboard/StartingSoonCard.tsx"
+        "src/components/publicDashboard/StartingSoonCard.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4712,14 +4848,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -4741,7 +4891,8 @@
         }
       ],
       "consumers": [
-        "src/components/publicDashboard/Navbar.tsx"
+        "src/components/publicDashboard/Navbar.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4760,14 +4911,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -4789,7 +4954,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4816,14 +4982,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -4846,7 +5026,8 @@
       ],
       "consumers": [
         "src/pages/PublicDashboardPage.tsx",
-        "src/workbench/stories/Environment.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4873,14 +5054,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -4903,7 +5098,8 @@
       ],
       "consumers": [
         "src/pages/PublicDashboardPage.tsx",
-        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4928,19 +5124,26 @@
         ],
         "readiness": {
           "workbench": "ready",
-          "accessibility": "verified",
-          "internationalization": "needs-review",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
           "theme": "verified"
         },
         "uiStates": [
-          "visible",
-          "hidden",
-          "reduced motion",
-          "long message"
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Feedback/Alerts and notifications. The default English fallback remains outside i18n and needs review."
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
         ]
       }
     },
@@ -4982,15 +5185,27 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; review whether dashboard polling controls remain user-facing."
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
         ]
       }
     },
@@ -5008,7 +5223,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5036,14 +5252,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -5065,7 +5295,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5092,14 +5323,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -5121,7 +5366,8 @@
         }
       ],
       "consumers": [
-        "src/components/publicDashboard/CurrentSongCard.tsx"
+        "src/components/publicDashboard/CurrentSongCard.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5145,14 +5391,28 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "current",
+          "next",
+          "starting-soon",
+          "finished",
+          "offline",
+          "qr",
+          "empty",
+          "shared-screen",
+          "mobile",
+          "long-content",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
+        ]
       }
     },
     {
@@ -8553,14 +8813,22 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loading",
+          "error",
+          "offline",
+          "live",
+          "finished"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route-level polling and fullscreen orchestration remain exempt; all reusable Public Dashboard visuals and controls are reviewed directly."
+        ]
       }
     },
     {
@@ -9266,6 +9534,14 @@
       "reason": "Private Storybook composition for catalogued overlay components; not product UI."
     },
     {
+      "source": "src/workbench/stories/PublicDashboardCards.stories.tsx",
+      "reason": "Private Storybook composition for reviewed Public Dashboard cards and display states; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+      "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."
+    },
+    {
       "source": "src/workbench/stories/SchedulePrimitives.stories.tsx",
       "reason": "Private Storybook composition for reviewed Schedule primitives and actions; not product UI."
     },
@@ -9283,9 +9559,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 165,
+    "eligibleSources": 167,
     "representedSources": 140,
-    "ignoredSources": 25
+    "ignoredSources": 27
   },
   "reviewCandidates": [
     {
