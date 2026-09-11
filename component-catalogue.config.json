@@ -1,11 +1,18 @@
 {
   "project": "tsconfig.app.json",
-  "include": [
-    "src/components/Alert.tsx",
-    "src/components/Footer.tsx",
-    "src/components/Modal.tsx",
-    "src/components/publicDashboard/Header.tsx",
-    "src/pages/host/HostDashboardPage.tsx"
+  "include": ["src/**/*.tsx"],
+  "metadata": "component-catalogue.metadata.json",
+  "ignore": [
+    {"source": "src/main.tsx", "reason": "Application bootstrap; renders the root but does not declare a component."},
+    {"source": "src/lib/musicUtils.tsx", "reason": "Utility module containing static provider icon elements, not React components."},
+    {"source": "src/lib/schedule/instrumentHelpers.tsx", "reason": "Schedule utility module returning ReactNode values, not React components."},
+    {"source": "src/components/PromoVideo/CTAScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
+    {"source": "src/components/PromoVideo/DashboardScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
+    {"source": "src/components/PromoVideo/FeaturesScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
+    {"source": "src/components/PromoVideo/HeroScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
+    {"source": "src/components/PromoVideo/HowItWorksScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
+    {"source": "src/components/PromoVideo/PromoVideoPlayer.tsx", "reason": "Empty retired promotional player retained pending legacy cleanup."},
+    {"source": "src/components/PromoVideo/index.tsx", "reason": "Deprecated schema-only barrel with no React component declaration."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",

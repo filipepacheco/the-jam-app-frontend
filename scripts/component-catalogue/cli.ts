@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url'
 
 import {analyseCatalogue} from './analyse.ts'
 import {renderManifest, renderMarkdown} from './render.ts'
-import type {CatalogueConfig} from '../../src/types/componentCatalogue.types.ts'
+import type {CatalogueConfig, CatalogueMetadataConfig} from '../../src/types/componentCatalogue.types.ts'
 
 const parseConfigPath = (args: string[]): string => {
   const index = args.indexOf('--config')
@@ -20,7 +20,16 @@ export const runCatalogueCommand = async (args: string[], cwd = process.cwd()): 
   const configPath = path.resolve(cwd, parseConfigPath(args))
   const root = path.dirname(configPath)
   const config = JSON.parse(await readFile(configPath, 'utf8')) as CatalogueConfig
-  const catalogue = analyseCatalogue({root, project: config.project, include: config.include})
+  const metadata = JSON.parse(
+    await readFile(path.resolve(root, config.metadata), 'utf8'),
+  ) as CatalogueMetadataConfig
+  const catalogue = analyseCatalogue({
+    root,
+    project: config.project,
+    include: config.include,
+    ignore: config.ignore,
+    metadata,
+  })
   const jsonPath = path.resolve(root, config.output.json)
   const markdownPath = path.resolve(root, config.output.markdown)
 
