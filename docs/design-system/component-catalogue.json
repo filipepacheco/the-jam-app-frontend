@@ -231,14 +231,16 @@
         ],
         "readiness": {
           "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "accessibility": "not-applicable",
+          "internationalization": "not-applicable",
+          "theme": "not-applicable"
         },
-        "uiStates": [],
+        "uiStates": [
+          "route suspense"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Application shell and route composition."
+          "Explicit workbench exemption: local application-shell fallback only composes the independently reviewed FullPageSpinner and has no additional visual or owned interaction behavior."
         ]
       }
     },
@@ -293,7 +295,8 @@
         "src/pages/tabs/DashboardTab.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
-        "src/workbench/stories/Environment.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -315,14 +318,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "info",
+          "success",
+          "warning",
+          "error",
+          "dismissible",
+          "long localized text"
+        ],
         "candidateFamily": "feedback",
-        "notes": []
+        "notes": [
+          "Reviewed in Feedback/Alerts and notifications with user-observable dismissal coverage."
+        ]
       }
     },
     {
@@ -494,7 +506,8 @@
         }
       ],
       "consumers": [
-        "src/components/Navbar.tsx"
+        "src/components/Navbar.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -523,14 +536,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "authenticated",
+          "guest",
+          "loading",
+          "settings open"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed through direct settings and loading stories plus the desktop application navigation stories."
+        ]
       }
     },
     {
@@ -985,7 +1005,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/ScheduleTab.tsx"
+        "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1002,14 +1023,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "informational",
+          "recovery action",
+          "long localized content"
+        ],
         "candidateFamily": "empty-state",
-        "notes": []
+        "notes": [
+          "Reviewed in States/Empty state; consumers own translated copy."
+        ]
       }
     },
     {
@@ -1078,7 +1105,8 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Feedback/ErrorBoundary.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1099,15 +1127,18 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "needs-review",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default recovery",
+          "custom fallback"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Application error boundary."
+          "Reviewed in Feedback/Error boundary. Recovery copy remains hardcoded and requires internationalization review."
         ]
       }
     },
@@ -1601,7 +1632,8 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1618,14 +1650,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "unlabelled",
+          "labelled",
+          "long localized label"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in States/Loading; consumers own translated labels."
+        ]
       }
     },
     {
@@ -2054,7 +2092,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2071,14 +2110,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "phone",
+          "desktop",
+          "reduced motion",
+          "alternate theme"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed as the active Jam detail loading composition in States/Loading."
+        ]
       }
     },
     {
@@ -2744,7 +2790,8 @@
       ],
       "consumers": [
         "src/pages/BrowseJamsPage.tsx",
-        "src/pages/host/HostDashboardPage.tsx"
+        "src/pages/host/HostDashboardPage.tsx",
+        "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2761,14 +2808,19 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "single card",
+          "responsive grid"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed at phone and desktop widths in States/Loading."
+        ]
       }
     },
     {
@@ -3524,7 +3576,8 @@
         "src/App.tsx",
         "src/pages/AboutPage.tsx",
         "src/pages/NotFoundPage.tsx",
-        "src/workbench/stories/Environment.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3554,14 +3607,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop host",
+          "desktop guest",
+          "mobile drawer open",
+          "mobile drawer dismissed"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Navbar and its local NavLink are reviewed in Navigation/Application navigation across guest and host routes. The mobile composition also covers keyboard dismissal and focus restoration."
+        ]
       }
     },
     {
@@ -3591,14 +3651,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop host",
+          "desktop guest",
+          "mobile drawer open",
+          "mobile drawer dismissed"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Navbar and its local NavLink are reviewed in Navigation/Application navigation across guest and host routes. The mobile composition also covers keyboard dismissal and focus restoration."
+        ]
       }
     },
     {
@@ -3687,7 +3754,8 @@
         "src/pages/MusicPage.tsx",
         "src/pages/host/CreateJamPage.tsx",
         "src/pages/host/HostDashboardPage.tsx",
-        "src/pages/host/JamManagementPage.tsx"
+        "src/pages/host/JamManagementPage.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3698,7 +3766,7 @@
       },
       "metadata": {
         "category": "product-ui",
-        "layer": "domain-component",
+        "layer": "pattern",
         "lifecycle": "active",
         "productArea": "shared",
         "viewportContexts": [
@@ -3706,14 +3774,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": []
+        "uiStates": [
+          "error",
+          "success",
+          "simultaneous messages",
+          "dismissed"
+        ],
+        "candidateFamily": "feedback",
+        "notes": [
+          "Reviewed in Feedback/Alerts and notifications; consumers own translated copy."
+        ]
       }
     },
     {
@@ -4648,7 +4723,8 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx"
+        "src/pages/PublicDashboardPage.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4672,14 +4748,21 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "needs-review",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "visible",
+          "hidden",
+          "reduced motion",
+          "long message"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Feedback/Alerts and notifications. The default English fallback remains outside i18n and needs review."
+        ]
       }
     },
     {
@@ -8788,6 +8871,14 @@
       "reason": "Private Storybook composition; stories exercise catalogued production components but are not product UI."
     },
     {
+      "source": "src/workbench/stories/Feedback/Alerts.stories.tsx",
+      "reason": "Private Storybook composition for reviewed alert, notification, and page-feedback states; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/Feedback/ErrorBoundary.stories.tsx",
+      "reason": "Private Storybook composition for reviewed recovery states; not product UI."
+    },
+    {
       "source": "src/workbench/stories/Forms.stories.tsx",
       "reason": "Private Storybook composition for catalogued form components; not product UI."
     },
@@ -8796,14 +8887,26 @@
       "reason": "Private Storybook composition for catalogued Jam overlay components; not product UI."
     },
     {
+      "source": "src/workbench/stories/Navigation/Navbar.stories.tsx",
+      "reason": "Private Storybook composition for reviewed responsive navigation and menu states; not product UI."
+    },
+    {
       "source": "src/workbench/stories/Overlays.stories.tsx",
       "reason": "Private Storybook composition for catalogued overlay components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/States/EmptyState.stories.tsx",
+      "reason": "Private Storybook composition for reviewed empty states; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/States/Loading.stories.tsx",
+      "reason": "Private Storybook composition for reviewed loading and skeleton states; not product UI."
     }
   ],
   "coverage": {
-    "eligibleSources": 154,
+    "eligibleSources": 159,
     "representedSources": 140,
-    "ignoredSources": 14
+    "ignoredSources": 19
   },
   "reviewCandidates": [
     {
