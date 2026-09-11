@@ -16,7 +16,12 @@
     {"source": "src/workbench/stories/Environment.stories.tsx", "reason": "Private Storybook composition; stories exercise catalogued production components but are not product UI."},
     {"source": "src/workbench/stories/Forms.stories.tsx", "reason": "Private Storybook composition for catalogued form components; not product UI."},
     {"source": "src/workbench/stories/Overlays.stories.tsx", "reason": "Private Storybook composition for catalogued overlay components; not product UI."},
-    {"source": "src/workbench/stories/JamOverlays.stories.tsx", "reason": "Private Storybook composition for catalogued Jam overlay components; not product UI."}
+    {"source": "src/workbench/stories/JamOverlays.stories.tsx", "reason": "Private Storybook composition for catalogued Jam overlay components; not product UI."},
+    {"source": "src/workbench/stories/Feedback/Alerts.stories.tsx", "reason": "Private Storybook composition for reviewed alert, notification, and page-feedback states; not product UI."},
+    {"source": "src/workbench/stories/Feedback/ErrorBoundary.stories.tsx", "reason": "Private Storybook composition for reviewed recovery states; not product UI."},
+    {"source": "src/workbench/stories/Navigation/Navbar.stories.tsx", "reason": "Private Storybook composition for reviewed responsive navigation and menu states; not product UI."},
+    {"source": "src/workbench/stories/States/EmptyState.stories.tsx", "reason": "Private Storybook composition for reviewed empty states; not product UI."},
+    {"source": "src/workbench/stories/States/Loading.stories.tsx", "reason": "Private Storybook composition for reviewed loading and skeleton states; not product UI."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",
