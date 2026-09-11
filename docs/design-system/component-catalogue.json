@@ -151,7 +151,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -159,7 +159,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Landing-page composition declared locally in the application shell."
+          "Local app-shell composition is covered through its exported marketing sections in Marketing/Current sections."
         ]
       }
     },
@@ -352,7 +352,8 @@
       ],
       "consumers": [
         "src/components/MusicianProfileModal.tsx",
-        "src/components/schedule/RegistrationList.tsx"
+        "src/components/schedule/RegistrationList.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -369,14 +370,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "initials",
+          "image",
+          "sizes",
+          "long-name"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -393,7 +401,8 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -420,14 +429,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "reduced-motion",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -1110,7 +1126,8 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1138,14 +1155,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "guest",
+          "host",
+          "desktop",
+          "mobile",
+          "reduced-motion",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections with shared auth contexts."
+        ]
       }
     },
     {
@@ -1262,7 +1288,8 @@
         }
       ],
       "consumers": [
-        "src/components/Navbar.tsx"
+        "src/components/Navbar.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1287,14 +1314,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "icon-only",
+          "modal-open",
+          "keyboard"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed with its already catalogued modal in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -1376,7 +1410,8 @@
       ],
       "consumers": [
         "src/App.tsx",
-        "src/pages/AboutPage.tsx"
+        "src/pages/AboutPage.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1399,14 +1434,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -1737,7 +1778,8 @@
         }
       ],
       "consumers": [
-        "src/components/EnhancedHero.tsx"
+        "src/components/EnhancedHero.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1760,14 +1802,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -1784,7 +1832,8 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -1809,14 +1858,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "reduced-motion",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -4080,7 +4136,8 @@
         }
       ],
       "consumers": [
-        "src/pages/ProfilePage.tsx"
+        "src/pages/ProfilePage.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4104,14 +4161,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "needs-review",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "host",
+          "musician",
+          "long-name",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Product/Remaining reusable UI; member-since copy remains hardcoded English and needs i18n review."
+        ]
       }
     },
     {
@@ -7543,14 +7607,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "preview",
+          "icon-only",
+          "invalid-link",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "SpotifyPreview, SpotifyPlayButton and local SpotifyLogo are reviewed together in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -7573,7 +7645,8 @@
       ],
       "consumers": [
         "src/components/MusicTable.tsx",
-        "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx"
+        "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7592,14 +7665,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "preview",
+          "icon-only",
+          "invalid-link",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "SpotifyPreview, SpotifyPlayButton and local SpotifyLogo are reviewed together in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -7621,7 +7702,8 @@
         }
       ],
       "consumers": [
-        "src/components/MusicCard.tsx"
+        "src/components/MusicCard.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7640,14 +7722,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "preview",
+          "icon-only",
+          "invalid-link",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "SpotifyPreview, SpotifyPlayButton and local SpotifyLogo are reviewed together in Product/Remaining reusable UI."
+        ]
       }
     },
     {
@@ -7712,7 +7802,8 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7733,14 +7824,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "long-localization"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Marketing/Current sections."
+        ]
       }
     },
     {
@@ -7872,7 +7969,9 @@
           "module": "src/pages/AboutPage.tsx"
         }
       ],
-      "consumers": [],
+      "consumers": [
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Footer.tsx",
@@ -7901,14 +8000,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "desktop",
+          "mobile",
+          "long-localization",
+          "routing"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed as a stable page composition in Pages/Stable compositions."
+        ]
       }
     },
     {
@@ -8058,7 +8164,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -8066,7 +8172,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Locally declared feedback card."
+          "Private route-local card has no exported render seam; promote it before direct isolated review."
         ]
       }
     },
@@ -8120,14 +8226,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Host route owns authenticated data fetching; reusable feedback patterns are catalogued directly."
+        ]
       }
     },
     {
@@ -8583,14 +8691,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Authentication route redirects and mutates session state; its reusable forms are catalogued by #33."
+        ]
       }
     },
     {
@@ -8672,7 +8782,8 @@
       ],
       "consumers": [
         "src/App.tsx",
-        "src/pages/SlugRedirect.tsx"
+        "src/pages/SlugRedirect.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -8699,14 +8810,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "not-found",
+          "mobile",
+          "routing"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed as a stable page composition in Pages/Stable compositions."
+        ]
       }
     },
     {
@@ -8756,14 +8873,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Profile route owns authenticated mutations; ProfileHeader and form sections are catalogued directly."
+        ]
       }
     },
     {
@@ -8928,14 +9047,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "OAuth callback has no stable visual output beyond catalogued loading and feedback patterns."
+        ]
       }
     },
     {
@@ -9034,14 +9155,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Authentication callback is redirect infrastructure without standalone visual output."
+        ]
       }
     },
     {
@@ -9522,6 +9645,10 @@
       "reason": "Private Storybook composition for reviewed Jam timeline components; not product UI."
     },
     {
+      "source": "src/workbench/stories/Marketing.stories.tsx",
+      "reason": "Private Storybook composition for reviewed marketing sections; not product UI."
+    },
+    {
       "source": "src/workbench/stories/MusicLibrary.stories.tsx",
       "reason": "Private Storybook composition for reviewed Music components; not product UI."
     },
@@ -9534,12 +9661,20 @@
       "reason": "Private Storybook composition for catalogued overlay components; not product UI."
     },
     {
+      "source": "src/workbench/stories/PageCompositions.stories.tsx",
+      "reason": "Private Storybook composition for stable page-level visual review; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/PublicDashboardCards.stories.tsx",
       "reason": "Private Storybook composition for reviewed Public Dashboard cards and display states; not product UI."
     },
     {
       "source": "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
       "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/RemainingUI.stories.tsx",
+      "reason": "Private Storybook composition for remaining reviewed product UI; not product UI itself."
     },
     {
       "source": "src/workbench/stories/SchedulePrimitives.stories.tsx",
@@ -9559,9 +9694,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 167,
+    "eligibleSources": 170,
     "representedSources": 140,
-    "ignoredSources": 27
+    "ignoredSources": 30
   },
   "reviewCandidates": [
     {
