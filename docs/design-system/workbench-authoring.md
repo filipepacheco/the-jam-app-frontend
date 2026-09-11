@@ -30,6 +30,16 @@ Stories must not call live services. Add fixed, typed data to `src/workbench/fix
 
 | Story | Owner ticket | Reason | Removal condition |
 | --- | --- | --- | --- |
-| None | — | — | — |
+| `SuggestNewSongModal` | #33 | Cross-service Spotify, music, and schedule orchestration | Add injected adapters or complete request scenarios in #35 |
+| `SuggestSongModal` | #33 | Schedule-domain request orchestration | Add Jam request scenarios in #35 |
+| `MusicianProfileModal` | #33 | Fetches its profile internally | Add a typed profile request scenario in #36 |
+| `MusicModal` | #33 | Create/edit submit behavior belongs to the Music slice | Add create/edit scenarios in #35 |
+| `OnboardingModal` | #33 | Mutates authenticated profile state | Add deterministic auth mutation fixtures in #39 |
+| `ProfileSetupModal` | #33 | Mutates authenticated profile state | Add deterministic auth mutation fixtures in #39 |
+| `HostMusicianRegistrationModal` | #33 | Multi-registration queue orchestration | Add queue scenarios in #36 |
+| `ScheduleEnrollmentModal` | #33 | Enrollment mutation belongs to the Schedule slice | Add enrollment scenarios in #36 |
+| `ShareModal` | #33 | Clipboard and native-share capability branches | Add controlled browser capability fixtures in #39 |
+| `SpotifyExportModal` | #33 | Integration is currently hidden in product UI | Re-enable the integration and add scenarios in #35 |
+| `SpotifyImportModal` | #33 | Multi-mode Spotify and Jam orchestration | Add the integration request matrix in #35 |
 
 CI runs browser interactions and a deterministic private static build, but neither uploads nor deploys the generated output.

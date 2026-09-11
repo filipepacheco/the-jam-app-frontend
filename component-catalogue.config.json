@@ -13,7 +13,10 @@
     {"source": "src/components/PromoVideo/HowItWorksScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
     {"source": "src/components/PromoVideo/PromoVideoPlayer.tsx", "reason": "Empty retired promotional player retained pending legacy cleanup."},
     {"source": "src/components/PromoVideo/index.tsx", "reason": "Deprecated schema-only barrel with no React component declaration."},
-    {"source": "src/workbench/stories/Environment.stories.tsx", "reason": "Private Storybook composition; stories exercise catalogued production components but are not product UI."}
+    {"source": "src/workbench/stories/Environment.stories.tsx", "reason": "Private Storybook composition; stories exercise catalogued production components but are not product UI."},
+    {"source": "src/workbench/stories/Forms.stories.tsx", "reason": "Private Storybook composition for catalogued form components; not product UI."},
+    {"source": "src/workbench/stories/Overlays.stories.tsx", "reason": "Private Storybook composition for catalogued overlay components; not product UI."},
+    {"source": "src/workbench/stories/JamOverlays.stories.tsx", "reason": "Private Storybook composition for catalogued Jam overlay components; not product UI."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",
