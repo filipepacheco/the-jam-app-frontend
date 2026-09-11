@@ -1,0 +1,14 @@
+{
+  "project": "tsconfig.app.json",
+  "include": [
+    "src/components/Alert.tsx",
+    "src/components/Footer.tsx",
+    "src/components/Modal.tsx",
+    "src/components/publicDashboard/Header.tsx",
+    "src/pages/host/HostDashboardPage.tsx"
+  ],
+  "output": {
+    "json": "docs/design-system/component-catalogue.json",
+    "markdown": "docs/design-system/component-catalogue.md"
+  }
+}

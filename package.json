@@ -12,7 +12,8 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:i18n": "vitest run src/__tests__/i18n.smoke.test.tsx"
+    "test:i18n": "vitest run src/__tests__/i18n.smoke.test.tsx",
+    "catalogue:generate": "tsx scripts/component-catalogue/cli.ts --config component-catalogue.config.json"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.87.0",

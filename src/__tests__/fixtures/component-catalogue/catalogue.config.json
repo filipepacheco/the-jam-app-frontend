@@ -1,0 +1,18 @@
+{
+  "project": "tsconfig.json",
+  "include": [
+    "src/NamedWidget.tsx",
+    "src/DefaultPanel.tsx",
+    "src/CataloguePage.tsx",
+    "src/DynamicSet.tsx",
+    "src/AnonymousView.tsx",
+    "src/AnonymousFunction.tsx",
+    "src/UnusedCard.tsx",
+    "src/WrappedMemo.tsx",
+    "src/WrappedForwardRef.tsx"
+  ],
+  "output": {
+    "json": "generated/catalogue.json",
+    "markdown": "generated/catalogue.md"
+  }
+}
