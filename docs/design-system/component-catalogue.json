@@ -438,7 +438,8 @@
       ],
       "consumers": [
         "src/pages/MusicPage.tsx",
-        "src/pages/tabs/ScheduleTab.tsx"
+        "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -462,14 +463,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "destructive",
+          "submitting",
+          "keyboard-dismissal"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Overlays/Current components."
+        ]
       }
     },
     {
@@ -910,7 +918,8 @@
         }
       ],
       "consumers": [
-        "src/pages/host/MusiciansPage.tsx"
+        "src/pages/host/MusiciansPage.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -939,14 +948,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "validation",
+          "long-text",
+          "mobile",
+          "scrolling"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Overlays/Jam forms."
+        ]
       }
     },
     {
@@ -1208,7 +1225,8 @@
       "consumers": [
         "src/components/FeedbackButton.tsx",
         "src/components/MobileDrawer.tsx",
-        "src/workbench/stories/Environment.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1237,14 +1255,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "validation",
+          "submitting",
+          "success",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Overlays/Current components with MSW-backed submission."
+        ]
       }
     },
     {
@@ -1315,7 +1341,8 @@
       ],
       "consumers": [
         "src/pages/JamRegisterPage.tsx",
-        "src/workbench/stories/Environment.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1342,14 +1369,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "validation",
+          "disabled",
+          "submitting",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Forms/Current components."
+        ]
       }
     },
     {
@@ -1376,7 +1411,8 @@
         }
       ],
       "consumers": [
-        "src/components/forms/SupabaseLoginForm.tsx"
+        "src/components/forms/SupabaseLoginForm.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1399,14 +1435,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "loading",
+          "disabled"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Forms/Current components."
+        ]
       }
     },
     {
@@ -1424,7 +1466,8 @@
       ],
       "consumers": [
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
-        "src/pages/tabs/ScheduleTab.tsx"
+        "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1450,14 +1493,25 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "search",
+          "empty",
+          "loading",
+          "disabled",
+          "keyboard",
+          "focus",
+          "overflow"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Forms/Current components."
+        ]
       }
     },
     {
@@ -1479,7 +1533,8 @@
         }
       ],
       "consumers": [
-        "src/pages/LoginPage.tsx"
+        "src/pages/LoginPage.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1509,14 +1564,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "sign-in",
+          "sign-up",
+          "validation",
+          "error",
+          "loading"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Forms/Current components with shared auth context."
+        ]
       }
     },
     {
@@ -2037,7 +2100,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2062,14 +2126,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "empty",
+          "disabled",
+          "scrolling",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Overlays/Jam forms."
+        ]
       }
     },
     {
@@ -2123,14 +2195,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "validation",
+          "importing",
+          "creating",
+          "linking",
+          "error"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: orchestration couples Spotify import, music creation, and schedule linking; remove when service adapters can be injected or fully modeled with scenario handlers in #35."
+        ]
       }
     },
     {
@@ -2183,14 +2263,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loading",
+          "search",
+          "empty",
+          "error",
+          "submitting"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: schedule-domain orchestration belongs to the Jam catalogue slice; remove when service scenarios are added in #35."
+        ]
       }
     },
     {
@@ -2747,7 +2835,8 @@
         }
       ],
       "consumers": [
-        "src/components/Navbar.tsx"
+        "src/components/Navbar.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2778,14 +2867,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "open",
+          "keyboard-dismissal",
+          "focus",
+          "scrolling",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Overlays/Current components with shared auth context."
+        ]
       }
     },
     {
@@ -2824,7 +2921,8 @@
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/host/CreateJamPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
-        "src/workbench/stories/Environment.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2849,14 +2947,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "responsive",
+          "long-text",
+          "keyboard-dismissal",
+          "focus",
+          "scrolling"
+        ],
         "candidateFamily": "overlay",
-        "notes": []
+        "notes": [
+          "Reviewed in Overlays/Current components."
+        ]
       }
     },
     {
@@ -2886,7 +2993,8 @@
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
-        "src/pages/tabs/ScheduleTab.tsx"
+        "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2907,14 +3015,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "destructive",
+          "submitting",
+          "disabled"
+        ],
         "candidateFamily": "overlay",
-        "notes": []
+        "notes": [
+          "Reviewed through Modal and ConfirmDialog stories."
+        ]
       }
     },
     {
@@ -3078,7 +3193,8 @@
         }
       ],
       "consumers": [
-        "src/pages/MusicPage.tsx"
+        "src/pages/MusicPage.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3099,14 +3215,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "filtered",
+          "long-text",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Forms/Current components."
+        ]
       }
     },
     {
@@ -3153,14 +3276,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loading",
+          "error",
+          "success"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: profile retrieval is performed internally; remove when a typed musician-profile MSW scenario is added in #36."
+        ]
       }
     },
     {
@@ -3212,14 +3341,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "create",
+          "edit",
+          "validation",
+          "submitting",
+          "error"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: music-domain submit behavior is owned by the Music catalogue slice; remove when create/edit scenarios are added in #35."
+        ]
       }
     },
     {
@@ -3242,7 +3379,8 @@
       ],
       "consumers": [
         "src/components/MusicModal.tsx",
-        "src/components/jam-detail-v2/SuggestNewSongModal.tsx"
+        "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3265,14 +3403,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "validation",
+          "long-text",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Forms/Current components."
+        ]
       }
     },
     {
@@ -3503,14 +3648,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "validation",
+          "submitting",
+          "error"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: completion mutates authenticated profile state; remove when the shared auth fixture exposes deterministic mutation scenarios in #39."
+        ]
       }
     },
     {
@@ -3624,7 +3776,8 @@
         }
       ],
       "consumers": [
-        "src/pages/ProfilePage.tsx"
+        "src/pages/ProfilePage.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3641,14 +3794,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "view",
+          "edit",
+          "disabled",
+          "long-text",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Forms/Current components."
+        ]
       }
     },
     {
@@ -3745,14 +3906,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "validation",
+          "submitting",
+          "error"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: profile setup mutates authenticated profile state; remove when the shared auth fixture exposes deterministic mutation scenarios in #39."
+        ]
       }
     },
     {
@@ -4752,14 +4920,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "validation",
+          "submitting",
+          "disabled",
+          "long-text",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "QuickEditPanel and local InstrumentStepper are reviewed together in Forms/Current components."
+        ]
       }
     },
     {
@@ -4781,7 +4958,8 @@
         }
       ],
       "consumers": [
-        "src/components/MusicCard.tsx"
+        "src/components/MusicCard.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4807,14 +4985,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "validation",
+          "submitting",
+          "disabled",
+          "long-text",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "QuickEditPanel and local InstrumentStepper are reviewed together in Forms/Current components."
+        ]
       }
     },
     {
@@ -5162,14 +5349,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "search",
+          "queued",
+          "submitting",
+          "partial-error",
+          "success"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: multi-registration orchestration belongs to the Schedule catalogue slice; remove when queue scenarios are added in #36."
+        ]
       }
     },
     {
@@ -5538,7 +5733,8 @@
       ],
       "consumers": [
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
-        "src/components/schedule/ScheduleCompactCard.tsx"
+        "src/components/schedule/ScheduleCompactCard.tsx",
+        "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -5561,14 +5757,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "ready",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "empty",
+          "view",
+          "edit",
+          "loading",
+          "focus",
+          "long-text"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Forms/Current components."
+        ]
       }
     },
     {
@@ -6022,14 +6227,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "full",
+          "submitting",
+          "error"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: enrollment mutation belongs to the Schedule catalogue slice; remove when enrollment scenarios are added in #36."
+        ]
       }
     },
     {
@@ -6436,14 +6648,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "copied",
+          "native-share",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: clipboard and native-share branches need controlled browser capability fixtures; remove when those capabilities are added in #39."
+        ]
       }
     },
     {
@@ -6541,14 +6760,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "default",
+          "submitting",
+          "error",
+          "success"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: Spotify export is currently hidden in product UI; remove when the integration is re-enabled and modeled in #35."
+        ]
       }
     },
     {
@@ -6604,14 +6830,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
-        "uiStates": [],
+        "uiStates": [
+          "new",
+          "existing",
+          "loading",
+          "validation",
+          "submitting",
+          "error",
+          "success"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Phase 3 exemption: multi-mode Spotify and Jam orchestration requires a dedicated request scenario matrix; remove when integration scenarios are added in #35."
+        ]
       }
     },
     {
@@ -8550,12 +8786,24 @@
     {
       "source": "src/workbench/stories/Environment.stories.tsx",
       "reason": "Private Storybook composition; stories exercise catalogued production components but are not product UI."
+    },
+    {
+      "source": "src/workbench/stories/Forms.stories.tsx",
+      "reason": "Private Storybook composition for catalogued form components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/JamOverlays.stories.tsx",
+      "reason": "Private Storybook composition for catalogued Jam overlay components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/Overlays.stories.tsx",
+      "reason": "Private Storybook composition for catalogued overlay components; not product UI."
     }
   ],
   "coverage": {
-    "eligibleSources": 151,
+    "eligibleSources": 154,
     "representedSources": 140,
-    "ignoredSources": 11
+    "ignoredSources": 14
   },
   "reviewCandidates": [
     {

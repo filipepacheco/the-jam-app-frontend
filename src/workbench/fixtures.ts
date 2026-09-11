@@ -87,6 +87,26 @@ export const nextSong = {
   ],
 }
 
+export const searchableMusic = [
+  { id: 'music-psycho-killer', title: 'Psycho Killer', artist: 'Talking Heads' },
+  { id: 'music-satisfaction', title: "(I Can't Get No) Satisfaction", artist: 'The Rolling Stones' },
+]
+
+export const blankMusicForm = {
+  title: '',
+  artist: '',
+  description: '',
+  link: '',
+  info: '',
+  genre: '',
+  duration: '',
+  neededDrums: 1,
+  neededGuitars: 2,
+  neededVocals: 1,
+  neededBass: 1,
+  neededKeys: 0,
+}
+
 export const inProgressSchedule: ScheduleResponseDto = {
   id: 'schedule-fixture',
   jamId: 'jam-fixture',
