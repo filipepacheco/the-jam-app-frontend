@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "components": [
+    {
+      "id": "src.components.alert.alert",
+      "name": "Alert",
+      "source": "src/components/Alert.tsx",
+      "declaration": "variable",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "Alert",
+          "module": "src/components/Alert.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Alert",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/EditMusicianModal.tsx",
+        "src/components/FeedbackModal.tsx",
+        "src/components/OnboardingModal.tsx",
+        "src/components/PageAlerts.tsx",
+        "src/components/ProfileSetupModal.tsx",
+        "src/components/RouteGuards.tsx",
+        "src/components/SpotifyExportModal.tsx",
+        "src/components/SpotifyImportModal.tsx",
+        "src/components/dj-control/PlaybackControls.tsx",
+        "src/components/dj-control/QueueStats.tsx",
+        "src/components/forms/JamRegistrationForm.tsx",
+        "src/components/forms/SupabaseLoginForm.tsx",
+        "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
+        "src/components/jam-detail-v2/SuggestSongModal.tsx",
+        "src/components/schedule/HostMusicianRegistrationModal.tsx",
+        "src/components/schedule/ScheduleEnrollmentModal.tsx",
+        "src/pages/BrowseJamsPage.tsx",
+        "src/pages/JamRegisterPage.tsx",
+        "src/pages/ProfilePage.tsx",
+        "src/pages/PublicDashboardPage.tsx",
+        "src/pages/host/CreateJamPage.tsx",
+        "src/pages/host/FeedbackPage.tsx",
+        "src/pages/host/HostDashboardPage.tsx",
+        "src/pages/host/HostJamSongsPage.tsx",
+        "src/pages/host/JamManagementPage.tsx",
+        "src/pages/host/MusiciansPage.tsx",
+        "src/pages/tabs/AnalyticsTab.tsx",
+        "src/pages/tabs/DJControlTab.tsx",
+        "src/pages/tabs/DJControlTabV2.tsx",
+        "src/pages/tabs/DashboardTab.tsx",
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/pages/tabs/ScheduleTab.tsx"
+      ],
+      "dependencies": {
+        "internal": [],
+        "external": [
+          "react",
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
+      }
+    },
+    {
+      "id": "src.components.footer.footer",
+      "name": "Footer",
+      "source": "src/components/Footer.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "default",
+          "name": "default",
+          "module": "src/components/Footer.tsx"
+        }
+      ],
+      "consumers": [
+        "src/App.tsx",
+        "src/pages/AboutPage.tsx"
+      ],
+      "dependencies": {
+        "internal": [],
+        "external": [
+          "react-i18next",
+          "react-router-dom"
+        ],
+        "contexts": [
+          "internationalization",
+          "routing"
+        ]
+      }
+    },
+    {
+      "id": "src.components.modal.modal",
+      "name": "Modal",
+      "source": "src/components/Modal.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "Modal",
+          "module": "src/components/Modal.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Modal",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/ConfirmDialog.tsx",
+        "src/components/EditMusicianModal.tsx",
+        "src/components/FeedbackModal.tsx",
+        "src/components/MusicModal.tsx",
+        "src/components/MusicianProfileModal.tsx",
+        "src/components/OnboardingModal.tsx",
+        "src/components/ProfileSetupModal.tsx",
+        "src/components/ShareModal.tsx",
+        "src/components/SpotifyExportModal.tsx",
+        "src/components/SpotifyImportModal.tsx",
+        "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
+        "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
+        "src/components/jam-detail-v2/SuggestSongModal.tsx",
+        "src/components/schedule/HostMusicianRegistrationModal.tsx",
+        "src/components/schedule/ScheduleEnrollmentModal.tsx",
+        "src/pages/host/CreateJamPage.tsx",
+        "src/pages/tabs/ScheduleTab.tsx"
+      ],
+      "dependencies": {
+        "internal": [],
+        "external": [
+          "lucide-react",
+          "react",
+          "react-dom",
+          "react-i18next"
+        ],
+        "contexts": [
+          "browser",
+          "internationalization"
+        ]
+      }
+    },
+    {
+      "id": "src.components.publicdashboard.header.header",
+      "name": "Header",
+      "source": "src/components/publicDashboard/Header.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "default",
+          "name": "default",
+          "module": "src/components/publicDashboard/Header.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Header",
+          "module": "src/components/publicDashboard/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/pages/PublicDashboardPage.tsx"
+      ],
+      "dependencies": {
+        "internal": [],
+        "external": [],
+        "contexts": []
+      }
+    },
+    {
+      "id": "src.pages.host.hostdashboardpage.hostdashboardpage",
+      "name": "HostDashboardPage",
+      "source": "src/pages/host/HostDashboardPage.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "HostDashboardPage",
+          "module": "src/pages/host/HostDashboardPage.tsx"
+        },
+        {
+          "kind": "default",
+          "name": "default",
+          "module": "src/pages/host/HostDashboardPage.tsx"
+        }
+      ],
+      "consumers": [
+        "src/App.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/index.ts",
+          "src/hooks/index.ts",
+          "src/services/jamService.ts",
+          "src/types/api.types.ts"
+        ],
+        "external": [
+          "lucide-react",
+          "react",
+          "react-i18next",
+          "react-router-dom"
+        ],
+        "contexts": [
+          "api",
+          "internationalization",
+          "routing"
+        ]
+      }
+    },
+    {
+      "id": "src.pages.host.hostdashboardpage.jamcard",
+      "name": "JamCard",
+      "source": "src/pages/host/HostDashboardPage.tsx",
+      "declaration": "function",
+      "visibility": "local",
+      "exports": [],
+      "consumers": [
+        "src/pages/host/HostDashboardPage.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/lib/i18nUtils.ts",
+          "src/lib/statusUtils.ts",
+          "src/utils/jamUrl.ts"
+        ],
+        "external": [
+          "lucide-react",
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
+      }
+    }
+  ]
+}
