@@ -5467,7 +5467,8 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/MusicianSlotList.tsx"
+        "src/components/schedule/MusicianSlotList.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5490,14 +5491,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "single-open-slot",
+          "multiple-open-slots",
+          "mobile"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -5568,7 +5575,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: multi-registration orchestration belongs to the Schedule catalogue slice; remove when queue scenarios are added in #36."
+          "Internal search and multi-registration mutations need an injectable service seam; revisit with a typed scenario adapter."
         ]
       }
     },
@@ -5594,7 +5601,8 @@
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
         "src/components/schedule/ScheduleDisplayItem.tsx",
-        "src/components/schedule/SongInfo.tsx"
+        "src/components/schedule/SongInfo.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5616,14 +5624,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "not-applicable",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "dense-instruments",
+          "duration",
+          "mobile",
+          "desktop"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -5642,7 +5657,8 @@
       "consumers": [
         "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
-        "src/components/schedule/ScheduleEnrollmentModal.tsx"
+        "src/components/schedule/ScheduleEnrollmentModal.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5666,14 +5682,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "available",
+          "filled",
+          "highlighted",
+          "open-song"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -5722,14 +5745,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Live playback control and its private children are catalogued by #37."
+        ]
       }
     },
     {
@@ -5765,14 +5790,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Live playback control and its private children are catalogued by #37."
+        ]
       }
     },
     {
@@ -5806,14 +5833,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Live playback control and its private children are catalogued by #37."
+        ]
       }
     },
     {
@@ -5836,7 +5865,8 @@
       ],
       "consumers": [
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
-        "src/components/schedule/ScheduleCompactCard.tsx"
+        "src/components/schedule/ScheduleCompactCard.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5860,14 +5890,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "empty",
+          "pending",
+          "approved",
+          "actions",
+          "disabled",
+          "phone",
+          "host-console"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "MusicianSlotList and MusicianSlotRow are reviewed in Domain/Schedule/Registration and cards."
+        ]
       }
     },
     {
@@ -5913,14 +5953,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "pending",
+          "approved",
+          "rejected",
+          "actions",
+          "disabled",
+          "long-name"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed through MusicianSlotList in Domain/Schedule/Registration and cards."
+        ]
       }
     },
     {
@@ -6006,7 +6055,8 @@
       ],
       "consumers": [
         "src/components/schedule/ScheduleCardManagement.tsx",
-        "src/components/schedule/ScheduleDisplayItem.tsx"
+        "src/components/schedule/ScheduleDisplayItem.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6033,14 +6083,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "empty",
+          "approved",
+          "dense",
+          "actions",
+          "phone",
+          "host-console"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Registration and cards."
+        ]
       }
     },
     {
@@ -6067,7 +6126,8 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/ScheduleCardManagement.tsx"
+        "src/components/schedule/ScheduleCardManagement.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6088,14 +6148,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "suggested",
+          "approved",
+          "completed",
+          "destructive",
+          "disabled"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed with user interactions in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -6170,7 +6238,8 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/ScheduleTab.tsx"
+        "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6203,14 +6272,26 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "collapsed",
+          "expanded",
+          "pending",
+          "approved",
+          "completed",
+          "suggested",
+          "long-content",
+          "keyboard",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Registration and cards."
+        ]
       }
     },
     {
@@ -6284,7 +6365,8 @@
       ],
       "consumers": [
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
-        "src/components/schedule/ScheduleEnrollmentModal.tsx"
+        "src/components/schedule/ScheduleEnrollmentModal.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6305,14 +6387,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "filled",
+          "long-content",
+          "duration"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -6445,7 +6533,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Phase 3 exemption: enrollment mutation belongs to the Schedule catalogue slice; remove when enrollment scenarios are added in #36."
+          "Enrollment mutation remains covered as a form overlay in #33 until its service is injectable."
         ]
       }
     },
@@ -6469,7 +6557,8 @@
       ],
       "consumers": [
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
-        "src/components/schedule/ScheduleCompactCard.tsx"
+        "src/components/schedule/ScheduleCompactCard.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6493,14 +6582,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "open",
+          "pending-approvals",
+          "destructive",
+          "disabled",
+          "keyboard",
+          "focus"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed with user interactions in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -6528,7 +6626,8 @@
       ],
       "consumers": [
         "src/components/schedule/ScheduleCardManagement.tsx",
-        "src/components/schedule/ScheduleCompactCard.tsx"
+        "src/components/schedule/ScheduleCompactCard.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6551,14 +6650,22 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "scheduled",
+          "in-progress",
+          "completed",
+          "canceled",
+          "suggested"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -6575,7 +6682,8 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/ScheduleCollapsibleCard.tsx"
+        "src/components/schedule/ScheduleCollapsibleCard.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6598,14 +6706,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "empty",
+          "partial",
+          "complete"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -6632,7 +6746,8 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/ScheduleCardManagement.tsx"
+        "src/components/schedule/ScheduleCardManagement.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6655,14 +6770,20 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "needs-review",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "filled",
+          "long-content",
+          "dense-instruments"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -6679,7 +6800,8 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/ScheduleCollapsibleCard.tsx"
+        "src/components/schedule/ScheduleCollapsibleCard.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6700,14 +6822,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "scheduled",
+          "in-progress",
+          "completed",
+          "canceled",
+          "suggested",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Reviewed in Domain/Schedule/Primitives and actions."
+        ]
       }
     },
     {
@@ -7958,14 +8089,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route composition is catalogued by #39."
+        ]
       }
     },
     {
@@ -8012,14 +8145,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route composition is catalogued by #39."
+        ]
       }
     },
     {
@@ -8895,14 +9030,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route composition is catalogued by #39."
+        ]
       }
     },
     {
@@ -8954,14 +9091,16 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "needs-review",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
         },
         "uiStates": [],
         "candidateFamily": null,
-        "notes": []
+        "notes": [
+          "Route composition is catalogued by #39."
+        ]
       }
     }
   ],
@@ -9047,6 +9186,14 @@
       "reason": "Private Storybook composition for catalogued overlay components; not product UI."
     },
     {
+      "source": "src/workbench/stories/SchedulePrimitives.stories.tsx",
+      "reason": "Private Storybook composition for reviewed Schedule primitives and actions; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/ScheduleRegistration.stories.tsx",
+      "reason": "Private Storybook composition for reviewed Schedule registration and card states; not product UI."
+    },
+    {
       "source": "src/workbench/stories/States/EmptyState.stories.tsx",
       "reason": "Private Storybook composition for reviewed empty states; not product UI."
     },
@@ -9056,9 +9203,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 162,
+    "eligibleSources": 164,
     "representedSources": 140,
-    "ignoredSources": 22
+    "ignoredSources": 24
   },
   "reviewCandidates": [
     {
