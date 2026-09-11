@@ -1,4 +1,5 @@
 {
+  "candidateFamilies": ["overlay", "feedback", "empty-state"],
   "defaults": {
     "category": "product-ui",
     "layer": "domain-component",

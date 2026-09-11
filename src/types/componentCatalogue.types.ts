@@ -113,6 +113,7 @@ export interface ComponentCatalogue {
 }
 
 export interface CatalogueMetadataConfig {
+  candidateFamilies: string[]
   defaults: ComponentMetadata
   rules: Array<{
     source: string

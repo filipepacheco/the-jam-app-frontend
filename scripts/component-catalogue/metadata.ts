@@ -1,16 +1,8 @@
-import {
-  AUDIT_STATUSES,
-  CATALOGUE_CATEGORIES,
-  CATALOGUE_LAYERS,
-  COMPONENT_LIFECYCLES,
-  PRODUCT_AREAS,
-  VIEWPORT_CONTEXTS,
-  WORKBENCH_READINESS,
-} from '../../src/types/componentCatalogue.types.ts'
 import type {
   CatalogueMetadataConfig,
   ComponentMetadata,
 } from '../../src/types/componentCatalogue.types.ts'
+import {isRecord} from './validate.ts'
 
 export interface MetadataComponent {
   key: string
@@ -47,35 +39,16 @@ export const metadataFor = (
   component: MetadataComponent,
   config: CatalogueMetadataConfig,
 ): ComponentMetadata => {
-  let metadata: ComponentMetadata = structuredClone(config.defaults)
+  let metadata = (isRecord(config.defaults) ? structuredClone(config.defaults) : {}) as ComponentMetadata
   for (const rule of config.rules) {
+    if (typeof rule.source !== 'string' || !isRecord(rule.metadata)) continue
     if (!globPattern(rule.source).test(component.source)) continue
     if (rule.component && rule.component !== component.name) continue
     metadata = {
       ...metadata,
       ...rule.metadata,
-      readiness: {...metadata.readiness, ...rule.metadata.readiness},
+      readiness: {...metadata.readiness, ...(isRecord(rule.metadata.readiness) ? rule.metadata.readiness : {})},
     }
   }
   return metadata
-}
-
-export const validateMetadata = (
-  metadata: ComponentMetadata,
-  component: MetadataComponent,
-): void => {
-  const valid = (value: string, values: readonly string[], field: string): void => {
-    if (!values.includes(value)) throw new Error(`${component.key}: invalid ${field} "${value}"`)
-  }
-  valid(metadata.category, CATALOGUE_CATEGORIES, 'category')
-  valid(metadata.layer, CATALOGUE_LAYERS, 'layer')
-  valid(metadata.lifecycle, COMPONENT_LIFECYCLES, 'lifecycle')
-  valid(metadata.productArea, PRODUCT_AREAS, 'productArea')
-  for (const viewport of metadata.viewportContexts) {
-    valid(viewport, VIEWPORT_CONTEXTS, 'viewportContexts')
-  }
-  valid(metadata.readiness.workbench, WORKBENCH_READINESS, 'readiness.workbench')
-  for (const field of ['accessibility', 'internationalization', 'theme'] as const) {
-    valid(metadata.readiness[field], AUDIT_STATUSES, `readiness.${field}`)
-  }
 }
