@@ -10,6 +10,7 @@ import {InstrumentBadges} from './InstrumentBadges'
 import {useTranslation} from 'react-i18next'
 import {getStatusColor, getStatusLabel, getStatusIcon} from '../../lib/schedule/statusHelpers'
 import {CheckCircle} from 'lucide-react'
+import {Action} from '../Action'
 
 interface ScheduleDisplayItemProps {
     schedule: ScheduleResponseDto
@@ -97,12 +98,10 @@ export const ScheduleDisplayItem = memo(function ScheduleDisplayItem({
                         {t('schedule.already_enrolled')}
                     </span>
                 ) : (
-                    <button
-                        onClick={onEnrollClick}
-                        className="btn btn-sm btn-primary font-semibold gap-2"
-                    >
-                        🎵 {t('schedule.enroll_btn')}
-                    </button>
+                    <Action onClick={onEnrollClick} variant="primary">
+                        <Action.Icon aria-hidden="true">🎵</Action.Icon>
+                        <Action.Label>{t('schedule.enroll_btn')}</Action.Label>
+                    </Action>
                 )}
             </div>
         </div>

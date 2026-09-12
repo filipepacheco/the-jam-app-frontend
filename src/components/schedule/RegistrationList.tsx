@@ -10,6 +10,7 @@ import {Avatar} from '../Avatar'
 import {memo} from "react"
 import {groupRegistrationsByInstrument} from '../../utils/musicianUtils';
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
+import {Action, IconAction} from '../Action'
 
 
 const getInstrumentDisplayName = (instrument: string, t: (key: string) => string): string => {
@@ -99,13 +100,9 @@ export const RegistrationList = memo(function RegistrationList({
                     {t('schedule.musicians_registered')}
                 </p>
                 {showActions && onAddMusician && (
-                    <button
-                        onClick={onAddMusician}
-                        className="btn btn-xs btn-outline min-h-[44px] min-w-[44px]"
-                        title={t('schedule.add_musician_btn')}
-                    >
-                        {t('schedule.add_musician')}
-                    </button>
+                    <Action onClick={onAddMusician} variant="secondary" title={t('schedule.add_musician_btn')}>
+                        <Action.Label>{t('schedule.add_musician')}</Action.Label>
+                    </Action>
                 )}
             </div>
 
@@ -198,33 +195,36 @@ export const RegistrationList = memo(function RegistrationList({
                                                 <>
                                                     {registration.status !== 'APPROVED' && registration.status !== 'REJECTED' && (
                                                         <div className="flex gap-1 flex-shrink-0">
-                                                            <button
+                                                            <IconAction
+                                                                variant="quiet"
+                                                                label={t('common.approve')}
                                                                 onClick={() => onApprove?.(registration.id)}
-                                                                className="btn btn-xs btn-success btn-outline min-h-[44px] min-w-[44px]"
-                                                                disabled={loading}
-                                                                title={t('common.approve')}
+                                                                state={loading ? 'disabled' : 'idle'}
+                                                                className="text-success"
                                                             >
                                                                 ✓
-                                                            </button>
-                                                            <button
+                                                            </IconAction>
+                                                            <IconAction
+                                                                variant="quiet"
+                                                                label={t('common.reject')}
                                                                 onClick={() => onReject?.(registration.id)}
-                                                                className="btn btn-xs btn-error btn-outline min-h-[44px] min-w-[44px]"
-                                                                disabled={loading}
-                                                                title={t('common.reject')}
+                                                                state={loading ? 'disabled' : 'idle'}
+                                                                className="text-error"
                                                             >
                                                                 ✕
-                                                            </button>
+                                                            </IconAction>
                                                         </div>
                                                     )}
                                                     {registration.status === 'APPROVED' && (
-                                                        <button
+                                                        <IconAction
+                                                            variant="quiet"
+                                                            label={t('common.delete')}
                                                             onClick={() => onDelete?.(registration.id)}
-                                                            className="btn btn-xs btn-error btn-outline min-h-[44px] min-w-[44px]"
-                                                            disabled={loading}
-                                                            title={t('common.delete')}
+                                                            state={loading ? 'disabled' : 'idle'}
+                                                            className="text-error"
                                                         >
                                                             <Trash2 className="w-3 h-3" />
-                                                        </button>
+                                                        </IconAction>
                                                     )}
                                                 </>
                                             )}

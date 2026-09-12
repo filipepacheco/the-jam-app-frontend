@@ -6,6 +6,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FileText, Pencil } from 'lucide-react'
+import { Action, IconAction } from '../Action'
 
 interface NotesEditorProps {
   notes?: string | null
@@ -37,22 +38,22 @@ export function NotesEditor({ notes, jamMusicId, loading = false, onSave }: Note
           autoFocus
         />
         <div className="flex gap-1 justify-end">
-          <button
-            className="btn btn-sm min-h-[44px] min-w-[44px] btn-ghost"
+          <Action
+            variant="quiet"
             onClick={() => { setEditing(false); setEditValue(notes || '') }}
           >
-            {t('common.cancel')}
-          </button>
-          <button
-            className="btn btn-sm min-h-[44px] min-w-[44px] btn-primary"
-            disabled={loading}
+            <Action.Label>{t('common.cancel')}</Action.Label>
+          </Action>
+          <Action
+            variant="primary"
+            state={loading ? 'disabled' : 'idle'}
             onClick={() => {
               onSave?.(jamMusicId, displayValue)
               setEditing(false)
             }}
           >
-            {t('common.save')}
-          </button>
+            <Action.Label>{t('common.save')}</Action.Label>
+          </Action>
         </div>
       </div>
     )
@@ -64,14 +65,14 @@ export function NotesEditor({ notes, jamMusicId, loading = false, onSave }: Note
         <FileText className="w-3 h-3 mt-0.5 shrink-0 text-base-content/40" />
         <p className="whitespace-pre-line flex-1 min-w-0">{notes}</p>
         {onSave && (
-          <button
-            className="btn btn-ghost btn-sm min-h-[44px] min-w-[44px] btn-circle shrink-0"
+          <IconAction
+            variant="quiet"
+            className="shrink-0"
+            label={t('schedule.edit_notes')}
             onClick={() => { setEditValue(notes || ''); setEditing(true) }}
-            title={t('schedule.edit_notes')}
-            aria-label={t('schedule.edit_notes')}
           >
             <Pencil className="w-3 h-3" />
-          </button>
+          </IconAction>
         )}
       </div>
     )
@@ -79,13 +80,14 @@ export function NotesEditor({ notes, jamMusicId, loading = false, onSave }: Note
 
   if (onSave) {
     return (
-      <button
-        className="btn btn-sm min-h-[44px] min-w-[44px] btn-ghost text-base-content/40 gap-1"
+      <Action
+        variant="quiet"
+        className="text-base-content/40"
         onClick={() => { setEditValue(''); setEditing(true) }}
       >
-        <FileText className="w-3 h-3" />
-        {t('schedule.add_notes')}
-      </button>
+        <Action.Icon><FileText className="w-3 h-3" /></Action.Icon>
+        <Action.Label>{t('schedule.add_notes')}</Action.Label>
+      </Action>
     )
   }
 

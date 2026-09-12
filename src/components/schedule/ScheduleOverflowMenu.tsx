@@ -1,11 +1,11 @@
 /**
  * ScheduleOverflowMenu - Compact dropdown for schedule actions
- * Replaces inline action buttons with a three-dot overflow menu
+ * Wraps the canonical OverflowMenu with Schedule-specific status transitions
  */
 
-import React, { useRef } from 'react'
-import { MoreVertical, CheckCircle, Trash2, UserPlus, CheckCheck, Pencil } from 'lucide-react'
+import { CheckCircle, Trash2, UserPlus, CheckCheck, Pencil } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { OverflowMenu, type NavigationMenuItem } from '../Navigation'
 
 interface ScheduleOverflowMenuProps {
   status: string | undefined
@@ -29,101 +29,57 @@ export function ScheduleOverflowMenu({
   onEditMusic,
 }: ScheduleOverflowMenuProps) {
   const { t } = useTranslation()
-  const triggerRef = useRef<HTMLDivElement>(null)
 
-  const handleAction = (action: () => void) => {
-    (document.activeElement as HTMLElement)?.blur()
-    action()
-    requestAnimationFrame(() => triggerRef.current?.focus())
+  const items: NavigationMenuItem[] = []
+
+  if (status === 'IN_PROGRESS') {
+    items.push({
+      id: 'complete',
+      label: t('schedule.statuses.completed'),
+      icon: <CheckCircle className="w-3.5 h-3.5" />,
+      disabled: loading,
+      onSelect: () => onStatusChange?.('COMPLETED'),
+    })
   }
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      e.preventDefault()
-      ;(document.activeElement as HTMLElement)?.blur()
-    }
+  if (onAddMusician) {
+    items.push({
+      id: 'add-musician',
+      label: t('schedule.add_musician_btn'),
+      icon: <UserPlus className="w-3.5 h-3.5" />,
+      disabled: loading,
+      onSelect: onAddMusician,
+    })
   }
 
-  return (
-    <div className="dropdown dropdown-end">
-      <div
-        ref={triggerRef}
-        tabIndex={0}
-        role="button"
-        className="btn btn-ghost btn-sm btn-circle"
-        aria-label={t('common.actions')}
-      >
-        <MoreVertical className="w-4 h-4" />
-      </div>
-      <ul
-        tabIndex={0}
-        className="dropdown-content menu bg-base-100 rounded-box z-50 w-48 p-1 shadow-lg border border-base-300"
-        onKeyDown={handleKeyDown}
-      >
-        {/* Status transitions */}
-        {status === 'IN_PROGRESS' && (
-          <li>
-            <button
-              onClick={() => handleAction(() => onStatusChange?.('COMPLETED'))}
-              disabled={loading}
-              className="text-xs"
-            >
-              <CheckCircle className="w-3.5 h-3.5" />
-              {t('schedule.statuses.completed')}
-            </button>
-          </li>
-        )}
-        {onAddMusician && (
-          <li>
-            <button
-              onClick={() => handleAction(onAddMusician)}
-              disabled={loading}
-              className="text-xs"
-            >
-              <UserPlus className="w-3.5 h-3.5" />
-              {t('schedule.add_musician_btn')}
-            </button>
-          </li>
-        )}
-        {hasPendingRegistrations && onApproveAll && (
-          <li>
-            <button
-              onClick={() => handleAction(onApproveAll)}
-              disabled={loading}
-              className="text-xs text-success"
-            >
-              <CheckCheck className="w-3.5 h-3.5" />
-              {t('schedule.approve_all', 'Approve all')}
-            </button>
-          </li>
-        )}
+  if (hasPendingRegistrations && onApproveAll) {
+    items.push({
+      id: 'approve-all',
+      label: t('schedule.approve_all', 'Approve all'),
+      icon: <CheckCheck className="w-3.5 h-3.5" />,
+      disabled: loading,
+      onSelect: onApproveAll,
+    })
+  }
 
-        {/* Edit music details */}
-        {onEditMusic && (
-          <li>
-            <button
-              onClick={() => handleAction(onEditMusic)}
-              disabled={loading}
-              className="text-xs"
-            >
-              <Pencil className="w-3.5 h-3.5" />
-              {t('schedule.edit_music', 'Editar Música')}
-            </button>
-          </li>
-        )}
+  if (onEditMusic) {
+    items.push({
+      id: 'edit-music',
+      label: t('schedule.edit_music', 'Editar Música'),
+      icon: <Pencil className="w-3.5 h-3.5" />,
+      disabled: loading,
+      onSelect: onEditMusic,
+    })
+  }
 
-        {/* Delete */}
-        <li>
-          <button
-            onClick={() => handleAction(() => onDelete?.())}
-            disabled={loading}
-            className="text-xs text-error"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-            {t('common.delete')}
-          </button>
-        </li>
-      </ul>
-    </div>
-  )
+  items.push({
+    id: 'delete',
+    label: t('common.delete'),
+    icon: <Trash2 className="w-3.5 h-3.5" />,
+    disabled: loading,
+    destructive: true,
+    onSelect: () => onDelete?.(),
+  })
+
+  return <OverflowMenu items={items} label={t('common.actions')} />
 }

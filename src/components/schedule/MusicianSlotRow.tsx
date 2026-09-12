@@ -7,6 +7,7 @@ import type { RegistrationResponseDto } from '../../types/api.types'
 import { Check, X, Trash2 } from 'lucide-react'
 import { getInstrumentEmoji } from '../../lib/schedule/instrumentHelpers'
 import { useTranslation } from 'react-i18next'
+import { IconAction } from '../Action'
 
 interface MusicianSlotRowProps {
   registration: RegistrationResponseDto
@@ -83,36 +84,34 @@ export function MusicianSlotRow({
         <div className="flex-shrink-0 flex items-center gap-1">
           {status !== 'APPROVED' && status !== 'REJECTED' && (
             <>
-              <button
+              <IconAction
+                variant="quiet"
+                label={t('common.approve')}
                 onClick={() => onApprove?.(registration.id)}
-                className="btn btn-circle btn-ghost btn-sm min-h-[44px] min-w-[44px]"
-                disabled={loading}
-                title={t('common.approve')}
-                aria-label={t('common.approve')}
+                state={loading ? 'disabled' : 'idle'}
               >
                 <Check className="w-3 h-3 text-success" />
-              </button>
-              <button
+              </IconAction>
+              <IconAction
+                variant="quiet"
+                label={t('common.reject')}
                 onClick={() => onReject?.(registration.id)}
-                className="btn btn-circle btn-ghost btn-sm min-h-[44px] min-w-[44px]"
-                disabled={loading}
-                title={t('common.reject')}
-                aria-label={t('common.reject')}
+                state={loading ? 'disabled' : 'idle'}
               >
                 <X className="w-3 h-3 text-error" />
-              </button>
+              </IconAction>
             </>
           )}
           {status === 'APPROVED' && (
-            <button
+            <IconAction
+              variant="quiet"
+              label={t('common.delete')}
               onClick={() => onDelete?.(registration.id)}
-              className="btn btn-circle btn-ghost btn-sm min-h-[44px] min-w-[44px] text-error/40 hover:text-error transition-colors"
-              disabled={loading}
-              title={t('common.delete')}
-              aria-label={t('common.delete')}
+              state={loading ? 'disabled' : 'idle'}
+              className="text-error/40 hover:text-error"
             >
               <Trash2 className="w-3 h-3" />
-            </button>
+            </IconAction>
           )}
         </div>
       )}
