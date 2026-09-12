@@ -77,7 +77,7 @@ function RegistrationLikeForm() {
 export const FormComposition: Story = {
   render: () => <RegistrationLikeForm />,
   play: async ({ canvas, userEvent }) => {
-    const title = canvas.getByRole('textbox', { name: /song title required/i })
+    const title = canvas.getByRole('textbox', { name: 'Song title Required' })
     await userEvent.type(title, 'Bluesette')
     await userEvent.click(canvas.getByRole('button', { name: 'Save song' }))
     await expect(canvas.getByRole('status')).toHaveTextContent('Song saved to the setlist.')

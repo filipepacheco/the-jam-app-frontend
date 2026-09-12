@@ -23,6 +23,7 @@ describe('canonical form fields', () => {
     )
 
     const input = screen.getByRole('textbox', { name: /song title required/i })
+    expect(input).toHaveAccessibleName('Song title Required')
     expect(screen.getByText('Song title').closest('label')).toHaveAttribute('for', 'song-title')
     expect(input).toHaveAttribute('id', 'song-title')
     expect(input).toBeRequired()

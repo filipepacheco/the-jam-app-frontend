@@ -91,7 +91,7 @@ export const Field: FieldComponent = function Field({
         {required && (
           <span className="ds-field__requirement">
             <span aria-hidden="true"> *</span>
-            <span className="sr-only">{requiredLabel}</span>
+            <span className="sr-only"> {requiredLabel}</span>
           </span>
         )}
       </label>
