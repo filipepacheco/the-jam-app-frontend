@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Music } from 'lucide-react'
 import type { LiveStateSongDto, PlaybackState } from '../../types/jamControl.types'
-import { StatusIndicator, type StatusTone } from '../data-display'
+import { DataCard, StatusIndicator, type StatusTone } from '../data-display'
 
 interface NowPlayingBarProps {
   currentSong: LiveStateSongDto | null
@@ -30,9 +30,9 @@ export function NowPlayingBar({ currentSong, playbackState, nextSong }: NowPlayi
 
   if (!currentSong) {
     return (
-      <div className="rounded-lg bg-base-200 px-3 py-2.5">
+      <DataCard as="section" density="compact" className="space-y-2">
         <div className="flex items-center justify-between mb-1">
-          <span className="text-xs font-medium text-base-content/50 uppercase tracking-wide">
+          <span className="text-xs font-medium text-base-content/70">
             {t('dj_control.now_playing.ready_to_start', 'Pronto para iniciar')}
           </span>
           <StatusIndicator status={config.status} label={t(config.label)} />
@@ -40,31 +40,31 @@ export function NowPlayingBar({ currentSong, playbackState, nextSong }: NowPlayi
         {nextSong ? (
           <div>
             <p className="text-sm text-base-content/60">
-              {t('dj_control.now_playing.next_up', 'Proxima')}: <span className="font-semibold text-base-content/80">{nextSong.music.title}</span>
+              {t('dj_control.now_playing.next_up', 'Proxima')}: <span className="font-semibold text-base-content">{nextSong.music.title}</span>
             </p>
             <p className="text-xs text-base-content/40">{nextSong.music.artist}</p>
           </div>
         ) : (
           <p className="text-sm text-base-content/40">{t('dj_control.now_playing.idle', 'Nenhuma musica na fila')}</p>
         )}
-      </div>
+      </DataCard>
     )
   }
 
   return (
-    <div className="rounded-lg bg-base-200 px-3 py-2.5">
+    <DataCard as="section" density="compact" selected className="space-y-1">
       <div className="flex items-center justify-between mb-0.5">
-        <div className="flex items-center gap-1.5 text-xs font-medium text-base-content/50 uppercase tracking-wide">
+        <div className="flex items-center gap-1.5 text-xs font-medium text-base-content/70">
           <Music className="size-3" aria-hidden="true" />
           {t('dj_control.timeline.now_playing', 'Tocando agora')}
         </div>
         <StatusIndicator status={config.status} label={t(config.label)} />
       </div>
-      <p className="text-lg font-bold leading-tight line-clamp-1">{currentSong.music.title}</p>
-      <p className="text-sm text-base-content/60">
+      <p className="ds-wrap-user-content text-lg font-bold leading-tight">{currentSong.music.title}</p>
+      <p className="ds-wrap-user-content text-sm text-base-content/60">
         {currentSong.music.artist}
         {currentSong.music.duration ? ` - ${formatDuration(currentSong.music.duration)}` : ''}
       </p>
-    </div>
+    </DataCard>
   )
 }
