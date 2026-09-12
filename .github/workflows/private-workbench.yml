@@ -46,7 +46,12 @@ jobs:
 
       - name: Commit canonical Linux visual baselines
         if: github.event_name == 'push' && github.ref == 'refs/heads/codex/private-visual-regression-61'
-        run: git config user.name github-actions && git config user.email github-actions@github.com && git add private-visual-baselines docs/design-system && git commit -m "fix: regenerate visuals in canonical Linux renderer [skip ci]" && git push
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add private-visual-baselines docs/design-system
+          git commit -m "fix: regenerate visuals in canonical Linux renderer [skip ci]"
+          git push
 
       - name: Run workbench browser tests
         if: github.event_name != 'push' || github.ref != 'refs/heads/codex/private-visual-regression-61'
