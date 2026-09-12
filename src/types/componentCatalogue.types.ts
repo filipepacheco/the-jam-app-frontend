@@ -44,6 +44,29 @@ export type AuditStatus = typeof AUDIT_STATUSES[number]
 export const WORKBENCH_READINESS = ['unknown', 'needs-review', 'ready', 'exempt'] as const
 export type WorkbenchReadiness = typeof WORKBENCH_READINESS[number]
 
+/** Recorded migration decision; absence means the catalogue does not claim adoption. */
+export const CANONICAL_ADOPTION_STATUSES = [
+  'adopted',
+  'documented-exception',
+  'unreviewed',
+  'not-applicable',
+] as const
+export type CanonicalAdoptionStatus = typeof CANONICAL_ADOPTION_STATUSES[number]
+
+export interface CanonicalAdoption {
+  status: CanonicalAdoptionStatus
+  family?: string
+  /** Stable IDs of every canonical component that replaces a retained legacy composite. */
+  replacements?: string[]
+  note?: string
+}
+
+/** Machine-readable companion to the human migration and contraction records. */
+export interface DeprecationRecord {
+  replacement: string | null
+  removalCondition: string
+}
+
 export interface ComponentReadiness {
   workbench: WorkbenchReadiness
   accessibility: AuditStatus
@@ -61,6 +84,8 @@ export interface ComponentMetadata {
   uiStates: string[]
   candidateFamily: string | null
   notes: string[]
+  canonicalAdoption?: CanonicalAdoption
+  deprecation?: DeprecationRecord
 }
 
 export interface CatalogueComponent {

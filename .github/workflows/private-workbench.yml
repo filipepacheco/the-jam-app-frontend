@@ -17,6 +17,11 @@ jobs:
   verify:
     name: Test and build privately
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.55.1-noble
+      options: --ipc=host
+    env:
+      PRIVATE_VISUAL_RENDERER: playwright-v1.55.1-noble
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -30,11 +35,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-
       - name: Run workbench browser tests
         run: npm run workbench:test
+
+      - name: Enforce private visual policy
+        run: npm run visual:privacy
+
+      - name: Compare private visual baselines
+        run: npm run visual:compare
+
+      - name: Check deterministic workbench progress
+        run: npm run visual:progress:check
 
       - name: Verify deterministic static build
         run: npm run workbench:verify-build

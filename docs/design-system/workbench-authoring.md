@@ -9,6 +9,7 @@ The workbench is an internal-only Storybook environment for developing and revie
 - `npm run workbench:build` creates the ignored local `storybook-static/` build.
 - `npm run workbench:verify-build` builds twice in temporary directories and requires byte-identical runtime output. It normalizes only Storybook's `generatedAt` and local `userSince` provenance timestamps in `project.json` before comparison.
 - `npm run catalogue:baseline` verifies generated catalogue freshness and rejects active reusable visual components whose workbench readiness is still `unknown` or `needs-review`.
+- `npm run visual:compare` compares only the explicitly enumerated private visual matrix. See [private visual regression](./private-visual-regression.md) for reference update and noise-control rules; regular workbench tests never write image baselines.
 
 ## Shared environment
 

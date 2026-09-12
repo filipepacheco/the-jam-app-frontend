@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "inventory": {
+    "discovered": 183,
+    "represented": 138,
+    "ignored": 30,
+    "lifecycle": {
+      "active": 168,
+      "legacy": 2,
+      "uncertain": 13
+    }
+  },
+  "stories": {
+    "files": 27,
+    "total": 143,
+    "playCoverage": 65,
+    "reachableCatalogueComponents": 107,
+    "visualCandidates": 143,
+    "visualCells": 32
+  },
+  "interactions": {
+    "total": 65,
+    "pass": 65,
+    "fail": 0,
+    "unhandled": 0,
+    "evidence": "workbench-json-results"
+  },
+  "accessibility": {
+    "strict": 25,
+    "todo": 118,
+    "reviewedDebt": 3,
+    "newViolations": 0
+  },
+  "visual": {
+    "baselines": 32,
+    "pass": 32,
+    "change": 0,
+    "missing": 0,
+    "failure": 0,
+    "themes": [
+      "jam-dark",
+      "jam-light"
+    ],
+    "viewports": [
+      "desktop",
+      "phone",
+      "venue"
+    ],
+    "threshold": 0.0005
+  },
+  "canonicalAdoption": {
+    "adopted": {
+      "empty-state": 1,
+      "action": 2,
+      "feedback": 6,
+      "data-display": 5,
+      "field": 2,
+      "overlay": 6,
+      "navigation": 6
+    },
+    "documented-exception": {
+      "dj-control": 1
+    },
+    "unreviewed": {
+      "data-display": 1
+    },
+    "not-applicable": {
+      "unspecified": 5
+    },
+    "notRecorded": 148,
+    "inlinePatternCandidates": {
+      "action": 1,
+      "badge": 1,
+      "card": 1,
+      "field": 1,
+      "menu": 1,
+      "modal": 1
+    }
+  },
+  "deprecation": {
+    "legacy": 2,
+    "uncertain": 13,
+    "unconsumed": 10,
+    "withReplacement": 2,
+    "withRemovalCondition": 2
+  },
+  "ci": {
+    "privateCommands": [
+      "visual:compare",
+      "visual:privacy",
+      "visual:progress:check"
+    ],
+    "deterministic": true,
+    "externalVisualServices": 0
+  }
+}

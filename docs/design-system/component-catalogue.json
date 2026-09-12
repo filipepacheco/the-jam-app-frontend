@@ -855,7 +855,21 @@
         "candidateFamily": null,
         "notes": [
           "Consumed only by the legacy DJ control tab."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "documented-exception",
+          "family": "dj-control",
+          "replacements": [
+            "ui.0011",
+            "ui.0012",
+            "ui.0013"
+          ],
+          "note": "The legacy composite remains only behind ?useLegacyDJ=true until its statistics, current-song, and playback-control responsibilities are fully replaced by the documented V2 components."
+        },
+        "deprecation": {
+          "replacement": "ui.0011 + ui.0012 + ui.0013",
+          "removalCondition": "Remove after DJControlTab is retired and the legacy statistics-and-controls workflow is represented by the V2 playback and compact-stat components."
+        }
       }
     },
     {
@@ -1115,7 +1129,11 @@
         "candidateFamily": "empty-state",
         "notes": [
           "Reviewed in States/Empty state; consumers own translated copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "empty-state"
+        }
       }
     },
     {
@@ -5421,7 +5439,11 @@
         "candidateFamily": null,
         "notes": [
           "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "not-applicable",
+          "note": "Route guards are authentication infrastructure, not a reusable visual family."
+        }
       }
     },
     {
@@ -5468,7 +5490,11 @@
         "candidateFamily": null,
         "notes": [
           "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "not-applicable",
+          "note": "Route guards are authentication infrastructure, not a reusable visual family."
+        }
       }
     },
     {
@@ -5524,7 +5550,11 @@
         "candidateFamily": null,
         "notes": [
           "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "not-applicable",
+          "note": "Route guards are authentication infrastructure, not a reusable visual family."
+        }
       }
     },
     {
@@ -5571,7 +5601,11 @@
         "candidateFamily": null,
         "notes": [
           "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "not-applicable",
+          "note": "Route guards are authentication infrastructure, not a reusable visual family."
+        }
       }
     },
     {
@@ -5618,7 +5652,11 @@
         "candidateFamily": null,
         "notes": [
           "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "not-applicable",
+          "note": "Route guards are authentication infrastructure, not a reusable visual family."
+        }
       }
     },
     {
@@ -6522,7 +6560,12 @@
         "candidateFamily": null,
         "notes": [
           "No production or story consumers; it is a denser alternative to ScheduleCollapsibleCard that has not been wired into a page. Not deprecated because nothing has superseded it; kept pending a product decision to adopt it. See docs/design-system/schedule-registration-migration.md (issue #52)."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "unreviewed",
+          "family": "data-display",
+          "note": "The dense card has no production consumer and awaits a product adoption decision."
+        }
       }
     },
     {
@@ -9075,7 +9118,11 @@
         "candidateFamily": null,
         "notes": [
           "Legacy DJ control tab retained alongside its V2 design iteration."
-        ]
+        ],
+        "deprecation": {
+          "replacement": "ui.0159",
+          "removalCondition": "Remove after the ?useLegacyDJ=true route is retired and its production consumers have migrated to DJControlTabV2."
+        }
       }
     },
     {
@@ -9601,7 +9648,11 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "action"
+        }
       }
     },
     {
@@ -9694,7 +9745,11 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "action"
+        }
       }
     },
     {
@@ -9767,7 +9822,11 @@
         "candidateFamily": "feedback",
         "notes": [
           "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "feedback"
+        }
       }
     },
     {
@@ -9833,7 +9892,11 @@
         "candidateFamily": "feedback",
         "notes": [
           "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "feedback"
+        }
       }
     },
     {
@@ -9894,7 +9957,11 @@
         "candidateFamily": "feedback",
         "notes": [
           "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "feedback"
+        }
       }
     },
     {
@@ -9955,7 +10022,11 @@
         "candidateFamily": "feedback",
         "notes": [
           "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "feedback"
+        }
       }
     },
     {
@@ -10022,7 +10093,11 @@
         "candidateFamily": "feedback",
         "notes": [
           "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "feedback"
+        }
       }
     },
     {
@@ -10087,7 +10162,11 @@
         "candidateFamily": "feedback",
         "notes": [
           "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "feedback"
+        }
       }
     },
     {
@@ -10163,7 +10242,11 @@
         "candidateFamily": "data-display",
         "notes": [
           "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "data-display"
+        }
       }
     },
     {
@@ -10228,7 +10311,11 @@
         "candidateFamily": "data-display",
         "notes": [
           "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "data-display"
+        }
       }
     },
     {
@@ -10297,7 +10384,11 @@
         "candidateFamily": "data-display",
         "notes": [
           "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "data-display"
+        }
       }
     },
     {
@@ -10358,7 +10449,11 @@
         "candidateFamily": "data-display",
         "notes": [
           "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "data-display"
+        }
       }
     },
     {
@@ -10421,7 +10516,11 @@
         "candidateFamily": "data-display",
         "notes": [
           "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "data-display"
+        }
       }
     },
     {
@@ -10750,7 +10849,11 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Foundations/Field controls with native keyboard operation, label and description association, validation, disabled state, asynchronous feedback, and long localized text. Consumers own localized copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "field"
+        }
       }
     },
     {
@@ -10821,7 +10924,11 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Foundations/Field controls with native keyboard operation, label and description association, validation, disabled state, asynchronous feedback, and long localized text. Consumers own localized copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "field"
+        }
       }
     },
     {
@@ -10886,7 +10993,11 @@
         "candidateFamily": "overlay",
         "notes": [
           "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "overlay"
+        }
       }
     },
     {
@@ -10962,7 +11073,11 @@
         "candidateFamily": "overlay",
         "notes": [
           "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "overlay"
+        }
       }
     },
     {
@@ -11032,7 +11147,11 @@
         "candidateFamily": "overlay",
         "notes": [
           "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "overlay"
+        }
       }
     },
     {
@@ -11103,7 +11222,11 @@
         "candidateFamily": "overlay",
         "notes": [
           "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "overlay"
+        }
       }
     },
     {
@@ -11181,7 +11304,11 @@
         "candidateFamily": "overlay",
         "notes": [
           "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "overlay"
+        }
       }
     },
     {
@@ -11253,7 +11380,11 @@
         "candidateFamily": "overlay",
         "notes": [
           "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "overlay"
+        }
       }
     },
     {
@@ -11326,7 +11457,11 @@
         "candidateFamily": "navigation",
         "notes": [
           "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "navigation"
+        }
       }
     },
     {
@@ -11401,7 +11536,11 @@
         "candidateFamily": "navigation",
         "notes": [
           "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "navigation"
+        }
       }
     },
     {
@@ -11465,7 +11604,11 @@
         "candidateFamily": "navigation",
         "notes": [
           "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "navigation"
+        }
       }
     },
     {
@@ -11535,7 +11678,11 @@
         "candidateFamily": "navigation",
         "notes": [
           "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "navigation"
+        }
       }
     },
     {
@@ -11601,7 +11748,11 @@
         "candidateFamily": "navigation",
         "notes": [
           "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "navigation"
+        }
       }
     },
     {
@@ -11662,7 +11813,11 @@
         "candidateFamily": "navigation",
         "notes": [
           "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "navigation"
+        }
       }
     }
   ],
