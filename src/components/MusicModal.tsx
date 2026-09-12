@@ -10,6 +10,7 @@ import type { CreateMusicDto, MusicResponseDto, UpdateMusicDto } from '../types/
 import { MusicModalFormFields } from './MusicModalFormFields'
 import { isDuplicate as checkDuplicate, parseDuration } from '../lib/musicUtils'
 import { Modal } from './Modal'
+import { Action } from './Action'
 
 interface MusicModalProps {
   mode: 'add' | 'edit' | 'suggest'
@@ -174,26 +175,31 @@ export function MusicModal({
       scrollable
       footer={
         <>
-          <button
+          <Action
             type="button"
             onClick={onClose}
-            className="btn btn-ghost"
-            disabled={submitting}
+            variant="quiet"
+            state={submitting ? 'disabled' : 'idle'}
           >
-            {t('common.cancel')}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
-              void handleSubmit(syntheticEvent)
-            }}
-            className="btn btn-primary"
-            disabled={submitting}
-          >
-            {submitting && <span className="loading loading-spinner loading-sm mr-2" />}
-            {getSubmitLabel()}
-          </button>
+            <Action.Label>{t('common.cancel')}</Action.Label>
+          </Action>
+          {submitting ? (
+            <Action type="button" variant="primary" state="loading" loadingLabel={getSubmitLabel()}>
+              <Action.Label>{getSubmitLabel()}</Action.Label>
+            </Action>
+          ) : (
+            <Action
+              type="button"
+              onClick={() => {
+                const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
+                void handleSubmit(syntheticEvent)
+              }}
+              variant="primary"
+              state="idle"
+            >
+              <Action.Label>{getSubmitLabel()}</Action.Label>
+            </Action>
+          )}
         </>
       }
     >

@@ -10,6 +10,7 @@ import { spotifyService } from '../services'
 import { Alert } from './Alert'
 import { Modal } from './Modal'
 import { ModalFooter } from './ModalFooter'
+import { Field } from './Field'
 import type { SpotifyExportResponse } from '../types/spotify.types'
 
 interface SpotifyExportModalProps {
@@ -113,6 +114,9 @@ export function SpotifyExportModal({
             )}
           </div>
 
+          {/* Native anchor kept: Action/IconAction render only a <button>, and opening the
+              created playlist needs real link semantics (new-tab, Cmd/Ctrl-click). See
+              jam-music-migration.md. */}
           <a
             href={exportResult.spotifyPlaylistUrl}
             target="_blank"
@@ -131,34 +135,26 @@ export function SpotifyExportModal({
           )}
 
           {/* Playlist Name */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">{t('spotify.export_modal.name_label')}</span>
-            </label>
-            <input
+          <Field id="spotify-export-name" label={t('spotify.export_modal.name_label')} disabled={isSubmitting}>
+            <Field.Input
               type="text"
-              className="input input-bordered w-full"
               value={playlistName}
               onChange={(e) => setPlaylistName(e.target.value)}
-              disabled={isSubmitting}
             />
-          </div>
+          </Field>
 
           {/* Description */}
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text">{t('spotify.export_modal.description_label')}</span>
-            </label>
-            <textarea
-              className="textarea textarea-bordered h-20 resize-none"
+          <Field id="spotify-export-description" label={t('spotify.export_modal.description_label')} disabled={isSubmitting}>
+            <Field.Textarea
+              className="h-20 resize-none"
               placeholder={t('spotify.export_modal.description_placeholder')}
               value={playlistDescription}
               onChange={(e) => setPlaylistDescription(e.target.value)}
-              disabled={isSubmitting}
             />
-          </div>
+          </Field>
 
-          {/* Public Toggle */}
+          {/* Public Toggle. Kept hand-rolled: the canonical Field family covers text/select/
+              textarea controls only; there is no canonical toggle-switch primitive yet. */}
           <div className="form-control">
             <label className="label cursor-pointer">
               <span className="label-text">{t('spotify.export_modal.public_label')}</span>

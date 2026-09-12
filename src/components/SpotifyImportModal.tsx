@@ -12,6 +12,8 @@ import { jamService } from '../services'
 import { Alert } from './Alert'
 import { Modal } from './Modal'
 import { ModalFooter } from './ModalFooter'
+import { Field } from './Field'
+import { Action } from './Action'
 import type { SpotifyImportResponse } from '../types/spotify.types'
 import type { JamResponseDto } from '../types/api.types'
 import { isValidSpotifyPlaylistUrl } from '../lib/spotifyUtils'
@@ -216,16 +218,18 @@ export function SpotifyImportModal({
             )}
           </div>
 
-          <button
+          <Action
             type="button"
             onClick={() => onSuccess(importResult.jam.id, importResult.isExistingJam)}
-            className="btn btn-primary"
+            variant="primary"
           >
-            {importResult.isExistingJam
-              ? t('spotify.import_modal.back_to_jam')
-              : t('spotify.import_modal.view_jam')
-            }
-          </button>
+            <Action.Label>
+              {importResult.isExistingJam
+                ? t('spotify.import_modal.back_to_jam')
+                : t('spotify.import_modal.view_jam')
+              }
+            </Action.Label>
+          </Action>
         </div>
       </Modal>
     )
@@ -269,152 +273,143 @@ export function SpotifyImportModal({
 
         {/* Mode Selection - Only show if no preselectedJamId */}
         {!preselectedJamId && (
-          <div className="join w-full">
-            <button
+          <div className="flex gap-2 w-full">
+            <Action
               type="button"
               onClick={() => handleModeChange('new')}
-              className={`join-item btn btn-sm flex-1 ${mode === 'new' ? 'btn-active' : 'btn-ghost'}`}
+              variant={mode === 'new' ? 'primary' : 'quiet'}
+              className="flex-1"
             >
-              <Plus className="w-4 h-4 mr-1" />
-              {t('spotify.import_modal.mode_new')}
-            </button>
-            <button
+              <Action.Icon><Plus className="w-4 h-4" /></Action.Icon>
+              <Action.Label>{t('spotify.import_modal.mode_new')}</Action.Label>
+            </Action>
+            <Action
               type="button"
               onClick={() => handleModeChange('existing')}
-              className={`join-item btn btn-sm flex-1 ${mode === 'existing' ? 'btn-active' : 'btn-ghost'}`}
+              variant={mode === 'existing' ? 'primary' : 'quiet'}
+              className="flex-1"
             >
-              <ListMusic className="w-4 h-4 mr-1" />
-              {t('spotify.import_modal.mode_existing')}
-            </button>
+              <Action.Icon><ListMusic className="w-4 h-4" /></Action.Icon>
+              <Action.Label>{t('spotify.import_modal.mode_existing')}</Action.Label>
+            </Action>
           </div>
         )}
 
         {/* Playlist URL - Always required */}
-        <fieldset className="fieldset">
-          <label className="fieldset-legend">{t('spotify.import_modal.url_label')}</label>
-          <input
+        <Field id="spotify-import-url" label={t('spotify.import_modal.url_label')} disabled={isSubmitting}>
+          <Field.Input
             type="url"
-            className="input input-bordered w-full"
             placeholder={t('spotify.import_modal.url_placeholder')}
             value={playlistUrl}
             onChange={(e) => setPlaylistUrl(e.target.value)}
-            disabled={isSubmitting}
           />
-        </fieldset>
+        </Field>
 
         {/* Existing Jam Selector */}
         {mode === 'existing' && (
-          <fieldset className="fieldset">
-            <label className="fieldset-legend">{t('spotify.import_modal.select_jam_label')}</label>
-            {preselectedJamId ? (
-              <input
-                type="text"
-                className="input input-bordered w-full bg-base-200"
-                value={preselectedJamName || t('spotify.import_modal.current_jam')}
-                disabled
-              />
-            ) : (
-              <select
-                className="select select-bordered w-full"
-                value={selectedJamId}
-                onChange={(e) => setSelectedJamId(e.target.value)}
-                disabled={isSubmitting || loadingJams}
-              >
-                <option value="">{t('spotify.import_modal.select_jam_placeholder')}</option>
-                {userJams.map((jam) => (
-                  <option key={jam.id} value={jam.id}>
-                    {jam.name} ({jam._count?.schedules ?? jam.schedules?.length ?? 0} {t('spotify.import_modal.songs_count')})
-                  </option>
-                ))}
-              </select>
-            )}
+          <div>
+            <Field
+              id="spotify-import-jam"
+              label={t('spotify.import_modal.select_jam_label')}
+              disabled={preselectedJamId ? true : (isSubmitting || loadingJams)}
+            >
+              {preselectedJamId ? (
+                <Field.Input
+                  type="text"
+                  className="bg-base-200"
+                  value={preselectedJamName || t('spotify.import_modal.current_jam')}
+                />
+              ) : (
+                <Field.Select
+                  value={selectedJamId}
+                  onChange={(e) => setSelectedJamId(e.target.value)}
+                >
+                  <option value="">{t('spotify.import_modal.select_jam_placeholder')}</option>
+                  {userJams.map((jam) => (
+                    <option key={jam.id} value={jam.id}>
+                      {jam.name} ({jam._count?.schedules ?? jam.schedules?.length ?? 0} {t('spotify.import_modal.songs_count')})
+                    </option>
+                  ))}
+                </Field.Select>
+              )}
+            </Field>
             {loadingJams && (
               <span className="loading loading-spinner loading-xs mt-2"></span>
             )}
-          </fieldset>
+          </div>
         )}
 
         {/* New Jam Fields */}
         {mode === 'new' && (
           <>
             {/* Override Details Toggle */}
-            <button
+            <Action
               type="button"
-              className="btn btn-ghost btn-sm gap-1 -ml-2"
+              variant="quiet"
+              className="-ml-2"
               onClick={() => setShowOverrides(!showOverrides)}
             >
-              {showOverrides ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-              {t('spotify.import_modal.override_section')}
-            </button>
+              <Action.Icon>{showOverrides ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}</Action.Icon>
+              <Action.Label>{t('spotify.import_modal.override_section')}</Action.Label>
+            </Action>
 
             {showOverrides && (
               <div className="space-y-3">
-                <fieldset className="fieldset">
-                  <label className="fieldset-legend">{t('spotify.import_modal.name_label')}</label>
-                  <input
+                <Field id="spotify-import-name" label={t('spotify.import_modal.name_label')} disabled={isSubmitting}>
+                  <Field.Input
                     type="text"
-                    className="input input-bordered w-full"
                     placeholder={t('spotify.import_modal.name_placeholder')}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    disabled={isSubmitting}
                   />
-                </fieldset>
+                </Field>
 
-                <fieldset className="fieldset">
-                  <label className="fieldset-legend">{t('spotify.import_modal.description_label')}</label>
-                  <textarea
-                    className="textarea textarea-bordered h-20 resize-none w-full"
+                <Field id="spotify-import-description" label={t('spotify.import_modal.description_label')} disabled={isSubmitting}>
+                  <Field.Textarea
+                    className="h-20 resize-none"
                     placeholder={t('spotify.import_modal.description_placeholder')}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    disabled={isSubmitting}
                   />
-                </fieldset>
+                </Field>
 
-                <fieldset className="fieldset">
-                  <label className="fieldset-legend">{t('spotify.import_modal.date_label')}</label>
-                  <input
+                <Field id="spotify-import-date" label={t('spotify.import_modal.date_label')} disabled={isSubmitting}>
+                  <Field.Input
                     type="datetime-local"
-                    className="input input-bordered w-full"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    disabled={isSubmitting}
                   />
-                </fieldset>
+                </Field>
 
-                <fieldset className="fieldset">
-                  <label className="fieldset-legend">{t('spotify.import_modal.location_label')}</label>
-                  <input
+                <Field id="spotify-import-location" label={t('spotify.import_modal.location_label')} disabled={isSubmitting}>
+                  <Field.Input
                     type="text"
-                    className="input input-bordered w-full"
                     placeholder={t('spotify.import_modal.location_placeholder')}
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    disabled={isSubmitting}
                   />
-                </fieldset>
+                </Field>
 
-                <fieldset className="fieldset">
-                  <label className="fieldset-legend">{t('create_jam.form.slug')}</label>
+                <Field
+                  id="spotify-import-slug"
+                  label={t('create_jam.form.slug')}
+                  hint={t('create_jam.form.slug_hint')}
+                  disabled={isSubmitting}
+                >
                   <div className="flex items-stretch">
                     <span className="inline-flex items-center px-3 bg-base-300 border border-r-0 border-base-content/20 rounded-l-lg text-xs text-base-content/70 select-none whitespace-nowrap">
                       jamapp.com.br/jams/
                     </span>
-                    <input
+                    <Field.Input
                       type="text"
-                      className="input input-bordered rounded-l-none font-mono text-sm flex-1 min-w-0"
+                      className="rounded-l-none font-mono text-sm flex-1 min-w-0"
                       placeholder={t('create_jam.form.placeholder_slug')}
                       value={slug}
                       onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''))}
-                      disabled={isSubmitting}
                       maxLength={80}
                     />
                   </div>
-                  <p className="fieldset-label text-base-content/50">
-                    {t('create_jam.form.slug_hint')}
-                  </p>
-                </fieldset>
+                </Field>
               </div>
             )}
           </>
