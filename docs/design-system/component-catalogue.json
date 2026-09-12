@@ -855,7 +855,7 @@
           "Consumed only by the legacy DJ control tab."
         ],
         "deprecation": {
-          "replacement": "ui.0012",
+          "replacement": "ui.0011 + ui.0012 + ui.0013",
           "removalCondition": "Remove after DJControlTab is retired and the legacy statistics-and-controls workflow is represented by the V2 playback and compact-stat components."
         }
       }

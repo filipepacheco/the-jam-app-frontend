@@ -24,6 +24,8 @@ const REQUIRED_IGNORES = [
 
 export interface PrivateVisualPolicyInput {
   packageJson: unknown
+  workflows?: readonly { path: string; contents: string }[]
+  /** The canonical private-workbench workflow, used for exact ordering checks. */
   workflow: string
   gitignore: string
 }
@@ -38,10 +40,12 @@ const scriptMap = (packageJson: unknown): Record<string, string> => {
 }
 
 /** Static policy seam: private evidence stays in this repository and on the runner. */
-export const validatePrivateVisualPolicy = ({ packageJson, workflow, gitignore }: PrivateVisualPolicyInput): string[] => {
+export const validatePrivateVisualPolicy = ({ packageJson, workflows, workflow, gitignore }: PrivateVisualPolicyInput): string[] => {
   const diagnostics: string[] = []
   const scripts = scriptMap(packageJson)
-  const allConfiguration = `${JSON.stringify(packageJson)}\n${workflow}`.toLowerCase()
+  const workflowSources = workflows ?? [{ path: '.github/workflows/private-workbench.yml', contents: workflow }]
+  const allWorkflowContents = workflowSources.map(({ path: filename, contents }) => `${filename}\n${contents}`).join('\n')
+  const allConfiguration = `${JSON.stringify(packageJson)}\n${allWorkflowContents}`.toLowerCase()
 
   for (const service of PUBLIC_VISUAL_SERVICES) {
     if (allConfiguration.includes(service)) {
@@ -57,10 +61,15 @@ export const validatePrivateVisualPolicy = ({ packageJson, workflow, gitignore }
     }
   }
 
-  if (/(?:npm run visual:update|VISUAL_BASELINE_UPDATE|--update)/.test(workflow)) {
+  if (/(?:npm run visual:update|VISUAL_BASELINE_UPDATE|--update)/.test(allWorkflowContents)) {
     diagnostics.push('private visual policy forbids baseline update mode in CI')
   }
-  if (/(?:\b(?:upload|publish|deploy|release)\b|storybook-static|visual-baselines\/actual)/i.test(workflow)) {
+  const visualUploadPath = /(?:storybook-static|private-visual-baselines\/(?:actual|diff|failures)|visual-baselines\/actual)/i
+  const visualPublication = /(?:actions\/upload-artifact|\b(?:upload|publish|deploy|release)\b)/i
+  const hasVisualUpload = workflowSources.some(({ path: filename, contents }) =>
+    visualPublication.test(contents) && (visualUploadPath.test(contents) || /(?:visual|storybook|workbench|baseline)/i.test(filename)),
+  )
+  if (hasVisualUpload) {
     diagnostics.push('private visual policy forbids uploading visual artefacts')
   }
 

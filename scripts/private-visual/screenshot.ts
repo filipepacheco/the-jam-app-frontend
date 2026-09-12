@@ -17,14 +17,17 @@ export const storyFrameUrl = (serverUrl: string, cell: VisualMatrixCell): string
 }
 
 /**
- * Keeps components that use randomness for decorative-only output stable in
- * the private capture browser without changing their production behaviour.
- * Playwright reinstalls this fixed value for every document navigation, so
- * unrelated framework calls cannot shift a pseudo-random sequence.
+ * Keeps the one reviewed waveform cell's decorative randomness stable in its
+ * capture document without changing production behaviour or other stories.
  */
-export const installDeterministicCaptureEnvironment = async (page: Page): Promise<void> => {
+export const installDeterministicCaptureEnvironment = async (
+  page: Page,
+): Promise<void> => {
   await page.addInitScript(() => {
-    Math.random = () => 0.5
+    const storyId = new URLSearchParams(window.location.search).get('id')
+    if (storyId === 'domain-public-dashboard-cards-and-display--current-and-next') {
+      Math.random = () => 0.5
+    }
   })
 }
 

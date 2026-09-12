@@ -60,4 +60,24 @@ describe('private visual policy', () => {
       'private visual policy forbids unapproved workflow command "npx unknown-visual-cloud publish"',
     ]))
   })
+
+  it('scans every workflow for visual publication and baseline update paths', () => {
+    const diagnostics = validatePrivateVisualPolicy({
+      packageJson: { scripts: privateScripts },
+      workflow: privateWorkflow,
+      workflows: [
+        { path: '.github/workflows/private-workbench.yml', contents: privateWorkflow },
+        {
+          path: '.github/workflows/ci.yml',
+          contents: 'run: npm run visual:update\nuses: actions/upload-artifact@v4\nwith:\n  path: private-visual-baselines/actual/\n',
+        },
+      ],
+      gitignore: 'private-visual-baselines/actual/\nprivate-visual-baselines/diff/\nprivate-visual-baselines/failures/\nprivate-visual-baselines/.runtime/\n',
+    })
+
+    expect(diagnostics).toEqual(expect.arrayContaining([
+      'private visual policy forbids baseline update mode in CI',
+      'private visual policy forbids uploading visual artefacts',
+    ]))
+  })
 })

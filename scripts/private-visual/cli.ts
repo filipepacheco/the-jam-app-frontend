@@ -10,6 +10,7 @@ import { chromium } from 'playwright'
 
 import {
   VISUAL_ACTUAL_DIRECTORY,
+  VISUAL_DIFF_DIRECTORY,
   compareCapturedVisuals,
   planVisualBaselineUpdate,
   type VisualComparisonResult,
@@ -51,6 +52,10 @@ interface RuntimeWorkbenchEvidence {
   }
 }
 
+// Restart Chromium periodically so Storybook/MSW state cannot accumulate across
+// the complete matrix while still avoiding one expensive launch per cell.
+const VISUAL_BROWSER_BATCH_SIZE = 4
+
 const runtimeDirectory = (root: string): string =>
   path.join(root, 'private-visual-baselines/.runtime/storybook')
 
@@ -73,6 +78,17 @@ const listFiles = async (directory: string, predicate: (filename: string) => boo
   }
   await visit(directory)
   return files.sort()
+}
+
+const readWorkflowSources = async (root: string): Promise<Array<{ path: string; contents: string }>> => {
+  const filenames = await listFiles(
+    path.join(root, '.github/workflows'),
+    (filename) => filename.endsWith('.yml') || filename.endsWith('.yaml'),
+  )
+  return Promise.all(filenames.map(async (filename) => ({
+    path: path.relative(root, filename),
+    contents: await readFile(filename, 'utf8'),
+  })))
 }
 
 const parseArguments = (args: string[]): CommandArguments => {
@@ -178,6 +194,10 @@ const writeComparisonSummary = async (root: string, summary: VisualComparisonRes
 
 const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promise<void> => {
   const update = mode === 'update' ? verifyUpdateProtocol() : undefined
+  await Promise.all([
+    rm(path.join(root, VISUAL_DIFF_DIRECTORY), { recursive: true, force: true }),
+    rm(path.join(root, 'private-visual-baselines/failures'), { recursive: true, force: true }),
+  ])
   const staticDirectory = await buildStaticWorkbench(root)
   try {
     const storyIds = await staticStoryIds(staticDirectory)
@@ -185,17 +205,23 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
     if (matrixDiagnostics.length > 0) throw new Error(`Private visual matrix is invalid:\n- ${matrixDiagnostics.join('\n- ')}`)
 
     const server = await serveStaticDirectory(staticDirectory)
-    const browser = await chromium.launch({ headless: true })
     try {
-      const page = await browser.newPage()
-      await installDeterministicCaptureEnvironment(page)
       const captures = []
       const failures: Array<{ key: string; message: string }> = []
-      for (const cell of VISUAL_MATRIX) {
+      for (let start = 0; start < VISUAL_MATRIX.length; start += VISUAL_BROWSER_BATCH_SIZE) {
+        const browser = await chromium.launch({ headless: true })
         try {
-          captures.push({ cell, png: await captureVisualCell(page, server.url, cell) })
-        } catch (error: unknown) {
-          failures.push({ key: cell.key, message: error instanceof Error ? error.message : String(error) })
+          const page = await browser.newPage()
+          await installDeterministicCaptureEnvironment(page)
+          for (const cell of VISUAL_MATRIX.slice(start, start + VISUAL_BROWSER_BATCH_SIZE)) {
+            try {
+              captures.push({ cell, png: await captureVisualCell(page, server.url, cell) })
+            } catch (error: unknown) {
+              failures.push({ key: cell.key, message: error instanceof Error ? error.message : String(error) })
+            }
+          }
+        } finally {
+          await browser.close()
         }
       }
       if (failures.length > 0) {
@@ -238,7 +264,6 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
         throw new Error(`Private visual comparison failed for: ${changed.join(', ') || 'unexpected reference files'}.`)
       }
     } finally {
-      await browser.close()
       await server.close()
     }
   } finally {
@@ -362,11 +387,12 @@ const runtimeVisualEvidence = async (root: string): Promise<Pick<VisualCompariso
 }
 
 const generateProgress = async (root: string, check: boolean): Promise<void> => {
-  const [catalogueSource, debtSource, packageSource, workflow, gitignore, stories, baselineFiles] = await Promise.all([
+  const [catalogueSource, debtSource, packageSource, workflow, workflows, gitignore, stories, baselineFiles] = await Promise.all([
     readFile(path.join(root, 'docs/design-system/component-catalogue.json'), 'utf8'),
     readFile(path.join(root, 'docs/design-system/reviewed-governance-baseline.json'), 'utf8'),
     readFile(path.join(root, 'package.json'), 'utf8'),
     readFile(path.join(root, '.github/workflows/private-workbench.yml'), 'utf8'),
+    readWorkflowSources(root),
     readFile(path.join(root, '.gitignore'), 'utf8'),
     sourceStoryMetrics(root),
     listFiles(baselineDirectory(root), (filename) => filename.endsWith('.png')).catch((error: unknown) => {
@@ -377,7 +403,7 @@ const generateProgress = async (root: string, check: boolean): Promise<void> => 
   const catalogue = JSON.parse(catalogueSource) as Parameters<typeof createWorkbenchProgressReport>[0]['catalogue']
   const debt = JSON.parse(debtSource) as { reviewedDebt?: unknown[] }
   const packageJson = JSON.parse(packageSource)
-  const policy = validatePrivateVisualPolicy({ packageJson, workflow, gitignore })
+  const policy = validatePrivateVisualPolicy({ packageJson, workflows, workflow, gitignore })
   if (policy.length > 0) throw new Error(`Private visual policy failed:\n- ${policy.join('\n- ')}`)
   const [workbenchEvidence, visualEvidence] = await Promise.all([
     runtimeWorkbenchEvidence(root, stories),
@@ -425,12 +451,13 @@ const generateProgress = async (root: string, check: boolean): Promise<void> => 
 }
 
 const runPrivacyPolicy = async (root: string): Promise<void> => {
-  const [packageSource, workflow, gitignore] = await Promise.all([
+  const [packageSource, workflow, workflows, gitignore] = await Promise.all([
     readFile(path.join(root, 'package.json'), 'utf8'),
     readFile(path.join(root, '.github/workflows/private-workbench.yml'), 'utf8'),
+    readWorkflowSources(root),
     readFile(path.join(root, '.gitignore'), 'utf8'),
   ])
-  const diagnostics = validatePrivateVisualPolicy({ packageJson: JSON.parse(packageSource), workflow, gitignore })
+  const diagnostics = validatePrivateVisualPolicy({ packageJson: JSON.parse(packageSource), workflows, workflow, gitignore })
   if (diagnostics.length > 0) throw new Error(`Private visual policy failed:\n- ${diagnostics.join('\n- ')}`)
   console.log('Private visual policy is enforced: no public service, upload, or CI baseline update path.')
 }
