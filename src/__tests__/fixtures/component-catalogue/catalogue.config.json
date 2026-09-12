@@ -6,6 +6,10 @@
     {
       "source": "src/IgnoredScene.tsx",
       "reason": "Empty retired promotional scene retained during cleanup."
+    },
+    {
+      "source": "src/workbench/stories/IgnoredFoundation.stories.tsx",
+      "reason": "Private story composition and its local helper are not product UI."
     }
   ],
   "output": {

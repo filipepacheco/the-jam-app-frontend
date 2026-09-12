@@ -223,10 +223,9 @@
     "hosted_by": "Hosted by",
     "specialties_needed": "🎸 Specialties Needed",
     "no_songs_listed": "No songs listed yet",
-    "songs_count": {
-      "one": "{{count}} song",
-      "other": "{{count}} songs"
-    },
+    "songs_count_zero": "No songs",
+    "songs_count_one": "{{count}} song",
+    "songs_count_other": "{{count}} songs",
     "statuses": {
       "live": "Live Now",
       "active": "Active",

@@ -1,0 +1,236 @@
+/* DaisyUI remains the palette adapter; Jam App components consume the semantic --ds-* layer. */
+@plugin "daisyui" {
+  themes: all;
+}
+
+@plugin "daisyui/theme" {
+  name: "jam-light";
+  default: false;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: oklch(98% 0.012 300);
+  --color-base-200: oklch(95% 0.018 300);
+  --color-base-300: oklch(90% 0.025 300);
+  --color-base-content: oklch(24% 0.035 300);
+  --color-primary: oklch(43% 0.2 300);
+  --color-primary-content: oklch(98% 0.01 300);
+  --color-secondary: oklch(54% 0.14 330);
+  --color-secondary-content: oklch(98% 0.01 330);
+  --color-accent: oklch(62% 0.14 55);
+  --color-accent-content: oklch(20% 0.035 55);
+  --color-neutral: oklch(31% 0.035 300);
+  --color-neutral-content: oklch(94% 0.015 300);
+  --color-info: oklch(48% 0.13 250);
+  --color-info-content: oklch(98% 0.01 250);
+  --color-success: oklch(43% 0.12 155);
+  --color-success-content: oklch(98% 0.01 155);
+  --color-warning: oklch(72% 0.14 75);
+  --color-warning-content: oklch(24% 0.045 75);
+  --color-error: oklch(45% 0.18 25);
+  --color-error-content: oklch(98% 0.01 25);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.625rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "jam-dark";
+  default: false;
+  prefersdark: false;
+  color-scheme: dark;
+
+  --color-base-100: oklch(17% 0.025 300);
+  --color-base-200: oklch(21% 0.03 300);
+  --color-base-300: oklch(27% 0.038 300);
+  --color-base-content: oklch(92% 0.015 300);
+  --color-primary: oklch(76% 0.15 300);
+  --color-primary-content: oklch(20% 0.04 300);
+  --color-secondary: oklch(72% 0.13 330);
+  --color-secondary-content: oklch(19% 0.04 330);
+  --color-accent: oklch(78% 0.13 55);
+  --color-accent-content: oklch(20% 0.035 55);
+  --color-neutral: oklch(30% 0.035 300);
+  --color-neutral-content: oklch(92% 0.015 300);
+  --color-info: oklch(74% 0.11 250);
+  --color-info-content: oklch(19% 0.035 250);
+  --color-success: oklch(72% 0.12 155);
+  --color-success-content: oklch(18% 0.03 155);
+  --color-warning: oklch(79% 0.13 75);
+  --color-warning-content: oklch(22% 0.04 75);
+  --color-error: oklch(74% 0.14 25);
+  --color-error-content: oklch(20% 0.035 25);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.625rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+:root,
+[data-theme],
+.ds-theme-scope {
+  /* Surfaces */
+  --ds-surface-canvas: var(--color-base-100);
+  --ds-surface-raised: var(--color-base-200);
+  --ds-surface-sunken: var(--color-base-300);
+  --ds-surface-overlay: color-mix(in oklch, var(--color-neutral) 82%, transparent);
+
+  /* Content */
+  --ds-content-primary: var(--color-base-content);
+  --ds-content-secondary: color-mix(in oklch, var(--color-base-content) 72%, transparent);
+  --ds-content-inverse: var(--color-primary-content);
+  --ds-content-link: var(--color-primary);
+
+  /* Borders */
+  --ds-border-subtle: color-mix(in oklch, var(--color-base-content) 18%, transparent);
+  --ds-border-strong: color-mix(in oklch, var(--color-base-content) 42%, transparent);
+  --ds-border-interactive: var(--color-primary);
+
+  /* Actions and focus */
+  --ds-action-primary: var(--color-primary);
+  --ds-action-primary-content: var(--color-primary-content);
+  --ds-action-secondary: var(--color-secondary);
+  --ds-action-danger: var(--color-error);
+  --ds-focus-ring: var(--color-primary);
+  --ds-focus-offset: var(--color-base-100);
+
+  /* Status always combines color with text or iconography. */
+  --ds-status-info: var(--color-info);
+  --ds-status-info-content: var(--color-info-content);
+  --ds-status-success: var(--color-success);
+  --ds-status-success-content: var(--color-success-content);
+  --ds-status-warning: var(--color-warning);
+  --ds-status-warning-content: var(--color-warning-content);
+  --ds-status-danger: var(--color-error);
+  --ds-status-danger-content: var(--color-error-content);
+
+  /* Fixed product UI type scale; shared displays opt into the display roles. */
+  --ds-text-caption: 0.75rem;
+  --ds-text-secondary: 0.875rem;
+  --ds-text-body: 1rem;
+  --ds-text-ui: 1rem;
+  --ds-text-subheading: 1.25rem;
+  --ds-text-heading: 1.5rem;
+  --ds-text-display: 2rem;
+  --ds-leading-display: 1.15;
+  --ds-leading-heading: 1.25;
+  --ds-leading-body: 1.55;
+  --ds-leading-ui: 1.35;
+  --ds-leading-compact: 1.35;
+  --ds-weight-body: 400;
+  --ds-weight-ui: 500;
+  --ds-weight-label: 600;
+  --ds-weight-heading: 700;
+  --ds-weight-display: 800;
+
+  /* Semantic 4-point space and context-aware control sizes. */
+  --ds-space-related: 0.25rem;
+  --ds-space-compact: 0.5rem;
+  --ds-space-control: 0.75rem;
+  --ds-space-cluster: 1rem;
+  --ds-space-section: 1.5rem;
+  --ds-space-region: 2rem;
+  --ds-space-layout: 3rem;
+  --ds-space-spacious: 4rem;
+  --ds-space-stage: 6rem;
+  --ds-control-compact-pointer: 2.25rem;
+  --ds-control-touch: 2.75rem;
+  --ds-control-comfortable: 3rem;
+  --ds-control-shared-display: 3.5rem;
+
+  /* Motion communicates state quickly; exit timing is intentionally shorter. */
+  --ds-motion-feedback: 120ms;
+  --ds-motion-state: 220ms;
+  --ds-motion-enter: 320ms;
+  --ds-motion-exit: 160ms;
+  --ds-ease-out: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.ds-focusable:focus-visible,
+:where(a[href], button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 3px solid var(--ds-focus-ring);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 2px var(--ds-focus-offset);
+}
+
+.ds-control {
+  min-block-size: var(--ds-control-touch);
+  min-inline-size: var(--ds-control-touch);
+}
+
+.ds-type-display {
+  font-family: var(--font-display);
+  font-size: var(--ds-text-display);
+  font-weight: var(--ds-weight-display);
+  line-height: var(--ds-leading-display);
+}
+
+.ds-type-body {
+  max-inline-size: 70ch;
+  font-family: var(--font-body);
+  font-size: var(--ds-text-body);
+  font-weight: var(--ds-weight-body);
+  line-height: var(--ds-leading-body);
+}
+
+.ds-type-ui {
+  font-family: var(--font-body);
+  font-size: var(--ds-text-ui);
+  font-weight: var(--ds-weight-ui);
+  line-height: var(--ds-leading-ui);
+}
+
+.ds-truncate-single {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-wrap-user-content {
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+
+@media (min-width: 64rem) {
+  .ds-control--host {
+    min-block-size: var(--ds-control-compact-pointer);
+  }
+}
+
+@media (min-width: 90rem) {
+  .ds-shared-display {
+    --ds-text-body: 1.25rem;
+    --ds-text-subheading: 1.5rem;
+    --ds-text-heading: 2rem;
+    --ds-text-display: 3rem;
+  }
+
+  .ds-control--shared-display {
+    min-block-size: var(--ds-control-shared-display);
+    min-inline-size: var(--ds-control-shared-display);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

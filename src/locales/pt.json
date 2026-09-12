@@ -226,10 +226,9 @@
     "hosted_by": "Organizado por",
     "specialties_needed": "🎸 Especialidades necessárias",
     "no_songs_listed": "Nenhuma música listada ainda",
-    "songs_count": {
-      "one": "{{count}} música",
-      "other": "{{count}} músicas"
-    },
+    "songs_count_zero": "Nenhuma música",
+    "songs_count_one": "{{count}} música",
+    "songs_count_other": "{{count}} músicas",
     "statuses": {
       "live": "Ao Vivo",
       "active": "Programado",

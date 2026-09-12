@@ -16,6 +16,16 @@ The toolbar controls the same `data-theme` attribute used by the app, the produc
 
 Stories must not call live services. Add fixed, typed data to `src/workbench/fixtures.ts` and MSW handlers to `src/workbench/mocks.ts`. Unhandled requests fail so accidental backend, Supabase, analytics, or other production traffic is visible immediately. Fixture identities use the reserved `example.test` domain and stable timestamps.
 
+## Foundation standards
+
+Use these before introducing a reusable visual decision:
+
+- [Color and themes](./color-and-themes.md) defines semantic roles, the Jam reference themes, contrast expectations, and selectable-theme coverage.
+- [Typography, spacing, sizing, and responsive foundations](./typography-spacing-responsive.md) defines the product scale and the phone, host-console, and shared-display contexts.
+- [Interaction, motion, accessibility, and content standards](./interaction-motion-accessibility-content.md) defines feedback, keyboard and dialog behavior, reduced motion, and multilingual content.
+
+The matching **Foundations** stories are the executable reference examples. Standards describe intent; the stories demonstrate and test representative states.
+
 ## Authoring conventions
 
 1. Put durable catalogue stories under `src/workbench/stories/` and title them by design-system area, such as `Forms/Text input`. Phase 3 may colocate focused stories where that makes ownership clearer; update the catalogue ignore entry when adding a new story module.

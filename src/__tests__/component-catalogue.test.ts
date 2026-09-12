@@ -83,9 +83,9 @@ describe('component catalogue command', () => {
     const {catalogue, markdown} = await generate()
 
     expect(catalogue.coverage).toEqual({
-      eligibleSources: 11,
+      eligibleSources: 12,
       representedSources: 10,
-      ignoredSources: 1,
+      ignoredSources: 2,
       workbench: {
         activeReusableVisualComponents: 4,
         ready: 1,
@@ -99,6 +99,10 @@ describe('component catalogue command', () => {
       {
         source: 'src/IgnoredScene.tsx',
         reason: 'Empty retired promotional scene retained during cleanup.',
+      },
+      {
+        source: 'src/workbench/stories/IgnoredFoundation.stories.tsx',
+        reason: 'Private story composition and its local helper are not product UI.',
       },
     ])
     expect(catalogue.components.find((component) => component.name === 'CataloguePage')).toMatchObject({

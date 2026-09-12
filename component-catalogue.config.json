@@ -13,6 +13,7 @@
     {"source": "src/components/PromoVideo/HowItWorksScene.tsx", "reason": "Empty retired promotional scene retained pending legacy cleanup."},
     {"source": "src/components/PromoVideo/PromoVideoPlayer.tsx", "reason": "Empty retired promotional player retained pending legacy cleanup."},
     {"source": "src/components/PromoVideo/index.tsx", "reason": "Deprecated schema-only barrel with no React component declaration."},
+    {"source": "src/workbench/stories/Foundations/ColorAndThemes.stories.tsx", "reason": "Private Storybook reference for color and theme foundations; not product UI."},
     {"source": "src/workbench/stories/Environment.stories.tsx", "reason": "Private Storybook composition; stories exercise catalogued production components but are not product UI."},
     {"source": "src/workbench/stories/Forms.stories.tsx", "reason": "Private Storybook composition for catalogued form components; not product UI."},
     {"source": "src/workbench/stories/Overlays.stories.tsx", "reason": "Private Storybook composition for catalogued overlay components; not product UI."},
@@ -32,7 +33,9 @@
     {"source": "src/workbench/stories/PublicDashboardCarousel.stories.tsx", "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."},
     {"source": "src/workbench/stories/Marketing.stories.tsx", "reason": "Private Storybook composition for reviewed marketing sections; not product UI."},
     {"source": "src/workbench/stories/RemainingUI.stories.tsx", "reason": "Private Storybook composition for remaining reviewed product UI; not product UI itself."},
-    {"source": "src/workbench/stories/PageCompositions.stories.tsx", "reason": "Private Storybook composition for stable page-level visual review; not product UI itself."}
+    {"source": "src/workbench/stories/PageCompositions.stories.tsx", "reason": "Private Storybook composition for stable page-level visual review; not product UI itself."},
+    {"source": "src/workbench/stories/Foundations/TypographySpacingResponsive.stories.tsx", "reason": "Private Storybook composition demonstrating typography, spacing, sizing, and responsive foundations; not product UI itself."},
+    {"source": "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx", "reason": "Private Storybook composition demonstrating interaction, accessibility, motion, and multilingual content standards; not product UI itself."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",

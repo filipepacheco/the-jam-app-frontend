@@ -10043,6 +10043,18 @@
       "reason": "Private Storybook composition for catalogued form components; not product UI."
     },
     {
+      "source": "src/workbench/stories/Foundations/ColorAndThemes.stories.tsx",
+      "reason": "Private Storybook reference for color and theme foundations; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+      "reason": "Private Storybook composition demonstrating interaction, accessibility, motion, and multilingual content standards; not product UI itself."
+    },
+    {
+      "source": "src/workbench/stories/Foundations/TypographySpacingResponsive.stories.tsx",
+      "reason": "Private Storybook composition demonstrating typography, spacing, sizing, and responsive foundations; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/JamComponents.stories.tsx",
       "reason": "Private Storybook composition for reviewed Jam components; not product UI."
     },
@@ -10104,9 +10116,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 170,
+    "eligibleSources": 173,
     "representedSources": 140,
-    "ignoredSources": 30,
+    "ignoredSources": 33,
     "workbench": {
       "activeReusableVisualComponents": 104,
       "ready": 87,
