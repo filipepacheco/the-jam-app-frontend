@@ -11407,9 +11407,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Navigation.tsx:285:7:action",
+          "id": "src/components/Navigation.tsx:289:7:action",
           "source": "src/components/Navigation.tsx",
-          "line": 285,
+          "line": 289,
           "column": 7,
           "ownerComponentId": "ui.0172",
           "tag": "button",

@@ -421,7 +421,7 @@ Only `ready` and reasoned `exempt` entries satisfy the reviewed baseline. `needs
 - `src/components/Navbar.tsx:107:15` — owner `ui.0066`; tag `<a>`; static classes: `btn`, `btn-primary`, `min-h-[44px]`, `whitespace-nowrap`; dynamic classes: no; equivalence: unreviewed.
 - `src/components/Navbar.tsx:60:9` — owner `ui.0066`; tag `<a>`; static classes: `btn`, `btn-ghost`, `md:text-xl`, `sm:text-lg`, `text-base`; dynamic classes: no; equivalence: unreviewed.
 - `src/components/Navigation.tsx:241:17` — owner `ui.0171`; tag `<button>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Navigation.tsx:285:7` — owner `ui.0172`; tag `<button>`; static classes: `ds-control`, `ds-dropdown__trigger`, `ds-focusable`; dynamic classes: no; equivalence: unreviewed.
+- `src/components/Navigation.tsx:289:7` — owner `ui.0172`; tag `<button>`; static classes: `ds-control`, `ds-dropdown__trigger`, `ds-focusable`; dynamic classes: no; equivalence: unreviewed.
 - `src/components/Navigation.tsx:62:13` — owner `ui.0168`; tag `<button>`; static classes: `ds-tab`; dynamic classes: yes; equivalence: unreviewed.
 - `src/components/OnboardingModal.tsx:123:11` — owner `ui.0068`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: yes; equivalence: unreviewed.
 - `src/components/OnboardingModal.tsx:219:9` — owner `ui.0068`; tag `<button>`; static classes: `hidden`; dynamic classes: no; equivalence: unreviewed.
