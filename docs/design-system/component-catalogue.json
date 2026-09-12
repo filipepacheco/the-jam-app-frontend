@@ -4543,8 +4543,12 @@
       ],
       "dependencies": {
         "internal": [],
-        "external": [],
-        "contexts": []
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
       },
       "metadata": {
         "category": "product-ui",
@@ -5056,9 +5060,15 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
-        "external": [],
-        "contexts": []
+        "internal": [
+          "src/components/Action.tsx"
+        ],
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
       },
       "metadata": {
         "category": "product-ui",
@@ -5264,6 +5274,8 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
+          "src/components/Field.tsx",
           "src/components/publicDashboard/LanguageSelector.tsx",
           "src/hooks/index.ts"
         ],
@@ -5481,7 +5493,9 @@
       "consumers": [],
       "workbenchStories": [],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Field.tsx"
+        ],
         "external": [
           "react-i18next"
         ],
@@ -5545,6 +5559,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/utils/jamUrl.ts"
         ],
         "external": [
@@ -10094,6 +10109,8 @@
         "src/components/Navigation.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/overlays/CanonicalOverlays.tsx",
+        "src/components/publicDashboard/Navbar.tsx",
+        "src/components/publicDashboard/QRCodeCorner.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
@@ -10110,6 +10127,8 @@
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx",
@@ -10176,6 +10195,8 @@
       ],
       "consumers": [
         "src/components/Navigation.tsx",
+        "src/components/publicDashboard/Header.tsx",
+        "src/components/publicDashboard/Navbar.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx"
       ],
       "workbenchStories": [
@@ -10183,7 +10204,9 @@
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
-        "src/workbench/stories/PageCompositions.stories.tsx"
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11162,12 +11185,15 @@
       "consumers": [
         "src/components/Field.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
+        "src/components/publicDashboard/Navbar.tsx",
+        "src/components/publicDashboard/PollingControls.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/Foundations/FieldControls.stories.tsx"
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -13826,47 +13852,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/publicDashboard/Header.tsx:22:7:action",
-          "source": "src/components/publicDashboard/Header.tsx",
-          "line": 22,
-          "column": 7,
-          "ownerComponentId": "ui.0083",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "pointer-events-auto",
-            "shrink-0",
-            "text-base-content",
-            "z-10"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/publicDashboard/Header.tsx:47:9:action",
-          "source": "src/components/publicDashboard/Header.tsx",
-          "line": 47,
-          "column": 9,
-          "ownerComponentId": "ui.0083",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "pointer-events-auto",
-            "text-base-content"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/publicDashboard/LanguageSelector.tsx:23:9:action",
+          "id": "src/components/publicDashboard/LanguageSelector.tsx:29:9:action",
           "source": "src/components/publicDashboard/LanguageSelector.tsx",
-          "line": 23,
+          "line": 29,
           "column": 9,
           "ownerComponentId": "ui.0085",
           "tag": "button",
@@ -13883,67 +13871,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/publicDashboard/Navbar.tsx:131:9:action",
-          "source": "src/components/publicDashboard/Navbar.tsx",
-          "line": 131,
-          "column": 9,
-          "ownerComponentId": "ui.0086",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "text-base-content"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/publicDashboard/Navbar.tsx:79:15:action",
-          "source": "src/components/publicDashboard/Navbar.tsx",
-          "line": 79,
-          "column": 15,
-          "ownerComponentId": "ui.0086",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "join-item"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/publicDashboard/Navbar.tsx:86:15:action",
-          "source": "src/components/publicDashboard/Navbar.tsx",
-          "line": 86,
-          "column": 15,
-          "ownerComponentId": "ui.0086",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "join-item"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/publicDashboard/QRCodeCorner.tsx:95:15:action",
-          "source": "src/components/publicDashboard/QRCodeCorner.tsx",
-          "line": 95,
-          "column": 15,
-          "ownerComponentId": "ui.0090",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "mt-6",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/publicDashboard/carousel/CarouselIndicator.tsx:14:11:action",
+          "id": "src/components/publicDashboard/carousel/CarouselIndicator.tsx:18:11:action",
           "source": "src/components/publicDashboard/carousel/CarouselIndicator.tsx",
-          "line": 14,
+          "line": 18,
           "column": 11,
           "ownerComponentId": "ui.0075",
           "tag": "button",
@@ -18276,54 +18206,6 @@
             "flex-1",
             "input",
             "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/publicDashboard/Navbar.tsx:100:13:field",
-          "source": "src/components/publicDashboard/Navbar.tsx",
-          "line": 100,
-          "column": 13,
-          "ownerComponentId": "ui.0086",
-          "tag": "select",
-          "staticClassTokens": [
-            "bg-base-200",
-            "select",
-            "select-sm",
-            "text-base-content"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/publicDashboard/Navbar.tsx:117:13:field",
-          "source": "src/components/publicDashboard/Navbar.tsx",
-          "line": 117,
-          "column": 13,
-          "ownerComponentId": "ui.0086",
-          "tag": "select",
-          "staticClassTokens": [
-            "bg-base-200",
-            "select",
-            "select-sm",
-            "text-base-content"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/publicDashboard/PollingControls.tsx:23:7:field",
-          "source": "src/components/publicDashboard/PollingControls.tsx",
-          "line": 23,
-          "column": 7,
-          "ownerComponentId": "ui.0089",
-          "tag": "select",
-          "staticClassTokens": [
-            "bg-base-200",
-            "focus:outline-none",
-            "focus:ring-2",
-            "focus:ring-primary",
-            "select",
-            "select-sm",
-            "text-base-content"
           ],
           "dynamicClasses": false
         },
