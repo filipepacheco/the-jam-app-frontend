@@ -278,13 +278,11 @@
         "src/components/SpotifyImportModal.tsx",
         "src/components/dj-control/PlaybackControls.tsx",
         "src/components/dj-control/QueueStats.tsx",
-        "src/components/forms/JamRegistrationForm.tsx",
         "src/components/forms/SupabaseLoginForm.tsx",
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
-        "src/pages/BrowseJamsPage.tsx",
         "src/pages/JamRegisterPage.tsx",
         "src/pages/ProfilePage.tsx",
         "src/pages/PublicDashboardPage.tsx",
@@ -1127,6 +1125,7 @@
         }
       ],
       "consumers": [
+        "src/pages/BrowseJamsPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
@@ -1136,7 +1135,9 @@
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/FeedbackStates.tsx"
+        ],
         "external": [],
         "contexts": []
       },
@@ -3453,6 +3454,7 @@
         "internal": [
           "src/components/QuickEditPanel.tsx",
           "src/components/SpotifyPreview.tsx",
+          "src/components/music/MusicDataDisplay.tsx",
           "src/lib/formatters.ts",
           "src/lib/schedule/instrumentHelpers.tsx"
         ],
@@ -10085,19 +10087,28 @@
       "consumers": [
         "src/components/Action.tsx",
         "src/components/FeedbackModal.tsx",
+        "src/components/FeedbackStates.tsx",
+        "src/components/forms/JamRegistrationForm.tsx",
         "src/components/overlays/CanonicalOverlays.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+        "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
-        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/States/EmptyState.stories.tsx",
+        "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10203,6 +10214,1064 @@
     },
     {
       "id": "ui.0168",
+      "name": "Status",
+      "source": "src/components/FeedbackStates.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "Status",
+          "module": "src/components/FeedbackStates.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Status",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/FeedbackStates.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/States/EmptyState.stories.tsx",
+        "src/workbench/stories/States/Loading.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/FeedbackStates.css"
+        ],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "pattern",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "persistent status",
+          "loading",
+          "skeleton",
+          "success",
+          "error recovery",
+          "empty results",
+          "first use"
+        ],
+        "candidateFamily": "feedback",
+        "notes": [
+          "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
+        ]
+      }
+    },
+    {
+      "id": "ui.0169",
+      "name": "LoadingState",
+      "source": "src/components/FeedbackStates.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "LoadingState",
+          "module": "src/components/FeedbackStates.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "LoadingState",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/pages/BrowseJamsPage.tsx",
+        "src/workbench/stories/States/Loading.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/States/Loading.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/FeedbackStates.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "pattern",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "persistent status",
+          "loading",
+          "skeleton",
+          "success",
+          "error recovery",
+          "empty results",
+          "first use"
+        ],
+        "candidateFamily": "feedback",
+        "notes": [
+          "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
+        ]
+      }
+    },
+    {
+      "id": "ui.0170",
+      "name": "Skeleton",
+      "source": "src/components/FeedbackStates.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "Skeleton",
+          "module": "src/components/FeedbackStates.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Skeleton",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/States/Loading.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/States/Loading.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/FeedbackStates.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "pattern",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "persistent status",
+          "loading",
+          "skeleton",
+          "success",
+          "error recovery",
+          "empty results",
+          "first use"
+        ],
+        "candidateFamily": "feedback",
+        "notes": [
+          "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
+        ]
+      }
+    },
+    {
+      "id": "ui.0171",
+      "name": "SuccessState",
+      "source": "src/components/FeedbackStates.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "SuccessState",
+          "module": "src/components/FeedbackStates.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "SuccessState",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/FeedbackStates.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "pattern",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "persistent status",
+          "loading",
+          "skeleton",
+          "success",
+          "error recovery",
+          "empty results",
+          "first use"
+        ],
+        "candidateFamily": "feedback",
+        "notes": [
+          "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
+        ]
+      }
+    },
+    {
+      "id": "ui.0172",
+      "name": "ErrorState",
+      "source": "src/components/FeedbackStates.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "ErrorState",
+          "module": "src/components/FeedbackStates.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "ErrorState",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/pages/BrowseJamsPage.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/FeedbackStates.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "pattern",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "persistent status",
+          "loading",
+          "skeleton",
+          "success",
+          "error recovery",
+          "empty results",
+          "first use"
+        ],
+        "candidateFamily": "feedback",
+        "notes": [
+          "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
+        ]
+      }
+    },
+    {
+      "id": "ui.0173",
+      "name": "CanonicalEmptyState",
+      "source": "src/components/FeedbackStates.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "CanonicalEmptyState",
+          "module": "src/components/FeedbackStates.tsx"
+        }
+      ],
+      "consumers": [
+        "src/components/EmptyState.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/States/EmptyState.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/FeedbackStates.css"
+        ],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "pattern",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "persistent status",
+          "loading",
+          "skeleton",
+          "success",
+          "error recovery",
+          "empty results",
+          "first use"
+        ],
+        "candidateFamily": "feedback",
+        "notes": [
+          "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
+        ]
+      }
+    },
+    {
+      "id": "ui.0174",
+      "name": "Badge",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "Badge",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Badge",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/music/MusicDataDisplay.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0175",
+      "name": "StatusIndicator",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "StatusIndicator",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "StatusIndicator",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/music/MusicDataDisplay.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0176",
+      "name": "DataCard",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "DataCard",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "DataCard",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/music/MusicDataDisplay.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0177",
+      "name": "ListRow",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "ListRow",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "ListRow",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0178",
+      "name": "CompactMetadata",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "CompactMetadata",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "CompactMetadata",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/music/MusicDataDisplay.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0179",
+      "name": "MusicBadge",
+      "source": "src/components/music/MusicDataDisplay.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "MusicBadge",
+          "module": "src/components/music/MusicDataDisplay.tsx"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "active",
+        "productArea": "music",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "approved",
+          "suggested",
+          "selected",
+          "shared-display"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."
+        ]
+      }
+    },
+    {
+      "id": "ui.0180",
+      "name": "MusicStatusIndicator",
+      "source": "src/components/music/MusicDataDisplay.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "MusicStatusIndicator",
+          "module": "src/components/music/MusicDataDisplay.tsx"
+        }
+      ],
+      "consumers": [
+        "src/components/MusicCard.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "active",
+        "productArea": "music",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "approved",
+          "suggested",
+          "selected",
+          "shared-display"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."
+        ]
+      }
+    },
+    {
+      "id": "ui.0181",
+      "name": "MusicCompactMetadata",
+      "source": "src/components/music/MusicDataDisplay.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "MusicCompactMetadata",
+          "module": "src/components/music/MusicDataDisplay.tsx"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/index.tsx",
+          "src/lib/formatters.ts",
+          "src/types/api.types.ts"
+        ],
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "active",
+        "productArea": "music",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "approved",
+          "suggested",
+          "selected",
+          "shared-display"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."
+        ]
+      }
+    },
+    {
+      "id": "ui.0182",
+      "name": "MusicDataCard",
+      "source": "src/components/music/MusicDataDisplay.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "MusicDataCard",
+          "module": "src/components/music/MusicDataDisplay.tsx"
+        }
+      ],
+      "consumers": [
+        "src/components/MusicCard.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "active",
+        "productArea": "music",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "approved",
+          "suggested",
+          "selected",
+          "shared-display"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."
+        ]
+      }
+    },
+    {
+      "id": "ui.0183",
+      "name": "Field",
+      "source": "src/components/Field.tsx",
+      "declaration": "variable",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "Field",
+          "module": "src/components/Field.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Field",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/Field.tsx",
+        "src/components/forms/JamRegistrationForm.tsx",
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Field.css"
+        ],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "input",
+          "select",
+          "textarea",
+          "hint",
+          "required",
+          "validation",
+          "disabled",
+          "submitting",
+          "success",
+          "error",
+          "keyboard",
+          "focus",
+          "long localized text"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "Reviewed in Foundations/Field controls with native keyboard operation, label and description association, validation, disabled state, asynchronous feedback, and long localized text. Consumers own localized copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0184",
+      "name": "FormSubmissionFeedback",
+      "source": "src/components/Field.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "FormSubmissionFeedback",
+          "module": "src/components/Field.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "FormSubmissionFeedback",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/forms/JamRegistrationForm.tsx",
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Field.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "input",
+          "select",
+          "textarea",
+          "hint",
+          "required",
+          "validation",
+          "disabled",
+          "submitting",
+          "success",
+          "error",
+          "keyboard",
+          "focus",
+          "long localized text"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "Reviewed in Foundations/Field controls with native keyboard operation, label and description association, validation, disabled state, asynchronous feedback, and long localized text. Consumers own localized copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0185",
       "name": "OverlaySurface",
       "source": "src/components/overlays/CanonicalOverlays.tsx",
       "declaration": "function",
@@ -10267,7 +11336,7 @@
       }
     },
     {
-      "id": "ui.0169",
+      "id": "ui.0186",
       "name": "OverlayModal",
       "source": "src/components/overlays/CanonicalOverlays.tsx",
       "declaration": "function",
@@ -10342,7 +11411,7 @@
       }
     },
     {
-      "id": "ui.0170",
+      "id": "ui.0187",
       "name": "OverlayDrawer",
       "source": "src/components/overlays/CanonicalOverlays.tsx",
       "declaration": "function",
@@ -10412,7 +11481,7 @@
       }
     },
     {
-      "id": "ui.0171",
+      "id": "ui.0188",
       "name": "ConfirmationDialog",
       "source": "src/components/overlays/CanonicalOverlays.tsx",
       "declaration": "function",
@@ -10483,7 +11552,7 @@
       }
     },
     {
-      "id": "ui.0172",
+      "id": "ui.0189",
       "name": "OverlayActions",
       "source": "src/components/overlays/CanonicalOverlays.tsx",
       "declaration": "function",
@@ -10561,7 +11630,7 @@
       }
     },
     {
-      "id": "ui.0173",
+      "id": "ui.0190",
       "name": "Disclosure",
       "source": "src/components/overlays/CanonicalOverlays.tsx",
       "declaration": "function",
@@ -10703,6 +11772,14 @@
       "reason": "Private Storybook reference for color and theme foundations; not product UI."
     },
     {
+      "source": "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+      "reason": "Private Storybook composition demonstrating the canonical data-display family; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+      "reason": "Private Storybook composition demonstrating the canonical field family; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
       "reason": "Private Storybook composition demonstrating interaction, accessibility, motion, and multilingual content standards; not product UI itself."
     },
@@ -10772,12 +11849,12 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 177,
-    "representedSources": 143,
-    "ignoredSources": 34,
+    "eligibleSources": 183,
+    "representedSources": 147,
+    "ignoredSources": 36,
     "workbench": {
-      "activeReusableVisualComponents": 112,
-      "ready": 94,
+      "activeReusableVisualComponents": 129,
+      "ready": 111,
       "exempt": 18,
       "needsReview": 0,
       "unknown": 0,
@@ -10801,16 +11878,18 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/Alert.tsx:69:9:action",
+          "id": "src/components/Alert.tsx:77:9:action",
           "source": "src/components/Alert.tsx",
-          "line": 69,
+          "line": 77,
           "column": 9,
           "ownerComponentId": "ui.0006",
           "tag": "button",
           "staticClassTokens": [
             "btn",
             "btn-ghost",
-            "btn-sm"
+            "btn-sm",
+            "ds-control",
+            "ds-focusable"
           ],
           "dynamicClasses": false
         },
@@ -11181,9 +12260,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/MusicCard.tsx:118:19:action",
+          "id": "src/components/MusicCard.tsx:120:19:action",
           "source": "src/components/MusicCard.tsx",
-          "line": 118,
+          "line": 120,
           "column": 19,
           "ownerComponentId": "ui.0057",
           "tag": "button",
@@ -11198,9 +12277,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:126:19:action",
+          "id": "src/components/MusicCard.tsx:128:19:action",
           "source": "src/components/MusicCard.tsx",
-          "line": 126,
+          "line": 128,
           "column": 19,
           "ownerComponentId": "ui.0057",
           "tag": "button",
@@ -11216,9 +12295,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:137:19:action",
+          "id": "src/components/MusicCard.tsx:139:19:action",
           "source": "src/components/MusicCard.tsx",
-          "line": 137,
+          "line": 139,
           "column": 19,
           "ownerComponentId": "ui.0057",
           "tag": "button",
@@ -11233,9 +12312,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/MusicCard.tsx:146:19:action",
+          "id": "src/components/MusicCard.tsx:148:19:action",
           "source": "src/components/MusicCard.tsx",
-          "line": 146,
+          "line": 148,
           "column": 19,
           "ownerComponentId": "ui.0057",
           "tag": "button",
@@ -11910,34 +12989,6 @@
             "text-error"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/JamRegistrationForm.tsx:162:13:action",
-          "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 162,
-          "column": 13,
-          "ownerComponentId": "ui.0026",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "flex-1"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/JamRegistrationForm.tsx:170:13:action",
-          "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 170,
-          "column": 13,
-          "ownerComponentId": "ui.0026",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "flex-1"
-          ],
-          "dynamicClasses": true
         },
         {
           "id": "src/components/forms/OAuthButton.tsx:27:5:action",
@@ -13043,9 +14094,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/BrowseJamsPage.tsx:285:17:action",
+          "id": "src/pages/BrowseJamsPage.tsx:286:17:action",
           "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 285,
+          "line": 286,
           "column": 17,
           "ownerComponentId": "ui.0137",
           "tag": "button",
@@ -13057,22 +14108,6 @@
             "items-center",
             "mb-3",
             "sm:mb-4"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:328:19:action",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 328,
-          "column": 19,
-          "ownerComponentId": "ui.0137",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-xs",
-            "lg:btn-md",
-            "sm:btn-sm"
           ],
           "dynamicClasses": false
         },
@@ -14329,9 +15364,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:71:9:badge",
+          "id": "src/components/MusicCard.tsx:72:9:badge",
           "source": "src/components/MusicCard.tsx",
-          "line": 71,
+          "line": 72,
           "column": 9,
           "ownerComponentId": "ui.0057",
           "tag": "span",
@@ -14883,9 +15918,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/BrowseJamsPage.tsx:268:19:badge",
+          "id": "src/pages/BrowseJamsPage.tsx:269:19:badge",
           "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 268,
+          "line": 269,
           "column": 19,
           "ownerComponentId": "ui.0137",
           "tag": "span",
@@ -14898,9 +15933,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/BrowseJamsPage.tsx:300:19:badge",
+          "id": "src/pages/BrowseJamsPage.tsx:301:19:badge",
           "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 300,
+          "line": 301,
           "column": 19,
           "ownerComponentId": "ui.0137",
           "tag": "span",
@@ -15107,12 +16142,12 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:100:5:card",
+          "id": "src/components/MusicCard.tsx:101:5:card",
           "source": "src/components/MusicCard.tsx",
-          "line": 100,
+          "line": 101,
           "column": 5,
           "ownerComponentId": "ui.0057",
-          "tag": "div",
+          "tag": "MusicDataCard",
           "staticClassTokens": [
             "bg-base-100",
             "border",
@@ -15244,9 +16279,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/forms/JamRegistrationForm.tsx:75:7:card",
+          "id": "src/components/forms/JamRegistrationForm.tsx:82:7:card",
           "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 75,
+          "line": 82,
           "column": 7,
           "ownerComponentId": "ui.0026",
           "tag": "div",
@@ -15257,9 +16292,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/forms/JamRegistrationForm.tsx:89:5:card",
+          "id": "src/components/forms/JamRegistrationForm.tsx:93:5:card",
           "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 89,
+          "line": 93,
           "column": 5,
           "ownerComponentId": "ui.0026",
           "tag": "div",
@@ -16701,35 +17736,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/forms/JamRegistrationForm.tsx:100:15:field",
+          "id": "src/components/forms/JamRegistrationForm.tsx:150:15:field",
           "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 100,
-          "column": 15,
-          "ownerComponentId": "ui.0026",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/JamRegistrationForm.tsx:124:13:field",
-          "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 124,
-          "column": 13,
-          "ownerComponentId": "ui.0026",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/JamRegistrationForm.tsx:142:15:field",
-          "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 142,
+          "line": 150,
           "column": 15,
           "ownerComponentId": "ui.0026",
           "tag": "input",
@@ -17538,7 +18547,7 @@
           "source": "src/components/overlays/CanonicalOverlays.tsx",
           "line": 185,
           "column": 5,
-          "ownerComponentId": "ui.0168",
+          "ownerComponentId": "ui.0185",
           "tag": "dialog",
           "staticClassTokens": [
             "ds-overlay",
