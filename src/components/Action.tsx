@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from 'react'
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode, Ref } from 'react'
 import './Action.css'
 
 export type ActionVariant = 'primary' | 'secondary' | 'quiet' | 'destructive'
@@ -28,20 +28,21 @@ function actionLabel({ className = '', ...props }: HTMLAttributes<HTMLSpanElemen
   return <span {...props} className={`ds-action__label ${className}`} />
 }
 
-type ActionComponent = ((props: ActionProps) => ReactNode) & {
+type ActionComponent = ((props: ActionProps & { ref?: Ref<HTMLButtonElement> }) => ReactNode) & {
   Icon: typeof actionIcon
   Label: typeof actionLabel
 }
 
-export const Action: ActionComponent = function Action({
+export const Action: ActionComponent = Object.assign(function Action({
   children,
   className = '',
   loadingLabel,
+  ref,
   state = 'idle',
   type = 'button',
   variant = 'primary',
   ...props
-}: ActionProps) {
+}: ActionProps & { ref?: Ref<HTMLButtonElement> }) {
   const isLoading = state === 'loading'
   const isDisabled = state !== 'idle'
   const classes = [
@@ -56,6 +57,7 @@ export const Action: ActionComponent = function Action({
   return (
     <button
       {...props}
+      ref={ref}
       type={type}
       className={classes}
       disabled={isDisabled}
@@ -71,14 +73,11 @@ export const Action: ActionComponent = function Action({
       ) : children}
     </button>
   )
-}
+}, { Icon: actionIcon, Label: actionLabel })
 
-Action.Icon = actionIcon
-Action.Label = actionLabel
-
-export function IconAction({ children, className = '', label, ...props }: IconActionProps) {
+export function IconAction({ children, className = '', label, ref, ...props }: IconActionProps & { ref?: Ref<HTMLButtonElement> }) {
   return (
-    <Action {...props} aria-label={label} className={`ds-action--icon-only ${className}`}>
+    <Action {...props} ref={ref} aria-label={label} className={`ds-action--icon-only ${className}`}>
       <Action.Icon>{children}</Action.Icon>
     </Action>
   )

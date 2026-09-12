@@ -10,6 +10,7 @@ import { FeedbackButton } from './FeedbackButton'
 import { useTranslation } from 'react-i18next'
 import { DesktopUserMenu } from './DesktopUserMenu'
 import { MobileDrawer } from './MobileDrawer'
+import { NavigationAction, NavigationLink } from './Navigation'
 import { Home, Search, Users, Music, LayoutDashboard } from 'lucide-react'
 
 const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: {
@@ -21,18 +22,15 @@ const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: 
 }) {
   return (
     <li>
-      <a
+      <NavigationLink
         href={href}
         onClick={onClick}
-        className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-          isActive
-            ? 'bg-primary/10 text-primary'
-            : 'text-base-content/70 hover:bg-base-200 hover:text-base-content'
-        }`}
+        current={isActive}
+        icon={icon}
+        className={isActive ? 'text-primary' : ''}
       >
-        {icon}
         {label}
-      </a>
+      </NavigationLink>
     </li>
   )
 })
@@ -52,7 +50,7 @@ function Navbar() {
 
   const handleNavClick = (path: string) => (e: React.MouseEvent) => {
     e.preventDefault()
-    navigate(path)
+    void navigate(path)
   }
 
   return (
@@ -114,9 +112,10 @@ function Navbar() {
         )}
 
         {/* Mobile Hamburger */}
-        <button
+        <NavigationAction
           ref={hamburgerRef}
-          className="btn btn-ghost xl:hidden"
+          variant="quiet"
+          className="xl:hidden"
           onClick={() => setIsDrawerOpen(true)}
           aria-label={t('nav.toggle_menu')}
         >
@@ -135,7 +134,7 @@ function Navbar() {
               d="M4 6h16M4 12h8m-8 6h16"
             />
           </svg>
-        </button>
+        </NavigationAction>
       </div>
 
       {/* Mobile Drawer */}

@@ -11,6 +11,26 @@ export { ModalFooter } from './ModalFooter'
 export { EmptyState } from './EmptyState'
 export { Action, IconAction } from './Action'
 export type { ActionProps, ActionState, ActionVariant, IconActionProps } from './Action'
+export {
+  DropdownMenu,
+  NavigationAction,
+  NavigationLink,
+  NavigationTabs,
+  NavLink,
+  OverflowMenu,
+  ResponsiveNavigation,
+  Tabs,
+} from './Navigation'
+export type {
+  DropdownMenuProps,
+  NavigationActionProps,
+  NavigationLinkProps,
+  NavigationMenuItem,
+  NavigationTabItem,
+  NavigationTabsProps,
+  OverflowMenuProps,
+  ResponsiveNavigationProps,
+} from './Navigation'
 
 export {
   ProtectedRoute,

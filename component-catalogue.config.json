@@ -21,6 +21,7 @@
     {"source": "src/workbench/stories/Feedback/Alerts.stories.tsx", "reason": "Private Storybook composition for reviewed alert, notification, and page-feedback states; not product UI."},
     {"source": "src/workbench/stories/Feedback/ErrorBoundary.stories.tsx", "reason": "Private Storybook composition for reviewed recovery states; not product UI."},
     {"source": "src/workbench/stories/Navigation/Navbar.stories.tsx", "reason": "Private Storybook composition for reviewed responsive navigation and menu states; not product UI."},
+    {"source": "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx", "reason": "Private Storybook composition demonstrating canonical navigation, tab, overflow, and responsive states; not product UI."},
     {"source": "src/workbench/stories/States/EmptyState.stories.tsx", "reason": "Private Storybook composition for reviewed empty states; not product UI."},
     {"source": "src/workbench/stories/States/Loading.stories.tsx", "reason": "Private Storybook composition for reviewed loading and skeleton states; not product UI."},
     {"source": "src/workbench/stories/JamComponents.stories.tsx", "reason": "Private Storybook composition for reviewed Jam components; not product UI."},
