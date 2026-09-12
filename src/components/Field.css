@@ -1,0 +1,94 @@
+.ds-field {
+  display: grid;
+  gap: var(--ds-space-related);
+  min-inline-size: 0;
+}
+
+.ds-field__label {
+  color: var(--ds-content-primary);
+  font-weight: var(--ds-weight-label);
+  overflow-wrap: anywhere;
+}
+
+.ds-field__requirement {
+  color: var(--ds-status-danger);
+}
+
+.ds-field__control {
+  inline-size: 100%;
+  border: 1px solid var(--ds-border-subtle);
+  border-radius: var(--radius-field);
+  background: var(--ds-surface-canvas);
+  color: var(--ds-content-primary);
+  font-family: var(--font-body);
+  font-size: var(--ds-text-body);
+  font-weight: var(--ds-weight-body);
+  line-height: var(--ds-leading-body);
+  padding: var(--ds-space-compact) var(--ds-space-control);
+  transition: border-color var(--ds-motion-feedback) var(--ds-ease-out), box-shadow var(--ds-motion-feedback) var(--ds-ease-out), background-color var(--ds-motion-feedback) var(--ds-ease-out);
+}
+
+.ds-field__control:hover:not(:disabled) {
+  border-color: var(--ds-border-strong);
+}
+
+.ds-field__control:focus-visible {
+  border-color: var(--ds-border-interactive);
+}
+
+.ds-field--invalid .ds-field__control {
+  border-color: var(--ds-status-danger);
+}
+
+.ds-field__textarea {
+  min-block-size: calc(var(--ds-control-touch) * 2);
+  resize: vertical;
+}
+
+.ds-field__control:disabled {
+  cursor: not-allowed;
+  background: var(--ds-surface-raised);
+  color: var(--ds-content-secondary);
+  opacity: 0.72;
+}
+
+.ds-field__hint,
+.ds-field__error {
+  max-inline-size: 70ch;
+  overflow-wrap: anywhere;
+}
+
+.ds-field__hint {
+  color: var(--ds-content-secondary);
+}
+
+.ds-field__error {
+  color: var(--ds-status-danger);
+  font-weight: var(--ds-weight-ui);
+}
+
+.ds-form-feedback {
+  border-inline-start: 4px solid currentColor;
+  border-radius: var(--radius-field);
+  padding: var(--ds-space-control);
+  font-family: var(--font-body);
+  font-size: var(--ds-text-body);
+  font-weight: var(--ds-weight-ui);
+  line-height: var(--ds-leading-body);
+  overflow-wrap: anywhere;
+}
+
+.ds-form-feedback--submitting {
+  background: color-mix(in oklch, var(--ds-status-info) 16%, var(--ds-surface-raised));
+  color: var(--ds-status-info);
+}
+
+.ds-form-feedback--success {
+  background: color-mix(in oklch, var(--ds-status-success) 16%, var(--ds-surface-raised));
+  color: var(--ds-status-success);
+}
+
+.ds-form-feedback--error {
+  background: color-mix(in oklch, var(--ds-status-danger) 16%, var(--ds-surface-raised));
+  color: var(--ds-status-danger);
+}

@@ -11,6 +11,8 @@ export { ModalFooter } from './ModalFooter'
 export { EmptyState } from './EmptyState'
 export { Action, IconAction } from './Action'
 export type { ActionProps, ActionState, ActionVariant, IconActionProps } from './Action'
+export { Field, FormSubmissionFeedback } from './Field'
+export type { FieldInputProps, FieldProps, FieldSelectProps, FieldTextareaProps, FormSubmissionState } from './Field'
 
 export {
   ProtectedRoute,
