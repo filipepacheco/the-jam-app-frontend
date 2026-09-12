@@ -950,6 +950,9 @@
     "offlineIndicator": "You are offline - showing cached data",
     "toggleNavbar": "Toggle navbar",
     "fullscreen": "Toggle fullscreen",
+    "enterFullscreen": "Enter fullscreen",
+    "exitFullscreen": "Exit fullscreen",
+    "closeNavbar": "Close navbar",
     "backToHome": "← Back to Home",
     "viewDetails": "View Full Details →",
     "nowPlaying": "Now Playing",
@@ -970,7 +973,8 @@
     "layoutLabel": "Layout",
     "slideDuration": "Slide Duration",
     "enterCode": "or enter code",
-    "joinAt": "Join at"
+    "joinAt": "Join at",
+    "goToSlide": "Go to slide {{number}}"
   },
   "searchableSelect": {
     "placeholder": "Select an option...",

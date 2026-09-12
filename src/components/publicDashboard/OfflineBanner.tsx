@@ -2,6 +2,14 @@ import React, { useMemo } from 'react'
 import {motion} from 'framer-motion'
 import {useReducedMotion} from '../../hooks'
 
+// Display-specific wrapper, documented in
+// docs/design-system/public-dashboard-migration.md: this stays a fixed,
+// high-contrast warning banner instead of adopting the canonical `Status`
+// section or `StatusIndicator` dot. Status/StatusIndicator use the
+// data-display content tokens, not the bg-warning/text-warning-content
+// pairing this banner needs to stay legible from across a venue; the
+// component already meets the Status contract otherwise (`role="status"`,
+// `aria-live="polite"`, plain-language text alongside the icon).
 export default function OfflineBanner({ visible, message }: { visible: boolean; message?: string }) {
   const { transition } = useReducedMotion()
 
