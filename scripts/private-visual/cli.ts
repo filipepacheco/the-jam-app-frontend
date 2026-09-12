@@ -11,6 +11,8 @@ import { chromium } from 'playwright'
 import {
   VISUAL_ACTUAL_DIRECTORY,
   compareCapturedVisuals,
+  planVisualBaselineUpdate,
+  type VisualComparisonResult,
 } from './baselines.ts'
 import { VISUAL_MATRIX, validateVisualMatrix } from './matrix.ts'
 import { validatePrivateVisualPolicy } from './policy.ts'
@@ -19,7 +21,7 @@ import {
   renderWorkbenchProgressJson,
   renderWorkbenchProgressMarkdown,
 } from './progress.ts'
-import { captureVisualCell } from './screenshot.ts'
+import { captureVisualCell, installDeterministicCaptureEnvironment } from './screenshot.ts'
 
 type VisualCommand = 'compare' | 'update' | 'privacy' | 'progress'
 
@@ -28,10 +30,37 @@ interface CommandArguments {
   check: boolean
 }
 
+interface SourceStoryMetrics {
+  files: number
+  total: number
+  withPlay: number
+  strictA11y: number
+  todoA11y: number
+  playTitlesByFile: ReadonlyMap<string, ReadonlySet<string>>
+  strictA11yFiles: ReadonlySet<string>
+}
+
+interface RuntimeWorkbenchEvidence {
+  interactions: {
+    pass: number
+    fail: number
+    unhandled: number
+  }
+  accessibility: {
+    newViolations: number
+  }
+}
+
 const runtimeDirectory = (root: string): string =>
   path.join(root, 'private-visual-baselines/.runtime/storybook')
 
 const baselineDirectory = (root: string): string => path.join(root, 'private-visual-baselines/baselines')
+
+const workbenchTestResultsPath = (root: string): string =>
+  path.join(root, VISUAL_ACTUAL_DIRECTORY, 'workbench-test-results.json')
+
+const visualComparisonSummaryPath = (root: string): string =>
+  path.join(root, VISUAL_ACTUAL_DIRECTORY, 'summary.json')
 
 const listFiles = async (directory: string, predicate: (filename: string) => boolean): Promise<string[]> => {
   const files: string[] = []
@@ -123,7 +152,7 @@ const staticStoryIds = async (staticDirectory: string): Promise<Set<string>> => 
     .map((entry) => entry.id!))
 }
 
-const verifyUpdateProtocol = (): { reason: string; reviewer: string } => {
+const verifyUpdateProtocol = (): { reason: string; reviewer: string; removalReason?: string } => {
   if (process.env.VISUAL_BASELINE_UPDATE !== '1') {
     throw new Error('VISUAL_BASELINE_UPDATE=1 is required before private visual references can be updated.')
   }
@@ -132,10 +161,14 @@ const verifyUpdateProtocol = (): { reason: string; reviewer: string } => {
   if (!reason || !reviewer) {
     throw new Error('VISUAL_BASELINE_REASON and VISUAL_BASELINE_REVIEWER are required for an intentional reference update.')
   }
-  return { reason, reviewer }
+  if (!/(?:#\d+|https?:\/\/\S+|(?:docs|design)\/[\w./-]+|\badr[- #:]+\d+)/i.test(reason)) {
+    throw new Error('VISUAL_BASELINE_REASON must link an issue or design record (for example, "Issue #123: ...").')
+  }
+  const removalReason = process.env.VISUAL_BASELINE_REMOVAL_REASON?.trim()
+  return { reason, reviewer, removalReason: removalReason || undefined }
 }
 
-const writeComparisonSummary = async (root: string, summary: unknown): Promise<void> => {
+const writeComparisonSummary = async (root: string, summary: VisualComparisonResult): Promise<void> => {
   const directory = path.join(root, VISUAL_ACTUAL_DIRECTORY)
   await mkdir(directory, { recursive: true })
   await writeFile(path.join(directory, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`)
@@ -153,6 +186,7 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
     const browser = await chromium.launch({ headless: true })
     try {
       const page = await browser.newPage()
+      await installDeterministicCaptureEnvironment(page)
       const captures = []
       const failures: Array<{ key: string; message: string }> = []
       for (const cell of VISUAL_MATRIX) {
@@ -169,9 +203,13 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
         throw new Error(`Private visual capture failed for ${failures.map(({ key }) => key).join(', ')}.`)
       }
 
-      const proposal = mode === 'update'
-        ? await compareCapturedVisuals(captures, { root, mode: 'compare' })
-        : undefined
+      const updatePlan = mode === 'update' ? await planVisualBaselineUpdate(captures, root) : undefined
+      if (updatePlan && updatePlan.changedCells.length === 0 && updatePlan.removedCells.length === 0) {
+        throw new Error('Private visual update found no changed or removed reference cells; keep the existing update record.')
+      }
+      if (updatePlan?.removedCells.length && !update?.removalReason) {
+        throw new Error('VISUAL_BASELINE_REMOVAL_REASON is required when an update removes matrix reference cells.')
+      }
       const result = await compareCapturedVisuals(captures, {
         root,
         mode,
@@ -180,17 +218,15 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
       await writeComparisonSummary(root, result)
 
       if (mode === 'update' && update) {
-        const changedCells = proposal?.cells
-          .filter((cell) => cell.status !== 'passed')
-          .map((cell) => cell.key)
-          .sort() ?? []
         await writeFile(path.join(root, 'private-visual-baselines/update-record.json'), `${JSON.stringify({
           reason: update.reason,
           reviewer: update.reviewer,
-          changedCells,
+          changedCells: updatePlan?.changedCells ?? [],
+          removedCells: updatePlan?.removedCells ?? [],
+          removalReason: updatePlan?.removedCells.length ? update.removalReason : undefined,
           matrixCells: VISUAL_MATRIX.map(({ key }) => key),
         }, null, 2)}\n`)
-        console.log(`Updated ${result.updated} private visual baselines. Changed cells: ${changedCells.join(', ') || 'none'}.`)
+        console.log(`Updated ${result.updated} private visual baselines. Changed cells: ${updatePlan?.changedCells.join(', ') || 'none'}. Removed cells: ${updatePlan?.removedCells.join(', ') || 'none'}.`)
         return
       }
 
@@ -208,27 +244,119 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
   }
 }
 
-const sourceStoryMetrics = async (root: string): Promise<{
-  files: number
-  total: number
-  withPlay: number
-  strictA11y: number
-  todoA11y: number
-}> => {
+const storyTitleFor = (exportName: string): string => exportName
+  .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+  .replace(/([A-Z])([A-Z][a-z])/g, '$1 $2')
+
+const sourceStoryMetrics = async (root: string): Promise<SourceStoryMetrics> => {
   const files = await listFiles(path.join(root, 'src/workbench/stories'), (filename) => filename.endsWith('.stories.tsx'))
   let total = 0
   let withPlay = 0
   let strictA11y = 0
   let todoA11y = 0
+  const playTitlesByFile = new Map<string, ReadonlySet<string>>()
+  const strictA11yFiles = new Set<string>()
   for (const filename of files) {
     const story = await readFile(filename, 'utf8')
     const count = [...story.matchAll(/export const [A-Za-z][A-Za-z0-9_]*\s*:\s*Story\s*=/g)].length
     total += count
-    withPlay += [...story.matchAll(/\bplay\s*:\s*async\b/g)].length
-    if (/a11y\s*:\s*\{\s*test\s*:\s*'error'/.test(story)) strictA11y += count
+    const storyBlocks = story.split(/(?=export const [A-Za-z][A-Za-z0-9_]*\s*:\s*Story\s*=)/)
+    const playTitles = new Set(storyBlocks.flatMap((block) => {
+      const exportName = block.match(/^export const ([A-Za-z][A-Za-z0-9_]*)\s*:\s*Story\s*=/)?.[1]
+      return exportName && /\bplay\s*:\s*async\b/.test(block) ? [storyTitleFor(exportName)] : []
+    }))
+    playTitlesByFile.set(filename, playTitles)
+    withPlay += playTitles.size
+    if (/a11y\s*:\s*\{\s*test\s*:\s*'error'/.test(story)) {
+      strictA11y += count
+      strictA11yFiles.add(filename)
+    }
     else todoA11y += count
   }
-  return { files: files.length, total, withPlay, strictA11y, todoA11y }
+  return { files: files.length, total, withPlay, strictA11y, todoA11y, playTitlesByFile, strictA11yFiles }
+}
+
+interface WorkbenchAssertionResult {
+  title?: unknown
+  status?: unknown
+  meta?: {
+    reports?: Array<{
+      type?: unknown
+      result?: { violations?: unknown[] }
+    }>
+  }
+}
+
+interface WorkbenchTestSuiteResult {
+  name?: unknown
+  assertionResults?: WorkbenchAssertionResult[]
+}
+
+const runtimeWorkbenchEvidence = async (
+  root: string,
+  stories: SourceStoryMetrics,
+): Promise<RuntimeWorkbenchEvidence> => {
+  let parsed: { testResults?: WorkbenchTestSuiteResult[] }
+  try {
+    parsed = JSON.parse(await readFile(workbenchTestResultsPath(root), 'utf8')) as { testResults?: WorkbenchTestSuiteResult[] }
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new Error('Private workbench progress requires runner-local workbench-test-results.json. Run npm run workbench:test first.')
+    }
+    throw error
+  }
+  if (!Array.isArray(parsed.testResults)) throw new Error('Private workbench test result is missing testResults evidence.')
+
+  const suites = new Map(parsed.testResults.flatMap((suite) =>
+    typeof suite.name === 'string' ? [[suite.name, suite] as const] : [],
+  ))
+  let pass = 0
+  let fail = 0
+  let unhandled = 0
+  let strictA11yReports = 0
+  let newViolations = 0
+
+  for (const [filename, playTitles] of stories.playTitlesByFile) {
+    const assertions = suites.get(filename)?.assertionResults ?? []
+    for (const title of playTitles) {
+      const status = assertions.find((assertion) => assertion.title === title)?.status
+      if (status === 'passed') pass += 1
+      else if (status === 'failed') fail += 1
+      else unhandled += 1
+    }
+  }
+
+  for (const filename of stories.strictA11yFiles) {
+    for (const assertion of suites.get(filename)?.assertionResults ?? []) {
+      for (const report of assertion.meta?.reports ?? []) {
+        if (report.type !== 'a11y') continue
+        strictA11yReports += 1
+        newViolations += Array.isArray(report.result?.violations) ? report.result.violations.length : 0
+      }
+    }
+  }
+  if (strictA11yReports !== stories.strictA11y) {
+    throw new Error(`Private workbench a11y evidence is incomplete: expected ${stories.strictA11y} strict reports, found ${strictA11yReports}.`)
+  }
+  return { interactions: { pass, fail, unhandled }, accessibility: { newViolations } }
+}
+
+const runtimeVisualEvidence = async (root: string): Promise<Pick<VisualComparisonResult, 'passed' | 'changed' | 'missing' | 'failed'>> => {
+  let parsed: Partial<VisualComparisonResult>
+  try {
+    parsed = JSON.parse(await readFile(visualComparisonSummaryPath(root), 'utf8')) as Partial<VisualComparisonResult>
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      throw new Error('Private workbench progress requires a runner-local visual summary. Run npm run visual:compare first.')
+    }
+    throw error
+  }
+  for (const key of ['passed', 'changed', 'missing', 'failed'] as const) {
+    if (!Number.isInteger(parsed[key]) || parsed[key]! < 0) {
+      throw new Error(`Private visual comparison summary has invalid ${key} evidence.`)
+    }
+  }
+  return { passed: parsed.passed!, changed: parsed.changed!, missing: parsed.missing!, failed: parsed.failed! }
 }
 
 const generateProgress = async (root: string, check: boolean): Promise<void> => {
@@ -249,10 +377,17 @@ const generateProgress = async (root: string, check: boolean): Promise<void> => 
   const packageJson = JSON.parse(packageSource)
   const policy = validatePrivateVisualPolicy({ packageJson, workflow, gitignore })
   if (policy.length > 0) throw new Error(`Private visual policy failed:\n- ${policy.join('\n- ')}`)
+  const [workbenchEvidence, visualEvidence] = await Promise.all([
+    runtimeWorkbenchEvidence(root, stories),
+    runtimeVisualEvidence(root),
+  ])
   const report = createWorkbenchProgressReport({
     catalogue,
     stories,
     reviewedDebt: debt.reviewedDebt?.length ?? 0,
+    interactions: workbenchEvidence.interactions,
+    accessibility: workbenchEvidence.accessibility,
+    visual: visualEvidence,
     matrix: {
       cells: VISUAL_MATRIX.length,
       baselineFiles: baselineFiles.length,

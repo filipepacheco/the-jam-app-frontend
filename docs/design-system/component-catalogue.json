@@ -5211,7 +5211,8 @@
           "src/hooks/index.ts"
         ],
         "external": [
-          "framer-motion"
+          "framer-motion",
+          "react"
         ],
         "contexts": [
           "animation"

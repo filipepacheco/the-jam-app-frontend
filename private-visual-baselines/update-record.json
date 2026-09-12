@@ -1,7 +1,16 @@
 {
-  "reason": "Issue #61 replace random Public Dashboard waveform heights with deterministic visual fixture data",
-  "reviewer": "Codex implementation review",
-  "changedCells": [],
+  "reason": "Issue #61: mask only declared animated spinner and pulse subregions",
+  "reviewer": "Independent Standards and Spec review",
+  "changedCells": [
+    "dashboard-current-next-light",
+    "foundation-actions-loading-dark",
+    "overlay-destructive-submitting-dark",
+    "schedule-disabled-light",
+    "schedule-pending-light",
+    "schedule-status-dark",
+    "state-loading-region-dark"
+  ],
+  "removedCells": [],
   "matrixCells": [
     "foundation-actions-light",
     "foundation-actions-loading-dark",

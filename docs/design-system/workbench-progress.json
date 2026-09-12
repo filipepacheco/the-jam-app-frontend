@@ -20,10 +20,10 @@
   },
   "interactions": {
     "total": 65,
-    "pass": 0,
+    "pass": 65,
     "fail": 0,
-    "unhandled": 65,
-    "evidence": "declared-play-functions"
+    "unhandled": 0,
+    "evidence": "workbench-json-results"
   },
   "accessibility": {
     "strict": 25,
@@ -33,7 +33,7 @@
   },
   "visual": {
     "baselines": 32,
-    "pass": 0,
+    "pass": 32,
     "change": 0,
     "missing": 0,
     "failure": 0,

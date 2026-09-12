@@ -1,6 +1,6 @@
 # Private workbench progress
 
-> Deterministic checked-in evidence. Runtime comparison output remains runner-local and is intentionally excluded.
+> Deterministic checked-in counts reduced from private runner-local workbench and visual evidence; timestamps and artefacts are intentionally excluded.
 
 ## Inventory
 
@@ -12,13 +12,13 @@ Lifecycle: active: 168; legacy: 2; uncertain: 13.
 
 Story files: 27; stories: 143; declared play functions: 65; reachable catalogue components: 107; visual candidates/cells: 143/32.
 
-Interaction evidence: total 65; pass 0; fail 0; unhandled 65 (declared-play-functions).
+Interaction evidence: total 65; pass 65; fail 0; unhandled 0 (workbench-json-results).
 
 ## Accessibility and visual baselines
 
 Accessibility modes — strict: 25; todo: 118; reviewed debt: 3; new violations: 0.
 
-Visual baselines: 32; pass/change/missing/failure: 0/0/0/0; themes: jam-dark, jam-light; viewports: desktop, phone, venue; max differing-pixel ratio: 0.0005.
+Visual baselines: 32; pass/change/missing/failure: 32/0/0/0; themes: jam-dark, jam-light; viewports: desktop, phone, venue; max differing-pixel ratio: 0.0005.
 
 ## Canonical adoption and deprecation
 

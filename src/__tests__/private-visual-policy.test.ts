@@ -46,4 +46,18 @@ describe('private visual policy', () => {
       'private visual policy requires ignored runner-local path "private-visual-baselines/diff/"',
     ]))
   })
+
+  it('rejects unlisted visual integrations and workflow actions before they can publish evidence', () => {
+    const diagnostics = validatePrivateVisualPolicy({
+      packageJson: { scripts: { ...privateScripts, 'visual:compare': 'unknown-visual-cloud compare --upload' } },
+      workflow: `${privateWorkflow}\nuses: visual-cloud/example@v1\nrun: npx unknown-visual-cloud publish`,
+      gitignore: 'private-visual-baselines/actual/\nprivate-visual-baselines/diff/\nprivate-visual-baselines/failures/\nprivate-visual-baselines/.runtime/\n',
+    })
+
+    expect(diagnostics).toEqual(expect.arrayContaining([
+      'private visual policy requires "visual:compare" to use only the repository-local private visual CLI',
+      'private visual policy forbids non-GitHub workflow action "visual-cloud/example@v1"',
+      'private visual policy forbids unapproved workflow command "npx unknown-visual-cloud publish"',
+    ]))
+  })
 })

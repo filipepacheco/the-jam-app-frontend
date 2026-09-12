@@ -1,18 +1,18 @@
 import { VISUAL_MAX_DIFF_RATIO } from './baselines.ts'
-
-export type CanonicalAdoptionStatus =
-  | 'adopted'
-  | 'documented-exception'
-  | 'unreviewed'
-  | 'not-applicable'
+import type {
+  CanonicalAdoption,
+  CanonicalAdoptionStatus,
+  ComponentLifecycle,
+  DeprecationRecord,
+} from '../../src/types/componentCatalogue.types.ts'
 
 interface ProgressComponent {
   id: string
   consumers: readonly string[]
   metadata: {
-    lifecycle: string
-    canonicalAdoption?: { status: CanonicalAdoptionStatus; family?: string }
-    deprecation?: { replacement: string | null; removalCondition: string }
+    lifecycle: ComponentLifecycle
+    canonicalAdoption?: Pick<CanonicalAdoption, 'status' | 'family'>
+    deprecation?: DeprecationRecord
   }
 }
 
@@ -31,6 +31,20 @@ export interface WorkbenchProgressInput {
     todoA11y: number
   }
   reviewedDebt: number
+  interactions: {
+    pass: number
+    fail: number
+    unhandled: number
+  }
+  accessibility: {
+    newViolations: number
+  }
+  visual: {
+    passed: number
+    changed: number
+    missing: number
+    failed: number
+  }
   matrix: {
     cells: number
     baselineFiles: number
@@ -65,7 +79,7 @@ export interface WorkbenchProgressReport {
     pass: number
     fail: number
     unhandled: number
-    evidence: 'declared-play-functions'
+    evidence: 'workbench-json-results'
   }
   accessibility: {
     strict: number
@@ -117,7 +131,7 @@ const initialAdoptionCounts = (): Record<CanonicalAdoptionStatus, Record<string,
   'not-applicable': {},
 })
 
-/** Reduces checked-in evidence only; runtime screenshots never add timestamp churn. */
+/** Reduces static and runner evidence to stable counts; timestamps never enter the checked-in report. */
 export const createWorkbenchProgressReport = (input: WorkbenchProgressInput): WorkbenchProgressReport => {
   const components = input.catalogue.components
   const lifecycle = countBy(components, (component) => component.metadata.lifecycle)
@@ -155,23 +169,23 @@ export const createWorkbenchProgressReport = (input: WorkbenchProgressInput): Wo
     },
     interactions: {
       total: input.stories.withPlay,
-      pass: 0,
-      fail: 0,
-      unhandled: input.stories.withPlay,
-      evidence: 'declared-play-functions',
+      pass: input.interactions.pass,
+      fail: input.interactions.fail,
+      unhandled: input.interactions.unhandled,
+      evidence: 'workbench-json-results',
     },
     accessibility: {
       strict: input.stories.strictA11y,
       todo: input.stories.todoA11y,
       reviewedDebt: input.reviewedDebt,
-      newViolations: 0,
+      newViolations: input.accessibility.newViolations,
     },
     visual: {
       baselines: input.matrix.baselineFiles,
-      pass: 0,
-      change: 0,
-      missing: 0,
-      failure: 0,
+      pass: input.visual.passed,
+      change: input.visual.changed,
+      missing: input.visual.missing,
+      failure: input.visual.failed,
       themes: [...input.matrix.themes].sort(),
       viewports: [...input.matrix.viewports].sort(),
       threshold: VISUAL_MAX_DIFF_RATIO,
@@ -206,7 +220,7 @@ export const renderWorkbenchProgressMarkdown = (report: WorkbenchProgressReport)
   return [
     '# Private workbench progress',
     '',
-    '> Deterministic checked-in evidence. Runtime comparison output remains runner-local and is intentionally excluded.',
+    '> Deterministic checked-in counts reduced from private runner-local workbench and visual evidence; timestamps and artefacts are intentionally excluded.',
     '',
     '## Inventory',
     '',

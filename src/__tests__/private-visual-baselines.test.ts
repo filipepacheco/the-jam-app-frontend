@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 
 import {
   compareCapturedVisuals,
+  planVisualBaselineUpdate,
   type VisualCapture,
 } from '../../scripts/private-visual/baselines.ts'
 import type { VisualMatrixCell } from '../../scripts/private-visual/matrix.ts'
@@ -75,5 +76,20 @@ describe('private visual baselines', () => {
     expect(result).toMatchObject({ changed: 1, unexpected: 1, failed: 2 })
     await expect(writeFile(path.join(root, 'private-visual-baselines/actual/foundation-action-states.png'), image(99))).resolves.toBeUndefined()
     await expect(writeFile(path.join(root, 'private-visual-baselines/diff/foundation-action-states.png'), image(99))).resolves.toBeUndefined()
+  })
+
+  it('records byte-level changes and retires stale references during an intentional update', async () => {
+    const root = await createRoot()
+    await compareCapturedVisuals([capture()], { root, mode: 'update', allowUpdate: true })
+    await mkdir(path.join(root, 'private-visual-baselines/baselines'), { recursive: true })
+    await writeFile(path.join(root, 'private-visual-baselines/baselines/retired-cell.png'), image(10))
+
+    const plan = await planVisualBaselineUpdate([capture(image(11))], root)
+
+    expect(plan).toEqual({ changedCells: ['foundation-action-states'], removedCells: ['retired-cell'] })
+    const update = await compareCapturedVisuals([capture(image(11))], { root, mode: 'update', allowUpdate: true })
+    expect(update.removed).toEqual(['retired-cell'])
+    const compared = await compareCapturedVisuals([capture(image(11))], { root, mode: 'compare' })
+    expect(compared).toMatchObject({ passed: 1, unexpected: 0, failed: 0 })
   })
 })

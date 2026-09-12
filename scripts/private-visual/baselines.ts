@@ -1,4 +1,4 @@
-import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, readdir, unlink, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 import pixelmatch from 'pixelmatch'
@@ -31,7 +31,15 @@ export interface VisualComparisonResult {
   unexpected: number
   failed: number
   updated: number
+  removed: string[]
   cells: VisualComparisonCellResult[]
+}
+
+export interface VisualBaselineUpdatePlan {
+  /** Captures whose bytes differ from their current reference, even within tolerance. */
+  changedCells: string[]
+  /** References no longer represented by the explicit matrix. */
+  removedCells: string[]
 }
 
 export interface VisualComparisonOptions {
@@ -52,6 +60,38 @@ const pngNames = async (directory: string): Promise<string[]> => {
   } catch (error: unknown) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return []
     throw error
+  }
+}
+
+/**
+ * Computes review evidence before an update mutates a committed reference.
+ * Byte comparison is intentional: a tolerance-passing image change still
+ * needs a reviewer-visible changed-cell entry.
+ */
+export const planVisualBaselineUpdate = async (
+  captures: readonly VisualCapture[],
+  root: string,
+): Promise<VisualBaselineUpdatePlan> => {
+  const expectedKeys = new Set(captures.map(({ cell }) => cell.key))
+  if (expectedKeys.size !== captures.length) throw new Error('Visual captures must have unique stable matrix keys.')
+
+  const baselineDirectory = path.join(root, VISUAL_BASELINE_DIRECTORY)
+  const existingKeys = await pngNames(baselineDirectory)
+  const changedCells: string[] = []
+
+  for (const capture of captures) {
+    try {
+      const reference = await readFile(pngPath(root, VISUAL_BASELINE_DIRECTORY, capture.cell.key))
+      if (!reference.equals(capture.png)) changedCells.push(capture.cell.key)
+    } catch (error: unknown) {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') changedCells.push(capture.cell.key)
+      else throw error
+    }
+  }
+
+  return {
+    changedCells: changedCells.sort(),
+    removedCells: existingKeys.filter((key) => !expectedKeys.has(key)),
   }
 }
 
@@ -103,10 +143,15 @@ export const compareCapturedVisuals = async (
     unexpected: 0,
     failed: 0,
     updated: 0,
+    removed: [],
     cells: [],
   }
 
   if (mode === 'update') await mkdir(baselineDirectory, { recursive: true })
+
+  const staleReferences = mode === 'update'
+    ? (await pngNames(baselineDirectory)).filter((key) => !expectedKeys.has(key))
+    : []
 
   for (const capture of captures) {
     const actualPath = pngPath(root, VISUAL_ACTUAL_DIRECTORY, capture.cell.key)
@@ -141,6 +186,11 @@ export const compareCapturedVisuals = async (
       result.passed += 1
       result.cells.push({ key: capture.cell.key, status: 'passed', diffPixels: comparison.pixels, diffRatio: comparison.ratio })
     }
+  }
+
+  if (mode === 'update') {
+    await Promise.all(staleReferences.map(async (key) => unlink(pngPath(root, VISUAL_BASELINE_DIRECTORY, key))))
+    result.removed = staleReferences
   }
 
   const unexpectedKeys = (await pngNames(baselineDirectory)).filter((key) => !expectedKeys.has(key))

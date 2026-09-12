@@ -1,4 +1,20 @@
 const PUBLIC_VISUAL_SERVICES = ['chromatic', 'percy', 'argos', 'applitools', 'visual-regression.com'] as const
+const PRIVATE_VISUAL_COMMANDS: Record<string, string> = {
+  'visual:privacy': 'tsx scripts/private-visual/cli.ts --privacy',
+  'visual:compare': 'tsx scripts/private-visual/cli.ts --compare',
+  'visual:update': 'VISUAL_BASELINE_UPDATE=1 tsx scripts/private-visual/cli.ts --update',
+  'visual:progress': 'tsx scripts/private-visual/cli.ts --progress',
+  'visual:progress:check': 'tsx scripts/private-visual/cli.ts --progress --check',
+}
+const APPROVED_WORKFLOW_COMMANDS = new Set([
+  'npm ci',
+  'npx playwright install --with-deps chromium',
+  'npm run workbench:test',
+  'npm run visual:privacy',
+  'npm run visual:compare',
+  'npm run visual:progress:check',
+  'npm run workbench:verify-build',
+])
 const REQUIRED_IGNORES = [
   'private-visual-baselines/actual/',
   'private-visual-baselines/diff/',
@@ -33,21 +49,32 @@ export const validatePrivateVisualPolicy = ({ packageJson, workflow, gitignore }
     }
   }
 
-  for (const requiredScript of ['visual:privacy', 'visual:compare', 'visual:update', 'visual:progress', 'visual:progress:check']) {
-    if (!scripts[requiredScript]) diagnostics.push(`private visual policy requires npm script "${requiredScript}"`)
-  }
-  if (scripts['visual:update'] && !scripts['visual:update'].includes('VISUAL_BASELINE_UPDATE=1')) {
-    diagnostics.push('private visual policy requires visual:update to set VISUAL_BASELINE_UPDATE=1')
-  }
-  if (scripts['visual:compare'] && /(?:VISUAL_BASELINE_UPDATE|--update)/.test(scripts['visual:compare'])) {
-    diagnostics.push('private visual policy requires visual:compare to remain non-mutating')
+  for (const [name, command] of Object.entries(PRIVATE_VISUAL_COMMANDS)) {
+    if (!scripts[name]) {
+      diagnostics.push(`private visual policy requires npm script "${name}"`)
+    } else if (scripts[name] !== command) {
+      diagnostics.push(`private visual policy requires "${name}" to use only the repository-local private visual CLI`)
+    }
   }
 
   if (/(?:npm run visual:update|VISUAL_BASELINE_UPDATE|--update)/.test(workflow)) {
     diagnostics.push('private visual policy forbids baseline update mode in CI')
   }
-  if (/upload-artifact|storybook-static|visual-baselines\/actual/i.test(workflow)) {
+  if (/(?:\b(?:upload|publish|deploy|release)\b|storybook-static|visual-baselines\/actual)/i.test(workflow)) {
     diagnostics.push('private visual policy forbids uploading visual artefacts')
+  }
+
+  const actions = [...workflow.matchAll(/^\s*uses:\s*([^\s#]+)/gm)].map((match) => match[1])
+  for (const action of actions) {
+    if (!/^actions\/(?:checkout|setup-node)@v\d+$/.test(action)) {
+      diagnostics.push(`private visual policy forbids non-GitHub workflow action "${action}"`)
+    }
+  }
+  const workflowCommands = [...workflow.matchAll(/^\s*run:\s*([^\n#]+)\s*$/gm)].map((match) => match[1].trim())
+  for (const command of workflowCommands) {
+    if (!APPROVED_WORKFLOW_COMMANDS.has(command)) {
+      diagnostics.push(`private visual policy forbids unapproved workflow command "${command}"`)
+    }
   }
 
   const browserIndex = workflow.indexOf('npm run workbench:test')

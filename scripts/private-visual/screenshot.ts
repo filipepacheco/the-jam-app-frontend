@@ -4,18 +4,28 @@ import { VISUAL_VIEWPORTS, type VisualMatrixCell } from './matrix.ts'
 
 const STABLE_CAPTURE_CSS = `
   *, *::before, *::after {
-    animation-delay: 0s !important;
-    animation-duration: 0s !important;
+    animation: none !important;
     caret-color: transparent !important;
     scroll-behavior: auto !important;
-    transition-delay: 0s !important;
-    transition-duration: 0s !important;
+    transition: none !important;
   }
 `
 
 export const storyFrameUrl = (serverUrl: string, cell: VisualMatrixCell): string => {
   const origin = serverUrl.endsWith('/') ? serverUrl.slice(0, -1) : serverUrl
   return `${origin}/iframe.html?id=${encodeURIComponent(cell.storyId)}&viewMode=story&globals=theme:${cell.theme};reducedMotion:true`
+}
+
+/**
+ * Keeps components that use randomness for decorative-only output stable in
+ * the private capture browser without changing their production behaviour.
+ * Playwright reinstalls this fixed value for every document navigation, so
+ * unrelated framework calls cannot shift a pseudo-random sequence.
+ */
+export const installDeterministicCaptureEnvironment = async (page: Page): Promise<void> => {
+  await page.addInitScript(() => {
+    Math.random = () => 0.5
+  })
 }
 
 const waitForStableLayout = async (page: Page, selector: string): Promise<void> => {
@@ -56,7 +66,7 @@ export const captureVisualCell = async (
     document.documentElement.scrollTop = 0
     document.body.scrollTop = 0
   })
-  const masks = cell.masks.map((mask) => page.locator(mask.selector).first())
+  const masks = cell.masks.map((mask) => page.locator(mask.selector))
   return page.locator(cell.target.selector).first().screenshot({
     animations: 'disabled',
     caret: 'hide',
