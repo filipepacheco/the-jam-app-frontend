@@ -86,10 +86,20 @@ describe('private visual baselines', () => {
 
     const plan = await planVisualBaselineUpdate([capture(image(11))], root)
 
-    expect(plan).toEqual({ changedCells: ['foundation-action-states'], removedCells: ['retired-cell'] })
+    expect(plan).toEqual({ addedCells: [], changedCells: ['foundation-action-states'], removedCells: ['retired-cell'] })
     const update = await compareCapturedVisuals([capture(image(11))], { root, mode: 'update', allowUpdate: true })
     expect(update.removed).toEqual(['retired-cell'])
     const compared = await compareCapturedVisuals([capture(image(11))], { root, mode: 'compare' })
     expect(compared).toMatchObject({ passed: 1, unexpected: 0, failed: 0 })
+  })
+
+  it('distinguishes newly added references from changed references in update evidence', async () => {
+    const root = await createRoot()
+
+    await expect(planVisualBaselineUpdate([capture()], root)).resolves.toEqual({
+      addedCells: ['foundation-action-states'],
+      changedCells: [],
+      removedCells: [],
+    })
   })
 })

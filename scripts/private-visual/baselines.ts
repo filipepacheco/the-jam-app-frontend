@@ -36,6 +36,8 @@ export interface VisualComparisonResult {
 }
 
 export interface VisualBaselineUpdatePlan {
+  /** Matrix cells that do not yet have a committed reference. */
+  addedCells: string[]
   /** Captures whose bytes differ from their current reference, even within tolerance. */
   changedCells: string[]
   /** References no longer represented by the explicit matrix. */
@@ -77,6 +79,7 @@ export const planVisualBaselineUpdate = async (
 
   const baselineDirectory = path.join(root, VISUAL_BASELINE_DIRECTORY)
   const existingKeys = await pngNames(baselineDirectory)
+  const addedCells: string[] = []
   const changedCells: string[] = []
 
   for (const capture of captures) {
@@ -84,12 +87,13 @@ export const planVisualBaselineUpdate = async (
       const reference = await readFile(pngPath(root, VISUAL_BASELINE_DIRECTORY, capture.cell.key))
       if (!reference.equals(capture.png)) changedCells.push(capture.cell.key)
     } catch (error: unknown) {
-      if ((error as NodeJS.ErrnoException).code === 'ENOENT') changedCells.push(capture.cell.key)
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') addedCells.push(capture.cell.key)
       else throw error
     }
   }
 
   return {
+    addedCells: addedCells.sort(),
     changedCells: changedCells.sort(),
     removedCells: existingKeys.filter((key) => !expectedKeys.has(key)),
   }

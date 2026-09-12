@@ -22,7 +22,7 @@ Visual baselines: 32; pass/change/missing/failure: 32/0/0/0; themes: jam-dark, j
 
 ## Canonical adoption and deprecation
 
-Recorded adopted families: empty-state: 1; action: 2; feedback: 6; data-display: 5; field: 2; overlay: 6; navigation: 6. Not recorded: 149. Inline-pattern candidates: action: 1; badge: 1; card: 1; field: 1; menu: 1; modal: 1.
+Recorded adopted families: empty-state: 1; action: 2; feedback: 6; data-display: 5; field: 2; overlay: 6; navigation: 6. Not recorded: 148. Inline-pattern candidates: action: 1; badge: 1; card: 1; field: 1; menu: 1; modal: 1.
 
 Deprecation — legacy: 2; uncertain: 13; unconsumed: 10; replacements: 2; removal conditions: 2.
 

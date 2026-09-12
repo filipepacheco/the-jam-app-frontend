@@ -8,7 +8,8 @@ const exportLabel = (component: CatalogueComponent): string[] =>
 const adoptionLabel = (component: CatalogueComponent): string => {
   const adoption = component.metadata.canonicalAdoption
   if (!adoption) return 'not recorded'
-  return [adoption.status, adoption.family, adoption.note].filter(Boolean).join(': ')
+  const replacements = adoption.replacements?.length ? `replacements: ${adoption.replacements.join(', ')}` : undefined
+  return [adoption.status, adoption.family, replacements, adoption.note].filter(Boolean).join(': ')
 }
 
 const deprecationLabel = (component: CatalogueComponent): string => {

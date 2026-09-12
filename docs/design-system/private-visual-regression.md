@@ -33,8 +33,8 @@ temporary static workbench stay ignored in sibling runner-local folders.
   files. Run the commands in that order.
 - `npm run visual:update` is deliberately local-only. It additionally requires
   `VISUAL_BASELINE_REASON` (a linked issue or design-record reason) and
-  `VISUAL_BASELINE_REVIEWER`. It writes `update-record.json` with every
-  byte-changed cell, including tolerance-passing changes, for review. When a
+  `VISUAL_BASELINE_REVIEWER`. It writes `update-record.json` with every added,
+  byte-changed, and removed cell, including tolerance-passing changes, for review. When a
   matrix change retires a reference, it also requires
   `VISUAL_BASELINE_REMOVAL_REASON` and records the removed cells. A no-op
   update is rejected so it cannot overwrite prior review evidence. CI never

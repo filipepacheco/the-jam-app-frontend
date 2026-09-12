@@ -47,4 +47,19 @@ describe('catalogue visual reporting metadata', () => {
       'rules[0].metadata.deprecation.removalCondition: expected a non-blank string',
     ]))
   })
+
+  it('requires documented-exception replacements to be explicit stable identifiers', () => {
+    const diagnostics = validateInputs(config, metadata({
+      canonicalAdoption: {
+        status: 'documented-exception',
+        family: 'action',
+        note: 'The legacy composite is retained until its replacement split is complete.',
+        replacements: ['ui.0011', 'ui.0011'],
+      },
+    }))
+
+    expect(diagnostics).toEqual(expect.arrayContaining([
+      'rules[0].metadata.canonicalAdoption.replacements[1]: duplicate replacement "ui.0011"',
+    ]))
+  })
 })

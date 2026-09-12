@@ -6,7 +6,7 @@ import { mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises'
 import { once } from 'node:events'
 import path from 'node:path'
 
-import { chromium } from 'playwright'
+import { chromium, type BrowserContext } from 'playwright'
 
 import {
   VISUAL_ACTUAL_DIRECTORY,
@@ -192,6 +192,21 @@ const writeComparisonSummary = async (root: string, summary: VisualComparisonRes
   await writeFile(path.join(directory, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`)
 }
 
+/** A fresh page prevents Storybook globals, listeners, and portal state leaking between matrix cells. */
+const captureVisualCellInFreshPage = async (
+  context: BrowserContext,
+  serverUrl: string,
+  cell: typeof VISUAL_MATRIX[number],
+): Promise<Buffer> => {
+  const page = await context.newPage()
+  try {
+    await installDeterministicCaptureEnvironment(page)
+    return await captureVisualCell(page, serverUrl, cell)
+  } finally {
+    await page.close()
+  }
+}
+
 const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promise<void> => {
   const update = mode === 'update' ? verifyUpdateProtocol() : undefined
   await Promise.all([
@@ -211,14 +226,17 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
       for (let start = 0; start < VISUAL_MATRIX.length; start += VISUAL_BROWSER_BATCH_SIZE) {
         const browser = await chromium.launch({ headless: true })
         try {
-          const page = await browser.newPage()
-          await installDeterministicCaptureEnvironment(page)
-          for (const cell of VISUAL_MATRIX.slice(start, start + VISUAL_BROWSER_BATCH_SIZE)) {
-            try {
-              captures.push({ cell, png: await captureVisualCell(page, server.url, cell) })
-            } catch (error: unknown) {
-              failures.push({ key: cell.key, message: error instanceof Error ? error.message : String(error) })
+          const context = await browser.newContext()
+          try {
+            for (const cell of VISUAL_MATRIX.slice(start, start + VISUAL_BROWSER_BATCH_SIZE)) {
+              try {
+                captures.push({ cell, png: await captureVisualCellInFreshPage(context, server.url, cell) })
+              } catch (error: unknown) {
+                failures.push({ key: cell.key, message: error instanceof Error ? error.message : String(error) })
+              }
             }
+          } finally {
+            await context.close()
           }
         } finally {
           await browser.close()
@@ -249,12 +267,13 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
         await writeFile(path.join(root, 'private-visual-baselines/update-record.json'), `${JSON.stringify({
           reason: update.reason,
           reviewer: update.reviewer,
+          addedCells: updatePlan?.addedCells ?? [],
           changedCells: updatePlan?.changedCells ?? [],
           removedCells: updatePlan?.removedCells ?? [],
           removalReason: updatePlan?.removedCells.length ? update.removalReason : undefined,
           matrixCells: VISUAL_MATRIX.map(({ key }) => key),
         }, null, 2)}\n`)
-        console.log(`Updated ${result.updated} private visual baselines. Changed cells: ${updatePlan?.changedCells.join(', ') || 'none'}. Removed cells: ${updatePlan?.removedCells.join(', ') || 'none'}.`)
+        console.log(`Updated ${result.updated} private visual baselines. Added cells: ${updatePlan?.addedCells.join(', ') || 'none'}. Changed cells: ${updatePlan?.changedCells.join(', ') || 'none'}. Removed cells: ${updatePlan?.removedCells.join(', ') || 'none'}.`)
         return
       }
 

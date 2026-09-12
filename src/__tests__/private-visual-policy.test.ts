@@ -80,4 +80,21 @@ describe('private visual policy', () => {
       'private visual policy forbids uploading visual artefacts',
     ]))
   })
+
+  it('rejects unapproved visual integrations in a non-primary workflow', () => {
+    const diagnostics = validatePrivateVisualPolicy({
+      packageJson: { scripts: privateScripts },
+      workflow: privateWorkflow,
+      workflows: [
+        { path: '.github/workflows/private-workbench.yml', contents: privateWorkflow },
+        { path: '.github/workflows/visual-release.yml', contents: 'uses: visual-cloud/example@v1\nrun: npx visual-cloud publish' },
+      ],
+      gitignore: 'private-visual-baselines/actual/\nprivate-visual-baselines/diff/\nprivate-visual-baselines/failures/\nprivate-visual-baselines/.runtime/\n',
+    })
+
+    expect(diagnostics).toEqual(expect.arrayContaining([
+      'private visual policy forbids non-GitHub workflow action "visual-cloud/example@v1" in ".github/workflows/visual-release.yml"',
+      'private visual policy forbids unapproved workflow command "npx visual-cloud publish" in ".github/workflows/visual-release.yml"',
+    ]))
+  })
 })

@@ -56,6 +56,8 @@ export type CanonicalAdoptionStatus = typeof CANONICAL_ADOPTION_STATUSES[number]
 export interface CanonicalAdoption {
   status: CanonicalAdoptionStatus
   family?: string
+  /** Stable IDs of every canonical component that replaces a retained legacy composite. */
+  replacements?: string[]
   note?: string
 }
 

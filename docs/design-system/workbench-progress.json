@@ -58,14 +58,16 @@
       "overlay": 6,
       "navigation": 6
     },
-    "documented-exception": {},
+    "documented-exception": {
+      "dj-control": 1
+    },
     "unreviewed": {
       "data-display": 1
     },
     "not-applicable": {
       "unspecified": 5
     },
-    "notRecorded": 149,
+    "notRecorded": 148,
     "inlinePatternCandidates": {
       "action": 1,
       "badge": 1,

@@ -30,6 +30,8 @@ export interface VisualMatrixCell {
   viewport: VisualViewport
   /** Component canvas or a portal surface; never a whole browser page. */
   target: { selector: string }
+  /** Stable rendered content required before the target can be captured. */
+  readySelector?: string
   /** Dynamic regions only. Every mask has an explicit review reason. */
   masks: readonly VisualMask[]
 }
@@ -73,11 +75,11 @@ export const VISUAL_MATRIX = Object.freeze([
   { key: 'dj-queue-light', storyId: 'domain-dj-control-playback-and-queue--queue-timeline', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'desktop', target: canvas, masks: [] },
   { key: 'dj-empty-dark', storyId: 'domain-dj-control-playback-and-queue--empty-queue', checkpoint: { kind: 'initial' }, theme: 'jam-dark', viewport: 'desktop', target: canvas, masks: [] },
 
-  { key: 'dashboard-current-next-light', storyId: 'domain-public-dashboard-cards-and-display--current-and-next', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'venue', target: canvas, masks: [] },
-  { key: 'dashboard-offline-dark', storyId: 'domain-public-dashboard-cards-and-display--offline-venue-display', checkpoint: { kind: 'initial' }, theme: 'jam-dark', viewport: 'venue', target: canvas, masks: [] },
-  { key: 'dashboard-live-light', storyId: 'domain-public-dashboard-carousel-and-controls--live-carousel', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'venue', target: canvas, masks: [] },
-  { key: 'dashboard-starting-dark', storyId: 'domain-public-dashboard-carousel-and-controls--starting-carousel', checkpoint: { kind: 'initial' }, theme: 'jam-dark', viewport: 'venue', target: canvas, masks: [] },
-  { key: 'dashboard-finished-light', storyId: 'domain-public-dashboard-carousel-and-controls--finished-carousel', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'venue', target: canvas, masks: [] },
+  { key: 'dashboard-current-next-light', storyId: 'domain-public-dashboard-cards-and-display--current-and-next', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'venue', target: canvas, readySelector: '[data-workbench-root] h2', masks: [] },
+  { key: 'dashboard-offline-dark', storyId: 'domain-public-dashboard-cards-and-display--offline-venue-display', checkpoint: { kind: 'initial' }, theme: 'jam-dark', viewport: 'venue', target: canvas, readySelector: '[data-workbench-root] [role="status"]', masks: [] },
+  { key: 'dashboard-live-light', storyId: 'domain-public-dashboard-carousel-and-controls--live-carousel', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'venue', target: canvas, readySelector: '[data-workbench-root] h2', masks: [] },
+  { key: 'dashboard-starting-dark', storyId: 'domain-public-dashboard-carousel-and-controls--starting-carousel', checkpoint: { kind: 'initial' }, theme: 'jam-dark', viewport: 'venue', target: canvas, readySelector: '[data-workbench-root] h2', masks: [] },
+  { key: 'dashboard-finished-light', storyId: 'domain-public-dashboard-carousel-and-controls--finished-carousel', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'venue', target: canvas, readySelector: '[data-workbench-root] h2', masks: [] },
   { key: 'dashboard-panel-matrix-dark', storyId: 'domain-public-dashboard-carousel-and-controls--panel-matrix', checkpoint: { kind: 'initial' }, theme: 'jam-dark', viewport: 'venue', target: canvas, masks: [] },
 ] as const satisfies readonly VisualMatrixCell[])
 
@@ -108,6 +110,7 @@ export const validateVisualMatrix = (
       diagnostics.push(`visual matrix cell "${cell.key}" uses unsupported viewport "${cell.viewport}"`)
     }
     if (!cell.target.selector.trim()) diagnostics.push(`visual matrix cell "${cell.key}" requires a precise target selector`)
+    if (cell.readySelector !== undefined && !cell.readySelector.trim()) diagnostics.push(`visual matrix cell "${cell.key}" ready selector must be non-blank when declared`)
     if (cell.checkpoint.kind === 'after-click' && (!cell.checkpoint.selector.trim() || !cell.checkpoint.waitFor.trim())) {
       diagnostics.push(`visual matrix cell "${cell.key}" requires an actionable checkpoint selector and settled-state selector`)
     }

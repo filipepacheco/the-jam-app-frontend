@@ -80,6 +80,21 @@ const validateCanonicalAdoption = (
   if ('note' in value && value.note !== undefined && !hasNote) {
     diagnostics.push(`${field}.note: expected a non-blank string when provided`)
   }
+  if ('replacements' in value && value.replacements !== undefined) {
+    if (!Array.isArray(value.replacements) || value.replacements.length === 0) {
+      diagnostics.push(`${field}.replacements: expected a non-empty array when provided`)
+    } else {
+      const replacements = new Set<string>()
+      value.replacements.forEach((replacement, index) => {
+        if (!isNonBlankString(replacement) || !STABLE_ID.test(replacement)) {
+          diagnostics.push(`${field}.replacements[${index}]: expected a stable component identifier`)
+        } else if (replacements.has(replacement)) {
+          diagnostics.push(`${field}.replacements[${index}]: duplicate replacement "${replacement}"`)
+        }
+        replacements.add(replacement as string)
+      })
+    }
+  }
 }
 
 const validateDeprecation = (

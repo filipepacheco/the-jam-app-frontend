@@ -11,6 +11,15 @@ const STABLE_CAPTURE_CSS = `
   }
 `
 
+/** Every capture operation has the same bounded lifecycle budget. */
+export const VISUAL_CAPTURE_TIMEOUT_MS = 15_000
+
+/** Do not wait for Storybook/MSW background work that can outlive a rendered story. */
+export const CAPTURE_NAVIGATION_OPTIONS = {
+  waitUntil: 'load' as const,
+  timeout: VISUAL_CAPTURE_TIMEOUT_MS,
+}
+
 export const storyFrameUrl = (serverUrl: string, cell: VisualMatrixCell): string => {
   const origin = serverUrl.endsWith('/') ? serverUrl.slice(0, -1) : serverUrl
   return `${origin}/iframe.html?id=${encodeURIComponent(cell.storyId)}&viewMode=story&globals=theme:${cell.theme};reducedMotion:true`
@@ -31,16 +40,32 @@ export const installDeterministicCaptureEnvironment = async (
   })
 }
 
-const waitForStableLayout = async (page: Page, selector: string): Promise<void> => {
-  await page.locator(selector).first().waitFor({ state: 'visible' })
-  await page.evaluate(async () => {
-    await document.fonts?.ready
-    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())))
-  })
-
+const waitForStableLayout = async (page: Page, selector: string, readySelector?: string): Promise<void> => {
   const target = page.locator(selector).first()
+  await target.waitFor({ state: 'visible', timeout: VISUAL_CAPTURE_TIMEOUT_MS })
+  await page.evaluate(async (timeout) => {
+    const fonts = document.fonts?.ready ?? Promise.resolve()
+    await Promise.race([
+      fonts,
+      new Promise<never>((_, reject) => window.setTimeout(() => reject(new Error('Font loading did not settle before capture.')), timeout)),
+    ])
+    await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
+  }, VISUAL_CAPTURE_TIMEOUT_MS)
+  if (readySelector) {
+    await page.waitForFunction(({ targetSelector, readyContentSelector }) => {
+      const root = document.querySelector(targetSelector)
+      const ready = document.querySelector<HTMLElement>(readyContentSelector)
+      if (!root || !ready || !root.contains(ready)) return false
+      for (let element: HTMLElement | null = ready; element && element !== root; element = element.parentElement) {
+        const style = getComputedStyle(element)
+        if (style.display === 'none' || style.visibility === 'hidden' || Number.parseFloat(style.opacity) < 0.99) return false
+      }
+      return true
+    }, { targetSelector: selector, readyContentSelector: readySelector }, { timeout: VISUAL_CAPTURE_TIMEOUT_MS })
+  }
+
   const before = await target.boundingBox()
-  await page.waitForTimeout(80)
+  await page.evaluate(() => new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
   const after = await target.boundingBox()
   if (!before || !after || before.width !== after.width || before.height !== after.height) {
     throw new Error(`Visual target "${selector}" did not settle to a stable CSS-pixel layout.`)
@@ -55,15 +80,19 @@ export const captureVisualCell = async (
 ): Promise<Buffer> => {
   const viewport = VISUAL_VIEWPORTS[cell.viewport]
   await page.setViewportSize(viewport)
-  await page.goto(storyFrameUrl(serverUrl, cell), { waitUntil: 'networkidle' })
+  await page.goto(storyFrameUrl(serverUrl, cell), CAPTURE_NAVIGATION_OPTIONS)
   await page.addStyleTag({ content: STABLE_CAPTURE_CSS })
 
-  if (cell.checkpoint.kind === 'after-click') {
-    await page.locator(cell.checkpoint.selector).first().click()
-    await page.locator(cell.checkpoint.waitFor).first().waitFor({ state: 'visible' })
+  if (cell.readySelector) {
+    await page.locator(cell.readySelector).first().waitFor({ state: 'visible', timeout: VISUAL_CAPTURE_TIMEOUT_MS })
   }
 
-  await waitForStableLayout(page, cell.target.selector)
+  if (cell.checkpoint.kind === 'after-click') {
+    await page.locator(cell.checkpoint.selector).first().click({ timeout: VISUAL_CAPTURE_TIMEOUT_MS })
+    await page.locator(cell.checkpoint.waitFor).first().waitFor({ state: 'visible', timeout: VISUAL_CAPTURE_TIMEOUT_MS })
+  }
+
+  await waitForStableLayout(page, cell.target.selector, cell.readySelector)
   await page.evaluate(() => {
     window.scrollTo(0, 0)
     document.documentElement.scrollTop = 0
@@ -75,5 +104,6 @@ export const captureVisualCell = async (
     caret: 'hide',
     mask: masks,
     scale: 'css',
+    timeout: VISUAL_CAPTURE_TIMEOUT_MS,
   })
 }

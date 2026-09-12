@@ -39,6 +39,16 @@ const scriptMap = (packageJson: unknown): Record<string, string> => {
   )
 }
 
+const workflowActions = (contents: string): string[] =>
+  [...contents.matchAll(/^\s*uses:\s*([^\s#]+)/gm)].map((match) => match[1])
+
+const workflowCommands = (contents: string): string[] =>
+  [...contents.matchAll(/^\s*run:\s*([^\n#]+)\s*$/gm)].map((match) => match[1].trim())
+
+const isVisualWorkflow = ({ path, contents }: { path: string; contents: string }): boolean =>
+  /(?:visual|storybook)/i.test(path) ||
+  /(?:visual:|storybook-static|private-visual-baselines|workbench:(?:test|build|verify))/i.test(contents)
+
 /** Static policy seam: private evidence stays in this repository and on the runner. */
 export const validatePrivateVisualPolicy = ({ packageJson, workflows, workflow, gitignore }: PrivateVisualPolicyInput): string[] => {
   const diagnostics: string[] = []
@@ -73,16 +83,19 @@ export const validatePrivateVisualPolicy = ({ packageJson, workflows, workflow, 
     diagnostics.push('private visual policy forbids uploading visual artefacts')
   }
 
-  const actions = [...workflow.matchAll(/^\s*uses:\s*([^\s#]+)/gm)].map((match) => match[1])
-  for (const action of actions) {
-    if (!/^actions\/(?:checkout|setup-node)@v\d+$/.test(action)) {
-      diagnostics.push(`private visual policy forbids non-GitHub workflow action "${action}"`)
+  for (const source of workflowSources) {
+    const primary = source.contents === workflow
+    if (!primary && !isVisualWorkflow(source)) continue
+    const sourceLabel = primary ? '' : ` in "${source.path}"`
+    for (const action of workflowActions(source.contents)) {
+      if (!/^actions\/(?:checkout|setup-node)@v\d+$/.test(action)) {
+        diagnostics.push(`private visual policy forbids non-GitHub workflow action "${action}"${sourceLabel}`)
+      }
     }
-  }
-  const workflowCommands = [...workflow.matchAll(/^\s*run:\s*([^\n#]+)\s*$/gm)].map((match) => match[1].trim())
-  for (const command of workflowCommands) {
-    if (!APPROVED_WORKFLOW_COMMANDS.has(command)) {
-      diagnostics.push(`private visual policy forbids unapproved workflow command "${command}"`)
+    for (const command of workflowCommands(source.contents)) {
+      if (!APPROVED_WORKFLOW_COMMANDS.has(command)) {
+        diagnostics.push(`private visual policy forbids unapproved workflow command "${command}"${sourceLabel}`)
+      }
     }
   }
 

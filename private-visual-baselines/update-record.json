@@ -1,7 +1,7 @@
 {
   "reason": "Issue #61: establish and review the bounded 32-cell private reference baseline",
   "reviewer": "Independent Standards and Spec review",
-  "changedCells": [
+  "addedCells": [
     "foundation-actions-light",
     "foundation-actions-loading-dark",
     "foundation-fields-light",
@@ -35,6 +35,7 @@
     "dashboard-finished-light",
     "dashboard-panel-matrix-dark"
   ],
+  "changedCells": [],
   "removedCells": [],
   "matrixCells": [
     "foundation-actions-light",
