@@ -99,7 +99,9 @@
   --ds-action-primary: var(--color-primary);
   --ds-action-primary-content: var(--color-primary-content);
   --ds-action-secondary: var(--color-secondary);
+  --ds-action-secondary-content: var(--color-secondary-content);
   --ds-action-danger: var(--color-error);
+  --ds-action-danger-content: var(--color-error-content);
   --ds-focus-ring: var(--color-primary);
   --ds-focus-offset: var(--color-base-100);
 

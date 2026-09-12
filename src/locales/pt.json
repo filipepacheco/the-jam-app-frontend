@@ -474,7 +474,13 @@
     },
     "actions": {
       "start": "▶️ Iniciar",
-      "reschedule": "🔄 Reagendar"
+      "reschedule": "🔄 Reagendar",
+      "approve_performance": "Aprovar apresentação",
+      "reject_performance": "Rejeitar apresentação",
+      "delete_performance": "Excluir apresentação",
+      "approving": "Aprovando apresentação…",
+      "rejecting": "Rejeitando apresentação…",
+      "deleting": "Excluindo apresentação…"
     },
     "instruments": {
       "drums": "Bateria",

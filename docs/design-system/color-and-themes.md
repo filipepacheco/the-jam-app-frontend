@@ -11,7 +11,7 @@ Jam App uses DaisyUI as its palette adapter and a small semantic layer for produ
 | Surfaces | `--ds-surface-canvas`, `--ds-surface-raised`, `--ds-surface-sunken`, `--ds-surface-overlay` | Page canvas, cards, inset regions, and scrims |
 | Content | `--ds-content-primary`, `--ds-content-secondary`, `--ds-content-inverse`, `--ds-content-link` | Primary copy, supporting copy, copy on actions, and links |
 | Borders | `--ds-border-subtle`, `--ds-border-strong`, `--ds-border-interactive` | Separation, emphasis, and interactive boundaries |
-| Actions | `--ds-action-primary`, `--ds-action-primary-content`, `--ds-action-secondary`, `--ds-action-danger` | Primary, secondary, and destructive actions |
+| Actions | `--ds-action-primary`, `--ds-action-primary-content`, `--ds-action-secondary`, `--ds-action-secondary-content`, `--ds-action-danger`, `--ds-action-danger-content` | Primary, secondary, and destructive actions |
 | Focus | `--ds-focus-ring`, `--ds-focus-offset` | Keyboard focus independent of component palette |
 | Statuses | `--ds-status-{info,success,warning,danger}` and matching `-content` tokens | Informational, successful, cautionary, and failed or destructive states |
 
