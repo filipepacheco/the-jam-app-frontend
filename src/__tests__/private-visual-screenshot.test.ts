@@ -45,10 +45,12 @@ describe('private visual screenshot tracer', () => {
 
   it('declares local faces for every reviewed font weight instead of a system-font fallback', async () => {
     const styles = await readFile(path.resolve('src/workbench/workbench.css'), 'utf8')
+    const screenshotSource = await readFile(path.resolve('scripts/private-visual/screenshot.ts'), 'utf8')
 
     for (const weight of [400, 500, 600, 700, 800]) {
       expect(styles).toContain(`@fontsource/nunito-sans/${weight}.css`)
     }
     expect(styles).toContain(':root[data-private-visual-capture]')
+    expect(screenshotSource).toContain('document.fonts.load')
   })
 })

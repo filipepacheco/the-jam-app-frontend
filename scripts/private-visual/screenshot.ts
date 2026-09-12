@@ -51,7 +51,10 @@ const waitForStableLayout = async (page: Page, selector: string, readySelector?:
   const target = page.locator(selector).first()
   await target.waitFor({ state: 'visible', timeout: VISUAL_CAPTURE_TIMEOUT_MS })
   await page.evaluate(async ({ timeout, family, weights }) => {
-    const fonts = document.fonts?.ready ?? Promise.resolve()
+    const fonts = document.fonts
+      ? Promise.all(weights.map((weight) => document.fonts.load(`${weight} 16px "${family}"`, 'Visual baseline')))
+          .then(() => document.fonts.ready)
+      : Promise.resolve()
     await Promise.race([
       fonts,
       new Promise<never>((_, reject) => window.setTimeout(() => reject(new Error('Font loading did not settle before capture.')), timeout)),
