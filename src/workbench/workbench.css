@@ -1,4 +1,19 @@
+/*
+ * Private visual captures must not depend on a macOS/Linux system fallback.
+ * These self-hosted faces cover every reviewed product weight while keeping
+ * the captured typeface aligned with the product's declared Nunito Sans body.
+ */
+@import "@fontsource/nunito-sans/400.css";
+@import "@fontsource/nunito-sans/500.css";
+@import "@fontsource/nunito-sans/600.css";
+@import "@fontsource/nunito-sans/700.css";
+@import "@fontsource/nunito-sans/800.css";
 @import "../index.css";
+
+:root[data-private-visual-capture] {
+  --font-body: 'Nunito Sans', sans-serif;
+  --font-display: 'Nunito Sans', sans-serif;
+}
 
 /* Story composition markup is deliberately visible only to the private build. */
 @source "./";

@@ -57,6 +57,20 @@ or portal locator rather than the browser page. Its pixel matcher permits at
 most a 0.05% differing pixel ratio with a 0.1 per-pixel threshold. Unexplained
 layout changes fail.
 
+The canonical reference renderer is the pinned
+`mcr.microsoft.com/playwright:v1.55.1-noble` Linux image declared in the private
+workbench workflow. Reference images and blocking comparisons must be produced
+inside that image; host-native macOS or Linux output is diagnostic only because
+text rasterization is operating-system dependent.
+
+Within that renderer, the capture document opts into pinned, self-hosted Nunito Sans assets for each
+reviewed weight and disables synthetic font weights. It also requests grayscale
+glyph antialiasing and geometric text rendering, reducing renderer-specific
+edge noise without masking text or loosening the pixel threshold. This prevents
+macOS CoreText and Linux system fallback selection from changing references.
+Refresh references only after this renderer path is available and
+`document.fonts.ready` has settled.
+
 A mask is an exception, not a convenience. Keep it limited to a documented
 dynamic subregion and state why that subregion cannot be deterministic. Prefer
 repairing the fixture or animation to adding one.

@@ -2,11 +2,18 @@ import type { Page } from 'playwright'
 
 import { VISUAL_VIEWPORTS, type VisualMatrixCell } from './matrix.ts'
 
-const STABLE_CAPTURE_CSS = `
+export const PRIVATE_VISUAL_CAPTURE_ATTRIBUTE = 'data-private-visual-capture'
+export const VISUAL_CAPTURE_FONT_FAMILY = 'Nunito Sans'
+export const VISUAL_CAPTURE_FONT_WEIGHTS = [400, 500, 600, 700, 800] as const
+
+export const STABLE_CAPTURE_CSS = `
   *, *::before, *::after {
     animation: none !important;
     caret-color: transparent !important;
+    font-synthesis: none !important;
+    -webkit-font-smoothing: antialiased !important;
     scroll-behavior: auto !important;
+    text-rendering: geometricPrecision !important;
     transition: none !important;
   }
 `
@@ -43,14 +50,18 @@ export const installDeterministicCaptureEnvironment = async (
 const waitForStableLayout = async (page: Page, selector: string, readySelector?: string): Promise<void> => {
   const target = page.locator(selector).first()
   await target.waitFor({ state: 'visible', timeout: VISUAL_CAPTURE_TIMEOUT_MS })
-  await page.evaluate(async (timeout) => {
+  await page.evaluate(async ({ timeout, family, weights }) => {
     const fonts = document.fonts?.ready ?? Promise.resolve()
     await Promise.race([
       fonts,
       new Promise<never>((_, reject) => window.setTimeout(() => reject(new Error('Font loading did not settle before capture.')), timeout)),
     ])
+    const missingWeights = weights.filter((weight) => !document.fonts.check(`${weight} 16px "${family}"`))
+    if (missingWeights.length > 0) {
+      throw new Error(`Private visual font "${family}" is unavailable for weights: ${missingWeights.join(', ')}.`)
+    }
     await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
-  }, VISUAL_CAPTURE_TIMEOUT_MS)
+  }, { timeout: VISUAL_CAPTURE_TIMEOUT_MS, family: VISUAL_CAPTURE_FONT_FAMILY, weights: VISUAL_CAPTURE_FONT_WEIGHTS })
   if (readySelector) {
     await page.waitForFunction(({ targetSelector, readyContentSelector }) => {
       const root = document.querySelector(targetSelector)
@@ -81,6 +92,7 @@ export const captureVisualCell = async (
   const viewport = VISUAL_VIEWPORTS[cell.viewport]
   await page.setViewportSize(viewport)
   await page.goto(storyFrameUrl(serverUrl, cell), CAPTURE_NAVIGATION_OPTIONS)
+  await page.evaluate((attribute) => document.documentElement.setAttribute(attribute, ''), PRIVATE_VISUAL_CAPTURE_ATTRIBUTE)
   await page.addStyleTag({ content: STABLE_CAPTURE_CSS })
 
   if (cell.readySelector) {

@@ -3,6 +3,11 @@ import { describe, expect, it } from 'vitest'
 import { validatePrivateVisualPolicy } from '../../scripts/private-visual/policy.ts'
 
 const privateWorkflow = `
+container:
+  image: mcr.microsoft.com/playwright:v1.55.1-noble
+  options: --ipc=host
+env:
+  PRIVATE_VISUAL_RENDERER: playwright-v1.55.1-noble
 - name: Run workbench browser tests
   run: npm run workbench:test
 - name: Enforce private visual policy
@@ -95,6 +100,23 @@ describe('private visual policy', () => {
     expect(diagnostics).toEqual(expect.arrayContaining([
       'private visual policy forbids non-GitHub workflow action "visual-cloud/example@v1" in ".github/workflows/visual-release.yml"',
       'private visual policy forbids unapproved workflow command "npx visual-cloud publish" in ".github/workflows/visual-release.yml"',
+    ]))
+  })
+
+  it('rejects an unpinned or unidentified renderer environment', () => {
+    const workflow = privateWorkflow
+      .replace('mcr.microsoft.com/playwright:v1.55.1-noble', 'ubuntu:latest')
+      .replace('playwright-v1.55.1-noble', 'host-dependent')
+      .replace('options: --ipc=host\n', '')
+
+    expect(validatePrivateVisualPolicy({
+      packageJson: { scripts: privateScripts },
+      workflow,
+      gitignore: 'private-visual-baselines/actual/\nprivate-visual-baselines/diff/\nprivate-visual-baselines/failures/\nprivate-visual-baselines/.runtime/\n',
+    })).toEqual(expect.arrayContaining([
+      'private visual policy requires canonical renderer image "mcr.microsoft.com/playwright:v1.55.1-noble"',
+      'private visual policy requires the canonical renderer IPC configuration',
+      'private visual policy requires renderer identity "playwright-v1.55.1-noble"',
     ]))
   })
 })

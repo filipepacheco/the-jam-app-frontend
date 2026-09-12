@@ -8,13 +8,14 @@ const PRIVATE_VISUAL_COMMANDS: Record<string, string> = {
 }
 const APPROVED_WORKFLOW_COMMANDS = new Set([
   'npm ci',
-  'npx playwright install --with-deps chromium',
   'npm run workbench:test',
   'npm run visual:privacy',
   'npm run visual:compare',
   'npm run visual:progress:check',
   'npm run workbench:verify-build',
 ])
+export const PRIVATE_VISUAL_RENDERER_IMAGE = 'mcr.microsoft.com/playwright:v1.55.1-noble'
+export const PRIVATE_VISUAL_RENDERER_ID = 'playwright-v1.55.1-noble'
 const REQUIRED_IGNORES = [
   'private-visual-baselines/actual/',
   'private-visual-baselines/diff/',
@@ -108,6 +109,16 @@ export const validatePrivateVisualPolicy = ({ packageJson, workflows, workflow, 
     diagnostics.push('private visual policy requires browser, privacy, comparison, progress, and deterministic-build CI steps')
   } else if (!(browserIndex < privacyIndex && privacyIndex < compareIndex && compareIndex < progressIndex && progressIndex < buildIndex)) {
     diagnostics.push('private visual policy requires comparison after browser tests and before deterministic build verification')
+  }
+
+  if (!workflow.includes(`image: ${PRIVATE_VISUAL_RENDERER_IMAGE}`)) {
+    diagnostics.push(`private visual policy requires canonical renderer image "${PRIVATE_VISUAL_RENDERER_IMAGE}"`)
+  }
+  if (!workflow.includes('options: --ipc=host')) {
+    diagnostics.push('private visual policy requires the canonical renderer IPC configuration')
+  }
+  if (!workflow.includes(`PRIVATE_VISUAL_RENDERER: ${PRIVATE_VISUAL_RENDERER_ID}`)) {
+    diagnostics.push(`private visual policy requires renderer identity "${PRIVATE_VISUAL_RENDERER_ID}"`)
   }
 
   const ignoredPaths = new Set(gitignore.split(/\r?\n/).map((line) => line.trim()).filter(Boolean))
