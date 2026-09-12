@@ -1,6 +1,14 @@
 /**
  * Route Guards
  * Higher-order components and utilities for protecting routes based on user role
+ *
+ * Lifecycle audit (issue #50): no route uses any guard in this file.
+ * `ProtectedRoute` has four consumers, and all four are the wrappers below.
+ * `HostOnly`, `UserOnly`, `AuthenticatedOnly` and `ViewerOnly` have zero
+ * consumers; `src/components/index.ts` only re-exports them. `src/App.tsx`
+ * composes its routes without a guard. The catalogue lifecycle stays
+ * "uncertain" and not "deprecated", because no component supersedes this
+ * family: the routes simply never adopted it.
  */
 
 import type { ReactNode } from 'react'
@@ -49,6 +57,11 @@ export function ProtectedRoute({
 
   if (isLoading) {
     return (
+      // Documented design-system exception (issue #50): the guard shows a
+      // page-shaped placeholder (a short heading bar above a tall content
+      // block). The canonical `Skeleton` primitive renders uniform
+      // full-width lines only, so it cannot reproduce that silhouette.
+      // Same reasoning as PageHeaderSkeleton.tsx.
       <div className="min-h-screen bg-base-100 animate-pulse">
         <div className="container mx-auto max-w-6xl px-4 py-8">
           <div className="skeleton h-8 w-48 rounded mb-6" />

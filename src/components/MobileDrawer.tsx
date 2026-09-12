@@ -17,6 +17,9 @@ import { useAuth, useTheme } from '../hooks'
 import { FeedbackModal } from './FeedbackModal'
 import { useState } from 'react'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
+import { Action, IconAction } from './Action'
+import { Field } from './Field'
+import { NavigationLink } from './Navigation'
 
 interface MobileDrawerProps {
   isOpen: boolean
@@ -154,14 +157,14 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
           ) : (
             <span className="text-base font-semibold text-base-content">{t('common.app_name')}</span>
           )}
-          <button
+          <IconAction
             ref={closeButtonRef}
             onClick={onClose}
-            className="btn btn-ghost btn-sm btn-circle"
-            aria-label={t('nav.close_menu')}
+            variant="quiet"
+            label={t('nav.close_menu')}
           >
             <X className="size-5" />
-          </button>
+          </IconAction>
         </div>
 
         <div className="divider my-0 px-5"></div>
@@ -171,13 +174,13 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
           {/* Login CTA for unauthenticated */}
           {!isAuthenticated && !isLoading && (
             <div className="px-2 pb-3">
-              <a
-                href="/register"
-                onClick={(e) => { e.preventDefault(); handleNavClick('/register') }}
-                className="btn btn-primary w-full"
+              <Action
+                variant="primary"
+                className="w-full"
+                onClick={() => handleNavClick('/register')}
               >
-                {t('nav.login_register')}
-              </a>
+                <Action.Label>{t('nav.login_register')}</Action.Label>
+              </Action>
             </div>
           )}
 
@@ -185,41 +188,41 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
           <ul className="menu gap-0.5 p-0">
             {navItems.map((item) => (
               <li key={item.path}>
-                <a
+                <NavigationLink
                   href={item.path}
                   onClick={(e) => { e.preventDefault(); handleNavClick(item.path) }}
-                  className="flex items-center gap-3 py-3 text-base"
+                  icon={item.icon}
+                  className="py-3 text-base justify-start"
                 >
-                  {item.icon}
                   {item.label}
-                </a>
+                </NavigationLink>
               </li>
             ))}
 
             {/* Profile */}
             {isAuthenticated && user && (
               <li>
-                <a
+                <NavigationLink
                   href="/profile"
                   onClick={(e) => { e.preventDefault(); handleNavClick('/profile') }}
-                  className="flex items-center gap-3 py-3 text-base"
+                  icon={<UserCircle className="size-5" />}
+                  className="py-3 text-base justify-start"
                 >
-                  <UserCircle className="size-5" />
                   {t('nav.my_profile')}
-                </a>
+                </NavigationLink>
               </li>
             )}
 
             {/* Feedback */}
             <li>
-              <button
-                type="button"
+              <Action
+                variant="quiet"
+                className="w-full justify-start gap-3 py-3 text-base"
                 onClick={() => setFeedbackOpen(true)}
-                className="flex items-center gap-3 py-3 text-base"
               >
                 <MessageSquareHeart className="size-5" />
-                {t('feedback.button_text')}
-              </button>
+                <Action.Label>{t('feedback.button_text')}</Action.Label>
+              </Action>
             </li>
           </ul>
 
@@ -227,53 +230,43 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
           <div className="divider my-2 px-2"></div>
 
           <div className="flex flex-col gap-3 px-2">
-            <div role="group" aria-label={t('common.select_language')}>
-              <label className="text-xs font-medium text-base-content/50 uppercase tracking-wide mb-1 block">
-                {t('common.select_language')}
-              </label>
-              <select
+            <Field id="mobile-drawer-language" label={t('common.select_language')}>
+              <Field.Select
                 onChange={(e) => changeLanguage(e.target.value)}
                 value={currentLang}
-                className="select select-bordered w-full"
-                aria-label={t('common.select_language')}
               >
                 {LANGUAGES.map((lang) => (
                   <option key={lang.code} value={lang.code}>{lang.label}</option>
                 ))}
-              </select>
-            </div>
+              </Field.Select>
+            </Field>
 
-            <div role="group" aria-label={t('common.select_theme')}>
-              <label className="text-xs font-medium text-base-content/50 uppercase tracking-wide mb-1 block">
-                {t('common.select_theme')}
-              </label>
-              <select
+            <Field id="mobile-drawer-theme" label={t('common.select_theme')}>
+              <Field.Select
                 onChange={(e) => setTheme(e.target.value)}
                 value={currentTheme}
-                className="select select-bordered w-full"
-                aria-label={t('common.select_theme')}
               >
                 {THEMES.map((theme) => (
                   <option key={theme} value={theme}>
                     {theme.charAt(0).toUpperCase() + theme.slice(1)}
                   </option>
                 ))}
-              </select>
-            </div>
+              </Field.Select>
+            </Field>
           </div>
         </div>
 
         {/* Logout - pinned to bottom */}
         {isAuthenticated && (
           <div className="border-t border-base-300 px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-            <button
-              type="button"
+            <Action
+              variant="quiet"
               onClick={() => { handleLogout().catch(console.error) }}
-              className="btn btn-ghost btn-block justify-start gap-3 text-error text-base"
+              className="w-full justify-start gap-3 text-error text-base"
             >
               <LogOut className="size-5" />
-              {t('nav.logout')}
-            </button>
+              <Action.Label>{t('nav.logout')}</Action.Label>
+            </Action>
           </div>
         )}
       </nav>

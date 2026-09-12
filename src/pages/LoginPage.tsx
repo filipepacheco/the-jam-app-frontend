@@ -7,6 +7,7 @@ import {useEffect, useState} from 'react'
 import {useAuth} from '../hooks'
 import {useNavigate} from 'react-router-dom'
 import {ProfileSetupModal, SupabaseLoginForm} from '../components'
+import {NavigationLink} from '../components/Navigation'
 import {SEO} from '../components/SEO'
 import {useTranslation} from 'react-i18next'
 import {getRedirectPath} from '../utils/navigationUtils'
@@ -35,6 +36,14 @@ export function LoginPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
+        {/*
+          Documented design-system exception (issue #50): this login skeleton
+          stays hand-rolled. The canonical `Skeleton` primitive renders
+          uniform full-width lines only, so it cannot reproduce the field
+          label plus control pairs, the divider row, or the narrow footer
+          link placeholder. Substitution would visibly change the loading
+          silhouette. Same reasoning as PageHeaderSkeleton.tsx.
+        */}
         <div className="w-full max-w-sm sm:max-w-md animate-pulse">
           {/* Title skeleton */}
           <div className="text-center mb-6 sm:mb-8">
@@ -107,10 +116,13 @@ export function LoginPage() {
         <SupabaseLoginForm />
 
         {/* Footer Links */}
-        <div className="mt-6 sm:mt-8 text-center text-xs sm:text-sm">
-          <a href="/" className="link link-hover text-primary">
+        {/* A quiet navigation destination, so it uses NavigationLink. The
+            href stays a real anchor target, which keeps the browser
+            fallback for a user who reaches this page without the router. */}
+        <div className="mt-6 sm:mt-8 flex justify-center">
+          <NavigationLink href="/">
             {t('auth.back_to_home')}
-          </a>
+          </NavigationLink>
         </div>
       </div>
 

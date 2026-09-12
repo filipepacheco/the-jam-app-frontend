@@ -4,6 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { ChevronDown, UserCircle, LogOut, Globe, Palette } from 'lucide-react'
 import { useAuth, useTheme } from '../hooks'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
+import { Action } from './Action'
+
+// The language and theme selects below stay native <select> elements
+// instead of Field + Field.Select. Field always renders a visible label
+// above the control (see docs/design-system/form-fields.md), but these
+// rows use a leading icon plus an aria-label instead of a visible label to
+// stay compact. Adding a visible label would grow this menu, which is a
+// visual redesign this ticket does not authorize.
 
 interface DesktopUserMenuProps {
   className?: string
@@ -54,14 +62,15 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
   if (!isAuthenticated || !user) {
     return (
       <div className={`dropdown dropdown-end ${className}`}>
-        <button
+        <Action
+          variant="quiet"
           tabIndex={0}
-          className="btn btn-ghost gap-1"
+          className="gap-1"
           aria-label={t('nav.settings', { defaultValue: 'Settings' })}
         >
           <Globe className="size-4" />
           <ChevronDown className="size-4" aria-hidden="true" />
-        </button>
+        </Action>
         <div
           tabIndex={0}
           className="dropdown-content z-50 shadow-lg bg-base-100 rounded-box w-64 border border-base-300"
@@ -98,11 +107,13 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
             </div>
           </div>
 
-          {/* Login */}
+          {/* Login. This stays a real anchor (not Action, which only renders a
+              <button>) so right-click and middle-click "open in new tab" keep
+              working, matching its previous behavior. */}
           <div className="border-t border-base-300 p-2">
             <a
               href="/login"
-              className="btn btn-ghost btn-sm btn-block justify-start gap-2"
+              className="ds-menu__item"
             >
               {t('nav.login')}
             </a>
@@ -117,9 +128,10 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
 
   return (
     <div className={`dropdown dropdown-end ${className}`}>
-      <button
+      <Action
+        variant="quiet"
         tabIndex={0}
-        className="btn btn-ghost gap-1"
+        className="gap-1"
       >
         <div className="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center">
           <span className="text-xs font-bold leading-none">{firstName.charAt(0).toUpperCase()}</span>
@@ -127,7 +139,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
         <span className="max-w-[120px] truncate" title={displayName}>{firstName}</span>
         <ChevronDown className="size-4" aria-hidden="true" />
         <span className="sr-only">, {t('nav.user_menu')}</span>
-      </button>
+      </Action>
       <div
         tabIndex={0}
         className="dropdown-content z-50 shadow-lg bg-base-100 rounded-box w-64 border border-base-300"
@@ -138,20 +150,21 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
           <p className="text-xs text-base-content/50">{user.isHost ? t('roles.host') : t('roles.user')}</p>
         </div>
 
-        {/* Menu items */}
+        {/* Menu items. This item already navigates through the router
+            (preventDefault + navigate), so it moves onto Action without any
+            behavior change; it never relied on real-anchor semantics. */}
         <div className="p-2">
-          <a
-            href="/profile"
-            onClick={(e) => {
-              e.preventDefault()
+          <Action
+            variant="quiet"
+            className="w-full justify-start gap-2"
+            onClick={() => {
               closeDropdown()
               navigate('/profile')
             }}
-            className="btn btn-ghost btn-sm btn-block justify-start gap-2"
           >
             <UserCircle className="size-4" />
-            {t('nav.my_profile')}
-          </a>
+            <Action.Label>{t('nav.my_profile')}</Action.Label>
+          </Action>
         </div>
 
         {/* Settings */}
@@ -188,27 +201,28 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
 
         {/* Logout */}
         <div className="border-t border-base-300 p-2">
-          <button
-            type="button"
-            onClick={() => {
-              closeDropdown()
-              handleLogout().catch(console.error)
-            }}
-            className={`btn btn-ghost btn-sm btn-block justify-start gap-2 text-error ${isLoggingOut ? 'opacity-50 pointer-events-none' : ''}`}
-            disabled={isLoggingOut}
-          >
-            {isLoggingOut ? (
-              <>
-                <span className="loading loading-spinner loading-sm"></span>
-                {t('auth.logging_out')}
-              </>
-            ) : (
-              <>
-                <LogOut className="size-4" />
-                {t('nav.logout')}
-              </>
-            )}
-          </button>
+          {isLoggingOut ? (
+            <Action
+              variant="quiet"
+              state="loading"
+              loadingLabel={t('auth.logging_out')}
+              className="w-full justify-start gap-2 text-error"
+            >
+              <Action.Label>{t('auth.logging_out')}</Action.Label>
+            </Action>
+          ) : (
+            <Action
+              variant="quiet"
+              className="w-full justify-start gap-2 text-error"
+              onClick={() => {
+                closeDropdown()
+                handleLogout().catch(console.error)
+              }}
+            >
+              <LogOut className="size-4" />
+              <Action.Label>{t('nav.logout')}</Action.Label>
+            </Action>
+          )}
         </div>
       </div>
     </div>

@@ -59,6 +59,15 @@ export function EnhancedHero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.5 }}
           >
+            {/*
+              Documented design-system exception (issue #50): the hero
+              call-to-action pair stays router `Link` elements with DaisyUI
+              button classes. `Action` renders a `<button>` only, so it
+              cannot hold a destination. `NavigationLink` keeps the anchor
+              but applies the quiet pill treatment of the tab set, which
+              removes the emphasis and the `btn-lg` size a hero depends on.
+              Same exception as CallToAction.tsx and Navbar.tsx.
+            */}
             <Link
               to={ctaTo}
               className="btn btn-lg bg-base-100 text-primary hover:bg-base-200 border-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"

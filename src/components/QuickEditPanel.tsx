@@ -6,10 +6,12 @@
 
 import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Save, X, Loader2 } from 'lucide-react'
+import { Save, X } from 'lucide-react'
 import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import { GENRES } from '../lib/musicConstants'
 import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
+import { Action, IconAction } from './Action'
+import { Field } from './Field'
 
 interface QuickEditPanelProps {
   music: MusicResponseDto
@@ -28,25 +30,23 @@ function InstrumentStepper({ instrumentKey, label, value, onChange }: Instrument
   return (
     <div className="flex items-center gap-0.5">
       <span className="text-base shrink-0">{getInstrumentIcon(instrumentKey)}</span>
-      <button
-        type="button"
+      <IconAction
+        variant="quiet"
         onClick={() => onChange(Math.max(0, value - 1))}
-        className="btn btn-sm min-h-[44px] min-w-[44px] btn-square btn-ghost"
-        aria-label={`Decrease ${label}`}
-        disabled={value <= 0}
+        label={`Decrease ${label}`}
+        state={value <= 0 ? 'disabled' : 'idle'}
       >
         -
-      </button>
+      </IconAction>
       <span className="w-5 text-center text-sm font-semibold tabular-nums">{value}</span>
-      <button
-        type="button"
+      <IconAction
+        variant="quiet"
         onClick={() => onChange(Math.min(10, value + 1))}
-        className="btn btn-sm min-h-[44px] min-w-[44px] btn-square btn-ghost"
-        aria-label={`Increase ${label}`}
-        disabled={value >= 10}
+        label={`Increase ${label}`}
+        state={value >= 10 ? 'disabled' : 'idle'}
       >
         +
-      </button>
+      </IconAction>
     </div>
   )
 }
@@ -98,99 +98,82 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
   return (
     <div className="border-t border-base-300 pt-3 mt-2 space-y-3">
       {/* Title */}
-      <div>
-        <label className="text-xs text-base-content/60 mb-1 block">
-          {t('music_form.title')} *
-        </label>
-        <input
+      <Field id="quick-edit-title" label={t('music_form.title')} required requiredLabel={t('common.required')}>
+        <Field.Input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="input input-sm input-bordered w-full"
           placeholder={t('music_form.title_placeholder')}
-          required
         />
-      </div>
+      </Field>
 
       {/* Artist */}
-      <div>
-        <label className="text-xs text-base-content/60 mb-1 block">
-          {t('music_form.artist')} *
-        </label>
-        <input
+      <Field id="quick-edit-artist" label={t('music_form.artist')} required requiredLabel={t('common.required')}>
+        <Field.Input
           type="text"
           value={artist}
           onChange={(e) => setArtist(e.target.value)}
-          className="input input-sm input-bordered w-full"
           placeholder={t('music_form.artist_placeholder')}
-          required
         />
-      </div>
+      </Field>
 
       {/* Description */}
-      <div>
-        <label className="text-xs text-base-content/60 mb-1 block">
-          {t('music_form.description')}
-        </label>
-        <textarea
+      <Field id="quick-edit-description" label={t('music_form.description')}>
+        <Field.Textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="textarea textarea-bordered textarea-sm w-full"
           placeholder={t('music_form.description_placeholder')}
           rows={3}
         />
-      </div>
+      </Field>
 
       {/* Link */}
-      <div>
-        <label className="text-xs text-base-content/60 mb-1 block">
-          {t('music_form.link')}
-        </label>
-        <input
+      <Field id="quick-edit-link" label={t('music_form.link')}>
+        <Field.Input
           type="url"
           value={link}
           onChange={(e) => setLink(e.target.value)}
-          className="input input-sm input-bordered w-full"
           placeholder={t('music_form.link_placeholder')}
         />
-      </div>
+      </Field>
 
       {/* Info */}
-      <div>
-        <label className="text-xs text-base-content/60 mb-1 block">
-          {t('music_form.info_label')}
-        </label>
-        <textarea
+      <Field id="quick-edit-info" label={t('music_form.info_label')}>
+        <Field.Textarea
           value={info}
           onChange={(e) => setInfo(e.target.value)}
-          className="textarea textarea-bordered textarea-sm w-full"
           placeholder={t('music_form.info_placeholder')}
           rows={3}
         />
-      </div>
+      </Field>
 
       {/* Genre and Duration row */}
       <div className="flex flex-wrap gap-3">
         <div className="flex-1 min-w-[140px]">
-          <label className="text-xs text-base-content/60 mb-1 block">
-            {t('common.form_labels.genre')}
-          </label>
-          <select
-            value={genre}
-            onChange={(e) => setGenre(e.target.value)}
-            className="select select-sm select-bordered w-full"
-          >
-            <option value="">{t('music_form.select_genre')}</option>
-            {GENRES.map((g) => (
-              <option key={g} value={g}>{g}</option>
-            ))}
-          </select>
+          <Field id="quick-edit-genre" label={t('common.form_labels.genre')}>
+            <Field.Select value={genre} onChange={(e) => setGenre(e.target.value)}>
+              <option value="">{t('music_form.select_genre')}</option>
+              {GENRES.map((g) => (
+                <option key={g} value={g}>{g}</option>
+              ))}
+            </Field.Select>
+          </Field>
         </div>
 
+        {/*
+          Documented design-system exception (issue #50): the minutes and
+          seconds inputs stay native `<input>` elements instead of `Field` +
+          `Field.Input`. `Field` binds one visible label to exactly one
+          control, but this duration control is one visible label shared by
+          two inputs separated by a colon. Wrapping each input in its own
+          `Field` would either print the "Duration" text twice or drop the
+          shared-label layout. Both inputs keep their own `aria-label`, so
+          the accessible names are unchanged.
+        */}
         <div className="min-w-[120px]">
-          <label className="text-xs text-base-content/60 mb-1 block">
+          <span className="text-xs text-base-content/60 mb-1 block">
             {t('music_library.table.duration')}
-          </label>
+          </span>
           <div className="flex items-center gap-1">
             <input
               type="number"
@@ -217,9 +200,9 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
 
       {/* Instruments - icon only, compact row */}
       <div>
-        <label className="text-xs text-base-content/60 mb-2 block">
+        <span className="text-xs text-base-content/60 mb-2 block">
           {t('music_form.musicians_needed')}
-        </label>
+        </span>
         <div className="flex flex-wrap gap-3">
           <InstrumentStepper instrumentKey="drums" label={t('schedule.instruments.drums')} value={drums} onChange={setDrums} />
           <InstrumentStepper instrumentKey="guitars" label={t('schedule.instruments.guitars')} value={guitars} onChange={setGuitars} />
@@ -231,28 +214,30 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
 
       {/* Action buttons */}
       <div className="flex items-center justify-end gap-2 pt-1">
-        <button
-          type="button"
+        <Action
+          variant="quiet"
           onClick={onCancel}
-          disabled={saving}
-          className="btn btn-sm btn-ghost gap-1"
+          state={saving ? 'disabled' : 'idle'}
+          className="gap-1"
         >
           <X className="size-3.5" />
-          {t('common.cancel')}
-        </button>
-        <button
-          type="button"
-          onClick={() => { void handleSave() }}
-          disabled={saving || !title.trim() || !artist.trim()}
-          className="btn btn-sm btn-primary gap-1"
-        >
-          {saving ? (
-            <Loader2 className="size-3.5 animate-spin" />
-          ) : (
+          <Action.Label>{t('common.cancel')}</Action.Label>
+        </Action>
+        {saving ? (
+          <Action variant="primary" state="loading" loadingLabel={t('common.saving', { defaultValue: t('common.save') })} className="gap-1">
+            <Action.Label>{t('common.save')}</Action.Label>
+          </Action>
+        ) : (
+          <Action
+            variant="primary"
+            onClick={() => { void handleSave() }}
+            state={!title.trim() || !artist.trim() ? 'disabled' : 'idle'}
+            className="gap-1"
+          >
             <Save className="size-3.5" />
-          )}
-          {t('common.save')}
-        </button>
+            <Action.Label>{t('common.save')}</Action.Label>
+          </Action>
+        )}
       </div>
     </div>
   )
