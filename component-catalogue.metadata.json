@@ -1,5 +1,5 @@
 {
-  "candidateFamilies": ["overlay", "feedback", "empty-state"],
+  "candidateFamilies": ["overlay", "feedback", "empty-state", "data-display"],
   "defaults": {
     "category": "product-ui",
     "layer": "domain-component",
@@ -58,6 +58,9 @@
     {"source": "src/components/Alert.tsx", "metadata": {"layer": "primitive", "candidateFamily": "feedback", "readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "verified", "theme": "verified"}, "uiStates": ["info", "success", "warning", "error", "dismissible", "long localized text"], "notes": ["Reviewed in Feedback/Alerts and notifications with user-observable dismissal coverage."]}},
     {"source": "src/components/Avatar.tsx", "metadata": {"layer": "primitive", "notes": []}},
     {"source": "src/components/Action.tsx", "metadata": {"layer": "primitive", "productArea": "shared", "readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "not-applicable", "theme": "verified"}, "uiStates": ["primary", "secondary", "quiet", "destructive", "icon-only", "loading", "disabled", "keyboard", "focus"], "notes": ["Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."]}},
+    {"source": "src/components/FeedbackStates.tsx", "metadata": {"layer": "pattern", "candidateFamily": "feedback", "productArea": "shared", "readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "not-applicable", "theme": "verified"}, "uiStates": ["persistent status", "loading", "skeleton", "success", "error recovery", "empty results", "first use"], "notes": ["Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."]}},
+    {"source": "src/components/data-display/*.tsx", "metadata": {"layer": "primitive", "productArea": "shared", "candidateFamily": "data-display", "readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "not-applicable", "theme": "verified"}, "uiStates": ["semantic tones", "compact", "comfortable", "selected", "interactive", "long content", "responsive"], "notes": ["Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."]}},
+    {"source": "src/components/music/MusicDataDisplay.tsx", "metadata": {"layer": "domain-component", "productArea": "music", "candidateFamily": "data-display", "readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "verified", "theme": "verified"}, "uiStates": ["approved", "suggested", "selected", "shared-display"], "notes": ["Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."]}},
     {"source": "src/components/Field.tsx", "metadata": {"layer": "primitive", "productArea": "shared", "readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "not-applicable", "theme": "verified"}, "uiStates": ["input", "select", "textarea", "hint", "required", "validation", "disabled", "submitting", "success", "error", "keyboard", "focus", "long localized text"], "notes": ["Reviewed in Foundations/Field controls with native keyboard operation, label and description association, validation, disabled state, asynchronous feedback, and long localized text. Consumers own localized copy."]}},
     {"source": "src/components/EmptyState.tsx", "metadata": {"layer": "pattern", "candidateFamily": "empty-state", "readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "not-applicable", "theme": "verified"}, "uiStates": ["informational", "recovery action", "long localized content"], "notes": ["Reviewed in States/Empty state; consumers own translated copy."]}},
     {"source": "src/components/FullPageSpinner.tsx", "metadata": {"readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "not-applicable", "theme": "verified"}, "uiStates": ["unlabelled", "labelled", "long localized label"], "notes": ["Reviewed in States/Loading; consumers own translated labels."]}},
@@ -363,7 +366,22 @@
     {"id": "ui.0165", "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx", "name": "DestructiveActionExample"},
     {"id": "ui.0166", "source": "src/components/Action.tsx", "name": "Action"},
     {"id": "ui.0167", "source": "src/components/Action.tsx", "name": "IconAction"},
-    {"id": "ui.0168", "source": "src/components/Field.tsx", "name": "Field"},
-    {"id": "ui.0169", "source": "src/components/Field.tsx", "name": "FormSubmissionFeedback"}
+    {"id": "ui.0168", "source": "src/components/FeedbackStates.tsx", "name": "Status"},
+    {"id": "ui.0169", "source": "src/components/FeedbackStates.tsx", "name": "LoadingState"},
+    {"id": "ui.0170", "source": "src/components/FeedbackStates.tsx", "name": "Skeleton"},
+    {"id": "ui.0171", "source": "src/components/FeedbackStates.tsx", "name": "SuccessState"},
+    {"id": "ui.0172", "source": "src/components/FeedbackStates.tsx", "name": "ErrorState"},
+    {"id": "ui.0173", "source": "src/components/FeedbackStates.tsx", "name": "CanonicalEmptyState"},
+    {"id": "ui.0174", "source": "src/components/data-display/index.tsx", "name": "Badge"},
+    {"id": "ui.0175", "source": "src/components/data-display/index.tsx", "name": "StatusIndicator"},
+    {"id": "ui.0176", "source": "src/components/data-display/index.tsx", "name": "DataCard"},
+    {"id": "ui.0177", "source": "src/components/data-display/index.tsx", "name": "ListRow"},
+    {"id": "ui.0178", "source": "src/components/data-display/index.tsx", "name": "CompactMetadata"},
+    {"id": "ui.0179", "source": "src/components/music/MusicDataDisplay.tsx", "name": "MusicBadge"},
+    {"id": "ui.0180", "source": "src/components/music/MusicDataDisplay.tsx", "name": "MusicStatusIndicator"},
+    {"id": "ui.0181", "source": "src/components/music/MusicDataDisplay.tsx", "name": "MusicCompactMetadata"},
+    {"id": "ui.0182", "source": "src/components/music/MusicDataDisplay.tsx", "name": "MusicDataCard"},
+    {"id": "ui.0183", "source": "src/components/Field.tsx", "name": "Field"},
+    {"id": "ui.0184", "source": "src/components/Field.tsx", "name": "FormSubmissionFeedback"}
   ]
 }

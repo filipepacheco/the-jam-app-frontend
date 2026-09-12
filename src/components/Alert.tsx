@@ -1,9 +1,9 @@
-import { memo, useEffect } from 'react'
+import { memo, useEffect, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type AlertType = 'error' | 'warning' | 'success' | 'info'
 
-interface AlertProps {
+export interface AlertProps {
   type: AlertType
   message: string | null | undefined
   title?: string
@@ -11,6 +11,7 @@ interface AlertProps {
   className?: string
   autoHide?: boolean
   autoHideDelay?: number
+  action?: ReactNode
 }
 
 const ALERT_ICONS: Record<AlertType, string> = {
@@ -35,6 +36,7 @@ export const Alert = memo(function Alert({
   className = '',
   autoHide = false,
   autoHideDelay = 3000,
+  action,
 }: AlertProps) {
   const { t } = useTranslation()
 
@@ -47,7 +49,12 @@ export const Alert = memo(function Alert({
   if (!message) return null
 
   return (
-    <div className={`alert ${ALERT_CLASSES[type]} ${className}`} role="alert">
+    <div
+      className={`alert ${ALERT_CLASSES[type]} ${className}`}
+      role={type === 'error' ? 'alert' : 'status'}
+      aria-live={type === 'error' ? 'assertive' : 'polite'}
+      aria-atomic="true"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="stroke-current shrink-0 h-6 w-6"
@@ -64,9 +71,10 @@ export const Alert = memo(function Alert({
       <div className="flex-1">
         {title && <h3 className="font-bold">{title}</h3>}
         <div className="text-sm">{message}</div>
+        {action && <div className="mt-2 flex flex-wrap gap-2">{action}</div>}
       </div>
       {onDismiss && (
-        <button className="btn btn-sm btn-ghost" onClick={onDismiss} aria-label={t('common.dismiss')}>
+        <button className="btn btn-sm btn-ghost ds-control ds-focusable" onClick={onDismiss} aria-label={t('common.dismiss')}>
           ✕
         </button>
       )}

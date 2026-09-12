@@ -6,7 +6,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import useSWR from 'swr'
-import {Alert} from '../components'
+import {EmptyState, ErrorState, LoadingState} from '../components'
 import {SITE_URL} from '../lib/api'
 import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
@@ -17,7 +17,7 @@ type DateSortOption = 'newest' | 'oldest' | 'upcoming'
 
 export function BrowseJamsPage() {
   const { t } = useTranslation()
-  const { data: jams, error, isLoading } = useSWR('/jams')
+  const { data: jams, error, isLoading, mutate } = useSWR('/jams')
 
 
   // Filter state
@@ -240,10 +240,7 @@ export function BrowseJamsPage() {
         {/* Loading State */}
         {isLoading && (
           <div>
-            <div className="flex justify-center items-center gap-3 mb-8">
-              <span className="loading loading-spinner loading-md sm:loading-lg"></span>
-              <span className="font-semibold text-sm sm:text-base text-base-content/70">{t('jams.browse.loading')}</span>
-            </div>
+            <LoadingState label={t('jams.browse.loading')} className="mb-8" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
               {[...Array(6)].map((_, index) => (
                 <JamCardSkeleton key={`skeleton-jam-${index}`} />
@@ -254,7 +251,11 @@ export function BrowseJamsPage() {
 
         {/* Error State */}
         {error && (
-          <Alert type="error" title={t('jams.browse.error_title')} message={error} />
+          <ErrorState
+            title={t('jams.browse.error_title')}
+            description={typeof error === 'string' ? error : t('jams.browse.error_description')}
+            action={{ label: t('jams.browse.retry'), onClick: () => void mutate() }}
+          />
         )}
 
         {/* Jam Sections */}
@@ -316,20 +317,17 @@ export function BrowseJamsPage() {
 
             {/* Global Empty State */}
             {visibleCount === 0 && (
-              <div className="text-center py-8 sm:py-12 lg:py-16">
-                <div className="text-4xl sm:text-5xl lg:text-6xl mb-3 sm:mb-4">🎸</div>
-                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 sm:mb-3">{t('jams.browse.empty_title')}</h3>
-                <p className="text-xs sm:text-sm lg:text-base text-base-content/70 mb-4 sm:mb-6">
-                  {hasActiveFilters
-                    ? t('jams.browse.empty_try_filters')
-                    : t('jams.browse.empty_no_jams')}
-                </p>
-                {hasActiveFilters && (
-                  <button onClick={clearFilters} className="btn btn-primary btn-xs sm:btn-sm lg:btn-md">
-                    {t('jams.browse.clear_filters')}
-                  </button>
-                )}
-              </div>
+              <EmptyState
+                icon="🎸"
+                kind={hasActiveFilters ? 'results' : 'first-use'}
+                title={t('jams.browse.empty_title')}
+                description={hasActiveFilters
+                  ? t('jams.browse.empty_try_filters')
+                  : t('jams.browse.empty_no_jams')}
+                action={hasActiveFilters
+                  ? { label: t('jams.browse.clear_filters'), onClick: clearFilters }
+                  : undefined}
+              />
             )}
           </>
         )}
@@ -337,5 +335,4 @@ export function BrowseJamsPage() {
     </div>
   )
 }
-
 
