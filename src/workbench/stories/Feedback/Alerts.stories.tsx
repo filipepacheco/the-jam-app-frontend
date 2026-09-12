@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, fn } from 'storybook/test'
 import { Alert } from '../../../components/Alert'
 import { PageAlerts } from '../../../components/PageAlerts'
+import { ErrorState, Status, SuccessState } from '../../../components/FeedbackStates'
 import OfflineBanner from '../../../components/publicDashboard/OfflineBanner'
 
 const meta = {
@@ -94,4 +95,27 @@ export const OfflineNotificationHidden: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.queryByRole('status')).not.toBeInTheDocument()
   },
+}
+
+export const PersistentRecoveryStates: Story = {
+  render: () => (
+    <div className="grid max-w-3xl gap-4">
+      <Status
+        tone="warning"
+        title="A conexão está instável"
+        description="As alterações continuam salvas neste dispositivo. Tente novamente quando a rede estabilizar."
+        action={{ label: 'Tentar novamente', onClick: fn() }}
+      />
+      <SuccessState
+        title="Setlist salvo"
+        description="Todos já podem consultar a ordem atualizada das apresentações."
+      />
+      <ErrorState
+        title="Não foi possível atualizar a programação"
+        description="Suas inscrições continuam intactas. Verifique a conexão e tente novamente."
+        action={{ label: 'Tentar novamente', onClick: fn() }}
+      />
+    </div>
+  ),
+  globals: { theme: 'jam-light' },
 }

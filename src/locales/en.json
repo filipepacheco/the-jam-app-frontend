@@ -335,6 +335,8 @@
       "clear_filters": "Clear Filters",
       "loading": "Loading jam sessions...",
       "error_title": "Failed to Load Jams",
+      "error_description": "Your filters are still here. Check your connection and try again.",
+      "retry": "Try again",
       "empty_title": "No Jams Found",
       "empty_try_filters": "Try adjusting your filters to see more results",
       "empty_no_jams": "Be the first to create a jam session!",

@@ -338,6 +338,8 @@
       "clear_filters": "Limpar filtros",
       "loading": "Carregando sessões de jam...",
       "error_title": "Falha ao carregar os jams",
+      "error_description": "Seus filtros foram mantidos. Verifique sua conexão e tente novamente.",
+      "retry": "Tentar novamente",
       "empty_title": "Nenhum Jam encontrado",
       "empty_try_filters": "Tente ajustar seus filtros para ver mais resultados",
       "empty_no_jams": "Seja o primeiro a criar uma sessão de jam!",
