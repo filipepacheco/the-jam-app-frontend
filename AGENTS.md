@@ -38,8 +38,7 @@ This document provides essential information for AI coding agents working on the
 src/
 ├── components/           # Reusable UI components
 │   ├── publicDashboard/  # Live dashboard display components
-│   ├── dj-control/       # DJ control panel components (legacy)
-│   ├── dj-control-v2/    # Redesigned DJ control (active development)
+│   ├── dj-control/       # DJ control panel components (shared by legacy and V2 tabs)
 │   ├── jam-detail-v2/    # Redesigned jam detail components
 │   ├── schedule/         # Schedule management components
 │   ├── forms/            # Form components
