@@ -20,6 +20,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -35,3 +37,10 @@ jobs:
 
       - name: Enforce reviewed workbench baseline
         run: npm run catalogue:baseline
+
+      # Keep prospective policy findings visible before the blocking regression gate.
+      - name: Warn about design-system governance regressions
+        run: npm run design-system:warn -- --base "${{ github.event.pull_request.base.sha || github.event.before }}"
+
+      - name: Enforce new design-system regressions only
+        run: npm run design-system:check -- --base "${{ github.event.pull_request.base.sha || github.event.before }}"

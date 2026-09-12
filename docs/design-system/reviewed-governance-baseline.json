@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "reviewedDebt": [
+    {
+      "id": "debt.component-exemptions.before-60",
+      "kind": "component-exemption",
+      "scope": "unchanged-at-base",
+      "reason": "Existing active component exemptions were reviewed through the catalogue workflow before progressive enforcement. They remain visible while their owning component source is unchanged.",
+      "owner": "Design-system maintainers and the owning product-area consumer",
+      "record": "docs/design-system/component-catalogue.md and the component metadata notes",
+      "removeWhen": "Remove this entry as each exempt component receives direct evidence or a component-specific reviewed exception; changing an exempt component requires a component:<stable-id> entry or direct story evidence."
+    },
+    {
+      "id": "debt.story-accessibility.before-60",
+      "kind": "story-accessibility",
+      "scope": "unchanged-at-base",
+      "reason": "The private workbench intentionally retains Storybook a11y todo findings while inherited product accessibility defects are remediated.",
+      "owner": "Design-system maintainers and the owning story consumer",
+      "record": "docs/design-system/workbench-evaluation.md",
+      "removeWhen": "Remove this entry after all remaining inherited stories use a11y.test: error; changing an impacted story or component already requires strict a11y evidence."
+    },
+    {
+      "id": "debt.story-interaction.before-60",
+      "kind": "story-interaction",
+      "scope": "unchanged-at-base",
+      "reason": "Earlier workbench stories predate the explicit interaction classification and may be static or lack a durable play assertion.",
+      "owner": "Design-system maintainers and the owning story consumer",
+      "record": "docs/design-system/workbench-authoring.md",
+      "removeWhen": "Remove this entry after each inherited story has play coverage or an explicit static classification; changing an impacted story or component already requires one of those forms of evidence."
+    }
+  ]
+}
