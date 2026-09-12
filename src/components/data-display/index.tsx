@@ -4,7 +4,7 @@ import './DataDisplay.css'
 export type DataDisplayTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger'
 export type BadgeSize = 'sm' | 'md' | 'lg'
 export type DataDisplayDensity = 'compact' | 'comfortable'
-export type Status = DataDisplayTone | 'live' | 'offline' | 'pending' | 'completed'
+export type StatusTone = DataDisplayTone | 'live' | 'offline' | 'pending' | 'completed'
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   children: ReactNode
@@ -27,7 +27,7 @@ export function Badge({ children, className = '', size = 'md', tone = 'neutral',
 
 export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
   label: ReactNode
-  status?: Status
+  status?: StatusTone
 }
 
 export function StatusIndicator({ className = '', label, status = 'neutral', ...props }: StatusIndicatorProps) {
