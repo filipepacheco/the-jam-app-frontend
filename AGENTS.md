@@ -241,6 +241,7 @@ Access via URL parameters during development:
 | `src/contexts/AuthContext.tsx` | Authentication state management |
 | `src/contexts/JamContext.tsx` | Jam session state management |
 | `src/i18n.ts` | i18next configuration |
+| `docs/design-system/contributor-workflow.md` | Required entry point before changing Jam App UI: canonical-component discovery, foundations, private workbench evidence, exceptions, and deprecation |
 
 ## Security Considerations
 
