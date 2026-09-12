@@ -12,22 +12,22 @@
   },
   "stories": {
     "files": 27,
-    "total": 143,
-    "playCoverage": 65,
+    "total": 146,
+    "playCoverage": 66,
     "reachableCatalogueComponents": 107,
-    "visualCandidates": 143,
+    "visualCandidates": 146,
     "visualCells": 32
   },
   "interactions": {
-    "total": 65,
-    "pass": 65,
+    "total": 66,
+    "pass": 66,
     "fail": 0,
     "unhandled": 0,
     "evidence": "workbench-json-results"
   },
   "accessibility": {
     "strict": 25,
-    "todo": 118,
+    "todo": 121,
     "reviewedDebt": 3,
     "newViolations": 0
   },
