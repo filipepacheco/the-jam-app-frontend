@@ -62,7 +62,7 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
       <div className="card-body p-3 sm:p-6">
         {/* Header: Name + Status Badge */}
         <div className="flex justify-between items-center gap-2">
-          <h3 className="card-title text-base sm:text-lg min-w-0">{jam.name || t('jams.no_name')}</h3>
+          <h3 className="card-title ds-type-ui ds-wrap-user-content min-w-0">{jam.name || t('jams.no_name')}</h3>
           <Badge tone={jamStatusTone(jam.status)} className="flex-shrink-0 font-semibold">
             {getJamStatusLabel(jam.status, t)}
           </Badge>
@@ -78,7 +78,7 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
 
         {/* Description */}
         {jam.description && (
-          <p className="text-sm sm:text-base text-base-content/80 mt-2 line-clamp-3">
+          <p className="ds-wrap-user-content text-sm sm:text-base text-base-content/80 mt-2">
             {jam.description}
           </p>
         )}
@@ -95,7 +95,7 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
             href={jam.spotifyPlaylistUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-sm text-success hover:underline mt-2"
+            className="ds-control ds-focusable flex items-center gap-1.5 text-sm text-success hover:underline mt-2"
             onClick={(e) => e.stopPropagation()}
           >
             <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" />
@@ -109,11 +109,11 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
             browser "open in new tab" behaviour. Same exception as the external
             Spotify anchor above. See docs/design-system/jam-music-migration.md. */}
         <div className="card-actions justify-end gap-2 mt-4 sm:mt-6">
-            <Link to={getJamDashboardPath(jam)} className="btn btn-outline btn-sm text-xs sm:text-sm gap-1.5" title="View live dashboard">
+            <Link to={getJamDashboardPath(jam)} className="btn btn-outline ds-control ds-focusable ds-type-ui gap-1.5" title="View live dashboard">
               <Radio className="size-3.5" aria-hidden="true" />
               {t('jams.live_dashboard', 'Dashboard ao vivo')}
             </Link>
-          <Link to={getJamPath(jam)} className="btn btn-primary btn-sm text-xs sm:text-sm">
+          <Link to={getJamPath(jam)} className="btn btn-primary ds-control ds-focusable ds-type-ui">
             {t('common.details')}
           </Link>
         </div>
@@ -121,5 +121,3 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
     </div>
   )
 })
-
-

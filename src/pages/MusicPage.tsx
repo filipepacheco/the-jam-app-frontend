@@ -27,6 +27,7 @@ import {
 import { filterAndSortMusic } from '../lib/musicUtils'
 import { GENRES } from '../lib/musicConstants'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { MusicDataCard } from '../components/music/MusicDataDisplay'
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100] as const
 const DEFAULT_PAGE_SIZE = 50
@@ -542,19 +543,19 @@ export function MusicPage() {
         ) : (
           <div className="space-y-3 overflow-y-auto">
             {suggestedSongs.map((music) => (
-              <div key={music.id} className="card bg-base-200">
-                <div className="card-body p-4">
-                  <div className="flex items-start justify-between gap-3">
+              <MusicDataCard key={music.id} music={music} density="comfortable">
+                  <div className="flex flex-col items-start gap-3 sm:flex-row sm:justify-between">
                     <div className="min-w-0 flex-1">
-                      <p className="font-semibold">{music.title}</p>
-                      <p className="text-sm text-base-content/70">{music.artist}</p>
+                      <p className="ds-type-ui ds-wrap-user-content font-semibold">{music.title}</p>
+                      <p className="ds-wrap-user-content text-sm text-base-content/70">{music.artist}</p>
                       {music.genre && <Badge size="sm" className="mt-1">{music.genre}</Badge>}
-                      {music.description && <p className="text-xs text-base-content/50 mt-1 line-clamp-2">{music.description}</p>}
+                      {music.description && <p className="ds-wrap-user-content mt-1 text-sm text-base-content/50">{music.description}</p>}
                     </div>
-                    <div className="flex gap-2 shrink-0">
+                    <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:shrink-0">
                       <Action
                         state={actionLoading ? 'disabled' : 'idle'}
                         onClick={() => void handleApprove(music)}
+                        className="w-full sm:w-auto"
                       >
                         {t('common.approve')}
                       </Action>
@@ -562,13 +563,13 @@ export function MusicPage() {
                         variant="destructive"
                         state={actionLoading ? 'disabled' : 'idle'}
                         onClick={() => handleReject(music)}
+                        className="w-full sm:w-auto"
                       >
                         {t('common.reject')}
                       </Action>
                     </div>
                   </div>
-                </div>
-              </div>
+              </MusicDataCard>
             ))}
           </div>
         )}

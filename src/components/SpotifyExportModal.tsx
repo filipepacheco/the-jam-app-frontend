@@ -121,7 +121,7 @@ export function SpotifyExportModal({
             href={exportResult.spotifyPlaylistUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-primary gap-2"
+            className="btn btn-primary ds-control ds-focusable ds-type-ui gap-2"
           >
             <ExternalLink className="w-4 h-4" />
             {t('spotify.export_modal.open_playlist')}

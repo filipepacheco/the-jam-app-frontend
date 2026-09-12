@@ -55,7 +55,7 @@ memo(function MusicTableRow({
                 href={music.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-ghost btn-xs min-h-[44px] min-w-[44px]"
+                className="btn btn-ghost ds-control ds-focusable"
                 title={music.link}
               >
                 🔗
@@ -169,4 +169,3 @@ function MusicActionButtons({
     </div>
   )
 }
-

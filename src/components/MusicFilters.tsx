@@ -51,7 +51,7 @@ export function MusicFilters({
           </div>
 
           {/* Filters Row on Mobile / Horizontal on Desktop */}
-          <div className="flex gap-2 sm:gap-4">
+          <div className="flex flex-wrap gap-2 sm:flex-nowrap sm:gap-4">
             {/* Genre Filter */}
             <div className="flex-1 sm:min-w-[140px]">
               <Field id="music-genre-filter" label={<span className="sm:sr-only">{t('common.form_labels.genre')}</span>}>
@@ -77,17 +77,12 @@ export function MusicFilters({
               </Field>
             </div>
 
-            {/* Clear Filters - Icon only on mobile, text on desktop */}
+            {/* Clear filters move to their own row on compact screens. */}
             {hasFilters && (
-              <div className="shrink-0 self-end">
-                <Action
-                  onClick={onClearFilters}
-                  variant="quiet"
-                  aria-label={t('music_library.clear_filters')}
-                >
+              <div className="basis-full self-end sm:basis-auto sm:shrink-0">
+                <Action onClick={onClearFilters} variant="quiet">
                   <Action.Label>
-                    <span className="sm:hidden" aria-hidden="true">✕</span>
-                    <span className="hidden sm:inline">{t('music_library.clear_filters')}</span>
+                    {t('music_library.clear_filters')}
                   </Action.Label>
                 </Action>
               </div>

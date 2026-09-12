@@ -3,6 +3,7 @@ import { expect, fn } from 'storybook/test'
 import { EditMusicianModal } from '../../components/EditMusicianModal'
 import { PerformanceSelectionModal } from '../../components/jam-detail-v2/PerformanceSelectionModal'
 import { inProgressSchedule } from '../fixtures'
+import { scheduleFixtures } from '../jamMusicFixtures'
 
 const meta = { title: 'Overlays/Jam forms', parameters: { a11y: { test: 'todo' } } } satisfies Meta
 export default meta
@@ -28,3 +29,19 @@ export const PerformanceChoice: Story = {
 }
 
 export const NoPerformances: Story = { render: () => <PerformanceSelectionModal performances={[]} isOpen onClose={fn()} onSelectPerformance={fn()} /> }
+
+export const LongPerformanceChoice: Story = {
+  render: () => (
+    <PerformanceSelectionModal
+      performances={[scheduleFixtures[0]]}
+      isOpen
+      onClose={fn()}
+      onSelectPerformance={fn()}
+    />
+  ),
+  globals: {
+    locale: 'es',
+    theme: 'jam-light',
+    viewport: { value: 'phone', isRotated: false },
+  },
+}

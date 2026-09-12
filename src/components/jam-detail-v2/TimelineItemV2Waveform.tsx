@@ -121,24 +121,25 @@ export function TimelineItemV2Waveform({
     >
       <div className="card-body p-3 overflow-hidden">
 
-        {/* Header: Grid layout for proper text truncation with status */}
-        <div className={`grid grid-cols-[auto_1fr_auto] items-start gap-2 ${isCompleted && !isExpanded ? '' : 'mb-1'}`}>
+        {/* A song title is the primary decision input, so it wraps before the
+            status moves beneath it at phone widths. */}
+        <div className={`grid grid-cols-[auto_minmax(0,1fr)] sm:grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-2 ${isCompleted && !isExpanded ? '' : 'mb-1'}`}>
           {position !== undefined ? (
             <span className="text-[11px] font-semibold text-base-content/40 tabular-nums shrink-0 mt-0.5 w-5 text-center">
               {position}
             </span>
           ) : <div />}
           <div className="min-w-0">
-            <h3 className="text-sm sm:text-base md:text-lg font-bold text-base-content mb-0.5 truncate">
+            <h3 className="ds-type-ui ds-wrap-user-content font-bold text-base-content mb-0.5">
               {schedule.music?.title}
             </h3>
-            <p className="text-xs sm:text-sm text-base-content/70 truncate flex items-center gap-1">
+            <p className="ds-wrap-user-content flex items-center gap-1 text-sm text-base-content/70">
               {schedule.music?.artist}
               <ChevronDown className={`size-3 text-base-content/60 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
             </p>
           </div>
           {/* Status + meta - right column */}
-          <div className="text-right">
+          <div className="col-start-2 text-left sm:col-start-auto sm:text-right">
             <div className={`text-xs sm:text-sm font-semibold mb-0.5 ${status.color}`} title={status.hint || undefined}>
                 <span className={`${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse will-change-transform' : ''}`} aria-hidden="true">{status.icon}</span>
                 <span className="whitespace-nowrap"> {status.text}</span>
@@ -179,7 +180,7 @@ export function TimelineItemV2Waveform({
                   className="inline-flex items-center gap-1.5 bg-base-200/60 px-2 py-1 rounded-md text-xs max-w-full"
                 >
                   <span aria-hidden="true" className="shrink-0" title={reg.instrument || undefined}>{getInstrumentEmoji(reg.instrument)}</span>
-                  <span className="font-medium truncate">
+                  <span className="ds-wrap-user-content font-medium">
                     {reg.musician?.id === user?.id ? t('common.you') : (reg.musician?.name?.split(' ')[0] ?? reg.musician?.name)}
                   </span>
                 </div>
@@ -192,7 +193,7 @@ export function TimelineItemV2Waveform({
         {schedule.music?.description && (
           <div className="flex items-start gap-1.5 border-t border-base-content/10 pt-1">
             <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
-            <p className="text-xs text-base-content/50 line-clamp-2 break-words">{schedule.music.description}</p>
+            <p className="ds-wrap-user-content text-sm text-base-content/50">{schedule.music.description}</p>
           </div>
         )}
 
@@ -200,7 +201,7 @@ export function TimelineItemV2Waveform({
         {schedule.music?.info && (
           <div className="flex items-start gap-1.5 border-t border-base-content/10 pt-1">
             <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
-            <p className="text-xs text-base-content/50 line-clamp-3 break-words whitespace-pre-line">{schedule.music.info}</p>
+            <p className="ds-wrap-user-content whitespace-pre-line text-sm text-base-content/50">{schedule.music.info}</p>
           </div>
         )}
 

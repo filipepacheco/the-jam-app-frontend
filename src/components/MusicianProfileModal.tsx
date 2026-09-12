@@ -68,7 +68,7 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
           <div className="flex items-center gap-4">
             <Avatar name={profile.name || ''} size="lg" />
             <div className="min-w-0">
-              <h3 className="text-lg font-bold text-base-content truncate">
+              <h3 className="ds-wrap-user-content text-lg font-bold text-base-content">
                 {profile.name}
               </h3>
               {profile.instrument && (
@@ -90,7 +90,7 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
               <h4 className="text-xs font-semibold text-base-content/60 uppercase tracking-wide mb-1">
                 {t('musician_profile.bio')}
               </h4>
-              <p className="text-sm text-base-content whitespace-pre-line">
+              <p className="ds-wrap-user-content text-sm text-base-content whitespace-pre-line">
                 {profile.bio}
               </p>
             </div>

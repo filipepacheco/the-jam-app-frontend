@@ -8505,6 +8505,7 @@
       "dependencies": {
         "internal": [
           "src/components/index.ts",
+          "src/components/music/MusicDataDisplay.tsx",
           "src/hooks/index.ts",
           "src/lib/musicConstants.ts",
           "src/lib/musicUtils.tsx",
@@ -10602,6 +10603,7 @@
       ],
       "consumers": [
         "src/components/MusicCard.tsx",
+        "src/pages/MusicPage.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
@@ -11936,10 +11938,10 @@
           "staticClassTokens": [
             "btn",
             "btn-outline",
-            "btn-sm",
-            "gap-1.5",
-            "sm:text-sm",
-            "text-xs"
+            "ds-control",
+            "ds-focusable",
+            "ds-type-ui",
+            "gap-1.5"
           ],
           "dynamicClasses": false
         },
@@ -11953,9 +11955,9 @@
           "staticClassTokens": [
             "btn",
             "btn-primary",
-            "btn-sm",
-            "sm:text-sm",
-            "text-xs"
+            "ds-control",
+            "ds-focusable",
+            "ds-type-ui"
           ],
           "dynamicClasses": false
         },
@@ -12163,6 +12165,9 @@
           "staticClassTokens": [
             "btn",
             "btn-primary",
+            "ds-control",
+            "ds-focusable",
+            "ds-type-ui",
             "gap-2"
           ],
           "dynamicClasses": false
@@ -12177,11 +12182,13 @@
           "staticClassTokens": [
             "btn",
             "btn-ghost",
+            "ds-control",
+            "ds-focusable",
             "gap-1",
-            "hover:bg-[#1DB954]/10",
-            "text-[#1DB954]"
+            "hover:bg-success/10",
+            "text-success"
           ],
-          "dynamicClasses": true
+          "dynamicClasses": false
         },
         {
           "id": "src/components/SpotifyPreview.tsx:95:5:action",
@@ -12194,9 +12201,10 @@
             "btn",
             "btn-circle",
             "btn-ghost",
-            "btn-xs",
-            "hover:bg-[#1DB954]/20",
-            "text-[#1DB954]"
+            "ds-control",
+            "ds-focusable",
+            "hover:bg-success/20",
+            "text-success"
           ],
           "dynamicClasses": false
         },
@@ -12495,9 +12503,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:449:17:action",
+          "id": "src/pages/MusicPage.tsx:450:17:action",
           "source": "src/pages/MusicPage.tsx",
-          "line": 449,
+          "line": 450,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -12509,9 +12517,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:456:17:action",
+          "id": "src/pages/MusicPage.tsx:457:17:action",
           "source": "src/pages/MusicPage.tsx",
-          "line": 456,
+          "line": 457,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -12523,9 +12531,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:481:17:action",
+          "id": "src/pages/MusicPage.tsx:482:17:action",
           "source": "src/pages/MusicPage.tsx",
-          "line": 481,
+          "line": 482,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -12537,9 +12545,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:488:17:action",
+          "id": "src/pages/MusicPage.tsx:489:17:action",
           "source": "src/pages/MusicPage.tsx",
-          "line": 488,
+          "line": 489,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13741,23 +13749,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:103:5:card",
-          "source": "src/components/MusicCard.tsx",
-          "line": 103,
-          "column": 5,
-          "ownerComponentId": "ui.0057",
-          "tag": "MusicDataCard",
-          "staticClassTokens": [
-            "bg-base-100",
-            "border",
-            "border-base-200",
-            "card",
-            "compact",
-            "shadow-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/MusicFilters.tsx:36:5:card",
           "source": "src/components/MusicFilters.tsx",
           "line": 36,
@@ -14017,9 +14008,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:300:11:card",
+          "id": "src/pages/MusicPage.tsx:301:11:card",
           "source": "src/pages/MusicPage.tsx",
-          "line": 300,
+          "line": 301,
           "column": 11,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14032,9 +14023,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:308:15:card",
+          "id": "src/pages/MusicPage.tsx:309:15:card",
           "source": "src/pages/MusicPage.tsx",
-          "line": 308,
+          "line": 309,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14042,19 +14033,6 @@
             "bg-base-200",
             "card",
             "p-3"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:545:15:card",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 545,
-          "column": 15,
-          "ownerComponentId": "ui.0149",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card"
           ],
           "dynamicClasses": false
         },
@@ -14661,9 +14639,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:432:15:field",
+          "id": "src/pages/MusicPage.tsx:433:15:field",
           "source": "src/pages/MusicPage.tsx",
-          "line": 432,
+          "line": 433,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "select",
@@ -14675,9 +14653,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:466:17:field",
+          "id": "src/pages/MusicPage.tsx:467:17:field",
           "source": "src/pages/MusicPage.tsx",
-          "line": 466,
+          "line": 467,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "input",
