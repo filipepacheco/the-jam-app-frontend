@@ -11,6 +11,7 @@ export { ModalFooter } from './ModalFooter'
 export { EmptyState } from './EmptyState'
 export { Action, IconAction } from './Action'
 export type { ActionProps, ActionState, ActionVariant, IconActionProps } from './Action'
+export { ConfirmationDialog, Disclosure, OverlayActions, OverlayDrawer, OverlayModal } from './overlays'
 
 export {
   ProtectedRoute,

@@ -490,12 +490,9 @@
       ],
       "consumers": [
         "src/pages/MusicPage.tsx",
-        "src/pages/tabs/ScheduleTab.tsx",
-        "src/workbench/stories/Overlays.stories.tsx"
+        "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [
-        "src/workbench/stories/Overlays.stories.tsx"
-      ],
+      "workbenchStories": [],
       "dependencies": {
         "internal": [
           "src/components/Modal.tsx",
@@ -518,7 +515,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "ready",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -531,7 +528,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Overlays/Current components."
+          "Legacy compatibility dialog retained without a new direct workbench story; new confirmation work must use the canonical overlay family and migrate this workflow only when its consequence copy is reviewed."
         ]
       }
     },
@@ -1429,9 +1426,9 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
-          "src/components/Modal.tsx",
-          "src/components/ModalFooter.tsx",
+          "src/components/overlays/index.ts",
           "src/services/index.ts"
         ],
         "external": [
@@ -3223,13 +3220,11 @@
         }
       ],
       "consumers": [
-        "src/components/Navbar.tsx",
-        "src/workbench/stories/Overlays.stories.tsx"
+        "src/components/Navbar.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
-        "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
@@ -3300,7 +3295,6 @@
       "consumers": [
         "src/components/ConfirmDialog.tsx",
         "src/components/EditMusicianModal.tsx",
-        "src/components/FeedbackModal.tsx",
         "src/components/MusicModal.tsx",
         "src/components/MusicianProfileModal.tsx",
         "src/components/OnboardingModal.tsx",
@@ -3315,16 +3309,11 @@
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/host/CreateJamPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
-        "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/Overlays.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/JamOverlays.stories.tsx",
-        "src/workbench/stories/Navigation/Navbar.stories.tsx",
-        "src/workbench/stories/Overlays.stories.tsx",
-        "src/workbench/stories/PageCompositions.stories.tsx",
-        "src/workbench/stories/RemainingUI.stories.tsx"
+        "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3389,22 +3378,15 @@
       "consumers": [
         "src/components/ConfirmDialog.tsx",
         "src/components/EditMusicianModal.tsx",
-        "src/components/FeedbackModal.tsx",
         "src/components/SpotifyExportModal.tsx",
         "src/components/SpotifyImportModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
-        "src/pages/tabs/ScheduleTab.tsx",
-        "src/workbench/stories/Overlays.stories.tsx"
+        "src/pages/tabs/ScheduleTab.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/JamOverlays.stories.tsx",
-        "src/workbench/stories/Navigation/Navbar.stories.tsx",
-        "src/workbench/stories/Overlays.stories.tsx",
-        "src/workbench/stories/PageCompositions.stories.tsx",
-        "src/workbench/stories/RemainingUI.stories.tsx"
+        "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -10102,12 +10084,19 @@
       ],
       "consumers": [
         "src/components/Action.tsx",
+        "src/components/FeedbackModal.tsx",
+        "src/components/overlays/CanonicalOverlays.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
-        "src/workbench/stories/Foundations/ActionControls.stories.tsx"
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
@@ -10209,6 +10198,437 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0168",
+      "name": "OverlaySurface",
+      "source": "src/components/overlays/CanonicalOverlays.tsx",
+      "declaration": "function",
+      "visibility": "local",
+      "exports": [],
+      "consumers": [
+        "src/components/overlays/CanonicalOverlays.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Action.tsx",
+          "src/components/overlays/CanonicalOverlays.css"
+        ],
+        "external": [
+          "lucide-react",
+          "react",
+          "react-dom"
+        ],
+        "contexts": [
+          "browser"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "modal",
+          "drawer",
+          "confirmation",
+          "confirmation-submitting",
+          "long-content",
+          "mobile",
+          "desktop",
+          "non-modal-disclosure",
+          "keyboard",
+          "focus",
+          "scrolling"
+        ],
+        "candidateFamily": "overlay",
+        "notes": [
+          "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0169",
+      "name": "OverlayModal",
+      "source": "src/components/overlays/CanonicalOverlays.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "re-export",
+          "name": "OverlayModal",
+          "module": "src/components/index.ts"
+        },
+        {
+          "kind": "named",
+          "name": "OverlayModal",
+          "module": "src/components/overlays/CanonicalOverlays.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "OverlayModal",
+          "module": "src/components/overlays/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/FeedbackModal.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/overlays/CanonicalOverlays.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "modal",
+          "drawer",
+          "confirmation",
+          "confirmation-submitting",
+          "long-content",
+          "mobile",
+          "desktop",
+          "non-modal-disclosure",
+          "keyboard",
+          "focus",
+          "scrolling"
+        ],
+        "candidateFamily": "overlay",
+        "notes": [
+          "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0170",
+      "name": "OverlayDrawer",
+      "source": "src/components/overlays/CanonicalOverlays.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "re-export",
+          "name": "OverlayDrawer",
+          "module": "src/components/index.ts"
+        },
+        {
+          "kind": "named",
+          "name": "OverlayDrawer",
+          "module": "src/components/overlays/CanonicalOverlays.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "OverlayDrawer",
+          "module": "src/components/overlays/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/overlays/CanonicalOverlays.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "modal",
+          "drawer",
+          "confirmation",
+          "confirmation-submitting",
+          "long-content",
+          "mobile",
+          "desktop",
+          "non-modal-disclosure",
+          "keyboard",
+          "focus",
+          "scrolling"
+        ],
+        "candidateFamily": "overlay",
+        "notes": [
+          "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0171",
+      "name": "ConfirmationDialog",
+      "source": "src/components/overlays/CanonicalOverlays.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "re-export",
+          "name": "ConfirmationDialog",
+          "module": "src/components/index.ts"
+        },
+        {
+          "kind": "named",
+          "name": "ConfirmationDialog",
+          "module": "src/components/overlays/CanonicalOverlays.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "ConfirmationDialog",
+          "module": "src/components/overlays/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Action.tsx",
+          "src/components/overlays/CanonicalOverlays.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "modal",
+          "drawer",
+          "confirmation",
+          "confirmation-submitting",
+          "long-content",
+          "mobile",
+          "desktop",
+          "non-modal-disclosure",
+          "keyboard",
+          "focus",
+          "scrolling"
+        ],
+        "candidateFamily": "overlay",
+        "notes": [
+          "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0172",
+      "name": "OverlayActions",
+      "source": "src/components/overlays/CanonicalOverlays.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "re-export",
+          "name": "OverlayActions",
+          "module": "src/components/index.ts"
+        },
+        {
+          "kind": "named",
+          "name": "OverlayActions",
+          "module": "src/components/overlays/CanonicalOverlays.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "OverlayActions",
+          "module": "src/components/overlays/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/FeedbackModal.tsx",
+        "src/components/overlays/CanonicalOverlays.tsx",
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/overlays/CanonicalOverlays.css"
+        ],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "modal",
+          "drawer",
+          "confirmation",
+          "confirmation-submitting",
+          "long-content",
+          "mobile",
+          "desktop",
+          "non-modal-disclosure",
+          "keyboard",
+          "focus",
+          "scrolling"
+        ],
+        "candidateFamily": "overlay",
+        "notes": [
+          "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0173",
+      "name": "Disclosure",
+      "source": "src/components/overlays/CanonicalOverlays.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "re-export",
+          "name": "Disclosure",
+          "module": "src/components/index.ts"
+        },
+        {
+          "kind": "named",
+          "name": "Disclosure",
+          "module": "src/components/overlays/CanonicalOverlays.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Disclosure",
+          "module": "src/components/overlays/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Overlays.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/overlays/CanonicalOverlays.css"
+        ],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "modal",
+          "drawer",
+          "confirmation",
+          "confirmation-submitting",
+          "long-content",
+          "mobile",
+          "desktop",
+          "non-modal-disclosure",
+          "keyboard",
+          "focus",
+          "scrolling"
+        ],
+        "candidateFamily": "overlay",
+        "notes": [
+          "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
         ]
       }
     }
@@ -10352,13 +10772,13 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 176,
-    "representedSources": 142,
+    "eligibleSources": 177,
+    "representedSources": 143,
     "ignoredSources": 34,
     "workbench": {
-      "activeReusableVisualComponents": 106,
-      "ready": 89,
-      "exempt": 17,
+      "activeReusableVisualComponents": 112,
+      "ready": 94,
+      "exempt": 18,
       "needsReview": 0,
       "unknown": 0,
       "readyWithoutStory": 0
@@ -15625,9 +16045,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/FeedbackModal.tsx:139:19:field",
+          "id": "src/components/FeedbackModal.tsx:140:19:field",
           "source": "src/components/FeedbackModal.tsx",
-          "line": 139,
+          "line": 140,
           "column": 19,
           "ownerComponentId": "ui.0024",
           "tag": "input",
@@ -15639,9 +16059,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/FeedbackModal.tsx:167:13:field",
+          "id": "src/components/FeedbackModal.tsx:168:13:field",
           "source": "src/components/FeedbackModal.tsx",
-          "line": 167,
+          "line": 168,
           "column": 13,
           "ownerComponentId": "ui.0024",
           "tag": "textarea",
@@ -17110,6 +17530,19 @@
           "staticClassTokens": [
             "modal",
             "modal-open"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "src/components/overlays/CanonicalOverlays.tsx:185:5:modal",
+          "source": "src/components/overlays/CanonicalOverlays.tsx",
+          "line": 185,
+          "column": 5,
+          "ownerComponentId": "ui.0168",
+          "tag": "dialog",
+          "staticClassTokens": [
+            "ds-overlay",
+            "ds-overlay--"
           ],
           "dynamicClasses": true
         },

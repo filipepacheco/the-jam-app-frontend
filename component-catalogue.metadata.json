@@ -54,6 +54,7 @@
     {"source": "src/pages/ProfilePage.tsx", "metadata": {"productArea": "account", "notes": []}},
     {"source": "src/pages/tabs/AuthCallbackPage.tsx", "metadata": {"productArea": "account", "notes": []}},
     {"source": "src/components/Modal.tsx", "metadata": {"layer": "primitive", "candidateFamily": "overlay", "notes": []}},
+    {"source": "src/components/overlays/CanonicalOverlays.tsx", "metadata": {"layer": "primitive", "candidateFamily": "overlay", "readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "not-applicable", "theme": "verified"}, "uiStates": ["modal", "drawer", "confirmation", "confirmation-submitting", "long-content", "mobile", "desktop", "non-modal-disclosure", "keyboard", "focus", "scrolling"], "notes": ["Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."]}},
     {"source": "src/components/ModalFooter.tsx", "metadata": {"layer": "primitive", "candidateFamily": "overlay", "notes": []}},
     {"source": "src/components/Alert.tsx", "metadata": {"layer": "primitive", "candidateFamily": "feedback", "readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "verified", "theme": "verified"}, "uiStates": ["info", "success", "warning", "error", "dismissible", "long localized text"], "notes": ["Reviewed in Feedback/Alerts and notifications with user-observable dismissal coverage."]}},
     {"source": "src/components/Avatar.tsx", "metadata": {"layer": "primitive", "notes": []}},
@@ -95,7 +96,7 @@
     {"source": "src/components/ScheduleCardSkeleton.tsx", "metadata": {"lifecycle": "uncertain", "notes": ["No current consumers; confirm the canonical Schedule loading pattern."]}},
     {"source": "src/components/SidebarSectionSkeleton.tsx", "metadata": {"lifecycle": "uncertain", "notes": ["No current consumers; confirm the canonical sidebar loading pattern."]}},
     {"source": "src/components/Stats.tsx", "metadata": {"lifecycle": "uncertain", "notes": ["No current consumers; review against current dashboard statistics compositions."]}},
-    {"source": "src/components/ConfirmDialog.tsx", "metadata": {"readiness": {"workbench": "ready"}, "uiStates": ["default", "destructive", "submitting", "keyboard-dismissal"], "notes": ["Reviewed in Overlays/Current components."]}},
+    {"source": "src/components/ConfirmDialog.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "uiStates": ["default", "destructive", "submitting", "keyboard-dismissal"], "notes": ["Legacy compatibility dialog retained without a new direct workbench story; new confirmation work must use the canonical overlay family and migrate this workflow only when its consequence copy is reviewed."]}},
     {"source": "src/components/EditMusicianModal.tsx", "metadata": {"readiness": {"workbench": "ready"}, "uiStates": ["default", "validation", "long-text", "mobile", "scrolling"], "notes": ["Reviewed in Overlays/Jam forms."]}},
     {"source": "src/components/FeedbackModal.tsx", "metadata": {"readiness": {"workbench": "ready"}, "uiStates": ["default", "validation", "submitting", "success", "mobile"], "notes": ["Reviewed in Overlays/Current components with MSW-backed submission."]}},
     {"source": "src/components/forms/JamRegistrationForm.tsx", "metadata": {"readiness": {"workbench": "ready"}, "uiStates": ["default", "validation", "disabled", "submitting", "mobile"], "notes": ["Reviewed in Forms/Current components."]}},
@@ -361,6 +362,12 @@
     {"id": "ui.0164", "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx", "name": "ActionableEmptyStateExample"},
     {"id": "ui.0165", "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx", "name": "DestructiveActionExample"},
     {"id": "ui.0166", "source": "src/components/Action.tsx", "name": "Action"},
-    {"id": "ui.0167", "source": "src/components/Action.tsx", "name": "IconAction"}
+    {"id": "ui.0167", "source": "src/components/Action.tsx", "name": "IconAction"},
+    {"id": "ui.0168", "source": "src/components/overlays/CanonicalOverlays.tsx", "name": "OverlaySurface"},
+    {"id": "ui.0169", "source": "src/components/overlays/CanonicalOverlays.tsx", "name": "OverlayModal"},
+    {"id": "ui.0170", "source": "src/components/overlays/CanonicalOverlays.tsx", "name": "OverlayDrawer"},
+    {"id": "ui.0171", "source": "src/components/overlays/CanonicalOverlays.tsx", "name": "ConfirmationDialog"},
+    {"id": "ui.0172", "source": "src/components/overlays/CanonicalOverlays.tsx", "name": "OverlayActions"},
+    {"id": "ui.0173", "source": "src/components/overlays/CanonicalOverlays.tsx", "name": "Disclosure"}
   ]
 }

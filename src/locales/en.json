@@ -1010,6 +1010,7 @@
   "feedback": {
     "button_text": "Feedback",
     "button_label": "Send feedback about the app",
+    "close_modal": "Close feedback dialog",
     "modal_title": "Share Your Feedback",
     "modal_subtitle": "Help us improve by sharing your experience",
     "rating_label": "How would you rate your experience?",
