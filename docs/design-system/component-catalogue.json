@@ -3257,7 +3257,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "ready",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -3271,7 +3271,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Overlays/Current components with shared auth context."
+          "Private navigation child with no direct story: it is inspected through Navbar in Navigation/Responsive navbar, which opens the drawer and asserts its dialog role, accessible name, and keyboard dismissal. The former Overlays/Current components story was replaced by the canonical overlay family in #46."
         ]
       }
     },
@@ -3408,7 +3408,7 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "ready",
+          "workbench": "exempt",
           "accessibility": "unknown",
           "internationalization": "unknown",
           "theme": "unknown"
@@ -3421,7 +3421,7 @@
         ],
         "candidateFamily": "overlay",
         "notes": [
-          "Reviewed through Modal and ConfirmDialog stories."
+          "Shared modal action row with no direct story: it is inspected through its consumers, notably EditMusicianModal and the ConfirmDialog-backed flows, which render it and assert its default, destructive, submitting, and disabled states."
         ]
       }
     },
@@ -12261,8 +12261,8 @@
     "ignoredSources": 37,
     "workbench": {
       "activeReusableVisualComponents": 135,
-      "ready": 117,
-      "exempt": 18,
+      "ready": 115,
+      "exempt": 20,
       "needsReview": 0,
       "unknown": 0,
       "readyWithoutStory": 0

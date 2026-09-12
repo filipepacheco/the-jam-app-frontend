@@ -1,5 +1,5 @@
 import { readFileSync, readdirSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 const scope = [
@@ -14,10 +14,15 @@ describe('forms and overlays workbench coverage', () => {
     const catalogue = JSON.parse(readFileSync(resolve('docs/design-system/component-catalogue.json'), 'utf8')) as {
       components: Array<{ id: string; source: string; name: string; metadata: { readiness: { workbench: string }; notes: string[] } }>
     }
-    const storyText = readdirSync(resolve('src/workbench/stories'))
-      .filter((file) => file.endsWith('.stories.tsx'))
-      .map((file) => readFileSync(resolve('src/workbench/stories', file), 'utf8'))
-      .join('\n')
+    // Stories live in nested folders (Foundations/, Navigation/, Feedback/, States/),
+    // so collect them recursively rather than reading only the top level.
+    const collectStories = (dir: string): string[] =>
+      readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+        const entryPath = join(dir, entry.name)
+        if (entry.isDirectory()) return collectStories(entryPath)
+        return entry.name.endsWith('.stories.tsx') ? [readFileSync(entryPath, 'utf8')] : []
+      })
+    const storyText = collectStories(resolve('src/workbench/stories')).join('\n')
 
     expect(scope).toHaveLength(28)
     for (const id of scope) {
@@ -25,7 +30,9 @@ describe('forms and overlays workbench coverage', () => {
       expect(component, id).toBeDefined()
       expect(['ready', 'exempt'], id).toContain(component?.metadata.readiness.workbench)
       if (component?.metadata.readiness.workbench === 'ready') {
-        expect(storyText, `${id} ${component.name}`).toContain(component.source.replace('src/', '../../').replace('.tsx', ''))
+        // Match the module path without its relative prefix: nested stories import at a
+        // different depth ('../../../components/X') than top-level ones ('../../components/X').
+        expect(storyText, `${id} ${component.name}`).toContain(component.source.replace('src/', '').replace('.tsx', ''))
       } else {
         expect(component?.metadata.notes.some((note) => note.trim().length > 0), id).toBe(true)
       }
