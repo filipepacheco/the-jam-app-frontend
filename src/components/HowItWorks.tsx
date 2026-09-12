@@ -87,20 +87,18 @@ export function HowItWorks() {
               </div>
 
               {/* Content */}
-              <div className="card bg-base-200 flex-1 min-w-0">
-                <div className="card-body p-5 sm:p-6">
+              <div className="flex-1 min-w-0 rounded-box border border-base-300 bg-base-200/70 p-5 sm:p-6">
                   <div className="flex items-center gap-3 mb-2">
-                    <div className="text-primary">
+                    <div className="text-primary" aria-hidden="true">
                       {step.icon}
                     </div>
-                    <h3 className="text-lg sm:text-xl font-bold text-base-content">
+                    <h3 className="text-lg sm:text-xl font-bold text-base-content ds-wrap-user-content">
                       {step.title}
                     </h3>
                   </div>
-                  <p className="text-sm sm:text-base text-base-content/60 leading-relaxed">
+                  <p className="text-sm sm:text-base text-base-content/70 leading-relaxed ds-type-body">
                     {step.description}
                   </p>
-                </div>
               </div>
             </motion.div>
           ))}

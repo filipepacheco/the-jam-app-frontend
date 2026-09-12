@@ -5,6 +5,7 @@ import {LanguageSelector} from './LanguageSelector'
 import {useTranslation} from 'react-i18next'
 import {Action, IconAction} from '../Action'
 import {Field} from '../Field'
+import {NavigationLink} from '../Navigation'
 import type {DashboardLayout} from '../../hooks'
 
 interface Props {
@@ -57,7 +58,8 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-30 bg-black/50"
+        className="fixed inset-0 z-30"
+        style={{ background: 'var(--ds-surface-overlay)' }}
         onClick={handleBackdropClick}
         aria-hidden="true"
       />
@@ -68,90 +70,95 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
         animate={{ opacity: 1, y: 0 }}
         exit={navbarTransition}
         transition={transition}
-        className="fixed top-16 left-0 right-0 z-40 bg-base-200 border-b border-base-300 p-4"
+        className="fixed top-16 left-0 right-0 z-40 max-h-[calc(100vh-4rem)] overflow-y-auto bg-base-200 border-b border-base-300 p-4"
         role="navigation"
+        aria-label={t('publicDashboard.dashboardControls', 'Dashboard controls')}
         onKeyDown={handleEscapeKey}
       >
-      <div className="flex items-center justify-between max-w-6xl mx-auto">
-        <div className="flex items-center justify-between flex-1">
-          <div className="flex items-center gap-4">
-            <a href="/" onClick={onClose} className="link link-hover">← Back to Home</a>
-            <a href={`/jams/${jamSlug || jamId}`} onClick={onClose} className="link link-hover">View Full Details →</a>
+        <div className="flex flex-wrap items-center gap-4 max-w-6xl mx-auto">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
+            <NavigationLink href="/" onClick={onClose}>
+              {t('publicDashboard.backToHome', '← Back to Home')}
+            </NavigationLink>
+            <NavigationLink href={`/jams/${jamSlug || jamId}`} onClick={onClose}>
+              {t('publicDashboard.viewDetails', 'View Full Details →')}
+            </NavigationLink>
           </div>
 
-              <LanguageSelector currentLang={currentLang} onChange={onChangeLanguage} onSelectClose={onClose} />
+          <div className="flex flex-wrap items-center gap-3">
+            <LanguageSelector currentLang={currentLang} onChange={onChangeLanguage} onSelectClose={onClose} />
 
-        {onLayoutChange && (
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-base-content">{layoutLabel}:</span>
-            <div className="flex items-center gap-2" role="group" aria-label={layoutLabel}>
-              <Action
-                variant={layout === 'classic' ? 'primary' : 'secondary'}
-                className="ds-control--host"
-                aria-pressed={layout === 'classic'}
-                onClick={() => onLayoutChange('classic')}
+            {onLayoutChange && (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-base-content">{layoutLabel}:</span>
+                <div className="flex items-center gap-2" role="group" aria-label={layoutLabel}>
+                  <Action
+                    variant={layout === 'classic' ? 'primary' : 'secondary'}
+                    className="ds-control--host"
+                    aria-pressed={layout === 'classic'}
+                    onClick={() => onLayoutChange('classic')}
+                  >
+                    <Action.Label>{t('publicDashboard.layoutClassic', 'Classic')}</Action.Label>
+                  </Action>
+                  <Action
+                    variant={layout === 'carousel' ? 'primary' : 'secondary'}
+                    className="ds-control--host"
+                    aria-pressed={layout === 'carousel'}
+                    onClick={() => onLayoutChange('carousel')}
+                  >
+                    <Action.Label>{t('publicDashboard.layoutCarousel', 'Carousel')}</Action.Label>
+                  </Action>
+                </div>
+              </div>
+            )}
+
+            {layout === 'carousel' && onCarouselIntervalChange && (
+              <Field
+                id="carousel-slide-duration"
+                label={t('publicDashboard.slideDuration', 'Slide Duration')}
               >
-                <Action.Label>{t('publicDashboard.layoutClassic', 'Classic')}</Action.Label>
-              </Action>
-              <Action
-                variant={layout === 'carousel' ? 'primary' : 'secondary'}
-                className="ds-control--host"
-                aria-pressed={layout === 'carousel'}
-                onClick={() => onLayoutChange('carousel')}
+                <Field.Select
+                  value={carouselIntervalMs}
+                  onChange={(e) => onCarouselIntervalChange(Number(e.target.value))}
+                >
+                  <option value={5000}>5s</option>
+                  <option value={8000}>8s</option>
+                  <option value={10000}>10s</option>
+                  <option value={15000}>15s</option>
+                  <option value={20000}>20s</option>
+                </Field.Select>
+              </Field>
+            )}
+
+            {onPollingChange && (
+              <Field
+                id="navbar-polling-interval"
+                label={t('publicDashboard.autoRefresh', 'Auto-refresh')}
               >
-                <Action.Label>{t('publicDashboard.layoutCarousel', 'Carousel')}</Action.Label>
-              </Action>
-            </div>
+                <Field.Select
+                  value={pollingMs}
+                  onChange={(e) => onPollingChange(Number(e.target.value))}
+                >
+                  <option value={0}>{t('publicDashboard.off', 'Off')}</option>
+                  <option value={5000}>5s</option>
+                  <option value={10000}>10s</option>
+                  <option value={30000}>30s</option>
+                  <option value={60000}>1m</option>
+                </Field.Select>
+              </Field>
+            )}
           </div>
-        )}
 
-        {layout === 'carousel' && onCarouselIntervalChange && (
-          <Field
-            id="carousel-slide-duration"
-            label={t('publicDashboard.slideDuration', 'Slide Duration')}
-          >
-            <Field.Select
-              value={carouselIntervalMs}
-              onChange={(e) => onCarouselIntervalChange(Number(e.target.value))}
-            >
-              <option value={5000}>5s</option>
-              <option value={8000}>8s</option>
-              <option value={10000}>10s</option>
-              <option value={15000}>15s</option>
-              <option value={20000}>20s</option>
-            </Field.Select>
-          </Field>
-        )}
-
-        {onPollingChange && (
-          <Field
-            id="navbar-polling-interval"
-            label={t('publicDashboard.autoRefresh', 'Auto-refresh')}
-          >
-            <Field.Select
-              value={pollingMs}
-              onChange={(e) => onPollingChange(Number(e.target.value))}
-            >
-              <option value={0}>{t('publicDashboard.off', 'Off')}</option>
-              <option value={5000}>5s</option>
-              <option value={10000}>10s</option>
-              <option value={30000}>30s</option>
-              <option value={60000}>1m</option>
-            </Field.Select>
-          </Field>
-        )}
-
-        <IconAction
+          <IconAction
             variant="quiet"
             onClick={onClose}
             title={closeNavbarLabel}
             label={closeNavbarLabel}
-        >
-          ✕
-        </IconAction>
+            className="shrink-0"
+          >
+            ✕
+          </IconAction>
         </div>
-
-      </div>
       </motion.div>
     </>
   )

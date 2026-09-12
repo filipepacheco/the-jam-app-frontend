@@ -105,15 +105,32 @@ export const Tabs = NavigationTabs
 export interface NavigationLinkProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'aria-current'> {
   current?: boolean
   icon?: ReactNode
+  variant?: NavigationLinkVariant
 }
 
+/**
+ * Destination emphasis stays separate from Action's operation semantics while
+ * sharing the same semantic palette. Quiet is the default for ordinary
+ * navigation; primary and secondary are for destinations that intentionally
+ * carry call-to-action emphasis (for example, a marketing hero).
+ */
+export type NavigationLinkVariant = 'quiet' | 'primary' | 'secondary'
+
 /** A route-preserving navigation link with a visible current-page state. */
-export function NavigationLink({ children, className = '', current = false, icon, ...props }: NavigationLinkProps) {
+export function NavigationLink({
+  children,
+  className = '',
+  current = false,
+  icon,
+  variant = 'quiet',
+  ...props
+}: NavigationLinkProps) {
   return (
     <a
       {...props}
       aria-current={current ? 'page' : undefined}
-      className={`ds-navigation__link ${current ? 'ds-navigation__link--current' : ''} ${className}`}
+      className={`ds-navigation__link ${current ? 'ds-navigation__link--current' : ''} ${variant !== 'quiet' ? `ds-navigation__link--${variant}` : ''} ${className}`}
+      data-navigation-variant={variant}
     >
       {icon && <span className="ds-navigation__icon" aria-hidden="true">{icon}</span>}
       <span className="ds-navigation__label">{children}</span>

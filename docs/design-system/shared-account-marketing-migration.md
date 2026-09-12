@@ -25,6 +25,7 @@ hold the same behaviour or the same shape.
 | File | Legacy pattern | Canonical replacement |
 | --- | --- | --- |
 | `Navbar.tsx` | Already canonical before this issue | No code change. Three exception comments added |
+| `CallToAction.tsx`, `EnhancedHero.tsx` | Router `Link` elements with legacy button classes | `NavigationLink` with the opt-in `primary`/`secondary` destination variants and router-preserving click handling |
 | `MobileDrawer.tsx` | `btn btn-ghost` close button; `btn btn-primary` register anchor; `menu` links; two `label` plus `select select-bordered` rows; logout `btn` | `IconAction`; `Action variant="primary"`; `NavigationLink`; `Field` plus `Field.Select`; `Action variant="quiet"` |
 | `DesktopUserMenu.tsx` | `btn btn-ghost` trigger, profile and logout buttons | `Action variant="quiet"` |
 | `QuickEditPanel.tsx` | `input input-bordered` and `textarea` fields; `select select-bordered` genre; `btn` steppers; cancel and save `btn` | `Field` plus `Field.Input`, `Field.Textarea` and `Field.Select`; `IconAction variant="quiet"`; `Action` |
@@ -81,6 +82,9 @@ A reviewer sees these changes. The canonical primitives cause them.
    `loading-lg` size.
 10. The `FeedbackButton` icon-only form becomes a square icon control.
     `IconAction` applies the `ds-action--icon-only` shape.
+11. The active marketing CTAs keep native anchor semantics and modifier-click
+    behavior while adopting the design-system primary/secondary destination
+    emphasis. They no longer depend on legacy DaisyUI button classes.
 
 ## Documented exceptions
 
@@ -89,25 +93,24 @@ Each file below holds a comment with this reason.
 ### Anchors that must stay anchors
 
 `Action` renders a `button` element only. It cannot hold a destination.
-`NavigationLink` renders an anchor, but it carries the quiet pill treatment
-of the tab set. That treatment removes the primary or outline emphasis a
-call to action needs. So a call-to-action anchor keeps its router `Link`
-and its DaisyUI button classes.
+`NavigationLink` renders an anchor and now has opt-in `primary` and
+`secondary` destination variants. These variants keep the native `href`,
+modifier-click behavior, and browser context-menu affordances while applying
+semantic destination emphasis, so the active marketing CTAs moved to the
+canonical primitive in issue #58.
 
 | File | Control |
 | --- | --- |
 | `Navbar.tsx` | The logo anchor and the register anchor |
-| `CallToAction.tsx` | The register and browse-jams pair |
-| `EnhancedHero.tsx` | The primary and secondary hero pair |
 | `NotFoundPage.tsx` | The go-home and browse-jams pair |
 | `AboutPage.tsx` | The `mailto:` contact anchor and the two page-end links |
 | `DesktopUserMenu.tsx` | The login anchor, which uses the `ds-menu__item` class from `Navigation.css` |
 
 A quiet text link is a different case. `Footer.tsx` and `LoginPage.tsx` use
-quiet links that are destinations, so they moved to `NavigationLink`. The
-rule is this: a quiet destination link moves to `NavigationLink`, and a
-destination with a call-to-action emphasis stays an anchor with button
-classes until issue #58 decides the emphasis question.
+quiet links that are destinations, so they moved to `NavigationLink`. A
+destination with call-to-action emphasis now also uses `NavigationLink` with
+an explicit variant; the remaining anchors in the table have mailto or
+page-specific behavior that is outside the shared navigation migration.
 
 ### Placeholders with a specific shape
 
@@ -203,9 +206,10 @@ still holds.
 
 ## Compatibility variants
 
-This migration adds no compatibility variant. Every control uses a variant
-that the primitives already ship. Nothing changed inside `Action.tsx`,
-`Field.tsx`, `Navigation.tsx` or `FeedbackStates.tsx`.
+Issue #50 added no compatibility variant. Issue #58 adds the opt-in
+`primary`/`secondary` destination variants to `NavigationLink`; these are
+visual-only and do not change its native anchor behavior. `Action.tsx`,
+`Field.tsx` and `FeedbackStates.tsx` remain unchanged.
 
 ## Story queries
 

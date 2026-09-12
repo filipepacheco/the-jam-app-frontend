@@ -58,8 +58,9 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
         type="button"
         aria-label={t('publicDashboard.expandQrCode', 'Expand QR code')}
       >
+        {/* Explicit QR colors preserve scanner contrast on the projected surface. */}
         <QRCodeSVG value={url} size={150} fgColor="#ffffff" bgColor="transparent" aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')} />
-        <p className="text-xs text-center mt-2 text-base-content/60">{t('publicDashboard.scanToJoin', 'Scan to join')}</p>
+        <p className="text-xs text-center mt-2 text-base-content/70">{t('publicDashboard.scanToJoin', 'Scan to join')}</p>
       </motion.button>
 
       {/* Expanded QR Code Modal */}
@@ -71,7 +72,8 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
             exit={prefersReducedMotion ? undefined : { opacity: 0 }}
             transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.3 }}
             onClick={() => setIsExpanded(false)}
-            className="fixed inset-0 bg-neutral/70 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: 'var(--ds-surface-overlay)' }}
             role="dialog"
             aria-modal="true"
             aria-label={t('publicDashboard.joinTheJam', 'Join the Jam')}
@@ -87,6 +89,7 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
               <h2 className="text-2xl font-bold mb-6 text-base-content">{t('publicDashboard.joinTheJam', 'Join the Jam')}</h2>
 
               <div className="bg-base-100 p-6 rounded-lg mb-4">
+                {/* Explicit black/white colors preserve scanner contrast in the modal. */}
                 <QRCodeSVG value={url} size={280} fgColor="#000000" bgColor="#ffffff" aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')} />
               </div>
 
@@ -95,10 +98,10 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
                   {shortCode}
                 </p>
               )}
-              <p className="text-center text-base-content mb-2">
+              <p className="text-center text-base-content mb-2 ds-type-body ds-wrap-user-content">
                 {shortCode ? t('publicDashboard.scanOrTypeCode', 'Scan the QR code or type the code above') : t('publicDashboard.scanWithPhone', 'Scan the QR code with your phone')}
               </p>
-              <p className="text-sm text-base-content/70 text-center">{url}</p>
+              <p className="text-sm text-base-content/70 text-center ds-wrap-user-content">{url}</p>
 
               <Action
                 variant="primary"

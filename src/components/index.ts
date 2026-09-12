@@ -62,6 +62,7 @@ export type {
   DropdownMenuProps,
   NavigationActionProps,
   NavigationLinkProps,
+  NavigationLinkVariant,
   NavigationMenuItem,
   NavigationTabItem,
   NavigationTabsProps,

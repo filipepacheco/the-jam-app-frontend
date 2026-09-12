@@ -40,6 +40,18 @@ describe('canonical navigation and menu family', () => {
     expect(link).toHaveClass('ds-navigation__link--current')
   })
 
+  it('supports semantic emphasis variants without changing destination semantics', () => {
+    render(
+      <NavigationLink href="/register" variant="primary">
+        Create a jam
+      </NavigationLink>,
+    )
+
+    const link = screen.getByRole('link', { name: 'Create a jam' })
+    expect(link).toHaveAttribute('href', '/register')
+    expect(link).toHaveAttribute('data-navigation-variant', 'primary')
+  })
+
   it('uses roving keyboard tabs and reports selection to the route consumer', async () => {
     const user = userEvent.setup()
     const onValueChange = vi.fn()

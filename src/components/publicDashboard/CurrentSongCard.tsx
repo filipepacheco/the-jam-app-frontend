@@ -64,16 +64,18 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
         animate={prefersReducedMotion ? {} : CARD_PULSE_ANIMATION}
         transition={pulseTransition}
       >
-        <p className="text-base-content/70 text-sm md:text-lg font-semibold uppercase tracking-widest mb-4">
+        <p className="text-primary text-sm md:text-lg font-semibold mb-4">
           {t('publicDashboard.nowPlaying', 'Now Playing')}
         </p>
-        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 text-wrap">{song.title}</h2>
+        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 ds-wrap-user-content">{song.title}</h2>
         <WaveformVisualizer className="my-4" />
-        <p className="md:text-3xl text-base-content/80 mb-2">
+        <p className="md:text-3xl text-base-content/80 mb-2 ds-wrap-user-content">
           {t('publicDashboard.by', 'by')} {song.artist}
         </p>
         {song.duration && (
-          <p className="text-lg md:text-xl text-base-content/70 mb-8">⏱️ {formatDuration(song.duration)}</p>
+          <p className="text-lg md:text-xl text-base-content/70 mb-8">
+            <span aria-hidden="true">⏱️</span> {formatDuration(song.duration)}
+          </p>
         )}
 
         {song.musicians && song.musicians.length > 0 ? (
@@ -94,4 +96,3 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
     </motion.div>
   )
 }
-

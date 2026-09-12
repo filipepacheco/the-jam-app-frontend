@@ -13,15 +13,15 @@ export function NowPlayingPanel({ song }: NowPlayingPanelProps) {
 
   return (
     <div className="flex flex-col items-center justify-center text-center px-6 py-8">
-      <p className="text-2xl tracking-[0.3em] uppercase text-purple-300 font-semibold mb-6 animate-pulse">
+      <p className="text-2xl text-primary font-semibold mb-6">
         {t('publicDashboard.nowPlaying', 'Now Playing')}
       </p>
 
-      <h2 className="text-7xl md:text-8xl lg:text-9xl font-black mb-4 text-wrap leading-tight">
+      <h2 className="text-7xl md:text-8xl lg:text-9xl font-black mb-4 leading-tight ds-wrap-user-content">
         {song.title}
       </h2>
 
-      <p className="text-3xl md:text-5xl text-purple-100 mb-10">
+      <p className="text-3xl md:text-5xl text-base-content/80 mb-10 ds-wrap-user-content">
         {t('publicDashboard.by', 'by')} {song.artist}
       </p>
 
@@ -29,9 +29,9 @@ export function NowPlayingPanel({ song }: NowPlayingPanelProps) {
         <div className="flex flex-wrap items-center justify-center gap-8">
           {Object.entries(grouped).map(([instrument, musicians]) => (
             <div key={instrument} className="flex flex-col items-center gap-2">
-              <span className="text-4xl">{getInstrumentEmoji(instrument)}</span>
+              <span className="text-4xl" aria-hidden="true">{getInstrumentEmoji(instrument)}</span>
               {musicians.map((m) => (
-                <span key={m.id} className="text-2xl md:text-3xl font-semibold">
+                <span key={m.id} className="text-2xl md:text-3xl font-semibold ds-wrap-user-content">
                   {m.name}
                 </span>
               ))}

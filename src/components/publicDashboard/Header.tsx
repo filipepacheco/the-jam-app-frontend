@@ -51,8 +51,8 @@ export default function Header({
           </div>
         </div>
       ) : (
-        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg sm:text-2xl md:text-3xl font-bold pointer-events-none max-w-[60%] truncate">
-          🎤 <span className="pointer-events-none">{title}</span>
+        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg sm:text-2xl md:text-3xl font-bold pointer-events-none max-w-[60%] text-center ds-wrap-user-content">
+          <span aria-hidden="true">🎤</span> <span className="pointer-events-none">{title}</span>
         </h1>
       )}
 

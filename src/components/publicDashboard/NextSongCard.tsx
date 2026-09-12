@@ -33,11 +33,11 @@ export function NextSongCard({ song }: NextSongCardProps) {
       className="mb-8"
     >
       <div className="bg-base-200/80 border border-base-300 rounded-xl p-6 md:p-8">
-        <p className="text-base-content/80 text-sm md:text-base font-semibold uppercase tracking-widest mb-3">
+        <p className="text-secondary text-sm md:text-base font-semibold mb-3">
           {t('publicDashboard.upNext')}
         </p>
-        <h3 className="text-3xl md:text-5xl font-bold text-base-content mb-2">{song.title}</h3>
-        <p className="text-lg md:text-2xl text-base-content/80 mb-4">{song.artist}</p>
+        <h3 className="text-3xl md:text-5xl font-bold text-base-content mb-2 ds-wrap-user-content">{song.title}</h3>
+        <p className="text-lg md:text-2xl text-base-content/80 mb-4 ds-wrap-user-content">{song.artist}</p>
 
         {song.musicians && song.musicians.length > 0 && (
           <div className="mt-6">
@@ -55,4 +55,3 @@ export function NextSongCard({ song }: NextSongCardProps) {
     </motion.div>
   )
 }
-

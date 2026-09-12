@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { useCarouselCycle } from '../../../hooks'
+import { useCarouselCycle, useReducedMotion } from '../../../hooks'
 import { NowPlayingPanel } from './NowPlayingPanel'
 import { UpNextPanel } from './UpNextPanel'
 import { QRCodePanel } from './QRCodePanel'
@@ -71,19 +71,20 @@ export function CarouselDashboard({
     intervalMs,
     enabled: !isFinished,
   })
+  const { prefersReducedMotion } = useReducedMotion()
 
   const activePanel = panels[activeIndex]
 
   return (
-    <div className="relative pt-20 pb-8 px-4 md:px-8 z-10 flex flex-col min-h-[calc(100vh-5rem)]">
+    <div className="relative pt-20 pb-8 px-4 md:px-8 z-10 flex flex-col min-h-[calc(100vh-5rem)] ds-shared-display">
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={activePanel.key}
-            initial={{ opacity: 0, scale: 0.96 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.4 }}
+            exit={prefersReducedMotion ? undefined : { opacity: 0, scale: 0.96 }}
+            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.4 }}
             className="w-full max-w-6xl mx-auto"
           >
             {activePanel.content}
