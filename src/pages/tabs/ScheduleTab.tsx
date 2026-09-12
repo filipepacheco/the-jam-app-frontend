@@ -2,7 +2,7 @@ import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto, ScheduleStat
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {registrationService, scheduleService, musicService} from "../../services";
-import {Alert, ConfirmDialog, EmptyState, Modal, ModalFooter, MusicModal} from '../../components';
+import {Action, Alert, ConfirmDialog, EmptyState, Field, IconAction, Modal, ModalFooter, MusicModal} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCollapsibleCard} from "../../components/schedule/ScheduleCollapsibleCard";
 import {MusicianProfileModal} from "../../components/MusicianProfileModal";
@@ -352,54 +352,64 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             {/* Search + Filter Toolbar */}
             {sortedSchedules.length > 3 && (
                 <div className="space-y-2">
-                    <div className="flex gap-2">
-                        <div className="join flex-1">
-                            <div className="join-item flex items-center px-2 bg-base-200">
-                                <Search className="size-4 text-base-content/40" />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder={t('schedule.search_placeholder', 'Search songs or musicians...')}
-                                className="input input-sm input-bordered join-item flex-1"
-                                value={rawSearch}
-                                onChange={(e) => setRawSearch(e.target.value)}
-                                aria-label={t('schedule.search_placeholder', 'Search songs or musicians...')}
-                            />
+                    <div className="flex items-end gap-2">
+                        <div className="flex min-w-0 flex-1 items-end gap-2">
+                            <Search className="mb-3 size-4 shrink-0 text-base-content/60" aria-hidden="true" />
+                            <Field
+                                id="schedule-search"
+                                label={<span className="sr-only">{t('schedule.search_placeholder', 'Search songs or musicians...')}</span>}
+                                className="min-w-0 flex-1"
+                            >
+                                <Field.Input
+                                    type="search"
+                                    placeholder={t('schedule.search_placeholder', 'Search songs or musicians...')}
+                                    value={rawSearch}
+                                    onChange={(e) => setRawSearch(e.target.value)}
+                                />
+                            </Field>
                             {rawSearch && (
-                                <button className="btn btn-sm btn-ghost join-item" onClick={() => { setRawSearch(''); setSearchQuery('') }}>
+                                <IconAction
+                                    variant="quiet"
+                                    label={t('common.clear_filters', 'Clear filters')}
+                                    onClick={() => { setRawSearch(''); setSearchQuery('') }}
+                                >
                                     <X className="size-4" />
-                                </button>
+                                </IconAction>
                             )}
                         </div>
-                        <button
+                        <IconAction
                             onClick={() => setShowAddModal(true)}
-                            className="btn btn-primary btn-sm btn-square"
-                            disabled={loadingIds.has('add-schedule')}
-                            title={t('jam_management.schedule.add_new_song')}
-                            aria-label={t('jam_management.schedule.add_new_song')}
+                            variant="primary"
+                            {...(loadingIds.has('add-schedule')
+                                ? {state: 'loading' as const, loadingLabel: t('common.adding')}
+                                : {state: 'idle' as const})}
+                            label={t('jam_management.schedule.add_new_song')}
                         >
                             +
-                        </button>
+                        </IconAction>
                     </div>
-                    <div className="flex gap-1 flex-wrap">
-                        <button
-                            className={`btn btn-sm ${statusFilter === 'all' ? 'btn-primary' : 'btn-ghost'}`}
+                    <div className="flex flex-wrap gap-2" role="group" aria-label={t('jam_management.schedule.title')}>
+                        <Action
+                            variant={statusFilter === 'all' ? 'primary' : 'quiet'}
+                            aria-pressed={statusFilter === 'all'}
                             onClick={() => setStatusFilter('all')}
                         >
-                            {t('common.all', 'All')} ({totalCount})
-                        </button>
-                        <button
-                            className={`btn btn-sm ${statusFilter === 'needs_musicians' ? 'btn-warning' : 'btn-ghost'}`}
+                            <Action.Label>{t('common.all', 'All')} ({totalCount})</Action.Label>
+                        </Action>
+                        <Action
+                            variant={statusFilter === 'needs_musicians' ? 'primary' : 'quiet'}
+                            aria-pressed={statusFilter === 'needs_musicians'}
                             onClick={() => setStatusFilter('needs_musicians')}
                         >
-                            {t('schedule.needs_musicians_short', 'Aguardando')} ({needsCount})
-                        </button>
-                        <button
-                            className={`btn btn-sm ${statusFilter === 'complete' ? 'btn-success' : 'btn-ghost'}`}
+                            <Action.Label>{t('schedule.needs_musicians_short', 'Aguardando')} ({needsCount})</Action.Label>
+                        </Action>
+                        <Action
+                            variant={statusFilter === 'complete' ? 'primary' : 'quiet'}
+                            aria-pressed={statusFilter === 'complete'}
                             onClick={() => setStatusFilter('complete')}
                         >
-                            {t('schedule.band_complete_short', 'Pronto')} ({completeCount})
-                        </button>
+                            <Action.Label>{t('schedule.band_complete_short', 'Pronto')} ({completeCount})</Action.Label>
+                        </Action>
                     </div>
                 </div>
             )}
@@ -442,12 +452,12 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                 {t('common.no_results', 'No results found')}
                             </p>
                             {(searchQuery || statusFilter !== 'all') && (
-                                <button
-                                    className="btn btn-sm btn-ghost text-primary"
+                                <Action
+                                    variant="quiet"
                                     onClick={() => { setRawSearch(''); setSearchQuery(''); setStatusFilter('all') }}
                                 >
-                                    {t('common.clear_filters', 'Clear filters')}
-                                </button>
+                                    <Action.Label>{t('common.clear_filters', 'Clear filters')}</Action.Label>
+                                </Action>
                             )}
                         </div>
                     )}
@@ -462,14 +472,16 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                             : t('jam_management.schedule.add_songs_first')
                     }
                     action={
-                        <button
+                        <Action
                             onClick={() => setShowAddModal(true)}
-                            className="btn btn-primary btn-sm"
-                            disabled={loadingIds.has('add-schedule')}
+                            variant="primary"
+                            {...(loadingIds.has('add-schedule')
+                                ? {state: 'loading' as const, loadingLabel: t('common.adding')}
+                                : {state: 'idle' as const})}
                         >
-                            <ListMusic className="size-4" />
-                            {t('jam_management.schedule.add_new_song')}
-                        </button>
+                            <Action.Icon><ListMusic className="size-4" /></Action.Icon>
+                            <Action.Label>{t('jam_management.schedule.add_new_song')}</Action.Label>
+                        </Action>
                     }
                     className="card bg-base-200 p-4"
                 />
@@ -541,31 +553,30 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     || music.artist.toLowerCase().includes(query)
                             }}
                         />
-                        <button
+                        <Action
                             type="button"
                             onClick={() => {
                                 setShowAddModal(false)
                                 setShowCreateMusicModal(true)
                             }}
-                            className="btn btn-ghost btn-sm w-full mt-2 text-base-content/70 hover:text-primary"
+                            variant="quiet"
+                            className="mt-2 w-full"
                         >
-                            {t('music_library.create_new')}
-                        </button>
+                            <Action.Label>{t('music_library.create_new')}</Action.Label>
+                        </Action>
                     </div>
 
-                    <div className="form-control mb-4">
-                        <label className="label" htmlFor="order-input">
-                            <span className="label-text">{t('jam_management.schedule.order_label')}</span>
-                        </label>
-                        <input
-                            id="order-input"
+                    <Field
+                        id="order-input"
+                        label={t('jam_management.schedule.order_label')}
+                        disabled
+                        className="mb-4"
+                    >
+                        <Field.Input
                             type="text"
                             value={t('jam_management.schedule.order_auto', {count: sortedSchedules.length + 1})}
-                            className="input input-bordered"
-                            disabled
-                            aria-label={t('jam_management.schedule.order_label')}
                         />
-                    </div>
+                    </Field>
 
                     <Alert type="error" message={error} className="mb-4" />
                 </Modal>

@@ -41,11 +41,15 @@ vi.mock('../hooks', () => ({
     }),
 }))
 
-vi.mock('../components', () => ({
-    Alert: () => null,
-    PageAlerts: () => null,
-    SpotifyExportModal: () => null,
-}))
+vi.mock('../components', async (importOriginal) => {
+    const actual = await importOriginal<typeof import('../components')>()
+    return {
+        ...actual,
+        Alert: () => null,
+        PageAlerts: () => null,
+        SpotifyExportModal: () => null,
+    }
+})
 
 vi.mock('../components/schedule', () => ({
     LiveJamControlPanel: () => <div>live tab</div>,
@@ -85,5 +89,24 @@ describe('JamManagementPage', () => {
 
         expect(screen.getByText('overview tab')).toBeInTheDocument()
         expect(screen.queryByText('DJ control tab')).not.toBeInTheDocument()
+    })
+
+    it('lets the host move between management tabs with the keyboard', async () => {
+        const user = userEvent.setup()
+
+        render(
+            <MemoryRouter initialEntries={['/host/jams/jam-1/manage']}>
+                <Routes>
+                    <Route path="/host/jams/:id/manage" element={<JamManagementPage/>}/>
+                </Routes>
+            </MemoryRouter>,
+        )
+
+        const djTab = await screen.findByRole('tab', {name: /dj_control\.title/})
+        djTab.focus()
+        await user.keyboard('{ArrowLeft}')
+
+        expect(screen.getByRole('tab', {name: /jam_management\.tabs\.schedule/})).toHaveAttribute('aria-selected', 'true')
+        expect(screen.getByText('schedule tab')).toBeInTheDocument()
     })
 })

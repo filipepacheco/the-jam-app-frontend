@@ -39,6 +39,7 @@ export const CompletedStatistics: Story = {
 
 const pause = fn(async () => undefined)
 const noop = fn(async () => undefined)
+const pendingPause = fn(() => new Promise<void>(() => undefined))
 
 export const PlaybackInteraction: Story = {
   render: () => (
@@ -77,6 +78,31 @@ export const RapidOperationDisabled: Story = {
     />
   ),
   play: async ({ canvas }) => {
+    for (const button of canvas.getAllByRole('button')) {
+      await expect(button).toBeDisabled()
+    }
+  },
+}
+
+export const PendingPlaybackAction: Story = {
+  render: () => (
+    <PlaybackControls
+      playbackState="PLAYING"
+      hasCurrentSong
+      hasNextSong
+      isLoading={false}
+      onStart={noop}
+      onStop={noop}
+      onNext={noop}
+      onPrevious={noop}
+      onPause={pendingPause}
+      onResume={noop}
+    />
+  ),
+  globals: { locale: 'pt', viewport: { value: 'phone', isRotated: false } },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: /pausar|pause/i }))
+    await expect(canvas.getByRole('status')).toHaveTextContent(/atualizando|updating|actualizando/i)
     for (const button of canvas.getAllByRole('button')) {
       await expect(button).toBeDisabled()
     }
@@ -125,6 +151,7 @@ export const QueueTimeline: Story = {
     await userEvent.click(played)
     await expect(canvas.getAllByText('Psycho Killer')).toHaveLength(2)
   },
+  globals: { locale: 'pt', theme: 'jam-dark', viewport: { value: 'desktop', isRotated: false } },
 }
 
 export const ReorderedQueue: Story = {
