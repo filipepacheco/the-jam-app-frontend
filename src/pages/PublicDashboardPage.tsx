@@ -89,7 +89,7 @@ export function PublicDashboardPage() {
   // Show loading state
   if (isLoading && !currentSong) {
     return (
-      <div className="min-h-screen bg-base-300 text-base-content">
+      <div className="min-h-screen bg-base-300 text-base-content ds-shared-display">
         <div className="pt-20 pb-8 px-4 md:px-8">
           <div className="max-w-6xl mx-auto animate-pulse">
             {/* Now Playing skeleton */}
@@ -118,7 +118,7 @@ export function PublicDashboardPage() {
   // Show error state
   if (error) {
     return (
-      <div className="min-h-screen bg-base-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-base-100 flex items-center justify-center p-4 ds-shared-display">
         <Alert type="error" message={error.message} title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')} />
       </div>
     )
@@ -127,11 +127,8 @@ export function PublicDashboardPage() {
   return (
     <div
       ref={containerRef}
-      className="min-h-screen animate-gradient-shift text-base-content overflow-hidden relative"
+      className="min-h-screen bg-base-300 text-base-content ds-shared-display overflow-hidden relative"
     >
-      {/* Radial Glow Spotlight */}
-      <div className="radial-glow" />
-
       {/* Confetti */}
       <Suspense fallback={null}>
         <ConfettiWrapper show={confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
@@ -184,8 +181,8 @@ export function PublicDashboardPage() {
               {jamStatus === 'FINISHED' ? (
                 <div className="mb-12 text-center">
                   <div className="bg-base-200/80 border border-base-300 rounded-2xl p-8 md:p-12">
-                    <p className="text-5xl md:text-7xl mb-6">👏</p>
-                    <h2 className="text-4xl md:text-6xl font-black mb-4">{t('publicDashboard.jamFinished', 'That\'s a wrap!')}</h2>
+                    <p className="text-5xl md:text-7xl mb-6" aria-hidden="true">👏</p>
+                    <h2 className="text-4xl md:text-6xl font-black mb-4 ds-wrap-user-content">{t('publicDashboard.jamFinished', 'That\'s a wrap!')}</h2>
                     <p className="text-lg md:text-2xl text-base-content/70">{t('publicDashboard.thankYou', 'Thanks for jamming with us!')}</p>
                   </div>
                 </div>

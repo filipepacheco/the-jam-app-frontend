@@ -36,6 +36,33 @@
   color: var(--ds-content-link);
 }
 
+/*
+ * Destination emphasis uses the same semantic action roles as buttons while
+ * keeping a native anchor and its browser navigation affordances. This is
+ * intentionally opt-in; ordinary navigation remains the quiet variant.
+ */
+.ds-navigation__link--primary {
+  border-color: var(--ds-action-primary);
+  background: var(--ds-action-primary);
+  color: var(--ds-action-primary-content);
+}
+
+.ds-navigation__link--primary:hover {
+  background: color-mix(in oklch, var(--ds-action-primary) 88%, var(--ds-surface-canvas));
+  color: var(--ds-action-primary-content);
+}
+
+.ds-navigation__link--secondary {
+  border-color: var(--ds-action-secondary);
+  background: var(--ds-action-secondary);
+  color: var(--ds-action-secondary-content);
+}
+
+.ds-navigation__link--secondary:hover {
+  background: color-mix(in oklch, var(--ds-action-secondary) 88%, var(--ds-surface-canvas));
+  color: var(--ds-action-secondary-content);
+}
+
 .ds-tabs {
   inline-size: 100%;
   overflow-x: auto;

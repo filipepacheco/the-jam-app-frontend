@@ -1,14 +1,22 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion, useInView, useReducedMotion } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, type MouseEvent } from 'react'
 import { Zap, Search } from 'lucide-react'
+import { NavigationLink } from './Navigation'
 
 function CallToAction() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const prefersReducedMotion = useReducedMotion()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
+
+  const handleNavigate = (path: string) => (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    event.preventDefault()
+    void navigate(path)
+  }
 
   return (
     <section className="relative bg-base-300" aria-labelledby="cta-title">
@@ -27,32 +35,23 @@ function CallToAction() {
           <p className="text-base sm:text-lg lg:text-xl mb-8 sm:mb-10 text-base-content/80 leading-relaxed max-w-xl">
             {t('homepage.call_to_action.description')}
           </p>
-          {/*
-            Documented design-system exception (issue #50): the two
-            call-to-action controls stay router `Link` elements with DaisyUI
-            button classes. `Action` renders a `<button>` only, so it cannot
-            hold a destination. `NavigationLink` keeps the anchor but
-            applies the quiet pill treatment of the tab set, which removes
-            the primary and outline emphasis a marketing call to action
-            depends on, and drops the `btn-lg` size. A call-to-action
-            emphasis in the navigation family is a design-system change for
-            issue #58. Same exception as the register anchor in Navbar.tsx.
-          */}
           <div className="flex gap-4 justify-start flex-wrap">
-            <Link
-              to="/register"
-              className="btn btn-lg btn-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+            <NavigationLink
+              href="/register"
+              variant="primary"
+              onClick={handleNavigate('/register')}
+              icon={<Zap className="size-5" />}
             >
-              <Zap className="size-5" aria-hidden="true" />
               {t('homepage.call_to_action.cta_button')}
-            </Link>
-            <Link
-              to="/jams"
-              className="btn btn-lg btn-outline btn-primary focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary"
+            </NavigationLink>
+            <NavigationLink
+              href="/jams"
+              variant="secondary"
+              onClick={handleNavigate('/jams')}
+              icon={<Search className="size-5" />}
             >
-              <Search className="size-5" aria-hidden="true" />
               {t('homepage.call_to_action.browse_jams')}
-            </Link>
+            </NavigationLink>
           </div>
         </div>
       </motion.div>

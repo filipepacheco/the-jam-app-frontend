@@ -32,9 +32,9 @@ export const InstrumentGroup = memo(function InstrumentGroup({ instrument, music
   const { transition, prefersReducedMotion } = useReducedMotion()
 
   const sizeClasses = {
-    sm: { container: 'p-2', emoji: 'text-lg', text: 'text-xs' },
-    md: { container: 'p-3', emoji: 'text-2xl', text: 'text-xs' },
-    lg: { container: 'p-4', emoji: 'text-3xl', text: 'text-sm' },
+    sm: { container: 'p-2', emoji: 'text-lg', text: 'text-xs', spacing: 'mb-2' },
+    md: { container: 'p-3', emoji: 'text-2xl', text: 'text-xs', spacing: 'mb-2' },
+    lg: { container: 'p-4', emoji: 'text-3xl', text: 'text-sm', spacing: 'mb-3' },
   }
 
   const classes = sizeClasses[size]
@@ -56,15 +56,15 @@ export const InstrumentGroup = memo(function InstrumentGroup({ instrument, music
       initial={MUSICIAN_INITIAL}
       animate={MUSICIAN_ANIMATE}
       transition={transitionConfig}
-      className={`bg-base-300/50 hover:bg-base-300/70 transition-colors rounded-lg ${classes.container} text-center`}
+      className={`bg-base-300/50 rounded-lg ${classes.container} text-center`}
     >
-      <p className={`mb-${size === 'lg' ? '3' : '2'} ${classes.emoji}`}>
+      <p className={`${classes.spacing} ${classes.emoji}`} aria-hidden="true">
         {getInstrumentEmoji(instrument)}
       </p>
       <div className="space-y-1">
         {musicians &&
           musicians.map((musician) => (
-            <p key={musician.id} className={`font-semibold text-base-content ${classes.text} truncate`} title={musician.name || t('common.unknown', 'Unknown')}>
+            <p key={musician.id} className={`font-semibold text-base-content ${classes.text} ds-wrap-user-content`} title={musician.name || t('common.unknown', 'Unknown')}>
               {musician.name || t('common.unknown', 'Unknown')}
             </p>
           ))}
@@ -72,4 +72,3 @@ export const InstrumentGroup = memo(function InstrumentGroup({ instrument, music
     </motion.div>
   )
 })
-

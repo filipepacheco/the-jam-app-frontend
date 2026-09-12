@@ -11,6 +11,14 @@ Navigation communicates where a user is and how to get somewhere; actions change
 - Use `DropdownMenu` for a small secondary control surface such as settings. It is not a modal workflow; actions that need confirmation belong in an alert dialog.
 - Use `ResponsiveNavigation` when desktop navigation and a mobile drawer have different information density. The consumer owns the drawer's focus trap, dismissal, and route-specific permissions.
 
+`NavigationLink` is quiet by default. A destination that needs call-to-action
+emphasis may opt into `variant="primary"` or `variant="secondary"`; these
+variants use the same semantic action roles as `Action` while preserving a
+native anchor, `href`, modifier-click behavior, and server fallback. Use one
+emphasized destination per group where possible. The variant changes visual
+weight only: it does not turn a destination into an operation or provide
+confirmation/loading behavior.
+
 ## Responsive and content rules
 
 Navigation labels may grow with localization. The family allows wrapping and horizontal tab scrolling; it does not hide or truncate the only copy for an action. Keep at least 44px touch targets, a visible `:focus-visible` ring, and an explicit text label for icon-only triggers. Permission-filtered items should be omitted from the item list, not rendered as unavailable destinations.

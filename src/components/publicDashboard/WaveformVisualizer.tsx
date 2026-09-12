@@ -4,9 +4,9 @@
  * Creates audio visualizer appearance for song display
  */
 
-import {motion} from 'framer-motion'
-import {useMemo} from 'react'
-import {useReducedMotion} from "../../hooks";
+import { motion } from 'framer-motion'
+import { useMemo } from 'react'
+import { useReducedMotion } from '../../hooks'
 
 interface WaveformVisualizerProps {
   barCount?: number
@@ -31,18 +31,18 @@ export function WaveformVisualizer({ barCount = 12, className = '' }: WaveformVi
     () =>
       Array.from({ length: barCount }, (_, i) => ({
         id: i,
-        baseHeight: 20 + Math.random() * 40,
+        baseHeight: 20 + ((i * 17) % 41),
         delay: i * 0.1,
       })),
     [barCount]
   )
 
   return (
-    <div className={`flex gap-1 justify-center items-end ${className}`}>
+    <div className={`flex gap-1 justify-center items-end ${className}`} aria-hidden="true">
       {bars.map((bar) => (
         <motion.div
           key={bar.id}
-          className="w-2 bg-linear-to-t from-primary to-secondary rounded-full"
+          className="w-2 bg-primary/80 rounded-full"
           style={{ height: `${bar.baseHeight}px` }}
           animate={prefersReducedMotion ? {} : WAVEFORM_ANIMATION}
           transition={{ ...WAVEFORM_TRANSITION, delay: bar.delay }}

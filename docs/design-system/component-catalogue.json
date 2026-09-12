@@ -423,7 +423,9 @@
         "src/workbench/stories/Marketing.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Navigation.tsx"
+        ],
         "external": [
           "framer-motion",
           "lucide-react",
@@ -1138,11 +1140,13 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Navigation.tsx",
           "src/components/hero/HeroDashboardMockup.tsx",
           "src/hooks/index.ts"
         ],
         "external": [
           "framer-motion",
+          "react",
           "react-i18next",
           "react-router-dom"
         ],
@@ -4701,8 +4705,12 @@
         "internal": [
           "src/config/languages.config.ts"
         ],
-        "external": [],
-        "contexts": []
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
       },
       "metadata": {
         "category": "product-ui",
@@ -4767,6 +4775,7 @@
         "internal": [
           "src/components/Action.tsx",
           "src/components/Field.tsx",
+          "src/components/Navigation.tsx",
           "src/components/publicDashboard/LanguageSelector.tsx",
           "src/hooks/index.ts"
         ],
@@ -4923,10 +4932,12 @@
         ],
         "external": [
           "framer-motion",
-          "react"
+          "react",
+          "react-i18next"
         ],
         "contexts": [
-          "animation"
+          "animation",
+          "internationalization"
         ]
       },
       "metadata": {
@@ -11259,6 +11270,7 @@
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
@@ -11320,10 +11332,13 @@
         }
       ],
       "consumers": [
+        "src/components/CallToAction.tsx",
+        "src/components/EnhancedHero.tsx",
         "src/components/Footer.tsx",
         "src/components/MobileDrawer.tsx",
         "src/components/Navbar.tsx",
         "src/components/Navigation.tsx",
+        "src/components/publicDashboard/Navbar.tsx",
         "src/pages/LoginPage.tsx"
       ],
       "workbenchStories": [
@@ -11332,6 +11347,7 @@
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
@@ -11802,41 +11818,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/CallToAction.tsx:42:13:action",
-          "source": "src/components/CallToAction.tsx",
-          "line": 42,
-          "column": 13,
-          "ownerComponentId": "ui.0008",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-lg",
-            "btn-primary",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/CallToAction.tsx:49:13:action",
-          "source": "src/components/CallToAction.tsx",
-          "line": 49,
-          "column": 13,
-          "ownerComponentId": "ui.0008",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-lg",
-            "btn-outline",
-            "btn-primary",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/EditMusicianModal.tsx:186:9:action",
           "source": "src/components/EditMusicianModal.tsx",
           "line": 186,
@@ -11845,44 +11826,6 @@
           "tag": "button",
           "staticClassTokens": [
             "hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/EnhancedHero.tsx:71:13:action",
-          "source": "src/components/EnhancedHero.tsx",
-          "line": 71,
-          "column": 13,
-          "ownerComponentId": "ui.0020",
-          "tag": "Link",
-          "staticClassTokens": [
-            "bg-base-100",
-            "border-none",
-            "btn",
-            "btn-lg",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary",
-            "hover:bg-base-200",
-            "text-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/EnhancedHero.tsx:77:13:action",
-          "source": "src/components/EnhancedHero.tsx",
-          "line": 77,
-          "column": 13,
-          "ownerComponentId": "ui.0020",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-lg",
-            "btn-outline",
-            "btn-primary",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary"
           ],
           "dynamicClasses": false
         },
@@ -12054,9 +11997,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Navigation.tsx:241:17:action",
+          "id": "src/components/Navigation.tsx:258:17:action",
           "source": "src/components/Navigation.tsx",
-          "line": 241,
+          "line": 258,
           "column": 17,
           "ownerComponentId": "ui.0194",
           "tag": "button",
@@ -12064,9 +12007,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Navigation.tsx:289:7:action",
+          "id": "src/components/Navigation.tsx:306:7:action",
           "source": "src/components/Navigation.tsx",
-          "line": 289,
+          "line": 306,
           "column": 7,
           "ownerComponentId": "ui.0195",
           "tag": "button",
@@ -12332,13 +12275,14 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/publicDashboard/LanguageSelector.tsx:29:9:action",
+          "id": "src/components/publicDashboard/LanguageSelector.tsx:32:9:action",
           "source": "src/components/publicDashboard/LanguageSelector.tsx",
-          "line": 29,
+          "line": 32,
           "column": 9,
           "ownerComponentId": "ui.0085",
           "tag": "button",
           "staticClassTokens": [
+            "ds-focusable",
             "focus-visible:ring-2",
             "focus-visible:ring-offset-2",
             "focus-visible:ring-primary",
@@ -12358,11 +12302,16 @@
           "ownerComponentId": "ui.0075",
           "tag": "button",
           "staticClassTokens": [
-            "duration-300",
-            "rounded-full",
-            "transition-all"
+            "bg-transparent",
+            "ds-control",
+            "ds-control--shared-display",
+            "ds-focusable",
+            "flex",
+            "items-center",
+            "justify-center",
+            "rounded-full"
           ],
-          "dynamicClasses": true
+          "dynamicClasses": false
         },
         {
           "id": "src/components/schedule/LiveJamControlPanel.tsx:707:19:action",
@@ -13834,21 +13783,6 @@
             "mx-4",
             "shadow-xl",
             "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/HowItWorks.tsx:90:15:card",
-          "source": "src/components/HowItWorks.tsx",
-          "line": 90,
-          "column": 15,
-          "ownerComponentId": "ui.0032",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "flex-1",
-            "min-w-0"
           ],
           "dynamicClasses": false
         },

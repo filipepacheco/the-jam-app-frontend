@@ -17,14 +17,20 @@ export function QRCodePanel({ jamId, slug }: QRCodePanelProps) {
   return (
     <div className="flex flex-col items-center justify-center text-center px-6 py-8">
       <div className="bg-base-100 p-8 rounded-2xl mb-8">
-        <QRCodeSVG value={url} size={400} fgColor="#000000" bgColor="#ffffff" />
+        <QRCodeSVG
+          value={url}
+          size={400}
+          fgColor="#000000"
+          bgColor="#ffffff"
+          aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')}
+        />
       </div>
 
-      <p className="text-2xl md:text-3xl font-semibold tracking-wide mb-4 font-mono">
+      <p className="text-2xl md:text-3xl font-semibold tracking-wide mb-4 font-mono ds-wrap-user-content">
         {displayUrl}
       </p>
 
-      <p className="text-2xl md:text-3xl text-base-content/60">
+      <p className="text-2xl md:text-3xl text-base-content/70">
         {t('publicDashboard.scanToJoin', 'Scan to join')}
       </p>
     </div>

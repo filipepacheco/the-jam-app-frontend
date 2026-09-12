@@ -28,14 +28,14 @@ export function StartingSoonCard({ song }: StartingSoonCardProps) {
     <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={transition} className="mb-8">
       <div className="bg-base-200/80 border border-base-300 rounded-2xl p-6 md:p-10 text-center">
         <div className="animate-pulse mb-3">
-          <p className="text-5xl md:text-7xl font-black">🎉</p>
+          <p className="text-5xl md:text-7xl font-black" aria-hidden="true">🎉</p>
         </div>
-        <h2 className="text-4xl md:text-6xl font-black mb-2">{t('publicDashboard.startingSoon', 'Starting Soon!')}</h2>
+        <h2 className="text-4xl md:text-6xl font-black mb-2 ds-wrap-user-content">{t('publicDashboard.startingSoon', 'Starting Soon!')}</h2>
         {song ? (
           <div className="mt-4">
             <p className="text-lg md:text-2xl text-base-content/70 mb-1">{t('publicDashboard.firstUp', 'First up:')}</p>
-            <p className="text-3xl md:text-5xl font-bold text-base-content mb-1">{song.title}</p>
-            <p className="text-xl md:text-2xl text-base-content/60">
+            <p className="text-3xl md:text-5xl font-bold text-base-content mb-1 ds-wrap-user-content">{song.title}</p>
+            <p className="text-xl md:text-2xl text-base-content/60 ds-wrap-user-content">
               {t('publicDashboard.by', 'by')} {song.artist}
             </p>
 

@@ -45,7 +45,7 @@ export function HeroDashboardMockup() {
     >
       <div className="lg:rotate-y-[-2deg] lg:transition-transform lg:duration-700 lg:hover:rotate-y-0">
         {/* Now Playing Card */}
-        <div className="bg-base-200/90 border border-base-content/10 rounded-2xl p-5 sm:p-6 lg:p-8 shadow-2xl shadow-black/30">
+        <div className="bg-base-100/90 border border-primary/30 rounded-box p-5 sm:p-6 lg:p-8">
           {/* Header: LIVE indicator + jam name */}
           <div className="flex items-center gap-3 mb-4 sm:mb-5">
             <div className="flex items-center gap-2">
@@ -53,22 +53,22 @@ export function HeroDashboardMockup() {
                 <span className="animate-ping-slow absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-success" />
               </span>
-              <span className="text-xs font-bold uppercase tracking-wider text-success">
+              <span className="text-xs font-bold text-success ds-type-ui">
                 {t('homepage.hero.live_label')}
               </span>
             </div>
-            <span className="text-xs text-base-content/40 hidden sm:inline">
+            <span className="text-xs text-base-content/60 hidden sm:inline ds-wrap-user-content">
               {t('homepage.hero.mock_jam_name')}
             </span>
           </div>
 
           {/* Now Playing label */}
-          <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-base-content/50 mb-2">
+          <p className="text-xs font-semibold text-base-content/70 mb-2 ds-type-ui">
             {t('publicDashboard.nowPlaying')}
           </p>
 
           {/* Song title - intentionally hardcoded: real, well-known song title */}
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-base-content animate-text-glow mb-1">
+          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-base-content mb-1 ds-wrap-user-content">
             Don't Stop Believin'
           </h3>
 
@@ -82,7 +82,7 @@ export function HeroDashboardMockup() {
             {WAVEFORM_BARS.map((bar, i) => (
               <div
                 key={i}
-                className={`w-1.5 sm:w-2 rounded-full bg-primary/50 animate-wave-pulse origin-bottom ${i >= 12 ? 'hidden sm:block' : ''} ${i >= 16 ? 'hidden lg:block' : ''}`}
+                className={`w-1.5 sm:w-2 rounded-full bg-primary/70 animate-wave-pulse origin-bottom ${i >= 12 ? 'hidden sm:block' : ''} ${i >= 16 ? 'hidden lg:block' : ''}`}
                 style={{
                   height: `${bar.h * 100}%`,
                   animationDuration: `${bar.d}s`,
@@ -97,7 +97,7 @@ export function HeroDashboardMockup() {
             {MOCK_MUSICIANS_DESKTOP.map((m, i) => (
               <span
                 key={m.name}
-                className={`inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs sm:text-sm text-base-content/80 ${i === 3 ? 'hidden lg:inline-flex' : ''}`}
+                className={`inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 text-xs sm:text-sm text-base-content/80 ds-wrap-user-content ${i === 3 ? 'hidden lg:inline-flex' : ''}`}
               >
                 <span aria-hidden="true">{m.emoji}</span>
                 {m.name}
@@ -108,14 +108,14 @@ export function HeroDashboardMockup() {
 
         {/* Up Next Card - visible on all sizes */}
         <div className="mt-3">
-          <div className="bg-base-200/60 border border-base-content/8 rounded-xl p-3 sm:p-4 shadow-lg shadow-black/10">
+          <div className="bg-base-200/70 border border-base-300 rounded-box p-3 sm:p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-[10px] font-semibold uppercase tracking-widest text-base-content/40 mb-1">
+                <p className="text-xs font-semibold text-base-content/70 mb-1 ds-type-ui">
                   {t('promoVideo.dashboard.upNext')}
                 </p>
                 {/* Song/artist names intentionally hardcoded: real, well-known titles */}
-                <p className="text-base sm:text-lg font-semibold text-base-content/90">Bohemian Rhapsody</p>
+                <p className="text-base sm:text-lg font-semibold text-base-content ds-wrap-user-content">Bohemian Rhapsody</p>
                 <p className="text-xs text-base-content/50">{t('publicDashboard.by')} Queen</p>
               </div>
               <div className="flex -space-x-2">

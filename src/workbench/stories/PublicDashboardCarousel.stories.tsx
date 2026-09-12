@@ -40,7 +40,7 @@ const close = fn()
 export const LanguageControls: Story = {
   render: () => <LanguageSelector currentLang="pt" onChange={languageChange} onSelectClose={close} />,
   play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: /switch to english/i }))
+    await userEvent.click(canvas.getByRole('button', { name: /english/i }))
     await expect(languageChange).toHaveBeenCalledWith('en')
     await expect(close).toHaveBeenCalledOnce()
   },

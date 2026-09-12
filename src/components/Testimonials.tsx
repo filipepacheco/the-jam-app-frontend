@@ -65,18 +65,18 @@ export function Testimonials() {
           {testimonials.map((testimonial) => {
             const styles = colorStyles[testimonial.color]
             return (
-              <div key={testimonial.id} className={`${styles.bg} rounded-xl p-6`}>
-                <blockquote className="text-sm sm:text-base text-base-content/80 leading-relaxed mb-4">
-                  "{testimonial.quote}"
+              <figure key={testimonial.id} className={`${styles.bg} rounded-box border border-base-300 p-6`}>
+                <blockquote className="text-sm sm:text-base text-base-content/80 leading-relaxed mb-4 ds-type-body">
+                  “{testimonial.quote}”
                 </blockquote>
-                <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${styles.dot}`} />
+                <figcaption className="flex items-center gap-3">
+                  <div className={`w-2 h-2 rounded-full ${styles.dot}`} aria-hidden="true" />
                   <div>
-                    <p className="text-sm font-semibold text-base-content">{testimonial.name}</p>
-                    <p className="text-xs text-base-content/60">{testimonial.role}</p>
+                    <p className="text-sm font-semibold text-base-content ds-wrap-user-content">{testimonial.name}</p>
+                    <cite className="text-xs text-base-content/60 not-italic ds-wrap-user-content">{testimonial.role}</cite>
                   </div>
-                </div>
-              </div>
+                </figcaption>
+              </figure>
             )
           })}
         </div>
