@@ -230,10 +230,9 @@
       "finished": "Esta jam ya terminó",
       "inactive": "Esta jam aún no ha comenzado"
     },
-    "songs_count": {
-      "one": "{{count}} canción",
-      "other": "{{count}} canciones"
-    },
+    "songs_count_zero": "No hay canciones",
+    "songs_count_one": "{{count}} canción",
+    "songs_count_other": "{{count}} canciones",
     "no_name": "Jam sin nombre",
     "features": {
       "title": "Hecho para todos en el Jam",

@@ -1,5 +1,7 @@
 @import "tailwindcss" source(none);
 
+@import "./design-system/foundations.css";
+
 /* Production source boundary. Private workbench files add their own source in workbench.css. */
 @source "../index.html";
 @source "./App.tsx";
@@ -301,11 +303,6 @@ html {
     text-shadow: none !important;
   }
 }
-/*noinspection CssUnknownProperty*/
-@plugin "daisyui" {
-  themes: all;
-}
-
 html {
   scroll-behavior: smooth;
 }

@@ -488,7 +488,8 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata, diag
       diagnostics.push(`ignore[${index}]: source "${source}" is not eligible`)
       continue
     }
-    if ([...components.values()].some((component) => component.source === source)) {
+    const isPrivateStory = source.startsWith('src/workbench/stories/') && source.endsWith('.stories.tsx')
+    if (!isPrivateStory && [...components.values()].some((component) => component.source === source)) {
       diagnostics.push(`ignore[${index}]: source is not eligible for ignoring because it declares React components`)
       continue
     }

@@ -222,6 +222,7 @@ describe('component catalogue check command', () => {
     const metadataPath = path.join(root, 'catalogue.metadata.json')
     const config = await readJson<FixtureConfig>(configPath)
     const metadata = await readJson<FixtureMetadata>(metadataPath)
+    const firstNewIgnoreIndex = config.ignore.length
     config.ignore.push(
       {source: 'src/IgnoredScene.tsx', reason: 'duplicate'},
       {source: '../outside.tsx', reason: ''},
@@ -244,9 +245,9 @@ describe('component catalogue check command', () => {
 
     expect(result.status).toBe(1)
     expect(result.stderr).toContain('duplicate ignore source "src/IgnoredScene.tsx"')
-    expect(result.stderr).toContain('ignore[2].source: path must be normalized and stay inside the catalogue root')
-    expect(result.stderr).toContain('ignore[2].reason: reason must be non-blank')
-    expect(result.stderr).toContain('ignore[3]: source is not eligible for ignoring because it declares React components')
+    expect(result.stderr).toContain(`ignore[${firstNewIgnoreIndex + 1}].source: path must be normalized and stay inside the catalogue root`)
+    expect(result.stderr).toContain(`ignore[${firstNewIgnoreIndex + 1}].reason: reason must be non-blank`)
+    expect(result.stderr).toContain(`ignore[${firstNewIgnoreIndex + 2}]: source is not eligible for ignoring because it declares React components`)
     expect(result.stderr).toContain('duplicate component selector "src/NamedWidget.tsx#NamedWidget"')
     expect(result.stderr).toContain('component selector "src/Missing.tsx#Missing" does not resolve')
     expect(result.stderr).toContain(`rules[${firstNewRuleIndex}]: exact source "src/Missing.tsx" does not resolve`)

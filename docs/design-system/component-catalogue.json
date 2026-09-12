@@ -1131,9 +1131,11 @@
       ],
       "consumers": [
         "src/pages/tabs/ScheduleTab.tsx",
+        "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "dependencies": {
@@ -9979,6 +9981,104 @@
           "Route composition is catalogued by #39."
         ]
       }
+    },
+    {
+      "id": "ui.0164",
+      "name": "ActionableEmptyStateExample",
+      "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "ActionableEmptyStateExample",
+          "module": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/EmptyState.tsx"
+        ],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "uncertain",
+        "productArea": "uncertain",
+        "viewportContexts": [
+          "uncertain"
+        ],
+        "readiness": {
+          "workbench": "needs-review",
+          "accessibility": "unknown",
+          "internationalization": "unknown",
+          "theme": "unknown"
+        },
+        "uiStates": [],
+        "candidateFamily": null,
+        "notes": [
+          "Classification needs review; no unsupported inference was applied."
+        ]
+      }
+    },
+    {
+      "id": "ui.0165",
+      "name": "DestructiveActionExample",
+      "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "DestructiveActionExample",
+          "module": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [],
+        "external": [
+          "react"
+        ],
+        "contexts": [
+          "browser"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "uncertain",
+        "productArea": "uncertain",
+        "viewportContexts": [
+          "uncertain"
+        ],
+        "readiness": {
+          "workbench": "needs-review",
+          "accessibility": "unknown",
+          "internationalization": "unknown",
+          "theme": "unknown"
+        },
+        "uiStates": [],
+        "candidateFamily": null,
+        "notes": [
+          "Classification needs review; no unsupported inference was applied."
+        ]
+      }
     }
   ],
   "ignored": [
@@ -10043,6 +10143,18 @@
       "reason": "Private Storybook composition for catalogued form components; not product UI."
     },
     {
+      "source": "src/workbench/stories/Foundations/ColorAndThemes.stories.tsx",
+      "reason": "Private Storybook reference for color and theme foundations; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+      "reason": "Private Storybook composition demonstrating interaction, accessibility, motion, and multilingual content standards; not product UI itself."
+    },
+    {
+      "source": "src/workbench/stories/Foundations/TypographySpacingResponsive.stories.tsx",
+      "reason": "Private Storybook composition demonstrating typography, spacing, sizing, and responsive foundations; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/JamComponents.stories.tsx",
       "reason": "Private Storybook composition for reviewed Jam components; not product UI."
     },
@@ -10104,9 +10216,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 170,
-    "representedSources": 140,
-    "ignoredSources": 30,
+    "eligibleSources": 174,
+    "representedSources": 141,
+    "ignoredSources": 33,
     "workbench": {
       "activeReusableVisualComponents": 104,
       "ready": 87,
@@ -13562,6 +13674,82 @@
             "w-full"
           ],
           "dynamicClasses": false
+        },
+        {
+          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:108:19:action",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 108,
+          "column": 19,
+          "ownerComponentId": "ui.0165",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost",
+            "btn-sm",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:120:19:action",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 120,
+          "column": 19,
+          "ownerComponentId": "ui.0165",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "ds-control",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:121:19:action",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 121,
+          "column": 19,
+          "ownerComponentId": "ui.0165",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-error",
+            "ds-control",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:16:13:action",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 16,
+          "column": 13,
+          "ownerComponentId": "ui.0164",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary",
+            "ds-control",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:61:11:action",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 61,
+          "column": 11,
+          "ownerComponentId": "ui.0165",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-error",
+            "ds-control",
+            "ds-focusable",
+            "mt-4",
+            "w-fit"
+          ],
+          "dynamicClasses": false
         }
       ]
     },
@@ -15126,6 +15314,52 @@
             "bg-base-200",
             "card",
             "p-4"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:54:5:card",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 54,
+          "column": 5,
+          "ownerComponentId": "ui.0165",
+          "tag": "section",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "max-w-2xl",
+            "shadow-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:78:13:card",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 78,
+          "column": 13,
+          "ownerComponentId": "ui.0165",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-100",
+            "card",
+            "max-w-md",
+            "shadow-xl",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:8:5:card",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 8,
+          "column": 5,
+          "ownerComponentId": "ui.0164",
+          "tag": "section",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "max-w-2xl",
+            "shadow-sm"
           ],
           "dynamicClasses": false
         }
