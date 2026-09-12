@@ -28,7 +28,6 @@ This document provides essential information for AI coding agents working on the
 | HTTP Client | Axios |
 | i18n | i18next + react-i18next |
 | Animation | Framer Motion |
-| Video | Remotion (for promotional videos) |
 | Testing | Vitest + React Testing Library |
 | Deployment | Vercel |
 

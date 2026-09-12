@@ -367,7 +367,6 @@
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
@@ -990,64 +989,6 @@
       }
     },
     {
-      "id": "ui.0017",
-      "name": "TimelineSongItem",
-      "source": "src/components/dj-control/TimelineSongItem.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "named",
-          "name": "TimelineSongItem",
-          "module": "src/components/dj-control/TimelineSongItem.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "TimelineSongItem",
-          "module": "src/components/dj-control/index.ts"
-        },
-        {
-          "kind": "re-export",
-          "name": "TimelineSongItem",
-          "module": "src/components/index.ts"
-        }
-      ],
-      "consumers": [],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [
-          "src/components/Action.tsx"
-        ],
-        "external": [
-          "react-i18next"
-        ],
-        "contexts": [
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "legacy-experimental",
-        "layer": "domain-component",
-        "lifecycle": "uncertain",
-        "productArea": "dj-control",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "No current consumers; review whether this DJ timeline item is retained or deprecated."
-        ]
-      }
-    },
-    {
       "id": "ui.0018",
       "name": "EditMusicianModal",
       "source": "src/components/EditMusicianModal.tsx",
@@ -1291,56 +1232,6 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Feedback/Error boundary. Recovery copy remains hardcoded and requires internationalization review."
-        ]
-      }
-    },
-    {
-      "id": "ui.0022",
-      "name": "Features",
-      "source": "src/components/Features.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "default",
-          "name": "default",
-          "module": "src/components/Features.tsx"
-        }
-      ],
-      "consumers": [],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [],
-        "external": [
-          "framer-motion",
-          "lucide-react",
-          "react",
-          "react-i18next"
-        ],
-        "contexts": [
-          "animation",
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "marketing",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "marketing",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "No production or story consumers remain; grep-verified across src/. Superseded by HowItWorks.tsx, which carries the landing-page feature presentation that src/App.tsx actually renders (EnhancedHero, HowItWorks, Testimonials, CallToAction, Footer). See docs/design-system/shared-account-marketing-migration.md (issue #50)."
         ]
       }
     },
@@ -1991,57 +1882,6 @@
       }
     },
     {
-      "id": "ui.0033",
-      "name": "CanvasWaveform",
-      "source": "src/components/jam-detail-v2/CanvasWaveform.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "named",
-          "name": "CanvasWaveform",
-          "module": "src/components/jam-detail-v2/CanvasWaveform.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "CanvasWaveform",
-          "module": "src/components/jam-detail-v2/index.ts"
-        }
-      ],
-      "consumers": [],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [],
-        "external": [
-          "react"
-        ],
-        "contexts": [
-          "browser"
-        ]
-      },
-      "metadata": {
-        "category": "legacy-experimental",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "No consumers remain, in production or in a story; only the jam-detail-v2 barrel re-exports it. No replacement component draws a canvas waveform: the active TimelineItemV2Waveform shows a dot-based status instead. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
-        ]
-      }
-    },
-    {
       "id": "ui.0034",
       "name": "CollapsibleSection",
       "source": "src/components/jam-detail-v2/CollapsibleSection.tsx",
@@ -2060,7 +1900,6 @@
         }
       ],
       "consumers": [
-        "src/components/jam-detail-v2/CollapsibleSidebar.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
@@ -2100,62 +1939,6 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Domain/Jam/Summary and actions."
-        ]
-      }
-    },
-    {
-      "id": "ui.0035",
-      "name": "CollapsibleSidebar",
-      "source": "src/components/jam-detail-v2/CollapsibleSidebar.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "named",
-          "name": "CollapsibleSidebar",
-          "module": "src/components/jam-detail-v2/CollapsibleSidebar.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "CollapsibleSidebar",
-          "module": "src/components/jam-detail-v2/index.ts"
-        }
-      ],
-      "consumers": [],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [
-          "src/components/jam-detail-v2/CollapsibleSection.tsx"
-        ],
-        "external": [
-          "lucide-react",
-          "react",
-          "react-i18next"
-        ],
-        "contexts": [
-          "browser",
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "product-ui",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "No consumers remain; only the jam-detail-v2 barrel re-exports it. Superseded by the direct CollapsibleSection usage in src/pages/tabs/JamDetailPageV2.tsx. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2224,108 +2007,6 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Domain/Jam/Summary and actions."
-        ]
-      }
-    },
-    {
-      "id": "ui.0037",
-      "name": "FloatingRegisterButton",
-      "source": "src/components/jam-detail-v2/FloatingRegisterButton.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "named",
-          "name": "FloatingRegisterButton",
-          "module": "src/components/jam-detail-v2/FloatingRegisterButton.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "FloatingRegisterButton",
-          "module": "src/components/jam-detail-v2/index.ts"
-        }
-      ],
-      "consumers": [],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [],
-        "external": [
-          "react-i18next"
-        ],
-        "contexts": [
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "product-ui",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "Superseded by DualActionFAB, the only floating control wired into src/pages/tabs/JamDetailPageV2.tsx. No consumers remain, in production or in a story. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
-        ]
-      }
-    },
-    {
-      "id": "ui.0038",
-      "name": "FloatingSuggestButton",
-      "source": "src/components/jam-detail-v2/FloatingSuggestButton.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "named",
-          "name": "FloatingSuggestButton",
-          "module": "src/components/jam-detail-v2/FloatingSuggestButton.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "FloatingSuggestButton",
-          "module": "src/components/jam-detail-v2/index.ts"
-        }
-      ],
-      "consumers": [],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [],
-        "external": [
-          "react-i18next"
-        ],
-        "contexts": [
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "product-ui",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "Superseded by DualActionFAB, the only floating control wired into src/pages/tabs/JamDetailPageV2.tsx. No consumers remain, in production or in a story. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2599,72 +2280,6 @@
       }
     },
     {
-      "id": "ui.0043",
-      "name": "TimelineItem",
-      "source": "src/components/jam-detail-v2/TimelineItem.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "named",
-          "name": "TimelineItem",
-          "module": "src/components/jam-detail-v2/TimelineItem.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "TimelineItem",
-          "module": "src/components/jam-detail-v2/index.ts"
-        }
-      ],
-      "consumers": [
-        "src/components/jam-detail-v2/TimelineShowcase.tsx",
-        "src/workbench/stories/JamTimeline.stories.tsx"
-      ],
-      "workbenchStories": [
-        "src/workbench/stories/JamTimeline.stories.tsx"
-      ],
-      "dependencies": {
-        "internal": [
-          "src/components/Action.tsx",
-          "src/components/data-display/index.tsx",
-          "src/lib/formatters.ts",
-          "src/lib/schedule/instrumentHelpers.tsx"
-        ],
-        "external": [
-          "react-i18next"
-        ],
-        "contexts": [
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "legacy-experimental",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "ready",
-          "accessibility": "needs-review",
-          "internationalization": "verified",
-          "theme": "verified"
-        },
-        "uiStates": [
-          "scheduled",
-          "registration-available",
-          "mobile",
-          "desktop"
-        ],
-        "candidateFamily": null,
-        "notes": [
-          "Superseded by TimelineItemV2Waveform. TimelineShowcase is its only production-side caller and that showcase is legacy too. Remaining consumer: src/workbench/stories/JamTimeline.stories.tsx only. Still migrated onto Action and Badge, matching the TimelineSongItem precedent. See docs/design-system/jam-music-migration.md (issue #51)."
-        ]
-      }
-    },
-    {
       "id": "ui.0044",
       "name": "TimelineItemV2Waveform",
       "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
@@ -2734,185 +2349,6 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Domain/Jam/Performance timeline."
-        ]
-      }
-    },
-    {
-      "id": "ui.0045",
-      "name": "EmptyTimelineState",
-      "source": "src/components/jam-detail-v2/TimelineShowcase.tsx",
-      "declaration": "function",
-      "visibility": "local",
-      "exports": [],
-      "consumers": [
-        "src/components/jam-detail-v2/TimelineShowcase.tsx"
-      ],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [
-          "src/components/FeedbackStates.tsx"
-        ],
-        "external": [
-          "react-i18next"
-        ],
-        "contexts": [
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "legacy-experimental",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "Superseded by TimelineShowcaseV2Waveform, which src/pages/tabs/JamDetailPageV2.tsx renders. No consumers remain; only the jam-detail-v2 barrel re-exports it. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
-        ]
-      }
-    },
-    {
-      "id": "ui.0046",
-      "name": "HorizontalTimeline",
-      "source": "src/components/jam-detail-v2/TimelineShowcase.tsx",
-      "declaration": "function",
-      "visibility": "local",
-      "exports": [],
-      "consumers": [
-        "src/components/jam-detail-v2/TimelineShowcase.tsx"
-      ],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [
-          "src/components/jam-detail-v2/TimelineItem.tsx",
-          "src/types/api.types.ts",
-          "src/types/auth.types.ts"
-        ],
-        "external": [],
-        "contexts": []
-      },
-      "metadata": {
-        "category": "legacy-experimental",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "Superseded by TimelineShowcaseV2Waveform, which src/pages/tabs/JamDetailPageV2.tsx renders. No consumers remain; only the jam-detail-v2 barrel re-exports it. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
-        ]
-      }
-    },
-    {
-      "id": "ui.0047",
-      "name": "TimelineShowcase",
-      "source": "src/components/jam-detail-v2/TimelineShowcase.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "named",
-          "name": "TimelineShowcase",
-          "module": "src/components/jam-detail-v2/TimelineShowcase.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "TimelineShowcase",
-          "module": "src/components/jam-detail-v2/index.ts"
-        }
-      ],
-      "consumers": [],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [],
-        "external": [
-          "react-i18next"
-        ],
-        "contexts": [
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "legacy-experimental",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "Superseded by TimelineShowcaseV2Waveform, which src/pages/tabs/JamDetailPageV2.tsx renders. No consumers remain; only the jam-detail-v2 barrel re-exports it. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
-        ]
-      }
-    },
-    {
-      "id": "ui.0048",
-      "name": "VerticalTimeline",
-      "source": "src/components/jam-detail-v2/TimelineShowcase.tsx",
-      "declaration": "function",
-      "visibility": "local",
-      "exports": [],
-      "consumers": [
-        "src/components/jam-detail-v2/TimelineShowcase.tsx"
-      ],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [
-          "src/components/jam-detail-v2/TimelineItem.tsx",
-          "src/types/api.types.ts",
-          "src/types/auth.types.ts"
-        ],
-        "external": [],
-        "contexts": []
-      },
-      "metadata": {
-        "category": "legacy-experimental",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "jam",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "Superseded by TimelineShowcaseV2Waveform, which src/pages/tabs/JamDetailPageV2.tsx renders. No consumers remain; only the jam-detail-v2 barrel re-exports it. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -6333,12 +5769,10 @@
       "consumers": [
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
-        "src/components/schedule/ScheduleDisplayItem.tsx",
         "src/components/schedule/SongInfo.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
@@ -6827,12 +6261,9 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/ScheduleCardManagement.tsx",
-        "src/components/schedule/ScheduleDisplayItem.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
@@ -6904,11 +6335,9 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/ScheduleCardManagement.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
@@ -6947,67 +6376,6 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed with user interactions in Domain/Schedule/Primitives and actions."
-        ]
-      }
-    },
-    {
-      "id": "ui.0112",
-      "name": "ScheduleCardManagement",
-      "source": "src/components/schedule/ScheduleCardManagement.tsx",
-      "declaration": "function",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "re-export",
-          "name": "ScheduleCardManagement",
-          "module": "src/components/index.ts"
-        },
-        {
-          "kind": "named",
-          "name": "ScheduleCardManagement",
-          "module": "src/components/schedule/ScheduleCardManagement.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "ScheduleCardManagement",
-          "module": "src/components/schedule/index.ts"
-        }
-      ],
-      "consumers": [
-        "src/workbench/stories/Environment.stories.tsx"
-      ],
-      "workbenchStories": [
-        "src/workbench/stories/Environment.stories.tsx"
-      ],
-      "dependencies": {
-        "internal": [
-          "src/components/schedule/RegistrationList.tsx",
-          "src/components/schedule/ScheduleActionButtons.tsx",
-          "src/components/schedule/ScheduleStatusBadge.tsx",
-          "src/components/schedule/SongInfo.tsx"
-        ],
-        "external": [],
-        "contexts": []
-      },
-      "metadata": {
-        "category": "product-ui",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "schedule",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "Superseded by ScheduleCollapsibleCard, the card actually wired into the production host ScheduleTab. Remaining consumer: src/workbench/stories/Environment.stories.tsx only. See docs/design-system/schedule-registration-migration.md (issue #52)."
         ]
       }
     },
@@ -7200,69 +6568,6 @@
       }
     },
     {
-      "id": "ui.0116",
-      "name": "ScheduleDisplayItem",
-      "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-      "declaration": "variable",
-      "visibility": "exported",
-      "exports": [
-        {
-          "kind": "re-export",
-          "name": "ScheduleDisplayItem",
-          "module": "src/components/index.ts"
-        },
-        {
-          "kind": "named",
-          "name": "ScheduleDisplayItem",
-          "module": "src/components/schedule/ScheduleDisplayItem.tsx"
-        },
-        {
-          "kind": "re-export",
-          "name": "ScheduleDisplayItem",
-          "module": "src/components/schedule/index.ts"
-        }
-      ],
-      "consumers": [],
-      "workbenchStories": [],
-      "dependencies": {
-        "internal": [
-          "src/components/Action.tsx",
-          "src/components/schedule/InstrumentBadges.tsx",
-          "src/components/schedule/RegistrationList.tsx",
-          "src/lib/schedule/statusHelpers.ts"
-        ],
-        "external": [
-          "lucide-react",
-          "react",
-          "react-i18next"
-        ],
-        "contexts": [
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "product-ui",
-        "layer": "domain-component",
-        "lifecycle": "legacy",
-        "productArea": "schedule",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "needs-review",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
-        },
-        "uiStates": [],
-        "candidateFamily": null,
-        "notes": [
-          "No production or story consumers remain. Musician-facing schedule display in the live jam-detail-v2 page is now rendered inline by TimelineShowcaseV2Waveform (jam-detail-v2, out of this ticket's scope), which superseded this component. See docs/design-system/schedule-registration-migration.md (issue #52)."
-        ]
-      }
-    },
-    {
       "id": "ui.0117",
       "name": "ScheduleEnrollmentModal",
       "source": "src/components/schedule/ScheduleEnrollmentModal.tsx",
@@ -7429,12 +6734,10 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/ScheduleCardManagement.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
@@ -7558,11 +6861,9 @@
         }
       ],
       "consumers": [
-        "src/components/schedule/ScheduleCardManagement.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
@@ -10196,14 +9497,12 @@
         "src/components/dj-control/PlaybackControls.tsx",
         "src/components/dj-control/QueueStats.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
-        "src/components/dj-control/TimelineSongItem.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/forms/OAuthButton.tsx",
         "src/components/forms/SupabaseLoginForm.tsx",
         "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
-        "src/components/jam-detail-v2/TimelineItem.tsx",
         "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
         "src/components/overlays/CanonicalOverlays.tsx",
@@ -10214,7 +9513,6 @@
         "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
-        "src/components/schedule/ScheduleDisplayItem.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/JamRegisterPage.tsx",
         "src/pages/MusicPage.tsx",
@@ -10726,7 +10024,6 @@
         "src/components/EmptyState.tsx",
         "src/components/MusicEmptyState.tsx",
         "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
-        "src/components/jam-detail-v2/TimelineShowcase.tsx",
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx"
       ],
       "workbenchStories": [
@@ -10802,7 +10099,6 @@
         "src/components/dj-control/QueueStats.tsx",
         "src/components/jam-detail-v2/CollapsibleSection.tsx",
         "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
-        "src/components/jam-detail-v2/TimelineItem.tsx",
         "src/components/music/MusicDataDisplay.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
@@ -10812,7 +10108,6 @@
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
         "src/workbench/stories/JamComponents.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
-        "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
@@ -12341,34 +11636,6 @@
   ],
   "ignored": [
     {
-      "source": "src/components/PromoVideo/CTAScene.tsx",
-      "reason": "Empty retired promotional scene retained pending legacy cleanup."
-    },
-    {
-      "source": "src/components/PromoVideo/DashboardScene.tsx",
-      "reason": "Empty retired promotional scene retained pending legacy cleanup."
-    },
-    {
-      "source": "src/components/PromoVideo/FeaturesScene.tsx",
-      "reason": "Empty retired promotional scene retained pending legacy cleanup."
-    },
-    {
-      "source": "src/components/PromoVideo/HeroScene.tsx",
-      "reason": "Empty retired promotional scene retained pending legacy cleanup."
-    },
-    {
-      "source": "src/components/PromoVideo/HowItWorksScene.tsx",
-      "reason": "Empty retired promotional scene retained pending legacy cleanup."
-    },
-    {
-      "source": "src/components/PromoVideo/PromoVideoPlayer.tsx",
-      "reason": "Empty retired promotional player retained pending legacy cleanup."
-    },
-    {
-      "source": "src/components/PromoVideo/index.tsx",
-      "reason": "Deprecated schema-only barrel with no React component declaration."
-    },
-    {
       "source": "src/lib/musicUtils.tsx",
       "reason": "Utility module containing static provider icon elements, not React components."
     },
@@ -12490,9 +11757,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 185,
-    "representedSources": 148,
-    "ignoredSources": 37,
+    "eligibleSources": 168,
+    "representedSources": 138,
+    "ignoredSources": 30,
     "workbench": {
       "activeReusableVisualComponents": 134,
       "ready": 114,
@@ -13032,62 +12299,6 @@
             "shadow-2xl"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/FloatingRegisterButton.tsx:17:5:action",
-          "source": "src/components/jam-detail-v2/FloatingRegisterButton.tsx",
-          "line": 17,
-          "column": 5,
-          "ownerComponentId": "ui.0037",
-          "tag": "button",
-          "staticClassTokens": [
-            "bottom-6",
-            "btn",
-            "btn-circle",
-            "btn-lg",
-            "btn-primary",
-            "duration-300",
-            "fixed",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary",
-            "hover:shadow-xl",
-            "motion-reduce:transition-none",
-            "right-6",
-            "shadow-2xl",
-            "transition-[opacity,transform]",
-            "will-change-transform",
-            "z-40"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/FloatingSuggestButton.tsx:15:5:action",
-          "source": "src/components/jam-detail-v2/FloatingSuggestButton.tsx",
-          "line": 15,
-          "column": 5,
-          "ownerComponentId": "ui.0038",
-          "tag": "button",
-          "staticClassTokens": [
-            "bottom-30",
-            "btn",
-            "btn-circle",
-            "btn-lg",
-            "btn-secondary",
-            "duration-300",
-            "fixed",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-secondary",
-            "hover:shadow-xl",
-            "motion-reduce:transition-none",
-            "right-6",
-            "shadow-2xl",
-            "transition-[opacity,transform]",
-            "will-change-transform",
-            "z-40"
-          ],
-          "dynamicClasses": true
         },
         {
           "id": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx:80:13:action",
@@ -14455,28 +13666,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCardManagement.tsx:53:25:badge",
-          "source": "src/components/schedule/ScheduleCardManagement.tsx",
-          "line": 53,
-          "column": 25,
-          "ownerComponentId": "ui.0112",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-info",
-            "badge-md",
-            "font-bold",
-            "mb-auto",
-            "mt-auto",
-            "px-3",
-            "py-2",
-            "sm:px-4",
-            "sm:text-base",
-            "text-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:115:11:badge",
           "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
           "line": 115,
@@ -14525,64 +13714,6 @@
             "badge-sm",
             "flex-shrink-0",
             "font-bold"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:50:17:badge",
-          "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 50,
-          "column": 17,
-          "ownerComponentId": "ui.0116",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-warning",
-            "font-bold",
-            "uppercase"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:62:17:badge",
-          "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 62,
-          "column": 17,
-          "ownerComponentId": "ui.0116",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "font-bold",
-            "min-w-fit"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:89:13:badge",
-          "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 89,
-          "column": 13,
-          "ownerComponentId": "ui.0116",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-md"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:96:21:badge",
-          "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 96,
-          "column": 21,
-          "ownerComponentId": "ui.0116",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-success",
-            "gap-2",
-            "px-4",
-            "py-3"
           ],
           "dynamicClasses": false
         },
@@ -14705,21 +13836,6 @@
             "w-full"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Features.tsx:96:15:card",
-          "source": "src/components/Features.tsx",
-          "line": 96,
-          "column": 15,
-          "ownerComponentId": "ui.0022",
-          "tag": "motion.div",
-          "staticClassTokens": [
-            "card",
-            "duration-300",
-            "shadow-lg",
-            "transition-shadow"
-          ],
-          "dynamicClasses": true
         },
         {
           "id": "src/components/HowItWorks.tsx:90:15:card",
@@ -14971,24 +14087,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/TimelineItem.tsx:42:5:card",
-          "source": "src/components/jam-detail-v2/TimelineItem.tsx",
-          "line": 42,
-          "column": 5,
-          "ownerComponentId": "ui.0043",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-gradient-to-br",
-            "card",
-            "from-base-200",
-            "hover:shadow-xl",
-            "shadow-lg",
-            "to-base-300",
-            "transition-shadow"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:113:5:card",
           "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
           "line": 113,
@@ -15007,19 +14105,6 @@
             "text-left",
             "transition-shadow",
             "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/schedule/ScheduleCardManagement.tsx:39:9:card",
-          "source": "src/components/schedule/ScheduleCardManagement.tsx",
-          "line": 39,
-          "column": 9,
-          "ownerComponentId": "ui.0112",
-          "tag": "div",
-          "staticClassTokens": [
-            "card",
-            "shadow"
           ],
           "dynamicClasses": true
         },
