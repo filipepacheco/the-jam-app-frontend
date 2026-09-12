@@ -6,6 +6,7 @@
 
 import {useTranslation} from 'react-i18next'
 import type {LiveStateSongDto} from '../../types/jamControl.types'
+import {Action} from '../Action'
 
 interface TimelineSongItemV2Props {
   song: LiveStateSongDto
@@ -66,14 +67,14 @@ export function TimelineSongItem({ song, status, onRemove, loading }: TimelineSo
 
       {/* Remove button */}
       {onRemove && status !== 'current' && (
-        <button
+        <Action
           onClick={() => onRemove(song.id)}
-          disabled={loading}
-          className="btn btn-xs btn-ghost btn-outline text-error hover:bg-error/20 mt-1 min-h-[44px] min-w-[44px]"
-          title={t('dj_control.timeline.remove_song')}
+          state={loading ? 'disabled' : 'idle'}
+          variant="quiet"
+          className="mt-1"
         >
-          ✕ {t('common.remove')}
-        </button>
+          <Action.Label>✕ {t('common.remove')}</Action.Label>
+        </Action>
       )}
     </div>
   )

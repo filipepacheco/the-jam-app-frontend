@@ -1,5 +1,11 @@
 import { useTranslation } from 'react-i18next'
 
+// Considered converging onto the canonical `CompactMetadata` list, but its
+// dt/dd contract expects a discrete label and value per item, while these two
+// values are single pre-composed, interpolated sentences ("{{completed}}/{{total}}
+// tocadas", "{{time}} restante"). Splitting them would mean inventing new i18n
+// keys and copy, which is out of scope for a structural migration. See
+// docs/design-system/dj-control-migration.md for the recorded decision.
 interface CompactStatsProps {
   completedCount: number
   totalCount: number

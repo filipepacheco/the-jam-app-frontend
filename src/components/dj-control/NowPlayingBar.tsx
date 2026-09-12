@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { Music, Play, Pause, Square } from 'lucide-react'
+import { Music } from 'lucide-react'
 import type { LiveStateSongDto, PlaybackState } from '../../types/jamControl.types'
+import { StatusIndicator, type StatusTone } from '../data-display'
 
 interface NowPlayingBarProps {
   currentSong: LiveStateSongDto | null
@@ -14,16 +15,18 @@ function formatDuration(seconds: number): string {
   return `${mins}:${secs.toString().padStart(2, '0')}`
 }
 
-const STATE_CONFIG: Record<PlaybackState, { badge: string; Icon: typeof Play; label: string }> = {
-  PLAYING: { badge: 'badge-success', Icon: Play, label: 'dj_control.now_playing.playing' },
-  PAUSED: { badge: 'badge-warning', Icon: Pause, label: 'dj_control.now_playing.paused' },
-  STOPPED: { badge: 'badge-neutral', Icon: Square, label: 'dj_control.now_playing.stopped' },
+// StatusIndicator's convenience tones (live/pending/offline) preserve the same
+// semantic mapping used across the app, so playback status stops depending on
+// badge color alone and always carries a required visible label.
+const STATE_CONFIG: Record<PlaybackState, { status: StatusTone; label: string }> = {
+  PLAYING: { status: 'live', label: 'dj_control.now_playing.playing' },
+  PAUSED: { status: 'pending', label: 'dj_control.now_playing.paused' },
+  STOPPED: { status: 'offline', label: 'dj_control.now_playing.stopped' },
 }
 
 export function NowPlayingBar({ currentSong, playbackState, nextSong }: NowPlayingBarProps) {
   const { t } = useTranslation()
   const config = STATE_CONFIG[playbackState] || STATE_CONFIG.STOPPED
-  const { Icon } = config
 
   if (!currentSong) {
     return (
@@ -32,10 +35,7 @@ export function NowPlayingBar({ currentSong, playbackState, nextSong }: NowPlayi
           <span className="text-xs font-medium text-base-content/50 uppercase tracking-wide">
             {t('dj_control.now_playing.ready_to_start', 'Pronto para iniciar')}
           </span>
-          <span className={`badge badge-xs ${config.badge} gap-1`}>
-            <Icon className="size-2.5" />
-            {t(config.label)}
-          </span>
+          <StatusIndicator status={config.status} label={t(config.label)} />
         </div>
         {nextSong ? (
           <div>
@@ -55,13 +55,10 @@ export function NowPlayingBar({ currentSong, playbackState, nextSong }: NowPlayi
     <div className="rounded-lg bg-base-200 px-3 py-2.5">
       <div className="flex items-center justify-between mb-0.5">
         <div className="flex items-center gap-1.5 text-xs font-medium text-base-content/50 uppercase tracking-wide">
-          <Music className="size-3" />
+          <Music className="size-3" aria-hidden="true" />
           {t('dj_control.timeline.now_playing', 'Tocando agora')}
         </div>
-        <span className={`badge badge-xs ${config.badge} gap-1`}>
-          <Icon className="size-2.5" />
-          {t(config.label)}
-        </span>
+        <StatusIndicator status={config.status} label={t(config.label)} />
       </div>
       <p className="text-lg font-bold leading-tight line-clamp-1">{currentSong.music.title}</p>
       <p className="text-sm text-base-content/60">
