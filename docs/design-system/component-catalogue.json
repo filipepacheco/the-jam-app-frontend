@@ -1636,6 +1636,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/lib/musicUtils.tsx"
         ],
         "external": [
@@ -1766,6 +1767,7 @@
         "internal": [
           "src/components/Alert.tsx",
           "src/components/forms/OAuthButton.tsx",
+          "src/components/index.ts",
           "src/hooks/index.ts",
           "src/lib/supabase/index.ts"
         ],
@@ -6208,7 +6210,9 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/ModalFooter.tsx",
           "src/components/schedule/InstrumentsSummary.tsx",
@@ -6644,6 +6648,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/lib/schedule/instrumentHelpers.tsx"
         ],
         "external": [
@@ -6706,7 +6711,9 @@
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Action.tsx"
+        ],
         "external": [
           "lucide-react",
           "react",
@@ -6779,6 +6786,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Avatar.tsx",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/utils/musicianUtils.ts"
@@ -6933,7 +6941,7 @@
       "metadata": {
         "category": "product-ui",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "schedule",
         "viewportContexts": [
           "mobile",
@@ -6948,7 +6956,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; compare with active Schedule card compositions."
+          "Superseded by ScheduleCollapsibleCard, the card actually wired into the production host ScheduleTab. Remaining consumer: src/workbench/stories/Environment.stories.tsx only. See docs/design-system/schedule-registration-migration.md (issue #52)."
         ]
       }
     },
@@ -6974,6 +6982,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/schedule/InstrumentBadges.tsx",
           "src/components/schedule/MusicianSlotList.tsx",
           "src/components/schedule/NotesEditor.tsx",
@@ -7047,6 +7056,7 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/schedule/InstrumentBadges.tsx",
           "src/components/schedule/MusicianSlotList.tsx",
           "src/components/schedule/NotesEditor.tsx",
@@ -7078,7 +7088,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; compare with active Schedule card compositions."
+          "No production or story consumers; it is a denser alternative to ScheduleCollapsibleCard that has not been wired into a page. Not deprecated because nothing has superseded it; kept pending a product decision to adopt it. See docs/design-system/schedule-registration-migration.md (issue #52)."
         ]
       }
     },
@@ -7165,6 +7175,7 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/schedule/InstrumentBadges.tsx",
           "src/components/schedule/RegistrationList.tsx",
           "src/lib/schedule/statusHelpers.ts"
@@ -7181,7 +7192,7 @@
       "metadata": {
         "category": "product-ui",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "schedule",
         "viewportContexts": [
           "mobile",
@@ -7196,7 +7207,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; review intended Schedule display usage."
+          "No production or story consumers remain. Musician-facing schedule display in the live jam-detail-v2 page is now rendered inline by TimelineShowcaseV2Waveform (jam-detail-v2, out of this ticket's scope), which superseded this component. See docs/design-system/schedule-registration-migration.md (issue #52)."
         ]
       }
     },
@@ -7230,6 +7241,7 @@
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/ModalFooter.tsx",
           "src/components/schedule/InstrumentsSummary.tsx",
@@ -7302,14 +7314,14 @@
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Navigation.tsx"
+        ],
         "external": [
           "lucide-react",
-          "react",
           "react-i18next"
         ],
         "contexts": [
-          "browser",
           "internationalization"
         ]
       },
@@ -10117,10 +10129,17 @@
         "src/components/dj-control/SongQueueTimeline.tsx",
         "src/components/dj-control/TimelineSongItem.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
+        "src/components/forms/OAuthButton.tsx",
+        "src/components/forms/SupabaseLoginForm.tsx",
         "src/components/overlays/CanonicalOverlays.tsx",
         "src/components/publicDashboard/Navbar.tsx",
         "src/components/publicDashboard/QRCodeCorner.tsx",
+        "src/components/schedule/HostMusicianRegistrationModal.tsx",
+        "src/components/schedule/NotesEditor.tsx",
+        "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
+        "src/components/schedule/ScheduleCompactCard.tsx",
+        "src/components/schedule/ScheduleDisplayItem.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
@@ -10141,6 +10160,7 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
@@ -10208,17 +10228,25 @@
         "src/components/dj-control/SongQueueTimeline.tsx",
         "src/components/publicDashboard/Header.tsx",
         "src/components/publicDashboard/Navbar.tsx",
+        "src/components/schedule/HostMusicianRegistrationModal.tsx",
+        "src/components/schedule/MusicianSlotRow.tsx",
+        "src/components/schedule/NotesEditor.tsx",
+        "src/components/schedule/RegistrationList.tsx",
+        "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx",
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11205,8 +11233,11 @@
       "consumers": [
         "src/components/Field.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
+        "src/components/forms/SupabaseLoginForm.tsx",
         "src/components/publicDashboard/Navbar.tsx",
         "src/components/publicDashboard/PollingControls.tsx",
+        "src/components/schedule/HostMusicianRegistrationModal.tsx",
+        "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
       ],
       "workbenchStories": [
@@ -11787,7 +11818,9 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
-        "src/workbench/stories/PageCompositions.stories.tsx"
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11854,7 +11887,9 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
-        "src/workbench/stories/PageCompositions.stories.tsx"
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11976,10 +12011,13 @@
         }
       ],
       "consumers": [
+        "src/components/schedule/ScheduleOverflowMenu.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -13288,19 +13326,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/forms/OAuthButton.tsx:27:5:action",
-          "source": "src/components/forms/OAuthButton.tsx",
-          "line": 27,
-          "column": 5,
-          "ownerComponentId": "ui.0027",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline"
-          ],
-          "dynamicClasses": true
-        },
-        {
           "id": "src/components/forms/SearchableSelect.tsx:145:7:action",
           "source": "src/components/forms/SearchableSelect.tsx",
           "line": 145,
@@ -13320,34 +13345,6 @@
             "w-full"
           ],
           "dynamicClasses": true
-        },
-        {
-          "id": "src/components/forms/SupabaseLoginForm.tsx:177:9:action",
-          "source": "src/components/forms/SupabaseLoginForm.tsx",
-          "line": 177,
-          "column": 9,
-          "ownerComponentId": "ui.0029",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/SupabaseLoginForm.tsx:215:9:action",
-          "source": "src/components/forms/SupabaseLoginForm.tsx",
-          "line": 215,
-          "column": 9,
-          "ownerComponentId": "ui.0029",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-accent",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
         },
         {
           "id": "src/components/jam-detail-v2/CollapsibleSection.tsx:37:7:action",
@@ -13727,36 +13724,6 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/HostMusicianRegistrationModal.tsx:279:9:action",
-          "source": "src/components/schedule/HostMusicianRegistrationModal.tsx",
-          "line": 279,
-          "column": 9,
-          "ownerComponentId": "ui.0101",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "btn-primary",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/HostMusicianRegistrationModal.tsx:305:17:action",
-          "source": "src/components/schedule/HostMusicianRegistrationModal.tsx",
-          "line": 305,
-          "column": 17,
-          "ownerComponentId": "ui.0101",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/schedule/LiveJamControlPanel.tsx:707:19:action",
           "source": "src/components/schedule/LiveJamControlPanel.tsx",
           "line": 707,
@@ -13800,29 +13767,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/MusicianSlotRow.tsx:107:13:action",
+          "id": "src/components/schedule/MusicianSlotRow.tsx:59:9:action",
           "source": "src/components/schedule/MusicianSlotRow.tsx",
-          "line": 107,
-          "column": 13,
-          "ownerComponentId": "ui.0108",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm",
-            "hover:text-error",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "text-error/40",
-            "transition-colors"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/MusicianSlotRow.tsx:58:9:action",
-          "source": "src/components/schedule/MusicianSlotRow.tsx",
-          "line": 58,
+          "line": 59,
           "column": 9,
           "ownerComponentId": "ui.0108",
           "tag": "button",
@@ -13842,127 +13789,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/MusicianSlotRow.tsx:86:15:action",
-          "source": "src/components/schedule/MusicianSlotRow.tsx",
-          "line": 86,
-          "column": 15,
-          "ownerComponentId": "ui.0108",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/MusicianSlotRow.tsx:95:15:action",
-          "source": "src/components/schedule/MusicianSlotRow.tsx",
-          "line": 95,
-          "column": 15,
-          "ownerComponentId": "ui.0108",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/NotesEditor.tsx:40:11:action",
-          "source": "src/components/schedule/NotesEditor.tsx",
-          "line": 40,
-          "column": 11,
-          "ownerComponentId": "ui.0109",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/NotesEditor.tsx:46:11:action",
-          "source": "src/components/schedule/NotesEditor.tsx",
-          "line": 46,
-          "column": 11,
-          "ownerComponentId": "ui.0109",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-sm",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/NotesEditor.tsx:67:11:action",
-          "source": "src/components/schedule/NotesEditor.tsx",
-          "line": 67,
-          "column": 11,
-          "ownerComponentId": "ui.0109",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "shrink-0"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/NotesEditor.tsx:82:7:action",
-          "source": "src/components/schedule/NotesEditor.tsx",
-          "line": 82,
-          "column": 7,
-          "ownerComponentId": "ui.0109",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "gap-1",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "text-base-content/40"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/RegistrationList.tsx:102:21:action",
+          "id": "src/components/schedule/RegistrationList.tsx:132:45:action",
           "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 102,
-          "column": 21,
-          "ownerComponentId": "ui.0110",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "btn-xs",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/RegistrationList.tsx:135:45:action",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 135,
+          "line": 132,
           "column": 45,
           "ownerComponentId": "ui.0110",
           "tag": "button",
@@ -13975,208 +13804,6 @@
             "text-left"
           ],
           "dynamicClasses": true
-        },
-        {
-          "id": "src/components/schedule/RegistrationList.tsx:201:61:action",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 201,
-          "column": 61,
-          "ownerComponentId": "ui.0110",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "btn-success",
-            "btn-xs",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/RegistrationList.tsx:209:61:action",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 209,
-          "column": 61,
-          "ownerComponentId": "ui.0110",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "btn-outline",
-            "btn-xs",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/RegistrationList.tsx:220:57:action",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 220,
-          "column": 57,
-          "ownerComponentId": "ui.0110",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "btn-outline",
-            "btn-xs",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:150:13:action",
-          "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
-          "line": 150,
-          "column": 13,
-          "ownerComponentId": "ui.0113",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "btn-square",
-            "btn-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:159:13:action",
-          "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
-          "line": 159,
-          "column": 13,
-          "ownerComponentId": "ui.0113",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "btn-sm",
-            "btn-square"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleCompactCard.tsx:101:17:action",
-          "source": "src/components/schedule/ScheduleCompactCard.tsx",
-          "line": 101,
-          "column": 17,
-          "ownerComponentId": "ui.0114",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleCompactCard.tsx:94:17:action",
-          "source": "src/components/schedule/ScheduleCompactCard.tsx",
-          "line": 94,
-          "column": 17,
-          "ownerComponentId": "ui.0114",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "btn-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:100:21:action",
-          "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 100,
-          "column": 21,
-          "ownerComponentId": "ui.0116",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-sm",
-            "font-semibold",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleOverflowMenu.tsx:104:13:action",
-          "source": "src/components/schedule/ScheduleOverflowMenu.tsx",
-          "line": 104,
-          "column": 13,
-          "ownerComponentId": "ui.0118",
-          "tag": "button",
-          "staticClassTokens": [
-            "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleOverflowMenu.tsx:117:11:action",
-          "source": "src/components/schedule/ScheduleOverflowMenu.tsx",
-          "line": 117,
-          "column": 11,
-          "ownerComponentId": "ui.0118",
-          "tag": "button",
-          "staticClassTokens": [
-            "text-error",
-            "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleOverflowMenu.tsx:49:7:action",
-          "source": "src/components/schedule/ScheduleOverflowMenu.tsx",
-          "line": 49,
-          "column": 7,
-          "ownerComponentId": "ui.0118",
-          "tag": "div",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleOverflowMenu.tsx:66:13:action",
-          "source": "src/components/schedule/ScheduleOverflowMenu.tsx",
-          "line": 66,
-          "column": 13,
-          "ownerComponentId": "ui.0118",
-          "tag": "button",
-          "staticClassTokens": [
-            "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleOverflowMenu.tsx:78:13:action",
-          "source": "src/components/schedule/ScheduleOverflowMenu.tsx",
-          "line": 78,
-          "column": 13,
-          "ownerComponentId": "ui.0118",
-          "tag": "button",
-          "staticClassTokens": [
-            "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleOverflowMenu.tsx:90:13:action",
-          "source": "src/components/schedule/ScheduleOverflowMenu.tsx",
-          "line": 90,
-          "column": 13,
-          "ownerComponentId": "ui.0118",
-          "tag": "button",
-          "staticClassTokens": [
-            "text-success",
-            "text-xs"
-          ],
-          "dynamicClasses": false
         },
         {
           "id": "src/pages/AboutPage.tsx:153:13:action",
@@ -15811,9 +15438,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/MusicianSlotRow.tsx:76:9:badge",
+          "id": "src/components/schedule/MusicianSlotRow.tsx:77:9:badge",
           "source": "src/components/schedule/MusicianSlotRow.tsx",
-          "line": 76,
+          "line": 77,
           "column": 9,
           "ownerComponentId": "ui.0108",
           "tag": "span",
@@ -15827,9 +15454,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/RegistrationList.tsx:159:57:badge",
+          "id": "src/components/schedule/RegistrationList.tsx:156:57:badge",
           "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 159,
+          "line": 156,
           "column": 57,
           "ownerComponentId": "ui.0110",
           "tag": "div",
@@ -15846,9 +15473,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/RegistrationList.tsx:165:57:badge",
+          "id": "src/components/schedule/RegistrationList.tsx:162:57:badge",
           "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 165,
+          "line": 162,
           "column": 57,
           "ownerComponentId": "ui.0110",
           "tag": "div",
@@ -15864,9 +15491,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/RegistrationList.tsx:171:57:badge",
+          "id": "src/components/schedule/RegistrationList.tsx:168:57:badge",
           "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 171,
+          "line": 168,
           "column": 57,
           "ownerComponentId": "ui.0110",
           "tag": "div",
@@ -15883,9 +15510,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/RegistrationList.tsx:187:61:badge",
+          "id": "src/components/schedule/RegistrationList.tsx:184:61:badge",
           "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 187,
+          "line": 184,
           "column": 61,
           "ownerComponentId": "ui.0110",
           "tag": "p",
@@ -15921,9 +15548,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:114:11:badge",
+          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:115:11:badge",
           "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
-          "line": 114,
+          "line": 115,
           "column": 11,
           "ownerComponentId": "ui.0113",
           "tag": "span",
@@ -15938,9 +15565,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:136:11:badge",
+          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:137:11:badge",
           "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
-          "line": 136,
+          "line": 137,
           "column": 11,
           "ownerComponentId": "ui.0113",
           "tag": "span",
@@ -15957,9 +15584,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCompactCard.tsx:67:13:badge",
+          "id": "src/components/schedule/ScheduleCompactCard.tsx:68:13:badge",
           "source": "src/components/schedule/ScheduleCompactCard.tsx",
-          "line": 67,
+          "line": 68,
           "column": 13,
           "ownerComponentId": "ui.0114",
           "tag": "span",
@@ -15973,9 +15600,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:49:17:badge",
+          "id": "src/components/schedule/ScheduleDisplayItem.tsx:50:17:badge",
           "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 49,
+          "line": 50,
           "column": 17,
           "ownerComponentId": "ui.0116",
           "tag": "span",
@@ -15988,9 +15615,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:61:17:badge",
+          "id": "src/components/schedule/ScheduleDisplayItem.tsx:62:17:badge",
           "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 61,
+          "line": 62,
           "column": 17,
           "ownerComponentId": "ui.0116",
           "tag": "div",
@@ -16002,9 +15629,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:88:13:badge",
+          "id": "src/components/schedule/ScheduleDisplayItem.tsx:89:13:badge",
           "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 88,
+          "line": 89,
           "column": 13,
           "ownerComponentId": "ui.0116",
           "tag": "span",
@@ -16015,9 +15642,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/ScheduleDisplayItem.tsx:95:21:badge",
+          "id": "src/components/schedule/ScheduleDisplayItem.tsx:96:21:badge",
           "source": "src/components/schedule/ScheduleDisplayItem.tsx",
-          "line": 95,
+          "line": 96,
           "column": 21,
           "ownerComponentId": "ui.0116",
           "tag": "span",
@@ -16584,9 +16211,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/ScheduleCompactCard.tsx:61:5:card",
+          "id": "src/components/schedule/ScheduleCompactCard.tsx:62:5:card",
           "source": "src/components/schedule/ScheduleCompactCard.tsx",
-          "line": 61,
+          "line": 62,
           "column": 5,
           "ownerComponentId": "ui.0114",
           "tag": "div",
@@ -17922,48 +17549,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/forms/SupabaseLoginForm.tsx:119:13:field",
-          "source": "src/components/forms/SupabaseLoginForm.tsx",
-          "line": 119,
-          "column": 13,
-          "ownerComponentId": "ui.0029",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/SupabaseLoginForm.tsx:135:11:field",
-          "source": "src/components/forms/SupabaseLoginForm.tsx",
-          "line": 135,
-          "column": 11,
-          "ownerComponentId": "ui.0029",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/SupabaseLoginForm.tsx:151:13:field",
-          "source": "src/components/forms/SupabaseLoginForm.tsx",
-          "line": 151,
-          "column": 13,
-          "ownerComponentId": "ui.0029",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/jam-detail-v2/SuggestNewSongModal.tsx:266:13:field",
           "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
           "line": 266,
@@ -17978,35 +17563,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/HostMusicianRegistrationModal.tsx:238:9:field",
-          "source": "src/components/schedule/HostMusicianRegistrationModal.tsx",
-          "line": 238,
-          "column": 9,
-          "ownerComponentId": "ui.0101",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/HostMusicianRegistrationModal.tsx:258:9:field",
-          "source": "src/components/schedule/HostMusicianRegistrationModal.tsx",
-          "line": 258,
-          "column": 9,
-          "ownerComponentId": "ui.0101",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/NotesEditor.tsx:29:9:field",
+          "id": "src/components/schedule/NotesEditor.tsx:30:9:field",
           "source": "src/components/schedule/NotesEditor.tsx",
-          "line": 29,
+          "line": 30,
           "column": 9,
           "ownerComponentId": "ui.0109",
           "tag": "textarea",
@@ -18016,19 +17575,6 @@
             "textarea-bordered",
             "textarea-xs",
             "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleEnrollmentModal.tsx:101:11:field",
-          "source": "src/components/schedule/ScheduleEnrollmentModal.tsx",
-          "line": 101,
-          "column": 11,
-          "ownerComponentId": "ui.0117",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
           ],
           "dynamicClasses": false
         },
@@ -18466,40 +18012,6 @@
             "gap-0.5",
             "menu",
             "p-0"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleOverflowMenu.tsx:48:5:menu",
-          "source": "src/components/schedule/ScheduleOverflowMenu.tsx",
-          "line": 48,
-          "column": 5,
-          "ownerComponentId": "ui.0118",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-end"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleOverflowMenu.tsx:58:7:menu",
-          "source": "src/components/schedule/ScheduleOverflowMenu.tsx",
-          "line": 58,
-          "column": 7,
-          "ownerComponentId": "ui.0118",
-          "tag": "ul",
-          "staticClassTokens": [
-            "bg-base-100",
-            "border",
-            "border-base-300",
-            "dropdown-content",
-            "menu",
-            "p-1",
-            "rounded-box",
-            "shadow-lg",
-            "w-48",
-            "z-50"
           ],
           "dynamicClasses": false
         },

@@ -10,6 +10,7 @@
 
 import type { ScheduleResponseDto } from '../../types/api.types'
 import { useTranslation } from 'react-i18next'
+import { Action } from '../Action'
 import { ScheduleStatusBadge } from './ScheduleStatusBadge'
 import { InstrumentBadges } from './InstrumentBadges'
 import { NotesEditor } from './NotesEditor'
@@ -91,20 +92,20 @@ export function ScheduleCompactCard({
           <div className="flex-shrink-0">
             {isSuggested ? (
               <div className="flex items-center gap-1">
-                <button
+                <Action
                   onClick={() => onStatusChange?.(schedule.id, 'SCHEDULED')}
-                  className="btn btn-sm btn-success"
-                  disabled={loading}
+                  variant="primary"
+                  {...(loading ? { state: 'loading' as const, loadingLabel: t('schedule.actions.approving') } : { state: 'idle' as const })}
                 >
-                  {t('common.approve')}
-                </button>
-                <button
+                  <Action.Label>{t('common.approve')}</Action.Label>
+                </Action>
+                <Action
                   onClick={() => onDelete?.(schedule.id)}
-                  className="btn btn-sm btn-error"
-                  disabled={loading}
+                  variant="destructive"
+                  {...(loading ? { state: 'loading' as const, loadingLabel: t('schedule.actions.rejecting') } : { state: 'idle' as const })}
                 >
-                  {t('common.reject')}
-                </button>
+                  <Action.Label>{t('common.reject')}</Action.Label>
+                </Action>
               </div>
             ) : (
               <ScheduleOverflowMenu

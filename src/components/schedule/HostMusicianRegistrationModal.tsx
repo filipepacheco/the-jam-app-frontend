@@ -19,6 +19,8 @@ import {InstrumentsSummary} from './InstrumentsSummary'
 import {Modal} from '../Modal'
 import {ModalFooter} from '../ModalFooter'
 import {Plus, X} from 'lucide-react'
+import {Action, IconAction} from '../Action'
+import {Field} from '../Field'
 
 interface HostMusicianRegistrationModalProps {
   schedule: ScheduleResponseDto
@@ -231,15 +233,15 @@ export function HostMusicianRegistrationModal({
       <Alert type="error" message={error} />
 
       {/* Musician Selection */}
-      <div className="form-control mb-3">
-        <label className="label">
-          <span className="label-text">{t('schedule.select_musician')}</span>
-        </label>
-        <select
+      <Field
+        id="host-registration-musician"
+        label={t('schedule.select_musician')}
+        disabled={musicianLoading || submitting}
+        className="mb-3"
+      >
+        <Field.Select
           value={selectedMusicianId}
           onChange={(e) => setSelectedMusicianId(e.target.value)}
-          className="select select-bordered"
-          disabled={musicianLoading || submitting}
         >
           <option value="">{t('schedule.choose_musician')}</option>
           {musicians.map((musician) => (
@@ -247,19 +249,19 @@ export function HostMusicianRegistrationModal({
               {musician.name} ({musician.instrument ? t(`schedule.instruments.${musician.instrument}`, musician.instrument) : t('common.unknown')})
             </option>
           ))}
-        </select>
-      </div>
+        </Field.Select>
+      </Field>
 
       {/* Instrument Selection */}
-      <div className="form-control mb-3">
-        <label className="label">
-          <span className="label-text">{t('schedule.select_instrument')}</span>
-        </label>
-        <select
+      <Field
+        id="host-registration-instrument"
+        label={t('schedule.select_instrument')}
+        disabled={submitting}
+        className="mb-3"
+      >
+        <Field.Select
           value={selectedInstrument}
           onChange={(e) => setSelectedInstrument(e.target.value)}
-          className="select select-bordered"
-          disabled={submitting}
         >
           <option value="">{t('schedule.choose_instrument')}</option>
           {instrumentOptions.map((option) => {
@@ -271,20 +273,20 @@ export function HostMusicianRegistrationModal({
               </option>
             )
           })}
-        </select>
-      </div>
+        </Field.Select>
+      </Field>
 
       {/* Add to Queue Button */}
       <div className="flex justify-end mb-4">
-        <button
+        <Action
           type="button"
-          className="btn btn-sm btn-outline btn-primary"
+          variant="secondary"
           onClick={handleAddToQueue}
-          disabled={!selectedMusicianId || !selectedInstrument || submitting}
+          state={!selectedMusicianId || !selectedInstrument || submitting ? 'disabled' : 'idle'}
         >
-          <Plus className="size-4" />
-          {t('schedule.batch.add_to_queue')}
-        </button>
+          <Action.Icon><Plus className="size-4" /></Action.Icon>
+          <Action.Label>{t('schedule.batch.add_to_queue')}</Action.Label>
+        </Action>
       </div>
 
       {/* Queue */}
@@ -302,15 +304,14 @@ export function HostMusicianRegistrationModal({
                 <span>
                   {getInstrumentEmoji(item.instrument)} {item.musicianName} - {item.instrumentLabel}
                 </span>
-                <button
-                  type="button"
-                  className="btn btn-ghost btn-xs btn-circle"
+                <IconAction
+                  variant="quiet"
+                  label={t('common.remove')}
                   onClick={() => handleRemoveFromQueue(item.id)}
-                  disabled={submitting}
-                  aria-label={t('common.remove')}
+                  state={submitting ? 'disabled' : 'idle'}
                 >
                   <X className="size-3" />
-                </button>
+                </IconAction>
               </div>
             ))}
           </div>

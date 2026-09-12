@@ -14,6 +14,7 @@ import {Alert} from '../Alert'
 import {InstrumentsSummary} from './InstrumentsSummary'
 import {Modal} from '../Modal'
 import {ModalFooter} from '../ModalFooter'
+import {Field} from '../Field'
 
 interface ScheduleEnrollmentModalProps {
   schedule: ScheduleResponseDto
@@ -94,15 +95,15 @@ export function ScheduleEnrollmentModal({
         <Alert type="error" message={error} />
 
         {/* Instrument Selection */}
-        <div className="form-control mb-4">
-          <label className="label">
-            <span className="label-text">{t('schedule.select_your_instrument')}</span>
-          </label>
-          <select
+        <Field
+          id="enrollment-instrument"
+          label={t('schedule.select_your_instrument')}
+          disabled={enrollLoading}
+          className="mb-4"
+        >
+          <Field.Select
             value={selectedInstrument}
             onChange={(e) => setSelectedInstrument(e.target.value)}
-            className="select select-bordered"
-            disabled={enrollLoading}
           >
             <option value="">{t('schedule.choose_instrument')}</option>
             {instrumentOptions.map((option) => {
@@ -114,8 +115,8 @@ export function ScheduleEnrollmentModal({
                 {option.emoji} {option.label} {isFull ? t('schedule.full_parentheses') : isUnlimited ? '' : t('schedule.needed_count_parentheses', { count: remaining })}
               </option>)
             })}
-          </select>
-        </div>
+          </Field.Select>
+        </Field>
 
         <InstrumentsSummary instrumentOptions={instrumentOptions} />
       </Modal>

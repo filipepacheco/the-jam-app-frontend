@@ -8,7 +8,8 @@ import React, { useState, useEffect, useCallback, memo } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { ScheduleResponseDto } from '../../types/api.types'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown } from 'lucide-react'
+import { Check, ChevronDown, X } from 'lucide-react'
+import { IconAction } from '../Action'
 import { InstrumentBadges } from './InstrumentBadges'
 import { NotesEditor } from './NotesEditor'
 import { ScheduleOverflowMenu } from './ScheduleOverflowMenu'
@@ -147,24 +148,22 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
         {/* Suggested: inline approve/reject, others: chevron */}
         {isSuggested ? (
           <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
-            <button
-              className="btn btn-sm btn-success btn-square"
+            <IconAction
+              variant="primary"
+              label={t('common.approve')}
               onClick={() => onStatusChange?.(schedule.id, 'SCHEDULED')}
-              disabled={loading}
-              title={t('common.approve')}
-              aria-label={t('common.approve')}
+              state={loading ? 'disabled' : 'idle'}
             >
-              ✓
-            </button>
-            <button
-              className="btn btn-sm btn-error btn-square"
+              <Check size={16} />
+            </IconAction>
+            <IconAction
+              variant="destructive"
+              label={t('common.reject')}
               onClick={() => onDelete?.(schedule.id)}
-              disabled={loading}
-              title={t('common.reject')}
-              aria-label={t('common.reject')}
+              state={loading ? 'disabled' : 'idle'}
             >
-              ✕
-            </button>
+              <X size={16} />
+            </IconAction>
           </div>
         ) : (
           <ChevronDown

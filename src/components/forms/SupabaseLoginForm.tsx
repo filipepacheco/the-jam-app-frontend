@@ -11,6 +11,7 @@ import type {OAuthProvider} from '../../lib/supabase'
 import OAuthButton from "./OAuthButton.tsx";
 import {useTranslation} from 'react-i18next'
 import {Alert} from '../Alert'
+import {Action, Field} from '../index'
 
 interface SupabaseLoginFormProps {
   onSuccess?: () => void
@@ -112,60 +113,43 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
         <form onSubmit={handleEmailAuth} className="space-y-4">
           {/* Name field (only for signup) */}
         {isSignUp && (
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('common.name')}</span>
-            </label>
-            <input
+          <Field id="login-name" label={t('common.name')} disabled={isFormLoading}>
+            <Field.Input
               type="text"
               placeholder={t('auth.name_placeholder')}
-              className="input input-bordered w-full"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              disabled={isFormLoading}
             />
-          </div>
+          </Field>
         )}
 
         {/* Email Input */}
-        <div >
-          <label className="label">
-            {t('common.email')}
-          </label>
-          <input
+        <Field id="login-email" label={t('common.email')} required requiredLabel={t('common.required')} disabled={isFormLoading}>
+          <Field.Input
             type="email"
             placeholder={t('auth.email_placeholder')}
-            className="input input-bordered w-full"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={isFormLoading}
-            required
           />
-        </div>
+        </Field>
 
         {/* Password Input */}
-          <div>
-            <label className='label'>
-          {t('common.password')}
-            </label>
-            <input
-                type="password"
-                placeholder={t('auth.password_placeholder')}
-                className="input input-bordered w-full"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isFormLoading}
-                required
-                minLength={6}
-            />
-            {isSignUp && (
-                <label className="label">
-              <span className="label-text-alt text-xs text-base-content/60">
-                {t('auth.password_hint')}
-              </span>
-                </label>
-            )}
-          </div>
+        <Field
+          id="login-password"
+          label={t('common.password')}
+          required
+          requiredLabel={t('common.required')}
+          disabled={isFormLoading}
+          hint={isSignUp ? t('auth.password_hint') : undefined}
+        >
+          <Field.Input
+            type="password"
+            placeholder={t('auth.password_placeholder')}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            minLength={6}
+          />
+        </Field>
 
           {/* Error Alert */}
           <Alert type="error" message={error} />
@@ -174,20 +158,16 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
           <Alert type="info" message={message} />
 
         {/* Submit Button */}
-        <button
+        <Action
           type="submit"
-          className="btn btn-primary w-full"
-          disabled={isFormLoading || !email || !password}
+          variant="primary"
+          className="w-full"
+          {...(isFormLoading
+            ? { state: 'loading' as const, loadingLabel: isSignUp ? t('auth.creating_account') : t('auth.signing_in') }
+            : { state: (!email || !password) ? 'disabled' as const : 'idle' as const })}
         >
-          {isFormLoading ? (
-            <>
-              <span className="loading loading-spinner loading-sm"></span>
-              {isSignUp ? t('auth.creating_account') : t('auth.signing_in')}
-            </>
-          ) : (
-            isSignUp ? t('auth.create_account') : t('auth.sign_in')
-          )}
-        </button>
+          <Action.Label>{isSignUp ? t('auth.create_account') : t('auth.sign_in')}</Action.Label>
+        </Action>
 
           <div className="divider ">{t('common.or')}</div>
 
@@ -212,18 +192,18 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
       {/* Toggle Sign Up / Sign In */}
       <div className="divider "></div>
       <div className="text-center">
-        <button
+        <Action
           type="button"
-          className="btn btn-accent btn-sm"
+          variant="secondary"
+          state={isFormLoading ? 'disabled' : 'idle'}
           onClick={() => {
             setIsSignUp(!isSignUp)
             setError(null)
             setMessage(null)
           }}
-          disabled={isFormLoading}
         >
-          {isSignUp ? t('auth.already_have_account') : t('auth.dont_have_account')}
-        </button>
+          <Action.Label>{isSignUp ? t('auth.already_have_account') : t('auth.dont_have_account')}</Action.Label>
+        </Action>
       </div>
 
       {/* Forgot Password Link */}
