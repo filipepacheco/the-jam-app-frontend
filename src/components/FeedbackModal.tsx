@@ -9,6 +9,7 @@ import { CheckCircle } from 'lucide-react'
 import { feedbackService } from '../services'
 import { Alert } from './Alert'
 import { Action } from './Action'
+import { Field } from './Field'
 import { OverlayActions, OverlayModal } from './overlays'
 
 interface FeedbackModalProps {
@@ -129,7 +130,10 @@ export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: 
             />
           )}
 
-          {/* Rating Input */}
+          {/* Rating Input. This stays a hand-rolled radio group: Field wraps
+              exactly one native input/select/textarea, and this is five
+              radio inputs sharing one star-rating widget, so it does not
+              fit the Field contract. */}
           <div className="form-control">
             <label className="label">
               <span className="label-text font-medium">{t('feedback.rating_label')}</span>
@@ -158,23 +162,20 @@ export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: 
           </div>
 
           {/* Comment Textarea */}
-          <div className="form-control">
-            <label className="label" htmlFor="feedback-comment">
-              <span className="label-text">{t('feedback.comment_label')}</span>
-              <span className="label-text-alt text-base-content/50">
-                {t('feedback.character_count', { count: comment.length })}
-              </span>
-            </label>
-            <textarea
-              id="feedback-comment"
-              className="textarea textarea-bordered h-24 resize-none"
+          <Field
+            id="feedback-comment"
+            label={t('feedback.comment_label')}
+            hint={t('feedback.character_count', { count: comment.length })}
+            disabled={isSubmitting}
+          >
+            <Field.Textarea
+              className="h-24 resize-none"
               placeholder={t('feedback.comment_placeholder')}
               value={comment}
               onChange={handleCommentChange}
-              disabled={isSubmitting}
               maxLength={MAX_COMMENT_LENGTH}
             />
-          </div>
+          </Field>
         </div>
       )}
     </OverlayModal>

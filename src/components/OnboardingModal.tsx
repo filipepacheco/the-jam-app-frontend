@@ -10,6 +10,8 @@ import {useTranslation} from 'react-i18next'
 import type {MusicianLevel} from '../types/api.types'
 import {Alert} from './Alert'
 import {Modal} from './Modal'
+import {Action} from './Action'
+import {Field} from './Field'
 
 interface OnboardingModalProps {
   isOpen: boolean
@@ -112,26 +114,36 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   if (!isOpen) return null
 
+  const canSubmit = !isLoading && name.trim() && phone.replace(/\D/g, '').length >= 10 && instrument && level
+
   return (
+    // Modal.tsx stays the wrapper here (not OverlayModal): it is shared by
+    // many out-of-scope consumers, so swapping only this usage would change
+    // its focus-trap and dismissal implementation without a review of
+    // Modal.tsx's other consumers. See docs/design-system/
+    // schedule-registration-migration.md for the same precedent.
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       title={t('jams.onboarding.welcome_title')}
       closeDisabled={true}
       footer={
-        <>
-          <button
-            type="button"
-            className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
-            disabled={isLoading || !name.trim() || phone.replace(/\D/g, '').length < 10 || !instrument || !level}
+        isLoading ? (
+          <Action variant="primary" state="loading" loadingLabel={t('common.saving')}>
+            <Action.Label>{t('jams.onboarding.get_started')}</Action.Label>
+          </Action>
+        ) : (
+          <Action
+            variant="primary"
+            state={canSubmit ? 'idle' : 'disabled'}
             onClick={() => {
               const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
               void handleSubmit(syntheticEvent)
             }}
           >
-            {isLoading ? t('common.saving') : t('jams.onboarding.get_started')}
-          </button>
-        </>
+            <Action.Label>{t('jams.onboarding.get_started')}</Action.Label>
+          </Action>
+        )
       }
     >
       <p className="text-base-content/70 mb-6">
@@ -140,48 +152,31 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name Field - Required */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('jams.onboarding.name_label')} <span className="text-error">*</span></span>
-          </label>
-          <input
+        <Field id="onboarding-name" label={t('jams.onboarding.name_label')} required requiredLabel={t('common.required')} disabled={isLoading}>
+          <Field.Input
             type="text"
             placeholder={t('jams.onboarding.name_placeholder')}
-            className="input input-bordered w-full"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            disabled={isLoading}
-            required
           />
-        </div>
+        </Field>
 
         {/* Phone Field - Required */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('jams.onboarding.phone_label')} <span className="text-error">*</span></span>
-          </label>
-          <input
+        <Field id="onboarding-phone" label={t('jams.onboarding.phone_label')} required requiredLabel={t('common.required')} disabled={isLoading}>
+          <Field.Input
             type="tel"
             placeholder="(XX) XXXXX-XXXX"
-            className="input input-bordered w-full"
             value={phone}
             onChange={handlePhoneChange}
-            disabled={isLoading}
             maxLength={15}
-            required
           />
-        </div>
+        </Field>
 
         {/* Instrument Selection */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('jams.onboarding.instrument_q')} <span className="text-error">*</span></span>
-          </label>
-          <select
-            className="select select-bordered w-full"
+        <Field id="onboarding-instrument" label={t('jams.onboarding.instrument_q')} required requiredLabel={t('common.required')} disabled={isLoading}>
+          <Field.Select
             value={instrument}
             onChange={(e) => setInstrument(e.target.value)}
-            disabled={isLoading}
           >
             <option value="">{t('jams.onboarding.instrument_choose')}</option>
             {INSTRUMENTS.map((inst) => (
@@ -189,19 +184,14 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                 {t(`schedule.instruments.${inst}`)}
               </option>
             ))}
-          </select>
-        </div>
+          </Field.Select>
+        </Field>
 
         {/* Skill Level Selection */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('jams.onboarding.level_q')} <span className="text-error">*</span></span>
-          </label>
-          <select
-            className="select select-bordered w-full"
+        <Field id="onboarding-level" label={t('jams.onboarding.level_q')} required requiredLabel={t('common.required')} disabled={isLoading}>
+          <Field.Select
             value={level}
             onChange={(e) => setLevel(e.target.value)}
-            disabled={isLoading}
           >
             <option value="">{t('jams.onboarding.level_choose')}</option>
             {SKILL_LEVELS.map((lv) => (
@@ -209,8 +199,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                 {t(`schedule.levels.${lv}`)}
               </option>
             ))}
-          </select>
-        </div>
+          </Field.Select>
+        </Field>
 
         {/* Error Alert */}
         <Alert type="error" message={error} />

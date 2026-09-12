@@ -10,6 +10,7 @@ import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import {ProfileHeader} from '../components/ProfileHeader'
 import {ProfileFormSection} from '../components/ProfileFormSection'
 import {Alert} from '../components'
+import {Action} from '../components/Action'
 
 import {useTranslation} from 'react-i18next'
 
@@ -256,37 +257,29 @@ export function ProfilePage() {
           {/* Action Buttons */}
           <div className="flex gap-3 justify-center pt-6">
             {!isEditMode ? (
-              <button
-                type="button"
-                onClick={handleEditToggle}
-                className="btn btn-primary btn-lg"
-              >
-                ✏️ {t('profile.edit_profile')}
-              </button>
+              <Action variant="primary" onClick={handleEditToggle}>
+                <span aria-hidden="true">✏️</span>
+                <Action.Label>{t('profile.edit_profile')}</Action.Label>
+              </Action>
             ) : (
               <>
-                <button
-                  type="button"
+                <Action
+                  variant="quiet"
                   onClick={handleEditToggle}
-                  disabled={isLoading}
-                  className="btn btn-ghost btn-lg"
+                  state={isLoading ? 'disabled' : 'idle'}
                 >
-                  {t('common.cancel')}
-                </button>
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="btn btn-primary btn-lg"
-                >
-                  {isLoading ? (
-                    <>
-                      <span className="loading loading-spinner loading-sm"></span>
-                      {t('common.saving')}
-                    </>
-                  ) : (
-                    <>💾 {t('common.save_changes')}</>
-                  )}
-                </button>
+                  <Action.Label>{t('common.cancel')}</Action.Label>
+                </Action>
+                {isLoading ? (
+                  <Action type="submit" variant="primary" state="loading" loadingLabel={t('common.saving')}>
+                    <Action.Label>{t('common.save_changes')}</Action.Label>
+                  </Action>
+                ) : (
+                  <Action type="submit" variant="primary">
+                    <span aria-hidden="true">💾</span>
+                    <Action.Label>{t('common.save_changes')}</Action.Label>
+                  </Action>
+                )}
               </>
             )}
           </div>
