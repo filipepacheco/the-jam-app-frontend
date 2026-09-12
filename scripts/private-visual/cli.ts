@@ -250,7 +250,7 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
       }
 
       const updatePlan = mode === 'update' ? await planVisualBaselineUpdate(captures, root) : undefined
-      if (updatePlan && updatePlan.changedCells.length === 0 && updatePlan.removedCells.length === 0) {
+      if (updatePlan && updatePlan.addedCells.length === 0 && updatePlan.changedCells.length === 0 && updatePlan.removedCells.length === 0) {
         throw new Error('Private visual update found no changed or removed reference cells; keep the existing update record.')
       }
       if (updatePlan?.removedCells.length && !update?.removalReason) {
