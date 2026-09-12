@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import type { PlaybackState } from '../../types/api.types.ts'
-import { Alert } from '../Alert'
+import { Action, type ActionVariant } from '../Action'
+import { ErrorState } from '../FeedbackStates'
 
 interface PlaybackControlsProps {
   playbackState: PlaybackState
@@ -50,12 +51,16 @@ export function PlaybackControls({
   const isPlaying = playbackState === 'PLAYING'
   const isPaused = playbackState === 'PAUSED'
 
-  // Center button config based on state
+  // Center button config based on state.
+  // The canonical Action family exposes primary/secondary/quiet/destructive only,
+  // so the legacy success (start/resume) and warning (pause) tones both collapse
+  // onto the closest available semantic variant. This is a forced, documented
+  // color change, not an intentional redesign.
   const centerButton = isPlaying
-    ? { action: onPause, label: t('dj_control.actions.pause', 'Pausar'), Icon: Pause, className: 'btn-warning' }
+    ? { action: onPause, label: t('dj_control.actions.pause', 'Pausar'), Icon: Pause, variant: 'secondary' as ActionVariant }
     : isPaused
-      ? { action: onResume, label: t('dj_control.actions.resume', 'Retomar'), Icon: Play, className: 'btn-success' }
-      : { action: onStart, label: t('dj_control.actions.start', 'Iniciar'), Icon: Play, className: 'btn-success' }
+      ? { action: onResume, label: t('dj_control.actions.resume', 'Retomar'), Icon: Play, variant: 'primary' as ActionVariant }
+      : { action: onStart, label: t('dj_control.actions.start', 'Iniciar'), Icon: Play, variant: 'primary' as ActionVariant }
 
   const centerDisabled = busy || (isStopped && !hasNextSong)
   const prevDisabled = busy || !hasCurrentSong
@@ -63,38 +68,47 @@ export function PlaybackControls({
 
   return (
     <div className="space-y-2">
-      <Alert type="error" message={error} onDismiss={() => setError(null)} className="alert-sm" />
+      {error && (
+        <ErrorState
+          title={t('dj_control.errors.action_failed')}
+          description={error}
+          action={{ label: t('common.dismiss'), onClick: () => setError(null), variant: 'quiet' }}
+        />
+      )}
 
       {/* Transport row */}
       <div className="flex items-center gap-2">
-        <button
+        <Action
           onClick={() => { void handleAction(onPrevious) }}
-          className="btn btn-sm btn-secondary flex-1"
-          disabled={prevDisabled}
-          title={t('dj_control.actions.previous_tooltip', 'Anterior')}
+          variant="secondary"
+          state={prevDisabled ? 'disabled' : 'idle'}
+          className="flex-1"
+          aria-label={t('dj_control.actions.previous_tooltip', 'Anterior')}
         >
-          <SkipBack className="size-4" />
-          <span className="hidden sm:inline">{t('dj_control.actions.previous', 'Anterior')}</span>
-        </button>
+          <Action.Icon><SkipBack className="size-4" /></Action.Icon>
+          <Action.Label className="hidden sm:inline">{t('dj_control.actions.previous', 'Anterior')}</Action.Label>
+        </Action>
 
-        <button
+        <Action
           onClick={() => { void handleAction(centerButton.action) }}
-          className={`btn btn-md ${centerButton.className} flex-[2]`}
-          disabled={centerDisabled}
+          variant={centerButton.variant}
+          state={centerDisabled ? 'disabled' : 'idle'}
+          className="flex-[2]"
         >
-          <centerButton.Icon className="size-5" />
-          {centerButton.label}
-        </button>
+          <Action.Icon><centerButton.Icon className="size-5" /></Action.Icon>
+          <Action.Label>{centerButton.label}</Action.Label>
+        </Action>
 
-        <button
+        <Action
           onClick={() => { void handleAction(onNext) }}
-          className="btn btn-sm btn-primary flex-1"
-          disabled={nextDisabled}
-          title={t('dj_control.actions.next_tooltip', 'Proxima')}
+          variant="primary"
+          state={nextDisabled ? 'disabled' : 'idle'}
+          className="flex-1"
+          aria-label={t('dj_control.actions.next_tooltip', 'Proxima')}
         >
-          <span className="hidden sm:inline">{t('dj_control.actions.next', 'Proxima')}</span>
-          <SkipForward className="size-4" />
-        </button>
+          <Action.Label className="hidden sm:inline">{t('dj_control.actions.next', 'Proxima')}</Action.Label>
+          <Action.Icon><SkipForward className="size-4" /></Action.Icon>
+        </Action>
       </div>
 
       {/* Stop button - hidden for now */}
