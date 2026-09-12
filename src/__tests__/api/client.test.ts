@@ -1,137 +1,268 @@
 /**
  * API Client
  * Tests for the centralized API client
+ *
+ * `apiClient` is an `ApiClient` wrapper around a private axios instance
+ * (see `src/lib/api/client.ts`). It exposes only `get/post/put/patch/delete`,
+ * so these tests exercise the wrapper's real interceptor and error-handling
+ * logic through that public surface, with axios itself replaced by a small
+ * adapter-level mock. The mock records the config axios would have been
+ * created with, runs the request through the same interceptor chain the
+ * real ApiClient installs, and lets each test control what the mocked
+ * "network" adapter returns or throws.
  */
 
-import {beforeEach, describe, expect, it} from 'vitest'
-import {apiClient} from '../../lib/api'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
+
+// Mock the auth module so we control what token (if any) is available,
+// without relying on the real Supabase session machinery.
+const auth = vi.hoisted(() => ({
+  getAccessToken: vi.fn<() => Promise<string | null>>(),
+  refreshAccessToken: vi.fn<() => Promise<string | null>>(),
+  clearTokenCache: vi.fn(),
+}))
+
+vi.mock('../../lib/auth', () => auth)
+
+// Mock axios at the adapter level: keep everything else (AxiosError, etc.)
+// real, but replace `axios.create` with an instance whose interceptor
+// registration and request dispatch we control. This lets ApiClient's own
+// `setupInterceptors`, `transformResponse`, `handleError`, and
+// `getErrorMessage` run for real, while the "network" call itself is a
+// mock we can resolve or reject per test.
+const axiosMock = vi.hoisted(() => {
+  type Handler = { fulfilled: (value: any) => any; rejected?: (error: any) => any }
+
+  const requestHandlers: Handler[] = []
+  const responseHandlers: Handler[] = []
+  const adapter = vi.fn<(config: any) => Promise<any>>()
+  let createConfig: any = null
+
+  async function dispatch(config: any) {
+    let cfg = { headers: {}, ...config }
+    for (const handler of requestHandlers) {
+      cfg = await handler.fulfilled(cfg)
+    }
+
+    let rawResponse
+    try {
+      rawResponse = await adapter(cfg)
+    } catch (rawError: any) {
+      const error = { config: cfg, isAxiosError: true, ...rawError }
+      for (const handler of responseHandlers) {
+        if (handler.rejected) {
+          return handler.rejected(error)
+        }
+      }
+      throw error
+    }
+
+    let response = { config: cfg, ...rawResponse }
+    for (const handler of responseHandlers) {
+      response = await handler.fulfilled(response)
+    }
+    return response
+  }
+
+  function createInstance(config: any) {
+    createConfig = config
+    return {
+      defaults: config,
+      interceptors: {
+        request: {
+          use: (fulfilled: Handler['fulfilled'], rejected?: Handler['rejected']) => {
+            requestHandlers.push({ fulfilled, rejected })
+          },
+        },
+        response: {
+          use: (fulfilled: Handler['fulfilled'], rejected?: Handler['rejected']) => {
+            responseHandlers.push({ fulfilled, rejected })
+          },
+        },
+      },
+      request: (cfg: any) => dispatch(cfg),
+      get: (url: string, cfg: any = {}) => dispatch({ ...cfg, url, method: 'get' }),
+      post: (url: string, data: any, cfg: any = {}) => dispatch({ ...cfg, url, data, method: 'post' }),
+      put: (url: string, data: any, cfg: any = {}) => dispatch({ ...cfg, url, data, method: 'put' }),
+      patch: (url: string, data: any, cfg: any = {}) => dispatch({ ...cfg, url, data, method: 'patch' }),
+      delete: (url: string, cfg: any = {}) => dispatch({ ...cfg, url, method: 'delete' }),
+    }
+  }
+
+  return {
+    adapter,
+    reset() {
+      requestHandlers.length = 0
+      responseHandlers.length = 0
+      adapter.mockReset()
+      createConfig = null
+    },
+    getCreateConfig() {
+      return createConfig
+    },
+    createInstance,
+  }
+})
+
+vi.mock('axios', async () => {
+  const actual = await vi.importActual<typeof import('axios')>('axios')
+  return {
+    ...actual,
+    default: {
+      ...actual.default,
+      create: vi.fn((config: any) => axiosMock.createInstance(config)),
+    },
+  }
+})
 
 describe('API Client', () => {
-  beforeEach(() => {
-    // Clear localStorage before each test
+  let apiClient: typeof import('../../lib/api').apiClient
+
+  beforeEach(async () => {
     localStorage.clear()
+    axiosMock.reset()
+    auth.getAccessToken.mockReset().mockResolvedValue(null)
+    auth.refreshAccessToken.mockReset().mockResolvedValue(null)
+    auth.clearTokenCache.mockReset()
+
+    // Re-import so a fresh ApiClient singleton is constructed against the
+    // freshly reset axios mock for every test.
+    vi.resetModules()
+    ;({ apiClient } = await import('../../lib/api'))
   })
 
-  describe('Request Interceptor', () => {
-    it('should attach authorization header when token exists', async () => {
-      // Arrange
-      const token = 'test-jwt-token'
-      localStorage.setItem('auth_token', token)
+  describe('Request Interceptor - Authorization header', () => {
+    it('attaches an Authorization header when a token is available', async () => {
+      auth.getAccessToken.mockResolvedValue('test-jwt-token')
+      axiosMock.adapter.mockResolvedValue({ data: {}, status: 200, statusText: 'OK', headers: {} })
 
-      // Mock the axios request
-      const mockRequest = {
-        headers: {},
-        url: '/test',
-        method: 'get'
-      }
+      await apiClient.get('/test')
 
-      // Act
-      const config = apiClient.interceptors.request.handlers[0].fulfilled(mockRequest)
-
-      // Assert
-      expect(config.headers.Authorization).toBe(`Bearer ${token}`)
+      const [config] = axiosMock.adapter.mock.calls[0]
+      expect(config.headers.Authorization).toBe('Bearer test-jwt-token')
     })
 
-    it('should not attach authorization header when token does not exist', async () => {
-      // Arrange - no token in localStorage
-      const mockRequest = {
-        headers: {},
-        url: '/test',
-        method: 'get'
-      }
+    it('does not attach an Authorization header when no token is available', async () => {
+      auth.getAccessToken.mockResolvedValue(null)
+      axiosMock.adapter.mockResolvedValue({ data: {}, status: 200, statusText: 'OK', headers: {} })
 
-      // Act
-      const config = apiClient.interceptors.request.handlers[0].fulfilled(mockRequest)
+      await apiClient.get('/test')
 
-      // Assert
+      const [config] = axiosMock.adapter.mock.calls[0]
       expect(config.headers.Authorization).toBeUndefined()
     })
   })
 
-  describe('Response Interceptor', () => {
-    it('should standardize successful responses', () => {
-      // Arrange
-      const mockResponse = {
+  describe('Response Interceptor - success standardization', () => {
+    it('wraps a raw (unwrapped) backend response as { data, success: true }', async () => {
+      axiosMock.adapter.mockResolvedValue({
         data: { id: '123', name: 'Test' },
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: {} as any
-      }
+      })
 
-      // Act
-      const result = apiClient.interceptors.response.handlers[0].fulfilled(mockResponse)
+      const result = await apiClient.get<{ id: string; name: string }>('/test')
 
-      // Assert
       expect(result).toEqual({
         data: { id: '123', name: 'Test' },
         success: true,
-        message: 'OK'
       })
     })
 
-    it('should transform errors to standardized format', async () => {
-      // Arrange
-      const mockError = {
+    it('preserves an already-wrapped backend response', async () => {
+      axiosMock.adapter.mockResolvedValue({
+        data: { data: { id: '123' }, success: true, message: 'Loaded' },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+      })
+
+      const result = await apiClient.get<{ id: string }>('/test')
+
+      expect(result).toEqual({
+        data: { id: '123' },
+        success: true,
+        message: 'Loaded',
+        error: undefined,
+        meta: undefined,
+      })
+    })
+  })
+
+  describe('Response Interceptor - error standardization', () => {
+    it('transforms a server error response into the standardized ApiError shape', async () => {
+      axiosMock.adapter.mockRejectedValue({
         response: {
-          data: {
-            message: 'Invalid request',
-            statusCode: 400
-          },
+          data: { message: 'Invalid request' },
           status: 400,
-          statusText: 'Bad Request'
+          statusText: 'Bad Request',
         },
-        config: {},
-        isAxiosError: true
-      }
+      })
 
-      // Act
-      const rejectedHandler = apiClient.interceptors.response.handlers[0].rejected
-
-      try {
-        await rejectedHandler(mockError)
-        expect.fail('Should have thrown an error')
-      } catch (error: any) {
-        // Assert
-        expect(error.success).toBe(false)
-        expect(error.error).toBeDefined()
-        expect(error.error.message).toBe('Invalid request')
-        expect(error.error.status).toBe(400)
-      }
+      await expect(apiClient.get('/test')).rejects.toEqual({
+        message: 'Invalid request',
+        statusCode: 400,
+        error: 'Bad Request',
+      })
     })
 
-    it('should handle network errors', async () => {
-      // Arrange
-      const mockError = {
+    it('falls back to the response statusText when no message is present', async () => {
+      axiosMock.adapter.mockRejectedValue({
+        response: {
+          data: {},
+          status: 500,
+          statusText: 'Internal Server Error',
+        },
+      })
+
+      await expect(apiClient.get('/test')).rejects.toEqual({
+        message: 'Internal Server Error',
+        statusCode: 500,
+        error: 'Internal Server Error',
+      })
+    })
+
+    it('handles a network error (no response received)', async () => {
+      axiosMock.adapter.mockRejectedValue({
         message: 'Network Error',
         code: 'ERR_NETWORK',
-        config: {},
-        isAxiosError: true
-      }
+        request: {},
+      })
 
-      // Act
-      const rejectedHandler = apiClient.interceptors.response.handlers[0].rejected
+      await expect(apiClient.get('/test')).rejects.toEqual({
+        message: 'Network error - please check your internet connection',
+        statusCode: 0,
+        error: 'NETWORK_ERROR',
+      })
+    })
 
-      try {
-        await rejectedHandler(mockError)
-        expect.fail('Should have thrown an error')
-      } catch (error: any) {
-        // Assert
-        expect(error.success).toBe(false)
-        expect(error.error).toBeDefined()
-        expect(error.error.code).toBe('NETWORK_ERROR')
-      }
+    it('handles a request configuration error (no request was made)', async () => {
+      axiosMock.adapter.mockRejectedValue({
+        message: 'Something went wrong building the request',
+      })
+
+      await expect(apiClient.get('/test')).rejects.toEqual({
+        message: 'Something went wrong building the request',
+        statusCode: 0,
+        error: 'REQUEST_ERROR',
+      })
     })
   })
 
   describe('Configuration', () => {
-    it('should have correct base URL from environment', () => {
-      expect(apiClient.defaults.baseURL).toBeDefined()
-      expect(apiClient.defaults.timeout).toBe(30000)
+    it('creates the underlying axios instance with the expected base URL and timeout', () => {
+      const config = axiosMock.getCreateConfig()
+
+      expect(config.baseURL).toBeDefined()
+      expect(typeof config.baseURL).toBe('string')
+      expect(config.timeout).toBe(30000)
     })
 
-    it('should have correct headers', () => {
-      expect(apiClient.defaults.headers.common['Content-Type']).toBe('application/json')
+    it('creates the underlying axios instance with JSON content-type headers', () => {
+      const config = axiosMock.getCreateConfig()
+
+      expect(config.headers['Content-Type']).toBe('application/json')
     })
   })
 })

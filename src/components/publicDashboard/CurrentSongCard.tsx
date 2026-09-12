@@ -1,6 +1,14 @@
 /**
  * Current Song Card Component
  * Displays currently playing song with musicians grouped by instrument
+ *
+ * Display-specific wrapper, documented in
+ * docs/design-system/public-dashboard-migration.md: `DataCard` was
+ * evaluated and not applied here. `DataCard` fixes its own background,
+ * border radius, and padding scale, which would remove the semi-transparent
+ * surface, the accent `border-primary/20` that visually distinguishes
+ * "now playing" from the other cards, and the padding tuned for this
+ * card's distance-legible type scale (`text-5xl` to `text-8xl`).
  */
 
 import {motion} from 'framer-motion'

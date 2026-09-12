@@ -2,13 +2,20 @@
  * Queue Stats Component V2
  * Displays statistics about the song queue + playback control buttons
  * Uses new LiveStateResponseDto structure
+ *
+ * Legacy: consumed only by the legacy DJControlTab. Kept alongside CompactStats
+ * (the V2, presentation-only equivalent) because it also owns the embedded
+ * start/stop/previous/next actions the legacy tab layout expects. See
+ * docs/design-system/dj-control-migration.md for the recorded decision.
  */
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import type { LiveStateResponseDto, LiveStateSongDto } from '../../types/jamControl.types'
-import { Alert } from '../Alert'
+import { Action } from '../Action'
+import { ErrorState } from '../FeedbackStates'
+import { DataCard, Badge } from '../data-display'
 
 interface QueueStatsProps {
   liveState: LiveStateResponseDto | null
@@ -50,11 +57,9 @@ export function QueueStats({
 
   if (!liveState) {
     return (
-      <div className="card bg-gradient-to-br from-primary/10 to-secondary/10 shadow">
-        <div className="card-body p-4">
-          <p className="text-sm text-base-content/70">{t('common.loading')}</p>
-        </div>
-      </div>
+      <DataCard className="bg-gradient-to-br from-primary/10 to-secondary/10 shadow">
+        <p className="text-sm text-base-content/70">{t('common.loading')}</p>
+      </DataCard>
     )
   }
 
@@ -103,107 +108,116 @@ export function QueueStats({
   }
 
   return (
-    <div className="card bg-gradient-to-br from-primary/10 to-secondary/10 shadow">
-      <div className="card-body p-4">
-        <h3 className="font-bold text-lg mb-4">{t('dj_control.stats.title_with_emoji')}</h3>
+    <DataCard className="bg-gradient-to-br from-primary/10 to-secondary/10 shadow">
+      <h3 className="font-bold text-lg mb-4">{t('dj_control.stats.title_with_emoji')}</h3>
 
-        <div className="space-y-3">
-          {/* Total Songs */}
-          <div className="flex justify-between items-center p-3 bg-base-200 rounded-lg">
-            <span className="text-sm font-medium">{t('dj_control.stats.total_songs')}</span>
-            <span className="badge badge-lg badge-primary">{totalSongs}</span>
-          </div>
-
-          {/* Completed */}
-          <div className="flex justify-between items-center p-2">
-            <span className="text-xs">{t('dj_control.stats.completed_with_icon')}</span>
-            <span className="text-xs font-bold">{completedCount}</span>
-          </div>
-
-          {/* Upcoming */}
-          <div className="flex justify-between items-center p-2">
-            <span className="text-xs">{t('dj_control.stats.upcoming_with_icon')}</span>
-            <span className="text-xs font-bold">{upcomingCount}</span>
-          </div>
+      <div className="space-y-3">
+        {/* Total Songs */}
+        <div className="flex justify-between items-center p-3 bg-base-200 rounded-lg">
+          <span className="text-sm font-medium">{t('dj_control.stats.total_songs')}</span>
+          <Badge tone="neutral" size="lg">{totalSongs}</Badge>
         </div>
 
-        <hr className="my-4 border-base-300" />
-
-        <div className="flex justify-between text-sm">
-          <h3 className="font-bold text-sm">{t('dj_control.stats.duration_with_emoji')}</h3>
-          <span className="font-bold">{formatTime(totalDuration)}</span>
+        {/* Completed */}
+        <div className="flex justify-between items-center p-2">
+          <span className="text-xs">{t('dj_control.stats.completed_with_icon')}</span>
+          <span className="text-xs font-bold">{completedCount}</span>
         </div>
 
-        <progress
-          className="progress progress-primary"
-          value={totalDuration ? (completedDuration / totalDuration) * 100 : 0}
-          max="100"
-        ></progress>
-
-        <div className="flex justify-between text-xs text-base-content/70">
-          <span>{t('dj_control.stats.remaining')}</span>
-          <span>{formatTime(remainingDuration)}</span>
+        {/* Upcoming */}
+        <div className="flex justify-between items-center p-2">
+          <span className="text-xs">{t('dj_control.stats.upcoming_with_icon')}</span>
+          <span className="text-xs font-bold">{upcomingCount}</span>
         </div>
+      </div>
 
-        {/* Control Buttons */}
-        {onStart && (
-          <>
-            <hr className="my-4 border-base-300" />
+      <hr className="my-4 border-base-300" />
 
-            <Alert type="error" message={localError} onDismiss={() => setLocalError(null)} className="alert-sm" />
+      <div className="flex justify-between text-sm">
+        <h3 className="font-bold text-sm">{t('dj_control.stats.duration_with_emoji')}</h3>
+        <span className="font-bold">{formatTime(totalDuration)}</span>
+      </div>
 
-            <div className="space-y-2">
-              <div className="flex gap-2">
-                <button
-                  onClick={() => { void handleAction(onStart) }}
-                  className="btn btn-success btn-xs sm:btn-sm flex-1"
-                  disabled={isStartDisabled}
-                  title={t('dj_control.actions.start_tooltip')}
-                >
-                  {t('dj_control.actions.start')}
-                </button>
-                <button
-                  onClick={() => { void handleAction(onStop!) }}
-                  className="btn btn-error btn-xs sm:btn-sm flex-1"
-                  disabled={isStopDisabled}
-                  title={t('dj_control.actions.stop_tooltip')}
-                >
-                  {t('dj_control.actions.stop')}
-                </button>
-              </div>
+      <progress
+        className="progress progress-primary"
+        value={totalDuration ? (completedDuration / totalDuration) * 100 : 0}
+        max="100"
+      ></progress>
 
-              <div className="flex gap-2">
-                <button
-                  onClick={() => { void handleAction(onPrevious!) }}
-                  className="btn btn-secondary btn-xs sm:btn-sm flex-1"
-                  disabled={isPreviousDisabled}
-                  title={t('dj_control.actions.previous_tooltip')}
-                >
-                  {t('dj_control.actions.previous')}
-                </button>
-                <button
-                  onClick={() => { void handleAction(onNext!) }}
-                  className="btn btn-primary btn-xs sm:btn-sm flex-1"
-                  disabled={isNextDisabled}
-                  title={t('dj_control.actions.next_tooltip')}
-                >
-                  {t('dj_control.actions.next')}
-                </button>
-              </div>
+      <div className="flex justify-between text-xs text-base-content/70">
+        <span>{t('dj_control.stats.remaining')}</span>
+        <span>{formatTime(remainingDuration)}</span>
+      </div>
+
+      {/* Control Buttons */}
+      {onStart && (
+        <>
+          <hr className="my-4 border-base-300" />
+
+          {localError && (
+            <ErrorState
+              title={t('dj_control.errors.action_failed')}
+              description={localError}
+              action={{ label: t('common.dismiss'), onClick: () => setLocalError(null), variant: 'quiet' }}
+            />
+          )}
+
+          <div className="space-y-2">
+            <div className="flex gap-2">
+              <Action
+                onClick={() => { void handleAction(onStart) }}
+                variant="primary"
+                state={isStartDisabled ? 'disabled' : 'idle'}
+                className="flex-1"
+                aria-label={t('dj_control.actions.start_tooltip')}
+              >
+                <Action.Label>{t('dj_control.actions.start')}</Action.Label>
+              </Action>
+              <Action
+                onClick={() => { void handleAction(onStop!) }}
+                variant="destructive"
+                state={isStopDisabled ? 'disabled' : 'idle'}
+                className="flex-1"
+                aria-label={t('dj_control.actions.stop_tooltip')}
+              >
+                <Action.Label>{t('dj_control.actions.stop')}</Action.Label>
+              </Action>
             </div>
 
-            {jamId && (
-              <button
-                onClick={() => navigate(`/host/jams/${jamId}/manage`)}
-                className="btn btn-secondary btn-xs sm:btn-sm w-full mt-2"
+            <div className="flex gap-2">
+              <Action
+                onClick={() => { void handleAction(onPrevious!) }}
+                variant="secondary"
+                state={isPreviousDisabled ? 'disabled' : 'idle'}
+                className="flex-1"
+                aria-label={t('dj_control.actions.previous_tooltip')}
               >
-                <span className="hidden sm:inline">{t('dj_control.actions.add_songs')}</span>
-                <span className="sm:hidden">{t('dj_control.actions.add_songs_short')}</span>
-              </button>
-            )}
-          </>
-        )}
-      </div>
-    </div>
+                <Action.Label>{t('dj_control.actions.previous')}</Action.Label>
+              </Action>
+              <Action
+                onClick={() => { void handleAction(onNext!) }}
+                variant="primary"
+                state={isNextDisabled ? 'disabled' : 'idle'}
+                className="flex-1"
+                aria-label={t('dj_control.actions.next_tooltip')}
+              >
+                <Action.Label>{t('dj_control.actions.next')}</Action.Label>
+              </Action>
+            </div>
+          </div>
+
+          {jamId && (
+            <Action
+              onClick={() => navigate(`/host/jams/${jamId}/manage`)}
+              variant="secondary"
+              className="w-full mt-2"
+            >
+              <Action.Label className="hidden sm:inline">{t('dj_control.actions.add_songs')}</Action.Label>
+              <Action.Label className="sm:hidden">{t('dj_control.actions.add_songs_short')}</Action.Label>
+            </Action>
+          )}
+        </>
+      )}
+    </DataCard>
   )
 }

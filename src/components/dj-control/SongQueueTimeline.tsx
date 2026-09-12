@@ -7,6 +7,7 @@
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {LiveStateResponseDto, LiveStateSongDto} from '../../types/jamControl.types'
+import {Action, IconAction} from '../Action'
 
 interface SongQueueTimelineProps {
   liveState?: LiveStateResponseDto
@@ -87,24 +88,23 @@ function SongRow({
       {/* Actions */}
       <div className="shrink-0 flex gap-1">
         {status === 'suggested' && onApprove && (
-          <button
+          <Action
             onClick={() => onApprove(song.id)}
-            disabled={loading}
-            className="btn btn-xs btn-success min-h-[44px]"
-            title={t('common.approve')}
+            state={loading ? 'disabled' : 'idle'}
+            variant="primary"
           >
-            &#10003; {t('common.approve', 'Aprovar')}
-          </button>
+            <Action.Label>&#10003; {t('common.approve', 'Aprovar')}</Action.Label>
+          </Action>
         )}
         {onRemove && status !== 'current' && (
-          <button
+          <IconAction
             onClick={() => onRemove(song.id)}
-            disabled={loading}
-            className="btn btn-xs btn-ghost text-error/50 hover:text-error min-h-[44px] min-w-[44px]"
-            title={t('common.remove')}
+            state={loading ? 'disabled' : 'idle'}
+            variant="quiet"
+            label={t('dj_control.timeline.remove_song')}
           >
             &#10005;
-          </button>
+          </IconAction>
         )}
       </div>
     </div>

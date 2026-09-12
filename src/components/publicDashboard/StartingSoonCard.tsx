@@ -1,6 +1,12 @@
 /**
  * Starting Soon Card Component
  * Fallback display when no song is currently playing
+ *
+ * Display-specific wrapper, documented in
+ * docs/design-system/public-dashboard-migration.md: `DataCard` was
+ * evaluated and not applied here for the same reason as `CurrentSongCard`
+ * (fixed background/padding tokens would change this card's contrast and
+ * distance-legible type scale).
  */
 
 import {motion} from 'framer-motion'

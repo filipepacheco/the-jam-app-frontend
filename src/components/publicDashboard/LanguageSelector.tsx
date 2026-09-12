@@ -1,6 +1,12 @@
 /**
  * Language Selector Component
  * Reusable button group for language selection
+ *
+ * See docs/design-system/public-dashboard-migration.md, decision 5: this
+ * stays a bespoke compact pill-button group rather than `Action`. It lives
+ * in a tight, single-line settings bar; resizing each button to the
+ * canonical 44px control would reflow that whole bar, which is layout
+ * churn out of scope for this migration. Flagged there as a follow-up.
  */
 
 import {SUPPORTED_LANGUAGES} from '../../config/languages.config'

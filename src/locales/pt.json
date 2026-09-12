@@ -968,6 +968,9 @@
     "offlineIndicator": "Você está offline - mostrando dados em cache",
     "toggleNavbar": "Alternar barra de navegação",
     "fullscreen": "Alternar tela cheia",
+    "enterFullscreen": "Entrar em tela cheia",
+    "exitFullscreen": "Sair da tela cheia",
+    "closeNavbar": "Fechar barra de navegação",
     "backToHome": "← Voltar ao início",
     "viewDetails": "Ver detalhes →",
     "nowPlaying": "Tocando agora",
@@ -988,7 +991,8 @@
     "layoutLabel": "Layout",
     "slideDuration": "Tempo do slide",
     "enterCode": "ou digite o código",
-    "joinAt": "Participe:"
+    "joinAt": "Participe:",
+    "goToSlide": "Ir para o slide {{number}}"
   },
   "searchableSelect": {
     "placeholder": "Selecione uma opção...",

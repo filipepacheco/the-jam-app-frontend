@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
+import { Action } from '../Action'
 import { getJamShortUrl } from '../../utils/jamUrl'
 
 type Position = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
@@ -40,7 +41,14 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
 
   return (
     <>
-      {/* QR Code in Corner */}
+      {/*
+        Display-specific wrapper, documented in
+        docs/design-system/public-dashboard-migration.md: this trigger is
+        not an icon-only control, so `IconAction` (a single 44px glyph
+        button) was evaluated and not applied. It renders a full QR code
+        plus a caption inside a touch surface deliberately larger than
+        44px for cross-room visibility and thumb reach.
+      */}
       <motion.button
         initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -92,13 +100,13 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
               </p>
               <p className="text-sm text-base-content/70 text-center">{url}</p>
 
-              <button
+              <Action
+                variant="primary"
                 onClick={() => setIsExpanded(false)}
-                className="btn btn-primary mt-6 w-full"
-                type="button"
+                className="mt-6 w-full"
               >
-                {t('common.close', 'Close')}
-              </button>
+                <Action.Label>{t('common.close', 'Close')}</Action.Label>
+              </Action>
             </motion.div>
           </motion.div>
         )}
