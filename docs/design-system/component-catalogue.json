@@ -5899,6 +5899,8 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
+          "src/components/data-display/index.tsx",
           "src/hooks/index.ts",
           "src/types/api.types.ts"
         ],
@@ -6402,6 +6404,7 @@
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/data-display/index.tsx",
           "src/components/schedule/InstrumentBadges.tsx",
           "src/components/schedule/MusicianSlotList.tsx",
           "src/components/schedule/NotesEditor.tsx",
@@ -9509,6 +9512,7 @@
         "src/components/publicDashboard/Navbar.tsx",
         "src/components/publicDashboard/QRCodeCorner.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
+        "src/components/schedule/LiveJamControlPanel.tsx",
         "src/components/schedule/NotesEditor.tsx",
         "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
@@ -9518,6 +9522,7 @@
         "src/pages/MusicPage.tsx",
         "src/pages/ProfilePage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
@@ -9620,6 +9625,7 @@
         "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx"
       ],
       "workbenchStories": [
@@ -10102,6 +10108,7 @@
         "src/components/music/MusicDataDisplay.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
+        "src/pages/host/JamManagementPage.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
@@ -10231,13 +10238,18 @@
         }
       ],
       "consumers": [
+        "src/components/dj-control/NowPlayingBar.tsx",
         "src/components/dj-control/QueueStats.tsx",
         "src/components/music/MusicDataDisplay.tsx",
+        "src/components/schedule/LiveJamControlPanel.tsx",
+        "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10668,6 +10680,7 @@
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/BrowseJamsPage.tsx",
+        "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
       ],
       "workbenchStories": [
@@ -11251,6 +11264,7 @@
       "consumers": [
         "src/components/Navigation.tsx",
         "src/pages/BrowseJamsPage.tsx",
+        "src/pages/host/JamManagementPage.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
@@ -12365,49 +12379,6 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/LiveJamControlPanel.tsx:707:19:action",
-          "source": "src/components/schedule/LiveJamControlPanel.tsx",
-          "line": 707,
-          "column": 19,
-          "ownerComponentId": "ui.0104",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/LiveJamControlPanel.tsx:711:19:action",
-          "source": "src/components/schedule/LiveJamControlPanel.tsx",
-          "line": 711,
-          "column": 19,
-          "ownerComponentId": "ui.0104",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/LiveJamControlPanel.tsx:719:13:action",
-          "source": "src/components/schedule/LiveJamControlPanel.tsx",
-          "line": 719,
-          "column": 13,
-          "ownerComponentId": "ui.0104",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "gap-1"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/schedule/MusicianSlotRow.tsx:59:9:action",
           "source": "src/components/schedule/MusicianSlotRow.tsx",
           "line": 59,
@@ -12445,6 +12416,25 @@
             "text-left"
           ],
           "dynamicClasses": true
+        },
+        {
+          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:103:9:action",
+          "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
+          "line": 103,
+          "column": 9,
+          "ownerComponentId": "ui.0113",
+          "tag": "button",
+          "staticClassTokens": [
+            "ds-focusable",
+            "flex",
+            "flex-1",
+            "gap-2",
+            "items-center",
+            "min-w-0",
+            "rounded-[var(--radius-field)]",
+            "text-left"
+          ],
+          "dynamicClasses": false
         },
         {
           "id": "src/pages/AboutPage.tsx:160:13:action",
@@ -12976,9 +12966,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/JamManagementPage.tsx:187:21:action",
+          "id": "src/pages/host/JamManagementPage.tsx:194:21:action",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 187,
+          "line": 194,
           "column": 21,
           "ownerComponentId": "ui.0144",
           "tag": "button",
@@ -12990,9 +12980,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/JamManagementPage.tsx:220:33:action",
+          "id": "src/pages/host/JamManagementPage.tsx:227:33:action",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 220,
+          "line": 227,
           "column": 33,
           "ownerComponentId": "ui.0144",
           "tag": "button",
@@ -13001,22 +12991,6 @@
             "link-hover"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/JamManagementPage.tsx:243:45:action",
-          "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 243,
-          "column": 45,
-          "ownerComponentId": "ui.0144",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "gap-2",
-            "shrink-0",
-            "whitespace-nowrap"
-          ],
-          "dynamicClasses": true
         },
         {
           "id": "src/pages/host/MusiciansPage.tsx:323:23:action",
@@ -13237,122 +13211,6 @@
             "btn-ghost",
             "btn-sm",
             "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:369:33:action",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 369,
-          "column": 33,
-          "ownerComponentId": "ui.0163",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "join-item"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:374:25:action",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 374,
-          "column": 25,
-          "ownerComponentId": "ui.0163",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-sm",
-            "btn-square"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:385:25:action",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 385,
-          "column": 25,
-          "ownerComponentId": "ui.0163",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:391:25:action",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 391,
-          "column": 25,
-          "ownerComponentId": "ui.0163",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:397:25:action",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 397,
-          "column": 25,
-          "ownerComponentId": "ui.0163",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:445:33:action",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 445,
-          "column": 33,
-          "ownerComponentId": "ui.0163",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "text-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:465:25:action",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 465,
-          "column": 25,
-          "ownerComponentId": "ui.0163",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:544:25:action",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 544,
-          "column": 25,
-          "ownerComponentId": "ui.0163",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "hover:text-primary",
-            "mt-2",
-            "text-base-content/70",
-            "w-full"
           ],
           "dynamicClasses": false
         },
@@ -13666,10 +13524,10 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:115:11:badge",
+          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:113:13:badge",
           "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
-          "line": 115,
-          "column": 11,
+          "line": 113,
+          "column": 13,
           "ownerComponentId": "ui.0113",
           "tag": "span",
           "staticClassTokens": [
@@ -13683,10 +13541,10 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:137:11:badge",
+          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:132:13:badge",
           "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
-          "line": 137,
-          "column": 11,
+          "line": 132,
+          "column": 13,
           "ownerComponentId": "ui.0113",
           "tag": "span",
           "staticClassTokens": [
@@ -13755,21 +13613,6 @@
           "staticClassTokens": [
             "badge",
             "badge-xs"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/host/JamManagementPage.tsx:232:25:badge",
-          "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 232,
-          "column": 25,
-          "ownerComponentId": "ui.0144",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm",
-            "lg:badge-lg",
-            "sm:badge-md"
           ],
           "dynamicClasses": true
         },
@@ -14319,9 +14162,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/JamManagementPage.tsx:166:21:card",
+          "id": "src/pages/host/JamManagementPage.tsx:173:21:card",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 166,
+          "line": 173,
           "column": 21,
           "ownerComponentId": "ui.0144",
           "tag": "div",
@@ -14499,9 +14342,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/ScheduleTab.tsx:456:17:card",
+          "id": "src/pages/tabs/ScheduleTab.tsx:466:17:card",
           "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 456,
+          "line": 466,
           "column": 17,
           "ownerComponentId": "ui.0163",
           "tag": "EmptyState",
@@ -15136,35 +14979,6 @@
             "input-sm",
             "text-center",
             "w-16"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:360:29:field",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 360,
-          "column": 29,
-          "ownerComponentId": "ui.0163",
-          "tag": "input",
-          "staticClassTokens": [
-            "flex-1",
-            "input",
-            "input-bordered",
-            "input-sm",
-            "join-item"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/ScheduleTab.tsx:560:25:field",
-          "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 560,
-          "column": 25,
-          "ownerComponentId": "ui.0163",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
           ],
           "dynamicClasses": false
         }
