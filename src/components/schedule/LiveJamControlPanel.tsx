@@ -15,6 +15,8 @@ import {useTranslation} from 'react-i18next'
 import {normalizeInstrument} from '../../utils/musicianUtils'
 import {countActiveRegistrationsByInstrument, CORE_BAND} from '../../utils/scheduleUtils'
 import {useJamControl, useQueueReorder} from '../../hooks'
+import {Action} from '../Action'
+import {DataCard} from '../data-display'
 
 interface LiveJamControlPanelProps {
   jamId: string
@@ -668,10 +670,10 @@ export function LiveJamControlPanel({
   if (isLoading && !liveState) {
     return (
       <div className="space-y-6">
-        <div className="bg-base-200 rounded-xl p-8 text-center">
+        <DataCard className="p-8 text-center">
           <span className="loading loading-spinner loading-lg"></span>
           <p className="text-base-content/60 mt-4">{t('common.loading')}</p>
-        </div>
+        </DataCard>
       </div>
     )
   }
@@ -682,14 +684,14 @@ export function LiveJamControlPanel({
       {currentSong ? (
         <NowPlayingCard currentSong={currentSong} />
       ) : (
-        <div className="bg-base-200 rounded-xl p-6 text-center">
+        <DataCard className="p-6 text-center">
           <p className="text-base-content/60">{t('live_control.no_song_playing')}</p>
           <p className="text-sm text-base-content/50 mt-1">{t('live_control.start_to_begin')}</p>
-        </div>
+        </DataCard>
       )}
 
       {/* Up Next Section */}
-      <div className="bg-base-100 rounded-xl p-6 border border-base-300">
+      <DataCard as="section" className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-balance">
             {t('live_control.up_next')}
@@ -704,22 +706,22 @@ export function LiveJamControlPanel({
                 </div>
               ) : (
                 <>
-                  <button className="btn btn-ghost btn-sm" onClick={cancelReorder}>
-                    <X className="size-4" />
-                    {t('live_control.reorder_cancel', 'Cancel')}
-                  </button>
-                  <button className="btn btn-primary btn-sm" onClick={saveReorder}>
-                    <Check className="size-4" />
-                    {t('live_control.reorder_save', 'Save order')}
-                  </button>
+                  <Action variant="quiet" onClick={cancelReorder}>
+                    <Action.Icon><X className="size-4" /></Action.Icon>
+                    <Action.Label>{t('live_control.reorder_cancel', 'Cancel')}</Action.Label>
+                  </Action>
+                  <Action variant="primary" onClick={saveReorder}>
+                    <Action.Icon><Check className="size-4" /></Action.Icon>
+                    <Action.Label>{t('live_control.reorder_save', 'Save order')}</Action.Label>
+                  </Action>
                 </>
               )}
             </div>
           ) : nextSongs.length > 1 ? (
-            <button className="btn btn-ghost btn-sm gap-1" onClick={enterReorderMode}>
-              <ArrowUpDown className="size-4" />
-              {t('live_control.reorder_drag', 'Arrastar')}
-            </button>
+            <Action variant="quiet" onClick={enterReorderMode}>
+              <Action.Icon><ArrowUpDown className="size-4" /></Action.Icon>
+              <Action.Label>{t('live_control.reorder_drag', 'Arrastar')}</Action.Label>
+            </Action>
           ) : null}
         </div>
 
@@ -778,7 +780,7 @@ export function LiveJamControlPanel({
         ) : (
           <p className="text-center text-base-content/60 py-4">{t('live_control.no_more_songs')}</p>
         )}
-      </div>
+      </DataCard>
     </div>
   )
 }

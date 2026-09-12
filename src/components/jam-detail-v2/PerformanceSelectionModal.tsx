@@ -94,7 +94,7 @@ export function PerformanceSelectionModal({
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-bold text-sm sm:text-base truncate">
+                    <h4 className="ds-wrap-user-content font-bold text-sm sm:text-base">
                       {schedule.music?.title}
                     </h4>
                     {alreadyRegistered && (
@@ -103,7 +103,7 @@ export function PerformanceSelectionModal({
                       </Badge>
                     )}
                   </div>
-                  <p className="text-xs sm:text-sm text-base-content/70 truncate">
+                  <p className="ds-wrap-user-content text-xs sm:text-sm text-base-content/70">
                     {schedule.music?.artist}
                   </p>
                   <div className="flex items-center gap-3 mt-2 text-xs text-base-content/60">

@@ -176,6 +176,20 @@
   line-height: var(--ds-leading-display);
 }
 
+.ds-type-heading {
+  font-family: var(--font-body);
+  font-size: var(--ds-text-heading);
+  font-weight: var(--ds-weight-heading);
+  line-height: var(--ds-leading-heading);
+}
+
+.ds-type-subheading {
+  font-family: var(--font-body);
+  font-size: var(--ds-text-subheading);
+  font-weight: var(--ds-weight-heading);
+  line-height: var(--ds-leading-heading);
+}
+
 .ds-type-body {
   max-inline-size: 70ch;
   font-family: var(--font-body);

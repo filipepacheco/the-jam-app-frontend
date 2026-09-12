@@ -103,6 +103,22 @@ export const FilterInteraction: Story = {
   },
 }
 
+export const FilteredPhoneLayout: Story = {
+  render: () => (
+    <MusicFilters
+      searchTerm="Psycho Killer"
+      onSearchChange={() => undefined}
+      genreFilter="New Wave"
+      onGenreChange={() => undefined}
+      sortBy="title"
+      onSortChange={() => undefined}
+      onClearFilters={() => undefined}
+      genres={['Rock', 'New Wave', 'MPB', 'Soul']}
+    />
+  ),
+  globals: { locale: 'pt', theme: 'jam-dark', viewport: { value: 'phone', isRotated: false } },
+}
+
 export const EmptyFilteredResults: Story = {
   render: () => <MusicEmptyState hasFilters isHost={false} />,
   globals: { authRole: 'guest', locale: 'en' },

@@ -292,7 +292,7 @@ export function JamDetailPageV2() {
                             >
                                 <ArrowLeft className="size-4" />
                             </IconAction>
-                            <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-balance leading-tight">{jam.name}</h1>
+                            <h1 className="ds-type-heading ds-wrap-user-content font-extrabold leading-tight sm:text-3xl md:text-4xl">{jam.name}</h1>
                         </div>
                         <IconAction
                             variant="quiet"
@@ -329,7 +329,7 @@ export function JamDetailPageV2() {
                                 }
                             >
                                 <p className="text-sm font-semibold mb-2">{t('jams.info.full_address')}</p>
-                                <p className="text-sm text-base-content/80 mb-3 break-words">{jam.location}</p>
+                                <p className="ds-wrap-user-content text-sm text-base-content/80 mb-3">{jam.location}</p>
                                 <Action variant="secondary" onClick={handleCopyLocation} className="w-full">
                                     {locationCopied ? t('common.copied') : t('common.copy_address')}
                                 </Action>
@@ -343,7 +343,7 @@ export function JamDetailPageV2() {
                             href={jam.spotifyPlaylistUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1.5 text-xs text-success hover:text-success/80 transition-colors mt-2"
+                            className="ds-control ds-focusable inline-flex items-center gap-1.5 text-xs text-success hover:text-success/80 transition-colors mt-2"
                         >
                             <span aria-hidden="true">🎧</span>
                             {t('jams.listen_on_spotify', 'Playlist no Spotify')}
@@ -423,10 +423,10 @@ export function JamDetailPageV2() {
                                             className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
                                         >
                                             <div className="flex-1 min-w-0">
-                                                <p className="font-semibold text-sm truncate">
+                                                <p className="ds-wrap-user-content font-semibold text-sm">
                                                     {schedule.music?.title}
                                                 </p>
-                                                <p className="text-xs text-base-content/60 truncate">
+                                                <p className="ds-wrap-user-content text-xs text-base-content/60">
                                                     {schedule.music?.artist}
                                                 </p>
                                                 {schedule.registrations && schedule.registrations.length > 0 && (

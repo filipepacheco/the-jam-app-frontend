@@ -10,12 +10,12 @@ import useSWR from 'swr'
 import {SWR_DEFAULTS} from '../../config/swrDefaults'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import type {JamResponseDto} from '../../types/api.types.ts'
-import {Alert, PageAlerts} from '../../components'
+import type {JamResponseDto, JamStatus} from '../../types/api.types.ts'
+import {Alert, Badge, NavigationTabs, PageAlerts} from '../../components'
 import {SpotifyExportModal} from '../../components'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
-import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
+import {getJamStatusLabel} from '../../lib/statusUtils'
 import {DJControlTab} from "../tabs/DJControlTab.tsx";
 import {DJControlTabV2} from "../tabs/DJControlTabV2.tsx";
 import {AnalyticsTab} from "../tabs/AnalyticsTab.tsx";
@@ -25,6 +25,13 @@ import {RegistrationsTab} from "../tabs/RegistrationsTab.tsx";
 import {OverviewTab} from "../tabs/OverviewTab.tsx";
 
 type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live' | 'dj-control'
+
+const jamStatusTone: Record<JamStatus, 'info' | 'neutral' | 'success' | 'warning'> = {
+    ACTIVE: 'info',
+    FINISHED: 'neutral',
+    INACTIVE: 'warning',
+    LIVE: 'success',
+}
 
 // SWR fetcher for jam data
 const jamFetcher = async (id: string): Promise<JamResponseDto> => {
@@ -229,8 +236,9 @@ export function JamManagementPage() {
                     {/* Title and Status */}
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">🎭 {jam.name}</h1>
-                        <div
-                            className={`badge badge-sm sm:badge-md lg:badge-lg ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
+                        <Badge tone={jamStatusTone[jam.status]} size="lg">
+                            {getJamStatusLabel(jam.status, t)}
+                        </Badge>
                     </div>
                 </div>
             </div>
@@ -239,23 +247,15 @@ export function JamManagementPage() {
             {/* Tab Navigation */}
             <div className="border-b border-base-300 bg-base-200">
                 <div className="container mx-auto max-w-6xl px-2 sm:px-4">
-                    <div className="flex gap-1 sm:gap-2 py-2 overflow-x-auto" role="tablist" aria-label={t('jam_management.manage_title')}>
-                        {tabs.map((tab) => (<button
-                                key={tab.id}
-                                role="tab"
-                                aria-selected={activeTab === tab.id}
-                                aria-controls={`tabpanel-${tab.id}`}
-                                id={`tab-${tab.id}`}
-                                onClick={() => handleTabChange(tab.id)}
-                                className={`
-                                    btn btn-sm whitespace-nowrap shrink-0 gap-2
-                                    ${activeTab === tab.id ? 'btn-primary' : 'btn-ghost'}
-                                `}
-                            >
-                                <span aria-hidden="true">{tab.icon}</span>
-                                <span>{tab.label}</span>
-                            </button>))}
-                    </div>
+                    <NavigationTabs
+                        aria-label={t('jam_management.manage_title')}
+                        items={tabs.map((tab) => ({
+                            ...tab,
+                            panelId: `tabpanel-${tab.id}`,
+                        }))}
+                        onValueChange={(tabId) => handleTabChange(tabId as TabType)}
+                        value={activeTab}
+                    />
                 </div>
             </div>
 

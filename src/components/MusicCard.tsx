@@ -90,8 +90,9 @@ export const MusicCard = memo(function MusicCard({
           href={music.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="link link-primary flex items-center gap-1 text-xs"
+          className="link link-primary ds-control ds-focusable flex items-center gap-1 text-xs"
           title={isSpotifyLink ? 'Spotify' : t('common.link')}
+          aria-label={isSpotifyLink ? 'Spotify' : t('common.link')}
         >
           {isSpotifyLink ? <SpotifyIcon /> : '🔗'}
         </a>
@@ -100,15 +101,15 @@ export const MusicCard = memo(function MusicCard({
   )
 
   return (
-    <MusicDataCard music={music} className="card bg-base-100 border border-base-200 shadow-sm compact">
-      <div className="card-body p-3">
+    <MusicDataCard music={music} className="shadow-sm">
+      <div className="grid gap-[var(--ds-space-compact)]">
         {/* Main row: content + actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-start gap-2">
           {/* Title, Artist & Meta - flows horizontally on tablet */}
           <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:gap-3">
             <div className="min-w-0 shrink-0 sm:shrink">
-              <h3 className="font-bold text-base leading-tight truncate">{music.title}</h3>
-              <p className="text-sm text-base-content/70 truncate">{music.artist}</p>
+              <h3 className="ds-type-ui ds-wrap-user-content font-bold">{music.title}</h3>
+              <p className="ds-wrap-user-content text-sm text-base-content/70">{music.artist}</p>
             </div>
             {music.status && <MusicStatusIndicator status={music.status} />}
             <div className="hidden sm:block">{metaInfo}</div>
@@ -165,7 +166,7 @@ export const MusicCard = memo(function MusicCard({
         {music.description && (
           <div className="flex items-start gap-1.5 border-t border-base-200 pt-1">
             <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
-            <p className="text-xs text-base-content/50 line-clamp-2 break-words">{music.description}</p>
+            <p className="ds-wrap-user-content text-sm text-base-content/50">{music.description}</p>
           </div>
         )}
 
@@ -173,7 +174,7 @@ export const MusicCard = memo(function MusicCard({
         {music.info && (
           <div className="flex items-start gap-1.5 border-t border-base-200 pt-1">
             <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
-            <p className="text-xs text-base-content/50 line-clamp-3 break-words whitespace-pre-line">{music.info}</p>
+            <p className="ds-wrap-user-content whitespace-pre-line text-sm text-base-content/50">{music.info}</p>
           </div>
         )}
 

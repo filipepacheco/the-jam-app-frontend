@@ -10,6 +10,7 @@ import type { ScheduleResponseDto } from '../../types/api.types'
 import { useTranslation } from 'react-i18next'
 import { Check, ChevronDown, X } from 'lucide-react'
 import { IconAction } from '../Action'
+import { DataCard } from '../data-display'
 import { InstrumentBadges } from './InstrumentBadges'
 import { NotesEditor } from './NotesEditor'
 import { ScheduleOverflowMenu } from './ScheduleOverflowMenu'
@@ -70,13 +71,6 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
     setIsExpanded(prev => !prev)
   }, [])
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      toggleExpand()
-    }
-  }, [toggleExpand])
-
   // Readiness for scheduled items: ready (core band complete), partial, empty
   const getReadinessClass = () => {
     const { counts, activeCount } = countActiveRegistrationsByInstrument(schedule.registrations)
@@ -99,55 +93,62 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
           : getReadinessClass()
 
   return (
-    <div className={`rounded-lg ${borderClass}`}>
+    <DataCard
+      as="article"
+      density="compact"
+      className={`overflow-hidden p-0 ${borderClass}`}
+    >
       {/* Collapsed row - always visible */}
-      <div
-        className="flex items-center gap-2 px-2.5 py-1.5 cursor-pointer select-none"
-        onClick={toggleExpand}
-        onKeyDown={handleKeyDown}
-        role="button"
-        tabIndex={0}
-        aria-expanded={isExpanded}
-        aria-label={`${music?.title} - ${music?.artist}`}
-      >
-        {/* Order badge */}
-        {!isSuggested && (
-          <span className="badge badge-xs badge-neutral font-bold tabular-nums shrink-0">
-            {schedule.order}
+      <div className="flex items-center gap-2 px-2.5 py-1.5">
+        <button
+          type="button"
+          className="ds-focusable flex min-w-0 flex-1 items-center gap-2 rounded-[var(--radius-field)] text-left"
+          onClick={toggleExpand}
+          aria-controls={`schedule-details-${schedule.id}`}
+          aria-expanded={isExpanded}
+          aria-label={`${music?.title || t('schedule.song_tba')} - ${music?.artist || t('schedule.artist_tba')}`}
+        >
+          {/* Order badge */}
+          {!isSuggested && (
+            <span className="badge badge-xs badge-neutral font-bold tabular-nums shrink-0">
+              {schedule.order}
+            </span>
+          )}
+
+          {/* Title + artist */}
+          <span className="flex-1 min-w-0">
+            <span className="ds-wrap-user-content block text-sm font-semibold leading-tight">
+              {music?.title || t('schedule.song_tba')}
+            </span>
+            <span className="ds-truncate-single block text-xs text-base-content/70 leading-tight">
+              {music?.artist || t('schedule.artist_tba')}
+            </span>
           </span>
-        )}
 
-        {/* Title + artist */}
-        <div className="flex-1 min-w-0">
-          <p className="truncate text-sm font-semibold leading-tight">
-            {music?.title || t('schedule.song_tba')}
-          </p>
-          <p className="truncate text-xs text-base-content/70 leading-tight">
-            {music?.artist || t('schedule.artist_tba')}
-          </p>
-        </div>
-
-        {/* Fill indicator - hidden on mobile, visible in expanded view */}
-        {/*<div className="hidden sm:flex">*/}
           <SlotFillIndicator registrations={schedule.registrations} music={music} />
-        {/*</div>*/}
 
-        {/* Pending approval count - hidden on mobile */}
-        {pendingCount > 0 && schedule.status !== 'COMPLETED' && schedule.status !== 'CANCELED' && (
-          <span
-            className="hidden sm:inline-flex badge badge-xs badge-outline badge-warning font-semibold shrink-0"
-            title={t('schedule.pending_approvals', { count: pendingCount })}
-          >
-            {pendingCount} {t('schedule.pending_short', 'pending')}
-          </span>
-        )}
+          {/* Pending approval count - hidden on mobile */}
+          {pendingCount > 0 && schedule.status !== 'COMPLETED' && schedule.status !== 'CANCELED' && (
+            <span
+              className="hidden sm:inline-flex badge badge-xs badge-outline badge-warning font-semibold shrink-0"
+              title={t('schedule.pending_approvals', { count: pendingCount })}
+            >
+              {pendingCount} {t('schedule.pending_short', 'pending')}
+            </span>
+          )}
 
-        {/* Status dot */}
-        <StatusDot status={schedule.status} />
+          <StatusDot status={schedule.status} />
 
-        {/* Suggested: inline approve/reject, others: chevron */}
-        {isSuggested ? (
-          <div className="flex gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+          {!isSuggested && (
+            <ChevronDown
+              className={`size-4 shrink-0 text-base-content/60 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+              aria-hidden="true"
+            />
+          )}
+        </button>
+
+        {isSuggested && (
+          <div className="flex gap-1.5 shrink-0">
             <IconAction
               variant="primary"
               label={t('common.approve')}
@@ -165,10 +166,6 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
               <X size={16} />
             </IconAction>
           </div>
-        ) : (
-          <ChevronDown
-            className={`size-4 text-base-content/60 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-          />
         )}
       </div>
 
@@ -181,7 +178,7 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0 }}
             transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.15, ease: 'easeInOut' }}
           >
-            <div className="px-2.5 pb-2.5 pt-1 border-t border-base-300/30 space-y-1.5">
+            <div id={`schedule-details-${schedule.id}`} className="px-2.5 pb-2.5 pt-1 border-t border-base-300/30 space-y-1.5">
               {/* Instrument badges */}
               <InstrumentBadges
                 neededDrums={music?.neededDrums}
@@ -239,6 +236,6 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </DataCard>
   )
 })
