@@ -5,6 +5,18 @@ const cell = (values: string[]): string => values.length > 0 ? values.join('<br>
 const exportLabel = (component: CatalogueComponent): string[] =>
   component.exports.map((item) => `${item.kind}: ${item.name} (${item.module})`)
 
+const adoptionLabel = (component: CatalogueComponent): string => {
+  const adoption = component.metadata.canonicalAdoption
+  if (!adoption) return 'not recorded'
+  return [adoption.status, adoption.family, adoption.note].filter(Boolean).join(': ')
+}
+
+const deprecationLabel = (component: CatalogueComponent): string => {
+  const deprecation = component.metadata.deprecation
+  if (!deprecation) return '—'
+  return `replacement: ${deprecation.replacement ?? 'none'}; remove when: ${deprecation.removalCondition}`
+}
+
 export const renderManifest = (catalogue: ComponentCatalogue): string =>
   `${JSON.stringify(catalogue, null, 2)}\n`
 
@@ -33,14 +45,14 @@ export const renderMarkdown = (catalogue: ComponentCatalogue): string => {
     '',
     '## Components',
     '',
-    '| ID | Component | Source | Category | Layer | Lifecycle | Product area | Viewports | Workbench | Audits (a11y / i18n / theme) | Candidate family | Notes |',
-    '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
+    '| ID | Component | Source | Category | Layer | Lifecycle | Product area | Viewports | Workbench | Audits (a11y / i18n / theme) | Candidate family | Canonical adoption | Deprecation | Notes |',
+    '| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |',
   ]
 
   for (const component of catalogue.components) {
     const metadata = component.metadata
     lines.push(
-      `| \`${component.id}\` | ${component.name} | \`${component.source}\` | ${metadata.category} | ${metadata.layer} | ${metadata.lifecycle} | ${metadata.productArea} | ${cell(metadata.viewportContexts)} | ${metadata.readiness.workbench} | ${metadata.readiness.accessibility} / ${metadata.readiness.internationalization} / ${metadata.readiness.theme} | ${metadata.candidateFamily ?? '—'} | ${cell(metadata.notes)} |`,
+      `| \`${component.id}\` | ${component.name} | \`${component.source}\` | ${metadata.category} | ${metadata.layer} | ${metadata.lifecycle} | ${metadata.productArea} | ${cell(metadata.viewportContexts)} | ${metadata.readiness.workbench} | ${metadata.readiness.accessibility} / ${metadata.readiness.internationalization} / ${metadata.readiness.theme} | ${metadata.candidateFamily ?? '—'} | ${adoptionLabel(component)} | ${deprecationLabel(component)} | ${cell(metadata.notes)} |`,
     )
   }
 

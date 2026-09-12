@@ -5,7 +5,6 @@
  */
 
 import {motion} from 'framer-motion'
-import {useMemo} from 'react'
 import {useReducedMotion} from "../../hooks";
 
 interface WaveformVisualizerProps {
@@ -24,18 +23,17 @@ const WAVEFORM_TRANSITION = {
   ease: 'easeInOut',
 } as const
 
+/** Stable visual rhythm: public display refreshes must not redraw random bars. */
+const WAVEFORM_HEIGHTS = [24, 34, 46, 30, 52, 38, 56, 32, 44, 28, 50, 36] as const
+
 export function WaveformVisualizer({ barCount = 12, className = '' }: WaveformVisualizerProps) {
   const { prefersReducedMotion } = useReducedMotion()
 
-  const bars = useMemo(
-    () =>
-      Array.from({ length: barCount }, (_, i) => ({
-        id: i,
-        baseHeight: 20 + Math.random() * 40,
-        delay: i * 0.1,
-      })),
-    [barCount]
-  )
+  const bars = Array.from({ length: barCount }, (_, index) => ({
+    id: index,
+    baseHeight: WAVEFORM_HEIGHTS[index % WAVEFORM_HEIGHTS.length],
+    delay: index * 0.1,
+  }))
 
   return (
     <div className={`flex gap-1 justify-center items-end ${className}`}>

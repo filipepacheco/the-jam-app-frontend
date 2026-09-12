@@ -21,6 +21,9 @@ Dashboard work. Detailed contracts remain in the linked sources.
   are the product rules for color, layout, interaction, accessibility, motion,
   and content. They decide how a component behaves across themes, locales, and
   display contexts.
+- The [private visual regression guide](./private-visual-regression.md) keeps
+  a deliberately bounded set of high-risk reference states stable without
+  publishing screenshots or relying on a third-party service.
 
 ## Contribution path
 
@@ -65,7 +68,8 @@ Dashboard work. Detailed contracts remain in the linked sources.
    this document, are authoritative. Run `npm run catalogue:baseline`,
    `npm run workbench:test`, and `npm run workbench:verify-build` when the
    change affects their surfaces. Finish with the application checks required
-   by the change, including `npm run build` and `npm run test:run` before
+   by the change, including `npm run visual:privacy`, `npm run visual:compare`,
+   `npm run visual:progress:check`, `npm run build` and `npm run test:run` before
    review. **Complete when:** each applicable command exits successfully and
    no private workbench asset or dependency reaches the production build.
 

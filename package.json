@@ -24,7 +24,12 @@
     "workbench:typecheck": "tsc -p tsconfig.workbench.json",
     "workbench:build": "npm run workbench:typecheck && storybook build --output-dir storybook-static --disable-telemetry",
     "workbench:test": "npm run workbench:typecheck && vitest run --config .storybook/vitest.config.ts --project=storybook",
-    "workbench:verify-build": "npm run workbench:typecheck && node scripts/verify-workbench-build.mjs"
+    "workbench:verify-build": "npm run workbench:typecheck && node scripts/verify-workbench-build.mjs",
+    "visual:privacy": "tsx scripts/private-visual/cli.ts --privacy",
+    "visual:compare": "tsx scripts/private-visual/cli.ts --compare",
+    "visual:update": "VISUAL_BASELINE_UPDATE=1 tsx scripts/private-visual/cli.ts --update",
+    "visual:progress": "tsx scripts/private-visual/cli.ts --progress",
+    "visual:progress:check": "tsx scripts/private-visual/cli.ts --progress --check"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.87.0",
@@ -74,7 +79,9 @@
     "happy-dom": "^20.3.4",
     "msw": "2.15.0",
     "msw-storybook-addon": "3.0.0",
+    "pixelmatch": "^7.1.0",
     "playwright": "^1.55.1",
+    "pngjs": "^7.0.0",
     "puppeteer-core": "^24.37.3",
     "rollup-plugin-visualizer": "^6.0.5",
     "storybook": "10.6.0",

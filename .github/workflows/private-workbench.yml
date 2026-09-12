@@ -36,5 +36,14 @@ jobs:
       - name: Run workbench browser tests
         run: npm run workbench:test
 
+      - name: Enforce private visual policy
+        run: npm run visual:privacy
+
+      - name: Compare private visual baselines
+        run: npm run visual:compare
+
+      - name: Check deterministic workbench progress
+        run: npm run visual:progress:check
+
       - name: Verify deterministic static build
         run: npm run workbench:verify-build

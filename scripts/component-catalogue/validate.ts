@@ -2,6 +2,7 @@ import path from 'node:path'
 
 import {
   AUDIT_STATUSES,
+  CANONICAL_ADOPTION_STATUSES,
   CATALOGUE_CATEGORIES,
   CATALOGUE_LAYERS,
   COMPONENT_LIFECYCLES,
@@ -51,6 +52,53 @@ const validateStringArray = (
   })
 }
 
+const validateCanonicalAdoption = (
+  value: unknown,
+  field: string,
+  diagnostics: string[],
+): void => {
+  if (!isRecord(value)) {
+    diagnostics.push(`${field}: expected an object`)
+    return
+  }
+  const status = value.status
+  if (typeof status !== 'string' || !CANONICAL_ADOPTION_STATUSES.includes(status as typeof CANONICAL_ADOPTION_STATUSES[number])) {
+    diagnostics.push(`${field}.status: invalid canonical-adoption status`)
+    return
+  }
+  const hasFamily = isNonBlankString(value.family)
+  const hasNote = isNonBlankString(value.note)
+  if ((status === 'adopted' || status === 'documented-exception') && !hasFamily) {
+    diagnostics.push(`${field}.family: ${status} status requires a non-blank family`)
+  }
+  if ((status === 'documented-exception' || status === 'not-applicable') && !hasNote) {
+    diagnostics.push(`${field}.note: ${status} status requires a non-blank note`)
+  }
+  if ('family' in value && value.family !== undefined && !hasFamily) {
+    diagnostics.push(`${field}.family: expected a non-blank string when provided`)
+  }
+  if ('note' in value && value.note !== undefined && !hasNote) {
+    diagnostics.push(`${field}.note: expected a non-blank string when provided`)
+  }
+}
+
+const validateDeprecation = (
+  value: unknown,
+  field: string,
+  diagnostics: string[],
+): void => {
+  if (!isRecord(value)) {
+    diagnostics.push(`${field}: expected an object`)
+    return
+  }
+  if (!('replacement' in value) || (value.replacement !== null && !isNonBlankString(value.replacement))) {
+    diagnostics.push(`${field}.replacement: expected a non-blank string or null`)
+  }
+  if (!isNonBlankString(value.removalCondition)) {
+    diagnostics.push(`${field}.removalCondition: expected a non-blank string`)
+  }
+}
+
 export const isExactSource = (source: string): boolean => !GLOB_CHARACTERS.test(source)
 
 export const isSafeRelativePath = (value: unknown): value is string => {
@@ -91,6 +139,12 @@ const validateMetadataShape = (
     } else if (typeof family === 'string' && !candidateFamilies.includes(family)) {
       diagnostics.push(`${field}.candidateFamily: unknown candidate family "${family}"`)
     }
+  }
+  if ('canonicalAdoption' in value) {
+    validateCanonicalAdoption(value.canonicalAdoption, `${field}.canonicalAdoption`, diagnostics)
+  }
+  if ('deprecation' in value) {
+    validateDeprecation(value.deprecation, `${field}.deprecation`, diagnostics)
   }
 
   if (!partial || 'readiness' in value) {
