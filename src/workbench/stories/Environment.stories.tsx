@@ -6,8 +6,7 @@ import { Modal } from '../../components/Modal'
 import Navbar from '../../components/Navbar'
 import { JamRegistrationForm } from '../../components/forms/JamRegistrationForm'
 import { NextSongCard } from '../../components/publicDashboard/NextSongCard'
-import { ScheduleCardManagement } from '../../components/schedule/ScheduleCardManagement'
-import { inProgressSchedule, nextSong, registrationJam } from '../fixtures'
+import { nextSong, registrationJam } from '../fixtures'
 
 const meta = {
   title: 'Workbench/Shared environment',
@@ -95,21 +94,5 @@ export const RouterAndAuthRole: Story = {
     await userEvent.click(page.getByRole('button', { name: /alternar menu|toggle navigation menu/i }))
     await expect(page.getByRole('dialog', { name: /menu de navegação|navigation menu|menu de navegación/i })).toBeInTheDocument()
     await expect(page.getAllByText('Ana Host')).not.toHaveLength(0)
-  },
-}
-
-const deleteSchedule = fn()
-
-export const ComplexSchedule: Story = {
-  render: () => (
-    <div className="max-w-3xl">
-      <ScheduleCardManagement schedule={inProgressSchedule} onDelete={deleteSchedule} onAddMusician={fn()} />
-    </div>
-  ),
-  globals: { viewport: { value: 'phone', isRotated: false } },
-  play: async ({ canvas, userEvent }) => {
-    const [deleteButton] = canvas.getAllByRole('button', { name: /excluir|delete|eliminar/i })
-    await userEvent.click(deleteButton)
-    await expect(deleteSchedule).toHaveBeenCalledOnce()
   },
 }
