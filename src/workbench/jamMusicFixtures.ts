@@ -22,9 +22,8 @@ export const jamMusicWorkbenchCoverage: WorkbenchCoverageRecord[] = [
   exempt('ui.0040', 'Domain overlays are catalogued together by #33.'),
   exempt('ui.0041', 'Domain overlays and forms are catalogued together by #33.'),
   exempt('ui.0042', 'Domain overlays and forms are catalogued together by #33.'),
-  // ui.0043 TimelineItem is no longer listed: it moved to lifecycle "legacy" in
-  // component-catalogue.metadata.json (issue #51), so it leaves the active
-  // Jam and Music coverage set. Its story stays in JamTimeline.stories.tsx.
+  // ui.0043 was retired after the issue #51 lifecycle review and removed by
+  // issue #55; stable catalogue IDs are intentionally not reassigned.
   story('ui.0044'),
   story('ui.0049'),
   story('ui.0050'),
