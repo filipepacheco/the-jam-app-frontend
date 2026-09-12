@@ -1032,6 +1032,7 @@
   "feedback": {
     "button_text": "Feedback",
     "button_label": "Enviar feedback sobre o app",
+    "close_modal": "Fechar diálogo de feedback",
     "modal_title": "Compartilhe sua Opinião",
     "modal_subtitle": "Ajude-nos a melhorar compartilhando sua experiencia",
     "rating_label": "Como você avalia sua experiencia?",
