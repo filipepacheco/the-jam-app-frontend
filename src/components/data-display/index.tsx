@@ -32,8 +32,9 @@ export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElemen
 
 export function StatusIndicator({ className = '', label, status = 'neutral', ...props }: StatusIndicatorProps) {
   const classes = ['ds-status-indicator', `ds-status-indicator--${status}`, className].filter(Boolean).join(' ')
+  const accessibleLabel = typeof label === 'string' || typeof label === 'number' ? String(label) : undefined
   return (
-    <span {...props} className={classes} data-display-component="status-indicator" data-display-status={status} role="status">
+    <span {...props} aria-label={accessibleLabel} className={classes} data-display-component="status-indicator" data-display-status={status} role="status">
       <span className="ds-status-indicator__dot" aria-hidden="true" />
       <span className="ds-wrap-user-content">{label}</span>
     </span>
