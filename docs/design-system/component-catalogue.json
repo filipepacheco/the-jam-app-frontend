@@ -4000,6 +4000,7 @@
           "src/components/DesktopUserMenu.tsx",
           "src/components/FeedbackButton.tsx",
           "src/components/MobileDrawer.tsx",
+          "src/components/Navigation.tsx",
           "src/hooks/index.ts"
         ],
         "external": [
@@ -4056,7 +4057,9 @@
         "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Navigation.tsx"
+        ],
         "external": [
           "react"
         ],
@@ -10088,6 +10091,7 @@
         "src/components/Action.tsx",
         "src/components/FeedbackModal.tsx",
         "src/components/FeedbackStates.tsx",
+        "src/components/Navigation.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/overlays/CanonicalOverlays.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
@@ -10102,6 +10106,7 @@
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -10114,7 +10119,9 @@
         "internal": [
           "src/components/Action.css"
         ],
-        "external": [],
+        "external": [
+          "react"
+        ],
         "contexts": []
       },
       "metadata": {
@@ -10168,16 +10175,23 @@
         }
       ],
       "consumers": [
+        "src/components/Navigation.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Foundations/ActionControls.stories.tsx"
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [
           "src/components/Action.css"
         ],
-        "external": [],
+        "external": [
+          "react"
+        ],
         "contexts": []
       },
       "metadata": {
@@ -11700,6 +11714,395 @@
           "Canonical overlay family reviewed in Overlays/Canonical family with focused public interaction coverage. Consumers own localized title, description, and action copy."
         ]
       }
+    },
+    {
+      "id": "ui.0191",
+      "name": "NavigationTabs",
+      "source": "src/components/Navigation.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "NavigationTabs",
+          "module": "src/components/Navigation.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "NavigationTabs",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/Navigation.tsx",
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Navigation.css"
+        ],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "current",
+          "keyboard",
+          "focus",
+          "dismissed",
+          "permission-filtered",
+          "long-localization",
+          "responsive"
+        ],
+        "candidateFamily": "navigation",
+        "notes": [
+          "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
+        ]
+      }
+    },
+    {
+      "id": "ui.0192",
+      "name": "NavigationLink",
+      "source": "src/components/Navigation.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "NavigationLink",
+          "module": "src/components/Navigation.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "NavigationLink",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/Navbar.tsx",
+        "src/components/Navigation.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Navigation.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "current",
+          "keyboard",
+          "focus",
+          "dismissed",
+          "permission-filtered",
+          "long-localization",
+          "responsive"
+        ],
+        "candidateFamily": "navigation",
+        "notes": [
+          "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
+        ]
+      }
+    },
+    {
+      "id": "ui.0193",
+      "name": "NavigationAction",
+      "source": "src/components/Navigation.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "NavigationAction",
+          "module": "src/components/Navigation.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "NavigationAction",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/Navbar.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Action.tsx",
+          "src/components/Navigation.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "current",
+          "keyboard",
+          "focus",
+          "dismissed",
+          "permission-filtered",
+          "long-localization",
+          "responsive"
+        ],
+        "candidateFamily": "navigation",
+        "notes": [
+          "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
+        ]
+      }
+    },
+    {
+      "id": "ui.0194",
+      "name": "OverflowMenu",
+      "source": "src/components/Navigation.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "OverflowMenu",
+          "module": "src/components/Navigation.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "OverflowMenu",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Action.tsx",
+          "src/components/Navigation.css"
+        ],
+        "external": [
+          "lucide-react",
+          "react"
+        ],
+        "contexts": [
+          "browser"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "current",
+          "keyboard",
+          "focus",
+          "dismissed",
+          "permission-filtered",
+          "long-localization",
+          "responsive"
+        ],
+        "candidateFamily": "navigation",
+        "notes": [
+          "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
+        ]
+      }
+    },
+    {
+      "id": "ui.0195",
+      "name": "DropdownMenu",
+      "source": "src/components/Navigation.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "DropdownMenu",
+          "module": "src/components/Navigation.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "DropdownMenu",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Navigation.css"
+        ],
+        "external": [
+          "react"
+        ],
+        "contexts": [
+          "browser"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "current",
+          "keyboard",
+          "focus",
+          "dismissed",
+          "permission-filtered",
+          "long-localization",
+          "responsive"
+        ],
+        "candidateFamily": "navigation",
+        "notes": [
+          "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
+        ]
+      }
+    },
+    {
+      "id": "ui.0196",
+      "name": "ResponsiveNavigation",
+      "source": "src/components/Navigation.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "ResponsiveNavigation",
+          "module": "src/components/Navigation.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "ResponsiveNavigation",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Navigation.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "current",
+          "keyboard",
+          "focus",
+          "dismissed",
+          "permission-filtered",
+          "long-localization",
+          "responsive"
+        ],
+        "candidateFamily": "navigation",
+        "notes": [
+          "Reviewed in Navigation/Canonical navigation and menus; consumers own route permissions and localized labels."
+        ]
+      }
     }
   ],
   "ignored": [
@@ -11808,6 +12211,10 @@
       "reason": "Private Storybook composition for reviewed Music components; not product UI."
     },
     {
+      "source": "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
+      "reason": "Private Storybook composition demonstrating canonical navigation, tab, overflow, and responsive states; not product UI."
+    },
+    {
       "source": "src/workbench/stories/Navigation/Navbar.stories.tsx",
       "reason": "Private Storybook composition for reviewed responsive navigation and menu states; not product UI."
     },
@@ -11849,12 +12256,12 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 183,
-    "representedSources": 147,
-    "ignoredSources": 36,
+    "eligibleSources": 185,
+    "representedSources": 148,
+    "ignoredSources": 37,
     "workbench": {
-      "activeReusableVisualComponents": 129,
-      "ready": 111,
+      "activeReusableVisualComponents": 135,
+      "ready": 117,
       "exempt": 18,
       "needsReview": 0,
       "unknown": 0,
@@ -11868,9 +12275,9 @@
       "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/Action.tsx:57:5:action",
+          "id": "src/components/Action.tsx:58:5:action",
           "source": "src/components/Action.tsx",
-          "line": 57,
+          "line": 58,
           "column": 5,
           "ownerComponentId": "ui.0166",
           "tag": "button",
@@ -12456,9 +12863,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Navbar.tsx:109:15:action",
+          "id": "src/components/Navbar.tsx:107:15:action",
           "source": "src/components/Navbar.tsx",
-          "line": 109,
+          "line": 107,
           "column": 15,
           "ownerComponentId": "ui.0066",
           "tag": "a",
@@ -12471,23 +12878,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Navbar.tsx:117:9:action",
+          "id": "src/components/Navbar.tsx:60:9:action",
           "source": "src/components/Navbar.tsx",
-          "line": 117,
-          "column": 9,
-          "ownerComponentId": "ui.0066",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "xl:hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Navbar.tsx:62:9:action",
-          "source": "src/components/Navbar.tsx",
-          "line": 62,
+          "line": 60,
           "column": 9,
           "ownerComponentId": "ui.0066",
           "tag": "a",
@@ -12499,6 +12892,42 @@
             "text-base"
           ],
           "dynamicClasses": false
+        },
+        {
+          "id": "src/components/Navigation.tsx:241:17:action",
+          "source": "src/components/Navigation.tsx",
+          "line": 241,
+          "column": 17,
+          "ownerComponentId": "ui.0194",
+          "tag": "button",
+          "staticClassTokens": [],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/components/Navigation.tsx:289:7:action",
+          "source": "src/components/Navigation.tsx",
+          "line": 289,
+          "column": 7,
+          "ownerComponentId": "ui.0195",
+          "tag": "button",
+          "staticClassTokens": [
+            "ds-control",
+            "ds-dropdown__trigger",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/components/Navigation.tsx:62:13:action",
+          "source": "src/components/Navigation.tsx",
+          "line": 62,
+          "column": 13,
+          "ownerComponentId": "ui.0191",
+          "tag": "button",
+          "staticClassTokens": [
+            "ds-tab"
+          ],
+          "dynamicClasses": true
         },
         {
           "id": "src/components/OnboardingModal.tsx:123:11:action",
