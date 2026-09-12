@@ -30,20 +30,20 @@ export function PlaybackControls({
   onResume,
 }: PlaybackControlsProps) {
   const { t } = useTranslation()
-  const [actionLoading, setActionLoading] = useState(false)
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const busy = isLoading || actionLoading
+  const busy = isLoading || actionLoading !== null
 
-  const handleAction = useCallback(async (action: () => Promise<void>) => {
-    setActionLoading(true)
+  const handleAction = useCallback(async (action: () => Promise<void>, actionId: string) => {
+    setActionLoading(actionId)
     setError(null)
     try {
       await action()
     } catch (err) {
       setError(err instanceof Error ? err.message : t('dj_control.errors.action_failed'))
     } finally {
-      setActionLoading(false)
+      setActionLoading(null)
     }
   }, [t])
 
@@ -65,6 +65,12 @@ export function PlaybackControls({
   const centerDisabled = busy || (isStopped && !hasNextSong)
   const prevDisabled = busy || !hasCurrentSong
   const nextDisabled = busy || !hasCurrentSong || !hasNextSong
+  const actionState = (actionId: string, disabled: boolean) => {
+    if (actionLoading === actionId) {
+      return { state: 'loading' as const, loadingLabel: t('dj_control.actions.updating') }
+    }
+    return { state: disabled ? 'disabled' as const : 'idle' as const }
+  }
 
   return (
     <div className="space-y-2">
@@ -79,9 +85,9 @@ export function PlaybackControls({
       {/* Transport row */}
       <div className="flex items-center gap-2">
         <Action
-          onClick={() => { void handleAction(onPrevious) }}
+          onClick={() => { void handleAction(onPrevious, 'previous') }}
           variant="secondary"
-          state={prevDisabled ? 'disabled' : 'idle'}
+          {...actionState('previous', prevDisabled)}
           className="flex-1"
           aria-label={t('dj_control.actions.previous_tooltip', 'Anterior')}
         >
@@ -90,9 +96,9 @@ export function PlaybackControls({
         </Action>
 
         <Action
-          onClick={() => { void handleAction(centerButton.action) }}
+          onClick={() => { void handleAction(centerButton.action, 'center') }}
           variant={centerButton.variant}
-          state={centerDisabled ? 'disabled' : 'idle'}
+          {...actionState('center', centerDisabled)}
           className="flex-[2]"
         >
           <Action.Icon><centerButton.Icon className="size-5" /></Action.Icon>
@@ -100,9 +106,9 @@ export function PlaybackControls({
         </Action>
 
         <Action
-          onClick={() => { void handleAction(onNext) }}
+          onClick={() => { void handleAction(onNext, 'next') }}
           variant="primary"
-          state={nextDisabled ? 'disabled' : 'idle'}
+          {...actionState('next', nextDisabled)}
           className="flex-1"
           aria-label={t('dj_control.actions.next_tooltip', 'Proxima')}
         >

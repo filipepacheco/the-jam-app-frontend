@@ -74,6 +74,7 @@ export const HostCardExpanded: Story = {
       />
     </div>
   ),
+  globals: { locale: 'pt', theme: 'jam-dark', viewport: { value: 'desktop', isRotated: false } },
 }
 
 export const KeyboardExpansion: Story = {
