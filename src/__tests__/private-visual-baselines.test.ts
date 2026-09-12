@@ -8,6 +8,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import {
   compareCapturedVisuals,
   planVisualBaselineUpdate,
+  validateVisualUpdateRecord,
   type VisualCapture,
 } from '../../scripts/private-visual/baselines.ts'
 import type { VisualMatrixCell } from '../../scripts/private-visual/matrix.ts'
@@ -101,5 +102,22 @@ describe('private visual baselines', () => {
       changedCells: [],
       removedCells: [],
     })
+  })
+
+  it('rejects a matrix cell that is absent from the reviewed update record', async () => {
+    const root = await createRoot()
+    await mkdir(path.join(root, 'private-visual-baselines'), { recursive: true })
+    await writeFile(path.join(root, 'private-visual-baselines/update-record.json'), JSON.stringify({
+      reason: 'Issue #61: initial review',
+      reviewer: 'Design reviewer',
+      addedCells: [],
+      changedCells: [],
+      removedCells: [],
+      matrixCells: ['different-cell'],
+    }))
+
+    await expect(validateVisualUpdateRecord([cell.key], root)).resolves.toEqual([
+      'private visual update record matrix cells do not match the explicit visual matrix',
+    ])
   })
 })

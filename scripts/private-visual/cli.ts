@@ -13,6 +13,7 @@ import {
   VISUAL_DIFF_DIRECTORY,
   compareCapturedVisuals,
   planVisualBaselineUpdate,
+  validateVisualUpdateRecord,
   type VisualComparisonResult,
 } from './baselines.ts'
 import { VISUAL_MATRIX, validateVisualMatrix } from './matrix.ts'
@@ -218,6 +219,10 @@ const runVisualCapture = async (root: string, mode: 'compare' | 'update'): Promi
     const storyIds = await staticStoryIds(staticDirectory)
     const matrixDiagnostics = validateVisualMatrix(VISUAL_MATRIX, { reachableStoryIds: storyIds })
     if (matrixDiagnostics.length > 0) throw new Error(`Private visual matrix is invalid:\n- ${matrixDiagnostics.join('\n- ')}`)
+    if (mode === 'compare') {
+      const recordDiagnostics = await validateVisualUpdateRecord(VISUAL_MATRIX.map(({ key }) => key), root)
+      if (recordDiagnostics.length > 0) throw new Error(`Private visual update record is invalid:\n- ${recordDiagnostics.join('\n- ')}`)
+    }
 
     const server = await serveStaticDirectory(staticDirectory)
     try {

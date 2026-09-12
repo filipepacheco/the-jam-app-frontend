@@ -24,7 +24,9 @@ temporary static workbench stay ignored in sibling runner-local folders.
   upload, CI update path, or missing ignored runner directory can slip in.
 - `npm run visual:compare` builds the private workbench, validates that each
   matrix story is reachable, captures each exact target at CSS-pixel scale,
-  then fails on missing, unexpected, or changed references.
+  then fails on missing, unexpected, or changed references. It also requires
+  the checked-in update record's reviewed matrix list to match exactly, so an
+  added matrix cell cannot bypass the intentional update protocol.
 - `npm run workbench:test` writes its private JSON result to the ignored runner
   directory. `npm run visual:compare` writes the matching private visual
   summary there. `npm run visual:progress` reduces those outputs to stable

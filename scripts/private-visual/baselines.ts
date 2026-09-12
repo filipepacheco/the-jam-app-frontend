@@ -50,6 +50,15 @@ export interface VisualComparisonOptions {
   allowUpdate?: boolean
 }
 
+interface VisualUpdateRecord {
+  reason?: unknown
+  reviewer?: unknown
+  addedCells?: unknown
+  changedCells?: unknown
+  removedCells?: unknown
+  matrixCells?: unknown
+}
+
 const pngPath = (root: string, directory: string, key: string): string =>
   path.join(root, directory, `${key}.png`)
 
@@ -63,6 +72,46 @@ const pngNames = async (directory: string): Promise<string[]> => {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return []
     throw error
   }
+}
+
+const sameSortedKeys = (left: readonly string[], right: readonly string[]): boolean =>
+  left.length === right.length && left.every((key, index) => key === right[index])
+
+/**
+ * CI binds the mutable matrix to the last intentionally reviewed reference
+ * update. A new matrix row must therefore have an explicit update-record
+ * change, rather than silently becoming an expected comparison input.
+ */
+export const validateVisualUpdateRecord = async (
+  matrixKeys: readonly string[],
+  root: string,
+): Promise<string[]> => {
+  const diagnostics: string[] = []
+  let record: VisualUpdateRecord
+  try {
+    record = JSON.parse(await readFile(path.join(root, 'private-visual-baselines/update-record.json'), 'utf8')) as VisualUpdateRecord
+  } catch (error: unknown) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
+      return ['private visual update record is required to prove the reviewed visual matrix']
+    }
+    return ['private visual update record must contain valid JSON']
+  }
+
+  if (typeof record.reason !== 'string' || !record.reason.trim()) diagnostics.push('private visual update record requires a non-blank reason')
+  if (typeof record.reviewer !== 'string' || !record.reviewer.trim()) diagnostics.push('private visual update record requires a non-blank reviewer')
+  for (const field of ['addedCells', 'changedCells', 'removedCells', 'matrixCells'] as const) {
+    if (!Array.isArray(record[field]) || record[field].some((key) => typeof key !== 'string' || !key.trim())) {
+      diagnostics.push(`private visual update record requires ${field} to be a string array`)
+    }
+  }
+  if (diagnostics.length > 0) return diagnostics
+
+  const reviewedKeys = [...record.matrixCells as string[]].sort()
+  const expectedKeys = [...matrixKeys].sort()
+  if (!sameSortedKeys(reviewedKeys, expectedKeys)) {
+    diagnostics.push('private visual update record matrix cells do not match the explicit visual matrix')
+  }
+  return diagnostics
 }
 
 /**
