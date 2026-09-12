@@ -160,6 +160,16 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
           </Field>
         </div>
 
+        {/*
+          Documented design-system exception (issue #50): the minutes and
+          seconds inputs stay native `<input>` elements instead of `Field` +
+          `Field.Input`. `Field` binds one visible label to exactly one
+          control, but this duration control is one visible label shared by
+          two inputs separated by a colon. Wrapping each input in its own
+          `Field` would either print the "Duration" text twice or drop the
+          shared-label layout. Both inputs keep their own `aria-label`, so
+          the accessible names are unchanged.
+        */}
         <div className="min-w-[120px]">
           <span className="text-xs text-base-content/60 mb-1 block">
             {t('music_library.table.duration')}

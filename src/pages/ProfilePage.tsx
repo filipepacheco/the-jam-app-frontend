@@ -98,6 +98,15 @@ export function ProfilePage() {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-100 py-8 px-4">
+        {/*
+          Documented design-system exception (issue #50): this full-page
+          loading skeleton stays hand-rolled instead of the canonical
+          `Skeleton` primitive. `Skeleton` renders uniform full-width text
+          lines only, so it cannot reproduce the avatar circle, the two
+          card-shaped form sections, or the button row. Replacing it would
+          visibly change the loading silhouette. Same reasoning as
+          PageHeaderSkeleton.tsx.
+        */}
         <div className="max-w-2xl mx-auto animate-pulse">
           {/* Profile header skeleton */}
           <div className="flex flex-col items-center gap-4 mb-8">

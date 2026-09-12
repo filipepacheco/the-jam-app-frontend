@@ -27,6 +27,17 @@ function CallToAction() {
           <p className="text-base sm:text-lg lg:text-xl mb-8 sm:mb-10 text-base-content/80 leading-relaxed max-w-xl">
             {t('homepage.call_to_action.description')}
           </p>
+          {/*
+            Documented design-system exception (issue #50): the two
+            call-to-action controls stay router `Link` elements with DaisyUI
+            button classes. `Action` renders a `<button>` only, so it cannot
+            hold a destination. `NavigationLink` keeps the anchor but
+            applies the quiet pill treatment of the tab set, which removes
+            the primary and outline emphasis a marketing call to action
+            depends on, and drops the `btn-lg` size. A call-to-action
+            emphasis in the navigation family is a design-system change for
+            issue #58. Same exception as the register anchor in Navbar.tsx.
+          */}
           <div className="flex gap-4 justify-start flex-wrap">
             <Link
               to="/register"

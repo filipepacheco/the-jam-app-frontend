@@ -7,6 +7,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { ErrorState, LoadingState } from '../components/FeedbackStates'
 import {
   getStoredPKCEState,
   exchangeCodeForToken,
@@ -68,33 +69,23 @@ export function SpotifyCallbackPage() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-base-100 p-4">
-        <div className="card bg-base-200 w-full max-w-md">
-          <div className="card-body text-center">
-            <h2 className="card-title justify-center text-error">
-              {t('spotify.callback.auth_failed')}
-            </h2>
-            <p className="text-base-content/70 mt-2">{error}</p>
-            <div className="card-actions justify-center mt-6">
-              <button
-                type="button"
-                onClick={() => navigate('/host/dashboard')}
-                className="btn btn-primary"
-              >
-                {t('spotify.callback.retry')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ErrorState
+          className="w-full max-w-md"
+          role="alert"
+          title={t('spotify.callback.auth_failed')}
+          description={error}
+          action={{
+            label: t('spotify.callback.retry'),
+            onClick: () => navigate('/host/dashboard'),
+          }}
+        />
       </div>
     )
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-100">
-      <div className="text-center">
-        <div className="loading loading-spinner loading-lg text-primary"></div>
-        <p className="mt-4 text-base-content/70">{t('spotify.callback.processing')}</p>
-      </div>
+      <LoadingState label={t('spotify.callback.processing')} />
     </div>
   )
 }

@@ -20,6 +20,18 @@ export function NotFoundPage() {
           <p className="text-base-content/60 mb-8">
             {t('notFound.message')}
           </p>
+          {/*
+            Documented design-system exception (issue #50): these two
+            recovery controls stay router `Link` elements with DaisyUI
+            button classes. `Action` renders a `<button>` only, so it would
+            drop the anchor semantics (middle-click, open in a new tab, the
+            server fallback). `NavigationLink` keeps the anchor but carries
+            the quiet pill treatment of the tab set, which removes the
+            primary and outline emphasis this pair depends on. Adding a
+            call-to-action emphasis to the navigation family is a
+            design-system change, so it belongs to issue #58, not here.
+            Same exception as the register anchor in Navbar.tsx.
+          */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/" className="btn btn-primary gap-2">
               <Home className="w-4 h-4" />

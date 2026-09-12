@@ -1,3 +1,12 @@
+/**
+ * Hero dashboard mockup
+ *
+ * Design-system review (issue #50): this is a decorative, non-interactive
+ * illustration of the venue dashboard. Its inner shapes imitate product
+ * cards but they are not product data, so `DataCard` and the other
+ * data-display primitives do not apply. It contains no control.
+ * This component replaces the retired PromoVideo scenes.
+ */
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
 

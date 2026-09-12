@@ -1,6 +1,15 @@
 /**
  * Page Header Skeleton Component
  * Loading skeleton for jam detail page header section
+ *
+ * Documented design-system exception (issue #50): these placeholder shapes
+ * stay hand-rolled instead of the canonical `Skeleton` primitive from
+ * FeedbackStates.tsx. `Skeleton` only renders uniform full-width text lines,
+ * so it cannot reproduce the back-button pill, the wide title bar, or the
+ * six-cell stats grid with its circular icon placeholders. Substituting it
+ * would visibly change the loading silhouette, which this behaviour-
+ * preserving migration does not authorise. See
+ * docs/design-system/shared-account-marketing-migration.md.
  */
 
 export function PageHeaderSkeleton() {

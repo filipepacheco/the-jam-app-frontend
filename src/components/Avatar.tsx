@@ -1,6 +1,13 @@
 /**
  * Avatar Component
  * Displays user avatar with initials fallback
+ *
+ * Design-system position (issue #50): this component is itself a primitive.
+ * The data-display family has `Badge`, `StatusIndicator`, `DataCard`,
+ * `ListRow` and `CompactMetadata`, but no avatar primitive, so there is
+ * nothing canonical to migrate onto. The component has no interactive
+ * control, so the Action and Field families do not apply either. It stays
+ * as the app's own avatar primitive.
  */
 
 interface AvatarProps {

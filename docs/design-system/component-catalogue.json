@@ -551,6 +551,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/hooks/index.ts",
           "src/lib/uiConstants.ts"
         ],
@@ -1322,7 +1323,7 @@
       "metadata": {
         "category": "marketing",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "marketing",
         "viewportContexts": [
           "mobile",
@@ -1337,7 +1338,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; review against the active landing-page feature presentation."
+          "No production or story consumers remain; grep-verified across src/. Superseded by HowItWorks.tsx, which carries the landing-page feature presentation that src/App.tsx actually renders (EnhancedHero, HowItWorks, Testimonials, CallToAction, Footer). See docs/design-system/shared-account-marketing-migration.md (issue #50)."
         ]
       }
     },
@@ -1366,6 +1367,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/FeedbackModal.tsx"
         ],
         "external": [
@@ -1434,6 +1436,7 @@
         "internal": [
           "src/components/Action.tsx",
           "src/components/Alert.tsx",
+          "src/components/Field.tsx",
           "src/components/overlays/index.ts",
           "src/services/index.ts"
         ],
@@ -1498,7 +1501,9 @@
         "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Navigation.tsx"
+        ],
         "external": [
           "react-i18next",
           "react-router-dom"
@@ -3237,7 +3242,10 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/FeedbackModal.tsx",
+          "src/components/Field.tsx",
+          "src/components/Navigation.tsx",
           "src/hooks/index.ts",
           "src/lib/uiConstants.ts"
         ],
@@ -3278,7 +3286,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Private navigation child with no direct story: it is inspected through Navbar in Navigation/Responsive navbar, which opens the drawer and asserts its dialog role, accessible name, and keyboard dismissal. The former Overlays/Current components story was replaced by the canonical overlay family in #46."
+          "Private navigation child with no direct story: it is inspected through Navbar in Navigation/Application navigation, story MobileHostKeyboardDismissal (src/workbench/stories/Navigation/Navbar.stories.tsx), which opens the drawer and asserts its dialog role, accessible name, close-button focus, and keyboard dismissal. Re-verified after the #50 migration: the close control is now an IconAction whose label keeps the nav.close_menu accessible name and still receives the forwarded ref, so the indirect coverage holds. The former Overlays/Current components story was replaced by the canonical overlay family in #46."
         ]
       }
     },
@@ -4123,7 +4131,9 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/hooks/index.ts",
           "src/lib/instruments.ts",
@@ -4269,7 +4279,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; confirm whether this loading pattern remains supported."
+          "No rendering consumers; grep-verified across src/. Only src/components/index.ts re-exports it. Not deprecated because nothing supersedes it: the canonical Skeleton primitive renders uniform full-width lines and cannot reproduce this header silhouette. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
         ]
       }
     },
@@ -4294,7 +4304,9 @@
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Field.tsx"
+        ],
         "external": [],
         "contexts": []
       },
@@ -5776,6 +5788,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/lib/schedule/instrumentHelpers.tsx"
         ],
         "external": [],
@@ -5838,6 +5851,8 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
+          "src/components/Field.tsx",
           "src/lib/musicConstants.ts",
           "src/types/api.types.ts"
         ],
@@ -5922,7 +5937,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Guard family mixes current and unconsumed role wrappers; audit each route before choosing a lifecycle."
+          "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
         ]
       }
     },
@@ -5969,7 +5984,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Guard family mixes current and unconsumed role wrappers; audit each route before choosing a lifecycle."
+          "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
         ]
       }
     },
@@ -6025,7 +6040,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Guard family mixes current and unconsumed role wrappers; audit each route before choosing a lifecycle."
+          "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
         ]
       }
     },
@@ -6072,7 +6087,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Guard family mixes current and unconsumed role wrappers; audit each route before choosing a lifecycle."
+          "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
         ]
       }
     },
@@ -6119,7 +6134,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Guard family mixes current and unconsumed role wrappers; audit each route before choosing a lifecycle."
+          "Route audit complete (issue #50): no route uses any guard. ProtectedRoute is consumed only by the four wrappers in the same file; HostOnly, UserOnly, AuthenticatedOnly and ViewerOnly have zero consumers beyond the src/components/index.ts re-export, and src/App.tsx composes its routes without a guard. Not deprecated because nothing supersedes the family; it was never adopted. See docs/design-system/shared-account-marketing-migration.md (issue #50)."
         ]
       }
     },
@@ -7735,6 +7750,8 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
+          "src/components/FeedbackStates.tsx",
           "src/components/Modal.tsx",
           "src/utils/shareUtils.ts"
         ],
@@ -9082,6 +9099,7 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Navigation.tsx",
           "src/components/SEO.tsx",
           "src/components/index.ts",
           "src/hooks/index.ts",
@@ -9270,6 +9288,7 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/ProfileFormSection.tsx",
           "src/components/ProfileHeader.tsx",
           "src/components/index.ts",
@@ -9449,6 +9468,7 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/FeedbackStates.tsx",
           "src/lib/spotify/pkce.ts"
         ],
         "external": [
@@ -10121,9 +10141,15 @@
       ],
       "consumers": [
         "src/components/Action.tsx",
+        "src/components/DesktopUserMenu.tsx",
+        "src/components/FeedbackButton.tsx",
         "src/components/FeedbackModal.tsx",
         "src/components/FeedbackStates.tsx",
+        "src/components/MobileDrawer.tsx",
         "src/components/Navigation.tsx",
+        "src/components/OnboardingModal.tsx",
+        "src/components/QuickEditPanel.tsx",
+        "src/components/ShareModal.tsx",
         "src/components/dj-control/PlaybackControls.tsx",
         "src/components/dj-control/QueueStats.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
@@ -10140,6 +10166,7 @@
         "src/components/schedule/ScheduleActionButtons.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
         "src/components/schedule/ScheduleDisplayItem.tsx",
+        "src/pages/ProfilePage.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
@@ -10152,6 +10179,8 @@
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/Marketing.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
@@ -10224,7 +10253,10 @@
         }
       ],
       "consumers": [
+        "src/components/FeedbackButton.tsx",
+        "src/components/MobileDrawer.tsx",
         "src/components/Navigation.tsx",
+        "src/components/QuickEditPanel.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
         "src/components/publicDashboard/Header.tsx",
         "src/components/publicDashboard/Navbar.tsx",
@@ -10240,11 +10272,14 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/Marketing.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
@@ -10309,6 +10344,7 @@
       ],
       "consumers": [
         "src/components/FeedbackStates.tsx",
+        "src/components/ShareModal.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
@@ -10377,6 +10413,7 @@
       ],
       "consumers": [
         "src/pages/BrowseJamsPage.tsx",
+        "src/pages/SpotifyCallbackPage.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "workbenchStories": [
@@ -10563,6 +10600,7 @@
         "src/components/dj-control/PlaybackControls.tsx",
         "src/components/dj-control/QueueStats.tsx",
         "src/pages/BrowseJamsPage.tsx",
+        "src/pages/SpotifyCallbackPage.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
@@ -11231,7 +11269,12 @@
         }
       ],
       "consumers": [
+        "src/components/FeedbackModal.tsx",
         "src/components/Field.tsx",
+        "src/components/MobileDrawer.tsx",
+        "src/components/OnboardingModal.tsx",
+        "src/components/ProfileFormSection.tsx",
+        "src/components/QuickEditPanel.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/forms/SupabaseLoginForm.tsx",
         "src/components/publicDashboard/Navbar.tsx",
@@ -11244,7 +11287,12 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/Overlays.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11816,6 +11864,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -11880,11 +11929,15 @@
         }
       ],
       "consumers": [
+        "src/components/Footer.tsx",
+        "src/components/MobileDrawer.tsx",
         "src/components/Navbar.tsx",
-        "src/components/Navigation.tsx"
+        "src/components/Navigation.tsx",
+        "src/pages/LoginPage.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -12385,9 +12438,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/CallToAction.tsx:31:13:action",
+          "id": "src/components/CallToAction.tsx:42:13:action",
           "source": "src/components/CallToAction.tsx",
-          "line": 31,
+          "line": 42,
           "column": 13,
           "ownerComponentId": "ui.0008",
           "tag": "Link",
@@ -12402,9 +12455,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/CallToAction.tsx:38:13:action",
+          "id": "src/components/CallToAction.tsx:49:13:action",
           "source": "src/components/CallToAction.tsx",
-          "line": 38,
+          "line": 49,
           "column": 13,
           "ownerComponentId": "ui.0008",
           "tag": "Link",
@@ -12416,86 +12469,6 @@
             "focus-visible:ring-2",
             "focus-visible:ring-offset-2",
             "focus-visible:ring-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/DesktopUserMenu.tsx:103:13:action",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 103,
-          "column": 13,
-          "ownerComponentId": "ui.0010",
-          "tag": "a",
-          "staticClassTokens": [
-            "btn",
-            "btn-block",
-            "btn-ghost",
-            "btn-sm",
-            "gap-2",
-            "justify-start"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/DesktopUserMenu.tsx:120:7:action",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 120,
-          "column": 7,
-          "ownerComponentId": "ui.0010",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "gap-1"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/DesktopUserMenu.tsx:143:11:action",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 143,
-          "column": 11,
-          "ownerComponentId": "ui.0010",
-          "tag": "a",
-          "staticClassTokens": [
-            "btn",
-            "btn-block",
-            "btn-ghost",
-            "btn-sm",
-            "gap-2",
-            "justify-start"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/DesktopUserMenu.tsx:191:11:action",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 191,
-          "column": 11,
-          "ownerComponentId": "ui.0010",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-block",
-            "btn-ghost",
-            "btn-sm",
-            "gap-2",
-            "justify-start",
-            "text-error"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/DesktopUserMenu.tsx:57:9:action",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 57,
-          "column": 9,
-          "ownerComponentId": "ui.0010",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "gap-1"
           ],
           "dynamicClasses": false
         },
@@ -12512,9 +12485,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/EnhancedHero.tsx:62:13:action",
+          "id": "src/components/EnhancedHero.tsx:71:13:action",
           "source": "src/components/EnhancedHero.tsx",
-          "line": 62,
+          "line": 71,
           "column": 13,
           "ownerComponentId": "ui.0020",
           "tag": "Link",
@@ -12532,9 +12505,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/EnhancedHero.tsx:68:13:action",
+          "id": "src/components/EnhancedHero.tsx:77:13:action",
           "source": "src/components/EnhancedHero.tsx",
-          "line": 68,
+          "line": 77,
           "column": 13,
           "ownerComponentId": "ui.0020",
           "tag": "Link",
@@ -12576,20 +12549,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/FeedbackButton.tsx:22:7:action",
-          "source": "src/components/FeedbackButton.tsx",
-          "line": 22,
-          "column": 7,
-          "ownerComponentId": "ui.0023",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "gap-2"
-          ],
-          "dynamicClasses": true
-        },
-        {
           "id": "src/components/JamCard.tsx:87:13:action",
           "source": "src/components/JamCard.tsx",
           "line": 87,
@@ -12619,69 +12578,6 @@
             "btn-sm",
             "sm:text-sm",
             "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MobileDrawer.tsx:157:11:action",
-          "source": "src/components/MobileDrawer.tsx",
-          "line": 157,
-          "column": 11,
-          "ownerComponentId": "ui.0054",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MobileDrawer.tsx:174:15:action",
-          "source": "src/components/MobileDrawer.tsx",
-          "line": 174,
-          "column": 15,
-          "ownerComponentId": "ui.0054",
-          "tag": "a",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MobileDrawer.tsx:215:15:action",
-          "source": "src/components/MobileDrawer.tsx",
-          "line": 215,
-          "column": 15,
-          "ownerComponentId": "ui.0054",
-          "tag": "button",
-          "staticClassTokens": [
-            "flex",
-            "gap-3",
-            "items-center",
-            "py-3",
-            "text-base"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MobileDrawer.tsx:269:13:action",
-          "source": "src/components/MobileDrawer.tsx",
-          "line": 269,
-          "column": 13,
-          "ownerComponentId": "ui.0054",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-block",
-            "btn-ghost",
-            "gap-3",
-            "justify-start",
-            "text-base",
-            "text-error"
           ],
           "dynamicClasses": false
         },
@@ -12947,9 +12843,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Navbar.tsx:107:15:action",
+          "id": "src/components/Navbar.tsx:119:15:action",
           "source": "src/components/Navbar.tsx",
-          "line": 107,
+          "line": 119,
           "column": 15,
           "ownerComponentId": "ui.0066",
           "tag": "a",
@@ -12962,9 +12858,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Navbar.tsx:60:9:action",
+          "id": "src/components/Navbar.tsx:63:9:action",
           "source": "src/components/Navbar.tsx",
-          "line": 60,
+          "line": 63,
           "column": 9,
           "ownerComponentId": "ui.0066",
           "tag": "a",
@@ -13014,22 +12910,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/OnboardingModal.tsx:123:11:action",
+          "id": "src/components/OnboardingModal.tsx:209:9:action",
           "source": "src/components/OnboardingModal.tsx",
-          "line": 123,
-          "column": 11,
-          "ownerComponentId": "ui.0068",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/OnboardingModal.tsx:219:9:action",
-          "source": "src/components/OnboardingModal.tsx",
-          "line": 219,
+          "line": 209,
           "column": 9,
           "ownerComponentId": "ui.0068",
           "tag": "button",
@@ -13075,126 +12958,6 @@
             "btn-primary"
           ],
           "dynamicClasses": true
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:234:9:action",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 234,
-          "column": 9,
-          "ownerComponentId": "ui.0094",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "gap-1"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:243:9:action",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 243,
-          "column": 9,
-          "ownerComponentId": "ui.0094",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-sm",
-            "gap-1"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:31:7:action",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 31,
-          "column": 7,
-          "ownerComponentId": "ui.0093",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "btn-square",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:41:7:action",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 41,
-          "column": 7,
-          "ownerComponentId": "ui.0093",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "btn-square",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ShareModal.tsx:132:9:action",
-          "source": "src/components/ShareModal.tsx",
-          "line": 132,
-          "column": 9,
-          "ownerComponentId": "ui.0125",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ShareModal.tsx:142:9:action",
-          "source": "src/components/ShareModal.tsx",
-          "line": 142,
-          "column": 9,
-          "ownerComponentId": "ui.0125",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ShareModal.tsx:159:9:action",
-          "source": "src/components/ShareModal.tsx",
-          "line": 159,
-          "column": 9,
-          "ownerComponentId": "ui.0125",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ShareModal.tsx:177:11:action",
-          "source": "src/components/ShareModal.tsx",
-          "line": 177,
-          "column": 11,
-          "ownerComponentId": "ui.0125",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "gap-2"
-          ],
-          "dynamicClasses": false
         },
         {
           "id": "src/components/SpotifyExportModal.tsx:116:11:action",
@@ -13806,9 +13569,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/pages/AboutPage.tsx:153:13:action",
+          "id": "src/pages/AboutPage.tsx:160:13:action",
           "source": "src/pages/AboutPage.tsx",
-          "line": 153,
+          "line": 160,
           "column": 13,
           "ownerComponentId": "ui.0136",
           "tag": "a",
@@ -13820,9 +13583,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/AboutPage.tsx:170:15:action",
+          "id": "src/pages/AboutPage.tsx:181:15:action",
           "source": "src/pages/AboutPage.tsx",
-          "line": 170,
+          "line": 181,
           "column": 15,
           "ownerComponentId": "ui.0136",
           "tag": "Link",
@@ -13833,9 +13596,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/AboutPage.tsx:173:15:action",
+          "id": "src/pages/AboutPage.tsx:184:15:action",
           "source": "src/pages/AboutPage.tsx",
-          "line": 173,
+          "line": 184,
           "column": 15,
           "ownerComponentId": "ui.0136",
           "tag": "Link",
@@ -14131,9 +13894,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/NotFoundPage.tsx:24:13:action",
+          "id": "src/pages/NotFoundPage.tsx:36:13:action",
           "source": "src/pages/NotFoundPage.tsx",
-          "line": 24,
+          "line": 36,
           "column": 13,
           "ownerComponentId": "ui.0150",
           "tag": "Link",
@@ -14145,9 +13908,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/NotFoundPage.tsx:28:13:action",
+          "id": "src/pages/NotFoundPage.tsx:40:13:action",
           "source": "src/pages/NotFoundPage.tsx",
-          "line": 28,
+          "line": 40,
           "column": 13,
           "ownerComponentId": "ui.0150",
           "tag": "Link",
@@ -14155,61 +13918,6 @@
             "btn",
             "btn-outline",
             "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/ProfilePage.tsx:259:15:action",
-          "source": "src/pages/ProfilePage.tsx",
-          "line": 259,
-          "column": 15,
-          "ownerComponentId": "ui.0151",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-lg",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/ProfilePage.tsx:268:17:action",
-          "source": "src/pages/ProfilePage.tsx",
-          "line": 268,
-          "column": 17,
-          "ownerComponentId": "ui.0151",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-lg"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/ProfilePage.tsx:276:17:action",
-          "source": "src/pages/ProfilePage.tsx",
-          "line": 276,
-          "column": 17,
-          "ownerComponentId": "ui.0151",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-lg",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/SpotifyCallbackPage.tsx:78:15:action",
-          "source": "src/pages/SpotifyCallbackPage.tsx",
-          "line": 78,
-          "column": 15,
-          "ownerComponentId": "ui.0154",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
           ],
           "dynamicClasses": false
         },
@@ -15853,9 +15561,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/Features.tsx:82:15:card",
+          "id": "src/components/Features.tsx:96:15:card",
           "source": "src/components/Features.tsx",
-          "line": 82,
+          "line": 96,
           "column": 15,
           "ownerComponentId": "ui.0022",
           "tag": "motion.div",
@@ -15868,9 +15576,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/HowItWorks.tsx:81:15:card",
+          "id": "src/components/HowItWorks.tsx:90:15:card",
           "source": "src/components/HowItWorks.tsx",
-          "line": 81,
+          "line": 90,
           "column": 15,
           "ownerComponentId": "ui.0032",
           "tag": "div",
@@ -15972,9 +15680,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/ProfileFormSection.tsx:34:5:card",
+          "id": "src/components/ProfileFormSection.tsx:35:5:card",
           "source": "src/components/ProfileFormSection.tsx",
-          "line": 34,
+          "line": 35,
           "column": 5,
           "ownerComponentId": "ui.0071",
           "tag": "div",
@@ -16318,9 +16026,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/ProfilePage.tsx:109:11:card",
+          "id": "src/pages/ProfilePage.tsx:119:11:card",
           "source": "src/pages/ProfilePage.tsx",
-          "line": 109,
+          "line": 119,
           "column": 11,
           "ownerComponentId": "ui.0151",
           "tag": "div",
@@ -16333,9 +16041,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/ProfilePage.tsx:122:11:card",
+          "id": "src/pages/ProfilePage.tsx:132:11:card",
           "source": "src/pages/ProfilePage.tsx",
-          "line": 122,
+          "line": 132,
           "column": 11,
           "ownerComponentId": "ui.0151",
           "tag": "div",
@@ -16344,21 +16052,6 @@
             "card",
             "mb-6",
             "shadow-lg"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/SpotifyCallbackPage.tsx:71:9:card",
-          "source": "src/pages/SpotifyCallbackPage.tsx",
-          "line": 71,
-          "column": 9,
-          "ownerComponentId": "ui.0154",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "max-w-md",
-            "w-full"
           ],
           "dynamicClasses": false
         },
@@ -16683,21 +16376,6 @@
       "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/DesktopUserMenu.tsx:161:13:field",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 161,
-          "column": 13,
-          "ownerComponentId": "ui.0010",
-          "tag": "select",
-          "staticClassTokens": [
-            "flex-1",
-            "select",
-            "select-bordered",
-            "select-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/DesktopUserMenu.tsx:174:13:field",
           "source": "src/components/DesktopUserMenu.tsx",
           "line": 174,
@@ -16713,9 +16391,24 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/DesktopUserMenu.tsx:73:15:field",
+          "id": "src/components/DesktopUserMenu.tsx:187:13:field",
           "source": "src/components/DesktopUserMenu.tsx",
-          "line": 73,
+          "line": 187,
+          "column": 13,
+          "ownerComponentId": "ui.0010",
+          "tag": "select",
+          "staticClassTokens": [
+            "flex-1",
+            "select",
+            "select-bordered",
+            "select-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "src/components/DesktopUserMenu.tsx:82:15:field",
+          "source": "src/components/DesktopUserMenu.tsx",
+          "line": 82,
           "column": 15,
           "ownerComponentId": "ui.0010",
           "tag": "select",
@@ -16728,9 +16421,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/DesktopUserMenu.tsx:86:15:field",
+          "id": "src/components/DesktopUserMenu.tsx:95:15:field",
           "source": "src/components/DesktopUserMenu.tsx",
-          "line": 86,
+          "line": 95,
           "column": 15,
           "ownerComponentId": "ui.0010",
           "tag": "select",
@@ -16834,9 +16527,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/FeedbackModal.tsx:140:19:field",
+          "id": "src/components/FeedbackModal.tsx:144:19:field",
           "source": "src/components/FeedbackModal.tsx",
-          "line": 140,
+          "line": 144,
           "column": 19,
           "ownerComponentId": "ui.0024",
           "tag": "input",
@@ -16844,49 +16537,6 @@
             "bg-warning",
             "mask",
             "mask-star-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/FeedbackModal.tsx:168:13:field",
-          "source": "src/components/FeedbackModal.tsx",
-          "line": 168,
-          "column": 13,
-          "ownerComponentId": "ui.0024",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "h-24",
-            "resize-none",
-            "textarea",
-            "textarea-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MobileDrawer.tsx:234:15:field",
-          "source": "src/components/MobileDrawer.tsx",
-          "line": 234,
-          "column": 15,
-          "ownerComponentId": "ui.0054",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MobileDrawer.tsx:250:15:field",
-          "source": "src/components/MobileDrawer.tsx",
-          "line": 250,
-          "column": 15,
-          "ownerComponentId": "ui.0054",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
           ],
           "dynamicClasses": false
         },
@@ -17054,101 +16704,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/OnboardingModal.tsx:147:11:field",
-          "source": "src/components/OnboardingModal.tsx",
-          "line": 147,
-          "column": 11,
-          "ownerComponentId": "ui.0068",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/OnboardingModal.tsx:163:11:field",
-          "source": "src/components/OnboardingModal.tsx",
-          "line": 163,
-          "column": 11,
-          "ownerComponentId": "ui.0068",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/OnboardingModal.tsx:180:11:field",
-          "source": "src/components/OnboardingModal.tsx",
-          "line": 180,
-          "column": 11,
-          "ownerComponentId": "ui.0068",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/OnboardingModal.tsx:200:11:field",
-          "source": "src/components/OnboardingModal.tsx",
-          "line": 200,
-          "column": 11,
-          "ownerComponentId": "ui.0068",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileFormSection.tsx:52:17:field",
-          "source": "src/components/ProfileFormSection.tsx",
-          "line": 52,
-          "column": 17,
-          "ownerComponentId": "ui.0071",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileFormSection.tsx:68:17:field",
-          "source": "src/components/ProfileFormSection.tsx",
-          "line": 68,
-          "column": 17,
-          "ownerComponentId": "ui.0071",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "textarea",
-            "textarea-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileFormSection.tsx:80:17:field",
-          "source": "src/components/ProfileFormSection.tsx",
-          "line": 80,
-          "column": 17,
-          "ownerComponentId": "ui.0071",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/ProfileSetupModal.tsx:123:11:field",
           "source": "src/components/ProfileSetupModal.tsx",
           "line": 123,
@@ -17203,99 +16758,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/QuickEditPanel.tsx:105:9:field",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 105,
-          "column": 9,
-          "ownerComponentId": "ui.0094",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:120:9:field",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 120,
-          "column": 9,
-          "ownerComponentId": "ui.0094",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:135:9:field",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 135,
-          "column": 9,
-          "ownerComponentId": "ui.0094",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "textarea",
-            "textarea-bordered",
-            "textarea-sm",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:149:9:field",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 149,
-          "column": 9,
-          "ownerComponentId": "ui.0094",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:163:9:field",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 163,
-          "column": 9,
-          "ownerComponentId": "ui.0094",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "textarea",
-            "textarea-bordered",
-            "textarea-sm",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:178:11:field",
+          "id": "src/components/QuickEditPanel.tsx:178:13:field",
           "source": "src/components/QuickEditPanel.tsx",
           "line": 178,
-          "column": 11,
-          "ownerComponentId": "ui.0094",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "select-sm",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:195:13:field",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 195,
           "column": 13,
           "ownerComponentId": "ui.0094",
           "tag": "input",
@@ -17311,9 +16776,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/QuickEditPanel.tsx:205:13:field",
+          "id": "src/components/QuickEditPanel.tsx:188:13:field",
           "source": "src/components/QuickEditPanel.tsx",
-          "line": 205,
+          "line": 188,
           "column": 13,
           "ownerComponentId": "ui.0094",
           "tag": "input",
@@ -17976,9 +17441,9 @@
       "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/DesktopUserMenu.tsx:119:5:menu",
+          "id": "src/components/DesktopUserMenu.tsx:130:5:menu",
           "source": "src/components/DesktopUserMenu.tsx",
-          "line": 119,
+          "line": 130,
           "column": 5,
           "ownerComponentId": "ui.0010",
           "tag": "div",
@@ -17989,9 +17454,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/DesktopUserMenu.tsx:56:7:menu",
+          "id": "src/components/DesktopUserMenu.tsx:64:7:menu",
           "source": "src/components/DesktopUserMenu.tsx",
-          "line": 56,
+          "line": 64,
           "column": 7,
           "ownerComponentId": "ui.0010",
           "tag": "div",
@@ -18002,9 +17467,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/MobileDrawer.tsx:185:11:menu",
+          "id": "src/components/MobileDrawer.tsx:188:11:menu",
           "source": "src/components/MobileDrawer.tsx",
-          "line": 185,
+          "line": 188,
           "column": 11,
           "ownerComponentId": "ui.0054",
           "tag": "ul",
