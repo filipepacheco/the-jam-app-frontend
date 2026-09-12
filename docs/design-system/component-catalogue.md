@@ -10,8 +10,8 @@ This catalogue contains 196 discovered React components across 148 source module
 
 | Status | Components |
 | --- | ---: |
-| Ready | 117 |
-| Exempt | 18 |
+| Ready | 115 |
+| Exempt | 20 |
 | Needs review | 0 |
 | Unknown | 0 |
 | Ready without story evidence | 0 |
@@ -75,9 +75,9 @@ Only `ready` and reasoned `exempt` entries satisfy the reviewed baseline. `needs
 | `ui.0051` | JamCard | `src/components/JamCard.tsx` | product-ui | domain-component | active | shared | mobile<br>desktop | ready | needs-review / needs-review / verified | — | Reviewed in Domain/Jam/Summary and actions; the workbench exposes an existing missing live-dashboard translation key. |
 | `ui.0052` | JamCardSkeleton | `src/components/JamCardSkeleton.tsx` | product-ui | domain-component | active | shared | mobile<br>desktop | ready | needs-review / not-applicable / verified | — | Reviewed at phone and desktop widths in States/Loading. |
 | `ui.0053` | JamContextDisplay | `src/components/JamContextDisplay.tsx` | product-ui | domain-component | active | shared | mobile<br>desktop | ready | needs-review / verified / verified | — | Reviewed in Domain/Jam/Summary and actions. |
-| `ui.0054` | MobileDrawer | `src/components/MobileDrawer.tsx` | product-ui | domain-component | active | shared | mobile<br>desktop | ready | unknown / unknown / unknown | — | Reviewed in Overlays/Current components with shared auth context. |
+| `ui.0054` | MobileDrawer | `src/components/MobileDrawer.tsx` | product-ui | domain-component | active | shared | mobile<br>desktop | exempt | unknown / unknown / unknown | — | Private navigation child with no direct story: it is inspected through Navbar in Navigation/Responsive navbar, which opens the drawer and asserts its dialog role, accessible name, and keyboard dismissal. The former Overlays/Current components story was replaced by the canonical overlay family in #46. |
 | `ui.0055` | Modal | `src/components/Modal.tsx` | product-ui | primitive | active | shared | mobile<br>desktop | ready | unknown / unknown / unknown | overlay | Reviewed in Overlays/Current components. |
-| `ui.0056` | ModalFooter | `src/components/ModalFooter.tsx` | product-ui | primitive | active | shared | mobile<br>desktop | ready | unknown / unknown / unknown | overlay | Reviewed through Modal and ConfirmDialog stories. |
+| `ui.0056` | ModalFooter | `src/components/ModalFooter.tsx` | product-ui | primitive | active | shared | mobile<br>desktop | exempt | unknown / unknown / unknown | overlay | Shared modal action row with no direct story: it is inspected through its consumers, notably EditMusicianModal and the ConfirmDialog-backed flows, which render it and assert its default, destructive, submitting, and disabled states. |
 | `ui.0057` | MusicCard | `src/components/MusicCard.tsx` | product-ui | domain-component | active | music | mobile<br>desktop | ready | needs-review / verified / verified | — | The local SpotifyIcon is covered through the exported card composition in Domain/Music/Library. |
 | `ui.0058` | SpotifyIcon | `src/components/MusicCard.tsx` | product-ui | domain-component | active | music | mobile<br>desktop | ready | needs-review / verified / verified | — | The local SpotifyIcon is covered through the exported card composition in Domain/Music/Library. |
 | `ui.0059` | MusicEmptyState | `src/components/MusicEmptyState.tsx` | product-ui | domain-component | active | music | mobile<br>desktop | ready | needs-review / verified / verified | — | Reviewed in Domain/Music/Library. |
