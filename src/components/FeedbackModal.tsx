@@ -114,7 +114,7 @@ export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: 
         /* Success State */
         <div className="flex flex-col items-center py-8 text-center">
           <CheckCircle className="w-16 h-16 text-success mb-4" aria-hidden="true" />
-          <h4 className="text-xl font-bold mb-2">{t('feedback.success_title')}</h4>
+          <h3 className="text-xl font-bold mb-2">{t('feedback.success_title')}</h3>
           <p className="text-base-content/70">{t('feedback.success_message')}</p>
         </div>
       ) : (
