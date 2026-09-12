@@ -11,6 +11,7 @@
 }
 
 .ds-field__requirement {
+  display: inline-block;
   color: var(--ds-status-danger);
 }
 
