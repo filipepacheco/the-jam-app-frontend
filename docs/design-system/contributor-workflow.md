@@ -69,6 +69,45 @@ Dashboard work. Detailed contracts remain in the linked sources.
    review. **Complete when:** each applicable command exits successfully and
    no private workbench asset or dependency reaches the production build.
 
+## Progressive governance checks
+
+`npm run design-system:check -- --base <commit>` is the repository-level
+policy check. It first runs the non-mutating catalogue freshness check, then
+uses the supplied base commit (never an inferred branch) and the generated
+catalogue coverage graph to determine the stories affected by new or changed
+reusable components. The CI checkout keeps complete history so the pull
+request base SHA is available to that comparison.
+
+The check blocks only newly introduced debt:
+
+- A newly discovered active reusable component must have catalogue metadata
+  and a meaningful reachable workbench story, unless it has a component-
+  specific reviewed exemption.
+- Every changed story and every story reached from a changed reusable
+  component must keep `a11y.test: 'error'`, so the global Storybook `todo`
+  setting remains an inherited-debt signal rather than a blanket waiver.
+- An eligible story needs a `play` assertion for user-observable behavior. A
+  genuinely static story may instead declare
+  `parameters.designSystem.interaction: { status: 'not-applicable', rationale: '...' }`.
+  The rationale must state why no user-operated behavior exists.
+
+Existing reviewed debt is still emitted as warnings from
+[`reviewed-governance-baseline.json`](./reviewed-governance-baseline.json),
+but it cannot waive an affected source. The baseline is deliberately machine
+readable: every entry has a stable identifier, kind, scope, concrete reason,
+owner/owning consumer, issue or design record, and removal/reopening
+condition. An exemption for a changed or new component must use
+`scope: "component:<stable catalogue id>"` with all of those fields; a generic
+unchanged-at-base entry is not sufficient.
+
+CI runs `npm run design-system:warn -- --base <commit>` before the enforcing
+command. The warning stage reports prospective findings without making them a
+new failure, while the following command blocks actual new regressions. The
+private workbench browser job remains the render, interaction, and
+accessibility execution gate; this governance command verifies that affected
+stories are eligible for those checks. It does not add visual-regression
+testing or publish the private workbench.
+
 ## Exceptions and keep-separate decisions
 
 An **exception** keeps a hand-rolled pattern because a canonical component

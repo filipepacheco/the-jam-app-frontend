@@ -17,6 +17,8 @@
     "catalogue:generate": "tsx scripts/component-catalogue/cli.ts --config component-catalogue.config.json",
     "catalogue:check": "tsx scripts/component-catalogue/cli.ts --config component-catalogue.config.json --check",
     "catalogue:baseline": "tsx scripts/component-catalogue/cli.ts --config component-catalogue.config.json --check --require-reviewed-workbench",
+    "design-system:check": "tsx scripts/design-system-check/cli.ts --config design-system-check.config.json",
+    "design-system:warn": "npm run design-system:check -- --warning",
     "workbench": "storybook dev -p 6006 --no-open --disable-telemetry",
     "workbench:smoke": "storybook dev -p 6006 --ci --smoke-test --disable-telemetry",
     "workbench:typecheck": "tsc -p tsconfig.workbench.json",

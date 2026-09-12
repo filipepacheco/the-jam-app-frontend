@@ -1,0 +1,6 @@
+{
+  "catalogueConfig": "component-catalogue.config.json",
+  "catalogueOutput": "docs/design-system/component-catalogue.json",
+  "stories": ["src/workbench/stories/**/*.stories.tsx"],
+  "baseline": "docs/design-system/reviewed-governance-baseline.json"
+}
