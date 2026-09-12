@@ -948,6 +948,9 @@
     "offlineIndicator": "Estás sin conexión - mostrando datos en caché",
     "toggleNavbar": "Alternar barra de navegación",
     "fullscreen": "Alternar pantalla completa",
+    "enterFullscreen": "Entrar en pantalla completa",
+    "exitFullscreen": "Salir de pantalla completa",
+    "closeNavbar": "Cerrar barra de navegación",
     "backToHome": "← Volver al inicio",
     "viewDetails": "Ver detalles →",
     "nowPlaying": "Reproduciendo ahora",
@@ -968,7 +971,8 @@
     "layoutLabel": "Diseño",
     "slideDuration": "Duración del slide",
     "enterCode": "o ingresa el código",
-    "joinAt": "Únete en"
+    "joinAt": "Únete en",
+    "goToSlide": "Ir a la diapositiva {{number}}"
   },
   "searchableSelect": {
     "placeholder": "Selecciona una opción...",

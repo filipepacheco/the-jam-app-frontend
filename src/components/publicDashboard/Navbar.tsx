@@ -3,6 +3,8 @@ import {motion} from 'framer-motion'
 import {useReducedMotion} from '../../hooks'
 import {LanguageSelector} from './LanguageSelector'
 import {useTranslation} from 'react-i18next'
+import {Action, IconAction} from '../Action'
+import {Field} from '../Field'
 import type {DashboardLayout} from '../../hooks'
 
 interface Props {
@@ -20,6 +22,10 @@ interface Props {
   onCarouselIntervalChange?: (ms: number) => void
 }
 
+// The navbar is a host-facing settings drawer, not the venue-projected
+// content: it is opened up close by whoever runs the display, so it can
+// carry the standard 44px canonical controls without affecting the
+// distance-legible screen behind it.
 export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange, layout, onLayoutChange, carouselIntervalMs, onCarouselIntervalChange }: Props) {
   const { t } = useTranslation()
   const { transition } = useReducedMotion()
@@ -28,7 +34,7 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
     opacity: transition.duration === 0 ? 0.1 : 0,
     y: -20
   }), [transition])
-  
+
   if (!visible) return null
 
   const handleBackdropClick = () => {
@@ -40,6 +46,9 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
       onClose()
     }
   }
+
+  const closeNavbarLabel = t('publicDashboard.closeNavbar', 'Close navbar')
+  const layoutLabel = t('publicDashboard.layoutLabel', 'Layout')
 
   return (
     <>
@@ -74,69 +83,72 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
 
         {onLayoutChange && (
           <div className="flex items-center gap-3">
-            <span className="text-sm text-base-content">{t('publicDashboard.layoutLabel', 'Layout')}:</span>
-            <div className="join">
-              <button
-                type="button"
-                className={`btn btn-sm join-item ${layout === 'classic' ? 'btn-primary' : 'btn-ghost'}`}
+            <span className="text-sm text-base-content">{layoutLabel}:</span>
+            <div className="flex items-center gap-2" role="group" aria-label={layoutLabel}>
+              <Action
+                variant={layout === 'classic' ? 'primary' : 'secondary'}
+                className="ds-control--host"
+                aria-pressed={layout === 'classic'}
                 onClick={() => onLayoutChange('classic')}
               >
-                {t('publicDashboard.layoutClassic', 'Classic')}
-              </button>
-              <button
-                type="button"
-                className={`btn btn-sm join-item ${layout === 'carousel' ? 'btn-primary' : 'btn-ghost'}`}
+                <Action.Label>{t('publicDashboard.layoutClassic', 'Classic')}</Action.Label>
+              </Action>
+              <Action
+                variant={layout === 'carousel' ? 'primary' : 'secondary'}
+                className="ds-control--host"
+                aria-pressed={layout === 'carousel'}
                 onClick={() => onLayoutChange('carousel')}
               >
-                {t('publicDashboard.layoutCarousel', 'Carousel')}
-              </button>
+                <Action.Label>{t('publicDashboard.layoutCarousel', 'Carousel')}</Action.Label>
+              </Action>
             </div>
           </div>
         )}
 
         {layout === 'carousel' && onCarouselIntervalChange && (
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-base-content">{t('publicDashboard.slideDuration', 'Slide Duration')}:</span>
-            <select
+          <Field
+            id="carousel-slide-duration"
+            label={t('publicDashboard.slideDuration', 'Slide Duration')}
+          >
+            <Field.Select
               value={carouselIntervalMs}
               onChange={(e) => onCarouselIntervalChange(Number(e.target.value))}
-              className="select select-sm bg-base-200 text-base-content"
             >
               <option value={5000}>5s</option>
               <option value={8000}>8s</option>
               <option value={10000}>10s</option>
               <option value={15000}>15s</option>
               <option value={20000}>20s</option>
-            </select>
-          </div>
+            </Field.Select>
+          </Field>
         )}
 
         {onPollingChange && (
-          <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold text-base-content">🔄</span>
-            <select
+          <Field
+            id="navbar-polling-interval"
+            label={t('publicDashboard.autoRefresh', 'Auto-refresh')}
+          >
+            <Field.Select
               value={pollingMs}
               onChange={(e) => onPollingChange(Number(e.target.value))}
-              className="select select-sm bg-base-200 text-base-content"
             >
-              <option value={0}>Off</option>
+              <option value={0}>{t('publicDashboard.off', 'Off')}</option>
               <option value={5000}>5s</option>
               <option value={10000}>10s</option>
               <option value={30000}>30s</option>
               <option value={60000}>1m</option>
-            </select>
-          </div>
+            </Field.Select>
+          </Field>
         )}
 
-        <button
-            type="button"
+        <IconAction
+            variant="quiet"
             onClick={onClose}
-            className="btn btn-sm btn-ghost text-base-content"
-            title="Close navbar"
-            aria-label="Close navbar"
+            title={closeNavbarLabel}
+            label={closeNavbarLabel}
         >
           ✕
-        </button>
+        </IconAction>
         </div>
 
       </div>
@@ -144,4 +156,3 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
     </>
   )
 }
-

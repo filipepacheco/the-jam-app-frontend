@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 interface CarouselIndicatorProps {
   count: number
   activeIndex: number
@@ -5,6 +7,8 @@ interface CarouselIndicatorProps {
 }
 
 export function CarouselIndicator({ count, activeIndex, onSelect }: CarouselIndicatorProps) {
+  const { t } = useTranslation()
+
   if (count <= 1) return null
 
   return (
@@ -21,7 +25,7 @@ export function CarouselIndicator({ count, activeIndex, onSelect }: CarouselIndi
                 ? 'w-4 h-4 bg-primary'
                 : 'w-3 h-3 bg-base-content/30 hover:bg-base-content/50'
             }`}
-            aria-label={`Go to slide ${i + 1}`}
+            aria-label={t('publicDashboard.goToSlide', { number: i + 1, defaultValue: `Go to slide ${i + 1}` })}
           />
         </li>
       ))}
