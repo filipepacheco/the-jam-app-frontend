@@ -11,6 +11,7 @@ import {INSTRUMENTS} from '../lib/instruments'
 import {Alert} from './Alert'
 import {Modal} from './Modal'
 import {ModalFooter} from './ModalFooter'
+import {Field} from './Field'
 
 interface EditMusicianModalProps {
   musician: MusicianResponseDto
@@ -98,128 +99,85 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('musician_form.name_label')}</span>
-          </label>
-          <input
+        <Field id="edit-musician-name" label={t('musician_form.name_label')} disabled={isLoading}>
+          <Field.Input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleInputChange}
-            className="input input-bordered"
             placeholder={t('musician_form.name_placeholder')}
-            disabled={isLoading}
           />
-        </div>
+        </Field>
 
         {/* Instrument + Level (side by side on sm+) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('musician_form.instrument_label')}</span>
-            </label>
-            <select
-              name="instrument"
-              value={formData.instrument}
-              onChange={handleInputChange}
-              className="select select-bordered"
-              disabled={isLoading}
-            >
+          <Field id="edit-musician-instrument" label={t('musician_form.instrument_label')} disabled={isLoading}>
+            <Field.Select name="instrument" value={formData.instrument} onChange={handleInputChange}>
               <option value="">{t('musician_form.instrument_placeholder')}</option>
               {INSTRUMENTS.map((inst) => (
                 <option key={inst} value={inst}>
                   {t(`schedule.instruments.${inst}`)}
                 </option>
               ))}
-            </select>
-          </div>
+            </Field.Select>
+          </Field>
 
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('schedule.levels.experience_level')}</span>
-            </label>
-            <select
-              name="level"
-              value={formData.level}
-              onChange={handleInputChange}
-              className="select select-bordered"
-              disabled={isLoading}
-            >
+          <Field id="edit-musician-level" label={t('schedule.levels.experience_level')} disabled={isLoading}>
+            <Field.Select name="level" value={formData.level} onChange={handleInputChange}>
               <option value="BEGINNER">{t('schedule.levels.beginner')}</option>
               <option value="INTERMEDIATE">{t('schedule.levels.intermediate')}</option>
               <option value="ADVANCED">{t('schedule.levels.advanced')}</option>
               <option value="PROFESSIONAL">{t('schedule.levels.professional')}</option>
-            </select>
-          </div>
+            </Field.Select>
+          </Field>
         </div>
 
         {/* Contact + Phone (side by side on sm+) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('musician_form.contact_label')}</span>
-            </label>
-            <input
+          <Field id="edit-musician-contact" label={t('musician_form.contact_label')} disabled={isLoading}>
+            <Field.Input
               type="text"
               name="contact"
               value={formData.contact}
               onChange={handleInputChange}
-              className="input input-bordered"
               placeholder={t('musician_form.contact_placeholder')}
-              disabled={isLoading}
             />
-          </div>
+          </Field>
 
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-semibold">{t('musician_form.phone_label')}</span>
-            </label>
-            <input
+          <Field id="edit-musician-phone" label={t('musician_form.phone_label')} disabled={isLoading}>
+            <Field.Input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              className="input input-bordered"
               placeholder={t('musician_form.phone_placeholder')}
-              disabled={isLoading}
             />
-          </div>
+          </Field>
         </div>
 
         {/* Other Instruments */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('musician_form.other_instruments_label')}</span>
-          </label>
-          <input
+        <Field id="edit-musician-other-instruments" label={t('musician_form.other_instruments_label')} disabled={isLoading}>
+          <Field.Input
             type="text"
             name="otherInstruments"
             value={formData.otherInstruments}
             onChange={handleInputChange}
-            className="input input-bordered"
             placeholder={t('musician_form.other_instruments_placeholder')}
             maxLength={200}
-            disabled={isLoading}
           />
-        </div>
+        </Field>
 
         {/* Bio */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">{t('musician_form.bio_label')}</span>
-          </label>
-          <textarea
+        <Field id="edit-musician-bio" label={t('musician_form.bio_label')} disabled={isLoading}>
+          <Field.Textarea
             name="bio"
             value={formData.bio}
             onChange={handleInputChange}
-            className="textarea textarea-bordered"
             placeholder={t('musician_form.bio_placeholder')}
             rows={3}
             maxLength={500}
-            disabled={isLoading}
           />
-        </div>
+        </Field>
 
         {/* Error Alert */}
         <Alert type="error" message={error} />

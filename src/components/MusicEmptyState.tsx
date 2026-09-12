@@ -4,6 +4,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import { CanonicalEmptyState } from './FeedbackStates'
 
 interface MusicEmptyStateProps {
   hasFilters: boolean
@@ -13,19 +14,14 @@ interface MusicEmptyStateProps {
 export function MusicEmptyState({ hasFilters, isHost }: MusicEmptyStateProps) {
   const { t } = useTranslation()
   return (
-    <div className="card bg-base-200">
-      <div className="card-body text-center py-12">
-        <h2 className="text-2xl font-bold mb-2">
-          {hasFilters ? t('music_empty.no_songs_found') : t('music_empty.no_music_in_library')}
-        </h2>
-        <p className="text-base-content/70">
-          {hasFilters
-            ? t('music_empty.try_adjusting_filters')
-            : isHost
-              ? t('music_empty.host_hint')
-              : t('music_empty.empty_hint')}
-        </p>
-      </div>
-    </div>
+    <CanonicalEmptyState
+      kind={hasFilters ? 'results' : 'first-use'}
+      title={hasFilters ? t('music_empty.no_songs_found') : t('music_empty.no_music_in_library')}
+      description={hasFilters
+        ? t('music_empty.try_adjusting_filters')
+        : isHost
+          ? t('music_empty.host_hint')
+          : t('music_empty.empty_hint')}
+    />
   )
 }

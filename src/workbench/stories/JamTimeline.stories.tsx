@@ -32,7 +32,11 @@ export const CompleteSchedule: Story = {
   play: async ({ canvas, userEvent }) => {
     const guitarFilter = canvas.getByRole('button', { name: /guitarra/i })
     await userEvent.click(guitarFilter)
-    await expect(guitarFilter).toHaveClass('btn-primary')
+    // The filter pills are canonical Action controls now, so the selected pill
+    // is identified by aria-pressed and by the canonical variant attribute, not
+    // by the DaisyUI btn-primary class.
+    await expect(guitarFilter).toHaveAttribute('aria-pressed', 'true')
+    await expect(guitarFilter).toHaveAttribute('data-action-variant', 'primary')
     await userEvent.click(canvas.getByRole('button', { name: /tudo/i }))
     await expect(canvas.getAllByText('Psycho Killer')).toHaveLength(2)
   },

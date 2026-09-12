@@ -6,6 +6,8 @@ import { Avatar } from './Avatar'
 import { musicianService } from '../services'
 import type { MusicianProfileWithStats } from '../types/api.types'
 import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
+import { LoadingState, ErrorState } from './FeedbackStates'
+import { Badge } from './data-display'
 
 interface MusicianProfileModalProps {
   musicianId: string
@@ -49,13 +51,15 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
       size="md"
     >
       {loading && (
-        <div className="flex justify-center py-8">
-          <span className="loading loading-spinner loading-md" />
+        <div className="py-8">
+          <LoadingState label={t('musician_profile.loading', 'Loading profile…')} />
         </div>
       )}
 
       {error && (
-        <div className="text-center py-8 text-error">{error}</div>
+        <div className="py-8">
+          <ErrorState title={error} />
+        </div>
       )}
 
       {profile && !loading && (
@@ -73,9 +77,9 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
                 </p>
               )}
               {profile.level && (
-                <span className="badge badge-sm badge-ghost mt-1">
-                  {t(`schedule.levels.${profile.level}`)}
-                </span>
+                <div className="mt-1">
+                  <Badge tone="neutral" size="sm">{t(`schedule.levels.${profile.level}`)}</Badge>
+                </div>
               )}
             </div>
           </div>
@@ -101,9 +105,9 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {profile.otherInstruments.split(',').map(s => s.trim()).filter(Boolean).map((inst) => (
-                  <span key={inst.trim()} className="badge badge-sm badge-outline">
-                    {getInstrumentIcon(inst.trim())} {inst.trim()}
-                  </span>
+                  <Badge key={inst} tone="neutral" size="sm">
+                    {getInstrumentIcon(inst)} {inst}
+                  </Badge>
                 ))}
               </div>
             </div>
@@ -138,9 +142,9 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {profile.stats.instruments.map((inst) => (
-                  <span key={inst} className="badge badge-sm badge-primary badge-outline">
+                  <Badge key={inst} tone="info" size="sm">
                     {getInstrumentIcon(inst)} {inst}
-                  </span>
+                  </Badge>
                 ))}
               </div>
             </div>

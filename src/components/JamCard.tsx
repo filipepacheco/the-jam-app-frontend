@@ -8,12 +8,33 @@ import {Link} from 'react-router-dom'
 import type {JamResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../lib/i18nUtils'
-import {getJamStatusBadgeClass, getJamStatusLabel} from '../lib/statusUtils'
+import {getJamStatusLabel} from '../lib/statusUtils'
 import {getJamPath, getJamDashboardPath} from '../utils/jamUrl'
 import {Calendar, Music, ExternalLink, Radio} from 'lucide-react'
+import {Badge, type DataDisplayTone} from './data-display'
+import type {JamStatus} from '../types/api.types'
 
 interface JamCardProps {
   jam: JamResponseDto
+}
+
+/**
+ * Map a jam status to a canonical Badge tone.
+ * This mirrors getJamStatusBadgeClass from lib/statusUtils, which still returns
+ * DaisyUI classes for the host pages (issue #57). Keep this map local until the
+ * host pages also move to Badge; then promote it to lib/statusUtils.
+ */
+function jamStatusTone(status: JamStatus): DataDisplayTone {
+  switch (status) {
+    case 'LIVE':
+      return 'success'
+    case 'ACTIVE':
+      return 'info'
+    case 'INACTIVE':
+      return 'warning'
+    default:
+      return 'neutral'
+  }
 }
 
 /**
@@ -42,9 +63,9 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
         {/* Header: Name + Status Badge */}
         <div className="flex justify-between items-center gap-2">
           <h3 className="card-title text-base sm:text-lg min-w-0">{jam.name || t('jams.no_name')}</h3>
-          <div className={`badge badge-sm sm:badge-md lg:badge-lg flex-shrink-0 font-semibold ${getJamStatusBadgeClass(jam.status)}`}>
+          <Badge tone={jamStatusTone(jam.status)} className="flex-shrink-0 font-semibold">
             {getJamStatusLabel(jam.status, t)}
-          </div>
+          </Badge>
         </div>
 
         {/* Date */}
@@ -82,7 +103,11 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
           </a>
         )}
 
-        {/* Action Buttons */}
+        {/* Action Buttons.
+            These stay react-router <Link> elements: Action renders a native
+            <button> only, so it cannot give an href, a route transition, or the
+            browser "open in new tab" behaviour. Same exception as the external
+            Spotify anchor above. See docs/design-system/jam-music-migration.md. */}
         <div className="card-actions justify-end gap-2 mt-4 sm:mt-6">
             <Link to={getJamDashboardPath(jam)} className="btn btn-outline btn-sm text-xs sm:text-sm gap-1.5" title="View live dashboard">
               <Radio className="size-3.5" aria-hidden="true" />

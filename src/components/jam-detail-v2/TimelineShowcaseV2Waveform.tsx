@@ -7,6 +7,8 @@ import {TimelineItemV2Waveform} from './TimelineItemV2Waveform'
 import {useState} from 'react'
 import {Music, Users, Flag, ClipboardList} from 'lucide-react'
 import {formatJamDuration} from '../../lib/formatters'
+import {Action} from '../Action'
+import {CanonicalEmptyState} from '../FeedbackStates'
 
 interface TimelineUser {
   id: string
@@ -122,32 +124,35 @@ export function TimelineShowcaseV2Waveform({
       {availableFilters.length > 1 && (
         <div className="flex items-center gap-2">
           <div className="flex gap-1.5 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            <button
-              type="button"
+            <Action
               onClick={() => { setInstrumentFilter(null); setMineFilter(false) }}
-              className={`btn btn-xs rounded-full gap-1 min-h-[44px] min-w-[44px] shrink-0 ${instrumentFilter === null && !mineFilter ? 'btn-primary' : 'btn-ghost border border-base-300'}`}
+              variant={instrumentFilter === null && !mineFilter ? 'primary' : 'quiet'}
+              aria-pressed={instrumentFilter === null && !mineFilter}
+              className="gap-1 shrink-0"
             >
               {t('common.all')}
-            </button>
+            </Action>
             {user && (
-              <button
-                type="button"
+              <Action
                 onClick={() => { setMineFilter(prev => !prev); setInstrumentFilter(null) }}
-                className={`btn btn-xs rounded-full gap-1 min-h-[44px] min-w-[44px] shrink-0 ${mineFilter ? 'btn-secondary' : 'btn-ghost border border-base-300'}`}
+                variant={mineFilter ? 'secondary' : 'quiet'}
+                aria-pressed={mineFilter}
+                className="gap-1 shrink-0"
               >
                 {t('jams.my_registrations_short', 'Minhas')}
-              </button>
+              </Action>
             )}
             {availableFilters.map(inst => (
-              <button
+              <Action
                 key={inst}
-                type="button"
                 onClick={() => { setInstrumentFilter(prev => prev === inst ? null : inst); setMineFilter(false) }}
-                className={`btn btn-xs rounded-full gap-1 min-h-[44px] min-w-[44px] shrink-0 ${instrumentFilter === inst ? 'btn-primary' : 'btn-ghost border border-base-300'}`}
+                variant={instrumentFilter === inst ? 'primary' : 'quiet'}
+                aria-pressed={instrumentFilter === inst}
+                className="gap-1 shrink-0"
               >
                 <span>{getInstrumentEmoji(inst)}</span>
                 <span>{t(`schedule.instruments.${inst}`)}</span>
-              </button>
+              </Action>
             ))}
           </div>
         </div>
@@ -242,16 +247,11 @@ function EmptyTimelineState() {
   const { t } = useTranslation()
 
   return (
-    <div className="card bg-base-200">
-      <div className="card-body text-center py-12">
-        <ClipboardList className="size-10 text-base-content/30 mx-auto mb-3" />
-        <h3 className="font-bold text-lg mb-2 text-balance">
-          {t('jams.no_performance_schedule_title')}
-        </h3>
-        <p className="text-sm text-base-content/70 text-pretty">
-          {t('jams.no_performance_schedule_desc')}
-        </p>
-      </div>
-    </div>
+    <CanonicalEmptyState
+      kind="content"
+      icon={<ClipboardList className="size-10 text-base-content/30" />}
+      title={t('jams.no_performance_schedule_title')}
+      description={t('jams.no_performance_schedule_desc')}
+    />
   )
 }

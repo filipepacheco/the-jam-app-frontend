@@ -2,6 +2,7 @@ import type {ScheduleResponseDto} from '../../types/api.types'
 import type {AuthUser} from '../../types/auth.types'
 import {useTranslation} from 'react-i18next'
 import {TimelineItem} from './TimelineItem'
+import {CanonicalEmptyState} from '../FeedbackStates'
 
 interface TimelineShowcaseProps {
   schedules: ScheduleResponseDto[]
@@ -143,16 +144,11 @@ function EmptyTimelineState() {
   const { t } = useTranslation()
 
   return (
-    <div className="card bg-gradient-to-br from-base-200 to-base-300">
-      <div className="card-body text-center py-12">
-        <div className="text-5xl mb-4" aria-hidden="true">📋</div>
-        <h3 className="font-bold text-lg mb-2 text-balance">
-          {t('jams.no_performance_schedule_title')}
-        </h3>
-        <p className="text-sm text-base-content/70 text-pretty">
-          {t('jams.no_performance_schedule_desc')}
-        </p>
-      </div>
-    </div>
+    <CanonicalEmptyState
+      kind="content"
+      icon="📋"
+      title={t('jams.no_performance_schedule_title')}
+      description={t('jams.no_performance_schedule_desc')}
+    />
   )
 }

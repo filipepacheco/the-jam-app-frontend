@@ -12,8 +12,12 @@ import {useTranslation} from 'react-i18next'
 import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
 import {
+    Action,
     Alert,
+    DropdownMenu,
+    IconAction,
     ScheduleEnrollmentModal,
+    Status,
 } from '../../components'
 import {ShareModal} from '../../components/ShareModal'
 import {
@@ -250,34 +254,26 @@ export function JamDetailPageV2() {
             />
             {/* Success Alerts */}
             {enrollSuccess && (
-                <div
-                    className="bg-info text-info-content sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none"
-                    role="alert" aria-live="polite">
-                    <div className="container mx-auto max-w-4xl px-4 py-3 flex items-center justify-center gap-4">
-                        <span className="text-lg" aria-hidden="true">✓</span>
-                        <p className="font-semibold">{enrollSuccess}</p>
+                <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
+                    <div className="container mx-auto max-w-4xl px-4 py-3">
+                        <Status tone="info" role="alert" title={enrollSuccess} />
                     </div>
                 </div>
             )}
 
             {suggestSuccess && (
-                <div
-                    className="bg-success text-success-content sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none"
-                    role="alert" aria-live="polite">
-                    <div className="container mx-auto max-w-4xl px-4 py-3 flex items-center justify-center gap-4">
-                        <span className="text-lg" aria-hidden="true">✓</span>
-                        <p className="font-semibold">{suggestSuccess}</p>
+                <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
+                    <div className="container mx-auto max-w-4xl px-4 py-3">
+                        <Status tone="success" role="alert" title={suggestSuccess} />
                     </div>
                 </div>
             )}
 
             {/* Error Alert */}
             {errorMessage && (
-                <div
-                    className="bg-error text-error-content sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none"
-                    role="alert" aria-live="assertive">
-                    <div className="container mx-auto max-w-4xl px-4 py-3 flex items-center justify-center gap-4">
-                        <p className="font-semibold text-sm">{errorMessage}</p>
+                <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
+                    <div className="container mx-auto max-w-4xl px-4 py-3">
+                        <Status tone="error" role="alert" title={errorMessage} />
                     </div>
                 </div>
             )}
@@ -288,24 +284,24 @@ export function JamDetailPageV2() {
                     {/* Title row with back + share */}
                     <div className="flex items-start justify-between gap-3 mb-2">
                         <div className="flex items-start gap-2 min-w-0">
-                            <button
-                                type="button"
+                            <IconAction
+                                variant="quiet"
                                 onClick={() => navigate('/jams')}
-                                className="btn btn-ghost btn-sm btn-square shrink-0 mt-0.5"
-                                aria-label={t('common.back')}
+                                className="shrink-0 mt-0.5"
+                                label={t('common.back')}
                             >
                                 <ArrowLeft className="size-4" />
-                            </button>
+                            </IconAction>
                             <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-balance leading-tight">{jam.name}</h1>
                         </div>
-                        <button
-                            type="button"
+                        <IconAction
+                            variant="quiet"
                             onClick={() => setIsShareModalOpen(true)}
-                            className="btn btn-ghost btn-sm btn-square shrink-0"
-                            aria-label={t('share.share_button')}
+                            className="shrink-0"
+                            label={t('share.share_button')}
                         >
                             <Share2 className="size-4" />
-                        </button>
+                        </IconAction>
                     </div>
 
                     {/* Single metadata line: date, location, status */}
@@ -323,26 +319,21 @@ export function JamDetailPageV2() {
                             </span>
                         )}
                         {jam.location && (
-                            <div className="dropdown dropdown-bottom">
-                                <span
-                                    tabIndex={0}
-                                    role="button"
-                                    className="inline-flex items-center gap-1 hover:text-base-content transition-colors cursor-pointer"
-                                >
-                                    <MapPin className="size-3" />
-                                    <span className="truncate max-w-[180px]">{jam.location}</span>
-                                </span>
-                                <div tabIndex={0} className="dropdown-content z-50 menu p-3 shadow-lg bg-base-100 rounded-box w-72 max-w-[90vw]">
-                                    <p className="text-sm font-semibold mb-2">{t('jams.info.full_address')}</p>
-                                    <p className="text-sm text-base-content/80 mb-3 break-words">{jam.location}</p>
-                                    <button
-                                        onClick={handleCopyLocation}
-                                        className="btn btn-sm btn-outline w-full"
-                                    >
-                                        {locationCopied ? t('common.copied') : t('common.copy_address')}
-                                    </button>
-                                </div>
-                            </div>
+                            <DropdownMenu
+                                label={t('jams.info.full_address')}
+                                trigger={
+                                    <span className="inline-flex items-center gap-1">
+                                        <MapPin className="size-3" />
+                                        <span className="truncate max-w-[180px]">{jam.location}</span>
+                                    </span>
+                                }
+                            >
+                                <p className="text-sm font-semibold mb-2">{t('jams.info.full_address')}</p>
+                                <p className="text-sm text-base-content/80 mb-3 break-words">{jam.location}</p>
+                                <Action variant="secondary" onClick={handleCopyLocation} className="w-full">
+                                    {locationCopied ? t('common.copied') : t('common.copy_address')}
+                                </Action>
+                            </DropdownMenu>
                         )}
                     </div>
 
@@ -366,13 +357,13 @@ export function JamDetailPageV2() {
                                 {jam.description}
                             </p>
                             {jam.description.length > 100 && (
-                                <button
+                                <Action
+                                    variant="quiet"
                                     onClick={() => setDescriptionExpanded(prev => !prev)}
-                                    className="btn btn-ghost btn-xs mt-1 text-primary"
-                                    type="button"
+                                    className="mt-1 text-primary"
                                 >
                                     {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
-                                </button>
+                                </Action>
                             )}
                         </div>
                     )}
@@ -452,13 +443,13 @@ export function JamDetailPageV2() {
                                                     </div>
                                                 )}
                                             </div>
-                                            <button
-                                                type="button"
+                                            <Action
+                                                variant="secondary"
                                                 onClick={() => handleEnrollClick(schedule)}
-                                                className="btn btn-outline btn-primary btn-xs shrink-0"
+                                                className="shrink-0"
                                             >
                                                 + {t('jams.register')}
-                                            </button>
+                                            </Action>
                                         </div>
                                     ))}
                                 </div>

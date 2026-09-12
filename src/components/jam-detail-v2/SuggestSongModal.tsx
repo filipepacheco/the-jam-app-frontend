@@ -12,6 +12,8 @@ import {Alert} from "../Alert"
 import {SearchableSelect} from "../forms/SearchableSelect.tsx"
 import {Modal} from '../Modal'
 import {ModalFooter} from '../ModalFooter'
+import {Action} from '../Action'
+import {LoadingState} from '../FeedbackStates'
 
 interface SuggestSongModalProps {
   jamId: string
@@ -107,12 +109,7 @@ export function SuggestSongModal({
       {/* Loading State */}
       {loadingSongs && !allSongs.length ? (
         <div className="mb-4">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>
-            <span className="text-sm text-base-content/70 font-semibold">
-              {t('jams.loading_songs')}
-            </span>
-          </div>
+          <LoadingState label={t('jams.loading_songs')} className="mb-3" />
           <div className="form-control">
             <label className="label" htmlFor="song-select">
               <span className="label-text">{t('jams.select_song')}</span>
@@ -121,6 +118,9 @@ export function SuggestSongModal({
           </div>
         </div>
       ) : (
+        /* The song picker keeps its own label element: form-fields.md states that
+           SearchableSelect is not wrapped in Field, because Field clones exactly
+           one native control and SearchableSelect is a composite widget. */
         <div className="form-control mb-4">
           <label className="label" id="song-select-label" htmlFor="song-select">
             <span className="label-text">{t('jams.select_song')}</span>
@@ -145,17 +145,17 @@ export function SuggestSongModal({
             }}
           />
           {onCreateNewSong && (
-            <button
-              type="button"
+            <Action
+              variant="quiet"
               onClick={() => {
                 onClose()
                 onCreateNewSong()
               }}
-              className="btn btn-ghost btn-sm w-full mt-2 text-base-content/70 hover:text-primary"
-              disabled={submitting}
+              className="w-full mt-2"
+              state={submitting ? 'disabled' : 'idle'}
             >
               {t('jams.didnt_find_music')}
-            </button>
+            </Action>
           )}
         </div>
       )}

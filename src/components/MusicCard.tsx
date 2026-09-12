@@ -13,6 +13,8 @@ import { getInstrumentIcon, getInstrumentCounts } from '../lib/schedule/instrume
 import { SpotifyPreview, isSpotifyTrackLink } from './SpotifyPreview'
 import { QuickEditPanel } from './QuickEditPanel'
 import { MusicDataCard, MusicStatusIndicator } from './music/MusicDataDisplay'
+import { IconAction } from './Action'
+import { Badge } from './data-display'
 
 interface MusicCardProps {
   music: MusicResponseDto
@@ -69,7 +71,7 @@ export const MusicCard = memo(function MusicCard({
   const metaInfo = (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
       {music.genre && (
-        <span className="badge badge-outline badge-xs">{music.genre}</span>
+        <Badge size="sm">{music.genre}</Badge>
       )}
       {music.duration && (
         <span className="text-xs text-base-content/60">
@@ -117,42 +119,38 @@ export const MusicCard = memo(function MusicCard({
             <div className="flex items-center gap-1 shrink-0">
               {isSuggested ? (
                 <>
-                  <button
+                  <IconAction
                     onClick={() => { void onApprove?.(music) }}
-                    className="btn btn-xs btn-success btn-circle min-h-[44px] min-w-[44px]"
-                    title={t('common.approve')}
-                    aria-label={t('common.approve')}
+                    variant="primary"
+                    label={t('common.approve')}
                   >
                     ✓
-                  </button>
-                  <button
+                  </IconAction>
+                  <IconAction
                     onClick={() => onReject?.(music)}
-                    className="btn btn-xs btn-error btn-outline btn-circle min-h-[44px] min-w-[44px]"
-                    title={t('common.reject')}
-                    aria-label={t('common.reject')}
+                    variant="destructive"
+                    label={t('common.reject')}
                   >
                     ✕
-                  </button>
+                  </IconAction>
                 </>
               ) : (
                 <>
-                  <button
+                  <IconAction
                     onClick={handlePencilClick}
-                    className={`btn btn-xs btn-ghost btn-circle min-h-[44px] min-w-[44px] ${isExpanded ? 'btn-active' : ''}`}
-                    title={t('common.edit')}
-                    aria-label={t('common.edit')}
+                    variant="quiet"
+                    label={t('common.edit')}
                     aria-expanded={isExpanded}
                   >
                     <Pencil className="size-3.5" />
-                  </button>
-                  <button
+                  </IconAction>
+                  <IconAction
                     onClick={() => onDelete(music)}
-                    className="btn btn-xs btn-error btn-outline btn-circle min-h-[44px] min-w-[44px]"
-                    title={t('common.delete')}
-                    aria-label={t('common.delete')}
+                    variant="destructive"
+                    label={t('common.delete')}
                   >
                     <Trash2 className="size-3.5" />
-                  </button>
+                  </IconAction>
                 </>
               )}
             </div>

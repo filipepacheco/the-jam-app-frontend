@@ -9,7 +9,7 @@ import {useTranslation} from 'react-i18next'
 import {useAuth} from '../hooks'
 import type {JamDetails} from '../services'
 import * as jamService from '../services/jamService'
-import {Alert, JamContextDisplay, JamRegistrationForm} from '../components'
+import {Action, Alert, JamContextDisplay, JamRegistrationForm} from '../components'
 
 export function JamRegisterPage() {
   const { jamId } = useParams<{ jamId: string }>()
@@ -118,9 +118,9 @@ export function JamRegisterPage() {
       <div className="min-h-screen bg-base-100 p-4">
         <div className="container mx-auto max-w-2xl">
           <Alert type="error" message={error || t('jams.not_found')} title={t('jams.error_loading_jam')} />
-          <button onClick={() => navigate('/jams')} className="btn btn-primary mt-4">
+          <Action onClick={() => navigate('/jams')} className="mt-4">
             {t('jams.back_to_jams')}
-          </button>
+          </Action>
         </div>
       </div>
     )
@@ -131,12 +131,13 @@ export function JamRegisterPage() {
       {/* Header */}
       <div className="bg-base-200 border-b border-base-300">
         <div className="container mx-auto max-w-2xl px-4 py-6">
-          <button
+          <Action
+            variant="quiet"
             onClick={() => navigate(`/jams/${jamId}`)}
-            className="btn btn-ghost btn-sm mb-4"
+            className="mb-4"
           >
             {t('jams.back_to_jam')}
-          </button>
+          </Action>
           <h1 className="text-3xl font-bold">{t('jams.register_for_name', { name: jam.name })}</h1>
         </div>
       </div>
@@ -155,6 +156,9 @@ export function JamRegisterPage() {
                 <span className="font-semibold">{user?.name}</span>
                 <span className="text-base-content/70 ml-2">({user?.email || user?.phone})</span>
               </p>
+              {/* Anchor exception: Action renders a native <button> only, so it
+                  cannot carry an href or open in a new tab. See
+                  docs/design-system/jam-music-migration.md. */}
               <a href="/profile" className="link link-sm mt-2">
                 {t('profile.edit_profile')} →
               </a>

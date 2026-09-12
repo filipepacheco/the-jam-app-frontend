@@ -1070,6 +1070,7 @@
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/ModalFooter.tsx",
           "src/hooks/index.ts",
@@ -1132,6 +1133,7 @@
       ],
       "consumers": [
         "src/pages/BrowseJamsPage.tsx",
+        "src/pages/MusicPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
@@ -2018,9 +2020,9 @@
         ]
       },
       "metadata": {
-        "category": "product-ui",
+        "category": "legacy-experimental",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2035,7 +2037,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; review whether the canvas implementation remains a supported Jam visual."
+          "No consumers remain, in production or in a story; only the jam-detail-v2 barrel re-exports it. No replacement component draws a canvas waveform: the active TimelineItemV2Waveform shows a dot-based status instead. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2066,7 +2068,9 @@
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
         "external": [
           "lucide-react",
           "react"
@@ -2136,7 +2140,7 @@
       "metadata": {
         "category": "product-ui",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2151,7 +2155,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; review intended Jam detail navigation usage."
+          "No consumers remain; only the jam-detail-v2 barrel re-exports it. Superseded by the direct CollapsibleSection usage in src/pages/tabs/JamDetailPageV2.tsx. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2255,7 +2259,7 @@
       "metadata": {
         "category": "product-ui",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2270,7 +2274,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; review against the active dual-action control."
+          "Superseded by DualActionFAB, the only floating control wired into src/pages/tabs/JamDetailPageV2.tsx. No consumers remain, in production or in a story. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2306,7 +2310,7 @@
       "metadata": {
         "category": "product-ui",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2321,7 +2325,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "No current consumers; review against the active dual-action control."
+          "Superseded by DualActionFAB, the only floating control wired into src/pages/tabs/JamDetailPageV2.tsx. No consumers remain, in production or in a story. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2409,7 +2413,10 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
+          "src/components/FeedbackStates.tsx",
           "src/components/Modal.tsx",
+          "src/components/data-display/index.tsx",
           "src/lib/formatters.ts",
           "src/types/api.types.ts"
         ],
@@ -2472,7 +2479,9 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/MusicModalFormFields.tsx",
           "src/lib/formatters.ts",
@@ -2542,7 +2551,9 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
+          "src/components/FeedbackStates.tsx",
           "src/components/Modal.tsx",
           "src/components/ModalFooter.tsx",
           "src/components/forms/SearchableSelect.tsx",
@@ -2614,6 +2625,8 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
+          "src/components/data-display/index.tsx",
           "src/lib/formatters.ts",
           "src/lib/schedule/instrumentHelpers.tsx"
         ],
@@ -2625,9 +2638,9 @@
         ]
       },
       "metadata": {
-        "category": "product-ui",
+        "category": "legacy-experimental",
         "layer": "domain-component",
-        "lifecycle": "active",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2647,7 +2660,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Domain/Jam/Performance timeline."
+          "Superseded by TimelineItemV2Waveform. TimelineShowcase is its only production-side caller and that showcase is legacy too. Remaining consumer: src/workbench/stories/JamTimeline.stories.tsx only. Still migrated onto Action and Badge, matching the TimelineSongItem precedent. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2678,6 +2691,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/SpotifyPreview.tsx",
           "src/components/schedule/InstrumentsSummary.tsx",
           "src/hooks/index.ts",
@@ -2735,7 +2749,9 @@
       ],
       "workbenchStories": [],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/FeedbackStates.tsx"
+        ],
         "external": [
           "react-i18next"
         ],
@@ -2746,7 +2762,7 @@
       "metadata": {
         "category": "legacy-experimental",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2761,7 +2777,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Older timeline showcase family has no external consumers; compare with the active waveform version."
+          "Superseded by TimelineShowcaseV2Waveform, which src/pages/tabs/JamDetailPageV2.tsx renders. No consumers remain; only the jam-detail-v2 barrel re-exports it. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2788,7 +2804,7 @@
       "metadata": {
         "category": "legacy-experimental",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2803,7 +2819,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Older timeline showcase family has no external consumers; compare with the active waveform version."
+          "Superseded by TimelineShowcaseV2Waveform, which src/pages/tabs/JamDetailPageV2.tsx renders. No consumers remain; only the jam-detail-v2 barrel re-exports it. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2839,7 +2855,7 @@
       "metadata": {
         "category": "legacy-experimental",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2854,7 +2870,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Older timeline showcase family has no external consumers; compare with the active waveform version."
+          "Superseded by TimelineShowcaseV2Waveform, which src/pages/tabs/JamDetailPageV2.tsx renders. No consumers remain; only the jam-detail-v2 barrel re-exports it. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2881,7 +2897,7 @@
       "metadata": {
         "category": "legacy-experimental",
         "layer": "domain-component",
-        "lifecycle": "uncertain",
+        "lifecycle": "legacy",
         "productArea": "jam",
         "viewportContexts": [
           "mobile",
@@ -2896,7 +2912,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "Older timeline showcase family has no external consumers; compare with the active waveform version."
+          "Superseded by TimelineShowcaseV2Waveform, which src/pages/tabs/JamDetailPageV2.tsx renders. No consumers remain; only the jam-detail-v2 barrel re-exports it. Kept for a separate deletion ticket. See docs/design-system/jam-music-migration.md (issue #51)."
         ]
       }
     },
@@ -2914,7 +2930,9 @@
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/FeedbackStates.tsx"
+        ],
         "external": [
           "lucide-react",
           "react-i18next"
@@ -2982,6 +3000,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
           "src/hooks/index.ts",
           "src/lib/formatters.ts",
@@ -3058,6 +3077,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/data-display/index.tsx",
           "src/lib/i18nUtils.ts",
           "src/lib/statusUtils.ts",
           "src/utils/jamUrl.ts"
@@ -3183,7 +3203,10 @@
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/data-display/index.tsx",
+          "src/lib/statusUtils.ts"
+        ],
         "external": [
           "react-i18next"
         ],
@@ -3467,8 +3490,10 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/QuickEditPanel.tsx",
           "src/components/SpotifyPreview.tsx",
+          "src/components/data-display/index.tsx",
           "src/components/music/MusicDataDisplay.tsx",
           "src/lib/formatters.ts",
           "src/lib/schedule/instrumentHelpers.tsx"
@@ -3588,7 +3613,9 @@
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/FeedbackStates.tsx"
+        ],
         "external": [
           "react-i18next"
         ],
@@ -3651,7 +3678,10 @@
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Action.tsx",
+          "src/components/Field.tsx"
+        ],
         "external": [
           "react-i18next"
         ],
@@ -3708,7 +3738,9 @@
       "dependencies": {
         "internal": [
           "src/components/Avatar.tsx",
+          "src/components/FeedbackStates.tsx",
           "src/components/Modal.tsx",
+          "src/components/data-display/index.tsx",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/services/index.ts",
           "src/types/api.types.ts"
@@ -3774,6 +3806,7 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Modal.tsx",
           "src/components/MusicModalFormFields.tsx",
           "src/lib/musicUtils.tsx",
@@ -3845,6 +3878,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Field.tsx",
           "src/lib/musicConstants.ts"
         ],
         "external": [
@@ -3895,7 +3929,9 @@
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Action.tsx"
+        ],
         "external": [
           "react-i18next"
         ],
@@ -7864,6 +7900,7 @@
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/ModalFooter.tsx",
           "src/services/index.ts",
@@ -7932,7 +7969,9 @@
       "workbenchStories": [],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/ModalFooter.tsx",
           "src/lib/spotifyUtils.ts",
@@ -10146,10 +10185,14 @@
         "src/components/FeedbackModal.tsx",
         "src/components/FeedbackStates.tsx",
         "src/components/MobileDrawer.tsx",
+        "src/components/MusicFilters.tsx",
+        "src/components/MusicModal.tsx",
+        "src/components/MusicTable.tsx",
         "src/components/Navigation.tsx",
         "src/components/OnboardingModal.tsx",
         "src/components/QuickEditPanel.tsx",
         "src/components/ShareModal.tsx",
+        "src/components/SpotifyImportModal.tsx",
         "src/components/dj-control/PlaybackControls.tsx",
         "src/components/dj-control/QueueStats.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
@@ -10157,6 +10200,12 @@
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/forms/OAuthButton.tsx",
         "src/components/forms/SupabaseLoginForm.tsx",
+        "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
+        "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
+        "src/components/jam-detail-v2/SuggestSongModal.tsx",
+        "src/components/jam-detail-v2/TimelineItem.tsx",
+        "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
+        "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
         "src/components/overlays/CanonicalOverlays.tsx",
         "src/components/publicDashboard/Navbar.tsx",
         "src/components/publicDashboard/QRCodeCorner.tsx",
@@ -10166,7 +10215,11 @@
         "src/components/schedule/ScheduleActionButtons.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
         "src/components/schedule/ScheduleDisplayItem.tsx",
+        "src/pages/BrowseJamsPage.tsx",
+        "src/pages/JamRegisterPage.tsx",
+        "src/pages/MusicPage.tsx",
         "src/pages/ProfilePage.tsx",
+        "src/pages/tabs/JamDetailPageV2.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
@@ -10179,6 +10232,8 @@
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
@@ -10255,6 +10310,7 @@
       "consumers": [
         "src/components/FeedbackButton.tsx",
         "src/components/MobileDrawer.tsx",
+        "src/components/MusicCard.tsx",
         "src/components/Navigation.tsx",
         "src/components/QuickEditPanel.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
@@ -10265,6 +10321,7 @@
         "src/components/schedule/NotesEditor.tsx",
         "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
+        "src/pages/tabs/JamDetailPageV2.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx"
       ],
       "workbenchStories": [
@@ -10345,12 +10402,16 @@
       "consumers": [
         "src/components/FeedbackStates.tsx",
         "src/components/ShareModal.tsx",
+        "src/pages/tabs/JamDetailPageV2.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
@@ -10412,7 +10473,10 @@
         }
       ],
       "consumers": [
+        "src/components/MusicianProfileModal.tsx",
+        "src/components/jam-detail-v2/SuggestSongModal.tsx",
         "src/pages/BrowseJamsPage.tsx",
+        "src/pages/MusicPage.tsx",
         "src/pages/SpotifyCallbackPage.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
@@ -10597,6 +10661,7 @@
         }
       ],
       "consumers": [
+        "src/components/MusicianProfileModal.tsx",
         "src/components/dj-control/PlaybackControls.tsx",
         "src/components/dj-control/QueueStats.tsx",
         "src/pages/BrowseJamsPage.tsx",
@@ -10658,10 +10723,17 @@
         }
       ],
       "consumers": [
-        "src/components/EmptyState.tsx"
+        "src/components/EmptyState.tsx",
+        "src/components/MusicEmptyState.tsx",
+        "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
+        "src/components/jam-detail-v2/TimelineShowcase.tsx",
+        "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "dependencies": {
@@ -10722,12 +10794,25 @@
         }
       ],
       "consumers": [
+        "src/components/JamCard.tsx",
+        "src/components/JamContextDisplay.tsx",
+        "src/components/MusicCard.tsx",
+        "src/components/MusicTable.tsx",
+        "src/components/MusicianProfileModal.tsx",
         "src/components/dj-control/QueueStats.tsx",
+        "src/components/jam-detail-v2/CollapsibleSection.tsx",
+        "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
+        "src/components/jam-detail-v2/TimelineItem.tsx",
         "src/components/music/MusicDataDisplay.tsx",
+        "src/pages/BrowseJamsPage.tsx",
+        "src/pages/MusicPage.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "dependencies": {
@@ -11269,24 +11354,32 @@
         }
       ],
       "consumers": [
+        "src/components/EditMusicianModal.tsx",
         "src/components/FeedbackModal.tsx",
         "src/components/Field.tsx",
         "src/components/MobileDrawer.tsx",
+        "src/components/MusicFilters.tsx",
+        "src/components/MusicModalFormFields.tsx",
         "src/components/OnboardingModal.tsx",
         "src/components/ProfileFormSection.tsx",
         "src/components/QuickEditPanel.tsx",
+        "src/components/SpotifyExportModal.tsx",
+        "src/components/SpotifyImportModal.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/forms/SupabaseLoginForm.tsx",
+        "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/components/publicDashboard/Navbar.tsx",
         "src/components/publicDashboard/PollingControls.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
+        "src/pages/BrowseJamsPage.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
@@ -11359,6 +11452,7 @@
       ],
       "consumers": [
         "src/components/forms/JamRegistrationForm.tsx",
+        "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
       ],
       "workbenchStories": [
@@ -11499,6 +11593,7 @@
       ],
       "consumers": [
         "src/components/FeedbackModal.tsx",
+        "src/pages/MusicPage.tsx",
         "src/workbench/stories/Overlays.stories.tsx"
       ],
       "workbenchStories": [
@@ -11860,6 +11955,7 @@
       ],
       "consumers": [
         "src/components/Navigation.tsx",
+        "src/pages/BrowseJamsPage.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
@@ -12134,6 +12230,7 @@
         }
       ],
       "consumers": [
+        "src/pages/tabs/JamDetailPageV2.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
@@ -12397,8 +12494,8 @@
     "representedSources": 148,
     "ignoredSources": 37,
     "workbench": {
-      "activeReusableVisualComponents": 135,
-      "ready": 115,
+      "activeReusableVisualComponents": 134,
+      "ready": 114,
       "exempt": 20,
       "needsReview": 0,
       "unknown": 0,
@@ -12473,9 +12570,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/EditMusicianModal.tsx:228:9:action",
+          "id": "src/components/EditMusicianModal.tsx:186:9:action",
           "source": "src/components/EditMusicianModal.tsx",
-          "line": 228,
+          "line": 186,
           "column": 9,
           "ownerComponentId": "ui.0018",
           "tag": "button",
@@ -12549,9 +12646,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/JamCard.tsx:87:13:action",
+          "id": "src/components/JamCard.tsx:112:13:action",
           "source": "src/components/JamCard.tsx",
-          "line": 87,
+          "line": 112,
           "column": 13,
           "ownerComponentId": "ui.0051",
           "tag": "Link",
@@ -12566,9 +12663,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/JamCard.tsx:91:11:action",
+          "id": "src/components/JamCard.tsx:116:11:action",
           "source": "src/components/JamCard.tsx",
-          "line": 91,
+          "line": 116,
           "column": 11,
           "ownerComponentId": "ui.0051",
           "tag": "Link",
@@ -12647,198 +12744,14 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/MusicCard.tsx:120:19:action",
-          "source": "src/components/MusicCard.tsx",
-          "line": 120,
-          "column": 19,
-          "ownerComponentId": "ui.0057",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-success",
-            "btn-xs",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicCard.tsx:128:19:action",
-          "source": "src/components/MusicCard.tsx",
-          "line": 128,
-          "column": 19,
-          "ownerComponentId": "ui.0057",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-error",
-            "btn-outline",
-            "btn-xs",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicCard.tsx:139:19:action",
-          "source": "src/components/MusicCard.tsx",
-          "line": 139,
-          "column": 19,
-          "ownerComponentId": "ui.0057",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-xs",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/MusicCard.tsx:148:19:action",
-          "source": "src/components/MusicCard.tsx",
-          "line": 148,
-          "column": 19,
-          "ownerComponentId": "ui.0057",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-error",
-            "btn-outline",
-            "btn-xs",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicFilters.tsx:96:15:action",
-          "source": "src/components/MusicFilters.tsx",
-          "line": 96,
-          "column": 15,
-          "ownerComponentId": "ui.0060",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "shrink-0",
-            "sm:btn-md"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModal.tsx:177:11:action",
+          "id": "src/components/MusicModal.tsx:209:9:action",
           "source": "src/components/MusicModal.tsx",
-          "line": 177,
-          "column": 11,
-          "ownerComponentId": "ui.0062",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModal.tsx:185:11:action",
-          "source": "src/components/MusicModal.tsx",
-          "line": 185,
-          "column": 11,
-          "ownerComponentId": "ui.0062",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModal.tsx:203:9:action",
-          "source": "src/components/MusicModal.tsx",
-          "line": 203,
+          "line": 209,
           "column": 9,
           "ownerComponentId": "ui.0062",
           "tag": "button",
           "staticClassTokens": [
             "hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicTable.tsx:144:11:action",
-          "source": "src/components/MusicTable.tsx",
-          "line": 144,
-          "column": 11,
-          "ownerComponentId": "ui.0064",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-success",
-            "btn-xs",
-            "gap-1",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicTable.tsx:151:11:action",
-          "source": "src/components/MusicTable.tsx",
-          "line": 151,
-          "column": 11,
-          "ownerComponentId": "ui.0064",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-xs",
-            "gap-1",
-            "hover:bg-error/10",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "text-error"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicTable.tsx:161:11:action",
-          "source": "src/components/MusicTable.tsx",
-          "line": 161,
-          "column": 11,
-          "ownerComponentId": "ui.0064",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-xs",
-            "gap-1",
-            "min-h-[44px]",
-            "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicTable.tsx:168:11:action",
-          "source": "src/components/MusicTable.tsx",
-          "line": 168,
-          "column": 11,
-          "ownerComponentId": "ui.0064",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-xs",
-            "gap-1",
-            "hover:bg-error/10",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "text-error"
           ],
           "dynamicClasses": false
         },
@@ -12960,9 +12873,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/SpotifyExportModal.tsx:116:11:action",
+          "id": "src/components/SpotifyExportModal.tsx:120:11:action",
           "source": "src/components/SpotifyExportModal.tsx",
-          "line": 116,
+          "line": 120,
           "column": 11,
           "ownerComponentId": "ui.0127",
           "tag": "a",
@@ -12974,68 +12887,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/SpotifyImportModal.tsx:219:11:action",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 219,
-          "column": 11,
-          "ownerComponentId": "ui.0128",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:273:13:action",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 273,
-          "column": 13,
-          "ownerComponentId": "ui.0128",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "flex-1",
-            "join-item"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:281:13:action",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 281,
-          "column": 13,
-          "ownerComponentId": "ui.0128",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "flex-1",
-            "join-item"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:341:13:action",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 341,
-          "column": 13,
-          "ownerComponentId": "ui.0128",
-          "tag": "button",
-          "staticClassTokens": [
-            "-ml-2",
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "gap-1"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyPreview.tsx:59:5:action",
+          "id": "src/components/SpotifyPreview.tsx:62:5:action",
           "source": "src/components/SpotifyPreview.tsx",
-          "line": 59,
+          "line": 62,
           "column": 5,
           "ownerComponentId": "ui.0131",
           "tag": "a",
@@ -13049,9 +12903,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/SpotifyPreview.tsx:91:5:action",
+          "id": "src/components/SpotifyPreview.tsx:95:5:action",
           "source": "src/components/SpotifyPreview.tsx",
-          "line": 91,
+          "line": 95,
           "column": 5,
           "ownerComponentId": "ui.0130",
           "tag": "a",
@@ -13110,9 +12964,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/jam-detail-v2/CollapsibleSection.tsx:37:7:action",
+          "id": "src/components/jam-detail-v2/CollapsibleSection.tsx:38:7:action",
           "source": "src/components/jam-detail-v2/CollapsibleSection.tsx",
-          "line": 37,
+          "line": 38,
           "column": 7,
           "ownerComponentId": "ui.0034",
           "tag": "button",
@@ -13236,23 +13090,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx:45:9:action",
+          "id": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx:80:13:action",
           "source": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
-          "line": 45,
-          "column": 9,
-          "ownerComponentId": "ui.0040",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx:64:13:action",
-          "source": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
-          "line": 64,
+          "line": 80,
           "column": 13,
           "ownerComponentId": "ui.0040",
           "tag": "button",
@@ -13269,48 +13109,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/jam-detail-v2/SuggestNewSongModal.tsx:228:11:action",
+          "id": "src/components/jam-detail-v2/SuggestNewSongModal.tsx:309:9:action",
           "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
-          "line": 228,
-          "column": 11,
-          "ownerComponentId": "ui.0041",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/SuggestNewSongModal.tsx:236:11:action",
-          "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
-          "line": 236,
-          "column": 11,
-          "ownerComponentId": "ui.0041",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/SuggestNewSongModal.tsx:279:13:action",
-          "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
-          "line": 279,
-          "column": 13,
-          "ownerComponentId": "ui.0041",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-secondary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/SuggestNewSongModal.tsx:307:9:action",
-          "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
-          "line": 307,
+          "line": 309,
           "column": 9,
           "ownerComponentId": "ui.0041",
           "tag": "button",
@@ -13318,140 +13119,6 @@
             "hidden"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/SuggestSongModal.tsx:148:13:action",
-          "source": "src/components/jam-detail-v2/SuggestSongModal.tsx",
-          "line": 148,
-          "column": 13,
-          "ownerComponentId": "ui.0042",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "hover:text-primary",
-            "mt-2",
-            "text-base-content/70",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineItem.tsx:95:9:action",
-          "source": "src/components/jam-detail-v2/TimelineItem.tsx",
-          "line": 95,
-          "column": 9,
-          "ownerComponentId": "ui.0043",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:222:17:action",
-          "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
-          "line": 222,
-          "column": 17,
-          "ownerComponentId": "ui.0044",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-xs",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:230:17:action",
-          "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
-          "line": 230,
-          "column": 17,
-          "ownerComponentId": "ui.0044",
-          "tag": "button",
-          "staticClassTokens": [
-            "border",
-            "border-base-300/50",
-            "btn",
-            "btn-ghost",
-            "btn-xs",
-            "text-base-content/40",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:239:15:action",
-          "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
-          "line": 239,
-          "column": 15,
-          "ownerComponentId": "ui.0044",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx:125:13:action",
-          "source": "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
-          "line": 125,
-          "column": 13,
-          "ownerComponentId": "ui.0050",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-xs",
-            "gap-1",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "rounded-full",
-            "shrink-0"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx:133:15:action",
-          "source": "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
-          "line": 133,
-          "column": 15,
-          "ownerComponentId": "ui.0050",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-xs",
-            "gap-1",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "rounded-full",
-            "shrink-0"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx:142:15:action",
-          "source": "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
-          "line": 142,
-          "column": 15,
-          "ownerComponentId": "ui.0050",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-xs",
-            "gap-1",
-            "min-h-[44px]",
-            "min-w-[44px]",
-            "rounded-full",
-            "shrink-0"
-          ],
-          "dynamicClasses": true
         },
         {
           "id": "src/components/publicDashboard/LanguageSelector.tsx:29:9:action",
@@ -13609,85 +13276,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/BrowseJamsPage.tsx:166:13:action",
+          "id": "src/pages/BrowseJamsPage.tsx:275:17:action",
           "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 166,
-          "column": 13,
-          "ownerComponentId": "ui.0137",
-          "tag": "button",
-          "staticClassTokens": [
-            "tab"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:176:13:action",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 176,
-          "column": 13,
-          "ownerComponentId": "ui.0137",
-          "tag": "button",
-          "staticClassTokens": [
-            "tab"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:186:13:action",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 186,
-          "column": 13,
-          "ownerComponentId": "ui.0137",
-          "tag": "button",
-          "staticClassTokens": [
-            "tab"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:196:13:action",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 196,
-          "column": 13,
-          "ownerComponentId": "ui.0137",
-          "tag": "button",
-          "staticClassTokens": [
-            "tab"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:206:13:action",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 206,
-          "column": 13,
-          "ownerComponentId": "ui.0137",
-          "tag": "button",
-          "staticClassTokens": [
-            "tab"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:229:15:action",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 229,
-          "column": 15,
-          "ownerComponentId": "ui.0137",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "sm:text-sm",
-            "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:286:17:action",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 286,
+          "line": 275,
           "column": 17,
           "ownerComponentId": "ui.0137",
           "tag": "button",
@@ -13703,98 +13294,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/JamRegisterPage.tsx:121:11:action",
-          "source": "src/pages/JamRegisterPage.tsx",
-          "line": 121,
-          "column": 11,
-          "ownerComponentId": "ui.0146",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "mt-4"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/JamRegisterPage.tsx:134:11:action",
-          "source": "src/pages/JamRegisterPage.tsx",
-          "line": 134,
-          "column": 11,
-          "ownerComponentId": "ui.0146",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "mb-4"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:331:17:action",
+          "id": "src/pages/MusicPage.tsx:449:17:action",
           "source": "src/pages/MusicPage.tsx",
-          "line": 331,
-          "column": 17,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "flex-1",
-            "sm:flex-none"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:340:17:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 340,
-          "column": 17,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-secondary",
-            "flex-1",
-            "sm:flex-none"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:348:17:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 348,
-          "column": 17,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-secondary",
-            "flex-1",
-            "sm:flex-none"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:360:13:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 360,
-          "column": 13,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "btn-warning",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:439:17:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 439,
+          "line": 449,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13806,9 +13308,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:446:17:action",
+          "id": "src/pages/MusicPage.tsx:456:17:action",
           "source": "src/pages/MusicPage.tsx",
-          "line": 446,
+          "line": 456,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13820,9 +13322,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:471:17:action",
+          "id": "src/pages/MusicPage.tsx:481:17:action",
           "source": "src/pages/MusicPage.tsx",
-          "line": 471,
+          "line": 481,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13834,9 +13336,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:478:17:action",
+          "id": "src/pages/MusicPage.tsx:488:17:action",
           "source": "src/pages/MusicPage.tsx",
-          "line": 478,
+          "line": 488,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13844,52 +13346,6 @@
             "btn",
             "btn-sm",
             "join-item"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:521:13:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 521,
-          "column": 13,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "absolute",
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm",
-            "right-2",
-            "top-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:541:27:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 541,
-          "column": 27,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "btn-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:548:27:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 548,
-          "column": 27,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "btn-sm"
           ],
           "dynamicClasses": false
         },
@@ -14515,86 +13971,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/JamDetailPageV2.tsx:291:29:action",
-          "source": "src/pages/tabs/JamDetailPageV2.tsx",
-          "line": 291,
-          "column": 29,
-          "ownerComponentId": "ui.0160",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "btn-square",
-            "mt-0.5",
-            "shrink-0"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/JamDetailPageV2.tsx:301:25:action",
-          "source": "src/pages/tabs/JamDetailPageV2.tsx",
-          "line": 301,
-          "column": 25,
-          "ownerComponentId": "ui.0160",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "btn-square",
-            "shrink-0"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/JamDetailPageV2.tsx:338:37:action",
-          "source": "src/pages/tabs/JamDetailPageV2.tsx",
-          "line": 338,
-          "column": 37,
-          "ownerComponentId": "ui.0160",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "btn-sm",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/JamDetailPageV2.tsx:369:33:action",
-          "source": "src/pages/tabs/JamDetailPageV2.tsx",
-          "line": 369,
-          "column": 33,
-          "ownerComponentId": "ui.0160",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-xs",
-            "mt-1",
-            "text-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/JamDetailPageV2.tsx:455:45:action",
-          "source": "src/pages/tabs/JamDetailPageV2.tsx",
-          "line": 455,
-          "column": 45,
-          "ownerComponentId": "ui.0160",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "btn-primary",
-            "btn-xs",
-            "shrink-0"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/pages/tabs/OverviewTab.tsx:101:21:action",
           "source": "src/pages/tabs/OverviewTab.tsx",
           "line": 101,
@@ -14853,23 +14229,6 @@
       "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/JamCard.tsx:45:11:badge",
-          "source": "src/components/JamCard.tsx",
-          "line": 45,
-          "column": 11,
-          "ownerComponentId": "ui.0051",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm",
-            "flex-shrink-0",
-            "font-semibold",
-            "lg:badge-lg",
-            "sm:badge-md"
-          ],
-          "dynamicClasses": true
-        },
-        {
           "id": "src/components/JamCardSkeleton.tsx:15:11:badge",
           "source": "src/components/JamCardSkeleton.tsx",
           "line": 15,
@@ -14887,36 +14246,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/JamContextDisplay.tsx:84:11:badge",
-          "source": "src/components/JamContextDisplay.tsx",
-          "line": 84,
-          "column": 11,
-          "ownerComponentId": "ui.0053",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-outline"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicCard.tsx:72:9:badge",
-          "source": "src/components/MusicCard.tsx",
-          "line": 72,
-          "column": 9,
-          "ownerComponentId": "ui.0057",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-outline",
-            "badge-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicTable.tsx:106:11:badge",
+          "id": "src/components/MusicTable.tsx:112:11:badge",
           "source": "src/components/MusicTable.tsx",
-          "line": 106,
+          "line": 112,
           "column": 11,
           "ownerComponentId": "ui.0065",
           "tag": "span",
@@ -14924,50 +14256,6 @@
             "badge",
             "badge-sm",
             "gap-0.5"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicianProfileModal.tsx:104:19:badge",
-          "source": "src/components/MusicianProfileModal.tsx",
-          "line": 104,
-          "column": 19,
-          "ownerComponentId": "ui.0061",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-outline",
-            "badge-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicianProfileModal.tsx:141:19:badge",
-          "source": "src/components/MusicianProfileModal.tsx",
-          "line": 141,
-          "column": 19,
-          "ownerComponentId": "ui.0061",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-outline",
-            "badge-primary",
-            "badge-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicianProfileModal.tsx:76:17:badge",
-          "source": "src/components/MusicianProfileModal.tsx",
-          "line": 76,
-          "column": 17,
-          "ownerComponentId": "ui.0061",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-ghost",
-            "badge-sm",
-            "mt-1"
           ],
           "dynamicClasses": false
         },
@@ -15021,19 +14309,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/CollapsibleSection.tsx:46:21:badge",
-          "source": "src/components/jam-detail-v2/CollapsibleSection.tsx",
-          "line": 46,
-          "column": 21,
-          "ownerComponentId": "ui.0034",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/jam-detail-v2/DualActionFAB.tsx:140:17:badge",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
           "line": 140,
@@ -15047,60 +14322,6 @@
             "border-0",
             "tabular-nums",
             "text-primary-content"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx:105:19:badge",
-          "source": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
-          "line": 105,
-          "column": 19,
-          "ownerComponentId": "ui.0040",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm",
-            "flex-shrink-0"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx:85:23:badge",
-          "source": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
-          "line": 85,
-          "column": 23,
-          "ownerComponentId": "ui.0040",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm",
-            "badge-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineItem.tsx:37:11:badge",
-          "source": "src/components/jam-detail-v2/TimelineItem.tsx",
-          "line": 37,
-          "column": 11,
-          "ownerComponentId": "ui.0043",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineItem.tsx:87:15:badge",
-          "source": "src/components/jam-detail-v2/TimelineItem.tsx",
-          "line": 87,
-          "column": 15,
-          "ownerComponentId": "ui.0043",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-outline",
-            "badge-sm"
           ],
           "dynamicClasses": false
         },
@@ -15394,81 +14615,6 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/pages/BrowseJamsPage.tsx:220:13:badge",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 220,
-          "column": 13,
-          "ownerComponentId": "ui.0137",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-primary",
-            "badge-sm",
-            "lg:badge-lg",
-            "sm:badge-md",
-            "sm:text-sm",
-            "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:269:19:badge",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 269,
-          "column": 19,
-          "ownerComponentId": "ui.0137",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-primary",
-            "badge-sm",
-            "ml-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:301:19:badge",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 301,
-          "column": 19,
-          "ownerComponentId": "ui.0137",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-ghost",
-            "badge-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:365:15:badge",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 365,
-          "column": 15,
-          "ownerComponentId": "ui.0149",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:537:43:badge",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 537,
-          "column": 43,
-          "ownerComponentId": "ui.0149",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-outline",
-            "badge-sm",
-            "mt-1"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/pages/host/HostDashboardPage.tsx:293:21:badge",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 293,
@@ -15591,9 +14737,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/JamCard.tsx:40:5:card",
+          "id": "src/components/JamCard.tsx:61:5:card",
           "source": "src/components/JamCard.tsx",
-          "line": 40,
+          "line": 61,
           "column": 5,
           "ownerComponentId": "ui.0051",
           "tag": "div",
@@ -15622,9 +14768,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/JamContextDisplay.tsx:25:5:card",
+          "id": "src/components/JamContextDisplay.tsx:45:5:card",
           "source": "src/components/JamContextDisplay.tsx",
-          "line": 25,
+          "line": 45,
           "column": 5,
           "ownerComponentId": "ui.0053",
           "tag": "div",
@@ -15636,9 +14782,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:101:5:card",
+          "id": "src/components/MusicCard.tsx:103:5:card",
           "source": "src/components/MusicCard.tsx",
-          "line": 101,
+          "line": 103,
           "column": 5,
           "ownerComponentId": "ui.0057",
           "tag": "MusicDataCard",
@@ -15653,22 +14799,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicEmptyState.tsx:16:5:card",
-          "source": "src/components/MusicEmptyState.tsx",
-          "line": 16,
-          "column": 5,
-          "ownerComponentId": "ui.0059",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicFilters.tsx:34:5:card",
+          "id": "src/components/MusicFilters.tsx:36:5:card",
           "source": "src/components/MusicFilters.tsx",
-          "line": 34,
+          "line": 36,
           "column": 5,
           "ownerComponentId": "ui.0060",
           "tag": "div",
@@ -15767,9 +14900,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/CollapsibleSection.tsx:36:5:card",
+          "id": "src/components/jam-detail-v2/CollapsibleSection.tsx:37:5:card",
           "source": "src/components/jam-detail-v2/CollapsibleSection.tsx",
-          "line": 36,
+          "line": 37,
           "column": 5,
           "ownerComponentId": "ui.0034",
           "tag": "div",
@@ -15838,9 +14971,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/TimelineItem.tsx:27:5:card",
+          "id": "src/components/jam-detail-v2/TimelineItem.tsx:42:5:card",
           "source": "src/components/jam-detail-v2/TimelineItem.tsx",
-          "line": 27,
+          "line": 42,
           "column": 5,
           "ownerComponentId": "ui.0043",
           "tag": "div",
@@ -15856,9 +14989,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:107:5:card",
+          "id": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:113:5:card",
           "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
-          "line": 107,
+          "line": 113,
           "column": 5,
           "ownerComponentId": "ui.0044",
           "tag": "div",
@@ -15876,34 +15009,6 @@
             "w-full"
           ],
           "dynamicClasses": true
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineShowcase.tsx:146:5:card",
-          "source": "src/components/jam-detail-v2/TimelineShowcase.tsx",
-          "line": 146,
-          "column": 5,
-          "ownerComponentId": "ui.0045",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-gradient-to-br",
-            "card",
-            "from-base-200",
-            "to-base-300"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx:245:5:card",
-          "source": "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
-          "line": 245,
-          "column": 5,
-          "ownerComponentId": "ui.0049",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card"
-          ],
-          "dynamicClasses": false
         },
         {
           "id": "src/components/schedule/ScheduleCardManagement.tsx:39:9:card",
@@ -15945,9 +15050,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/JamRegisterPage.tsx:151:11:card",
+          "id": "src/pages/JamRegisterPage.tsx:152:11:card",
           "source": "src/pages/JamRegisterPage.tsx",
-          "line": 151,
+          "line": 152,
           "column": 11,
           "ownerComponentId": "ui.0146",
           "tag": "div",
@@ -15984,9 +15089,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:295:11:card",
+          "id": "src/pages/MusicPage.tsx:300:11:card",
           "source": "src/pages/MusicPage.tsx",
-          "line": 295,
+          "line": 300,
           "column": 11,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -15999,9 +15104,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:303:15:card",
+          "id": "src/pages/MusicPage.tsx:308:15:card",
           "source": "src/pages/MusicPage.tsx",
-          "line": 303,
+          "line": 308,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -16013,10 +15118,10 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:531:19:card",
+          "id": "src/pages/MusicPage.tsx:545:15:card",
           "source": "src/pages/MusicPage.tsx",
-          "line": 531,
-          "column": 19,
+          "line": 545,
+          "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "div",
           "staticClassTokens": [
@@ -16436,97 +15541,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/EditMusicianModal.tsx:105:11:field",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 105,
-          "column": 11,
-          "ownerComponentId": "ui.0018",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/EditMusicianModal.tsx:122:13:field",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 122,
-          "column": 13,
-          "ownerComponentId": "ui.0018",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/EditMusicianModal.tsx:142:13:field",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 142,
-          "column": 13,
-          "ownerComponentId": "ui.0018",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/EditMusicianModal.tsx:163:13:field",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 163,
-          "column": 13,
-          "ownerComponentId": "ui.0018",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/EditMusicianModal.tsx:178:13:field",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 178,
-          "column": 13,
-          "ownerComponentId": "ui.0018",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/EditMusicianModal.tsx:195:11:field",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 195,
-          "column": 11,
-          "ownerComponentId": "ui.0018",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/EditMusicianModal.tsx:212:11:field",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 212,
-          "column": 11,
-          "ownerComponentId": "ui.0018",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "textarea",
-            "textarea-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/FeedbackModal.tsx:144:19:field",
           "source": "src/components/FeedbackModal.tsx",
           "line": 144,
@@ -16537,169 +15551,6 @@
             "bg-warning",
             "mask",
             "mask-star-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicFilters.tsx:43:13:field",
-          "source": "src/components/MusicFilters.tsx",
-          "line": 43,
-          "column": 13,
-          "ownerComponentId": "ui.0060",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "sm:input-md",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicFilters.tsx:60:15:field",
-          "source": "src/components/MusicFilters.tsx",
-          "line": 60,
-          "column": 15,
-          "ownerComponentId": "ui.0060",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "select-sm",
-            "sm:select-md",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicFilters.tsx:81:15:field",
-          "source": "src/components/MusicFilters.tsx",
-          "line": 81,
-          "column": 15,
-          "ownerComponentId": "ui.0060",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "select-sm",
-            "sm:select-md",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModalFormFields.tsx:106:11:field",
-          "source": "src/components/MusicModalFormFields.tsx",
-          "line": 106,
-          "column": 11,
-          "ownerComponentId": "ui.0063",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModalFormFields.tsx:124:11:field",
-          "source": "src/components/MusicModalFormFields.tsx",
-          "line": 124,
-          "column": 11,
-          "ownerComponentId": "ui.0063",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "min-h-[80px]",
-            "textarea",
-            "textarea-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModalFormFields.tsx:145:13:field",
-          "source": "src/components/MusicModalFormFields.tsx",
-          "line": 145,
-          "column": 13,
-          "ownerComponentId": "ui.0063",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModalFormFields.tsx:165:13:field",
-          "source": "src/components/MusicModalFormFields.tsx",
-          "line": 165,
-          "column": 13,
-          "ownerComponentId": "ui.0063",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModalFormFields.tsx:195:15:field",
-          "source": "src/components/MusicModalFormFields.tsx",
-          "line": 195,
-          "column": 15,
-          "ownerComponentId": "ui.0063",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModalFormFields.tsx:54:11:field",
-          "source": "src/components/MusicModalFormFields.tsx",
-          "line": 54,
-          "column": 11,
-          "ownerComponentId": "ui.0063",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModalFormFields.tsx:71:11:field",
-          "source": "src/components/MusicModalFormFields.tsx",
-          "line": 71,
-          "column": 11,
-          "ownerComponentId": "ui.0063",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicModalFormFields.tsx:89:11:field",
-          "source": "src/components/MusicModalFormFields.tsx",
-          "line": 89,
-          "column": 11,
-          "ownerComponentId": "ui.0063",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "min-h-[80px]",
-            "textarea",
-            "textarea-bordered",
-            "w-full"
           ],
           "dynamicClasses": false
         },
@@ -16794,163 +15645,15 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/SpotifyExportModal.tsx:138:13:field",
+          "id": "src/components/SpotifyExportModal.tsx:161:15:field",
           "source": "src/components/SpotifyExportModal.tsx",
-          "line": 138,
-          "column": 13,
-          "ownerComponentId": "ui.0127",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyExportModal.tsx:152:13:field",
-          "source": "src/components/SpotifyExportModal.tsx",
-          "line": 152,
-          "column": 13,
-          "ownerComponentId": "ui.0127",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "h-20",
-            "resize-none",
-            "textarea",
-            "textarea-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyExportModal.tsx:165:15:field",
-          "source": "src/components/SpotifyExportModal.tsx",
-          "line": 165,
+          "line": 161,
           "column": 15,
           "ownerComponentId": "ui.0127",
           "tag": "input",
           "staticClassTokens": [
             "toggle",
             "toggle-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:295:11:field",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 295,
-          "column": 11,
-          "ownerComponentId": "ui.0128",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:310:15:field",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 310,
-          "column": 15,
-          "ownerComponentId": "ui.0128",
-          "tag": "input",
-          "staticClassTokens": [
-            "bg-base-200",
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:317:15:field",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 317,
-          "column": 15,
-          "ownerComponentId": "ui.0128",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:354:19:field",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 354,
-          "column": 19,
-          "ownerComponentId": "ui.0128",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:366:19:field",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 366,
-          "column": 19,
-          "ownerComponentId": "ui.0128",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "h-20",
-            "resize-none",
-            "textarea",
-            "textarea-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:377:19:field",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 377,
-          "column": 19,
-          "ownerComponentId": "ui.0128",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:388:19:field",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 388,
-          "column": 19,
-          "ownerComponentId": "ui.0128",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyImportModal.tsx:404:21:field",
-          "source": "src/components/SpotifyImportModal.tsx",
-          "line": 404,
-          "column": 21,
-          "ownerComponentId": "ui.0128",
-          "tag": "input",
-          "staticClassTokens": [
-            "flex-1",
-            "font-mono",
-            "input",
-            "input-bordered",
-            "min-w-0",
-            "rounded-l-none",
-            "text-sm"
           ],
           "dynamicClasses": false
         },
@@ -17014,20 +15717,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/SuggestNewSongModal.tsx:266:13:field",
-          "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
-          "line": 266,
-          "column": 13,
-          "ownerComponentId": "ui.0041",
-          "tag": "input",
-          "staticClassTokens": [
-            "flex-1",
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "src/components/schedule/NotesEditor.tsx:30:9:field",
           "source": "src/components/schedule/NotesEditor.tsx",
           "line": 30,
@@ -17044,48 +15733,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/BrowseJamsPage.tsx:143:13:field",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 143,
-          "column": 13,
-          "ownerComponentId": "ui.0137",
-          "tag": "input",
-          "staticClassTokens": [
-            "flex-1",
-            "input",
-            "input-bordered",
-            "input-sm",
-            "min-h-[44px]",
-            "sm:input-md",
-            "sm:text-sm",
-            "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:152:13:field",
-          "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 152,
-          "column": 13,
-          "ownerComponentId": "ui.0137",
-          "tag": "select",
-          "staticClassTokens": [
-            "min-h-[44px]",
-            "select",
-            "select-bordered",
-            "select-sm",
-            "sm:select-md",
-            "sm:text-sm",
-            "sm:w-48",
-            "text-xs",
-            "w-40"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:422:15:field",
+          "id": "src/pages/MusicPage.tsx:432:15:field",
           "source": "src/pages/MusicPage.tsx",
-          "line": 422,
+          "line": 432,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "select",
@@ -17097,9 +15747,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:456:17:field",
+          "id": "src/pages/MusicPage.tsx:466:17:field",
           "source": "src/pages/MusicPage.tsx",
-          "line": 456,
+          "line": 466,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "input",
@@ -17544,39 +16194,6 @@
             "z-10"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/JamDetailPageV2.tsx:326:29:menu",
-          "source": "src/pages/tabs/JamDetailPageV2.tsx",
-          "line": 326,
-          "column": 29,
-          "ownerComponentId": "ui.0160",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-bottom"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/JamDetailPageV2.tsx:335:33:menu",
-          "source": "src/pages/tabs/JamDetailPageV2.tsx",
-          "line": 335,
-          "column": 33,
-          "ownerComponentId": "ui.0160",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-100",
-            "dropdown-content",
-            "max-w-[90vw]",
-            "menu",
-            "p-3",
-            "rounded-box",
-            "shadow-lg",
-            "w-72",
-            "z-50"
-          ],
-          "dynamicClasses": false
         }
       ]
     },
@@ -17610,19 +16227,6 @@
             "ds-overlay--"
           ],
           "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:518:9:modal",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 518,
-          "column": 9,
-          "ownerComponentId": "ui.0149",
-          "tag": "dialog",
-          "staticClassTokens": [
-            "modal",
-            "modal-open"
-          ],
-          "dynamicClasses": false
         },
         {
           "id": "src/pages/host/HostJamSongsPage.tsx:165:11:modal",

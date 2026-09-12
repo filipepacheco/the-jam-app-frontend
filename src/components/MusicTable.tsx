@@ -9,6 +9,8 @@ import {useTranslation} from 'react-i18next'
 import {formatDuration} from '../lib/formatters'
 import {getInstrumentCounts, getInstrumentIcon} from '../lib/schedule/instrumentHelpers'
 import {SpotifyPlayButton, isSpotifyTrackLink} from './SpotifyPreview'
+import {Action} from './Action'
+import {Badge} from './data-display'
 
 interface MusicTableRowProps {
   music: MusicResponseDto
@@ -34,7 +36,7 @@ memo(function MusicTableRow({
       <td className="truncate" title={music.artist}>{music.artist}</td>
       <td className="hidden sm:table-cell">
         {music.genre ? (
-          <span className="badge badge-outline badge-sm">{music.genre}</span>
+          <Badge size="sm">{music.genre}</Badge>
         ) : (
           <span className="text-xs text-base-content/40">-</span>
         )}
@@ -46,6 +48,9 @@ memo(function MusicTableRow({
             isSpotifyTrackLink(music.link) ? (
               <SpotifyPlayButton link={music.link} title={music.title} />
             ) : (
+              // Kept as a native anchor: Action/IconAction render only a <button>, and this
+              // control must keep native link semantics (browser context menu, Cmd/Ctrl-click,
+              // status-bar preview) for an external link. See jam-music-migration.md.
               <a
                 href={music.link}
                 target="_blank"
@@ -62,11 +67,9 @@ memo(function MusicTableRow({
         </div>
       </td>
       <td>
-        <span
-          className={`badge badge-sm ${music.status === 'SUGGESTED' ? 'badge-warning' : 'badge-success'}`}
-        >
+        <Badge tone={music.status === 'SUGGESTED' ? 'warning' : 'success'} size="sm">
           {music.status === 'SUGGESTED' ? '💡' : '✓'} {music.status === 'SUGGESTED' ? t('common.statuses.suggested') : t('common.statuses.approved')}
-        </span>
+        </Badge>
       </td>
       <td>
         <MusiciansBadges music={music} />
@@ -93,6 +96,9 @@ interface MusiciansBadgesProps {
   music: MusicResponseDto
 }
 
+// Dense inline badge row sized for a table cell; kept hand-rolled rather than the canonical
+// `Badge` because several badges must fit one table row (see jam-music-migration.md, matching
+// the precedent set for `InstrumentBadges` in the Schedule migration).
 export const MusiciansBadges = memo(function MusiciansBadges({ music }: MusiciansBadgesProps) {
   const { t } = useTranslation()
   const instrumentCounts = getInstrumentCounts(music, t)
@@ -141,37 +147,21 @@ function MusicActionButtons({
     <div className="flex gap-1">
       {isSuggested && isHost ? (
         <>
-          <button
-            onClick={() => { void onApprove?.(music) }}
-            className="btn btn-xs btn-success gap-1 min-h-[44px] min-w-[44px]"
-            title={t('common.approve')}
-          >
-            ✓ <span className="hidden xl:inline">{t('common.approve')}</span>
-          </button>
-          <button
-            onClick={() => onReject?.(music)}
-            className="btn btn-xs btn-ghost text-error hover:bg-error/10 gap-1 min-h-[44px] min-w-[44px]"
-            title={t('common.reject')}
-          >
-            ✕ <span className="hidden xl:inline">{t('common.reject')}</span>
-          </button>
+          <Action onClick={() => { void onApprove?.(music) }} variant="primary" className="gap-1" title={t('common.approve')}>
+            <Action.Label>✓ <span className="hidden xl:inline">{t('common.approve')}</span></Action.Label>
+          </Action>
+          <Action onClick={() => onReject?.(music)} variant="quiet" className="gap-1" title={t('common.reject')}>
+            <Action.Label>✕ <span className="hidden xl:inline">{t('common.reject')}</span></Action.Label>
+          </Action>
         </>
       ) : isHost && !isSuggested ? (
         <>
-          <button
-            onClick={() => onEdit(music)}
-            className="btn btn-xs btn-ghost gap-1 min-h-[44px] min-w-[44px]"
-            title={t('common.edit')}
-          >
-            ✏️ <span className="hidden xl:inline">{t('common.edit')}</span>
-          </button>
-          <button
-            onClick={() => onDelete(music)}
-            className="btn btn-xs btn-ghost text-error hover:bg-error/10 gap-1 min-h-[44px] min-w-[44px]"
-            title={t('common.delete')}
-          >
-            🗑️ <span className="hidden xl:inline">{t('common.delete')}</span>
-          </button>
+          <Action onClick={() => onEdit(music)} variant="quiet" className="gap-1" title={t('common.edit')}>
+            <Action.Label>✏️ <span className="hidden xl:inline">{t('common.edit')}</span></Action.Label>
+          </Action>
+          <Action onClick={() => onDelete(music)} variant="quiet" className="gap-1" title={t('common.delete')}>
+            <Action.Label>🗑️ <span className="hidden xl:inline">{t('common.delete')}</span></Action.Label>
+          </Action>
         </>
       ) : (
         <span className="text-xs text-base-content/40">-</span>

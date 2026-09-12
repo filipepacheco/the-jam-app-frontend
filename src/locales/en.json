@@ -600,6 +600,7 @@
     "other_instruments_placeholder": "e.g. piano, ukulele, harmonica"
   },
   "musician_profile": {
+    "loading": "Loading profile…",
     "title": "Musician Profile",
     "bio": "About",
     "other_instruments": "Other instruments",
