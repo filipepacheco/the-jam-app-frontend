@@ -46,7 +46,7 @@ export function JamContextDisplay({ jam }: JamContextDisplayProps) {
       <div className="card-body">
         {/* Jam Name and Date */}
         <div className="mb-4">
-          <h2 className="text-3xl font-bold">{jam.name}</h2>
+          <h2 className="ds-type-heading ds-wrap-user-content font-bold">{jam.name}</h2>
           <p className="text-base-content/70 mt-2">{jam.date || t('jams.date_tba')}</p>
         </div>
 
@@ -85,8 +85,8 @@ export function JamContextDisplay({ jam }: JamContextDisplayProps) {
                   key={schedule.id}
                   className="p-3 rounded-lg bg-primary/10 border border-primary/20"
                 >
-                  <p className="font-semibold text-sm">{schedule.music?.title || t('schedule.song_tba')}</p>
-                  <p className="text-xs text-base-content/70">
+                  <p className="ds-wrap-user-content font-semibold text-sm">{schedule.music?.title || t('schedule.song_tba')}</p>
+                  <p className="ds-wrap-user-content text-xs text-base-content/70">
                     {schedule.music?.artist || t('schedule.artist_tba')}
                   </p>
                 </div>
@@ -107,6 +107,5 @@ export function JamContextDisplay({ jam }: JamContextDisplayProps) {
     </div>
   )
 }
-
 
 

@@ -49,7 +49,7 @@ export const SpotifyPreview = memo(function SpotifyPreview({
   if (!trackId) return null
 
   const spotifyUrl = `https://open.spotify.com/track/${trackId}`
-  const buttonSize = size === 'sm' ? 'btn-xs' : 'btn-sm'
+  const iconSize = size === 'sm' ? 'w-4 h-4' : 'w-5 h-5'
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -64,10 +64,10 @@ export const SpotifyPreview = memo(function SpotifyPreview({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleClick}
-      className={`btn ${buttonSize} btn-ghost gap-1 text-[#1DB954] hover:bg-[#1DB954]/10`}
+      className="btn btn-ghost ds-control ds-focusable gap-1 text-success hover:bg-success/10"
       title={`Open "${title || 'track'}" in Spotify`}
     >
-      <SpotifyLogo className={size === 'sm' ? 'w-4 h-4' : 'w-5 h-5'} />
+      <SpotifyLogo className={iconSize} />
       <span className="hidden sm:inline">Spotify</span>
     </a>
   )
@@ -97,7 +97,7 @@ export const SpotifyPlayButton = memo(function SpotifyPlayButton({
       target="_blank"
       rel="noopener noreferrer"
       onClick={handleClick}
-      className="btn btn-circle btn-xs btn-ghost text-[#1DB954] hover:bg-[#1DB954]/20"
+      className="btn btn-circle btn-ghost ds-control ds-focusable text-success hover:bg-success/20"
       title={`Open "${title || 'track'}" in Spotify`}
       aria-label={`Open ${title || 'track'} in Spotify`}
     >

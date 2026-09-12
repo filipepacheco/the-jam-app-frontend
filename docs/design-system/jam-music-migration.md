@@ -181,6 +181,41 @@ The request-level error keeps the shared `Alert` plus `useFormState` pattern.
 a `Field` form. To change this error path is a larger behavior change than this
 ticket needs.
 
+## Issue #56 visual normalization
+
+Issue #56 applies the established foundation rules after the structural
+migration and the issue #55 contraction. It does not change requests, routes,
+permissions, callbacks, or product copy.
+
+- `MusicCard` and the suggested-song review now use the canonical music data
+  surface without a second generic card shell. Song titles, artists,
+  descriptions, and performance notes use the user-content wrapping rule. This
+  keeps the music title as the primary reading target instead of turning it into
+  clipped dashboard metadata.
+- Jam-context and Jam-detail page titles use the documented heading foundation.
+  The foundation now includes heading and subheading classes for the existing
+  type tokens, so this change retains a distinct page hierarchy after the
+  browser heading reset.
+- The active timeline gives its title the flexible column at phone width and
+  moves status beneath it until the desktop three-column arrangement is
+  available. Performer names and choice-card titles also wrap. This preserves a
+  readable tap target with localized and unbroken content.
+- The Music filter clear action keeps its text label at every width. On phones
+  it moves to its own row rather than making the filter controls or their label
+  too narrow.
+- Native Spotify and route anchors remain anchors under the existing anchor
+  exception. Their hit areas and focus treatment now use the foundation control
+  contract, and Spotify preview controls use the semantic success role instead
+  of a raw provider color.
+
+Workbench coverage remains intentionally component-level and deterministic:
+`Domain/Music/Library/LongContentForViewer`,
+`Domain/Music/Library/FilteredPhoneLayout`,
+`Domain/Jam/Performance timeline/CompleteSchedule`,
+`Domain/Jam/Summary and actions/LongTranslatedSummary`, and
+`Overlays/Jam forms/LongPerformanceChoice` cover the long-content, phone,
+localized, reference-theme, and action states touched here.
+
 ## Required decisions
 
 ### 1. `TimelineShowcase` and `TimelineItem` against the waveform pair
