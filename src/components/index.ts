@@ -26,6 +26,25 @@ export type {
 } from './FeedbackStates'
 export { Action, IconAction } from './Action'
 export type { ActionProps, ActionState, ActionVariant, IconActionProps } from './Action'
+export {
+  Badge,
+  CompactMetadata,
+  DataCard,
+  ListRow,
+  StatusIndicator,
+} from './data-display'
+export type {
+  BadgeProps,
+  BadgeSize,
+  CompactMetadataItem,
+  CompactMetadataProps,
+  DataCardProps,
+  DataDisplayDensity,
+  DataDisplayTone,
+  ListRowProps,
+  StatusIndicatorProps,
+  StatusTone,
+} from './data-display'
 
 export {
   ProtectedRoute,

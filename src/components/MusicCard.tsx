@@ -12,6 +12,7 @@ import { formatDuration } from '../lib/formatters'
 import { getInstrumentIcon, getInstrumentCounts } from '../lib/schedule/instrumentHelpers'
 import { SpotifyPreview, isSpotifyTrackLink } from './SpotifyPreview'
 import { QuickEditPanel } from './QuickEditPanel'
+import { MusicDataCard, MusicStatusIndicator } from './music/MusicDataDisplay'
 
 interface MusicCardProps {
   music: MusicResponseDto
@@ -51,7 +52,7 @@ export const MusicCard = memo(function MusicCard({
 
   const instrumentCounts = useMemo(
     () => getInstrumentCounts(music, t).filter(inst => inst.count > 0),
-    [music.neededDrums, music.neededGuitars, music.neededVocals, music.neededBass, music.neededKeys, t],
+    [music, t],
   )
 
   // Check if link is a Spotify track (playable preview)
@@ -97,7 +98,7 @@ export const MusicCard = memo(function MusicCard({
   )
 
   return (
-    <div className="card bg-base-100 border border-base-200 shadow-sm compact">
+    <MusicDataCard music={music} className="card bg-base-100 border border-base-200 shadow-sm compact">
       <div className="card-body p-3">
         {/* Main row: content + actions */}
         <div className="flex items-center gap-2">
@@ -107,6 +108,7 @@ export const MusicCard = memo(function MusicCard({
               <h3 className="font-bold text-base leading-tight truncate">{music.title}</h3>
               <p className="text-sm text-base-content/70 truncate">{music.artist}</p>
             </div>
+            {music.status && <MusicStatusIndicator status={music.status} />}
             <div className="hidden sm:block">{metaInfo}</div>
           </div>
 
@@ -186,6 +188,6 @@ export const MusicCard = memo(function MusicCard({
           />
         )}
       </div>
-    </div>
+    </MusicDataCard>
   )
 })

@@ -3473,6 +3473,7 @@
         "internal": [
           "src/components/QuickEditPanel.tsx",
           "src/components/SpotifyPreview.tsx",
+          "src/components/music/MusicDataDisplay.tsx",
           "src/lib/formatters.ts",
           "src/lib/schedule/instrumentHelpers.tsx"
         ],
@@ -10590,6 +10591,549 @@
           "Reviewed in Feedback/Persistent recovery states, States/Loading, and States/Empty state with live-region and Action-family recovery coverage."
         ]
       }
+    },
+    {
+      "id": "ui.0174",
+      "name": "Badge",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "Badge",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Badge",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/music/MusicDataDisplay.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0175",
+      "name": "StatusIndicator",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "StatusIndicator",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "StatusIndicator",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/music/MusicDataDisplay.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0176",
+      "name": "DataCard",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "DataCard",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "DataCard",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/music/MusicDataDisplay.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0177",
+      "name": "ListRow",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "ListRow",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "ListRow",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0178",
+      "name": "CompactMetadata",
+      "source": "src/components/data-display/index.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "CompactMetadata",
+          "module": "src/components/data-display/index.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "CompactMetadata",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/music/MusicDataDisplay.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/DataDisplay.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "semantic tones",
+          "compact",
+          "comfortable",
+          "selected",
+          "interactive",
+          "long content",
+          "responsive"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Reviewed in Foundations/Data display with Jam, Music, Schedule, and Public Dashboard content across phone, desktop, and venue contexts."
+        ]
+      }
+    },
+    {
+      "id": "ui.0179",
+      "name": "MusicBadge",
+      "source": "src/components/music/MusicDataDisplay.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "MusicBadge",
+          "module": "src/components/music/MusicDataDisplay.tsx"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "active",
+        "productArea": "music",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "approved",
+          "suggested",
+          "selected",
+          "shared-display"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."
+        ]
+      }
+    },
+    {
+      "id": "ui.0180",
+      "name": "MusicStatusIndicator",
+      "source": "src/components/music/MusicDataDisplay.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "MusicStatusIndicator",
+          "module": "src/components/music/MusicDataDisplay.tsx"
+        }
+      ],
+      "consumers": [
+        "src/components/MusicCard.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "active",
+        "productArea": "music",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "approved",
+          "suggested",
+          "selected",
+          "shared-display"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."
+        ]
+      }
+    },
+    {
+      "id": "ui.0181",
+      "name": "MusicCompactMetadata",
+      "source": "src/components/music/MusicDataDisplay.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "MusicCompactMetadata",
+          "module": "src/components/music/MusicDataDisplay.tsx"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/index.tsx",
+          "src/lib/formatters.ts",
+          "src/types/api.types.ts"
+        ],
+        "external": [
+          "react-i18next"
+        ],
+        "contexts": [
+          "internationalization"
+        ]
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "active",
+        "productArea": "music",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "approved",
+          "suggested",
+          "selected",
+          "shared-display"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."
+        ]
+      }
+    },
+    {
+      "id": "ui.0182",
+      "name": "MusicDataCard",
+      "source": "src/components/music/MusicDataDisplay.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "MusicDataCard",
+          "module": "src/components/music/MusicDataDisplay.tsx"
+        }
+      ],
+      "consumers": [
+        "src/components/MusicCard.tsx",
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+        "src/workbench/stories/MusicLibrary.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "domain-component",
+        "lifecycle": "active",
+        "productArea": "music",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "approved",
+          "suggested",
+          "selected",
+          "shared-display"
+        ],
+        "candidateFamily": "data-display",
+        "notes": [
+          "Jam App domain mappings keep music status meaning in one place and are exercised by the MusicCard production consumer and Foundations/Data display."
+        ]
+      }
     }
   ],
   "ignored": [
@@ -10662,6 +11206,10 @@
       "reason": "Private Storybook reference for color and theme foundations; not product UI."
     },
     {
+      "source": "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
+      "reason": "Private Storybook composition demonstrating the canonical data-display family; not product UI."
+    },
+    {
       "source": "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
       "reason": "Private Storybook composition demonstrating interaction, accessibility, motion, and multilingual content standards; not product UI itself."
     },
@@ -10731,12 +11279,12 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 177,
-    "representedSources": 143,
-    "ignoredSources": 34,
+    "eligibleSources": 180,
+    "representedSources": 145,
+    "ignoredSources": 35,
     "workbench": {
-      "activeReusableVisualComponents": 112,
-      "ready": 95,
+      "activeReusableVisualComponents": 121,
+      "ready": 104,
       "exempt": 17,
       "needsReview": 0,
       "unknown": 0,
@@ -11142,9 +11690,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/MusicCard.tsx:118:19:action",
+          "id": "src/components/MusicCard.tsx:120:19:action",
           "source": "src/components/MusicCard.tsx",
-          "line": 118,
+          "line": 120,
           "column": 19,
           "ownerComponentId": "ui.0057",
           "tag": "button",
@@ -11159,9 +11707,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:126:19:action",
+          "id": "src/components/MusicCard.tsx:128:19:action",
           "source": "src/components/MusicCard.tsx",
-          "line": 126,
+          "line": 128,
           "column": 19,
           "ownerComponentId": "ui.0057",
           "tag": "button",
@@ -11177,9 +11725,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:137:19:action",
+          "id": "src/components/MusicCard.tsx:139:19:action",
           "source": "src/components/MusicCard.tsx",
-          "line": 137,
+          "line": 139,
           "column": 19,
           "ownerComponentId": "ui.0057",
           "tag": "button",
@@ -11194,9 +11742,9 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/MusicCard.tsx:146:19:action",
+          "id": "src/components/MusicCard.tsx:148:19:action",
           "source": "src/components/MusicCard.tsx",
-          "line": 146,
+          "line": 148,
           "column": 19,
           "ownerComponentId": "ui.0057",
           "tag": "button",
@@ -14274,9 +14822,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:71:9:badge",
+          "id": "src/components/MusicCard.tsx:72:9:badge",
           "source": "src/components/MusicCard.tsx",
-          "line": 71,
+          "line": 72,
           "column": 9,
           "ownerComponentId": "ui.0057",
           "tag": "span",
@@ -15052,12 +15600,12 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/MusicCard.tsx:100:5:card",
+          "id": "src/components/MusicCard.tsx:101:5:card",
           "source": "src/components/MusicCard.tsx",
-          "line": 100,
+          "line": 101,
           "column": 5,
           "ownerComponentId": "ui.0057",
-          "tag": "div",
+          "tag": "MusicDataCard",
           "staticClassTokens": [
             "bg-base-100",
             "border",
