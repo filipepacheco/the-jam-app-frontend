@@ -356,6 +356,8 @@
     {"id": "ui.0160", "source": "src/pages/tabs/JamDetailPageV2.tsx", "name": "JamDetailPageV2"},
     {"id": "ui.0161", "source": "src/pages/tabs/OverviewTab.tsx", "name": "OverviewTab"},
     {"id": "ui.0162", "source": "src/pages/tabs/RegistrationsTab.tsx", "name": "RegistrationsTab"},
-    {"id": "ui.0163", "source": "src/pages/tabs/ScheduleTab.tsx", "name": "ScheduleTab"}
+    {"id": "ui.0163", "source": "src/pages/tabs/ScheduleTab.tsx", "name": "ScheduleTab"},
+    {"id": "ui.0164", "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx", "name": "ActionableEmptyStateExample"},
+    {"id": "ui.0165", "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx", "name": "DestructiveActionExample"}
   ]
 }
