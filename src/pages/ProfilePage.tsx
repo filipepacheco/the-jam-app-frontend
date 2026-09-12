@@ -10,6 +10,7 @@ import type {AuthUser, UpdateProfileDto} from '../types/auth.types'
 import {ProfileHeader} from '../components/ProfileHeader'
 import {ProfileFormSection} from '../components/ProfileFormSection'
 import {Alert} from '../components'
+import {Action} from '../components/Action'
 
 import {useTranslation} from 'react-i18next'
 
@@ -97,6 +98,15 @@ export function ProfilePage() {
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-base-200 to-base-100 py-8 px-4">
+        {/*
+          Documented design-system exception (issue #50): this full-page
+          loading skeleton stays hand-rolled instead of the canonical
+          `Skeleton` primitive. `Skeleton` renders uniform full-width text
+          lines only, so it cannot reproduce the avatar circle, the two
+          card-shaped form sections, or the button row. Replacing it would
+          visibly change the loading silhouette. Same reasoning as
+          PageHeaderSkeleton.tsx.
+        */}
         <div className="max-w-2xl mx-auto animate-pulse">
           {/* Profile header skeleton */}
           <div className="flex flex-col items-center gap-4 mb-8">
@@ -256,37 +266,29 @@ export function ProfilePage() {
           {/* Action Buttons */}
           <div className="flex gap-3 justify-center pt-6">
             {!isEditMode ? (
-              <button
-                type="button"
-                onClick={handleEditToggle}
-                className="btn btn-primary btn-lg"
-              >
-                ✏️ {t('profile.edit_profile')}
-              </button>
+              <Action variant="primary" onClick={handleEditToggle}>
+                <span aria-hidden="true">✏️</span>
+                <Action.Label>{t('profile.edit_profile')}</Action.Label>
+              </Action>
             ) : (
               <>
-                <button
-                  type="button"
+                <Action
+                  variant="quiet"
                   onClick={handleEditToggle}
-                  disabled={isLoading}
-                  className="btn btn-ghost btn-lg"
+                  state={isLoading ? 'disabled' : 'idle'}
                 >
-                  {t('common.cancel')}
-                </button>
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="btn btn-primary btn-lg"
-                >
-                  {isLoading ? (
-                    <>
-                      <span className="loading loading-spinner loading-sm"></span>
-                      {t('common.saving')}
-                    </>
-                  ) : (
-                    <>💾 {t('common.save_changes')}</>
-                  )}
-                </button>
+                  <Action.Label>{t('common.cancel')}</Action.Label>
+                </Action>
+                {isLoading ? (
+                  <Action type="submit" variant="primary" state="loading" loadingLabel={t('common.saving')}>
+                    <Action.Label>{t('common.save_changes')}</Action.Label>
+                  </Action>
+                ) : (
+                  <Action type="submit" variant="primary">
+                    <span aria-hidden="true">💾</span>
+                    <Action.Label>{t('common.save_changes')}</Action.Label>
+                  </Action>
+                )}
               </>
             )}
           </div>

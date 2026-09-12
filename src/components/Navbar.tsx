@@ -55,7 +55,10 @@ function Navbar() {
 
   return (
     <nav className="navbar bg-base-100 shadow-lg px-2 sm:px-4 py-2 sm:py-3 gap-1 sm:gap-2 md:gap-3">
-      {/* Navbar Start - Logo */}
+      {/* Navbar Start - Logo. Stays a plain anchor: it is a brand mark, not
+          a product action or a NavigationLink destination in the tab set
+          above, and its enlarged logo-plus-wordmark styling does not match
+          either Action or NavigationLink's control sizing. */}
       <div className="navbar-start">
         <a href="/" className="btn btn-ghost text-base sm:text-lg md:text-xl">
           <img
@@ -89,7 +92,11 @@ function Navbar() {
       {/* Navbar End - Actions */}
       <div className="navbar-end gap-1 sm:gap-2 md:gap-3 flex-wrap md:flex-nowrap justify-end">
         {isLoading ? (
-          /* Skeleton placeholders while auth state loads */
+          /* Skeleton placeholders while auth state loads. The canonical
+             Skeleton (FeedbackStates.tsx) always renders full-width text
+             lines; it does not model this pill-plus-avatar shape, so
+             reproducing it here would change the loading silhouette. Kept
+             hand-rolled and documented as an exception. */
           <div className="hidden xl:flex items-center gap-2 animate-pulse">
             <div className="skeleton h-6 w-20 rounded" />
             <div className="skeleton h-8 w-8 rounded-full" />
@@ -102,7 +109,12 @@ function Navbar() {
             {/* Desktop User Menu */}
             <DesktopUserMenu className="hidden xl:inline-flex" />
 
-            {/* Register Button - Viewer/Anonymous Only */}
+            {/* Register Button - Viewer/Anonymous Only. Stays a real anchor
+                (not Action, which only renders a <button>) so the link
+                keeps true href navigation semantics (open in new tab,
+                right-click, no client-side preventDefault); its filled
+                primary-button look is also outside NavigationLink's pill
+                style, which is tuned for the tab set above, not a CTA. */}
             {isViewer() && !isAuthenticated && (
               <a href="/register" className="btn btn-primary whitespace-nowrap min-h-[44px]">
                 {t('nav.join')}

@@ -150,6 +150,13 @@ export function AboutPage() {
             <p className="text-base-content/70 mb-6">
               {t('about.contact_text')}
             </p>
+            {/*
+              Documented design-system exception (issue #50): this is a
+              `mailto:` destination, which only an anchor can open. `Action`
+              renders a `<button>` only, and `NavigationLink` applies the
+              quiet pill treatment of the tab set, which removes the primary
+              emphasis this contact control depends on.
+            */}
             <a
               href="mailto:contato@jamapp.com.br"
               className="btn btn-primary gap-2"
@@ -166,6 +173,10 @@ export function AboutPage() {
             <h2 className="text-2xl font-bold text-base-content mb-4">
               {t('about.cta_title')}
             </h2>
+            {/* Same call-to-action exception as CallToAction.tsx: these are
+                destinations that need the primary and outline emphasis, so
+                they stay router `Link` elements with DaisyUI button
+                classes. */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link to="/jams" className="btn btn-primary">
                 {t('about.cta_explore')}

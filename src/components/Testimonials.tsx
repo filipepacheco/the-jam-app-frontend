@@ -1,3 +1,10 @@
+/**
+ * Testimonials marketing section
+ *
+ * Design-system review (issue #50): this section renders static quotations
+ * and attributions only. It contains no button, no link and no form
+ * control, so no canonical family applies.
+ */
 import { useTranslation } from 'react-i18next'
 
 export function Testimonials() {

@@ -1,3 +1,12 @@
+/**
+ * How It Works marketing section
+ *
+ * Design-system review (issue #50): this section renders headings, numbered
+ * step cards and icons. It contains no button, no link and no form control,
+ * so the Action, Field and Navigation families do not apply. The card
+ * surfaces stay marketing-specific: `DataCard` carries product metadata
+ * semantics, not a numbered marketing step.
+ */
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'

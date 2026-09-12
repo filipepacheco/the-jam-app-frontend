@@ -1,3 +1,9 @@
+// This stays hand-rolled instead of the canonical LoadingState
+// (FeedbackStates.tsx). LoadingState requires a label and always renders it
+// in a live region; FullPageSpinner's `label` is optional and App.tsx
+// renders it with no label at all during the earliest app boot, before any
+// text is safe to announce. LoadingState's inline feedback-row layout also
+// does not match this component's full-viewport centered layout.
 interface FullPageSpinnerProps {
   className?: string
   label?: string

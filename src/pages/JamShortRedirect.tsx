@@ -32,6 +32,10 @@ export function JamShortRedirect() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-100">
+      {/* Documented design-system exception (issue #50): a circle above a
+          short bar. The canonical `Skeleton` primitive renders uniform
+          full-width lines only, so it cannot reproduce this silhouette.
+          Same reasoning as PageHeaderSkeleton.tsx. */}
       <div className="flex flex-col items-center gap-3 animate-pulse">
         <div className="skeleton h-12 w-12 rounded-full" />
         <div className="skeleton h-4 w-32 rounded" />

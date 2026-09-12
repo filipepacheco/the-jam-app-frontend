@@ -1,16 +1,40 @@
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { NavigationLink } from './Navigation'
 
 function Footer() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  const routes = [
+    { path: '/jams', label: t('nav.jams') },
+    { path: '/host/dashboard', label: t('nav.for_hosts', 'For Hosts') },
+    { path: '/about', label: t('nav.about') },
+    { path: '/register', label: t('auth.sign_up') },
+  ]
+
   return (
     <footer className="footer footer-center bg-base-300 text-base-content p-4 sm:p-8 lg:p-10">
-      <nav className="flex flex-wrap justify-center gap-4 text-xs sm:text-sm">
-        <Link to="/jams" className="link link-hover">{t('nav.jams')}</Link>
-        <Link to="/host/dashboard" className="link link-hover">{t('nav.for_hosts', 'For Hosts')}</Link>
-        <Link to="/about" className="link link-hover">{t('nav.about')}</Link>
-        <Link to="/register" className="link link-hover">{t('auth.sign_up')}</Link>
-        <a href="/privacy.html" className="link link-hover">{t('common.privacy_policy')}</a>
+      {/* These are destinations, not operations, so they use NavigationLink.
+          It renders a native anchor, so the href stays intact for
+          modifier-click and for the server fallback, while the onClick
+          handler keeps client-side routing. See
+          docs/design-system/canonical-navigation.md. */}
+      <nav className="flex flex-wrap justify-center gap-2 sm:gap-4">
+        {routes.map((route) => (
+          <NavigationLink
+            key={route.path}
+            href={route.path}
+            onClick={(e) => { e.preventDefault(); navigate(route.path) }}
+          >
+            {route.label}
+          </NavigationLink>
+        ))}
+        {/* A real document outside the router: no onClick, so the browser
+            performs the navigation itself. */}
+        <NavigationLink href="/privacy.html">
+          {t('common.privacy_policy')}
+        </NavigationLink>
       </nav>
       <aside>
         <p className="text-xs sm:text-sm">

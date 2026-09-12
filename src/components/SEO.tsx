@@ -1,3 +1,10 @@
+/**
+ * SEO Component
+ *
+ * Design-system review (issue #50): this component renders only `<Helmet>`
+ * document metadata (title, meta, link and JSON-LD). It has no visible
+ * element and no interactive control, so no canonical family applies.
+ */
 import {Helmet} from 'react-helmet-async'
 import {useAppLanguage} from '../hooks'
 import {SITE_URL} from '../lib/api'

@@ -1,3 +1,17 @@
+/**
+ * Features marketing section
+ *
+ * Lifecycle audit (issue #50): this component has zero consumers. No page,
+ * no component and no workbench story renders it (grep-verified across
+ * `src/`). The active landing page in `src/App.tsx` composes EnhancedHero,
+ * HowItWorks, Testimonials, CallToAction and Footer instead, and
+ * HowItWorks.tsx now carries the landing-page feature presentation. The
+ * catalogue entry moves from "uncertain" to "legacy" and names
+ * HowItWorks.tsx as the replacement.
+ *
+ * Design-system review: the section holds no button, no link and no form
+ * control, so no canonical family applies to its markup.
+ */
 import { useTranslation } from 'react-i18next'
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useRef } from 'react'
