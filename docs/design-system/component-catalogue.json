@@ -6846,7 +6846,9 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/Action.tsx"
+        ],
         "external": [
           "react-i18next"
         ],
@@ -10079,6 +10081,136 @@
           "Classification needs review; no unsupported inference was applied."
         ]
       }
+    },
+    {
+      "id": "ui.0166",
+      "name": "Action",
+      "source": "src/components/Action.tsx",
+      "declaration": "variable",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "Action",
+          "module": "src/components/Action.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "Action",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/Action.tsx",
+        "src/components/schedule/ScheduleActionButtons.tsx",
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Action.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "primary",
+          "secondary",
+          "quiet",
+          "destructive",
+          "icon-only",
+          "loading",
+          "disabled",
+          "keyboard",
+          "focus"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+        ]
+      }
+    },
+    {
+      "id": "ui.0167",
+      "name": "IconAction",
+      "source": "src/components/Action.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "IconAction",
+          "module": "src/components/Action.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "IconAction",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Action.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "primary",
+          "secondary",
+          "quiet",
+          "destructive",
+          "icon-only",
+          "loading",
+          "disabled",
+          "keyboard",
+          "focus"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+        ]
+      }
     }
   ],
   "ignored": [
@@ -10141,6 +10273,10 @@
     {
       "source": "src/workbench/stories/Forms.stories.tsx",
       "reason": "Private Storybook composition for catalogued form components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+      "reason": "Private Storybook composition demonstrating the canonical action-control family; not product UI itself."
     },
     {
       "source": "src/workbench/stories/Foundations/ColorAndThemes.stories.tsx",
@@ -10216,12 +10352,12 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 174,
-    "representedSources": 141,
-    "ignoredSources": 33,
+    "eligibleSources": 176,
+    "representedSources": 142,
+    "ignoredSources": 34,
     "workbench": {
-      "activeReusableVisualComponents": 104,
-      "ready": 87,
+      "activeReusableVisualComponents": 106,
+      "ready": 89,
       "exempt": 17,
       "needsReview": 0,
       "unknown": 0,
@@ -10234,6 +10370,16 @@
       "assessment": "review-candidate",
       "equivalence": "unreviewed",
       "occurrences": [
+        {
+          "id": "src/components/Action.tsx:57:5:action",
+          "source": "src/components/Action.tsx",
+          "line": 57,
+          "column": 5,
+          "ownerComponentId": "ui.0166",
+          "tag": "button",
+          "staticClassTokens": [],
+          "dynamicClasses": true
+        },
         {
           "id": "src/components/Alert.tsx:69:9:action",
           "source": "src/components/Alert.tsx",
@@ -12206,49 +12352,6 @@
             "btn-xs",
             "min-h-[44px]",
             "min-w-[44px]"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleActionButtons.tsx:23:13:action",
-          "source": "src/components/schedule/ScheduleActionButtons.tsx",
-          "line": 23,
-          "column": 13,
-          "ownerComponentId": "ui.0111",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "btn-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleActionButtons.tsx:30:13:action",
-          "source": "src/components/schedule/ScheduleActionButtons.tsx",
-          "line": 30,
-          "column": 13,
-          "ownerComponentId": "ui.0111",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/ScheduleActionButtons.tsx:42:13:action",
-          "source": "src/components/schedule/ScheduleActionButtons.tsx",
-          "line": 42,
-          "column": 13,
-          "ownerComponentId": "ui.0111",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "btn-outline",
-            "btn-sm"
           ],
           "dynamicClasses": false
         },

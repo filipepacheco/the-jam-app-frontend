@@ -466,7 +466,13 @@
     },
     "actions": {
       "start": "▶️ Iniciar",
-      "reschedule": "🔄 Reprogramar"
+      "reschedule": "🔄 Reprogramar",
+      "approve_performance": "Aprobar actuación",
+      "reject_performance": "Rechazar actuación",
+      "delete_performance": "Eliminar actuación",
+      "approving": "Aprobando actuación…",
+      "rejecting": "Rechazando actuación…",
+      "deleting": "Eliminando actuación…"
     },
     "instruments": {
       "drums": "Batería",

@@ -1,0 +1,80 @@
+.ds-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-compact);
+  border: 1px solid transparent;
+  border-radius: var(--radius-field);
+  padding-inline: var(--ds-space-control);
+  font-family: var(--font-body);
+  font-size: var(--ds-text-ui);
+  font-weight: var(--ds-weight-ui);
+  line-height: var(--ds-leading-ui);
+  text-align: center;
+  transition: background-color var(--ds-motion-feedback) var(--ds-ease-out), border-color var(--ds-motion-feedback) var(--ds-ease-out), box-shadow var(--ds-motion-feedback) var(--ds-ease-out), color var(--ds-motion-feedback) var(--ds-ease-out), transform var(--ds-motion-feedback) var(--ds-ease-out);
+}
+
+.ds-action:not(:disabled) {
+  cursor: pointer;
+}
+
+.ds-action:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.ds-action__icon,
+.ds-action__label {
+  display: inline-flex;
+  align-items: center;
+}
+
+.ds-action--primary {
+  border-color: var(--ds-action-primary);
+  background: var(--ds-action-primary);
+  color: var(--ds-action-primary-content);
+}
+
+.ds-action--primary:not(:disabled):hover {
+  background: color-mix(in oklch, var(--ds-action-primary) 88%, var(--ds-surface-canvas));
+}
+
+.ds-action--secondary {
+  border-color: var(--ds-action-secondary);
+  background: var(--ds-action-secondary);
+  color: var(--ds-action-secondary-content);
+}
+
+.ds-action--secondary:not(:disabled):hover {
+  background: color-mix(in oklch, var(--ds-action-secondary) 88%, var(--ds-surface-canvas));
+}
+
+.ds-action--quiet {
+  border-color: transparent;
+  background: transparent;
+  color: var(--ds-content-primary);
+}
+
+.ds-action--quiet:not(:disabled):hover {
+  background: var(--ds-surface-raised);
+}
+
+.ds-action--destructive {
+  border-color: var(--ds-action-danger);
+  background: var(--ds-action-danger);
+  color: var(--ds-action-danger-content);
+}
+
+.ds-action--destructive:not(:disabled):hover {
+  background: color-mix(in oklch, var(--ds-action-danger) 88%, var(--ds-surface-canvas));
+}
+
+.ds-action--loading,
+.ds-action--disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.ds-action--icon-only {
+  inline-size: var(--ds-control-touch);
+  padding-inline: 0;
+}

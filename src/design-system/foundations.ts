@@ -14,7 +14,11 @@ export const SEMANTIC_COLOR_ROLES = {
   surfaces: ['--ds-surface-canvas', '--ds-surface-raised', '--ds-surface-sunken', '--ds-surface-overlay'],
   content: ['--ds-content-primary', '--ds-content-secondary', '--ds-content-inverse', '--ds-content-link'],
   borders: ['--ds-border-subtle', '--ds-border-strong', '--ds-border-interactive'],
-  actions: ['--ds-action-primary', '--ds-action-primary-content', '--ds-action-secondary', '--ds-action-danger'],
+  actions: [
+    '--ds-action-primary', '--ds-action-primary-content',
+    '--ds-action-secondary', '--ds-action-secondary-content',
+    '--ds-action-danger', '--ds-action-danger-content',
+  ],
   focus: ['--ds-focus-ring', '--ds-focus-offset'],
   statuses: [
     '--ds-status-info', '--ds-status-info-content',

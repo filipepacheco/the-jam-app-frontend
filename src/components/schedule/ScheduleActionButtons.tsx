@@ -4,6 +4,7 @@
  */
 
 import {useTranslation} from 'react-i18next'
+import {Action} from '../Action'
 
 interface ScheduleActionButtonsProps {
     status: string | undefined
@@ -13,6 +14,12 @@ interface ScheduleActionButtonsProps {
     onDelete?: () => void
 }
 
+function actionState(loading: boolean, loadingLabel: string) {
+    return loading
+        ? {state: 'loading' as const, loadingLabel}
+        : {state: 'idle' as const}
+}
+
 export function ScheduleActionButtons({
                                           status, loading = false, isSuggested = false, onStatusChange, onDelete,
                                       }: ScheduleActionButtonsProps) {
@@ -20,33 +27,38 @@ export function ScheduleActionButtons({
     return (<div className="flex flex-col gap-1">
         {/* Suggested action buttons */}
         {isSuggested && (<>
-            <button
+            <Action
+                type="submit"
                 onClick={() => onStatusChange?.('SCHEDULED')}
-                className="btn btn-sm btn-success"
-                disabled={loading}
+                variant="primary"
+                {...actionState(loading, t('schedule.actions.approving'))}
             >
-                ✓ {t('common.approve')}
-            </button>
-            <button
+                <Action.Icon>✓</Action.Icon>
+                <Action.Label>{t('schedule.actions.approve_performance')}</Action.Label>
+            </Action>
+            <Action
+                type="submit"
                 onClick={onDelete}
-                className="btn btn-sm btn-error"
-                disabled={loading}
+                variant="destructive"
+                {...actionState(loading, t('schedule.actions.rejecting'))}
             >
-                ✕ {t('common.reject')}
-            </button>
+                <Action.Icon>✕</Action.Icon>
+                <Action.Label>{t('schedule.actions.reject_performance')}</Action.Label>
+            </Action>
         </>)}
 
         {status === 'COMPLETED' && (<span className="text-xs text-success">{t('schedule.performance_completed')}</span>)}
 
         {!isSuggested && status !== 'COMPLETED' && (<>
-            <button
+            <Action
+                type="submit"
                 onClick={onDelete}
-                className="btn btn-sm btn-error btn-outline"
-                disabled={loading}
+                variant="destructive"
+                {...actionState(loading, t('schedule.actions.deleting'))}
             >
-                🗑️ {t('common.delete')}
-            </button>
+                <Action.Icon>🗑️</Action.Icon>
+                <Action.Label>{t('schedule.actions.delete_performance')}</Action.Label>
+            </Action>
         </>)}
     </div>)
 }
-

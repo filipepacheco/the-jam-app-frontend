@@ -468,7 +468,13 @@
     },
     "actions": {
       "start": "▶️ Start",
-      "reschedule": "🔄 Reschedule"
+      "reschedule": "🔄 Reschedule",
+      "approve_performance": "Approve performance",
+      "reject_performance": "Reject performance",
+      "delete_performance": "Delete performance",
+      "approving": "Approving performance…",
+      "rejecting": "Rejecting performance…",
+      "deleting": "Deleting performance…"
     },
     "instruments": {
       "drums": "Drums",
