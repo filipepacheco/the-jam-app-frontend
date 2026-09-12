@@ -47,3 +47,14 @@ export const LongLocalizedContent: Story = {
     viewport: { value: 'phone', isRotated: false },
   },
 }
+
+export const FirstUseGuidance: Story = {
+  args: {
+    icon: '🎸',
+    kind: 'first-use',
+    title: 'Ainda não há jams na sua região',
+    description: 'Crie a primeira sessão e convide músicos para começar a programação.',
+    action: { label: 'Criar uma jam', onClick: createMusic },
+  },
+  globals: { locale: 'pt', theme: 'jam-light' },
+}

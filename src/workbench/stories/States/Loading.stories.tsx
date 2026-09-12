@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { FullPageSpinner } from '../../../components/FullPageSpinner'
 import { JamCardSkeleton } from '../../../components/JamCardSkeleton'
 import { JamDetailLoadingSkeleton } from '../../../components/jam-detail-v2/JamDetailLoadingSkeleton'
+import { LoadingState, Skeleton } from '../../../components/FeedbackStates'
 
 const meta = {
   title: 'States/Loading',
@@ -67,4 +68,18 @@ export const JamDetailDesktopTheme: Story = {
     viewport: { value: 'desktop', isRotated: false },
   },
   parameters: { layout: 'fullscreen' },
+}
+
+export const CanonicalRegionStates: Story = {
+  render: () => (
+    <div className="grid max-w-xl gap-4">
+      <LoadingState label="Carregando as sessões de jam…" />
+      <Skeleton label="Carregando o resumo da sessão" lines={3} />
+    </div>
+  ),
+  globals: {
+    reducedMotion: true,
+    theme: 'jam-dark',
+    locale: 'pt',
+  },
 }

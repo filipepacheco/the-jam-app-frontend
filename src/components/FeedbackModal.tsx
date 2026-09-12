@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next'
 import { CheckCircle } from 'lucide-react'
 import { feedbackService } from '../services'
 import { Alert } from './Alert'
-import { Modal } from './Modal'
-import { ModalFooter } from './ModalFooter'
+import { Action } from './Action'
+import { OverlayActions, OverlayModal } from './overlays'
 
 interface FeedbackModalProps {
   isOpen: boolean
@@ -80,32 +80,33 @@ export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: 
 
   if (!isOpen) return null
 
-  const titleContent = (
-    <div>
-      <span className="font-bold text-lg">{t('feedback.modal_title')}</span>
-      <p className="text-sm text-base-content/70 font-normal">{t('feedback.modal_subtitle')}</p>
-    </div>
-  )
-
   return (
-    <Modal
+    <OverlayModal
       isOpen={isOpen}
-      onClose={onClose}
-      title={titleContent}
+      onDismiss={onClose}
+      closeLabel={t('feedback.close_modal')}
+      title={t('feedback.modal_title')}
+      description={t('feedback.modal_subtitle')}
       size="md"
       portal={portal}
       portalTarget={portalTarget}
-      responsive
-      closeDisabled={isSubmitting}
-      footer={
+      dismissible={!isSubmitting}
+      actions={
         !showSuccess ? (
-          <ModalFooter
-            onCancel={onClose}
-            onSubmit={() => { void handleSubmit() }}
-            submitLabel={isSubmitting ? t('feedback.submitting') : t('feedback.submit_button')}
-            submitting={isSubmitting}
-            submitDisabled={rating === 0}
-          />
+          <OverlayActions>
+            <Action onClick={onClose} state={isSubmitting ? 'disabled' : 'idle'} variant="quiet">
+              <Action.Label>{t('common.cancel')}</Action.Label>
+            </Action>
+            {isSubmitting ? (
+              <Action loadingLabel={t('feedback.submitting')} state="loading" variant="primary">
+                <Action.Label>{t('feedback.submit_button')}</Action.Label>
+              </Action>
+            ) : (
+              <Action onClick={() => { void handleSubmit() }} state={rating === 0 ? 'disabled' : 'idle'} variant="primary">
+                <Action.Label>{t('feedback.submit_button')}</Action.Label>
+              </Action>
+            )}
+          </OverlayActions>
         ) : undefined
       }
     >
@@ -113,7 +114,7 @@ export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: 
         /* Success State */
         <div className="flex flex-col items-center py-8 text-center">
           <CheckCircle className="w-16 h-16 text-success mb-4" aria-hidden="true" />
-          <h4 className="text-xl font-bold mb-2">{t('feedback.success_title')}</h4>
+          <h3 className="text-xl font-bold mb-2">{t('feedback.success_title')}</h3>
           <p className="text-base-content/70">{t('feedback.success_message')}</p>
         </div>
       ) : (
@@ -176,6 +177,6 @@ export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: 
           </div>
         </div>
       )}
-    </Modal>
+    </OverlayModal>
   )
 }

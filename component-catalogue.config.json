@@ -3,6 +3,7 @@
   "include": ["src/**/*.tsx"],
   "metadata": "component-catalogue.metadata.json",
   "ignore": [
+    {"source": "src/workbench/stories/Foundations/DataDisplay.stories.tsx", "reason": "Private Storybook composition demonstrating the canonical data-display family; not product UI."},
     {"source": "src/main.tsx", "reason": "Application bootstrap; renders the root but does not declare a component."},
     {"source": "src/lib/musicUtils.tsx", "reason": "Utility module containing static provider icon elements, not React components."},
     {"source": "src/lib/schedule/instrumentHelpers.tsx", "reason": "Schedule utility module returning ReactNode values, not React components."},
@@ -37,7 +38,8 @@
     {"source": "src/workbench/stories/PageCompositions.stories.tsx", "reason": "Private Storybook composition for stable page-level visual review; not product UI itself."},
     {"source": "src/workbench/stories/Foundations/TypographySpacingResponsive.stories.tsx", "reason": "Private Storybook composition demonstrating typography, spacing, sizing, and responsive foundations; not product UI itself."},
     {"source": "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx", "reason": "Private Storybook composition demonstrating interaction, accessibility, motion, and multilingual content standards; not product UI itself."},
-    {"source": "src/workbench/stories/Foundations/ActionControls.stories.tsx", "reason": "Private Storybook composition demonstrating the canonical action-control family; not product UI itself."}
+    {"source": "src/workbench/stories/Foundations/ActionControls.stories.tsx", "reason": "Private Storybook composition demonstrating the canonical action-control family; not product UI itself."},
+    {"source": "src/workbench/stories/Foundations/FieldControls.stories.tsx", "reason": "Private Storybook composition demonstrating the canonical field family; not product UI itself."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",
