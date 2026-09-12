@@ -109,10 +109,12 @@ const serveStaticDirectory = async (directory: string): Promise<{ url: string; c
       return
     }
     try {
+      const contents = await readFile(filename)
       response.writeHead(200, { 'content-type': mimeType(filename), 'cache-control': 'no-store' })
-      response.end(await readFile(filename))
+      response.end(contents)
     } catch {
-      response.writeHead(404).end()
+      if (!response.headersSent) response.writeHead(404)
+      response.end()
     }
   })
   server.listen(0, '127.0.0.1')
