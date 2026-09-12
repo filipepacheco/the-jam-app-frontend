@@ -101,8 +101,8 @@ export const KeyboardOverflowMenu: Story = {
   play: async ({ canvas, userEvent }) => {
     const trigger = canvas.getByRole('button', { name: /ações|actions|acciones/i })
     await userEvent.click(trigger)
-    const buttons = canvas.getAllByRole('button')
-    await userEvent.click(buttons.at(-1)!)
+    const remove = await canvas.findByRole('menuitem', { name: /excluir|delete|eliminar/i })
+    await userEvent.click(remove)
     await expect(deleteSchedule).toHaveBeenCalledOnce()
   },
 }
