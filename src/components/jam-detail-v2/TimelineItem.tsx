@@ -3,6 +3,21 @@ import type {AuthUser} from '../../types/auth.types'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {formatJamDuration} from '../../lib/formatters'
+import {Action} from '../Action'
+import {Badge, type DataDisplayTone} from '../data-display'
+
+function scheduleStatusTone(status: ScheduleResponseDto['status']): DataDisplayTone {
+  switch (status) {
+    case 'COMPLETED':
+      return 'success'
+    case 'IN_PROGRESS':
+      return 'warning'
+    case 'SUGGESTED':
+      return 'info'
+    default:
+      return 'neutral'
+  }
+}
 
 interface TimelineItemProps {
   schedule: ScheduleResponseDto
@@ -34,17 +49,12 @@ export function TimelineItem({
               {schedule.status === 'SUGGESTED' ? t('jams.suggested') : t('jams.scheduled')}
             </p>
           </div>
-          <span className={`badge ${
-            schedule.status === 'COMPLETED' ? 'badge-success' :
-            schedule.status === 'IN_PROGRESS' ? 'badge-warning' :
-            schedule.status === 'SUGGESTED' ? 'badge-info' :
-            'badge-ghost'
-          }`}>
+          <Badge tone={scheduleStatusTone(schedule.status)}>
             {schedule.status === 'COMPLETED' && t('schedule.statuses.completed')}
             {schedule.status === 'IN_PROGRESS' && t('schedule.statuses.in_progress')}
             {schedule.status === 'SUGGESTED' && t('common.statuses.suggested')}
             {schedule.status === 'SCHEDULED' && t('schedule.statuses.scheduled')}
-          </span>
+          </Badge>
         </div>
 
         {/* Song Info (Prominent) */}
@@ -84,23 +94,18 @@ export function TimelineItem({
         {schedule.registrations && schedule.registrations.length > 0 && (
           <div className="mb-4 flex flex-wrap gap-2">
             {schedule.registrations.map((reg) => (
-              <span key={reg.id} className="badge badge-sm badge-outline" aria-hidden="true">
+              <Badge key={reg.id} size="sm" aria-hidden="true">
                 {getInstrumentIcon(reg.instrument)}
-              </span>
+              </Badge>
             ))}
           </div>
         )}
 
         {/* Quick Register Button */}
-        <button
+        <Action
           onClick={onRegisterClick}
-          disabled={userRegistered}
-          className={`btn w-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
-            userRegistered
-              ? 'btn-disabled btn-outline'
-              : 'btn-primary'
-          }`}
-          type="button"
+          state={userRegistered ? 'disabled' : 'idle'}
+          className="w-full"
         >
           {userRegistered ? (
             t('schedule.already_enrolled')
@@ -110,7 +115,7 @@ export function TimelineItem({
               {t('jams.register')}
             </>
           )}
-        </button>
+        </Action>
       </div>
     </div>
   )

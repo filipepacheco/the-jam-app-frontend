@@ -1,5 +1,6 @@
 import {type ReactNode, useState} from 'react'
 import {ChevronDown} from 'lucide-react'
+import { Badge } from '../data-display'
 
 interface CollapsibleSectionProps {
   title: string
@@ -43,7 +44,7 @@ export function CollapsibleSection({
       >
         <div className="flex items-center gap-2">
           <h3 className="font-semibold text-sm">{title}</h3>
-          {badge && <span className="badge badge-sm">{badge}</span>}
+          {badge && <Badge size="sm">{badge}</Badge>}
         </div>
         <ChevronDown className={`size-4 transition-transform motion-reduce:transition-none ${expanded ? 'rotate-180' : ''}`} aria-hidden="true" />
       </button>

@@ -36,7 +36,7 @@ memo(function MusicTableRow({
       <td className="truncate" title={music.artist}>{music.artist}</td>
       <td className="hidden sm:table-cell">
         {music.genre ? (
-          <span className="badge badge-outline badge-sm">{music.genre}</span>
+          <Badge size="sm">{music.genre}</Badge>
         ) : (
           <span className="text-xs text-base-content/40">-</span>
         )}

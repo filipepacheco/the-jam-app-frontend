@@ -6,6 +6,7 @@ import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {InstrumentsSummary} from '../schedule/InstrumentsSummary'
 import {SpotifyPlayButton} from '../SpotifyPreview'
 import {FileText, Mic, ChevronDown} from 'lucide-react'
+import {Action} from '../Action'
 import React, {useCallback, useMemo} from "react"
 
 interface TimelineUser {
@@ -104,6 +105,11 @@ export function TimelineItemV2Waveform({
   }, [isCompleted, isInProgress, isSuggested, isReadyToPlay, t])
 
   return (
+    /* Documented exception: the whole card keeps role="button" so that a tap
+       anywhere expands the performance. data-display.md asks cards not to
+       manufacture button semantics, but removing the click-to-expand behaviour
+       is a product change, not a migration. See
+       docs/design-system/jam-music-migration.md. */
     <div
       role="button"
       tabIndex={0}
@@ -219,37 +225,27 @@ export function TimelineItemV2Waveform({
               ) : null
             ) : isReadyToPlay ? (
               instrumentOptions.some(opt => opt.needed > 0 && opt.registered < opt.needed) ? (
-                <button
+                <Action
                   onClick={handleRegisterClick}
-                  className={`btn btn-xs w-full ${userRegistered ? 'btn-ghost text-base-content/40 border border-base-300/50' : 'btn-primary btn-outline'}`}
-                  type="button"
+                  variant={userRegistered ? 'quiet' : 'secondary'}
+                  className="w-full"
                 >
                   {userRegistered ? t('schedule.register_another') : t('jams.register')}
-                </button>
+                </Action>
               ) : userRegistered ? (
-                <button
-                  onClick={handleRegisterClick}
-                  className="btn btn-ghost btn-xs w-full text-base-content/40 border border-base-300/50"
-                  type="button"
-                >
+                <Action onClick={handleRegisterClick} variant="quiet" className="w-full">
                   {t('schedule.register_another')}
-                </button>
+                </Action>
               ) : null
             ) : (
-              <button
+              <Action
                 onClick={handleRegisterClick}
-                className={`btn btn-sm w-full ${
-                  userRegistered
-                    ? 'btn-ghost border border-base-300 text-base-content/60'
-                    : isSuggested
-                    ? 'btn-info'
-                    : 'btn-primary btn-outline'
-                }`}
-                type="button"
+                variant={userRegistered ? 'quiet' : isSuggested ? 'primary' : 'secondary'}
+                className="w-full"
               >
                 {!userRegistered && <span className="text-base" aria-hidden="true">+</span>}
                 {userRegistered ? t('schedule.register_another') : t('jams.register')}
-              </button>
+              </Action>
             )}
           </>
         )}

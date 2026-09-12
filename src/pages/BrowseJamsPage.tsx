@@ -6,7 +6,8 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import useSWR from 'swr'
-import {EmptyState, ErrorState, LoadingState} from '../components'
+import {Action, Badge, EmptyState, ErrorState, Field, LoadingState, NavigationTabs} from '../components'
+import type {NavigationTabItem} from '../components'
 import {SITE_URL} from '../lib/api'
 import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
@@ -88,6 +89,19 @@ export function BrowseJamsPage() {
   // Check if any filters are active
   const hasActiveFilters = searchQuery.trim() !== '' || statusFilter !== 'ALL'
 
+  const statusTabs: NavigationTabItem[] = [
+    { id: 'ALL', label: t('jams.browse.tabs.all'), disabled: isLoading },
+    { id: 'LIVE', label: t('jams.browse.tabs.live'), disabled: isLoading },
+    { id: 'ACTIVE', label: t('jams.browse.tabs.active'), disabled: isLoading },
+    { id: 'INACTIVE', label: t('jams.browse.tabs.inactive'), disabled: isLoading },
+    { id: 'FINISHED', label: t('jams.browse.tabs.finished'), disabled: isLoading },
+  ]
+
+  const handleStatusTabChange = useCallback((next: string) => {
+    setStatusFilter(next as 'ALL' | JamStatus)
+    if (next === 'FINISHED') setPastJamsExpanded(true)
+  }, [])
+
   const siteUrl = SITE_URL
 
   const browseJsonLd: Record<string, unknown>[] = [
@@ -139,100 +153,71 @@ export function BrowseJamsPage() {
         {/* Filters & Search */}
         <div className="mb-4 sm:mb-6 space-y-3">
           {/* Search + Sort Row */}
-          <div className="flex gap-3">
-            <input
-              type="text"
-              placeholder={t('jams.browse.search_placeholder')}
-              className="input input-bordered flex-1 input-sm sm:input-md text-xs sm:text-sm min-h-[44px]"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="Search jams"
-              disabled={isLoading}
-            />
-            <select
-              className="select select-bordered w-40 sm:w-48 select-sm sm:select-md text-xs sm:text-sm min-h-[44px]"
-              value={dateSort}
-              onChange={(e) => setDateSort(e.target.value as DateSortOption)}
+          {/* Search + Sort Row.
+              Both labels are screen-reader only: this filter row never showed a
+              visible label, and Field always renders a label element. The same
+              sr-only label pattern is used by MusicFilters. */}
+          <div className="flex gap-3 items-end">
+            <Field
+              id="browse-jams-search"
+              label={<span className="sr-only">{t('jams.browse.search_label')}</span>}
+              className="flex-1"
               disabled={isLoading}
             >
-              <option value="newest">{t('jams.browse.sort.newest')}</option>
-              <option value="oldest">{t('jams.browse.sort.oldest')}</option>
-              <option value="upcoming">{t('jams.browse.sort.upcoming')}</option>
-            </select>
+              <Field.Input
+                type="text"
+                placeholder={t('jams.browse.search_placeholder')}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </Field>
+            <Field
+              id="browse-jams-sort"
+              label={<span className="sr-only">{t('jams.browse.sort_label')}</span>}
+              className="w-40 sm:w-48"
+              disabled={isLoading}
+            >
+              <Field.Select
+                value={dateSort}
+                onChange={(e) => setDateSort(e.target.value as DateSortOption)}
+              >
+                <option value="newest">{t('jams.browse.sort.newest')}</option>
+                <option value="oldest">{t('jams.browse.sort.oldest')}</option>
+                <option value="upcoming">{t('jams.browse.sort.upcoming')}</option>
+              </Field.Select>
+            </Field>
           </div>
 
-          {/* Status Filter Tabs */}
-          <div className="tabs tabs-boxed text-xs sm:text-sm flex-wrap overflow-x-auto [&_.tab]:min-h-[44px]" role="tablist">
-            <button
-              className={`tab ${statusFilter === 'ALL' ? 'tab-active' : ''}`}
-              onClick={() => setStatusFilter('ALL')}
-              role="tab"
-              aria-selected={statusFilter === 'ALL'}
-              disabled={isLoading}
-              title={t('jams.browse.tabs.all_hint', 'Show all jam sessions')}
-            >
-              {t('jams.browse.tabs.all')}
-            </button>
-            <button
-              className={`tab ${statusFilter === 'LIVE' ? 'tab-active' : ''}`}
-              onClick={() => setStatusFilter('LIVE')}
-              role="tab"
-              aria-selected={statusFilter === 'LIVE'}
-              disabled={isLoading}
-              title={t('jams.browse.tabs.live_hint', 'Currently performing live')}
-            >
-              {t('jams.browse.tabs.live')}
-            </button>
-            <button
-              className={`tab ${statusFilter === 'ACTIVE' ? 'tab-active' : ''}`}
-              onClick={() => setStatusFilter('ACTIVE')}
-              role="tab"
-              aria-selected={statusFilter === 'ACTIVE'}
-              disabled={isLoading}
-              title={t('jams.browse.tabs.active_hint', 'Scheduled and accepting musicians')}
-            >
-              {t('jams.browse.tabs.active')}
-            </button>
-            <button
-              className={`tab ${statusFilter === 'INACTIVE' ? 'tab-active' : ''}`}
-              onClick={() => setStatusFilter('INACTIVE')}
-              role="tab"
-              aria-selected={statusFilter === 'INACTIVE'}
-              disabled={isLoading}
-              title={t('jams.browse.tabs.inactive_hint', 'Created but not yet started')}
-            >
-              {t('jams.browse.tabs.inactive')}
-            </button>
-            <button
-              className={`tab ${statusFilter === 'FINISHED' ? 'tab-active' : ''}`}
-              onClick={() => { setStatusFilter('FINISHED'); setPastJamsExpanded(true) }}
-              role="tab"
-              aria-selected={statusFilter === 'FINISHED'}
-              disabled={isLoading}
-              title={t('jams.browse.tabs.finished_hint', 'Past sessions that have ended')}
-            >
-              {t('jams.browse.tabs.finished')}
-            </button>
-          </div>
+          {/* Status Filter Tabs.
+              NavigationTabs keeps the tablist and tab roles and adds arrow-key
+              roving focus. The per-tab title tooltips are not part of the
+              canonical contract and are dropped. */}
+          <NavigationTabs
+            aria-label={t('jams.browse.filter_label')}
+            className="text-xs sm:text-sm"
+            items={statusTabs}
+            value={statusFilter}
+            onValueChange={handleStatusTabChange}
+          />
 
           {/* Results Count & Clear Filters */}
           <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="badge badge-primary badge-sm sm:badge-md lg:badge-lg text-xs sm:text-sm">
+            <Badge tone="info" size="md">
               {(() => {
                 const count = visibleCount
                 const key = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
                 return t(key, { count })
               })()}
-            </div>
+            </Badge>
 
             {hasActiveFilters && (
-              <button
+              <Action
+                variant="quiet"
                 onClick={clearFilters}
-                className="btn btn-ghost btn-sm text-xs sm:text-sm"
-                disabled={isLoading}
+                state={isLoading ? 'disabled' : 'idle'}
               >
                 {t('jams.browse.clear_filters')}
-              </button>
+              </Action>
             )}
           </div>
         </div>
@@ -266,7 +251,7 @@ export function BrowseJamsPage() {
               <div className="mb-6 sm:mb-8">
                 <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-base-content">
                   {t('jams.browse.section_current')}
-                  <span className="badge badge-primary badge-sm ml-2">{currentJams.length}</span>
+                  <Badge tone="info" size="sm" className="ml-2">{currentJams.length}</Badge>
                 </h2>
                 {currentJams.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 animate-in fade-in duration-300">
@@ -283,6 +268,10 @@ export function BrowseJamsPage() {
             {/* Past Jams Section - Collapsible */}
             {showPastSection && (
               <div>
+                {/* Documented exception: this toggle stays hand-rolled. Disclosure
+                    renders native <details>/<summary>, which does not set
+                    aria-expanded, and the heading plus count must stay inside the
+                    control. See docs/design-system/jam-music-migration.md. */}
                 <button
                   onClick={() => setPastJamsExpanded(!pastJamsExpanded)}
                   className="flex items-center gap-2 mb-3 sm:mb-4 cursor-pointer group"
@@ -298,7 +287,7 @@ export function BrowseJamsPage() {
                   <h2 className="text-lg sm:text-xl font-bold text-base-content group-hover:text-primary transition-colors">
                     {t('jams.browse.section_past')}
                   </h2>
-                  <span className="badge badge-ghost badge-sm">{pastJams.length}</span>
+                  <Badge size="sm">{pastJams.length}</Badge>
                 </button>
 
                 {pastJamsExpanded && pastJams.length > 0 && (

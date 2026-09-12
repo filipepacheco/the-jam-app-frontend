@@ -56,6 +56,9 @@ export const SpotifyPreview = memo(function SpotifyPreview({
   }
 
   return (
+    // Native anchor kept: Action/IconAction render only a <button>, so they
+    // cannot open the track in a new tab. See
+    // docs/design-system/jam-music-migration.md.
     <a
       href={spotifyUrl}
       target="_blank"
@@ -88,6 +91,7 @@ export const SpotifyPlayButton = memo(function SpotifyPlayButton({
   }
 
   return (
+    // Native anchor kept, same exception as SpotifyPreview above.
     <a
       href={spotifyUrl}
       target="_blank"

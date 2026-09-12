@@ -610,6 +610,7 @@
     "other_instruments_placeholder": "ex. piano, ukulele, gaita"
   },
   "musician_profile": {
+    "loading": "Carregando perfil…",
     "title": "Perfil do Músico",
     "bio": "Sobre",
     "other_instruments": "Outros instrumentos",

@@ -598,6 +598,7 @@
     "other_instruments_placeholder": "ej. piano, ukulele, armónica"
   },
   "musician_profile": {
+    "loading": "Cargando perfil…",
     "title": "Perfil del Músico",
     "bio": "Sobre",
     "other_instruments": "Otros instrumentos",

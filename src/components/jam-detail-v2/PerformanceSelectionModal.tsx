@@ -6,7 +6,23 @@
 import { useTranslation } from 'react-i18next'
 import type { ScheduleResponseDto, RegistrationResponseDto } from '../../types/api.types'
 import { Modal } from '../Modal'
+import { Action } from '../Action'
+import { Badge, type DataDisplayTone } from '../data-display'
+import { CanonicalEmptyState } from '../FeedbackStates'
 import { formatJamDuration } from '../../lib/formatters'
+
+function scheduleStatusTone(status: ScheduleResponseDto['status']): DataDisplayTone {
+  switch (status) {
+    case 'COMPLETED':
+      return 'success'
+    case 'IN_PROGRESS':
+      return 'warning'
+    case 'SUGGESTED':
+      return 'info'
+    default:
+      return 'neutral'
+  }
+}
 
 interface PerformanceSelectionModalProps {
   performances: ScheduleResponseDto[]
@@ -42,13 +58,9 @@ export function PerformanceSelectionModal({
       title={t('jams.select_performance')}
       size="md"
       footer={
-        <button
-          onClick={onClose}
-          className="btn btn-ghost w-full"
-          type="button"
-        >
+        <Action onClick={onClose} variant="quiet" className="w-full">
           {t('common.cancel')}
-        </button>
+        </Action>
       }
     >
       <p className="text-sm text-base-content/70 mb-4">
@@ -61,6 +73,10 @@ export function PerformanceSelectionModal({
           const alreadyRegistered = isAlreadyRegistered(schedule)
 
           return (
+            /* Documented exception: this selectable performance card stays a
+               hand-rolled button. Action renders one canonical control shell, so
+               it cannot hold this multi-line card layout. See
+               docs/design-system/jam-music-migration.md. */
             <button
               key={schedule.id}
               onClick={() => {
@@ -82,9 +98,9 @@ export function PerformanceSelectionModal({
                       {schedule.music?.title}
                     </h4>
                     {alreadyRegistered && (
-                      <span className="badge badge-success badge-sm">
+                      <Badge tone="success" size="sm">
                         {t('schedule.already_enrolled')}
-                      </span>
+                      </Badge>
                     )}
                   </div>
                   <p className="text-xs sm:text-sm text-base-content/70 truncate">
@@ -102,22 +118,12 @@ export function PerformanceSelectionModal({
                   </div>
                 </div>
                 {!alreadyRegistered && (
-                  <span
-                    className={`badge badge-sm flex-shrink-0 ${
-                      schedule.status === 'COMPLETED'
-                        ? 'badge-success'
-                        : schedule.status === 'IN_PROGRESS'
-                        ? 'badge-warning'
-                        : schedule.status === 'SUGGESTED'
-                        ? 'badge-info'
-                        : 'badge-ghost'
-                    }`}
-                  >
+                  <Badge tone={scheduleStatusTone(schedule.status)} size="sm" className="flex-shrink-0">
                     {schedule.status === 'COMPLETED' && t('schedule.statuses.completed')}
                     {schedule.status === 'IN_PROGRESS' && t('schedule.statuses.in_progress')}
                     {schedule.status === 'SUGGESTED' && t('common.statuses.suggested')}
                     {schedule.status === 'SCHEDULED' && t('schedule.statuses.scheduled')}
-                  </span>
+                  </Badge>
                 )}
               </div>
             </button>
@@ -127,10 +133,11 @@ export function PerformanceSelectionModal({
 
       {/* Empty State */}
       {performances.length === 0 && (
-        <div className="text-center py-8">
-          <div className="text-4xl mb-3" aria-hidden="true">🎵</div>
-          <p className="text-sm font-semibold">{t('jams.no_performances_available')}</p>
-        </div>
+        <CanonicalEmptyState
+          kind="content"
+          icon="🎵"
+          title={t('jams.no_performances_available')}
+        />
       )}
     </Modal>
   )

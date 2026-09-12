@@ -14,6 +14,7 @@ import { SpotifyPreview, isSpotifyTrackLink } from './SpotifyPreview'
 import { QuickEditPanel } from './QuickEditPanel'
 import { MusicDataCard, MusicStatusIndicator } from './music/MusicDataDisplay'
 import { IconAction } from './Action'
+import { Badge } from './data-display'
 
 interface MusicCardProps {
   music: MusicResponseDto
@@ -70,7 +71,7 @@ export const MusicCard = memo(function MusicCard({
   const metaInfo = (
     <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
       {music.genre && (
-        <span className="badge badge-outline badge-xs">{music.genre}</span>
+        <Badge size="sm">{music.genre}</Badge>
       )}
       {music.duration && (
         <span className="text-xs text-base-content/60">

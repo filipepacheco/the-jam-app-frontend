@@ -15,6 +15,8 @@ import { isValidSpotifyTrackUrl } from '../../lib/spotifyUtils'
 import type { CreateMusicDto } from '../../types/api.types'
 import { Alert } from '../Alert'
 import { Modal } from '../Modal'
+import { Action } from '../Action'
+import { Field, FormSubmissionFeedback } from '../Field'
 
 interface SuggestNewSongModalProps {
   jamId: string
@@ -225,26 +227,27 @@ export function SuggestNewSongModal({
       closeDisabled={submitting}
       footer={
         <>
-          <button
-            type="button"
-            onClick={onClose}
-            className="btn btn-ghost"
-            disabled={submitting}
-          >
+          <Action variant="quiet" onClick={onClose} state={submitting ? 'disabled' : 'idle'}>
             {t('common.cancel')}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const syntheticEvent = { preventDefault: () => {} } as FormEvent
-              void handleSubmit(syntheticEvent)
-            }}
-            className="btn btn-primary"
-            disabled={submitting || !formData.title.trim() || !formData.artist.trim()}
-          >
-            {submitting && <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>}
-            {getSubmitLabel()}
-          </button>
+          </Action>
+          {/* Two elements on purpose: ActionProps is a discriminated union, so a
+              loading Action must carry a literal state="loading" and a
+              loadingLabel. See docs/design-system/action-controls.md. */}
+          {submitting ? (
+            <Action state="loading" loadingLabel={getSubmitLabel()}>
+              {getSubmitLabel()}
+            </Action>
+          ) : (
+            <Action
+              onClick={() => {
+                const syntheticEvent = { preventDefault: () => {} } as FormEvent
+                void handleSubmit(syntheticEvent)
+              }}
+              state={!formData.title.trim() || !formData.artist.trim() ? 'disabled' : 'idle'}
+            >
+              {getSubmitLabel()}
+            </Action>
+          )}
         </>
       }
     >
@@ -259,44 +262,43 @@ export function SuggestNewSongModal({
 
         {/* Spotify Import Section */}
         <div className="bg-base-200 rounded-lg p-4 space-y-3">
-          <label className="label py-0" htmlFor="spotify-url">
-            <span className="label-text font-medium">{t('jams.spotify_url_label')}</span>
-          </label>
-          <div className="flex gap-2">
-            <input
+          {/* Field wraps exactly one control, so the import Action is a sibling
+              of the Field, not a child of it. */}
+          <div className="flex gap-2 items-end">
+            <Field
               id="spotify-url"
-              type="text"
-              value={spotifyUrl}
-              onChange={(e) => {
-                setSpotifyUrl(e.target.value)
-                setImportError(null)
-                setImportSuccess(false)
-              }}
-              className="input input-bordered flex-1"
-              placeholder={t('jams.spotify_url_placeholder')}
+              label={t('jams.spotify_url_label')}
+              className="flex-1"
               disabled={importLoading || submitting}
-            />
-            <button
-              type="button"
-              onClick={() => { void handleSpotifyImport() }}
-              className="btn btn-secondary"
-              disabled={!spotifyUrl.trim() || importLoading || submitting}
+              error={importError ?? undefined}
             >
-              {importLoading ? (
-                <>
-                  <span className="loading loading-spinner loading-sm" aria-hidden="true"></span>
-                  {t('jams.importing_metadata')}
-                </>
-              ) : (
-                t('jams.import_from_spotify')
-              )}
-            </button>
+              <Field.Input
+                type="text"
+                value={spotifyUrl}
+                onChange={(e) => {
+                  setSpotifyUrl(e.target.value)
+                  setImportError(null)
+                  setImportSuccess(false)
+                }}
+                placeholder={t('jams.spotify_url_placeholder')}
+              />
+            </Field>
+            {importLoading ? (
+              <Action variant="secondary" state="loading" loadingLabel={t('jams.importing_metadata')}>
+                {t('jams.importing_metadata')}
+              </Action>
+            ) : (
+              <Action
+                variant="secondary"
+                onClick={() => { void handleSpotifyImport() }}
+                state={!spotifyUrl.trim() || submitting ? 'disabled' : 'idle'}
+              >
+                {t('jams.import_from_spotify')}
+              </Action>
+            )}
           </div>
-          {importError && (
-            <p className="text-sm text-error">{importError}</p>
-          )}
           {importSuccess && (
-            <p className="text-sm text-success">{t('jams.import_success')}</p>
+            <FormSubmissionFeedback state="success" message={t('jams.import_success')} />
           )}
         </div>
 

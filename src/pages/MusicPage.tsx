@@ -12,11 +12,16 @@ import { useAuth, usePageAlerts } from '../hooks'
 import { musicService } from '../services'
 import type { MusicResponseDto, UpdateMusicDto, PaginationMeta } from '../types/api.types'
 import {
+  Action,
+  Badge,
   ConfirmDialog,
+  EmptyState,
+  LoadingState,
   MusicCard,
   MusicEmptyState,
   MusicFilters,
   MusicModal,
+  OverlayModal,
   PageAlerts,
 } from '../components'
 import { filterAndSortMusic } from '../lib/musicUtils'
@@ -328,42 +333,41 @@ export function MusicPage() {
             <h1 className="text-3xl sm:text-4xl font-bold text-balance">{t('music_library.page_title')}</h1>
             <div className="flex gap-2 w-full sm:w-auto">
               {user?.isHost && (
-                <button
+                <Action
                   onClick={handleAdd}
-                  className="btn btn-primary flex-1 sm:flex-none"
-                  disabled={actionLoading}
+                  className="flex-1 sm:flex-none"
+                  state={actionLoading ? 'disabled' : 'idle'}
                 >
                   {t('music_library.add_song')}
-                </button>
+                </Action>
               )}
               {isAuthenticated ? (
-                <button
+                <Action
+                  variant="secondary"
                   onClick={handleSuggest}
-                  className="btn btn-secondary flex-1 sm:flex-none"
-                  disabled={actionLoading}
+                  className="flex-1 sm:flex-none"
+                  state={actionLoading ? 'disabled' : 'idle'}
                 >
                   {t('music_library.suggest_song')}
-                </button>
+                </Action>
               ) : (
-                <button
+                <Action
+                  variant="secondary"
                   onClick={() => navigate('/login?redirect=/music')}
-                  className="btn btn-secondary flex-1 sm:flex-none"
+                  className="flex-1 sm:flex-none"
                 >
                   {t('music_library.suggest_song')}
-                </button>
+                </Action>
               )}
             </div>
           </div>
 
           {/* Suggested songs button - hosts only */}
           {user?.isHost && suggestedCount > 0 && (
-            <button
-              onClick={() => void openSuggestedModal()}
-              className="btn btn-warning btn-sm gap-2"
-            >
+            <Action variant="secondary" onClick={() => void openSuggestedModal()} className="gap-2">
               {t('music_library.suggested_songs')}
-              <span className="badge badge-sm">{suggestedCount}</span>
-            </button>
+              <Badge size="sm">{suggestedCount}</Badge>
+            </Action>
           )}
         </div>
       </div>
@@ -412,6 +416,12 @@ export function MusicPage() {
         )}
       </div>
 
+      {/* Pagination.
+          Documented exception: the page-size select, the page-number input, and
+          the four join-item step buttons stay hand-rolled. Field always renders a
+          label and Action always renders a full-size control, so these dense,
+          label-free pagination controls have no canonical equivalent yet.
+          See docs/design-system/jam-music-migration.md. */}
       {/* Pagination */}
       {meta && totalPages > 1 && (
         <div className="container mx-auto max-w-7xl px-4 pb-4">
@@ -513,55 +523,56 @@ export function MusicPage() {
       )}
 
 
-      {/* Suggested Songs Review Modal */}
-      {suggestedModalOpen && (
-        <dialog className="modal modal-open" onClick={(e) => { if (e.target === e.currentTarget) closeSuggestedModal() }}>
-          <div className="modal-box max-w-2xl max-h-[80vh]">
-            <h3 className="font-bold text-lg mb-4">{t('music_library.suggested_songs')}</h3>
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2" onClick={closeSuggestedModal}>X</button>
-            {suggestedLoading ? (
-              <div className="flex justify-center py-8">
-                <span className="loading loading-spinner loading-lg" />
-              </div>
-            ) : suggestedSongs.length === 0 ? (
-              <p className="text-base-content/60 text-center py-8">{t('music_library.no_suggested')}</p>
-            ) : (
-              <div className="space-y-3 overflow-y-auto">
-                {suggestedSongs.map((music) => (
-                  <div key={music.id} className="card bg-base-200">
-                    <div className="card-body p-4">
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0 flex-1">
-                          <p className="font-semibold">{music.title}</p>
-                          <p className="text-sm text-base-content/70">{music.artist}</p>
-                          {music.genre && <span className="badge badge-sm badge-outline mt-1">{music.genre}</span>}
-                          {music.description && <p className="text-xs text-base-content/50 mt-1 line-clamp-2">{music.description}</p>}
-                        </div>
-                        <div className="flex gap-2 shrink-0">
-                          <button
-                            className="btn btn-success btn-sm"
-                            disabled={actionLoading}
-                            onClick={() => void handleApprove(music)}
-                          >
-                            {t('common.approve')}
-                          </button>
-                          <button
-                            className="btn btn-error btn-sm"
-                            disabled={actionLoading}
-                            onClick={() => handleReject(music)}
-                          >
-                            {t('common.reject')}
-                          </button>
-                        </div>
-                      </div>
+      {/* Suggested Songs Review Modal.
+          This was a second, hand-rolled <dialog className="modal modal-open">
+          that duplicated the overlay behaviour (backdrop dismissal, close
+          control, scrollable body). It now uses the canonical OverlayModal,
+          which also adds the focus trap and the escape-key dismissal. */}
+      <OverlayModal
+        isOpen={suggestedModalOpen}
+        onDismiss={closeSuggestedModal}
+        title={t('music_library.suggested_songs')}
+        closeLabel={t('common.close')}
+        size="lg"
+      >
+        {suggestedLoading ? (
+          <LoadingState label={t('common.loading')} className="py-8" />
+        ) : suggestedSongs.length === 0 ? (
+          <EmptyState kind="content" title={t('music_library.no_suggested')} />
+        ) : (
+          <div className="space-y-3 overflow-y-auto">
+            {suggestedSongs.map((music) => (
+              <div key={music.id} className="card bg-base-200">
+                <div className="card-body p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-semibold">{music.title}</p>
+                      <p className="text-sm text-base-content/70">{music.artist}</p>
+                      {music.genre && <Badge size="sm" className="mt-1">{music.genre}</Badge>}
+                      {music.description && <p className="text-xs text-base-content/50 mt-1 line-clamp-2">{music.description}</p>}
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                      <Action
+                        state={actionLoading ? 'disabled' : 'idle'}
+                        onClick={() => void handleApprove(music)}
+                      >
+                        {t('common.approve')}
+                      </Action>
+                      <Action
+                        variant="destructive"
+                        state={actionLoading ? 'disabled' : 'idle'}
+                        onClick={() => handleReject(music)}
+                      >
+                        {t('common.reject')}
+                      </Action>
                     </div>
                   </div>
-                ))}
+                </div>
               </div>
-            )}
+            ))}
           </div>
-        </dialog>
-      )}
+        )}
+      </OverlayModal>
 
       {/* Confirm Dialog */}
       <ConfirmDialog
