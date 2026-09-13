@@ -27,6 +27,15 @@
       "owner": "Design-system maintainers and the owning story consumer",
       "record": "docs/design-system/workbench-authoring.md",
       "removeWhen": "Remove this entry after each inherited story has play coverage or an explicit static classification; changing an impacted story or component already requires one of those forms of evidence."
+    },
+    {
+      "id": "debt.host-jam-summary-card-exemption",
+      "kind": "component-exemption",
+      "scope": "component:ui.0142",
+      "reason": "HostJamSummaryCard is intentionally local to HostDashboardPage, where it depends on route-owned navigation and mutation behavior rather than exposing a reusable render seam.",
+      "owner": "Jam host-dashboard maintainers",
+      "record": "component-catalogue.metadata.json and docs/architecture-improvement-spec.md issue 103",
+      "removeWhen": "Remove when HostJamSummaryCard is extracted behind deterministic props and receives direct workbench evidence."
     }
   ]
 }

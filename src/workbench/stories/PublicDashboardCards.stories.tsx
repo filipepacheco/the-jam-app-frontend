@@ -41,7 +41,7 @@ export const HeaderControls: Story = {
     // primitives can render `role="menuitem"` instead of `role="button"`,
     // so a positional `getAllByRole('button')[n]` lookup silently points at
     // the wrong control. The regexes cover the en, es and pt labels.
-    const navToggle = canvas.getByRole('button', { name: /toggle navbar|alternar barra/i })
+    const navToggle = canvas.getByRole('button', { name: /dashboard controls|controles del panel|controles do painel/i })
     const fullscreenToggle = canvas.getByRole('button', { name: /fullscreen|pantalla completa|tela cheia/i })
     await userEvent.click(navToggle)
     await userEvent.click(fullscreenToggle)

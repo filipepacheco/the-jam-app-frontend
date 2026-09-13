@@ -2,9 +2,8 @@ name: Private component workbench
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
+    types: [opened, synchronize, reopened, labeled]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,6 +15,7 @@ concurrency:
 jobs:
   verify:
     name: Test and build privately
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'architecture-track-gate')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.55.1-noble

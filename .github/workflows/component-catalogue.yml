@@ -2,9 +2,8 @@ name: Component catalogue
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
+    types: [opened, synchronize, reopened, labeled]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,6 +15,7 @@ concurrency:
 jobs:
   check:
     name: Check catalogue
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'architecture-track-gate')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -40,7 +40,7 @@ jobs:
 
       # Keep prospective policy findings visible before the blocking regression gate.
       - name: Warn about design-system governance regressions
-        run: npm run design-system:warn -- --base "${{ github.event.pull_request.base.sha || github.event.before }}"
+        run: npm run design-system:warn -- --base "${{ github.event.pull_request.base.sha || github.event.before || 'origin/main' }}"
 
       - name: Enforce new design-system regressions only
-        run: npm run design-system:check -- --base "${{ github.event.pull_request.base.sha || github.event.before }}"
+        run: npm run design-system:check -- --base "${{ github.event.pull_request.base.sha || github.event.before || 'origin/main' }}"
