@@ -1,6 +1,7 @@
 import {afterEach, describe, expect, it, vi} from 'vitest'
 import {
   createHostScheduleController,
+  type HostScheduleOperationsPort,
   type HostScheduleSnapshot,
   type MusicCataloguePort,
   type ScheduleTimerPort,
@@ -8,6 +9,20 @@ import {
 
 const catalogue: MusicCataloguePort = {
   listApproved: vi.fn().mockResolvedValue({items: [], hasMore: false}),
+}
+
+function successfulOperations(
+  refreshed: HostScheduleSnapshot = snapshot(),
+): HostScheduleOperationsPort {
+  return {
+    updateNotes: vi.fn().mockResolvedValue({ok: true}),
+    updatePerformance: vi.fn().mockResolvedValue({ok: true}),
+    createPerformance: vi.fn().mockResolvedValue({ok: true}),
+    removePerformance: vi.fn().mockResolvedValue({ok: true}),
+    updateRegistration: vi.fn().mockResolvedValue({ok: true}),
+    removeRegistration: vi.fn().mockResolvedValue({ok: true}),
+    refresh: vi.fn().mockResolvedValue({ok: true, snapshot: refreshed}),
+  }
 }
 
 afterEach(() => {
@@ -76,6 +91,12 @@ function manualTimer() {
       callback?.()
     },
   }
+}
+
+function deferred<T>() {
+  let resolve!: (value: T) => void
+  const promise = new Promise<T>((nextResolve) => { resolve = nextResolve })
+  return {promise, resolve}
 }
 
 describe('Host Schedule controller', () => {
@@ -237,5 +258,205 @@ describe('Host Schedule controller', () => {
 
     await expect(loading).resolves.toEqual({code: 'cancelled', operation: 'load_music_catalogue'})
     expect(controller.getSnapshot().catalogue).toEqual({status: 'idle', items: []})
+  })
+
+  it('updates notes under an entity lock and refreshes authoritative state', async () => {
+    const operations = successfulOperations()
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    const saving = controller.commands.updateNotes('jam-music-1', 'Lower key')
+
+    expect(controller.getSnapshot().pendingEntityIds).toEqual(new Set(['jam-music-1']))
+    await expect(saving).resolves.toEqual({
+      code: 'success',
+      operation: 'update_notes',
+      affectedIds: ['jam-music-1'],
+    })
+    expect(operations.updateNotes).toHaveBeenCalledWith({
+      jamId: 'jam-1',
+      jamMusicId: 'jam-music-1',
+      notes: 'Lower key',
+    })
+    expect(operations.refresh).toHaveBeenCalledWith('jam-1')
+    expect(controller.getSnapshot().pendingEntityIds.size).toBe(0)
+    expect(controller.getSnapshot().latestOutcome).toEqual({
+      code: 'success',
+      operation: 'update_notes',
+      affectedIds: ['jam-music-1'],
+    })
+  })
+
+  it('reports a resolved notes failure without claiming success or refreshing', async () => {
+    const operations = successfulOperations()
+    vi.mocked(operations.updateNotes).mockResolvedValue({ok: false, error: {message: 'Not allowed'}})
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    await expect(controller.commands.updateNotes('jam-music-1', 'Lower key')).resolves.toEqual({
+      code: 'failure',
+      operation: 'update_notes',
+      failure: 'resolved',
+      affectedIds: ['jam-music-1'],
+      error: {message: 'Not allowed'},
+    })
+    expect(operations.refresh).not.toHaveBeenCalled()
+    expect(controller.getSnapshot().pendingEntityIds.size).toBe(0)
+  })
+
+  it('refreshes after a thrown notes failure because the mutation may have reached the server', async () => {
+    const operations = successfulOperations()
+    vi.mocked(operations.updateNotes).mockRejectedValue(new Error('Connection lost'))
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    await expect(controller.commands.updateNotes('jam-music-1', 'Lower key')).resolves.toEqual({
+      code: 'failure',
+      operation: 'update_notes',
+      failure: 'thrown',
+      affectedIds: ['jam-music-1'],
+      error: {message: 'Connection lost'},
+    })
+    expect(operations.refresh).toHaveBeenCalledWith('jam-1')
+    expect(controller.getSnapshot().pendingEntityIds.size).toBe(0)
+  })
+
+  it('reports refresh failure instead of success after a completed mutation', async () => {
+    const operations = successfulOperations()
+    vi.mocked(operations.refresh).mockResolvedValue({ok: false, error: {message: 'Refresh failed'}})
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    await expect(controller.commands.updateNotes('jam-music-1', 'Lower key')).resolves.toEqual({
+      code: 'refresh_failure',
+      operation: 'update_notes',
+      affectedIds: ['jam-music-1'],
+      error: {message: 'Refresh failed'},
+    })
+    expect(controller.getSnapshot().latestOutcome?.code).toBe('refresh_failure')
+  })
+
+  it('rejects a duplicate command while the same entity is pending', async () => {
+    const operations = successfulOperations()
+    const mutation = deferred<{ok: true}>()
+    vi.mocked(operations.updateNotes).mockReturnValue(mutation.promise)
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    const first = controller.commands.updateNotes('jam-music-1', 'Lower key')
+    await expect(controller.commands.updateNotes('jam-music-1', 'Another key')).resolves.toEqual({
+      code: 'duplicate_pending',
+      operation: 'update_notes',
+      entityId: 'jam-music-1',
+    })
+    expect(operations.updateNotes).toHaveBeenCalledTimes(1)
+
+    mutation.resolve({ok: true})
+    await first
+  })
+
+  it('does not treat matching IDs from different entity types as duplicates', async () => {
+    const operations = successfulOperations()
+    const notesMutation = deferred<{ok: true}>()
+    vi.mocked(operations.updateNotes).mockReturnValue(notesMutation.promise)
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    const savingNotes = controller.commands.updateNotes('shared-id', 'Lower key')
+    await expect(controller.commands.transitionPerformance('shared-id', 'COMPLETED')).resolves.toEqual({
+      code: 'success',
+      operation: 'transition_performance',
+      affectedIds: ['shared-id'],
+    })
+    expect(operations.updatePerformance).toHaveBeenCalledTimes(1)
+    expect(controller.getSnapshot().pendingEntityIds).toEqual(new Set(['shared-id']))
+
+    notesMutation.resolve({ok: true})
+    await savingNotes
+    expect(controller.getSnapshot().pendingEntityIds.size).toBe(0)
+  })
+
+  it('places an approved suggestion after the active Performance order', async () => {
+    const operations = successfulOperations()
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    await expect(controller.commands.transitionPerformance('suggestion', 'SCHEDULED')).resolves.toEqual({
+      code: 'success',
+      operation: 'transition_performance',
+      affectedIds: ['suggestion'],
+    })
+    expect(operations.updatePerformance).toHaveBeenCalledWith({
+      performanceId: 'suggestion',
+      status: 'SCHEDULED',
+      order: 3,
+    })
+  })
+
+  it('creates a Performance after the greatest existing order', async () => {
+    const operations = successfulOperations()
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    await expect(controller.commands.createPerformance('music-4')).resolves.toEqual({
+      code: 'success',
+      operation: 'create_performance',
+      affectedIds: ['music-4'],
+    })
+    expect(operations.createPerformance).toHaveBeenCalledWith({jamId: 'jam-1', musicId: 'music-4', order: 4})
+  })
+
+  it('models destructive confirmation before removing a Performance', async () => {
+    const operations = successfulOperations()
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    controller.commands.requestRemovePerformance('scheduled')
+    expect(controller.getSnapshot().pendingConfirmation).toEqual({
+      kind: 'remove_performance',
+      performanceId: 'scheduled',
+    })
+    expect(operations.removePerformance).not.toHaveBeenCalled()
+
+    await expect(controller.commands.confirmPendingAction()).resolves.toEqual({
+      code: 'success',
+      operation: 'remove_performance',
+      affectedIds: ['scheduled'],
+    })
+    expect(operations.removePerformance).toHaveBeenCalledWith('scheduled')
+    expect(controller.getSnapshot().pendingConfirmation).toBeNull()
+  })
+
+  it('approves a Performance Registration and refreshes the Jam', async () => {
+    const operations = successfulOperations()
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, operations})
+
+    await expect(controller.commands.approveRegistration('vocal')).resolves.toEqual({
+      code: 'success',
+      operation: 'approve_registration',
+      affectedIds: ['vocal'],
+    })
+    expect(operations.updateRegistration).toHaveBeenCalledWith({registrationId: 'vocal', status: 'APPROVED'})
+    expect(operations.refresh).toHaveBeenCalledWith('jam-1')
+  })
+
+  it('reports individual failures when bulk Registration approval partially succeeds', async () => {
+    const initial = snapshot()
+    const scheduled = initial.performances.find(({id}) => id === 'scheduled')!
+    const registrations = [
+      {...scheduled.registrations[0], id: 'pending-1', status: 'PENDING'},
+      {...scheduled.registrations[0], id: 'pending-2', status: 'PENDING'},
+    ]
+    const withPending = {
+      ...initial,
+      performances: initial.performances.map((performance) => (
+        performance.id === 'scheduled' ? {...performance, registrations} : performance
+      )),
+    }
+    const operations = successfulOperations(withPending)
+    vi.mocked(operations.updateRegistration)
+      .mockResolvedValueOnce({ok: true})
+      .mockResolvedValueOnce({ok: false, error: {message: 'Already filled'}})
+    const controller = createHostScheduleController({initialSnapshot: withPending, catalogue, operations})
+
+    await expect(controller.commands.approveAllRegistrations('scheduled')).resolves.toEqual({
+      code: 'partial_success',
+      operation: 'approve_all_registrations',
+      affectedIds: ['pending-1', 'pending-2'],
+      succeededIds: ['pending-1'],
+      failed: [{id: 'pending-2', failure: 'resolved', error: {message: 'Already filled'}}],
+    })
+    expect(operations.refresh).toHaveBeenCalledTimes(1)
   })
 })
