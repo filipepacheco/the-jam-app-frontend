@@ -46,7 +46,28 @@ function manualTimer() {
   }
 }
 
+function deferred<T>() {
+  let resolve!: (value: T) => void
+  const promise = new Promise<T>((nextResolve) => { resolve = nextResolve })
+  return {promise, resolve}
+}
+
 describe('Live Queue controller', () => {
+  it.each(['mouse', 'touch', 'keyboard'] as const)(
+    'uses the same move intent model for %s input',
+    (mode) => {
+      const controller = createLiveQueueController({initialSnapshot: snapshot(['a', 'b', 'c'])})
+      controller.commands.beginReorder()
+
+      controller.commands.beginMove({mode, performanceId: 'b'})
+      controller.commands.updateMoveTarget(0)
+      controller.commands.commitMove()
+
+      expect(controller.getSnapshot().draftPerformances.map(({id}) => id)).toEqual(['b', 'a', 'c'])
+      expect(controller.getSnapshot().input).toEqual({mode: 'idle'})
+    },
+  )
+
   it('keeps an active reorder draft when a poll replaces canonical server state', () => {
     const controller = createLiveQueueController({initialSnapshot: snapshot(['a', 'b', 'c'])})
 
@@ -141,8 +162,8 @@ describe('Live Queue controller', () => {
         expect.objectContaining({id: 'a', order: 4}),
         expect.objectContaining({id: 'b', order: 5}),
       ]),
-    })
-    expect(operations.refresh).toHaveBeenCalledWith('jam-1')
+    }, expect.any(AbortSignal))
+    expect(operations.refresh).toHaveBeenCalledWith('jam-1', expect.any(AbortSignal))
     expect(controller.getSnapshot().server).toEqual(authoritative)
     expect(controller.getSnapshot().draftPerformances.map(({id}) => id)).toEqual(['c', 'b', 'a'])
     expect(controller.getSnapshot().session).toEqual({status: 'idle'})
@@ -253,6 +274,35 @@ describe('Live Queue controller', () => {
     await expect(save).resolves.toEqual({code: 'cancelled', operation: 'save_reorder'})
     expect(scheduled.hasPending).toBe(false)
     expect(operations.reorder).not.toHaveBeenCalled()
+  })
+
+  it('aborts and invalidates in-flight persistence when the controller is disposed', async () => {
+    const scheduled = manualTimer()
+    const remote = deferred<{ok: true}>()
+    let signal: AbortSignal | undefined
+    const operations: LiveQueueOperationsPort = {
+      reorder: vi.fn().mockImplementation((_input, nextSignal) => {
+        signal = nextSignal
+        return remote.promise
+      }),
+      refresh: vi.fn(),
+    }
+    const controller = createLiveQueueController({
+      initialSnapshot: snapshot(['a', 'b']), operations, timer: scheduled.timer,
+    })
+    controller.commands.beginReorder()
+    controller.commands.movePerformance('b', 0)
+    const save = controller.commands.saveReorder()
+    scheduled.flush()
+
+    expect(controller.getSnapshot().persistence).toEqual({status: 'saving'})
+    controller.dispose()
+
+    await expect(save).resolves.toEqual({code: 'cancelled', operation: 'save_reorder'})
+    expect(signal?.aborted).toBe(true)
+    remote.resolve({ok: true})
+    await Promise.resolve()
+    expect(operations.refresh).not.toHaveBeenCalled()
   })
 
   it('normalizes a thrown persistence failure and restores the starting snapshot', async () => {

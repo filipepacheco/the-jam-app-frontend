@@ -12,8 +12,8 @@ import type {
 } from './liveQueueController'
 
 export interface LiveQueueTransport {
-  getLiveState(jamId: string): Promise<{data: LiveStateResponseDto; status: number}>
-  reorderQueue(jamId: string, updates: ScheduleOrderUpdate[]): Promise<ReorderQueueResponse>
+  getLiveState(jamId: string, signal?: AbortSignal): Promise<{data: LiveStateResponseDto; status: number}>
+  reorderQueue(jamId: string, updates: ScheduleOrderUpdate[], signal?: AbortSignal): Promise<ReorderQueueResponse>
 }
 
 function mapPerformance(song: LiveStateSongDto): LiveQueuePerformance {
@@ -51,11 +51,12 @@ export function createLiveQueueOperationsAdapter(
   transport: LiveQueueTransport = jamControlService,
 ): LiveQueueOperationsPort {
   return {
-    async reorder({jamId, performances}) {
+    async reorder({jamId, performances}, signal) {
       try {
         const response = await transport.reorderQueue(
           jamId,
           performances.map(({id, order}) => ({scheduleId: id, order})),
+          signal,
         )
         return response.success
           ? {ok: true}
@@ -64,9 +65,9 @@ export function createLiveQueueOperationsAdapter(
         return {ok: false, error: {message: message(cause, 'Failed to reorder Live Queue')}}
       }
     },
-    async refresh(jamId) {
+    async refresh(jamId, signal) {
       try {
-        const response = await transport.getLiveState(jamId)
+        const response = await transport.getLiveState(jamId, signal)
         return {ok: true, snapshot: mapLiveStateToLiveQueueSnapshot(jamId, response.data)}
       } catch (cause) {
         return {ok: false, error: {message: message(cause, 'Failed to refresh Live Queue')}}

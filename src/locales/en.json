@@ -548,6 +548,7 @@
     "song_paused_feedback": "Song paused",
     "skipped_feedback": "Skipped to next song",
     "reordered_feedback": "Queue reordered",
+    "reorder_conflict": "The Live Queue changed. Reload it and reapply your order.",
     "executing_action": "Executing action…",
     "saving_order": "Saving order…",
     "reorder_hint_mobile": "Hold an item for a moment, then drag to reorder",

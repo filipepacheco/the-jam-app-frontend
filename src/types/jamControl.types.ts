@@ -129,14 +129,3 @@ export interface ReorderQueueResponse {
     status: number
   }
 }
-
-/**
- * Hook return type for useQueueReorder
- * Provides reorder method and state management
- */
-export interface UseQueueReorderReturn {
-  reorderQueue: (newQueue: import('./api.types').ScheduleResponseDto[]) => Promise<void>
-  isReordering: boolean
-  error: string | null
-  resetError: () => void
-}

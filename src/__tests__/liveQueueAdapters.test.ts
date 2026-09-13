@@ -39,7 +39,7 @@ describe('Live Queue adapters', () => {
     expect(transport.reorderQueue).toHaveBeenCalledWith('jam-1', [
       {scheduleId: 'a', order: 4},
       {scheduleId: 'b', order: 5},
-    ])
+    ], undefined)
     await expect(operations.refresh('jam-1')).resolves.toEqual({ok: true, snapshot})
   })
 

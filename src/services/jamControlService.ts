@@ -11,9 +11,9 @@ import type {LiveStateResponseDto, ReorderQueueRequest, ReorderQueueResponse, Sc
 /**
  * Get the current live state of a jam
  */
-export function getLiveState(jamId: string) {
+export function getLiveState(jamId: string, signal?: AbortSignal) {
   return withLegacyResponse(
-    () => apiClient.get<LiveStateResponseDto>(`/jams/${jamId}/live/state`),
+    () => apiClient.get<LiveStateResponseDto>(`/jams/${jamId}/live/state`, {signal}),
     'Failed to load jam live state',
   )
 }
@@ -84,14 +84,16 @@ export function previous(jamId: string) {
  */
 export async function reorderQueue(
   jamId: string,
-  updates: ScheduleOrderUpdate[]
+  updates: ScheduleOrderUpdate[],
+  signal?: AbortSignal,
 ): Promise<ReorderQueueResponse> {
   try {
     const payload: ReorderQueueRequest = { updates }
 
     const response = await apiClient.post<JamResponseDto>(
       `/jams/${jamId}/control/reorder`,
-      payload
+      payload,
+      {signal},
     )
 
     if (!response.success) {
