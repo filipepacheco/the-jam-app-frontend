@@ -57,5 +57,8 @@ claude.md
 .cursor
 .claude
 .serena
-docs
+docs/*
+!docs/adr/
+!docs/architecture-improvement-plan.md
+!docs/architecture-improvement-spec.md
 .vercel
