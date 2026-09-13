@@ -1,6 +1,31 @@
 {
   "candidateFamilies": ["overlay", "feedback", "empty-state", "data-display", "navigation", "menu", "tabs"],
-  "inlinePatternGovernance": {"scopes": [], "candidates": []},
+  "inlinePatternGovernance": {
+    "scopes": [
+      {"source": "src/pages/host/HostDashboardPage.tsx", "families": ["card"]}
+    ],
+    "candidates": [
+      {
+        "id": "inline.ui.0142.card.a466fe497136",
+        "disposition": {
+          "status": "intentionally-distinct",
+          "rationale": "The compact host-owned Jam summary exposes management actions and operational counts, unlike the browse JamCard used by musicians to discover and open a Jam."
+        }
+      }
+    ]
+  },
+  "retiredComponents": [
+    {
+      "id": "ui.0064",
+      "formerSource": "src/components/MusicTable.tsx",
+      "formerName": "MusicActionButtons",
+      "reason": "The private actions belonged only to an unreachable, unexported MusicTableRow and had no production or workbench consumer.",
+      "evidence": [
+        "Repository import and JSX reference search found no consumer of MusicTableRow or MusicActionButtons outside their former module.",
+        "MusiciansBadges was relocated independently so its workbench evidence remains available."
+      ]
+    }
+  ],
   "defaults": {
     "category": "product-ui",
     "layer": "domain-component",
@@ -36,6 +61,7 @@
     {"source": "src/components/jam-detail-v2/**/*.tsx", "metadata": {"productArea": "jam", "notes": []}},
     {"source": "src/pages/tabs/DJControlTabV2.tsx", "metadata": {"productArea": "dj-control", "notes": ["Production-default DJ control tab."]}},
     {"source": "src/components/publicDashboard/**/*.tsx", "metadata": {"productArea": "public-dashboard", "viewportContexts": ["desktop", "shared-screen"], "notes": []}},
+    {"source": "src/components/publicDashboard/DashboardControlsPanel.tsx", "metadata": {"canonicalAdoption": {"status": "not-applicable", "note": "This is a host settings surface rather than application navigation; its links use the canonical NavigationLink primitive."}, "notes": ["Intentionally distinct from the application Navbar: it configures the venue dashboard display and does not own application-wide navigation."]}},
     {"source": "src/pages/PublicDashboardPage.tsx", "metadata": {"productArea": "public-dashboard", "viewportContexts": ["desktop", "shared-screen"], "notes": []}},
     {"source": "src/components/schedule/**/*.tsx", "metadata": {"productArea": "schedule", "notes": []}},
     {"source": "src/pages/tabs/ScheduleTab.tsx", "metadata": {"productArea": "schedule", "notes": []}},
@@ -77,7 +103,7 @@
     {"source": "src/components/dj-control/QueueStats.tsx", "metadata": {"category": "legacy-experimental", "lifecycle": "legacy", "productArea": "dj-control", "canonicalAdoption": {"status": "documented-exception", "family": "dj-control", "replacements": ["ui.0011", "ui.0012", "ui.0013"], "note": "The legacy composite remains only behind ?useLegacyDJ=true until its statistics, current-song, and playback-control responsibilities are fully replaced by the documented V2 components."}, "deprecation": {"replacement": "ui.0011 + ui.0012 + ui.0013", "removalCondition": "Remove after DJControlTab is retired and the legacy statistics-and-controls workflow is represented by the V2 playback and compact-stat components."}, "notes": ["Consumed only by the legacy DJ control tab."]}},
     {"source": "src/pages/tabs/JamDetailPageV2.tsx", "metadata": {"productArea": "jam", "notes": ["Production-default Jam detail page."]}},
     {"source": "src/App.tsx", "component": "HomePage", "metadata": {"category": "page-composition", "layer": "page-composition", "productArea": "marketing", "readiness": {"workbench": "needs-review"}, "notes": ["Landing-page composition declared locally in the application shell."]}},
-    {"source": "src/pages/host/HostDashboardPage.tsx", "component": "JamCard", "metadata": {"category": "product-ui", "layer": "domain-component", "productArea": "jam", "notes": ["Locally declared host Jam summary card."]}},
+    {"source": "src/pages/host/HostDashboardPage.tsx", "component": "HostJamSummaryCard", "metadata": {"category": "product-ui", "layer": "domain-component", "productArea": "jam", "notes": ["Intentionally distinct compact host summary with operational counts and management actions; browse JamCard serves musician discovery."]}},
     {"source": "src/pages/host/FeedbackPage.tsx", "component": "FeedbackCard", "metadata": {"category": "product-ui", "layer": "domain-component", "productArea": "feedback", "notes": ["Locally declared feedback card."]}},
     {"source": "src/pages/AboutPage.tsx", "metadata": {"productArea": "marketing", "notes": []}},
     {"source": "src/pages/NotFoundPage.tsx", "metadata": {"productArea": "app-shell", "notes": []}},
@@ -128,11 +154,10 @@
     {"source": "src/components/MusicCard.tsx", "metadata": {"readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "verified", "theme": "verified"}, "uiStates": ["approved", "suggested", "host", "viewer", "long-content", "spotify-link", "mobile", "desktop"], "notes": ["The local SpotifyIcon is covered through the exported card composition in Domain/Music/Library."]}},
     {"source": "src/components/MusicEmptyState.tsx", "metadata": {"readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "verified", "theme": "verified"}, "uiStates": ["filtered-results", "empty-library", "host", "guest"], "notes": ["Reviewed in Domain/Music/Library."]}},
     {"source": "src/components/MusicFilters.tsx", "metadata": {"readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "verified", "theme": "verified"}, "uiStates": ["default", "searching", "genre-filtered", "cleared", "mobile", "desktop"], "notes": ["Reviewed in Domain/Music/Library."]}},
-    {"source": "src/components/MusicTable.tsx", "metadata": {"readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "verified", "theme": "verified"}, "uiStates": ["instrument-requirements", "no-requirements"], "notes": ["MusiciansBadges is directly reviewed in Domain/Music/Library."]}},
-    {"source": "src/components/MusicTable.tsx", "component": "MusicActionButtons", "metadata": {"readiness": {"workbench": "exempt"}, "uiStates": ["host-actions", "viewer-permissions"], "notes": ["Local helper has no exported render seam because its owning table row is also unexported; revisit if that table seam becomes public."]}},
+    {"source": "src/components/music/MusiciansBadges.tsx", "metadata": {"productArea": "music", "readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "verified", "theme": "verified"}, "uiStates": ["instrument-requirements", "no-requirements"], "notes": ["MusiciansBadges is directly reviewed in Domain/Music/Library; its former unreachable table row and private actions are recorded under retired components."]}},
     {"source": "src/pages/BrowseJamsPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."]}},
     {"source": "src/pages/host/CreateJamPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."]}},
-    {"source": "src/pages/host/HostDashboardPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["The route-local JamCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."]}},
+    {"source": "src/pages/host/HostDashboardPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["The route-local HostJamSummaryCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."]}},
     {"source": "src/pages/host/HostJamSongsPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["Route-level data composition is deferred to page catalogue work; reusable Music UI is covered here."]}},
     {"source": "src/pages/host/JamManagementPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."]}},
     {"source": "src/pages/MusicPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["Route-level data composition is deferred to page catalogue work; reusable Music UI is covered here."]}},
@@ -243,8 +268,7 @@
     {"id": "ui.0061", "source": "src/components/MusicianProfileModal.tsx", "name": "MusicianProfileModal"},
     {"id": "ui.0062", "source": "src/components/MusicModal.tsx", "name": "MusicModal"},
     {"id": "ui.0063", "source": "src/components/MusicModalFormFields.tsx", "name": "MusicModalFormFields"},
-    {"id": "ui.0064", "source": "src/components/MusicTable.tsx", "name": "MusicActionButtons"},
-    {"id": "ui.0065", "source": "src/components/MusicTable.tsx", "name": "MusiciansBadges"},
+    {"id": "ui.0065", "source": "src/components/music/MusiciansBadges.tsx", "name": "MusiciansBadges"},
     {"id": "ui.0066", "source": "src/components/Navbar.tsx", "name": "Navbar"},
     {"id": "ui.0067", "source": "src/components/Navbar.tsx", "name": "NavLink"},
     {"id": "ui.0068", "source": "src/components/OnboardingModal.tsx", "name": "OnboardingModal"},
@@ -265,7 +289,7 @@
     {"id": "ui.0083", "source": "src/components/publicDashboard/Header.tsx", "name": "Header"},
     {"id": "ui.0084", "source": "src/components/publicDashboard/InstrumentGroup.tsx", "name": "InstrumentGroup"},
     {"id": "ui.0085", "source": "src/components/publicDashboard/LanguageSelector.tsx", "name": "LanguageSelector"},
-    {"id": "ui.0086", "source": "src/components/publicDashboard/Navbar.tsx", "name": "Navbar"},
+    {"id": "ui.0086", "source": "src/components/publicDashboard/DashboardControlsPanel.tsx", "name": "DashboardControlsPanel"},
     {"id": "ui.0087", "source": "src/components/publicDashboard/NextSongCard.tsx", "name": "NextSongCard"},
     {"id": "ui.0088", "source": "src/components/publicDashboard/OfflineBanner.tsx", "name": "OfflineBanner"},
     {"id": "ui.0089", "source": "src/components/publicDashboard/PollingControls.tsx", "name": "PollingControls"},
@@ -319,7 +343,7 @@
     {"id": "ui.0139", "source": "src/pages/host/FeedbackPage.tsx", "name": "FeedbackCard"},
     {"id": "ui.0140", "source": "src/pages/host/FeedbackPage.tsx", "name": "FeedbackPage"},
     {"id": "ui.0141", "source": "src/pages/host/HostDashboardPage.tsx", "name": "HostDashboardPage"},
-    {"id": "ui.0142", "source": "src/pages/host/HostDashboardPage.tsx", "name": "JamCard"},
+    {"id": "ui.0142", "source": "src/pages/host/HostDashboardPage.tsx", "name": "HostJamSummaryCard"},
     {"id": "ui.0143", "source": "src/pages/host/HostJamSongsPage.tsx", "name": "HostJamSongsPage"},
     {"id": "ui.0144", "source": "src/pages/host/JamManagementPage.tsx", "name": "JamManagementPage"},
     {"id": "ui.0145", "source": "src/pages/host/MusiciansPage.tsx", "name": "MusiciansPage"},

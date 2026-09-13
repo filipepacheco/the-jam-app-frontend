@@ -1,6 +1,6 @@
 export { default as Header } from './Header'
 export { default as OfflineBanner } from './OfflineBanner'
-export { default as Navbar } from './Navbar'
+export { default as DashboardControlsPanel } from './DashboardControlsPanel'
 export { PollingControls } from './PollingControls'
 export { CurrentSongCard } from './CurrentSongCard'
 export { NextSongCard } from './NextSongCard'

@@ -8,33 +8,13 @@ import {Link} from 'react-router-dom'
 import type {JamResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../lib/i18nUtils'
-import {getJamStatusLabel} from '../lib/statusUtils'
+import {getJamStatusLabel, getJamStatusTone} from '../lib/statusUtils'
 import {getJamPath, getJamDashboardPath} from '../utils/jamUrl'
 import {Calendar, Music, ExternalLink, Radio} from 'lucide-react'
-import {Badge, type DataDisplayTone} from './data-display'
-import type {JamStatus} from '../types/api.types'
+import {Badge} from './data-display'
 
 interface JamCardProps {
   jam: JamResponseDto
-}
-
-/**
- * Map a jam status to a canonical Badge tone.
- * This mirrors getJamStatusBadgeClass from lib/statusUtils, which still returns
- * DaisyUI classes for the host pages (issue #57). Keep this map local until the
- * host pages also move to Badge; then promote it to lib/statusUtils.
- */
-function jamStatusTone(status: JamStatus): DataDisplayTone {
-  switch (status) {
-    case 'LIVE':
-      return 'success'
-    case 'ACTIVE':
-      return 'info'
-    case 'INACTIVE':
-      return 'warning'
-    default:
-      return 'neutral'
-  }
 }
 
 /**
@@ -63,7 +43,7 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
         {/* Header: Name + Status Badge */}
         <div className="flex justify-between items-center gap-2">
           <h3 className="card-title ds-type-ui ds-wrap-user-content min-w-0">{jam.name || t('jams.no_name')}</h3>
-          <Badge tone={jamStatusTone(jam.status)} className="flex-shrink-0 font-semibold">
+          <Badge tone={getJamStatusTone(jam.status)} className="flex-shrink-0 font-semibold">
             {getJamStatusLabel(jam.status, t)}
           </Badge>
         </div>

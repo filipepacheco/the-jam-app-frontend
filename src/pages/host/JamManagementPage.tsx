@@ -10,12 +10,12 @@ import useSWR from 'swr'
 import {SWR_DEFAULTS} from '../../config/swrDefaults'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import type {JamResponseDto, JamStatus} from '../../types/api.types.ts'
+import type {JamResponseDto} from '../../types/api.types.ts'
 import {Alert, Badge, NavigationTabs, PageAlerts} from '../../components'
 import {SpotifyExportModal} from '../../components'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
-import {getJamStatusLabel} from '../../lib/statusUtils'
+import {getJamStatusLabel, getJamStatusTone} from '../../lib/statusUtils'
 import {DJControlTab} from "../tabs/DJControlTab.tsx";
 import {DJControlTabV2} from "../tabs/DJControlTabV2.tsx";
 import {AnalyticsTab} from "../tabs/AnalyticsTab.tsx";
@@ -25,13 +25,6 @@ import {RegistrationsTab} from "../tabs/RegistrationsTab.tsx";
 import {OverviewTab} from "../tabs/OverviewTab.tsx";
 
 type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live' | 'dj-control'
-
-const jamStatusTone: Record<JamStatus, 'info' | 'neutral' | 'success' | 'warning'> = {
-    ACTIVE: 'info',
-    FINISHED: 'neutral',
-    INACTIVE: 'warning',
-    LIVE: 'success',
-}
 
 // SWR fetcher for jam data
 const jamFetcher = async (id: string): Promise<JamResponseDto> => {
@@ -236,7 +229,7 @@ export function JamManagementPage() {
                     {/* Title and Status */}
                     <div className="flex items-center justify-between gap-2 flex-wrap">
                         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">🎭 {jam.name}</h1>
-                        <Badge tone={jamStatusTone[jam.status]} size="lg">
+                        <Badge tone={getJamStatusTone(jam.status)} size="lg">
                             {getJamStatusLabel(jam.status, t)}
                         </Badge>
                     </div>

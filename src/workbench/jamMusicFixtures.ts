@@ -37,7 +37,8 @@ export const jamMusicWorkbenchCoverage: WorkbenchCoverageRecord[] = [
   exempt('ui.0061', 'Domain overlays are catalogued together by #33.'),
   exempt('ui.0062', 'Domain overlays and forms are catalogued together by #33.'),
   exempt('ui.0063', 'Domain forms are catalogued together by #33.'),
-  exempt('ui.0064', 'Local helper has no exported render seam; revisit when its unexported table row is made public.'),
+  // ui.0064 was retired with the unreachable Music table row; its deletion
+  // evidence is retained in the catalogue's retiredComponents records.
   story('ui.0065'),
   story('ui.0179'),
   story('ui.0180'),

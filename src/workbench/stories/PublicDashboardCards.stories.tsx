@@ -35,7 +35,7 @@ const toggleNav = fn()
 const toggleFullscreen = fn()
 
 export const HeaderControls: Story = {
-  render: () => <div className="relative min-h-40"><Header title="Jam Benjamin Social Club with a long venue title" showNavbar={false} setShowNavbar={toggleNav} isFullscreen={false} onToggleFullscreen={toggleFullscreen} /></div>,
+  render: () => <div className="relative min-h-40"><Header title="Jam Benjamin Social Club with a long venue title" showControlsPanel={false} setShowControlsPanel={toggleNav} isFullscreen={false} onToggleFullscreen={toggleFullscreen} /></div>,
   play: async ({ canvas, userEvent }) => {
     // Query by accessible name, never by index. Canonical navigation
     // primitives can render `role="menuitem"` instead of `role="button"`,

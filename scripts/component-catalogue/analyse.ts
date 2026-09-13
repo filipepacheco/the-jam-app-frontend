@@ -530,6 +530,10 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata, diag
     identityIds.add(identity.id)
   }
   const includedKeys = new Set(includedComponents.map((component) => component.key))
+  for (const retired of metadata.retiredComponents) {
+    const key = `${toPosix(retired.formerSource)}#${retired.formerName}`
+    if (includedKeys.has(key)) diagnostics.push(`retired component selector "${key}" still resolves`)
+  }
   const staleIdentities = [...identities.keys()].filter((key) => !includedKeys.has(key))
   for (const key of staleIdentities) diagnostics.push(`component selector "${key}" does not resolve`)
   const missingIdentities = includedComponents.filter((component) => !identities.has(component.key))
@@ -603,8 +607,9 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata, diag
   )
 
   return {
-    schemaVersion: 3,
+    schemaVersion: 4,
     components: withWorkbenchStories,
+    retiredComponents: [...metadata.retiredComponents].sort((left, right) => compareText(left.id, right.id)),
     ignored: [...ignoredBySource.values()].sort((left, right) => compareText(left.source, right.source)),
     coverage: {
       eligibleSources: eligibleSources.length,

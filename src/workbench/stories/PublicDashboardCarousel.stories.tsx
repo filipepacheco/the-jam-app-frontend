@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect, fn, waitFor } from 'storybook/test'
-import DashboardNavbar from '../../components/publicDashboard/Navbar'
+import DashboardControlsPanel from '../../components/publicDashboard/DashboardControlsPanel'
 import { LanguageSelector } from '../../components/publicDashboard/LanguageSelector'
 import QRCodeCorner from '../../components/publicDashboard/QRCodeCorner'
 import { CarouselDashboard } from '../../components/publicDashboard/carousel/CarouselDashboard'
@@ -46,8 +46,8 @@ export const LanguageControls: Story = {
   },
 }
 
-export const SettingsNavbar: Story = {
-  render: () => <DashboardNavbar visible jamId="jam-public" jamSlug="friday-night-jam" onClose={close} currentLang="pt" onChangeLanguage={languageChange} pollingMs={5000} onPollingChange={fn()} layout="carousel" onLayoutChange={fn()} carouselIntervalMs={8000} onCarouselIntervalChange={fn()} />,
+export const ControlsPanel: Story = {
+  render: () => <DashboardControlsPanel visible jamId="jam-public" jamSlug="friday-night-jam" onClose={close} currentLang="pt" onChangeLanguage={languageChange} pollingMs={5000} onPollingChange={fn()} layout="carousel" onLayoutChange={fn()} carouselIntervalMs={8000} onCarouselIntervalChange={fn()} />,
   globals: { reducedMotion: true },
   play: async ({ canvasElement, userEvent }) => {
     const backdrop = canvasElement.querySelector<HTMLElement>('div.fixed.inset-0')!

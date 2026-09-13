@@ -3,8 +3,8 @@ import { IconAction } from '../Action'
 
 interface HeaderProps {
   title: string
-  showNavbar: boolean
-  setShowNavbar: (v: boolean) => void
+  showControlsPanel: boolean
+  setShowControlsPanel: (visible: boolean) => void
   isFullscreen: boolean
   onToggleFullscreen: () => void
   ariaToggleLabel?: string
@@ -17,15 +17,15 @@ interface HeaderProps {
 // layout and stacking classes are added here; no visual redesign.
 export default function Header({
   title,
-  showNavbar,
-  setShowNavbar,
+  showControlsPanel,
+  setShowControlsPanel,
   isFullscreen,
   onToggleFullscreen,
   ariaToggleLabel,
   tickerText,
 }: HeaderProps) {
   const { t } = useTranslation()
-  const toggleNavbarLabel = ariaToggleLabel || t('publicDashboard.toggleNavbar', 'Toggle navbar')
+  const toggleControlsLabel = ariaToggleLabel || t('publicDashboard.toggleControls', 'Toggle dashboard controls')
   const fullscreenLabel = isFullscreen
     ? t('publicDashboard.exitFullscreen', 'Exit fullscreen')
     : t('publicDashboard.enterFullscreen', 'Enter fullscreen')
@@ -34,12 +34,12 @@ export default function Header({
     <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 pointer-events-none">
       <IconAction
         variant="quiet"
-        onClick={() => setShowNavbar(!showNavbar)}
+        onClick={() => setShowControlsPanel(!showControlsPanel)}
         className="pointer-events-auto text-base-content shrink-0 z-10"
-        title={toggleNavbarLabel}
-        aria-expanded={showNavbar}
-        aria-controls="public-dashboard-navbar"
-        label={toggleNavbarLabel}
+        title={toggleControlsLabel}
+        aria-expanded={showControlsPanel}
+        aria-controls="public-dashboard-controls-panel"
+        label={toggleControlsLabel}
       >
         ☰
       </IconAction>

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import {useEffect, useMemo} from 'react'
 import {motion} from 'framer-motion'
 import {useReducedMotion} from '../../hooks'
 import {LanguageSelector} from './LanguageSelector'
@@ -8,7 +8,7 @@ import {Field} from '../Field'
 import {NavigationLink} from '../Navigation'
 import type {DashboardLayout} from '../../hooks'
 
-interface Props {
+interface DashboardControlsPanelProps {
   visible: boolean
   jamId?: string
   jamSlug?: string | null
@@ -23,18 +23,27 @@ interface Props {
   onCarouselIntervalChange?: (ms: number) => void
 }
 
-// The navbar is a host-facing settings drawer, not the venue-projected
+// This panel is host-facing, not part of the venue-projected
 // content: it is opened up close by whoever runs the display, so it can
 // carry the standard 44px canonical controls without affecting the
 // distance-legible screen behind it.
-export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange, layout, onLayoutChange, carouselIntervalMs, onCarouselIntervalChange }: Props) {
+export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange, layout, onLayoutChange, carouselIntervalMs, onCarouselIntervalChange }: DashboardControlsPanelProps) {
   const { t } = useTranslation()
   const { transition } = useReducedMotion()
 
-  const navbarTransition = useMemo(() => ({
+  const panelTransition = useMemo(() => ({
     opacity: transition.duration === 0 ? 0.1 : 0,
     y: -20
   }), [transition])
+
+  useEffect(() => {
+    if (!visible) return
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', closeOnEscape)
+    return () => document.removeEventListener('keydown', closeOnEscape)
+  }, [onClose, visible])
 
   if (!visible) return null
 
@@ -42,13 +51,7 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
     onClose()
   }
 
-  const handleEscapeKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      onClose()
-    }
-  }
-
-  const closeNavbarLabel = t('publicDashboard.closeNavbar', 'Close navbar')
+  const closePanelLabel = t('publicDashboard.closeControls', 'Close dashboard controls')
   const layoutLabel = t('publicDashboard.layoutLabel', 'Layout')
 
   return (
@@ -65,15 +68,14 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
       />
 
       <motion.div
-        id="public-dashboard-navbar"
-        initial={navbarTransition}
+        id="public-dashboard-controls-panel"
+        initial={panelTransition}
         animate={{ opacity: 1, y: 0 }}
-        exit={navbarTransition}
+        exit={panelTransition}
         transition={transition}
         className="fixed top-16 left-0 right-0 z-40 max-h-[calc(100vh-4rem)] overflow-y-auto bg-base-200 border-b border-base-300 p-4"
-        role="navigation"
+        role="region"
         aria-label={t('publicDashboard.dashboardControls', 'Dashboard controls')}
-        onKeyDown={handleEscapeKey}
       >
         <div className="flex flex-wrap items-center gap-4 max-w-6xl mx-auto">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
@@ -132,7 +134,7 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
 
             {onPollingChange && (
               <Field
-                id="navbar-polling-interval"
+                id="dashboard-polling-interval"
                 label={t('publicDashboard.autoRefresh', 'Auto-refresh')}
               >
                 <Field.Select
@@ -152,8 +154,8 @@ export default function Navbar({ visible, jamId, jamSlug, onClose, currentLang, 
           <IconAction
             variant="quiet"
             onClick={onClose}
-            title={closeNavbarLabel}
-            label={closeNavbarLabel}
+            title={closePanelLabel}
+            label={closePanelLabel}
             className="shrink-0"
           >
             ✕

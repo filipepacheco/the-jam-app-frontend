@@ -138,6 +138,17 @@ describe('component catalogue command', () => {
       'stories/NamedWidget.stories.tsx',
     ])
     expect(markdown).toContain('requires human review')
+    expect(catalogue.retiredComponents).toEqual([
+      {
+        id: 'ui.fixture.retired-action',
+        formerSource: 'src/RetiredAction.tsx',
+        formerName: 'RetiredAction',
+        reason: 'The unused fixture action was deleted after consumer analysis.',
+        evidence: ['No production or workbench imports resolve to the former module.'],
+      },
+    ])
+    expect(markdown).toContain('## Retired components')
+    expect(markdown).toContain('ui.fixture.retired-action')
   })
 
   it('reports repeated inline UI candidates with stable identity and governance state', async () => {

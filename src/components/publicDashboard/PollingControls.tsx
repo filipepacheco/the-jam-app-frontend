@@ -11,7 +11,7 @@ interface PollingControlsProps {
   onChange: (value: number) => void
 }
 
-// No page currently renders PollingControls (Navbar's own auto-refresh
+// No page currently renders PollingControls (DashboardControlsPanel's own auto-refresh
 // Field.Select covers that behavior); it is kept canonical-primitive-clean
 // for whichever consumer reintroduces it, per the catalogue's "uncertain
 // lifecycle" note.
@@ -35,4 +35,3 @@ export function PollingControls({ value, onChange }: PollingControlsProps) {
     </div>
   )
 }
-

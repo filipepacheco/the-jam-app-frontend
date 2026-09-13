@@ -106,6 +106,15 @@ export interface IgnoredCatalogueSource {
   reason: string
 }
 
+export interface RetiredCatalogueComponent {
+  /** Stable identity retained so deletion history is not lost. */
+  id: string
+  formerSource: string
+  formerName: string
+  reason: string
+  evidence: string[]
+}
+
 export const INLINE_PATTERN_FAMILIES = ['action', 'field', 'card', 'badge', 'menu', 'modal', 'drawer'] as const
 export type InlinePatternFamily = typeof INLINE_PATTERN_FAMILIES[number]
 
@@ -156,8 +165,9 @@ export interface InlinePatternCandidate {
 }
 
 export interface ComponentCatalogue {
-  schemaVersion: 3
+  schemaVersion: 4
   components: CatalogueComponent[]
+  retiredComponents: RetiredCatalogueComponent[]
   ignored: IgnoredCatalogueSource[]
   coverage: {
     eligibleSources: number
@@ -178,6 +188,7 @@ export interface ComponentCatalogue {
 export interface CatalogueMetadataConfig {
   candidateFamilies: string[]
   inlinePatternGovernance: InlinePatternGovernance
+  retiredComponents: RetiredCatalogueComponent[]
   defaults: ComponentMetadata
   rules: Array<{
     source: string

@@ -6,26 +6,8 @@
 import type {JamResponseDto, JamStatus, ScheduleResponseDto} from '../types/api.types'
 
 import {useTranslation} from 'react-i18next'
-import {Badge, type DataDisplayTone} from './data-display'
-import {getJamStatusLabel} from '../lib/statusUtils'
-
-/**
- * Map a jam status to a canonical Badge tone.
- * Kept local for the same reason as in JamCard.tsx: lib/statusUtils still
- * returns DaisyUI classes for the host pages (issue #57).
- */
-function jamStatusTone(status: JamStatus): DataDisplayTone {
-  switch (status) {
-    case 'LIVE':
-      return 'success'
-    case 'ACTIVE':
-      return 'info'
-    case 'INACTIVE':
-      return 'warning'
-    default:
-      return 'neutral'
-  }
-}
+import {Badge} from './data-display'
+import {getJamStatusLabel, getJamStatusTone} from '../lib/statusUtils'
 
 interface JamContextDisplayProps {
   jam: JamResponseDto | {
@@ -101,11 +83,10 @@ export function JamContextDisplay({ jam }: JamContextDisplayProps) {
         <div className="divider my-2"></div>
         <div className="flex items-center justify-between">
           <span className="text-sm text-base-content/70">{t('common.details')}</span>
-          <Badge tone={jamStatusTone(jam.status)}>{getJamStatusLabel(jam.status, t)}</Badge>
+          <Badge tone={getJamStatusTone(jam.status)}>{getJamStatusLabel(jam.status, t)}</Badge>
         </div>
       </div>
     </div>
   )
 }
-
 
