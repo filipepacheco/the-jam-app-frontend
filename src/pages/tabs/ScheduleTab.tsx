@@ -49,6 +49,14 @@ export function ScheduleTab({jam, onReload}: {
 
     const isAnyLoading = loadingIds.size > 0
 
+    useEffect(() => {
+        if (!selectedScheduleForRegistration) return
+        const refreshedPerformance = sortedSchedules.find(({id}) => id === selectedScheduleForRegistration.id)
+        if (refreshedPerformance && refreshedPerformance !== selectedScheduleForRegistration) {
+            setSelectedScheduleForRegistration(refreshedPerformance)
+        }
+    }, [selectedScheduleForRegistration, sortedSchedules])
+
     const reportMutationOutcome = useCallback((
         outcome: HostScheduleOutcome,
         successMessage: string,
@@ -382,11 +390,15 @@ export function ScheduleTab({jam, onReload}: {
                         setShowHostRegistrationModal(false)
                         setSelectedScheduleForRegistration(null)
                     }}
-                    onSuccess={() => {
-                        setShowHostRegistrationModal(false)
-                        setSelectedScheduleForRegistration(null)
-                        setSuccess(t('jam_management.schedule.musicians_registered', 'Musicians registered'))
-                        void onReload()
+                    onBatchComplete={(outcome) => {
+                        if (outcome.kind === 'success') {
+                            setShowHostRegistrationModal(false)
+                            setSelectedScheduleForRegistration(null)
+                        }
+                        if (outcome.kind !== 'failure') {
+                            setSuccess(t('jam_management.schedule.musicians_registered', 'Musicians registered'))
+                        }
+                        if (outcome.kind !== 'failure' || outcome.refreshRequired) void onReload()
                     }}
                 />
             )}
