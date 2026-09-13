@@ -1,5 +1,6 @@
-import {musicService} from '../../services'
+import {musicService, registrationService, scheduleService} from '../../services'
 import type {
+  ApiResponse,
   JamResponseDto,
   MusicResponseDto,
   MusicianResponseDto,
@@ -8,12 +9,19 @@ import type {
 } from '../../types/api.types'
 import type {
   HostScheduleSnapshot,
+  HostScheduleOperationsPort,
   Music,
   MusicCataloguePort,
   Musician,
   Performance,
   PerformanceRegistration,
 } from './hostScheduleController'
+
+function mapMutationResponse(response: ApiResponse<unknown>) {
+  return response.success
+    ? {ok: true as const}
+    : {ok: false as const, error: {message: response.error ?? response.message ?? 'Operation failed'}}
+}
 
 function mapMusic(music: MusicResponseDto): Music {
   const {registrations: _registrations, schedules: _schedules, ...domainMusic} = music
@@ -64,4 +72,38 @@ export const approvedMusicCatalogueAdapter: MusicCataloguePort = {
       hasMore: response.meta.hasMore,
     }
   },
+}
+
+export function createHostScheduleOperationsAdapter(
+  reloadJam: () => Promise<JamResponseDto | undefined>,
+): HostScheduleOperationsPort {
+  return {
+    async updateNotes({jamId, jamMusicId, notes}) {
+      return mapMutationResponse(await musicService.updateJamMusic(jamMusicId, jamId, {notes}))
+    },
+    async updatePerformance({performanceId, status, order}) {
+      return mapMutationResponse(await scheduleService.update(performanceId, {
+        status,
+        ...(order === undefined ? {} : {order}),
+      }))
+    },
+    async createPerformance({jamId, musicId, order}) {
+      return mapMutationResponse(await scheduleService.create({jamId, musicId, order, status: 'SCHEDULED'}))
+    },
+    async removePerformance(performanceId) {
+      return mapMutationResponse(await scheduleService.remove(performanceId))
+    },
+    async updateRegistration({registrationId, status}) {
+      return mapMutationResponse(await registrationService.update(registrationId, {status}))
+    },
+    async removeRegistration(registrationId) {
+      return mapMutationResponse(await registrationService.remove(registrationId))
+    },
+    async refresh() {
+      const jam = await reloadJam()
+      return jam
+        ? {ok: true, snapshot: mapJamToHostScheduleSnapshot(jam)}
+        : {ok: false, error: {message: 'Jam refresh returned no data'}}
+    },
+  }
 }
