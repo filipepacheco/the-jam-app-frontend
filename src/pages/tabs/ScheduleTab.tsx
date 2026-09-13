@@ -62,6 +62,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         void scheduleCommands.loadMusicCatalogue().then((outcome) => {
             if (outcome.code === 'failure') setError(loadingSongsFailedMessage)
         })
+        return scheduleCommands.cancelMusicCatalogueLoad
     }, [loadingSongsFailedMessage, scheduleCommands, showAddModal])
 
     const handleSaveNotes = useCallback((jamMusicId: string, notes: string) => {

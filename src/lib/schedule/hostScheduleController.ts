@@ -80,6 +80,10 @@ export interface MusicCataloguePort {
   listApproved(input: {skip: number; take: number}): Promise<MusicCataloguePage>
 }
 
+export interface ScheduleTimerPort {
+  schedule(delayMs: number, callback: () => void): () => void
+}
+
 export interface HostScheduleState {
   performances: readonly Performance[]
   activePerformances: readonly Performance[]
@@ -107,11 +111,13 @@ export interface HostScheduleCommands {
   setFilter(filter: HostScheduleFilter): void
   addCatalogueMusic(music: Music): void
   loadMusicCatalogue(): Promise<HostScheduleOutcome>
+  cancelMusicCatalogueLoad(): void
 }
 
 export type HostScheduleOutcome =
   | {code: 'success'; operation: 'load_music_catalogue'}
   | {code: 'failure'; operation: 'load_music_catalogue'; error: {message: string}}
+  | {code: 'cancelled'; operation: 'load_music_catalogue'}
 
 export interface HostScheduleController {
   getSnapshot(): HostScheduleState
@@ -121,6 +127,12 @@ export interface HostScheduleController {
 }
 
 const CORE_BAND = ['drums', 'guitars', 'bass', 'vocals'] as const
+const browserTimer: ScheduleTimerPort = {
+  schedule(delayMs, callback) {
+    const handle = setTimeout(callback, delayMs)
+    return () => clearTimeout(handle)
+  },
+}
 
 function hasCoreBand(performance: Performance): boolean {
   const instruments = new Set(
@@ -143,9 +155,11 @@ function matchesSearch(performance: Performance, search: string): boolean {
 export function createHostScheduleController({
   initialSnapshot,
   catalogue,
+  timer = browserTimer,
 }: {
   initialSnapshot: HostScheduleSnapshot
   catalogue: MusicCataloguePort
+  timer?: ScheduleTimerPort
 }): HostScheduleController {
   let performances = [...initialSnapshot.performances].sort((left, right) => left.order - right.order)
   let activePerformances = performances.filter(({status}) => status !== 'SUGGESTED')
@@ -153,10 +167,11 @@ export function createHostScheduleController({
   let rawSearch = ''
   let appliedSearch = ''
   let filter: HostScheduleFilter = 'all'
-  let searchTimer: ReturnType<typeof setTimeout> | undefined
+  let cancelSearchTimer: (() => void) | undefined
   let catalogueStatus: HostScheduleState['catalogue']['status'] = 'idle'
   let catalogueMusic: readonly Music[] = []
   let catalogueError: {message: string} | undefined
+  let catalogueRequest = 0
   let state: HostScheduleState
   const listeners = new Set<() => void>()
 
@@ -207,15 +222,16 @@ export function createHostScheduleController({
     setSearch(search) {
       rawSearch = search
       project()
-      if (searchTimer) clearTimeout(searchTimer)
-      searchTimer = setTimeout(() => {
+      cancelSearchTimer?.()
+      cancelSearchTimer = timer.schedule(200, () => {
+        cancelSearchTimer = undefined
         appliedSearch = rawSearch
         project()
-      }, 200)
+      })
     },
     clearSearch() {
-      if (searchTimer) clearTimeout(searchTimer)
-      searchTimer = undefined
+      cancelSearchTimer?.()
+      cancelSearchTimer = undefined
       rawSearch = ''
       appliedSearch = ''
       project()
@@ -231,6 +247,7 @@ export function createHostScheduleController({
       project()
     },
     async loadMusicCatalogue() {
+      const request = ++catalogueRequest
       catalogueStatus = 'loading'
       catalogueError = undefined
       project()
@@ -246,24 +263,38 @@ export function createHostScheduleController({
           skip += 100
         }
 
+        if (request !== catalogueRequest) {
+          return {code: 'cancelled', operation: 'load_music_catalogue'}
+        }
+
         catalogueMusic = items
         catalogueStatus = 'ready'
         project()
         return {code: 'success', operation: 'load_music_catalogue'}
       } catch (cause) {
+        if (request !== catalogueRequest) {
+          return {code: 'cancelled', operation: 'load_music_catalogue'}
+        }
         catalogueError = {message: cause instanceof Error ? cause.message : 'Unknown catalogue error'}
         catalogueStatus = 'failed'
         project()
         return {code: 'failure', operation: 'load_music_catalogue', error: catalogueError}
       }
     },
+    cancelMusicCatalogueLoad() {
+      catalogueRequest += 1
+      catalogueStatus = 'idle'
+      catalogueError = undefined
+      project()
+    },
   }
 
   return {
     commands,
     dispose() {
-      if (searchTimer) clearTimeout(searchTimer)
-      searchTimer = undefined
+      catalogueRequest += 1
+      cancelSearchTimer?.()
+      cancelSearchTimer = undefined
       listeners.clear()
     },
     getSnapshot: () => state,

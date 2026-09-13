@@ -3,6 +3,7 @@ import {
   createHostScheduleController,
   type HostScheduleSnapshot,
   type MusicCataloguePort,
+  type ScheduleTimerPort,
 } from '../lib/schedule/hostScheduleController'
 
 const catalogue: MusicCataloguePort = {
@@ -56,6 +57,27 @@ function snapshot(): HostScheduleSnapshot {
   }
 }
 
+function manualTimer() {
+  let pending: (() => void) | undefined
+  let delay: number | undefined
+  const timer: ScheduleTimerPort = {
+    schedule(nextDelay, callback) {
+      delay = nextDelay
+      pending = callback
+      return () => { pending = undefined }
+    },
+  }
+  return {
+    timer,
+    get delay() { return delay },
+    flush() {
+      const callback = pending
+      pending = undefined
+      callback?.()
+    },
+  }
+}
+
 describe('Host Schedule controller', () => {
   it('projects Performances in order and separates Suggestions from the active Schedule', () => {
     const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue})
@@ -75,8 +97,8 @@ describe('Host Schedule controller', () => {
   })
 
   it('debounces search while keeping completeness counts independent from the selected filter', () => {
-    vi.useFakeTimers()
-    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue})
+    const scheduled = manualTimer()
+    const controller = createHostScheduleController({initialSnapshot: snapshot(), catalogue, timer: scheduled.timer})
 
     controller.commands.setFilter('complete')
     expect(controller.getSnapshot().filteredActivePerformances.map(({id}) => id)).toEqual(['completed'])
@@ -85,9 +107,8 @@ describe('Host Schedule controller', () => {
 
     controller.commands.setSearch('radio')
     expect(controller.getSnapshot().appliedSearch).toBe('')
-    vi.advanceTimersByTime(199)
-    expect(controller.getSnapshot().appliedSearch).toBe('')
-    vi.advanceTimersByTime(1)
+    expect(scheduled.delay).toBe(200)
+    scheduled.flush()
 
     expect(controller.getSnapshot().appliedSearch).toBe('radio')
     expect(controller.getSnapshot().filteredActivePerformances).toEqual([])
@@ -197,5 +218,24 @@ describe('Host Schedule controller', () => {
 
     expect(controller.getSnapshot().catalogue.items).toEqual([music])
     expect(controller.getSnapshot().availableMusic).toEqual([music])
+  })
+
+  it('ignores a catalogue response after the caller cancels its lifecycle', async () => {
+    let resolvePage: ((page: {items: []; hasMore: false}) => void) | undefined
+    const page = new Promise<{items: []; hasMore: false}>((resolve) => {
+      resolvePage = resolve
+    })
+    const controller = createHostScheduleController({
+      initialSnapshot: snapshot(),
+      catalogue: {listApproved: vi.fn().mockReturnValue(page)},
+    })
+
+    const loading = controller.commands.loadMusicCatalogue()
+    expect(controller.getSnapshot().catalogue.status).toBe('loading')
+    controller.commands.cancelMusicCatalogueLoad()
+    resolvePage?.({items: [], hasMore: false})
+
+    await expect(loading).resolves.toEqual({code: 'cancelled', operation: 'load_music_catalogue'})
+    expect(controller.getSnapshot().catalogue).toEqual({status: 'idle', items: []})
   })
 })
