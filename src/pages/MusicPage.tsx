@@ -5,11 +5,10 @@
  * Route: /music
  */
 
-import { useCallback, useState, useRef } from 'react'
+import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth, useMusicLibraryController, usePageAlerts } from '../hooks'
-import { musicService } from '../services'
 import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import {
   Action,
@@ -30,7 +29,6 @@ import { MusicDataCard } from '../components/music/MusicDataDisplay'
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100] as const
 type SortBy = 'title' | 'artist' | 'date'
-type ModalMode = 'add' | 'suggest' | null
 
 export function MusicPage() {
   const navigate = useNavigate()
@@ -38,24 +36,26 @@ export function MusicPage() {
   const { user, isAuthenticated } = useAuth()
 
   const {state: musicState, commands: musicCommands} = useMusicLibraryController(Boolean(user?.isHost))
-  const {approved, query, suggestedCount, suggestedList, suggestedOpen, visibleMusic} = musicState
+  const {
+    approved, query, suggestedCount, suggestedList, suggestedOpen, visibleMusic,
+    pendingEntityIds, pendingConfirmation, modalIntent,
+  } = musicState
   const musicList = approved.items
   const meta = approved.meta
   const page = query.page
   const pageSize = query.pageSize
   const isLoading = approved.status === 'loading'
-  const fetchError = [approved.error, suggestedCount.error, suggestedList.error]
-    .map((queryFailure) => queryFailure?.message)
+  const fetchError = [approved, suggestedCount, suggestedList]
+    .filter((queryState) => queryState.status === 'failed')
+    .map((queryState) => queryState.error?.message || t('music_library.errors.failed_to_load'))
     .filter((message): message is string => Boolean(message))
     .join(' · ') || null
   const totalPages = meta ? Math.ceil(meta.total / pageSize) : 0
-  const mutate = musicCommands.refreshApproved
   const openSuggestedModal = musicCommands.openSuggested
   const closeSuggestedModal = musicCommands.closeSuggested
   const suggestedSongs = suggestedList.items
   const suggestedLoading = suggestedList.status === 'loading'
 
-  const [actionLoading, setActionLoading] = useState(false)
   const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
 
   // Filter states
@@ -66,39 +66,20 @@ export function MusicPage() {
   // Quick edit expanded card
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
 
-  const [modalState, setModalState] = useState<{ mode: ModalMode }>(({ mode: null }))
-
-  // Confirm dialog state (without function - using ref instead)
-  const [confirmOpen, setConfirmOpen] = useState(false)
-  const [confirmTitle, setConfirmTitle] = useState('')
-  const [confirmMessage, setConfirmMessage] = useState('')
-  const [confirmVariant, setConfirmVariant] = useState<'default' | 'destructive'>('default')
-  const pendingConfirmAction = useRef<(() => Promise<void>) | null>(null)
-
-  const openConfirm = useCallback((
-    title: string,
-    message: string,
-    variant: 'default' | 'destructive',
-    action: () => Promise<void>
-  ) => {
-    setConfirmTitle(title)
-    setConfirmMessage(message)
-    setConfirmVariant(variant)
-    pendingConfirmAction.current = action
-    setConfirmOpen(true)
-  }, [])
-
-  const closeConfirm = useCallback(() => {
-    setConfirmOpen(false)
-    pendingConfirmAction.current = null
-  }, [])
-
   const handleConfirm = useCallback(async () => {
-    if (pendingConfirmAction.current) {
-      await pendingConfirmAction.current()
+    const confirmation = pendingConfirmation
+    const outcome = await musicCommands.confirmPending()
+    if (outcome.code === 'success' && confirmation) {
+      const key = confirmation.kind === 'reject' ? 'reject_success' : 'delete_success'
+      setSuccess(t(`music_library.feedback.${key}`, {title: confirmation.title}))
+    } else if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
+      const fallback = confirmation?.kind === 'reject' ? 'failed_to_reject' : 'failed_to_delete'
+      const refreshMessage = outcome.code === 'failure' && outcome.refreshError
+        ? ` · ${outcome.refreshError.message || t('music_library.errors.failed_to_load')}`
+        : ''
+      setError(`${outcome.error.message || t(`music_library.errors.${fallback}`)}${refreshMessage}`)
     }
-    closeConfirm()
-  }, [closeConfirm])
+  }, [musicCommands, pendingConfirmation, setError, setSuccess, t])
 
   const handleClearFilters = useCallback(() => {
     musicCommands.clearFilters()
@@ -109,119 +90,67 @@ export function MusicPage() {
   }, [])
 
   const handleQuickSave = useCallback(async (id: string, data: UpdateMusicDto): Promise<boolean> => {
-    try {
-      const result = await musicService.update(id, data)
-      if (!result.success) {
-        setError(result.error || t('music_library.errors.failed_to_update'))
-        return false
-      }
+    const outcome = await musicCommands.edit(id, data)
+    if (outcome.code === 'success') {
       setExpandedCardId(null)
-      await mutate()
-      setSuccess(t('music_library.feedback.update_success', { title: result.data?.title || '' }))
+      setSuccess(t('music_library.feedback.update_success', {
+        title: data.title || musicList.find((music) => music.id === id)?.title || '',
+      }))
       return true
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_update'))
-      return false
     }
-  }, [t, mutate, setError, setSuccess])
-
-  const refreshSuggested = useCallback(async () => {
-    await Promise.all([musicCommands.refreshSuggestedCount(), musicCommands.refreshSuggestedList()])
-  }, [musicCommands])
+    if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
+      setError(outcome.error.message || t('music_library.errors.failed_to_update'))
+    }
+    return false
+  }, [musicCommands, musicList, setError, setSuccess, t])
 
   const handleApprove = useCallback(
     async (music: MusicResponseDto) => {
-      setActionLoading(true)
       setError(null)
-      try {
-        const result = await musicService.update(music.id, { status: 'APPROVED' })
-        if (!result.success) {
-          setError(result.error || t('music_library.errors.failed_to_approve'))
-        } else {
-          setSuccess(t('music_library.feedback.approve_success', { title: music.title }))
-          await Promise.all([mutate(), refreshSuggested()])
-        }
-      } catch (err) {
-        setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_approve'))
-      } finally {
-        setActionLoading(false)
+      const outcome = await musicCommands.approve(music)
+      if (outcome.code === 'success') setSuccess(t('music_library.feedback.approve_success', {title: music.title}))
+      else if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
+        const refreshMessage = outcome.code === 'failure' && outcome.refreshError
+          ? ` · ${outcome.refreshError.message || t('music_library.errors.failed_to_load')}`
+          : ''
+        setError(`${outcome.error.message || t('music_library.errors.failed_to_approve')}${refreshMessage}`)
       }
     },
-    [t, mutate, refreshSuggested, setError, setSuccess],
+    [musicCommands, setError, setSuccess, t],
   )
 
   const handleReject = useCallback(
     (music: MusicResponseDto) => {
-      openConfirm(
-        t('common.reject'),
-        t('music_library.feedback.reject_confirm', { title: music.title, artist: music.artist }),
-        'destructive',
-        async () => {
-          setActionLoading(true)
-          setError(null)
-          try {
-            const result = await musicService.remove(music.id)
-            if (!result.success) {
-              setError(result.error || t('music_library.errors.failed_to_reject'))
-            } else {
-              setSuccess(t('music_library.feedback.reject_success', { title: music.title }))
-              await refreshSuggested()
-            }
-          } catch (err) {
-            setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_reject'))
-          } finally {
-            setActionLoading(false)
-          }
-        }
-      )
+      musicCommands.requestConfirmation('reject', music)
     },
-    [t, openConfirm, mutate],
+    [musicCommands],
   )
 
   const handleDelete = useCallback(
     (music: MusicResponseDto) => {
-      openConfirm(
-        t('common.delete'),
-        t('music_library.feedback.delete_confirm', { title: music.title, artist: music.artist }),
-        'destructive',
-        async () => {
-          setActionLoading(true)
-          setError(null)
-          try {
-            const result = await musicService.remove(music.id)
-            if (!result.success) {
-              setError(result.error || t('music_library.errors.failed_to_delete'))
-            } else {
-              setSuccess(t('music_library.feedback.delete_success', { title: music.title }))
-              await mutate()
-            }
-          } catch (err) {
-            setError(err instanceof Error ? err.message : t('music_library.errors.failed_to_delete'))
-          } finally {
-            setActionLoading(false)
-          }
-        }
-      )
+      musicCommands.requestConfirmation('delete', music)
     },
-    [t, openConfirm, mutate],
+    [musicCommands],
   )
 
   const handleAdd = useCallback(() => {
-    setModalState({ mode: 'add' })
-  }, [])
+    musicCommands.openModal('add')
+  }, [musicCommands])
 
   const handleSuggest = useCallback(() => {
-    setModalState({ mode: 'suggest' })
-  }, [])
+    musicCommands.openModal('suggest')
+  }, [musicCommands])
 
   const handleModalSuccess = useCallback(async () => {
-    setModalState({ mode: null })
-    await mutate()
-  }, [mutate])
+    const outcome = await musicCommands.completeModal()
+    if (outcome.code === 'refresh_failure') {
+      setError(outcome.error.message || t('music_library.errors.failed_to_load'))
+    }
+  }, [musicCommands, setError, t])
 
   const handleModalClose = useCallback(() => {
-    setModalState({ mode: null })
-  }, [])
+    musicCommands.closeModal()
+  }, [musicCommands])
 
   // Loading skeleton
   if (isLoading && musicList.length === 0) {
@@ -275,7 +204,7 @@ export function MusicPage() {
                 <Action
                   onClick={handleAdd}
                   className="flex-1 sm:flex-none"
-                  state={actionLoading ? 'disabled' : 'idle'}
+                  state="idle"
                 >
                   {t('music_library.add_song')}
                 </Action>
@@ -285,7 +214,7 @@ export function MusicPage() {
                   variant="secondary"
                   onClick={handleSuggest}
                   className="flex-1 sm:flex-none"
-                  state={actionLoading ? 'disabled' : 'idle'}
+                  state="idle"
                 >
                   {t('music_library.suggest_song')}
                 </Action>
@@ -438,7 +367,7 @@ export function MusicPage() {
       )}
 
       {/* Add Music Modal */}
-      {modalState.mode === 'add' && (
+      {modalIntent?.kind === 'add' && (
         <MusicModal
           mode="add"
           existingSongs={[...musicList]}
@@ -450,7 +379,7 @@ export function MusicPage() {
       )}
 
       {/* Suggest Song Modal */}
-      {modalState.mode === 'suggest' && (
+      {modalIntent?.kind === 'suggest' && (
         <MusicModal
           mode="suggest"
           existingSongs={[...musicList]}
@@ -491,7 +420,7 @@ export function MusicPage() {
                     </div>
                     <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:shrink-0">
                       <Action
-                        state={actionLoading ? 'disabled' : 'idle'}
+                        state={pendingEntityIds.has(music.id) ? 'disabled' : 'idle'}
                         onClick={() => void handleApprove(music)}
                         className="w-full sm:w-auto"
                       >
@@ -499,7 +428,7 @@ export function MusicPage() {
                       </Action>
                       <Action
                         variant="destructive"
-                        state={actionLoading ? 'disabled' : 'idle'}
+                        state={pendingEntityIds.has(music.id) ? 'disabled' : 'idle'}
                         onClick={() => handleReject(music)}
                         className="w-full sm:w-auto"
                       >
@@ -515,13 +444,15 @@ export function MusicPage() {
 
       {/* Confirm Dialog */}
       <ConfirmDialog
-        isOpen={confirmOpen}
-        title={confirmTitle}
-        message={confirmMessage}
-        variant={confirmVariant}
-        loading={actionLoading}
+        isOpen={pendingConfirmation !== null}
+        title={pendingConfirmation?.kind === 'reject' ? t('common.reject') : t('common.delete')}
+        message={pendingConfirmation?.kind === 'reject'
+          ? t('music_library.feedback.reject_confirm', {title: pendingConfirmation.title, artist: pendingConfirmation.artist})
+          : t('music_library.feedback.delete_confirm', {title: pendingConfirmation?.title, artist: pendingConfirmation?.artist})}
+        variant="destructive"
+        loading={pendingConfirmation ? pendingEntityIds.has(pendingConfirmation.musicId) : false}
         onConfirm={handleConfirm}
-        onCancel={closeConfirm}
+        onCancel={musicCommands.cancelConfirmation}
       />
     </div>
   )

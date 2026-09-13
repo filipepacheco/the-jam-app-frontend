@@ -1,12 +1,13 @@
 import {useEffect, useMemo, useSyncExternalStore} from 'react'
-import {createMusicLibraryController, type MusicLibraryQueryPort} from '../lib/music/musicLibraryController'
-import {musicLibraryQueryAdapter} from '../lib/music/musicLibraryAdapters'
+import {createMusicLibraryController, type MusicLibraryMutationPort, type MusicLibraryQueryPort} from '../lib/music/musicLibraryController'
+import {musicLibraryMutationAdapter, musicLibraryQueryAdapter} from '../lib/music/musicLibraryAdapters'
 
 export function useMusicLibraryController(
   isHost: boolean,
   queries: MusicLibraryQueryPort = musicLibraryQueryAdapter,
+  operations: MusicLibraryMutationPort = musicLibraryMutationAdapter,
 ) {
-  const controller = useMemo(() => createMusicLibraryController({isHost, queries}), [isHost, queries])
+  const controller = useMemo(() => createMusicLibraryController({isHost, queries, operations}), [isHost, queries, operations])
   const state = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot)
 
   useEffect(() => {
