@@ -81,7 +81,6 @@ export function PerformanceSelectionModal({
               key={schedule.id}
               onClick={() => {
                 onSelectPerformance(schedule)
-                onClose()
               }}
               className={`w-full text-left p-4 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                 alreadyRegistered
