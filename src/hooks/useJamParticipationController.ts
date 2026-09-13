@@ -1,19 +1,36 @@
 import {useEffect, useMemo, useRef, useSyncExternalStore} from 'react'
 import type {JamResponseDto} from '../types/api.types'
 import {createJamParticipationController, type JamParticipationController} from '../lib/jam-participation/jamParticipationController'
-import {mapJamToParticipationContext} from '../lib/jam-participation/jamParticipationAdapters'
+import {
+  createJamParticipationOperationsAdapter,
+  mapJamToParticipationContext,
+  participationShareAdapter,
+} from '../lib/jam-participation/jamParticipationAdapters'
 
 export function useJamParticipationController(
   jam: JamResponseDto | null | undefined,
   isAuthenticated: boolean,
   musicianId: string | null,
+  reloadJam: () => Promise<JamResponseDto | null | undefined>,
 ) {
   const nextContext = useMemo(() => jam
     ? mapJamToParticipationContext({jam, isAuthenticated, musicianId})
     : {jamId: '', participationOpen: false, isAuthenticated, musicianId, performances: []},
   [jam, isAuthenticated, musicianId])
+  const reloadJamRef = useRef(reloadJam)
+  reloadJamRef.current = reloadJam
+  const identityRef = useRef({isAuthenticated, musicianId})
+  identityRef.current = {isAuthenticated, musicianId}
   const controllerRef = useRef<JamParticipationController | null>(null)
-  if (!controllerRef.current) controllerRef.current = createJamParticipationController(nextContext)
+  if (!controllerRef.current) {
+    controllerRef.current = createJamParticipationController(nextContext, {
+      operations: createJamParticipationOperationsAdapter({
+        reloadJam: () => reloadJamRef.current(),
+        getIdentity: () => identityRef.current,
+      }),
+      share: participationShareAdapter,
+    })
+  }
   const controller = controllerRef.current
   const state = useSyncExternalStore(controller.subscribe, controller.getSnapshot, controller.getSnapshot)
 

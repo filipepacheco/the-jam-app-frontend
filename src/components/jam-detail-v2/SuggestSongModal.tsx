@@ -6,7 +6,8 @@
 import {useCallback, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import type {MusicResponseDto} from '../../types/api.types'
-import {musicService, scheduleService} from '../../services'
+import type {JamParticipationOutcome} from '../../lib/jam-participation/jamParticipationController'
+import {musicService} from '../../services'
 import {useFormState} from '../../hooks'
 import {Alert} from "../Alert"
 import {SearchableSelect} from "../forms/SearchableSelect.tsx"
@@ -16,18 +17,16 @@ import {Action} from '../Action'
 import {LoadingState} from '../FeedbackStates'
 
 interface SuggestSongModalProps {
-  jamId: string
   isOpen: boolean
   onClose: () => void
-  onSuccess: () => void
+  onSuggest: (musicId: string) => Promise<JamParticipationOutcome>
   onCreateNewSong?: () => void
 }
 
 export function SuggestSongModal({
-  jamId,
   isOpen,
   onClose,
-  onSuccess,
+  onSuggest,
   onCreateNewSong,
 }: SuggestSongModalProps) {
   const { t } = useTranslation()
@@ -71,14 +70,10 @@ export function SuggestSongModal({
     setError(null)
 
     try {
-      await scheduleService.create({
-        jamId,
-        musicId: selectedSongId,
-        order: 0,
-        status: 'SUGGESTED',
-      } as any)
-
-      onSuccess()
+      const outcome = await onSuggest(selectedSongId)
+      if (outcome.code === 'failure' || outcome.code === 'partial_success' || outcome.code === 'refresh_failure') {
+        setError(outcome.error.message || t('jams.suggest_failed'))
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('jams.suggest_failed'))
     } finally {
