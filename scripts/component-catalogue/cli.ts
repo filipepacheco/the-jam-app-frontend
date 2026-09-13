@@ -55,6 +55,7 @@ export const runCatalogueCommand = async (args: string[], cwd = process.cwd()): 
     Array.isArray(metadata.candidateFamilies) &&
     Array.isArray(metadata.rules) && metadata.rules.every(isRecord) &&
     Array.isArray(metadata.components) && metadata.components.every(isRecord) &&
+    Array.isArray(metadata.retiredComponents) && metadata.retiredComponents.every(isRecord) &&
     isRecord(inlinePatternGovernance) &&
     Array.isArray(inlinePatternGovernance.scopes) && inlinePatternGovernance.scopes.every(isRecord) &&
     Array.isArray(inlinePatternGovernance.candidates) && inlinePatternGovernance.candidates.every(isRecord)

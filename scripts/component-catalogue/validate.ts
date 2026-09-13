@@ -188,6 +188,43 @@ const validateInlinePatternGovernance = (
   }
 }
 
+const validateRetiredComponents = (
+  value: unknown,
+  field: string,
+  diagnostics: string[],
+): Set<string> => {
+  const ids = new Set<string>()
+  if (!Array.isArray(value)) {
+    diagnostics.push(`${field}: expected an array`)
+    return ids
+  }
+  value.forEach((component, index) => {
+    const itemField = `${field}[${index}]`
+    if (!isRecord(component)) {
+      diagnostics.push(`${itemField}: expected an object`)
+      return
+    }
+    if (!isNonBlankString(component.id) || !STABLE_ID.test(component.id)) {
+      diagnostics.push(`${itemField}.id: invalid stable identifier; use lowercase dot/dash-separated segments`)
+    } else if (ids.has(component.id)) {
+      diagnostics.push(`${itemField}.id: duplicate retired component identifier "${component.id}"`)
+    } else {
+      ids.add(component.id)
+    }
+    if (!isSafeRelativePath(component.formerSource)) {
+      diagnostics.push(`${itemField}.formerSource: path must be normalized and stay inside the catalogue root`)
+    }
+    if (!isNonBlankString(component.formerName)) diagnostics.push(`${itemField}.formerName: value must be non-blank`)
+    if (!isNonBlankString(component.reason)) diagnostics.push(`${itemField}.reason: value must be non-blank`)
+    if (!Array.isArray(component.evidence) || component.evidence.length === 0) {
+      diagnostics.push(`${itemField}.evidence: expected a non-empty array`)
+    } else {
+      validateStringArray(component.evidence, `${itemField}.evidence`, diagnostics)
+    }
+  })
+  return ids
+}
+
 export const isExactSource = (source: string): boolean => !GLOB_CHARACTERS.test(source)
 
 export const isSafeRelativePath = (value: unknown): value is string => {
@@ -269,6 +306,7 @@ export const validateInputs = (
   const diagnostics: string[] = []
 
   validateInlinePatternGovernance(metadata.inlinePatternGovernance, 'inlinePatternGovernance', diagnostics)
+  const retiredIds = validateRetiredComponents(metadata.retiredComponents, 'retiredComponents', diagnostics)
 
   if (!isSafeRelativePath(config.project)) diagnostics.push('project: path must be normalized and stay inside the catalogue root')
   if (!Array.isArray(config.include)) diagnostics.push('include: expected an array')
@@ -314,6 +352,10 @@ export const validateInputs = (
     }
     if (!isNonBlankString(component.id) || !STABLE_ID.test(component.id)) {
       diagnostics.push(`components[${index}].id: invalid stable identifier; use lowercase dot/dash-separated segments`)
+    } else {
+      if (retiredIds.has(component.id)) {
+        diagnostics.push(`components[${index}].id: active component identifier "${component.id}" is also retired`)
+      }
     }
     if (!isSafeRelativePath(component.source)) diagnostics.push(`components[${index}].source: path must be normalized and stay inside the catalogue root`)
     if (!isNonBlankString(component.name)) diagnostics.push(`components[${index}].name: value must be non-blank`)

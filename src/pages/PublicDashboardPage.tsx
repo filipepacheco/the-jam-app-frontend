@@ -11,7 +11,7 @@ import {SWR_DEFAULTS} from '../config/swrDefaults'
 import {
     CurrentSongCard,
     Header,
-    Navbar,
+    DashboardControlsPanel,
     NextSongCard,
     OfflineBanner,
     StartingSoonCard,
@@ -60,7 +60,7 @@ export function PublicDashboardPage() {
   const nextSongs = dashboardData?.nextSongs ?? []
 
   // UI state management
-  const [showNavbar, setShowNavbar] = useState(false)
+  const [showControlsPanel, setShowControlsPanel] = useState(false)
 
   // Custom hooks for UI behaviors
   const { confettiVisible, confettiDimensions, containerRef } = useConfettiOnSongChange(
@@ -137,22 +137,22 @@ export function PublicDashboardPage() {
       {/* Offline Indicator */}
       <OfflineBanner visible={isOfflineMode} message={t('publicDashboard.offlineIndicator', 'You are offline - showing cached data')} />
 
-      {/* Header with Navbar Toggle & Fullscreen Button */}
+      {/* Header with controls-panel toggle and fullscreen button */}
       <Header
         title={t('publicDashboard.title', { name: jamName || '' })}
-        showNavbar={showNavbar}
-        setShowNavbar={setShowNavbar}
+        showControlsPanel={showControlsPanel}
+        setShowControlsPanel={setShowControlsPanel}
         isFullscreen={isFullscreen}
         onToggleFullscreen={toggleFullscreen}
-        ariaToggleLabel={t('publicDashboard.toggleNavbar', 'Toggle navbar')}
+        ariaToggleLabel={t('publicDashboard.toggleControls', 'Toggle dashboard controls')}
         tickerText={tickerText}
       />
 
-      <Navbar
-        visible={showNavbar}
+      <DashboardControlsPanel
+        visible={showControlsPanel}
         jamId={jamId}
         jamSlug={dashboardData?.slug}
-        onClose={() => setShowNavbar(false)}
+        onClose={() => setShowControlsPanel(false)}
         currentLang={currentLang}
         onChangeLanguage={changeLanguage}
         pollingMs={pollingMs}

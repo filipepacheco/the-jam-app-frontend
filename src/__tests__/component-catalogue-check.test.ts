@@ -26,6 +26,7 @@ interface FixtureMetadata {
   rules: Array<{source: string; component?: string; metadata: Record<string, unknown>}>
   components: Array<{id: string; source: string; name: string}>
   inlinePatternGovernance?: unknown
+  retiredComponents?: unknown
 }
 
 interface GeneratedCatalogue {
@@ -75,6 +76,25 @@ const snapshotTree = async (root: string): Promise<Record<string, string>> => {
 }
 
 describe('component catalogue check command', () => {
+  it('rejects a retirement record while the former component still exists', async () => {
+    const root = await createFixture()
+    const metadataPath = path.join(root, 'catalogue.metadata.json')
+    const metadata = await readJson<FixtureMetadata>(metadataPath)
+    metadata.retiredComponents = [{
+      id: 'ui.fixture.retired-widget',
+      formerSource: 'src/NamedWidget.tsx',
+      formerName: 'NamedWidget',
+      reason: 'Fixture retirement claim.',
+      evidence: ['No consumers remain.'],
+    }]
+    await writeJson(metadataPath, metadata)
+
+    const result = run(root)
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('retired component selector "src/NamedWidget.tsx#NamedWidget" still resolves')
+  })
+
   it('keeps inline candidate identities stable when source lines move', async () => {
     const root = await createFixture()
     expect(run(root).status).toBe(0)

@@ -3,7 +3,7 @@ import { expect, fn } from 'storybook/test'
 import { MusicCard } from '../../components/MusicCard'
 import { MusicEmptyState } from '../../components/MusicEmptyState'
 import { MusicFilters } from '../../components/MusicFilters'
-import { MusiciansBadges } from '../../components/MusicTable'
+import {MusiciansBadges} from '../../components/music/MusiciansBadges'
 import { musicFixtures } from '../jamMusicFixtures'
 
 const meta = {

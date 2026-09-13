@@ -68,6 +68,14 @@ export const renderMarkdown = (catalogue: ComponentCatalogue): string => {
     )
   }
 
+  lines.push('', '## Retired components', '')
+  lines.push('| ID | Former component | Former source | Reason | Evidence |', '| --- | --- | --- | --- | --- |')
+  for (const component of catalogue.retiredComponents) {
+    lines.push(
+      `| \`${component.id}\` | ${component.formerName} | \`${component.formerSource}\` | ${component.reason} | ${cell(component.evidence)} |`,
+    )
+  }
+
   lines.push('', '## Generated facts', '')
   for (const component of catalogue.components) {
     lines.push(

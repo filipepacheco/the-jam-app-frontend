@@ -13,6 +13,8 @@ const config: CatalogueConfig = {
 
 const metadata = (ruleMetadata: Record<string, unknown>): CatalogueMetadataConfig => ({
   candidateFamilies: ['action'],
+  inlinePatternGovernance: {scopes: [], candidates: []},
+  retiredComponents: [],
   defaults: {
     category: 'product-ui',
     layer: 'primitive',
@@ -29,6 +31,21 @@ const metadata = (ruleMetadata: Record<string, unknown>): CatalogueMetadataConfi
 } as unknown as CatalogueMetadataConfig)
 
 describe('catalogue visual reporting metadata', () => {
+  it('requires durable evidence for retired component identities', () => {
+    const input = metadata({}) as CatalogueMetadataConfig & {retiredComponents: unknown[]}
+    input.retiredComponents = [{
+      id: 'ui.action',
+      formerSource: 'src/Action.tsx',
+      formerName: 'Action',
+      reason: 'The component was unreachable.',
+      evidence: [],
+    }]
+
+    const diagnostics = validateInputs(config, input)
+
+    expect(diagnostics).toContain('retiredComponents[0].evidence: expected a non-empty array')
+  })
+
   it('requires a machine-readable family for adoption and an explicit record for exceptions', () => {
     const diagnostics = validateInputs(config, metadata({
       canonicalAdoption: { status: 'adopted' },

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 3,
+  "schemaVersion": 4,
   "components": [
     {
       "id": "ui.0001",
@@ -3374,69 +3374,19 @@
       }
     },
     {
-      "id": "ui.0064",
-      "name": "MusicActionButtons",
-      "source": "src/components/MusicTable.tsx",
-      "declaration": "function",
-      "visibility": "local",
-      "exports": [],
-      "consumers": [
-        "src/components/MusicTable.tsx"
-      ],
-      "workbenchStories": [
-        "src/workbench/stories/MusicLibrary.stories.tsx"
-      ],
-      "dependencies": {
-        "internal": [
-          "src/components/Action.tsx"
-        ],
-        "external": [
-          "react-i18next"
-        ],
-        "contexts": [
-          "internationalization"
-        ]
-      },
-      "metadata": {
-        "category": "product-ui",
-        "layer": "domain-component",
-        "lifecycle": "active",
-        "productArea": "music",
-        "viewportContexts": [
-          "mobile",
-          "desktop"
-        ],
-        "readiness": {
-          "workbench": "exempt",
-          "accessibility": "needs-review",
-          "internationalization": "verified",
-          "theme": "verified"
-        },
-        "uiStates": [
-          "host-actions",
-          "viewer-permissions"
-        ],
-        "candidateFamily": null,
-        "notes": [
-          "Local helper has no exported render seam because its owning table row is also unexported; revisit if that table seam becomes public."
-        ]
-      }
-    },
-    {
       "id": "ui.0065",
       "name": "MusiciansBadges",
-      "source": "src/components/MusicTable.tsx",
+      "source": "src/components/music/MusiciansBadges.tsx",
       "declaration": "variable",
       "visibility": "exported",
       "exports": [
         {
           "kind": "named",
           "name": "MusiciansBadges",
-          "module": "src/components/MusicTable.tsx"
+          "module": "src/components/music/MusiciansBadges.tsx"
         }
       ],
       "consumers": [
-        "src/components/MusicTable.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "workbenchStories": [
@@ -3475,7 +3425,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "MusiciansBadges is directly reviewed in Domain/Music/Library."
+          "MusiciansBadges is directly reviewed in Domain/Music/Library; its former unreachable table row and private actions are recorded under retired components."
         ]
       }
     },
@@ -4713,7 +4663,7 @@
         }
       ],
       "consumers": [
-        "src/components/publicDashboard/Navbar.tsx",
+        "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
@@ -4766,19 +4716,19 @@
     },
     {
       "id": "ui.0086",
-      "name": "Navbar",
-      "source": "src/components/publicDashboard/Navbar.tsx",
+      "name": "DashboardControlsPanel",
+      "source": "src/components/publicDashboard/DashboardControlsPanel.tsx",
       "declaration": "function",
       "visibility": "exported",
       "exports": [
         {
           "kind": "default",
           "name": "default",
-          "module": "src/components/publicDashboard/Navbar.tsx"
+          "module": "src/components/publicDashboard/DashboardControlsPanel.tsx"
         },
         {
           "kind": "re-export",
-          "name": "Navbar",
+          "name": "DashboardControlsPanel",
           "module": "src/components/publicDashboard/index.ts"
         }
       ],
@@ -4804,6 +4754,7 @@
         ],
         "contexts": [
           "animation",
+          "browser",
           "internationalization"
         ]
       },
@@ -4838,7 +4789,11 @@
         "candidateFamily": null,
         "notes": [
           "Reviewed in Domain/Public Dashboard/Cards and display or Carousel and controls."
-        ]
+        ],
+        "canonicalAdoption": {
+          "status": "not-applicable",
+          "note": "This is a host settings surface rather than application navigation; its links use the canonical NavigationLink primitive."
+        }
       }
     },
     {
@@ -7444,13 +7399,11 @@
         }
       ],
       "consumers": [
-        "src/components/MusicTable.tsx",
         "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/JamTimeline.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
@@ -8119,13 +8072,13 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "The route-local JamCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
+          "The route-local HostJamSummaryCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
         ]
       }
     },
     {
       "id": "ui.0142",
-      "name": "JamCard",
+      "name": "HostJamSummaryCard",
       "source": "src/pages/host/HostDashboardPage.tsx",
       "declaration": "function",
       "visibility": "local",
@@ -8166,7 +8119,7 @@
         "uiStates": [],
         "candidateFamily": null,
         "notes": [
-          "The route-local JamCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
+          "The route-local HostJamSummaryCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
         ]
       }
     },
@@ -9550,7 +9503,6 @@
         "src/components/MobileDrawer.tsx",
         "src/components/MusicFilters.tsx",
         "src/components/MusicModal.tsx",
-        "src/components/MusicTable.tsx",
         "src/components/Navigation.tsx",
         "src/components/OnboardingModal.tsx",
         "src/components/QuickEditPanel.tsx",
@@ -9568,7 +9520,7 @@
         "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
         "src/components/overlays/CanonicalOverlays.tsx",
-        "src/components/publicDashboard/Navbar.tsx",
+        "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/components/publicDashboard/QRCodeCorner.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/LiveJamControlPanel.tsx",
@@ -9680,8 +9632,8 @@
         "src/components/Navigation.tsx",
         "src/components/QuickEditPanel.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
+        "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/components/publicDashboard/Header.tsx",
-        "src/components/publicDashboard/Navbar.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/MusicianSlotRow.tsx",
         "src/components/schedule/NotesEditor.tsx",
@@ -10191,7 +10143,6 @@
         "src/components/JamCard.tsx",
         "src/components/JamContextDisplay.tsx",
         "src/components/MusicCard.tsx",
-        "src/components/MusicTable.tsx",
         "src/components/MusicianProfileModal.tsx",
         "src/components/dj-control/QueueStats.tsx",
         "src/components/jam-detail-v2/CollapsibleSection.tsx",
@@ -10787,7 +10738,7 @@
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/forms/SupabaseLoginForm.tsx",
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
-        "src/components/publicDashboard/Navbar.tsx",
+        "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/components/publicDashboard/PollingControls.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
@@ -11489,7 +11440,7 @@
         "src/components/MobileDrawer.tsx",
         "src/components/Navbar.tsx",
         "src/components/Navigation.tsx",
-        "src/components/publicDashboard/Navbar.tsx",
+        "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/pages/LoginPage.tsx"
       ],
       "workbenchStories": [
@@ -11821,6 +11772,18 @@
       }
     }
   ],
+  "retiredComponents": [
+    {
+      "id": "ui.0064",
+      "formerSource": "src/components/MusicTable.tsx",
+      "formerName": "MusicActionButtons",
+      "reason": "The private actions belonged only to an unreachable, unexported MusicTableRow and had no production or workbench consumer.",
+      "evidence": [
+        "Repository import and JSX reference search found no consumer of MusicTableRow or MusicActionButtons outside their former module.",
+        "MusiciansBadges was relocated independently so its workbench evidence remains available."
+      ]
+    }
+  ],
   "ignored": [
     {
       "source": "src/lib/musicUtils.tsx",
@@ -11948,9 +11911,9 @@
     "representedSources": 138,
     "ignoredSources": 30,
     "workbench": {
-      "activeReusableVisualComponents": 134,
+      "activeReusableVisualComponents": 133,
       "ready": 114,
-      "exempt": 20,
+      "exempt": 19,
       "needsReview": 0,
       "unknown": 0,
       "readyWithoutStory": 0
@@ -12162,7 +12125,7 @@
         {
           "id": "inline.ui.0051.action.998263c4bc81",
           "source": "src/components/JamCard.tsx",
-          "line": 112,
+          "line": 92,
           "column": 13,
           "ownerComponentId": "ui.0051",
           "tag": "Link",
@@ -12179,7 +12142,7 @@
         {
           "id": "inline.ui.0051.action.df9f8f021a85",
           "source": "src/components/JamCard.tsx",
-          "line": 116,
+          "line": 96,
           "column": 11,
           "ownerComponentId": "ui.0051",
           "tag": "Link",
@@ -12948,7 +12911,7 @@
         {
           "id": "inline.ui.0144.action.929d73ee5132",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 227,
+          "line": 220,
           "column": 33,
           "ownerComponentId": "ui.0144",
           "tag": "button",
@@ -12961,7 +12924,7 @@
         {
           "id": "inline.ui.0144.action.f371bceec7a1",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 194,
+          "line": 187,
           "column": 21,
           "ownerComponentId": "ui.0144",
           "tag": "button",
@@ -13440,9 +13403,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0065.badge.a042cc40c545",
-          "source": "src/components/MusicTable.tsx",
-          "line": 112,
+          "id": "inline.ui.0065.badge.6d4cd78e5066",
+          "source": "src/components/music/MusiciansBadges.tsx",
+          "line": 23,
           "column": 11,
           "ownerComponentId": "ui.0065",
           "tag": "span",
@@ -13908,7 +13871,7 @@
         {
           "id": "inline.ui.0051.card.2dcb594eef3c",
           "source": "src/components/JamCard.tsx",
-          "line": 61,
+          "line": 41,
           "column": 5,
           "ownerComponentId": "ui.0051",
           "tag": "div",
@@ -13939,7 +13902,7 @@
         {
           "id": "inline.ui.0053.card.15ce7f2c5911",
           "source": "src/components/JamContextDisplay.tsx",
-          "line": 45,
+          "line": 27,
           "column": 5,
           "ownerComponentId": "ui.0053",
           "tag": "div",
@@ -14095,7 +14058,11 @@
             "shadow-sm",
             "transition-shadow"
           ],
-          "dynamicClasses": false
+          "dynamicClasses": false,
+          "disposition": {
+            "status": "intentionally-distinct",
+            "rationale": "The compact host-owned Jam summary exposes management actions and operational counts, unlike the browse JamCard used by musicians to discover and open a Jam."
+          }
         },
         {
           "id": "inline.ui.0143.card.c0ec99e6a6e7",
@@ -14114,7 +14081,7 @@
         {
           "id": "inline.ui.0144.card.25817e902f0b",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 173,
+          "line": 166,
           "column": 21,
           "ownerComponentId": "ui.0144",
           "tag": "div",

@@ -24,6 +24,7 @@ Architecture completion means:
 - Keep deliberate visual redesign for the later screen phase.
 - Treat existing visual baselines as behavior evidence; change them only for a documented bug correction.
 - Update catalogue metadata, isolated states, tests, and architecture documentation in the ticket that changes them.
+- Treat the Component catalogue and Private component workbench CI workflows as milestone gates during this program: ordinary pull requests receive a fast deferred result, while the full workflows run manually or with the `architecture-track-gate` label at the end of each of the five tracks. Production build and test checks remain per-pull-request gates.
 - Preserve meaningful Jam, Music, Schedule, registration, DJ control, and Public Dashboard differences instead of merging by appearance alone.
 - Use a fresh worktree from current `main` for every implementation ticket. The checkout in which this plan was written contains unrelated work in progress.
 
@@ -117,8 +118,10 @@ For each unblocked ticket:
 3. Update the catalogue and supporting evidence within the same ticket.
 4. Run the Standards and Spec reviews against the fixed merge base.
 5. Open a focused pull request.
-6. Merge only after required checks and both review axes pass.
+6. Merge only after the per-pull-request checks and both review axes pass.
 7. Begin the next ticket in a fresh context.
+
+At each architecture-track boundary, run both milestone workflows against the integrated branch and resolve their findings before starting the next track. This cadence is temporary; restore catalogue and workbench enforcement on every pull request during architecture closeout.
 
 Completion criterion: the ticket is merged, its child issue is closed, and dependent tickets see its final interface on current `main`.
 

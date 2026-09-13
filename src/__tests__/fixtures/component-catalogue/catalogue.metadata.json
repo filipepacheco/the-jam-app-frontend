@@ -1,6 +1,15 @@
 {
   "candidateFamilies": ["overlay", "feedback", "empty-state"],
   "inlinePatternGovernance": {"scopes": [], "candidates": []},
+  "retiredComponents": [
+    {
+      "id": "ui.fixture.retired-action",
+      "formerSource": "src/RetiredAction.tsx",
+      "formerName": "RetiredAction",
+      "reason": "The unused fixture action was deleted after consumer analysis.",
+      "evidence": ["No production or workbench imports resolve to the former module."]
+    }
+  ],
   "defaults": {
     "category": "product-ui",
     "layer": "domain-component",

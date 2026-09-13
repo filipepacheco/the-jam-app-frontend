@@ -209,7 +209,7 @@ export function HostDashboardPage() {
                 {categories.inProgress.length > 0 && (<div className="mb-3 sm:mb-6">
                     <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.in_progress')}</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {categories.inProgress.map((jam) => (<JamCard
+                        {categories.inProgress.map((jam) => (<HostJamSummaryCard
                             key={jam.id}
                             jam={jam}
                             onDelete={handleDeleteJam}
@@ -223,7 +223,7 @@ export function HostDashboardPage() {
                 {categories.planned.length > 0 && (<div className="mb-3 sm:mb-6">
                     <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.planned')}</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {categories.planned.map((jam) => (<JamCard
+                        {categories.planned.map((jam) => (<HostJamSummaryCard
                             key={jam.id}
                             jam={jam}
                             onDelete={handleDeleteJam}
@@ -237,7 +237,7 @@ export function HostDashboardPage() {
                 {categories.past.length > 0 && (<div className="mb-3 sm:mb-6">
                     <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.past')}</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {categories.past.map((jam) => (<JamCard
+                        {categories.past.map((jam) => (<HostJamSummaryCard
                             key={jam.id}
                             jam={jam}
                             onDelete={handleDeleteJam}
@@ -261,16 +261,16 @@ export function HostDashboardPage() {
 }
 
 /**
- * Jam Card Component for Dashboard
+ * Compact Jam summary for the host dashboard.
  */
-interface JamCardProps {
+interface HostJamSummaryCardProps {
     jam: JamResponseDto
     onDelete: (jamId: string) => void
     onNavigate: (path: string) => void
     loading: boolean
 }
 
-function JamCard({jam, onDelete, onNavigate}: JamCardProps) {
+function HostJamSummaryCard({jam, onDelete, onNavigate}: HostJamSummaryCardProps) {
     const {t} = useTranslation()
 
     const registrationCount = jam._count?.registrations ?? 0

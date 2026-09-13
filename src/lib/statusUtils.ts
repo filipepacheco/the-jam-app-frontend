@@ -1,6 +1,23 @@
 import type { TFunction } from 'i18next'
 import type { JamStatus } from '../types/api.types'
 
+export type JamStatusTone = 'info' | 'neutral' | 'success' | 'warning'
+
+export function getJamStatusTone(status: JamStatus): JamStatusTone {
+  switch (status) {
+    case 'LIVE':
+      return 'success'
+    case 'ACTIVE':
+      return 'info'
+    case 'INACTIVE':
+      return 'warning'
+    case 'FINISHED':
+      return 'neutral'
+    default:
+      return 'neutral'
+  }
+}
+
 export function getJamStatusBadgeClass(status: JamStatus): string {
   switch (status) {
     case 'LIVE':
