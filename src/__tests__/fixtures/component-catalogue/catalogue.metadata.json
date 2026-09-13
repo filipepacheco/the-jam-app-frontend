@@ -1,5 +1,6 @@
 {
   "candidateFamilies": ["overlay", "feedback", "empty-state"],
+  "inlinePatternGovernance": {"scopes": [], "candidates": []},
   "defaults": {
     "category": "product-ui",
     "layer": "domain-component",

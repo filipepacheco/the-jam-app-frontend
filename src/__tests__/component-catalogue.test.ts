@@ -140,7 +140,7 @@ describe('component catalogue command', () => {
     expect(markdown).toContain('requires human review')
   })
 
-  it('reports repeated inline UI families as unreviewed candidates', async () => {
+  it('reports repeated inline UI candidates with stable identity and governance state', async () => {
     const {catalogue, markdown} = await generate()
 
     expect(catalogue.reviewCandidates.map((candidate) => candidate.family)).toEqual([
@@ -153,8 +153,12 @@ describe('component catalogue command', () => {
       'modal',
     ])
     for (const candidate of catalogue.reviewCandidates) {
-      expect(candidate).toMatchObject({assessment: 'review-candidate', equivalence: 'unreviewed'})
+      expect(candidate).not.toHaveProperty('assessment')
+      expect(candidate).not.toHaveProperty('equivalence')
       expect(candidate.occurrences.length).toBeGreaterThanOrEqual(2)
+      for (const occurrence of candidate.occurrences) {
+        expect(occurrence.id).toMatch(/^inline\.[a-z0-9.-]+$/)
+      }
     }
     expect(
       catalogue.reviewCandidates
@@ -164,7 +168,7 @@ describe('component catalogue command', () => {
     expect(markdown).toContain('Similarity is not equivalence')
     expect(markdown).toMatch(/`src\/InlinePatterns\.tsx:\d+:\d+`/)
     expect(markdown).toContain('owner `ui.fixture.inline-patterns`')
-    expect(markdown).toContain('equivalence: unreviewed')
+    expect(markdown).toContain('disposition: ungoverned')
   })
 
   it('reports consumers and context dependencies in both outputs', async () => {
