@@ -5,7 +5,7 @@
 
 import {useNavigate, useParams} from 'react-router-dom'
 import {SITE_URL} from '../../lib/api'
-import {useAuth} from '../../hooks'
+import {useAuth, useJamParticipationController} from '../../hooks'
 import useSWR from 'swr'
 import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -46,32 +46,25 @@ export function JamDetailPageV2() {
         jamId ? `/jams/${jamId}` : null
     )
 
-    // State for enrollment modal
-    const [showEnrollModal, setShowEnrollModal] = useState(false)
-    const [selectedScheduleForEnroll, setSelectedScheduleForEnroll] = useState<ScheduleResponseDto | null>(null)
+    const {state: participation, commands: participationCommands} = useJamParticipationController(
+        jam,
+        isAuthenticated,
+        user?.id ?? null,
+    )
+
     const [enrollSuccess, setEnrollSuccess] = useState<string | null>(null)
 
     // State for suggest song modal
-    const [showSuggestModal, setShowSuggestModal] = useState(false)
     const [suggestSuccess, setSuggestSuccess] = useState<string | null>(null)
-
-    // State for suggest new song modal (create new music)
-    const [showNewSongModal, setShowNewSongModal] = useState(false)
 
     // State for suggested songs section collapse
     const [isSuggestedExpanded, setIsSuggestedExpanded] = useState(true)
-
-    // State for performance selection modal (from FAB)
-    const [showPerformanceSelectModal, setShowPerformanceSelectModal] = useState(false)
 
     // State for copy location feedback
     const [locationCopied, setLocationCopied] = useState(false)
 
     // State for description truncation
     const [descriptionExpanded, setDescriptionExpanded] = useState(false)
-
-    // State for share modal
-    const [isShareModalOpen, setIsShareModalOpen] = useState(false)
 
     // State for error feedback
     const [errorMessage] = useState<string | null>(null)
@@ -122,63 +115,58 @@ export function JamDetailPageV2() {
         return registrations
     }, [jam?.schedules, user?.id])
 
+    const eligibleSchedules = useMemo(() => {
+        const eligibleIds = new Set(participation.eligiblePerformances.map(({id}) => id))
+        return allSchedules.filter(({id}) => eligibleIds.has(id))
+    }, [allSchedules, participation.eligiblePerformances])
+    const selectedScheduleForEnroll = allSchedules.find(({id}) => id === participation.selectedPerformanceId) ?? null
+
     // Handle enrollment click
     const handleEnrollClick = useCallback((schedule: ScheduleResponseDto) => {
-        if (!isAuthenticated) {
-            navigate(`/login?redirect=/jams/${jamId}`)
-        } else {
-            setSelectedScheduleForEnroll(schedule)
-            setShowEnrollModal(true)
-        }
-    }, [isAuthenticated, navigate, jamId])
+        const outcome = participationCommands.beginRegistration(schedule.id)
+        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
+    }, [navigate, participationCommands])
 
     // Handle enrollment success
     const handleEnrollmentSuccess = useCallback(async () => {
-        setShowEnrollModal(false)
-        setSelectedScheduleForEnroll(null)
+        participationCommands.closeOverlay()
         setEnrollSuccess(t('jams.enroll_success'))
         await mutateJam()
         setTimeout(() => setEnrollSuccess(null), SUCCESS_TOAST_DURATION)
-    }, [t, mutateJam])
+    }, [participationCommands, t, mutateJam])
 
     // Handle FAB register click
     const handleFABRegisterClick = useCallback(() => {
-        if (nonSuggestedSchedules.length === 1) {
-            handleEnrollClick(nonSuggestedSchedules[0])
-        } else if (nonSuggestedSchedules.length > 1) {
-            setShowPerformanceSelectModal(true)
-        }
-    }, [nonSuggestedSchedules, handleEnrollClick])
+        const outcome = participationCommands.beginRegistration()
+        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
+    }, [navigate, participationCommands])
 
     // Handle suggest click
     const handleSuggestClick = useCallback(() => {
-        if (!isAuthenticated) {
-            navigate(`/login?redirect=/jams/${jamId}`)
-        } else {
-            setShowSuggestModal(true)
-        }
-    }, [isAuthenticated, navigate, jamId])
+        const outcome = participationCommands.beginSuggestion()
+        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
+    }, [navigate, participationCommands])
 
     // Handle suggest success
     const handleSuggestSuccess = useCallback(async () => {
-        setShowSuggestModal(false)
+        participationCommands.closeOverlay()
         setSuggestSuccess(t('jams.suggest_success'))
         await mutateJam()
         setTimeout(() => setSuggestSuccess(null), SUCCESS_TOAST_DURATION)
-    }, [t, mutateJam])
+    }, [participationCommands, t, mutateJam])
 
     // Handle create new song click (from SuggestSongModal)
     const handleCreateNewSong = useCallback(() => {
-        setShowNewSongModal(true)
-    }, [])
+        participationCommands.beginNewMusic()
+    }, [participationCommands])
 
     // Handle new song creation success
     const handleNewSongSuccess = useCallback(async () => {
-        setShowNewSongModal(false)
+        participationCommands.closeOverlay()
         setSuggestSuccess(t('jams.song_created_success'))
         await mutateJam()
         setTimeout(() => setSuggestSuccess(null), SUCCESS_TOAST_DURATION)
-    }, [t, mutateJam])
+    }, [participationCommands, t, mutateJam])
 
     // Loading state
     if (isLoading && !jam) {
@@ -296,7 +284,7 @@ export function JamDetailPageV2() {
                         </div>
                         <IconAction
                             variant="quiet"
-                            onClick={() => setIsShareModalOpen(true)}
+                            onClick={participationCommands.beginShare}
                             className="shrink-0"
                             label={t('share.share_button')}
                         >
@@ -384,8 +372,8 @@ export function JamDetailPageV2() {
             {/* Share Modal */}
             {jam && (
                 <ShareModal
-                    isOpen={isShareModalOpen}
-                    onClose={() => setIsShareModalOpen(false)}
+                    isOpen={participation.activeOverlay === 'share'}
+                    onClose={participationCommands.closeOverlay}
                     jamId={jam.id}
                     jamSlug={jam.slug}
                     jamName={jam.name}
@@ -443,13 +431,6 @@ export function JamDetailPageV2() {
                                                     </div>
                                                 )}
                                             </div>
-                                            <Action
-                                                variant="secondary"
-                                                onClick={() => handleEnrollClick(schedule)}
-                                                className="shrink-0"
-                                            >
-                                                + {t('jams.register')}
-                                            </Action>
                                         </div>
                                     ))}
                                 </div>
@@ -463,7 +444,7 @@ export function JamDetailPageV2() {
 
             {/* Floating Action Button - Combined register + suggest */}
             <DualActionFAB
-                isVisible={isAuthenticated && nonSuggestedSchedules.length > 0 && jam.status !== 'FINISHED' && jam.status !== 'INACTIVE'}
+                isVisible={isAuthenticated && participation.eligiblePerformances.length > 0}
                 registrationCount={userRegistrations.length}
                 onRegisterClick={handleFABRegisterClick}
                 onSuggestClick={handleSuggestClick}
@@ -474,34 +455,31 @@ export function JamDetailPageV2() {
             {selectedScheduleForEnroll && (
                 <ScheduleEnrollmentModal
                     schedule={selectedScheduleForEnroll}
-                    isOpen={showEnrollModal}
-                    onClose={() => {
-                        setShowEnrollModal(false)
-                        setSelectedScheduleForEnroll(null)
-                    }}
+                    isOpen={participation.activeOverlay === 'enrollment'}
+                    onClose={participationCommands.closeOverlay}
                     onSuccess={handleEnrollmentSuccess}
                 />
             )}
 
             <SuggestSongModal
                 jamId={jam?.id || ''}
-                isOpen={showSuggestModal}
-                onClose={() => setShowSuggestModal(false)}
+                isOpen={participation.activeOverlay === 'suggestion'}
+                onClose={participationCommands.closeOverlay}
                 onSuccess={handleSuggestSuccess}
                 onCreateNewSong={handleCreateNewSong}
             />
 
             <SuggestNewSongModal
                 jamId={jam?.id || ''}
-                isOpen={showNewSongModal}
-                onClose={() => setShowNewSongModal(false)}
+                isOpen={participation.activeOverlay === 'new_music'}
+                onClose={participationCommands.closeOverlay}
                 onSuccess={handleNewSongSuccess}
             />
 
             <PerformanceSelectionModal
-                performances={allSchedules}
-                isOpen={showPerformanceSelectModal}
-                onClose={() => setShowPerformanceSelectModal(false)}
+                performances={eligibleSchedules}
+                isOpen={participation.activeOverlay === 'performance_picker'}
+                onClose={participationCommands.closeOverlay}
                 onSelectPerformance={handleEnrollClick}
                 userId={user?.id}
             />
