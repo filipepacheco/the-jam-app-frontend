@@ -26,8 +26,13 @@ interface HostMusicianRegistrationModalProps {
   schedule: ScheduleResponseDto
   isOpen: boolean
   onClose: () => void
-  onSuccess: () => void
+  onBatchComplete: (outcome: RegistrationBatchOutcome) => void
 }
+
+export type RegistrationBatchOutcome =
+  | {kind: 'success'}
+  | {kind: 'partial'; succeeded: number; failed: number}
+  | {kind: 'failure'; failed: number; refreshRequired: boolean}
 
 interface QueuedRegistration {
   id: string
@@ -40,14 +45,19 @@ interface QueuedRegistration {
 interface SubmissionProgress {
   completed: number
   total: number
-  errors: Array<{ musicianName: string; instrument: string; message: string }>
+  errors: Array<{
+    musicianName: string
+    instrument: string
+    message: string
+    failure: 'resolved' | 'thrown'
+  }>
 }
 
 export function HostMusicianRegistrationModal({
   schedule,
   isOpen,
   onClose,
-  onSuccess,
+  onBatchComplete,
 }: HostMusicianRegistrationModalProps) {
   const { t } = useTranslation()
   const [musicians, setMusicians] = useState<MusicianResponseDto[]>([])
@@ -161,17 +171,27 @@ export function HostMusicianRegistrationModal({
       setProgress({ completed: i, total: queue.length, errors })
 
       try {
-        await registrationService.create({
+        const result = await registrationService.create({
           musicianId: item.musicianId,
           scheduleId: schedule.id,
           instrument: item.instrument,
         })
+        if (!result.success) {
+          errors.push({
+            musicianName: item.musicianName,
+            instrument: item.instrumentLabel,
+            message: result.error ?? result.message ?? t('errors.failed_to_register_musician'),
+            failure: 'resolved',
+          })
+          continue
+        }
         successIds.push(item.id)
       } catch (err) {
         errors.push({
           musicianName: item.musicianName,
           instrument: item.instrumentLabel,
           message: err instanceof Error ? err.message : t('errors.failed_to_register_musician'),
+          failure: 'thrown',
         })
       }
     }
@@ -183,11 +203,16 @@ export function HostMusicianRegistrationModal({
       setSubmitting(false)
       setProgress(null)
       onClose()
-      onSuccess()
+      onBatchComplete({kind: 'success'})
     } else if (errors.length === queue.length) {
       // All failed
       setError(t('schedule.batch.all_failed'))
       setSubmitting(false)
+      onBatchComplete({
+        kind: 'failure',
+        failed: errors.length,
+        refreshRequired: errors.some(({failure}) => failure === 'thrown'),
+      })
     } else {
       // Partial failure - remove successful items, keep failed ones
       setQueue(prev => prev.filter(q => !successIds.includes(q.id)))
@@ -196,7 +221,7 @@ export function HostMusicianRegistrationModal({
         failed: errors.length,
       }))
       setSubmitting(false)
-      onSuccess() // refresh parent for the ones that succeeded
+      onBatchComplete({kind: 'partial', succeeded: successIds.length, failed: errors.length})
     }
   }
 
