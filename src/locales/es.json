@@ -546,6 +546,7 @@
     "song_paused_feedback": "Canción pausada",
     "skipped_feedback": "Saltado a la siguiente canción",
     "reordered_feedback": "Cola reordenada",
+    "reorder_conflict": "La cola en vivo cambió. Recárgala y vuelve a aplicar el orden.",
     "executing_action": "Ejecutando acción…",
     "saving_order": "Guardando orden…",
     "reorder_hint_mobile": "Mantene presionado un item y arrastra para reordenar",

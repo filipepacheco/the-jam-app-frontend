@@ -28,9 +28,8 @@ export { useFormState } from './useFormState'
 export { useJamControl } from './useJamControl'
 export type { UseJamControlReturn } from '../types/jamControl.types'
 
-// Queue reorder hook
-export { useQueueReorder } from './useQueueReorder'
-export type { UseQueueReorderReturn } from '../types/jamControl.types'
+// Live Queue controller
+export {useLiveQueueController} from './useLiveQueueController'
 
 // Page-level alert state hook
 export { usePageAlerts } from './usePageAlerts'

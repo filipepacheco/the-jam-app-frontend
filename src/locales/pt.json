@@ -554,6 +554,7 @@
     "song_paused_feedback": "Música pausada",
     "skipped_feedback": "Pulou para a próxima música",
     "reordered_feedback": "Fila reordenada",
+    "reorder_conflict": "A fila ao vivo mudou. Recarregue e aplique a ordem novamente.",
     "executing_action": "Executando ação…",
     "saving_order": "Salvando ordem…",
     "reorder_hint_mobile": "Segure um item por um momento e arraste para reordenar",

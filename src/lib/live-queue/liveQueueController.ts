@@ -40,8 +40,8 @@ export interface LiveQueueOperationsPort {
   reorder(input: {
     jamId: string
     performances: readonly LiveQueuePerformance[]
-  }): Promise<LiveQueueMutationResult>
-  refresh(jamId: string): Promise<LiveQueueRefreshResult>
+  }, signal?: AbortSignal): Promise<LiveQueueMutationResult>
+  refresh(jamId: string, signal?: AbortSignal): Promise<LiveQueueRefreshResult>
 }
 
 export interface LiveQueueTimerPort {
@@ -75,6 +75,11 @@ export interface LiveQueueState {
     startingFingerprint: string
   }
   persistence: {status: 'idle' | 'debouncing' | 'saving'}
+  input: {mode: 'idle'} | {
+    mode: 'mouse' | 'touch' | 'keyboard'
+    performanceId: string
+    targetIndex: number
+  }
   conflict: null | {
     status: 'detected'
     startingFingerprint: string
@@ -90,6 +95,10 @@ export interface LiveQueueController {
     replaceServerSnapshot(snapshot: LiveQueueSnapshot): void
     beginReorder(): void
     movePerformance(performanceId: string, targetIndex: number): void
+    beginMove(input: {mode: 'mouse' | 'touch' | 'keyboard'; performanceId: string}): void
+    updateMoveTarget(targetIndex: number): void
+    commitMove(): void
+    cancelMove(): void
     cancelReorder(): LiveQueueOutcome
     saveReorder(): Promise<LiveQueueOutcome>
   }
@@ -136,10 +145,12 @@ export function createLiveQueueController({
   let conflict: LiveQueueState['conflict'] = null
   let latestOutcome: LiveQueueOutcome | null = null
   let persistenceStatus: LiveQueueState['persistence']['status'] = 'idle'
+  let input: LiveQueueState['input'] = {mode: 'idle'}
   let pendingSave: {
     cancel: () => void
     resolve: (outcome: LiveQueueOutcome) => void
   } | null = null
+  let activeSaveAbort: AbortController | null = null
   let disposed = false
   let state: LiveQueueState
   const listeners = new Set<() => void>()
@@ -150,10 +161,25 @@ export function createLiveQueueController({
       draftPerformances,
       session,
       persistence: {status: persistenceStatus},
+      input,
       conflict,
       latestOutcome,
     }
     if (notify && !disposed) listeners.forEach((listener) => listener())
+  }
+
+  const movePerformance = (performanceId: string, targetIndex: number) => {
+    if (session.status !== 'editing' || persistenceStatus !== 'idle') return
+    const sourceIndex = draftPerformances.findIndex(({id}) => id === performanceId)
+    if (sourceIndex < 0 || targetIndex < 0 || targetIndex >= draftPerformances.length) return
+    const reordered = [...draftPerformances]
+    const [moved] = reordered.splice(sourceIndex, 1)
+    reordered.splice(targetIndex, 0, moved)
+    const baseOrder = Math.min(...reordered.map(({order}) => order))
+    draftPerformances = reordered.map((performance, index) => ({
+      ...performance,
+      order: baseOrder + index,
+    }))
   }
 
   const commands: LiveQueueController['commands'] = {
@@ -184,26 +210,40 @@ export function createLiveQueueController({
       }
       draftPerformances = [...startingSnapshot.upcomingPerformances]
       conflict = null
+      input = {mode: 'idle'}
       project()
     },
     movePerformance(performanceId, targetIndex) {
+      movePerformance(performanceId, targetIndex)
+      project()
+    },
+    beginMove({mode, performanceId}) {
       if (session.status !== 'editing' || persistenceStatus !== 'idle') return
       const sourceIndex = draftPerformances.findIndex(({id}) => id === performanceId)
-      if (sourceIndex < 0 || targetIndex < 0 || targetIndex >= draftPerformances.length) return
-      const reordered = [...draftPerformances]
-      const [moved] = reordered.splice(sourceIndex, 1)
-      reordered.splice(targetIndex, 0, moved)
-      const baseOrder = Math.min(...reordered.map(({order}) => order))
-      draftPerformances = reordered.map((performance, index) => ({
-        ...performance,
-        order: baseOrder + index,
-      }))
+      if (sourceIndex < 0) return
+      input = {mode, performanceId, targetIndex: sourceIndex}
+      project()
+    },
+    updateMoveTarget(targetIndex) {
+      if (input.mode === 'idle' || targetIndex < 0 || targetIndex >= draftPerformances.length) return
+      input = {...input, targetIndex}
+      project()
+    },
+    commitMove() {
+      if (input.mode === 'idle') return
+      movePerformance(input.performanceId, input.targetIndex)
+      input = {mode: 'idle'}
+      project()
+    },
+    cancelMove() {
+      input = {mode: 'idle'}
       project()
     },
     cancelReorder() {
       draftPerformances = [...server.upcomingPerformances]
       session = {status: 'idle'}
       conflict = null
+      input = {mode: 'idle'}
       latestOutcome = {code: 'cancelled', operation: 'reorder_session'}
       project()
       return latestOutcome
@@ -240,7 +280,6 @@ export function createLiveQueueController({
 
       return new Promise<LiveQueueOutcome>((resolve) => {
         const cancel = timer.schedule(300, () => {
-          pendingSave = null
           void (async () => {
             const latestFingerprint = fingerprintQueue(server.upcomingPerformances)
             const startingFingerprint = fingerprintQueue(startingSnapshot.upcomingPerformances)
@@ -254,17 +293,21 @@ export function createLiveQueueController({
                 latestFingerprint,
               }
               project()
+              pendingSave = null
               resolve(latestOutcome)
               return
             }
             persistenceStatus = 'saving'
             project()
+            const abort = new AbortController()
+            activeSaveAbort = abort
             let mutation: LiveQueueMutationResult
             try {
               mutation = operations
-                ? await operations.reorder({jamId: server.jamId, performances: draftPerformances})
+                ? await operations.reorder({jamId: server.jamId, performances: draftPerformances}, abort.signal)
                 : {ok: false, error: {message: 'Live Queue operations adapter is required'}}
             } catch (cause) {
+              if (disposed || abort.signal.aborted) return
               server = startingSnapshot
               draftPerformances = [...startingSnapshot.upcomingPerformances]
               session = {status: 'idle'}
@@ -277,9 +320,13 @@ export function createLiveQueueController({
                 error: {message: cause instanceof Error ? cause.message : 'Unknown reorder error'},
               }
               project()
+              activeSaveAbort = null
+              pendingSave = null
               resolve(latestOutcome)
               return
             }
+
+            if (disposed || abort.signal.aborted) return
 
             if (!mutation.ok) {
               server = startingSnapshot
@@ -294,19 +341,23 @@ export function createLiveQueueController({
                 error: mutation.error,
               }
               project()
+              activeSaveAbort = null
+              pendingSave = null
               resolve(latestOutcome)
               return
             }
 
             let refreshed: LiveQueueRefreshResult
             try {
-              refreshed = await operations!.refresh(server.jamId)
+              refreshed = await operations!.refresh(server.jamId, abort.signal)
             } catch (cause) {
+              if (disposed || abort.signal.aborted) return
               refreshed = {
                 ok: false,
                 error: {message: cause instanceof Error ? cause.message : 'Unknown refresh error'},
               }
             }
+            if (disposed || abort.signal.aborted) return
             if (!refreshed.ok) {
               session = {status: 'idle'}
               conflict = null
@@ -317,6 +368,8 @@ export function createLiveQueueController({
                 error: refreshed.error,
               }
               project()
+              activeSaveAbort = null
+              pendingSave = null
               resolve(latestOutcome)
               return
             }
@@ -328,6 +381,8 @@ export function createLiveQueueController({
             persistenceStatus = 'idle'
             latestOutcome = {code: 'success', operation: 'save_reorder'}
             project()
+            activeSaveAbort = null
+            pendingSave = null
             resolve(latestOutcome)
           })()
         })
@@ -346,12 +401,14 @@ export function createLiveQueueController({
     },
     commands,
     dispose() {
+      disposed = true
+      activeSaveAbort?.abort()
+      activeSaveAbort = null
       if (pendingSave) {
         pendingSave.cancel()
         pendingSave.resolve({code: 'cancelled', operation: 'save_reorder'})
         pendingSave = null
       }
-      disposed = true
       listeners.clear()
     },
   }
