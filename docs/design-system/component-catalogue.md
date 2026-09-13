@@ -398,253 +398,253 @@ Only `ready` and reasoned `exempt` entries satisfy the reviewed baseline. `needs
 
 ### action
 
-99 occurrences; assessment: review-candidate; equivalence: unreviewed.
+99 occurrences.
 
-- `src/components/Action.tsx:58:5` — owner `ui.0166`; tag `<button>`; static classes: none detected; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/Alert.tsx:77:9` — owner `ui.0006`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `ds-control`, `ds-focusable`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/EditMusicianModal.tsx:186:9` — owner `ui.0018`; tag `<button>`; static classes: `hidden`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ErrorBoundary.tsx:47:17` — owner `ui.0021`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ErrorBoundary.tsx:53:17` — owner `ui.0021`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/JamCard.tsx:112:13` — owner `ui.0051`; tag `<Link>`; static classes: `btn`, `btn-outline`, `ds-control`, `ds-focusable`, `ds-type-ui`, `gap-1.5`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/JamCard.tsx:116:11` — owner `ui.0051`; tag `<Link>`; static classes: `btn`, `btn-primary`, `ds-control`, `ds-focusable`, `ds-type-ui`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Modal.tsx:128:17` — owner `ui.0055`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-ghost`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Modal.tsx:152:9` — owner `ui.0055`; tag `<button>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Modal.tsx:99:17` — owner `ui.0055`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-ghost`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ModalFooter.tsx:38:7` — owner `ui.0056`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ModalFooter.tsx:47:9` — owner `ui.0056`; tag `<button>`; static classes: `btn`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/MusicModal.tsx:209:9` — owner `ui.0062`; tag `<button>`; static classes: `hidden`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Navbar.tsx:119:15` — owner `ui.0066`; tag `<a>`; static classes: `btn`, `btn-primary`, `min-h-[44px]`, `whitespace-nowrap`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Navbar.tsx:63:9` — owner `ui.0066`; tag `<a>`; static classes: `btn`, `btn-ghost`, `md:text-xl`, `sm:text-lg`, `text-base`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Navigation.tsx:258:17` — owner `ui.0194`; tag `<button>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Navigation.tsx:306:7` — owner `ui.0195`; tag `<button>`; static classes: `ds-control`, `ds-dropdown__trigger`, `ds-focusable`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/Navigation.tsx:62:13` — owner `ui.0191`; tag `<button>`; static classes: `ds-tab`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/OnboardingModal.tsx:209:9` — owner `ui.0068`; tag `<button>`; static classes: `hidden`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileSetupModal.tsx:193:9` — owner `ui.0073`; tag `<button>`; static classes: `hidden`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileSetupModal.tsx:91:11` — owner `ui.0073`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileSetupModal.tsx:99:11` — owner `ui.0073`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/SpotifyExportModal.tsx:120:11` — owner `ui.0127`; tag `<a>`; static classes: `btn`, `btn-primary`, `ds-control`, `ds-focusable`, `ds-type-ui`, `gap-2`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/SpotifyPreview.tsx:62:5` — owner `ui.0131`; tag `<a>`; static classes: `btn`, `btn-ghost`, `ds-control`, `ds-focusable`, `gap-1`, `hover:bg-success/10`, `text-success`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/SpotifyPreview.tsx:95:5` — owner `ui.0130`; tag `<a>`; static classes: `btn`, `btn-circle`, `btn-ghost`, `ds-control`, `ds-focusable`, `hover:bg-success/20`, `text-success`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/dj-control/SongQueueTimeline.tsx:152:11` — owner `ui.0015`; tag `<button>`; static classes: `flex`, `font-semibold`, `gap-2`, `hover:text-success`, `items-center`, `mb-2`, `px-3`, `text-success/70`, `text-xs`, `tracking-wider`, `transition-colors`, `uppercase`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/forms/SearchableSelect.tsx:145:7` — owner `ui.0028`; tag `<button>`; static classes: `flex`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `items-center`, `justify-between`, `select`, `select-bordered`, `text-left`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/jam-detail-v2/CollapsibleSection.tsx:38:7` — owner `ui.0034`; tag `<button>`; static classes: `card-body`, `cursor-pointer`, `flex`, `flex-row`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `hover:bg-base-300/30`, `items-center`, `justify-between`, `outline-none`, `p-4`, `transition-colors`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/DualActionFAB.tsx:108:15` — owner `ui.0036`; tag `<button>`; static classes: `btn`, `btn-accent`, `btn-circle`, `btn-lg`, `shadow-2xl`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/DualActionFAB.tsx:127:9` — owner `ui.0036`; tag `<button>`; static classes: `btn`, `btn-primary`, `shadow-2xl`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/jam-detail-v2/DualActionFAB.tsx:94:15` — owner `ui.0036`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-lg`, `btn-secondary`, `shadow-2xl`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/PerformanceSelectionModal.tsx:80:13` — owner `ui.0040`; tag `<button>`; static classes: `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `p-4`, `rounded-lg`, `text-left`, `transition-colors`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/jam-detail-v2/SuggestNewSongModal.tsx:309:9` — owner `ui.0041`; tag `<button>`; static classes: `hidden`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/publicDashboard/LanguageSelector.tsx:32:9` — owner `ui.0085`; tag `<button>`; static classes: `ds-focusable`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `px-3`, `py-1`, `rounded`, `text-xs`, `transition`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/publicDashboard/carousel/CarouselIndicator.tsx:18:11` — owner `ui.0075`; tag `<button>`; static classes: `bg-transparent`, `ds-control`, `ds-control--shared-display`, `ds-focusable`, `flex`, `items-center`, `justify-center`, `rounded-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/MusicianSlotRow.tsx:59:9` — owner `ui.0108`; tag `<button>`; static classes: `cursor-pointer`, `flex-1`, `font-medium`, `hover:text-primary`, `hover:underline`, `lg:flex-initial`, `min-w-0`, `text-left`, `text-primary/80`, `transition-colors`, `truncate`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/RegistrationList.tsx:132:45` — owner `ui.0110`; tag `<button>`; static classes: `flex`, `flex-1`, `gap-3`, `items-start`, `min-w-0`, `text-left`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/schedule/ScheduleCollapsibleCard.tsx:103:9` — owner `ui.0113`; tag `<button>`; static classes: `ds-focusable`, `flex`, `flex-1`, `gap-2`, `items-center`, `min-w-0`, `rounded-[var(--radius-field)]`, `text-left`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/AboutPage.tsx:160:13` — owner `ui.0136`; tag `<a>`; static classes: `btn`, `btn-primary`, `gap-2`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/AboutPage.tsx:181:15` — owner `ui.0136`; tag `<Link>`; static classes: `btn`, `btn-primary`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/AboutPage.tsx:184:15` — owner `ui.0136`; tag `<Link>`; static classes: `btn`, `btn-outline`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/BrowseJamsPage.tsx:275:17` — owner `ui.0137`; tag `<button>`; static classes: `cursor-pointer`, `flex`, `gap-2`, `group`, `items-center`, `mb-3`, `sm:mb-4`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/MusicPage.tsx:450:17` — owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/MusicPage.tsx:457:17` — owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/MusicPage.tsx:482:17` — owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/MusicPage.tsx:489:17` — owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/NotFoundPage.tsx:36:13` — owner `ui.0150`; tag `<Link>`; static classes: `btn`, `btn-primary`, `gap-2`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/NotFoundPage.tsx:40:13` — owner `ui.0150`; tag `<Link>`; static classes: `btn`, `btn-outline`, `gap-2`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:320:11` — owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `mb-4`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:338:17` — owner `ui.0138`; tag `<button>`; static classes: `bg-success/10`, `flex`, `gap-3`, `hover:bg-success/20`, `items-center`, `p-3`, `rounded-lg`, `text-left`, `transition-colors`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:575:17` — owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:585:19` — owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-error`, `btn-outline`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:595:17` — owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:642:13` — owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:649:13` — owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-error`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/FeedbackPage.tsx:127:13` — owner `ui.0140`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `sm:btn-md`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/FeedbackPage.tsx:195:17` — owner `ui.0140`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/FeedbackPage.tsx:210:17` — owner `ui.0140`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:143:25` — owner `ui.0141`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `hidden`, `sm:inline-flex`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:150:25` — owner `ui.0141`; tag `<button>`; static classes: `btn`, `btn-outline`, `btn-sm`, `hidden`, `sm:inline-flex`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:157:25` — owner `ui.0141`; tag `<button>`; static classes: `btn`, `btn-primary`, `btn-sm`, `hidden`, `sm:inline-flex`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:166:29` — owner `ui.0141`; tag `<div>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `btn-square`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:170:37` — owner `ui.0141`; tag `<button>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:171:37` — owner `ui.0141`; tag `<button>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:172:37` — owner `ui.0141`; tag `<button>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:295:25` — owner `ui.0142`; tag `<div>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `btn-square`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:299:33` — owner `ui.0142`; tag `<button>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:300:33` — owner `ui.0142`; tag `<button>`; static classes: `text-error`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:138:11` — owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `mb-4`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:150:13` — owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:234:17` — owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-primary`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:265:21` — owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-secondary`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:279:17` — owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:330:23` — owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:339:23` — owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:347:21` — owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-error`, `btn-outline`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/JamManagementPage.tsx:194:21` — owner `ui.0144`; tag `<button>`; static classes: `btn`, `btn-primary`, `mt-4`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/JamManagementPage.tsx:227:33` — owner `ui.0144`; tag `<button>`; static classes: `link`, `link-hover`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:323:23` — owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-primary`, `btn-sm`, `shrink-0`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:376:25` — owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-primary`, `btn-xs`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:412:23` — owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:434:23` — owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:447:25` — owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:455:25` — owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:481:25` — owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:489:25` — owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/AuthCallbackPage.tsx:123:15` — owner `ui.0156`; tag `<a>`; static classes: `btn`, `btn-primary`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/AuthCallbackPage.tsx:126:15` — owner `ui.0156`; tag `<a>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/AuthCallbackPage.tsx:97:15` — owner `ui.0156`; tag `<a>`; static classes: `btn`, `btn-primary`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/DashboardTab.tsx:17:13` — owner `ui.0157`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/OverviewTab.tsx:101:21` — owner `ui.0161`; tag `<a>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `gap-2`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/OverviewTab.tsx:110:21` — owner `ui.0161`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `gap-2`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/OverviewTab.tsx:83:17` — owner `ui.0161`; tag `<button>`; static classes: `btn`, `gap-2`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/tabs/OverviewTab.tsx:94:21` — owner `ui.0161`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `gap-2`; dynamic classes: no; equivalence: unreviewed.
-- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:108:19` — owner `ui.0165`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `ds-focusable`; dynamic classes: no; equivalence: unreviewed.
-- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:120:19` — owner `ui.0165`; tag `<button>`; static classes: `btn`, `ds-control`, `ds-focusable`; dynamic classes: no; equivalence: unreviewed.
-- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:121:19` — owner `ui.0165`; tag `<button>`; static classes: `btn`, `btn-error`, `ds-control`, `ds-focusable`; dynamic classes: no; equivalence: unreviewed.
-- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:16:13` — owner `ui.0164`; tag `<button>`; static classes: `btn`, `btn-primary`, `ds-control`, `ds-focusable`; dynamic classes: no; equivalence: unreviewed.
-- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:61:11` — owner `ui.0165`; tag `<button>`; static classes: `btn`, `btn-error`, `ds-control`, `ds-focusable`, `mt-4`, `w-fit`; dynamic classes: no; equivalence: unreviewed.
+- `src/components/Alert.tsx:77:9` — candidate `inline.ui.0006.action.8f18b740ef0d`; owner `ui.0006`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `ds-control`, `ds-focusable`; dynamic classes: no; disposition: ungoverned.
+- `src/components/dj-control/SongQueueTimeline.tsx:152:11` — candidate `inline.ui.0015.action.91810193303e`; owner `ui.0015`; tag `<button>`; static classes: `flex`, `font-semibold`, `gap-2`, `hover:text-success`, `items-center`, `mb-2`, `px-3`, `text-success/70`, `text-xs`, `tracking-wider`, `transition-colors`, `uppercase`; dynamic classes: no; disposition: ungoverned.
+- `src/components/EditMusicianModal.tsx:186:9` — candidate `inline.ui.0018.action.39c79645ef02`; owner `ui.0018`; tag `<button>`; static classes: `hidden`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ErrorBoundary.tsx:53:17` — candidate `inline.ui.0021.action.71abab9194a7`; owner `ui.0021`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ErrorBoundary.tsx:47:17` — candidate `inline.ui.0021.action.a1cd35ec3c12`; owner `ui.0021`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: no; disposition: ungoverned.
+- `src/components/forms/SearchableSelect.tsx:145:7` — candidate `inline.ui.0028.action.08897267b064`; owner `ui.0028`; tag `<button>`; static classes: `flex`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `items-center`, `justify-between`, `select`, `select-bordered`, `text-left`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/jam-detail-v2/CollapsibleSection.tsx:38:7` — candidate `inline.ui.0034.action.5576c9e553fd`; owner `ui.0034`; tag `<button>`; static classes: `card-body`, `cursor-pointer`, `flex`, `flex-row`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `hover:bg-base-300/30`, `items-center`, `justify-between`, `outline-none`, `p-4`, `transition-colors`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/DualActionFAB.tsx:108:15` — candidate `inline.ui.0036.action.997eb302d3fc`; owner `ui.0036`; tag `<button>`; static classes: `btn`, `btn-accent`, `btn-circle`, `btn-lg`, `shadow-2xl`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/DualActionFAB.tsx:127:9` — candidate `inline.ui.0036.action.cb261c0949bd`; owner `ui.0036`; tag `<button>`; static classes: `btn`, `btn-primary`, `shadow-2xl`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/jam-detail-v2/DualActionFAB.tsx:94:15` — candidate `inline.ui.0036.action.e65f82f680e5`; owner `ui.0036`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-lg`, `btn-secondary`, `shadow-2xl`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/PerformanceSelectionModal.tsx:80:13` — candidate `inline.ui.0040.action.685d70f9b0e0`; owner `ui.0040`; tag `<button>`; static classes: `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `p-4`, `rounded-lg`, `text-left`, `transition-colors`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/jam-detail-v2/SuggestNewSongModal.tsx:309:9` — candidate `inline.ui.0041.action.39c79645ef02`; owner `ui.0041`; tag `<button>`; static classes: `hidden`; dynamic classes: no; disposition: ungoverned.
+- `src/components/JamCard.tsx:112:13` — candidate `inline.ui.0051.action.998263c4bc81`; owner `ui.0051`; tag `<Link>`; static classes: `btn`, `btn-outline`, `ds-control`, `ds-focusable`, `ds-type-ui`, `gap-1.5`; dynamic classes: no; disposition: ungoverned.
+- `src/components/JamCard.tsx:116:11` — candidate `inline.ui.0051.action.df9f8f021a85`; owner `ui.0051`; tag `<Link>`; static classes: `btn`, `btn-primary`, `ds-control`, `ds-focusable`, `ds-type-ui`; dynamic classes: no; disposition: ungoverned.
+- `src/components/Modal.tsx:152:9` — candidate `inline.ui.0055.action.06430e4aaaa7`; owner `ui.0055`; tag `<button>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
+- `src/components/Modal.tsx:99:17` — candidate `inline.ui.0055.action.dfadafd80204`; owner `ui.0055`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-ghost`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/components/Modal.tsx:128:17` — candidate `inline.ui.0055.action.dfadafd80204`; owner `ui.0055`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-ghost`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ModalFooter.tsx:47:9` — candidate `inline.ui.0056.action.0fbabc44f409`; owner `ui.0056`; tag `<button>`; static classes: `btn`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/ModalFooter.tsx:38:7` — candidate `inline.ui.0056.action.6775938f3e2e`; owner `ui.0056`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; disposition: ungoverned.
+- `src/components/MusicModal.tsx:209:9` — candidate `inline.ui.0062.action.39c79645ef02`; owner `ui.0062`; tag `<button>`; static classes: `hidden`; dynamic classes: no; disposition: ungoverned.
+- `src/components/Navbar.tsx:119:15` — candidate `inline.ui.0066.action.3c8b213fb73d`; owner `ui.0066`; tag `<a>`; static classes: `btn`, `btn-primary`, `min-h-[44px]`, `whitespace-nowrap`; dynamic classes: no; disposition: ungoverned.
+- `src/components/Navbar.tsx:63:9` — candidate `inline.ui.0066.action.68ea9d79c1a1`; owner `ui.0066`; tag `<a>`; static classes: `btn`, `btn-ghost`, `md:text-xl`, `sm:text-lg`, `text-base`; dynamic classes: no; disposition: ungoverned.
+- `src/components/OnboardingModal.tsx:209:9` — candidate `inline.ui.0068.action.39c79645ef02`; owner `ui.0068`; tag `<button>`; static classes: `hidden`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileSetupModal.tsx:99:11` — candidate `inline.ui.0073.action.0f9ca806c12d`; owner `ui.0073`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/ProfileSetupModal.tsx:193:9` — candidate `inline.ui.0073.action.39c79645ef02`; owner `ui.0073`; tag `<button>`; static classes: `hidden`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileSetupModal.tsx:91:11` — candidate `inline.ui.0073.action.7259264a8426`; owner `ui.0073`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; disposition: ungoverned.
+- `src/components/publicDashboard/carousel/CarouselIndicator.tsx:18:11` — candidate `inline.ui.0075.action.cd0b0ac251cb`; owner `ui.0075`; tag `<button>`; static classes: `bg-transparent`, `ds-control`, `ds-control--shared-display`, `ds-focusable`, `flex`, `items-center`, `justify-center`, `rounded-full`; dynamic classes: no; disposition: ungoverned.
+- `src/components/publicDashboard/LanguageSelector.tsx:32:9` — candidate `inline.ui.0085.action.6ff2b69f8725`; owner `ui.0085`; tag `<button>`; static classes: `ds-focusable`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `px-3`, `py-1`, `rounded`, `text-xs`, `transition`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/schedule/MusicianSlotRow.tsx:59:9` — candidate `inline.ui.0108.action.fe0fecd0ce65`; owner `ui.0108`; tag `<button>`; static classes: `cursor-pointer`, `flex-1`, `font-medium`, `hover:text-primary`, `hover:underline`, `lg:flex-initial`, `min-w-0`, `text-left`, `text-primary/80`, `transition-colors`, `truncate`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/RegistrationList.tsx:132:45` — candidate `inline.ui.0110.action.b4550f6f91d7`; owner `ui.0110`; tag `<button>`; static classes: `flex`, `flex-1`, `gap-3`, `items-start`, `min-w-0`, `text-left`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/schedule/ScheduleCollapsibleCard.tsx:103:9` — candidate `inline.ui.0113.action.fddc76b19af3`; owner `ui.0113`; tag `<button>`; static classes: `ds-focusable`, `flex`, `flex-1`, `gap-2`, `items-center`, `min-w-0`, `rounded-[var(--radius-field)]`, `text-left`; dynamic classes: no; disposition: ungoverned.
+- `src/components/SpotifyExportModal.tsx:120:11` — candidate `inline.ui.0127.action.b059ebdc6f66`; owner `ui.0127`; tag `<a>`; static classes: `btn`, `btn-primary`, `ds-control`, `ds-focusable`, `ds-type-ui`, `gap-2`; dynamic classes: no; disposition: ungoverned.
+- `src/components/SpotifyPreview.tsx:95:5` — candidate `inline.ui.0130.action.f046247be362`; owner `ui.0130`; tag `<a>`; static classes: `btn`, `btn-circle`, `btn-ghost`, `ds-control`, `ds-focusable`, `hover:bg-success/20`, `text-success`; dynamic classes: no; disposition: ungoverned.
+- `src/components/SpotifyPreview.tsx:62:5` — candidate `inline.ui.0131.action.a28cc700984b`; owner `ui.0131`; tag `<a>`; static classes: `btn`, `btn-ghost`, `ds-control`, `ds-focusable`, `gap-1`, `hover:bg-success/10`, `text-success`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/AboutPage.tsx:184:15` — candidate `inline.ui.0136.action.00184941bb64`; owner `ui.0136`; tag `<Link>`; static classes: `btn`, `btn-outline`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/AboutPage.tsx:160:13` — candidate `inline.ui.0136.action.8a7990fbd69f`; owner `ui.0136`; tag `<a>`; static classes: `btn`, `btn-primary`, `gap-2`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/AboutPage.tsx:181:15` — candidate `inline.ui.0136.action.96a334eb6eb0`; owner `ui.0136`; tag `<Link>`; static classes: `btn`, `btn-primary`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/BrowseJamsPage.tsx:275:17` — candidate `inline.ui.0137.action.1dd0b008a9ef`; owner `ui.0137`; tag `<button>`; static classes: `cursor-pointer`, `flex`, `gap-2`, `group`, `items-center`, `mb-3`, `sm:mb-4`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:649:13` — candidate `inline.ui.0138.action.54ec90266fe5`; owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-error`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:595:17` — candidate `inline.ui.0138.action.66160410e1da`; owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:338:17` — candidate `inline.ui.0138.action.6eddb1414edb`; owner `ui.0138`; tag `<button>`; static classes: `bg-success/10`, `flex`, `gap-3`, `hover:bg-success/20`, `items-center`, `p-3`, `rounded-lg`, `text-left`, `transition-colors`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:320:11` — candidate `inline.ui.0138.action.7b07ac140f54`; owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `mb-4`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:642:13` — candidate `inline.ui.0138.action.7f2367eca031`; owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:575:17` — candidate `inline.ui.0138.action.9ee8e9b4d3ba`; owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:585:19` — candidate `inline.ui.0138.action.f05672707818`; owner `ui.0138`; tag `<button>`; static classes: `btn`, `btn-error`, `btn-outline`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/FeedbackPage.tsx:127:13` — candidate `inline.ui.0140.action.10ad6ce1887e`; owner `ui.0140`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `sm:btn-md`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/FeedbackPage.tsx:195:17` — candidate `inline.ui.0140.action.e3313d24431b`; owner `ui.0140`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/FeedbackPage.tsx:210:17` — candidate `inline.ui.0140.action.f86ec59cb6fb`; owner `ui.0140`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:150:25` — candidate `inline.ui.0141.action.0340e02aa1e2`; owner `ui.0141`; tag `<button>`; static classes: `btn`, `btn-outline`, `btn-sm`, `hidden`, `sm:inline-flex`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:143:25` — candidate `inline.ui.0141.action.09e0a16fbe50`; owner `ui.0141`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `hidden`, `sm:inline-flex`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:172:37` — candidate `inline.ui.0141.action.2365031eb3a4`; owner `ui.0141`; tag `<button>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:166:29` — candidate `inline.ui.0141.action.80919867aed7`; owner `ui.0141`; tag `<div>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `btn-square`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:157:25` — candidate `inline.ui.0141.action.8f5f82b1a1f6`; owner `ui.0141`; tag `<button>`; static classes: `btn`, `btn-primary`, `btn-sm`, `hidden`, `sm:inline-flex`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:171:37` — candidate `inline.ui.0141.action.d372c6ca8f39`; owner `ui.0141`; tag `<button>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:170:37` — candidate `inline.ui.0141.action.d3ba29dbf38f`; owner `ui.0141`; tag `<button>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:300:33` — candidate `inline.ui.0142.action.1854699bbfb9`; owner `ui.0142`; tag `<button>`; static classes: `text-error`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:295:25` — candidate `inline.ui.0142.action.80919867aed7`; owner `ui.0142`; tag `<div>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `btn-square`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:299:33` — candidate `inline.ui.0142.action.9e18b100dc7d`; owner `ui.0142`; tag `<button>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:234:17` — candidate `inline.ui.0143.action.04dcbf960e93`; owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-primary`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:347:21` — candidate `inline.ui.0143.action.0cb67403f8a8`; owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-error`, `btn-outline`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:339:23` — candidate `inline.ui.0143.action.172ad49aabc8`; owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:265:21` — candidate `inline.ui.0143.action.39b88e19d34b`; owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-secondary`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:279:17` — candidate `inline.ui.0143.action.5f404e6c5dde`; owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:150:13` — candidate `inline.ui.0143.action.733b34d26ae4`; owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:330:23` — candidate `inline.ui.0143.action.c7224d425e3a`; owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:138:11` — candidate `inline.ui.0143.action.f30ad90a15b4`; owner `ui.0143`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `mb-4`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/JamManagementPage.tsx:227:33` — candidate `inline.ui.0144.action.929d73ee5132`; owner `ui.0144`; tag `<button>`; static classes: `link`, `link-hover`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/JamManagementPage.tsx:194:21` — candidate `inline.ui.0144.action.f371bceec7a1`; owner `ui.0144`; tag `<button>`; static classes: `btn`, `btn-primary`, `mt-4`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:412:23` — candidate `inline.ui.0145.action.089fb2941062`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:323:23` — candidate `inline.ui.0145.action.2076eb39fae5`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-primary`, `btn-sm`, `shrink-0`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:434:23` — candidate `inline.ui.0145.action.4d6b1d213141`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:455:25` — candidate `inline.ui.0145.action.5b4ae785a84c`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:376:25` — candidate `inline.ui.0145.action.66884209f969`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-primary`, `btn-xs`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:481:25` — candidate `inline.ui.0145.action.711e49093a1a`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:489:25` — candidate `inline.ui.0145.action.b0c1f98c7b08`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:447:25` — candidate `inline.ui.0145.action.da2ccfdf8dea`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:482:17` — candidate `inline.ui.0149.action.13992e296a37`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:450:17` — candidate `inline.ui.0149.action.66ccf2efc3cc`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:457:17` — candidate `inline.ui.0149.action.8f783887c351`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:489:17` — candidate `inline.ui.0149.action.ffc3d5a3e973`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/NotFoundPage.tsx:40:13` — candidate `inline.ui.0150.action.7a732819e71d`; owner `ui.0150`; tag `<Link>`; static classes: `btn`, `btn-outline`, `gap-2`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/NotFoundPage.tsx:36:13` — candidate `inline.ui.0150.action.ad399f270378`; owner `ui.0150`; tag `<Link>`; static classes: `btn`, `btn-primary`, `gap-2`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/AuthCallbackPage.tsx:126:15` — candidate `inline.ui.0156.action.275fc0c0934a`; owner `ui.0156`; tag `<a>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/AuthCallbackPage.tsx:97:15` — candidate `inline.ui.0156.action.d857aa222e77`; owner `ui.0156`; tag `<a>`; static classes: `btn`, `btn-primary`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/AuthCallbackPage.tsx:123:15` — candidate `inline.ui.0156.action.d857aa222e77`; owner `ui.0156`; tag `<a>`; static classes: `btn`, `btn-primary`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/DashboardTab.tsx:17:13` — candidate `inline.ui.0157.action.bae5b533f94d`; owner `ui.0157`; tag `<button>`; static classes: `btn`, `btn-primary`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/OverviewTab.tsx:101:21` — candidate `inline.ui.0161.action.430827641e9d`; owner `ui.0161`; tag `<a>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `gap-2`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/OverviewTab.tsx:83:17` — candidate `inline.ui.0161.action.8e26b7ddb3d8`; owner `ui.0161`; tag `<button>`; static classes: `btn`, `gap-2`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/tabs/OverviewTab.tsx:110:21` — candidate `inline.ui.0161.action.a2b1847bbf16`; owner `ui.0161`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `gap-2`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/OverviewTab.tsx:94:21` — candidate `inline.ui.0161.action.d5afae87e211`; owner `ui.0161`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `gap-2`; dynamic classes: no; disposition: ungoverned.
+- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:16:13` — candidate `inline.ui.0164.action.49759727702d`; owner `ui.0164`; tag `<button>`; static classes: `btn`, `btn-primary`, `ds-control`, `ds-focusable`; dynamic classes: no; disposition: ungoverned.
+- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:108:19` — candidate `inline.ui.0165.action.3b5dbdb8b387`; owner `ui.0165`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `ds-focusable`; dynamic classes: no; disposition: ungoverned.
+- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:120:19` — candidate `inline.ui.0165.action.4887870f7836`; owner `ui.0165`; tag `<button>`; static classes: `btn`, `ds-control`, `ds-focusable`; dynamic classes: no; disposition: ungoverned.
+- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:61:11` — candidate `inline.ui.0165.action.5567f13c2209`; owner `ui.0165`; tag `<button>`; static classes: `btn`, `btn-error`, `ds-control`, `ds-focusable`, `mt-4`, `w-fit`; dynamic classes: no; disposition: ungoverned.
+- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:121:19` — candidate `inline.ui.0165.action.fe708c3ba7ed`; owner `ui.0165`; tag `<button>`; static classes: `btn`, `btn-error`, `ds-control`, `ds-focusable`; dynamic classes: no; disposition: ungoverned.
+- `src/components/Action.tsx:58:5` — candidate `inline.ui.0166.action.bcd852a27998`; owner `ui.0166`; tag `<button>`; static classes: none detected; dynamic classes: yes; disposition: ungoverned.
+- `src/components/Navigation.tsx:62:13` — candidate `inline.ui.0191.action.d9e82b4db73b`; owner `ui.0191`; tag `<button>`; static classes: `ds-tab`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/Navigation.tsx:258:17` — candidate `inline.ui.0194.action.d43d82020bdb`; owner `ui.0194`; tag `<button>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
+- `src/components/Navigation.tsx:306:7` — candidate `inline.ui.0195.action.b0becf9266a0`; owner `ui.0195`; tag `<button>`; static classes: `ds-control`, `ds-dropdown__trigger`, `ds-focusable`; dynamic classes: no; disposition: ungoverned.
 
 ### badge
 
-23 occurrences; assessment: review-candidate; equivalence: unreviewed.
+23 occurrences.
 
-- `src/components/JamCardSkeleton.tsx:15:11` — owner `ui.0052`; tag `<div>`; static classes: `badge`, `h-6`, `rounded`, `skeleton`, `sm:h-7`, `w-20`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/MusicTable.tsx:112:11` — owner `ui.0065`; tag `<span>`; static classes: `badge`, `badge-sm`, `gap-0.5`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileHeader.tsx:65:9` — owner `ui.0072`; tag `<div>`; static classes: `badge`, `badge-lg`, `badge-outline`, `border-white`, `mt-2`, `text-white`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/ScheduleCardSkeleton.tsx:25:17` — owner `ui.0123`; tag `<div>`; static classes: `badge`, `h-6`, `rounded`, `skeleton`, `w-20`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ScheduleCardSkeleton.tsx:26:17` — owner `ui.0123`; tag `<div>`; static classes: `badge`, `h-6`, `rounded`, `skeleton`, `w-20`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/DualActionFAB.tsx:140:17` — owner `ui.0036`; tag `<span>`; static classes: `badge`, `badge-sm`, `bg-white/20`, `border-0`, `tabular-nums`, `text-primary-content`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/InstrumentBadges.tsx:40:9` — owner `ui.0102`; tag `<span>`; static classes: `badge`, `badge-neutral`, `font-semibold`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/schedule/InstrumentBadges.tsx:47:13` — owner `ui.0102`; tag `<span>`; static classes: `badge`, `badge-ghost`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/schedule/InstrumentsSummary.tsx:50:13` — owner `ui.0103`; tag `<span>`; static classes: `badge`, `badge-sm`, `gap-1`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/schedule/MusicianSlotRow.tsx:77:9` — owner `ui.0108`; tag `<span>`; static classes: `badge`, `badge-ghost`, `badge-xs`, `hidden`, `lg:inline`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/RegistrationList.tsx:156:57` — owner `ui.0110`; tag `<div>`; static classes: `badge`, `badge-sm`, `bg-success/10`, `border-success`, `flex`, `gap-1`, `items-center`, `text-success`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/RegistrationList.tsx:162:57` — owner `ui.0110`; tag `<div>`; static classes: `badge`, `badge-error`, `badge-sm`, `flex`, `gap-1`, `items-center`, `text-error-content`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/RegistrationList.tsx:168:57` — owner `ui.0110`; tag `<div>`; static classes: `badge`, `badge-sm`, `bg-warning/10`, `border-warning`, `flex`, `gap-1`, `items-center`, `text-warning`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/RegistrationList.tsx:184:61` — owner `ui.0110`; tag `<p>`; static classes: `badge`, `badge-ghost`, `badge-xs`, `text-base-content/50`, `text-xs`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/ScheduleCollapsibleCard.tsx:113:13` — owner `ui.0113`; tag `<span>`; static classes: `badge`, `badge-neutral`, `badge-xs`, `font-bold`, `shrink-0`, `tabular-nums`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/ScheduleCollapsibleCard.tsx:132:13` — owner `ui.0113`; tag `<span>`; static classes: `badge`, `badge-outline`, `badge-warning`, `badge-xs`, `font-semibold`, `hidden`, `shrink-0`, `sm:inline-flex`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/ScheduleCompactCard.tsx:68:13` — owner `ui.0114`; tag `<span>`; static classes: `badge`, `badge-info`, `badge-sm`, `flex-shrink-0`, `font-bold`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/ScheduleStatusBadge.tsx:22:5` — owner `ui.0119`; tag `<div>`; static classes: `badge`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/schedule/SlotFillIndicator.tsx:27:5` — owner `ui.0120`; tag `<span>`; static classes: `badge`, `badge-xs`, `font-mono`, `font-semibold`, `shrink-0`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:293:21` — owner `ui.0142`; tag `<div>`; static classes: `badge`, `badge-xs`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:305:27` — owner `ui.0145`; tag `<span>`; static classes: `badge`, `badge-sm`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:366:25` — owner `ui.0145`; tag `<span>`; static classes: `badge`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/tabs/RegistrationsTab.tsx:31:37` — owner `ui.0162`; tag `<div>`; static classes: `badge`, `badge-outline`, `badge-xs`, `sm:badge-sm`; dynamic classes: no; equivalence: unreviewed.
+- `src/components/jam-detail-v2/DualActionFAB.tsx:140:17` — candidate `inline.ui.0036.badge.fcb3c3413a33`; owner `ui.0036`; tag `<span>`; static classes: `badge`, `badge-sm`, `bg-white/20`, `border-0`, `tabular-nums`, `text-primary-content`; dynamic classes: no; disposition: ungoverned.
+- `src/components/JamCardSkeleton.tsx:15:11` — candidate `inline.ui.0052.badge.6726979863dc`; owner `ui.0052`; tag `<div>`; static classes: `badge`, `h-6`, `rounded`, `skeleton`, `sm:h-7`, `w-20`; dynamic classes: no; disposition: ungoverned.
+- `src/components/MusicTable.tsx:112:11` — candidate `inline.ui.0065.badge.a042cc40c545`; owner `ui.0065`; tag `<span>`; static classes: `badge`, `badge-sm`, `gap-0.5`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileHeader.tsx:65:9` — candidate `inline.ui.0072.badge.cda50a3d9d9f`; owner `ui.0072`; tag `<div>`; static classes: `badge`, `badge-lg`, `badge-outline`, `border-white`, `mt-2`, `text-white`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/schedule/InstrumentBadges.tsx:40:9` — candidate `inline.ui.0102.badge.384375b91c2c`; owner `ui.0102`; tag `<span>`; static classes: `badge`, `badge-neutral`, `font-semibold`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/schedule/InstrumentBadges.tsx:47:13` — candidate `inline.ui.0102.badge.571da121368a`; owner `ui.0102`; tag `<span>`; static classes: `badge`, `badge-ghost`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/schedule/InstrumentsSummary.tsx:50:13` — candidate `inline.ui.0103.badge.b37524a569fd`; owner `ui.0103`; tag `<span>`; static classes: `badge`, `badge-sm`, `gap-1`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/schedule/MusicianSlotRow.tsx:77:9` — candidate `inline.ui.0108.badge.8fe3e68fc485`; owner `ui.0108`; tag `<span>`; static classes: `badge`, `badge-ghost`, `badge-xs`, `hidden`, `lg:inline`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/RegistrationList.tsx:168:57` — candidate `inline.ui.0110.badge.39460fa4ad05`; owner `ui.0110`; tag `<div>`; static classes: `badge`, `badge-sm`, `bg-warning/10`, `border-warning`, `flex`, `gap-1`, `items-center`, `text-warning`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/RegistrationList.tsx:156:57` — candidate `inline.ui.0110.badge.6ad924faf0fc`; owner `ui.0110`; tag `<div>`; static classes: `badge`, `badge-sm`, `bg-success/10`, `border-success`, `flex`, `gap-1`, `items-center`, `text-success`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/RegistrationList.tsx:184:61` — candidate `inline.ui.0110.badge.b2afb2cea6af`; owner `ui.0110`; tag `<p>`; static classes: `badge`, `badge-ghost`, `badge-xs`, `text-base-content/50`, `text-xs`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/RegistrationList.tsx:162:57` — candidate `inline.ui.0110.badge.ef85a8827234`; owner `ui.0110`; tag `<div>`; static classes: `badge`, `badge-error`, `badge-sm`, `flex`, `gap-1`, `items-center`, `text-error-content`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/ScheduleCollapsibleCard.tsx:113:13` — candidate `inline.ui.0113.badge.01c4dbd97efe`; owner `ui.0113`; tag `<span>`; static classes: `badge`, `badge-neutral`, `badge-xs`, `font-bold`, `shrink-0`, `tabular-nums`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/ScheduleCollapsibleCard.tsx:132:13` — candidate `inline.ui.0113.badge.583a9ab66ea6`; owner `ui.0113`; tag `<span>`; static classes: `badge`, `badge-outline`, `badge-warning`, `badge-xs`, `font-semibold`, `hidden`, `shrink-0`, `sm:inline-flex`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/ScheduleCompactCard.tsx:68:13` — candidate `inline.ui.0114.badge.d2ba0e50560b`; owner `ui.0114`; tag `<span>`; static classes: `badge`, `badge-info`, `badge-sm`, `flex-shrink-0`, `font-bold`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/ScheduleStatusBadge.tsx:22:5` — candidate `inline.ui.0119.badge.b9fd1af2830b`; owner `ui.0119`; tag `<div>`; static classes: `badge`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/schedule/SlotFillIndicator.tsx:27:5` — candidate `inline.ui.0120.badge.ba852613dff5`; owner `ui.0120`; tag `<span>`; static classes: `badge`, `badge-xs`, `font-mono`, `font-semibold`, `shrink-0`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/ScheduleCardSkeleton.tsx:25:17` — candidate `inline.ui.0123.badge.8559cf525a20`; owner `ui.0123`; tag `<div>`; static classes: `badge`, `h-6`, `rounded`, `skeleton`, `w-20`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ScheduleCardSkeleton.tsx:26:17` — candidate `inline.ui.0123.badge.8559cf525a20`; owner `ui.0123`; tag `<div>`; static classes: `badge`, `h-6`, `rounded`, `skeleton`, `w-20`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:293:21` — candidate `inline.ui.0142.badge.3854256bcbff`; owner `ui.0142`; tag `<div>`; static classes: `badge`, `badge-xs`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:366:25` — candidate `inline.ui.0145.badge.0c40efe10576`; owner `ui.0145`; tag `<span>`; static classes: `badge`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:305:27` — candidate `inline.ui.0145.badge.0c97f35472e2`; owner `ui.0145`; tag `<span>`; static classes: `badge`, `badge-sm`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/tabs/RegistrationsTab.tsx:31:37` — candidate `inline.ui.0162.badge.05d41c5cf463`; owner `ui.0162`; tag `<div>`; static classes: `badge`, `badge-outline`, `badge-xs`, `sm:badge-sm`; dynamic classes: no; disposition: ungoverned.
 
 ### card
 
-48 occurrences; assessment: review-candidate; equivalence: unreviewed.
+48 occurrences.
 
-- `src/components/ErrorBoundary.tsx:35:11` — owner `ui.0021`; tag `<div>`; static classes: `bg-base-100`, `card`, `max-w-md`, `mx-4`, `shadow-xl`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/JamCard.tsx:61:5` — owner `ui.0051`; tag `<div>`; static classes: `bg-base-200`, `card`, `hover:shadow-xl`, `shadow-lg`, `transition-shadow`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/JamCardSkeleton.tsx:8:5` — owner `ui.0052`; tag `<div>`; static classes: `animate-pulse`, `bg-base-200`, `card`, `shadow-lg`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/JamContextDisplay.tsx:45:5` — owner `ui.0053`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/MusicFilters.tsx:36:5` — owner `ui.0060`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileFormSection.tsx:35:5` — owner `ui.0071`; tag `<div>`; static classes: `bg-base-200`, `card`, `duration-300`, `shadow-lg`, `transition-all`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileHeader.tsx:52:5` — owner `ui.0072`; tag `<div>`; static classes: `bg-gradient-to-r`, `card`, `shadow-xl`, `text-primary-content`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/ScheduleCardSkeleton.tsx:8:5` — owner `ui.0123`; tag `<div>`; static classes: `animate-pulse`, `bg-gradient-to-br`, `card`, `from-base-200`, `to-base-300`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/SidebarSectionSkeleton.tsx:8:5` — owner `ui.0126`; tag `<div>`; static classes: `animate-pulse`, `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/forms/JamRegistrationForm.tsx:82:7` — owner `ui.0026`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/forms/JamRegistrationForm.tsx:93:5` — owner `ui.0026`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/CollapsibleSection.tsx:37:5` — owner `ui.0034`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:104:25` — owner `ui.0039`; tag `<div>`; static classes: `bg-base-100/50`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:47:13` — owner `ui.0039`; tag `<div>`; static classes: `bg-linear-to-br`, `card`, `from-base-200`, `to-base-300`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:55:13` — owner `ui.0039`; tag `<div>`; static classes: `bg-linear-to-br`, `card`, `from-base-200`, `to-base-300`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:70:13` — owner `ui.0039`; tag `<div>`; static classes: `bg-linear-to-br`, `card`, `from-base-200`, `to-base-300`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:113:5` — owner `ui.0044`; tag `<div>`; static classes: `card`, `cursor-pointer`, `duration-300`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `hover:shadow-lg`, `outline-none`, `text-left`, `transition-shadow`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/schedule/ScheduleCompactCard.tsx:62:5` — owner `ui.0114`; tag `<div>`; static classes: `card`, `shadow-sm`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/JamRegisterPage.tsx:103:13` — owner `ui.0146`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/JamRegisterPage.tsx:152:11` — owner `ui.0146`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/JamRegisterPage.tsx:87:13` — owner `ui.0146`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/JamRegisterPage.tsx:96:13` — owner `ui.0146`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/MusicPage.tsx:301:11` — owner `ui.0149`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-4`, `p-3`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/MusicPage.tsx:309:15` — owner `ui.0149`; tag `<div>`; static classes: `bg-base-200`, `card`, `p-3`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/ProfilePage.tsx:119:11` — owner `ui.0151`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`, `shadow-lg`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/ProfilePage.tsx:132:11` — owner `ui.0151`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`, `shadow-lg`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:265:11` — owner `ui.0138`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow-lg`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:333:9` — owner `ui.0138`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow-lg`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/FeedbackPage.tsx:262:5` — owner `ui.0139`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:279:13` — owner `ui.0142`; tag `<div>`; static classes: `bg-base-200`, `card`, `cursor-pointer`, `hover:shadow-md`, `shadow-sm`, `transition-shadow`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:310:15` — owner `ui.0143`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow-md`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/JamManagementPage.tsx:173:21` — owner `ui.0144`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:164:11` — owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:193:15` — owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:235:9` — owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:285:11` — owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:299:17` — owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/AnalyticsTab.tsx:21:17` — owner `ui.0155`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/AnalyticsTab.tsx:27:17` — owner `ui.0155`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/AnalyticsTab.tsx:33:17` — owner `ui.0155`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/AuthCallbackPage.tsx:111:9` — owner `ui.0156`; tag `<div>`; static classes: `bg-base-200`, `card`, `max-w-md`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/AuthCallbackPage.tsx:84:9` — owner `ui.0156`; tag `<div>`; static classes: `bg-base-200`, `card`, `max-w-md`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/OverviewTab.tsx:136:17` — owner `ui.0161`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/RegistrationsTab.tsx:22:25` — owner `ui.0162`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/tabs/ScheduleTab.tsx:466:17` — owner `ui.0163`; tag `<EmptyState>`; static classes: `bg-base-200`, `card`, `p-4`; dynamic classes: no; equivalence: unreviewed.
-- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:54:5` — owner `ui.0165`; tag `<section>`; static classes: `bg-base-200`, `card`, `max-w-2xl`, `shadow-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:78:13` — owner `ui.0165`; tag `<div>`; static classes: `bg-base-100`, `card`, `max-w-md`, `shadow-xl`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:8:5` — owner `ui.0164`; tag `<section>`; static classes: `bg-base-200`, `card`, `max-w-2xl`, `shadow-sm`; dynamic classes: no; equivalence: unreviewed.
+- `src/components/ErrorBoundary.tsx:35:11` — candidate `inline.ui.0021.card.ad218e4c73ec`; owner `ui.0021`; tag `<div>`; static classes: `bg-base-100`, `card`, `max-w-md`, `mx-4`, `shadow-xl`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/components/forms/JamRegistrationForm.tsx:82:7` — candidate `inline.ui.0026.card.25817e902f0b`; owner `ui.0026`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/components/forms/JamRegistrationForm.tsx:93:5` — candidate `inline.ui.0026.card.25817e902f0b`; owner `ui.0026`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/CollapsibleSection.tsx:37:5` — candidate `inline.ui.0034.card.25817e902f0b`; owner `ui.0034`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:47:13` — candidate `inline.ui.0039.card.31d245cad4b5`; owner `ui.0039`; tag `<div>`; static classes: `bg-linear-to-br`, `card`, `from-base-200`, `to-base-300`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:55:13` — candidate `inline.ui.0039.card.31d245cad4b5`; owner `ui.0039`; tag `<div>`; static classes: `bg-linear-to-br`, `card`, `from-base-200`, `to-base-300`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:70:13` — candidate `inline.ui.0039.card.31d245cad4b5`; owner `ui.0039`; tag `<div>`; static classes: `bg-linear-to-br`, `card`, `from-base-200`, `to-base-300`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:104:25` — candidate `inline.ui.0039.card.fdd714540ab4`; owner `ui.0039`; tag `<div>`; static classes: `bg-base-100/50`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:113:5` — candidate `inline.ui.0044.card.9f2bafa4204d`; owner `ui.0044`; tag `<div>`; static classes: `card`, `cursor-pointer`, `duration-300`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `hover:shadow-lg`, `outline-none`, `text-left`, `transition-shadow`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/JamCard.tsx:61:5` — candidate `inline.ui.0051.card.2dcb594eef3c`; owner `ui.0051`; tag `<div>`; static classes: `bg-base-200`, `card`, `hover:shadow-xl`, `shadow-lg`, `transition-shadow`; dynamic classes: no; disposition: ungoverned.
+- `src/components/JamCardSkeleton.tsx:8:5` — candidate `inline.ui.0052.card.23a4f84ec232`; owner `ui.0052`; tag `<div>`; static classes: `animate-pulse`, `bg-base-200`, `card`, `shadow-lg`; dynamic classes: no; disposition: ungoverned.
+- `src/components/JamContextDisplay.tsx:45:5` — candidate `inline.ui.0053.card.15ce7f2c5911`; owner `ui.0053`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`; dynamic classes: no; disposition: ungoverned.
+- `src/components/MusicFilters.tsx:36:5` — candidate `inline.ui.0060.card.4f770448212d`; owner `ui.0060`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileFormSection.tsx:35:5` — candidate `inline.ui.0071.card.056ceaebd3f3`; owner `ui.0071`; tag `<div>`; static classes: `bg-base-200`, `card`, `duration-300`, `shadow-lg`, `transition-all`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileHeader.tsx:52:5` — candidate `inline.ui.0072.card.0c2ddd740560`; owner `ui.0072`; tag `<div>`; static classes: `bg-gradient-to-r`, `card`, `shadow-xl`, `text-primary-content`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/schedule/ScheduleCompactCard.tsx:62:5` — candidate `inline.ui.0114.card.8e1c5f236d45`; owner `ui.0114`; tag `<div>`; static classes: `card`, `shadow-sm`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/ScheduleCardSkeleton.tsx:8:5` — candidate `inline.ui.0123.card.436f8ef9ea1b`; owner `ui.0123`; tag `<div>`; static classes: `animate-pulse`, `bg-gradient-to-br`, `card`, `from-base-200`, `to-base-300`; dynamic classes: no; disposition: ungoverned.
+- `src/components/SidebarSectionSkeleton.tsx:8:5` — candidate `inline.ui.0126.card.baebd380de22`; owner `ui.0126`; tag `<div>`; static classes: `animate-pulse`, `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:265:11` — candidate `inline.ui.0138.card.ca6213990919`; owner `ui.0138`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow-lg`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:333:9` — candidate `inline.ui.0138.card.ca6213990919`; owner `ui.0138`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow-lg`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/FeedbackPage.tsx:262:5` — candidate `inline.ui.0139.card.4f770448212d`; owner `ui.0139`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:279:13` — candidate `inline.ui.0142.card.a466fe497136`; owner `ui.0142`; tag `<div>`; static classes: `bg-base-200`, `card`, `cursor-pointer`, `hover:shadow-md`, `shadow-sm`, `transition-shadow`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:310:15` — candidate `inline.ui.0143.card.c0ec99e6a6e7`; owner `ui.0143`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow-md`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/JamManagementPage.tsx:173:21` — candidate `inline.ui.0144.card.25817e902f0b`; owner `ui.0144`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:164:11` — candidate `inline.ui.0145.card.15ce7f2c5911`; owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:235:9` — candidate `inline.ui.0145.card.15ce7f2c5911`; owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:285:11` — candidate `inline.ui.0145.card.25817e902f0b`; owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:193:15` — candidate `inline.ui.0145.card.56ddd6651c4a`; owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:299:17` — candidate `inline.ui.0145.card.57283d4b3fc2`; owner `ui.0145`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/JamRegisterPage.tsx:87:13` — candidate `inline.ui.0146.card.25817e902f0b`; owner `ui.0146`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/JamRegisterPage.tsx:96:13` — candidate `inline.ui.0146.card.25817e902f0b`; owner `ui.0146`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/JamRegisterPage.tsx:103:13` — candidate `inline.ui.0146.card.25817e902f0b`; owner `ui.0146`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/JamRegisterPage.tsx:152:11` — candidate `inline.ui.0146.card.25817e902f0b`; owner `ui.0146`; tag `<div>`; static classes: `bg-base-200`, `card`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:309:15` — candidate `inline.ui.0149.card.9352e5e75f37`; owner `ui.0149`; tag `<div>`; static classes: `bg-base-200`, `card`, `p-3`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:301:11` — candidate `inline.ui.0149.card.b9a21d7bb545`; owner `ui.0149`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-4`, `p-3`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/ProfilePage.tsx:119:11` — candidate `inline.ui.0151.card.bdf9d53ac9bf`; owner `ui.0151`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`, `shadow-lg`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/ProfilePage.tsx:132:11` — candidate `inline.ui.0151.card.bdf9d53ac9bf`; owner `ui.0151`; tag `<div>`; static classes: `bg-base-200`, `card`, `mb-6`, `shadow-lg`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/AnalyticsTab.tsx:21:17` — candidate `inline.ui.0155.card.4f770448212d`; owner `ui.0155`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/AnalyticsTab.tsx:27:17` — candidate `inline.ui.0155.card.4f770448212d`; owner `ui.0155`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/AnalyticsTab.tsx:33:17` — candidate `inline.ui.0155.card.4f770448212d`; owner `ui.0155`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/AuthCallbackPage.tsx:84:9` — candidate `inline.ui.0156.card.dc35c1bc2c06`; owner `ui.0156`; tag `<div>`; static classes: `bg-base-200`, `card`, `max-w-md`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/AuthCallbackPage.tsx:111:9` — candidate `inline.ui.0156.card.dc35c1bc2c06`; owner `ui.0156`; tag `<div>`; static classes: `bg-base-200`, `card`, `max-w-md`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/OverviewTab.tsx:136:17` — candidate `inline.ui.0161.card.05967e332e13`; owner `ui.0161`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/RegistrationsTab.tsx:22:25` — candidate `inline.ui.0162.card.e42ed8b1e407`; owner `ui.0162`; tag `<div>`; static classes: `bg-base-200`, `card`, `shadow`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/tabs/ScheduleTab.tsx:466:17` — candidate `inline.ui.0163.card.6199aa1a86c4`; owner `ui.0163`; tag `<EmptyState>`; static classes: `bg-base-200`, `card`, `p-4`; dynamic classes: no; disposition: ungoverned.
+- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:8:5` — candidate `inline.ui.0164.card.88d062c72332`; owner `ui.0164`; tag `<section>`; static classes: `bg-base-200`, `card`, `max-w-2xl`, `shadow-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:54:5` — candidate `inline.ui.0165.card.028667a4178a`; owner `ui.0165`; tag `<section>`; static classes: `bg-base-200`, `card`, `max-w-2xl`, `shadow-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:78:13` — candidate `inline.ui.0165.card.e6b82dc9a79c`; owner `ui.0165`; tag `<div>`; static classes: `bg-base-100`, `card`, `max-w-md`, `shadow-xl`, `w-full`; dynamic classes: no; disposition: ungoverned.
 
 ### field
 
-40 occurrences; assessment: review-candidate; equivalence: unreviewed.
+40 occurrences.
 
-- `src/components/DesktopUserMenu.tsx:174:13` — owner `ui.0010`; tag `<select>`; static classes: `flex-1`, `select`, `select-bordered`, `select-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/DesktopUserMenu.tsx:187:13` — owner `ui.0010`; tag `<select>`; static classes: `flex-1`, `select`, `select-bordered`, `select-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/DesktopUserMenu.tsx:82:15` — owner `ui.0010`; tag `<select>`; static classes: `flex-1`, `select`, `select-bordered`, `select-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/DesktopUserMenu.tsx:95:15` — owner `ui.0010`; tag `<select>`; static classes: `flex-1`, `select`, `select-bordered`, `select-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/FeedbackModal.tsx:144:19` — owner `ui.0024`; tag `<input>`; static classes: `bg-warning`, `mask`, `mask-star-2`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileSetupModal.tsx:123:11` — owner `ui.0073`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileSetupModal.tsx:139:11` — owner `ui.0073`; tag `<select>`; static classes: `select`, `select-bordered`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileSetupModal.tsx:159:11` — owner `ui.0073`; tag `<select>`; static classes: `select`, `select-bordered`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/ProfileSetupModal.tsx:179:11` — owner `ui.0073`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/QuickEditPanel.tsx:178:13` — owner `ui.0094`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `px-1`, `tabular-nums`, `text-center`, `w-12`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/QuickEditPanel.tsx:188:13` — owner `ui.0094`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `px-1`, `tabular-nums`, `text-center`, `w-12`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/SpotifyExportModal.tsx:161:15` — owner `ui.0127`; tag `<input>`; static classes: `toggle`, `toggle-primary`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/forms/JamRegistrationForm.tsx:150:15` — owner `ui.0026`; tag `<input>`; static classes: `checkbox`, `checkbox-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/forms/SearchableSelect.tsx:142:16` — owner `ui.0028`; tag `<input>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/components/forms/SearchableSelect.tsx:145:7` — owner `ui.0028`; tag `<button>`; static classes: `flex`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `items-center`, `justify-between`, `select`, `select-bordered`, `text-left`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/forms/SearchableSelect.tsx:197:13` — owner `ui.0028`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/components/schedule/NotesEditor.tsx:30:9` — owner `ui.0109`; tag `<textarea>`; static classes: `text-xs`, `textarea`, `textarea-bordered`, `textarea-xs`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/MusicPage.tsx:433:15` — owner `ui.0149`; tag `<select>`; static classes: `select`, `select-bordered`, `select-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/MusicPage.tsx:467:17` — owner `ui.0149`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-14`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:354:17` — owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:379:17` — owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:408:19` — owner `ui.0138`; tag `<input>`; static classes: `flex-1`, `font-mono`, `input`, `input-bordered`, `min-w-0`, `rounded-l-none`, `text-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:441:19` — owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:462:19` — owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:486:17` — owner `ui.0138`; tag `<textarea>`; static classes: `resize-y`, `textarea`, `textarea-bordered`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:503:17` — owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:522:21` — owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:536:21` — owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/CreateJamPage.tsx:556:19` — owner `ui.0138`; tag `<select>`; static classes: `select`, `select-bordered`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:177:19` — owner `ui.0143`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:190:19` — owner `ui.0143`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:204:21` — owner `ui.0143`; tag `<select>`; static classes: `select`, `select-bordered`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:223:21` — owner `ui.0143`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:251:23` — owner `ui.0143`; tag `<select>`; static classes: `select`, `select-bordered`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:241:17` — owner `ui.0145`; tag `<label>`; static classes: `input`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:243:19` — owner `ui.0145`; tag `<input>`; static classes: none detected; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:257:17` — owner `ui.0145`; tag `<select>`; static classes: `select`, `w-full`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:395:19` — owner `ui.0145`; tag `<select>`; static classes: `select`, `select-bordered`, `select-sm`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:421:25` — owner `ui.0145`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-14`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/MusiciansPage.tsx:466:25` — owner `ui.0145`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-16`; dynamic classes: no; equivalence: unreviewed.
+- `src/components/DesktopUserMenu.tsx:82:15` — candidate `inline.ui.0010.field.83cf07fce210`; owner `ui.0010`; tag `<select>`; static classes: `flex-1`, `select`, `select-bordered`, `select-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/components/DesktopUserMenu.tsx:174:13` — candidate `inline.ui.0010.field.83cf07fce210`; owner `ui.0010`; tag `<select>`; static classes: `flex-1`, `select`, `select-bordered`, `select-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/components/DesktopUserMenu.tsx:95:15` — candidate `inline.ui.0010.field.faae46012791`; owner `ui.0010`; tag `<select>`; static classes: `flex-1`, `select`, `select-bordered`, `select-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/components/DesktopUserMenu.tsx:187:13` — candidate `inline.ui.0010.field.faae46012791`; owner `ui.0010`; tag `<select>`; static classes: `flex-1`, `select`, `select-bordered`, `select-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/components/FeedbackModal.tsx:144:19` — candidate `inline.ui.0024.field.e76b8944b19c`; owner `ui.0024`; tag `<input>`; static classes: `bg-warning`, `mask`, `mask-star-2`; dynamic classes: no; disposition: ungoverned.
+- `src/components/forms/JamRegistrationForm.tsx:150:15` — candidate `inline.ui.0026.field.5719863ad50b`; owner `ui.0026`; tag `<input>`; static classes: `checkbox`, `checkbox-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/components/forms/SearchableSelect.tsx:145:7` — candidate `inline.ui.0028.field.08897267b064`; owner `ui.0028`; tag `<button>`; static classes: `flex`, `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `items-center`, `justify-between`, `select`, `select-bordered`, `text-left`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/forms/SearchableSelect.tsx:197:13` — candidate `inline.ui.0028.field.49cf2aaca6d9`; owner `ui.0028`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/components/forms/SearchableSelect.tsx:142:16` — candidate `inline.ui.0028.field.f4e4c9af21dc`; owner `ui.0028`; tag `<input>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileSetupModal.tsx:179:11` — candidate `inline.ui.0073.field.04c7d44f22e7`; owner `ui.0073`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileSetupModal.tsx:139:11` — candidate `inline.ui.0073.field.552babd6490f`; owner `ui.0073`; tag `<select>`; static classes: `select`, `select-bordered`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileSetupModal.tsx:159:11` — candidate `inline.ui.0073.field.70b992692dca`; owner `ui.0073`; tag `<select>`; static classes: `select`, `select-bordered`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/components/ProfileSetupModal.tsx:123:11` — candidate `inline.ui.0073.field.d973beecd490`; owner `ui.0073`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; disposition: ungoverned.
+- `src/components/QuickEditPanel.tsx:178:13` — candidate `inline.ui.0094.field.75d6307d0371`; owner `ui.0094`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `px-1`, `tabular-nums`, `text-center`, `w-12`; dynamic classes: no; disposition: ungoverned.
+- `src/components/QuickEditPanel.tsx:188:13` — candidate `inline.ui.0094.field.7f2154df812d`; owner `ui.0094`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `px-1`, `tabular-nums`, `text-center`, `w-12`; dynamic classes: no; disposition: ungoverned.
+- `src/components/schedule/NotesEditor.tsx:30:9` — candidate `inline.ui.0109.field.c20fc644c0c3`; owner `ui.0109`; tag `<textarea>`; static classes: `text-xs`, `textarea`, `textarea-bordered`, `textarea-xs`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/components/SpotifyExportModal.tsx:161:15` — candidate `inline.ui.0127.field.4136f565e298`; owner `ui.0127`; tag `<input>`; static classes: `toggle`, `toggle-primary`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:354:17` — candidate `inline.ui.0138.field.06014e27ad84`; owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:441:19` — candidate `inline.ui.0138.field.5e03e415187d`; owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:556:19` — candidate `inline.ui.0138.field.6cbf6f1811bc`; owner `ui.0138`; tag `<select>`; static classes: `select`, `select-bordered`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:503:17` — candidate `inline.ui.0138.field.7dcd1fa55220`; owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:522:21` — candidate `inline.ui.0138.field.8bdd4c9e72b5`; owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:379:17` — candidate `inline.ui.0138.field.e515c8e563b4`; owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:462:19` — candidate `inline.ui.0138.field.e91bb31a1f0e`; owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:486:17` — candidate `inline.ui.0138.field.eaeeb3cf74fd`; owner `ui.0138`; tag `<textarea>`; static classes: `resize-y`, `textarea`, `textarea-bordered`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:408:19` — candidate `inline.ui.0138.field.f77935e49433`; owner `ui.0138`; tag `<input>`; static classes: `flex-1`, `font-mono`, `input`, `input-bordered`, `min-w-0`, `rounded-l-none`, `text-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/CreateJamPage.tsx:536:21` — candidate `inline.ui.0138.field.fe9d7a86dd1a`; owner `ui.0138`; tag `<input>`; static classes: `input`, `input-bordered`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:190:19` — candidate `inline.ui.0143.field.087fd8d054df`; owner `ui.0143`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:223:21` — candidate `inline.ui.0143.field.748bb25dc23b`; owner `ui.0143`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:204:21` — candidate `inline.ui.0143.field.b6b1b386dc7e`; owner `ui.0143`; tag `<select>`; static classes: `select`, `select-bordered`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:177:19` — candidate `inline.ui.0143.field.b8d1bc04ca61`; owner `ui.0143`; tag `<input>`; static classes: `input`, `input-bordered`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:251:23` — candidate `inline.ui.0143.field.f8e5389af642`; owner `ui.0143`; tag `<select>`; static classes: `select`, `select-bordered`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:241:17` — candidate `inline.ui.0145.field.1c692166840b`; owner `ui.0145`; tag `<label>`; static classes: `input`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:421:25` — candidate `inline.ui.0145.field.29e654bf736a`; owner `ui.0145`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-14`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:243:19` — candidate `inline.ui.0145.field.2de566221baa`; owner `ui.0145`; tag `<input>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:257:17` — candidate `inline.ui.0145.field.467feeb54644`; owner `ui.0145`; tag `<select>`; static classes: `select`, `w-full`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:466:25` — candidate `inline.ui.0145.field.8fdfc603b90f`; owner `ui.0145`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-16`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/MusiciansPage.tsx:395:19` — candidate `inline.ui.0145.field.974ab352a3fe`; owner `ui.0145`; tag `<select>`; static classes: `select`, `select-bordered`, `select-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:467:17` — candidate `inline.ui.0149.field.29e654bf736a`; owner `ui.0149`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-14`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:433:15` — candidate `inline.ui.0149.field.37d484e07210`; owner `ui.0149`; tag `<select>`; static classes: `select`, `select-bordered`, `select-sm`; dynamic classes: no; disposition: ungoverned.
 
 ### menu
 
-7 occurrences; assessment: review-candidate; equivalence: unreviewed.
+7 occurrences.
 
-- `src/components/DesktopUserMenu.tsx:130:5` — owner `ui.0010`; tag `<div>`; static classes: `dropdown`, `dropdown-end`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/DesktopUserMenu.tsx:64:7` — owner `ui.0010`; tag `<div>`; static classes: `dropdown`, `dropdown-end`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/MobileDrawer.tsx:188:11` — owner `ui.0054`; tag `<ul>`; static classes: `gap-0.5`, `menu`, `p-0`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:165:25` — owner `ui.0141`; tag `<div>`; static classes: `dropdown`, `dropdown-end`, `sm:hidden`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:169:29` — owner `ui.0141`; tag `<ul>`; static classes: `bg-base-200`, `dropdown-content`, `menu`, `p-2`, `rounded-box`, `shadow-lg`, `w-52`, `z-10`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:294:21` — owner `ui.0142`; tag `<div>`; static classes: `dropdown`, `dropdown-end`; dynamic classes: no; equivalence: unreviewed.
-- `src/pages/host/HostDashboardPage.tsx:298:25` — owner `ui.0142`; tag `<ul>`; static classes: `bg-base-200`, `dropdown-content`, `menu`, `p-2`, `rounded-box`, `shadow-lg`, `w-44`, `z-10`; dynamic classes: no; equivalence: unreviewed.
+- `src/components/DesktopUserMenu.tsx:64:7` — candidate `inline.ui.0010.menu.4971e201356c`; owner `ui.0010`; tag `<div>`; static classes: `dropdown`, `dropdown-end`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/DesktopUserMenu.tsx:130:5` — candidate `inline.ui.0010.menu.4971e201356c`; owner `ui.0010`; tag `<div>`; static classes: `dropdown`, `dropdown-end`; dynamic classes: yes; disposition: ungoverned.
+- `src/components/MobileDrawer.tsx:188:11` — candidate `inline.ui.0054.menu.0fc68a1fc731`; owner `ui.0054`; tag `<ul>`; static classes: `gap-0.5`, `menu`, `p-0`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:165:25` — candidate `inline.ui.0141.menu.1fdbd1ec99ad`; owner `ui.0141`; tag `<div>`; static classes: `dropdown`, `dropdown-end`, `sm:hidden`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:169:29` — candidate `inline.ui.0141.menu.d97e081f8535`; owner `ui.0141`; tag `<ul>`; static classes: `bg-base-200`, `dropdown-content`, `menu`, `p-2`, `rounded-box`, `shadow-lg`, `w-52`, `z-10`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:294:21` — candidate `inline.ui.0142.menu.869e80851761`; owner `ui.0142`; tag `<div>`; static classes: `dropdown`, `dropdown-end`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/host/HostDashboardPage.tsx:298:25` — candidate `inline.ui.0142.menu.fe84b02a8eab`; owner `ui.0142`; tag `<ul>`; static classes: `bg-base-200`, `dropdown-content`, `menu`, `p-2`, `rounded-box`, `shadow-lg`, `w-44`, `z-10`; dynamic classes: no; disposition: ungoverned.
 
 ### modal
 
-3 occurrences; assessment: review-candidate; equivalence: unreviewed.
+3 occurrences.
 
-- `src/components/Modal.tsx:86:5` — owner `ui.0055`; tag `<dialog>`; static classes: `modal`, `modal-open`; dynamic classes: yes; equivalence: unreviewed.
-- `src/components/overlays/CanonicalOverlays.tsx:185:5` — owner `ui.0185`; tag `<dialog>`; static classes: `ds-overlay`, `ds-overlay--`; dynamic classes: yes; equivalence: unreviewed.
-- `src/pages/host/HostJamSongsPage.tsx:165:11` — owner `ui.0143`; tag `<div>`; static classes: `modal`, `modal-open`; dynamic classes: no; equivalence: unreviewed.
+- `src/components/Modal.tsx:86:5` — candidate `inline.ui.0055.modal.8a2e4c771428`; owner `ui.0055`; tag `<dialog>`; static classes: `modal`, `modal-open`; dynamic classes: yes; disposition: ungoverned.
+- `src/pages/host/HostJamSongsPage.tsx:165:11` — candidate `inline.ui.0143.modal.155300266174`; owner `ui.0143`; tag `<div>`; static classes: `modal`, `modal-open`; dynamic classes: no; disposition: ungoverned.
+- `src/components/overlays/CanonicalOverlays.tsx:185:5` — candidate `inline.ui.0185.modal.3bf9e96c9761`; owner `ui.0185`; tag `<dialog>`; static classes: `ds-overlay`, `ds-overlay--`; dynamic classes: yes; disposition: ungoverned.
 
 
 ## Explicitly ignored sources

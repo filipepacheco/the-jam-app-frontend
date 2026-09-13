@@ -106,7 +106,37 @@ export interface IgnoredCatalogueSource {
   reason: string
 }
 
-export type InlinePatternFamily = 'action' | 'field' | 'card' | 'badge' | 'menu' | 'modal' | 'drawer'
+export const INLINE_PATTERN_FAMILIES = ['action', 'field', 'card', 'badge', 'menu', 'modal', 'drawer'] as const
+export type InlinePatternFamily = typeof INLINE_PATTERN_FAMILIES[number]
+
+export const INLINE_PATTERN_DISPOSITIONS = [
+  'adopted',
+  'intentionally-distinct',
+  'migration-debt',
+  'deletion-debt',
+] as const
+export type InlinePatternDispositionStatus = typeof INLINE_PATTERN_DISPOSITIONS[number]
+
+export type InlinePatternDisposition =
+  | {status: 'adopted'; canonicalFamily: string}
+  | {status: 'intentionally-distinct'; rationale: string}
+  | {status: 'migration-debt'; replacement: string; completionCondition: string}
+  | {status: 'deletion-debt'; verificationCondition: string}
+
+export interface InlinePatternGovernanceScope {
+  source: string
+  families: InlinePatternFamily[]
+}
+
+export interface GovernedInlinePatternCandidate {
+  id: string
+  disposition: InlinePatternDisposition
+}
+
+export interface InlinePatternGovernance {
+  scopes: InlinePatternGovernanceScope[]
+  candidates: GovernedInlinePatternCandidate[]
+}
 
 export interface InlinePatternOccurrence {
   id: string
@@ -117,12 +147,11 @@ export interface InlinePatternOccurrence {
   tag: string
   staticClassTokens: string[]
   dynamicClasses: boolean
+  disposition?: InlinePatternDisposition
 }
 
 export interface InlinePatternCandidate {
   family: InlinePatternFamily
-  assessment: 'review-candidate'
-  equivalence: 'unreviewed'
   occurrences: InlinePatternOccurrence[]
 }
 
@@ -148,6 +177,7 @@ export interface ComponentCatalogue {
 
 export interface CatalogueMetadataConfig {
   candidateFamilies: string[]
+  inlinePatternGovernance: InlinePatternGovernance
   defaults: ComponentMetadata
   rules: Array<{
     source: string

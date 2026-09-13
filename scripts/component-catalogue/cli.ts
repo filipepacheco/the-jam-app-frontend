@@ -48,12 +48,16 @@ export const runCatalogueCommand = async (args: string[], cwd = process.cwd()): 
     await readFile(path.resolve(root, config.metadata), 'utf8'),
   ) as CatalogueMetadataConfig
   const diagnostics = validateInputs(config, metadata)
+  const inlinePatternGovernance = metadata.inlinePatternGovernance
   const canAnalyse = isSafeRelativePath(config.project) &&
     Array.isArray(config.include) && config.include.every(isSafeRelativePath) &&
     Array.isArray(config.ignore) && config.ignore.every(isRecord) &&
     Array.isArray(metadata.candidateFamilies) &&
     Array.isArray(metadata.rules) && metadata.rules.every(isRecord) &&
-    Array.isArray(metadata.components) && metadata.components.every(isRecord)
+    Array.isArray(metadata.components) && metadata.components.every(isRecord) &&
+    isRecord(inlinePatternGovernance) &&
+    Array.isArray(inlinePatternGovernance.scopes) && inlinePatternGovernance.scopes.every(isRecord) &&
+    Array.isArray(inlinePatternGovernance.candidates) && inlinePatternGovernance.candidates.every(isRecord)
   if (!canAnalyse) throwDiagnostics(diagnostics)
   const catalogue = analyseCatalogue({
     root,

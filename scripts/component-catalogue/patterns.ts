@@ -1,3 +1,5 @@
+import {createHash} from 'node:crypto'
+
 import ts from 'typescript'
 
 import type {
@@ -15,6 +17,17 @@ export interface PatternComponent {
 
 const compareText = (left: string, right: string): number =>
   left < right ? -1 : left > right ? 1 : 0
+
+const stableOccurrenceId = (
+  ownerComponentId: string,
+  family: InlinePatternFamily,
+  node: ts.JsxOpeningElement | ts.JsxSelfClosingElement,
+  sourceFile: ts.SourceFile,
+): string => {
+  const normalizedMarkup = node.getText(sourceFile).replace(/\s+/g, ' ').trim()
+  const fingerprint = createHash('sha256').update(normalizedMarkup).digest('hex').slice(0, 12)
+  return `inline.${ownerComponentId}.${family}.${fingerprint}`
+}
 
 const jsxClassValue = (attribute: ts.JsxAttribute): {tokens: string[]; dynamic: boolean} => {
   const initializer = attribute.initializer
@@ -76,8 +89,9 @@ export const inlinePatternCandidates = (
         const location = component.sourceFile.getLineAndCharacterOfPosition(node.getStart(component.sourceFile))
         for (const family of patternFamilies(tag, classes.tokens)) {
           const values = occurrences.get(family) ?? []
+          const stableId = stableOccurrenceId(ownerComponentId, family, node, component.sourceFile)
           values.push({
-            id: `${component.source}:${location.line + 1}:${location.character + 1}:${family}`,
+            id: stableId,
             source: component.source,
             line: location.line + 1,
             column: location.character + 1,
@@ -97,8 +111,6 @@ export const inlinePatternCandidates = (
     .filter(([, values]) => values.length > 1)
     .map(([family, values]) => ({
       family,
-      assessment: 'review-candidate' as const,
-      equivalence: 'unreviewed' as const,
       occurrences: values.sort((left, right) => compareText(left.id, right.id)),
     }))
     .sort((left, right) => compareText(left.family, right.family))

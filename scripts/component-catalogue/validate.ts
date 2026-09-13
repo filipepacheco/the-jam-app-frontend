@@ -6,6 +6,8 @@ import {
   CATALOGUE_CATEGORIES,
   CATALOGUE_LAYERS,
   COMPONENT_LIFECYCLES,
+  INLINE_PATTERN_DISPOSITIONS,
+  INLINE_PATTERN_FAMILIES,
   PRODUCT_AREAS,
   VIEWPORT_CONTEXTS,
   WORKBENCH_READINESS,
@@ -114,6 +116,78 @@ const validateDeprecation = (
   }
 }
 
+const validateInlinePatternDisposition = (
+  value: unknown,
+  field: string,
+  diagnostics: string[],
+): void => {
+  if (!isRecord(value)) {
+    diagnostics.push(`${field}: expected an object`)
+    return
+  }
+  const status = value.status
+  if (typeof status !== 'string' || !INLINE_PATTERN_DISPOSITIONS.includes(status as typeof INLINE_PATTERN_DISPOSITIONS[number])) {
+    diagnostics.push(`${field}.status: invalid inline-pattern disposition`)
+    return
+  }
+  if (status === 'adopted' && !isNonBlankString(value.canonicalFamily)) {
+    diagnostics.push(`${field}.canonicalFamily: adopted status requires a non-blank canonical family`)
+  }
+  if (status === 'intentionally-distinct' && !isNonBlankString(value.rationale)) {
+    diagnostics.push(`${field}.rationale: intentionally-distinct status requires a non-blank rationale`)
+  }
+  if (status === 'migration-debt') {
+    if (!isNonBlankString(value.replacement)) {
+      diagnostics.push(`${field}.replacement: migration-debt status requires a non-blank replacement`)
+    }
+    if (!isNonBlankString(value.completionCondition)) {
+      diagnostics.push(`${field}.completionCondition: migration-debt status requires a non-blank completion condition`)
+    }
+  }
+  if (status === 'deletion-debt' && !isNonBlankString(value.verificationCondition)) {
+    diagnostics.push(`${field}.verificationCondition: deletion-debt status requires a non-blank verification condition`)
+  }
+}
+
+const validateInlinePatternGovernance = (
+  value: unknown,
+  field: string,
+  diagnostics: string[],
+): void => {
+  if (!isRecord(value)) {
+    diagnostics.push(`${field}: expected an object`)
+    return
+  }
+  if (!Array.isArray(value.scopes)) diagnostics.push(`${field}.scopes: expected an array`)
+  else value.scopes.forEach((scope, index) => {
+    if (!isRecord(scope)) {
+      diagnostics.push(`${field}.scopes[${index}]: expected an object`)
+      return
+    }
+    if (!isSafeRelativePath(scope.source)) {
+      diagnostics.push(`${field}.scopes[${index}].source: path must be normalized and stay inside the catalogue root`)
+    }
+    validateStringArray(scope.families, `${field}.scopes[${index}].families`, diagnostics, INLINE_PATTERN_FAMILIES)
+  })
+  if (!Array.isArray(value.candidates)) diagnostics.push(`${field}.candidates: expected an array`)
+  else {
+    const ids = new Set<string>()
+    value.candidates.forEach((candidate, index) => {
+      if (!isRecord(candidate)) {
+        diagnostics.push(`${field}.candidates[${index}]: expected an object`)
+        return
+      }
+      if (!isNonBlankString(candidate.id) || !STABLE_ID.test(candidate.id)) {
+        diagnostics.push(`${field}.candidates[${index}].id: expected a stable candidate identifier`)
+      } else if (ids.has(candidate.id)) {
+        diagnostics.push(`${field}.candidates[${index}].id: duplicate candidate identifier "${candidate.id}"`)
+      }
+      if (isNonBlankString(candidate.id)) ids.add(candidate.id)
+      validateInlinePatternDisposition(candidate.disposition, `${field}.candidates[${index}].disposition`, diagnostics)
+    })
+  }
+}
+
 export const isExactSource = (source: string): boolean => !GLOB_CHARACTERS.test(source)
 
 export const isSafeRelativePath = (value: unknown): value is string => {
@@ -193,6 +267,8 @@ export const validateInputs = (
   metadata: CatalogueMetadataConfig,
 ): string[] => {
   const diagnostics: string[] = []
+
+  validateInlinePatternGovernance(metadata.inlinePatternGovernance, 'inlinePatternGovernance', diagnostics)
 
   if (!isSafeRelativePath(config.project)) diagnostics.push('project: path must be normalized and stay inside the catalogue root')
   if (!Array.isArray(config.include)) diagnostics.push('include: expected an array')

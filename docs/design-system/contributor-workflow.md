@@ -112,6 +112,30 @@ accessibility execution gate; this governance command verifies that affected
 stories are eligible for those checks. It does not add visual-regression
 testing or publish the private workbench.
 
+### Inline-pattern dispositions
+
+The generated catalogue gives each repeated inline pattern a structural
+candidate ID. Moving the markup to another line does not change that ID, and
+identical markup within one owning component shares one candidate ID across
+its source occurrences. A meaningful markup change creates a new candidate so
+it cannot silently inherit an old decision.
+
+Govern candidates progressively through `inlinePatternGovernance` in
+`component-catalogue.metadata.json`. A scope names a source pattern and the
+inline families governed there. Every candidate in that scope must then have
+exactly one disposition record:
+
+- `adopted` names the canonical family;
+- `intentionally-distinct` records the behavioral rationale;
+- `migration-debt` names the replacement and completion condition;
+- `deletion-debt` names the verification condition.
+
+Run `npm run catalogue:generate` to discover candidate IDs before adding a
+scope. Once the scope is active, `npm run catalogue:check` rejects new
+unexplained candidates, stale disposition IDs, and disposition records outside
+the governed scope. Sources outside configured scopes remain visible as
+`ungoverned` until their review ticket assigns dispositions.
+
 ## Exceptions and keep-separate decisions
 
 An **exception** keeps a hand-rolled pattern because a canonical component

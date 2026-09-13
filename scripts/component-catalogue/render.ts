@@ -1,4 +1,4 @@
-import type {CatalogueComponent, ComponentCatalogue} from '../../src/types/componentCatalogue.types.ts'
+import type {CatalogueComponent, ComponentCatalogue, InlinePatternOccurrence} from '../../src/types/componentCatalogue.types.ts'
 
 const cell = (values: string[]): string => values.length > 0 ? values.join('<br>') : '—'
 
@@ -16,6 +16,17 @@ const deprecationLabel = (component: CatalogueComponent): string => {
   const deprecation = component.metadata.deprecation
   if (!deprecation) return '—'
   return `replacement: ${deprecation.replacement ?? 'none'}; remove when: ${deprecation.removalCondition}`
+}
+
+const inlineDispositionLabel = (occurrence: InlinePatternOccurrence): string => {
+  const disposition = occurrence.disposition
+  if (!disposition) return 'ungoverned'
+  if (disposition.status === 'adopted') return `adopted; canonical family: ${disposition.canonicalFamily}`
+  if (disposition.status === 'intentionally-distinct') return `intentionally distinct; rationale: ${disposition.rationale}`
+  if (disposition.status === 'migration-debt') {
+    return `migration debt; replacement: ${disposition.replacement}; complete when: ${disposition.completionCondition}`
+  }
+  return `deletion debt; verify with: ${disposition.verificationCondition}`
 }
 
 export const renderManifest = (catalogue: ComponentCatalogue): string =>
@@ -70,7 +81,7 @@ export const renderMarkdown = (catalogue: ComponentCatalogue): string => {
     lines.push(
       `### ${candidate.family}`,
       '',
-      `${candidate.occurrences.length} occurrences; assessment: ${candidate.assessment}; equivalence: ${candidate.equivalence}.`,
+      `${candidate.occurrences.length} occurrences.`,
       '',
     )
     for (const occurrence of candidate.occurrences) {
@@ -78,7 +89,7 @@ export const renderMarkdown = (catalogue: ComponentCatalogue): string => {
         ? occurrence.staticClassTokens.map((token) => `\`${token}\``).join(', ')
         : 'none detected'
       lines.push(
-        `- \`${occurrence.source}:${occurrence.line}:${occurrence.column}\` — owner \`${occurrence.ownerComponentId}\`; tag \`<${occurrence.tag}>\`; static classes: ${classes}; dynamic classes: ${occurrence.dynamicClasses ? 'yes' : 'no'}; equivalence: ${candidate.equivalence}.`,
+        `- \`${occurrence.source}:${occurrence.line}:${occurrence.column}\` — candidate \`${occurrence.id}\`; owner \`${occurrence.ownerComponentId}\`; tag \`<${occurrence.tag}>\`; static classes: ${classes}; dynamic classes: ${occurrence.dynamicClasses ? 'yes' : 'no'}; disposition: ${inlineDispositionLabel(occurrence)}.`,
       )
     }
     lines.push('')

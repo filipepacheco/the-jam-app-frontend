@@ -25,6 +25,14 @@ interface FixtureMetadata {
   defaults: Record<string, unknown>
   rules: Array<{source: string; component?: string; metadata: Record<string, unknown>}>
   components: Array<{id: string; source: string; name: string}>
+  inlinePatternGovernance?: unknown
+}
+
+interface GeneratedCatalogue {
+  reviewCandidates: Array<{
+    family: string
+    occurrences: Array<{id: string; source: string; staticClassTokens: string[]}>
+  }>
 }
 
 const createFixture = async (): Promise<string> => {
@@ -67,6 +75,128 @@ const snapshotTree = async (root: string): Promise<Record<string, string>> => {
 }
 
 describe('component catalogue check command', () => {
+  it('keeps inline candidate identities stable when source lines move', async () => {
+    const root = await createFixture()
+    expect(run(root).status).toBe(0)
+    const outputPath = path.join(root, 'generated/catalogue.json')
+    const before = await readJson<GeneratedCatalogue>(outputPath)
+    const beforeIds = before.reviewCandidates
+      .flatMap((candidate) => candidate.occurrences)
+      .filter((occurrence) => occurrence.source === 'src/InlinePatterns.tsx')
+      .map((occurrence) => occurrence.id)
+
+    const sourcePath = path.join(root, 'src/InlinePatterns.tsx')
+    const source = await readFile(sourcePath, 'utf8')
+    await writeFile(sourcePath, `\n\n${source}`)
+    expect(run(root).status).toBe(0)
+    const after = await readJson<GeneratedCatalogue>(outputPath)
+    const afterIds = after.reviewCandidates
+      .flatMap((candidate) => candidate.occurrences)
+      .filter((occurrence) => occurrence.source === 'src/InlinePatterns.tsx')
+      .map((occurrence) => occurrence.id)
+
+    expect(afterIds).toEqual(beforeIds)
+  })
+
+  it('uses one candidate identity for repeated identical markup in the same owner', async () => {
+    const root = await createFixture()
+    const sourcePath = path.join(root, 'src/InlinePatterns.tsx')
+    const source = await readFile(sourcePath, 'utf8')
+    await writeFile(
+      sourcePath,
+      source.replace(
+        '<button className="btn btn-primary">One</button>',
+        '<button className="btn btn-primary">One</button>\n      <button className="btn btn-primary">Another</button>',
+      ),
+    )
+    expect(run(root).status).toBe(0)
+    const generated = await readJson<GeneratedCatalogue>(path.join(root, 'generated/catalogue.json'))
+    const identicalMarkupOccurrences = generated.reviewCandidates
+      .find((candidate) => candidate.family === 'action')
+      ?.occurrences.filter(
+        (occurrence) => occurrence.source === 'src/InlinePatterns.tsx' &&
+          occurrence.staticClassTokens.includes('btn-primary'),
+      ) ?? []
+
+    expect(identicalMarkupOccurrences).toHaveLength(2)
+    expect(new Set(identicalMarkupOccurrences.map((occurrence) => occurrence.id)).size).toBe(1)
+  })
+
+  it('requires disposition-specific evidence for governed inline candidates', async () => {
+    const root = await createFixture()
+    const metadataPath = path.join(root, 'catalogue.metadata.json')
+    const metadata = await readJson<FixtureMetadata>(metadataPath)
+    metadata.inlinePatternGovernance = {
+      scopes: [],
+      candidates: [
+        {id: 'inline.fixture.action.one', disposition: {status: 'adopted'}},
+        {id: 'inline.fixture.action.two', disposition: {status: 'intentionally-distinct'}},
+        {id: 'inline.fixture.action.three', disposition: {status: 'migration-debt'}},
+        {id: 'inline.fixture.action.four', disposition: {status: 'deletion-debt'}},
+      ],
+    }
+    await writeJson(metadataPath, metadata)
+
+    const result = run(root, '--check')
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('candidates[0].disposition.canonicalFamily: adopted status requires a non-blank canonical family')
+    expect(result.stderr).toContain('candidates[1].disposition.rationale: intentionally-distinct status requires a non-blank rationale')
+    expect(result.stderr).toContain('candidates[2].disposition.replacement: migration-debt status requires a non-blank replacement')
+    expect(result.stderr).toContain('candidates[2].disposition.completionCondition: migration-debt status requires a non-blank completion condition')
+    expect(result.stderr).toContain('candidates[3].disposition.verificationCondition: deletion-debt status requires a non-blank verification condition')
+  })
+
+  it('rejects a new unexplained candidate inside a governed scope', async () => {
+    const root = await createFixture()
+    expect(run(root).status).toBe(0)
+    const outputPath = path.join(root, 'generated/catalogue.json')
+    const baseline = await readJson<GeneratedCatalogue>(outputPath)
+    const actionIds = baseline.reviewCandidates
+      .find((candidate) => candidate.family === 'action')
+      ?.occurrences
+      .filter((occurrence) => occurrence.source === 'src/InlinePatterns.tsx')
+      .map((occurrence) => occurrence.id) ?? []
+    const metadataPath = path.join(root, 'catalogue.metadata.json')
+    const metadata = await readJson<FixtureMetadata>(metadataPath)
+    metadata.inlinePatternGovernance = {
+      scopes: [{source: 'src/InlinePatterns.tsx', families: ['action']}],
+      candidates: actionIds.map((id) => ({
+        id,
+        disposition: {status: 'adopted', canonicalFamily: 'Action'},
+      })),
+    }
+    await writeJson(metadataPath, metadata)
+    expect(run(root).status).toBe(0)
+    const governed = await readJson<GeneratedCatalogue>(outputPath) as GeneratedCatalogue & {
+      reviewCandidates: Array<{
+        family: string
+        occurrences: Array<{id: string; source: string; disposition?: {status: string}}>
+      }>
+    }
+    expect(
+      governed.reviewCandidates
+        .find((candidate) => candidate.family === 'action')
+        ?.occurrences
+        .filter((occurrence) => occurrence.source === 'src/InlinePatterns.tsx'),
+    ).toEqual(expect.arrayContaining([
+      expect.objectContaining({disposition: {status: 'adopted', canonicalFamily: 'Action'}}),
+    ]))
+    const sourcePath = path.join(root, 'src/InlinePatterns.tsx')
+    const source = await readFile(sourcePath, 'utf8')
+    await writeFile(
+      sourcePath,
+      source.replace('</section>', '<button data-catalogue-variant="new">New action</button>\n    </section>'),
+    )
+
+    const result = run(root)
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('unexplained inline pattern candidate')
+    expect(result.stderr).toContain('src/InlinePatterns.tsx')
+    expect(result.stderr).toContain('action')
+  }, 15_000)
+
   it('accepts a generated baseline without changing any file', async () => {
     const root = await createFixture()
     expect(run(root).status).toBe(0)
@@ -305,5 +435,19 @@ describe('component catalogue check command', () => {
     expect(result.stderr).toContain(`rules[${firstNewRuleIndex + 1}].metadata: expected an object`)
     expect(result.stderr).not.toContain('TypeError')
     expect(await snapshotTree(root)).toEqual(before)
+  })
+
+  it('turns malformed inline governance into field-level diagnostics instead of runtime errors', async () => {
+    const root = await createFixture()
+    const metadataPath = path.join(root, 'catalogue.metadata.json')
+    const metadata = await readJson<FixtureMetadata>(metadataPath)
+    metadata.inlinePatternGovernance = null
+    await writeJson(metadataPath, metadata)
+
+    const result = run(root, '--check')
+
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain('inlinePatternGovernance: expected an object')
+    expect(result.stderr).not.toContain('TypeError')
   })
 })

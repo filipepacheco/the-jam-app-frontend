@@ -3,6 +3,7 @@ import ts from 'typescript'
 
 import {globPattern, matchesAny, metadataFor} from './metadata.ts'
 import {inlinePatternCandidates} from './patterns.ts'
+import {applyInlinePatternGovernance} from './governance.ts'
 import {deriveWorkbenchCoverage, deriveWorkbenchStorySources} from './coverage.ts'
 import {isExactSource, isSafeRelativePath, validateResolvedMetadata} from './validate.ts'
 
@@ -595,6 +596,11 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata, diag
     ...component,
     workbenchStories: deriveWorkbenchStorySources(normalized, component),
   }))
+  const reviewCandidates = applyInlinePatternGovernance(
+    inlinePatternCandidates(includedComponents, componentNodes, identities),
+    metadata.inlinePatternGovernance,
+    diagnostics,
+  )
 
   return {
     schemaVersion: 3,
@@ -606,6 +612,6 @@ export const analyseCatalogue = ({root, project, include, ignore, metadata, diag
       ignoredSources: ignoredBySource.size,
       workbench: deriveWorkbenchCoverage(withWorkbenchStories),
     },
-    reviewCandidates: inlinePatternCandidates(includedComponents, componentNodes, identities),
+    reviewCandidates,
   }
 }

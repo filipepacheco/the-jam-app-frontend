@@ -11959,21 +11959,9 @@
   "reviewCandidates": [
     {
       "family": "action",
-      "assessment": "review-candidate",
-      "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/Action.tsx:58:5:action",
-          "source": "src/components/Action.tsx",
-          "line": 58,
-          "column": 5,
-          "ownerComponentId": "ui.0166",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/Alert.tsx:77:9:action",
+          "id": "inline.ui.0006.action.8f18b740ef0d",
           "source": "src/components/Alert.tsx",
           "line": 77,
           "column": 9,
@@ -11989,325 +11977,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/EditMusicianModal.tsx:186:9:action",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 186,
-          "column": 9,
-          "ownerComponentId": "ui.0018",
-          "tag": "button",
-          "staticClassTokens": [
-            "hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ErrorBoundary.tsx:47:17:action",
-          "source": "src/components/ErrorBoundary.tsx",
-          "line": 47,
-          "column": 17,
-          "ownerComponentId": "ui.0021",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ErrorBoundary.tsx:53:17:action",
-          "source": "src/components/ErrorBoundary.tsx",
-          "line": 53,
-          "column": 17,
-          "ownerComponentId": "ui.0021",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/JamCard.tsx:112:13:action",
-          "source": "src/components/JamCard.tsx",
-          "line": 112,
-          "column": 13,
-          "ownerComponentId": "ui.0051",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "ds-control",
-            "ds-focusable",
-            "ds-type-ui",
-            "gap-1.5"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/JamCard.tsx:116:11:action",
-          "source": "src/components/JamCard.tsx",
-          "line": 116,
-          "column": 11,
-          "ownerComponentId": "ui.0051",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "ds-control",
-            "ds-focusable",
-            "ds-type-ui"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Modal.tsx:128:17:action",
-          "source": "src/components/Modal.tsx",
-          "line": 128,
-          "column": 17,
-          "ownerComponentId": "ui.0055",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Modal.tsx:152:9:action",
-          "source": "src/components/Modal.tsx",
-          "line": 152,
-          "column": 9,
-          "ownerComponentId": "ui.0055",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Modal.tsx:99:17:action",
-          "source": "src/components/Modal.tsx",
-          "line": 99,
-          "column": 17,
-          "ownerComponentId": "ui.0055",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ModalFooter.tsx:38:7:action",
-          "source": "src/components/ModalFooter.tsx",
-          "line": 38,
-          "column": 7,
-          "ownerComponentId": "ui.0056",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ModalFooter.tsx:47:9:action",
-          "source": "src/components/ModalFooter.tsx",
-          "line": 47,
-          "column": 9,
-          "ownerComponentId": "ui.0056",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/MusicModal.tsx:209:9:action",
-          "source": "src/components/MusicModal.tsx",
-          "line": 209,
-          "column": 9,
-          "ownerComponentId": "ui.0062",
-          "tag": "button",
-          "staticClassTokens": [
-            "hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Navbar.tsx:119:15:action",
-          "source": "src/components/Navbar.tsx",
-          "line": 119,
-          "column": 15,
-          "ownerComponentId": "ui.0066",
-          "tag": "a",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "min-h-[44px]",
-            "whitespace-nowrap"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Navbar.tsx:63:9:action",
-          "source": "src/components/Navbar.tsx",
-          "line": 63,
-          "column": 9,
-          "ownerComponentId": "ui.0066",
-          "tag": "a",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "md:text-xl",
-            "sm:text-lg",
-            "text-base"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Navigation.tsx:258:17:action",
-          "source": "src/components/Navigation.tsx",
-          "line": 258,
-          "column": 17,
-          "ownerComponentId": "ui.0194",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Navigation.tsx:306:7:action",
-          "source": "src/components/Navigation.tsx",
-          "line": 306,
-          "column": 7,
-          "ownerComponentId": "ui.0195",
-          "tag": "button",
-          "staticClassTokens": [
-            "ds-control",
-            "ds-dropdown__trigger",
-            "ds-focusable"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/Navigation.tsx:62:13:action",
-          "source": "src/components/Navigation.tsx",
-          "line": 62,
-          "column": 13,
-          "ownerComponentId": "ui.0191",
-          "tag": "button",
-          "staticClassTokens": [
-            "ds-tab"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/OnboardingModal.tsx:209:9:action",
-          "source": "src/components/OnboardingModal.tsx",
-          "line": 209,
-          "column": 9,
-          "ownerComponentId": "ui.0068",
-          "tag": "button",
-          "staticClassTokens": [
-            "hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileSetupModal.tsx:193:9:action",
-          "source": "src/components/ProfileSetupModal.tsx",
-          "line": 193,
-          "column": 9,
-          "ownerComponentId": "ui.0073",
-          "tag": "button",
-          "staticClassTokens": [
-            "hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileSetupModal.tsx:91:11:action",
-          "source": "src/components/ProfileSetupModal.tsx",
-          "line": 91,
-          "column": 11,
-          "ownerComponentId": "ui.0073",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileSetupModal.tsx:99:11:action",
-          "source": "src/components/ProfileSetupModal.tsx",
-          "line": 99,
-          "column": 11,
-          "ownerComponentId": "ui.0073",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/SpotifyExportModal.tsx:120:11:action",
-          "source": "src/components/SpotifyExportModal.tsx",
-          "line": 120,
-          "column": 11,
-          "ownerComponentId": "ui.0127",
-          "tag": "a",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "ds-control",
-            "ds-focusable",
-            "ds-type-ui",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyPreview.tsx:62:5:action",
-          "source": "src/components/SpotifyPreview.tsx",
-          "line": 62,
-          "column": 5,
-          "ownerComponentId": "ui.0131",
-          "tag": "a",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "ds-control",
-            "ds-focusable",
-            "gap-1",
-            "hover:bg-success/10",
-            "text-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyPreview.tsx:95:5:action",
-          "source": "src/components/SpotifyPreview.tsx",
-          "line": 95,
-          "column": 5,
-          "ownerComponentId": "ui.0130",
-          "tag": "a",
-          "staticClassTokens": [
-            "btn",
-            "btn-circle",
-            "btn-ghost",
-            "ds-control",
-            "ds-focusable",
-            "hover:bg-success/20",
-            "text-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/dj-control/SongQueueTimeline.tsx:152:11:action",
+          "id": "inline.ui.0015.action.91810193303e",
           "source": "src/components/dj-control/SongQueueTimeline.tsx",
           "line": 152,
           "column": 11,
@@ -12330,7 +12000,45 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/forms/SearchableSelect.tsx:145:7:action",
+          "id": "inline.ui.0018.action.39c79645ef02",
+          "source": "src/components/EditMusicianModal.tsx",
+          "line": 186,
+          "column": 9,
+          "ownerComponentId": "ui.0018",
+          "tag": "button",
+          "staticClassTokens": [
+            "hidden"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0021.action.71abab9194a7",
+          "source": "src/components/ErrorBoundary.tsx",
+          "line": 53,
+          "column": 17,
+          "ownerComponentId": "ui.0021",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0021.action.a1cd35ec3c12",
+          "source": "src/components/ErrorBoundary.tsx",
+          "line": 47,
+          "column": 17,
+          "ownerComponentId": "ui.0021",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0028.action.08897267b064",
           "source": "src/components/forms/SearchableSelect.tsx",
           "line": 145,
           "column": 7,
@@ -12351,7 +12059,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/jam-detail-v2/CollapsibleSection.tsx:38:7:action",
+          "id": "inline.ui.0034.action.5576c9e553fd",
           "source": "src/components/jam-detail-v2/CollapsibleSection.tsx",
           "line": 38,
           "column": 7,
@@ -12375,7 +12083,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/DualActionFAB.tsx:108:15:action",
+          "id": "inline.ui.0036.action.997eb302d3fc",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
           "line": 108,
           "column": 15,
@@ -12391,7 +12099,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/DualActionFAB.tsx:127:9:action",
+          "id": "inline.ui.0036.action.cb261c0949bd",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
           "line": 127,
           "column": 9,
@@ -12405,7 +12113,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/jam-detail-v2/DualActionFAB.tsx:94:15:action",
+          "id": "inline.ui.0036.action.e65f82f680e5",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
           "line": 94,
           "column": 15,
@@ -12421,7 +12129,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx:80:13:action",
+          "id": "inline.ui.0040.action.685d70f9b0e0",
           "source": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
           "line": 80,
           "column": 13,
@@ -12440,7 +12148,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/jam-detail-v2/SuggestNewSongModal.tsx:309:9:action",
+          "id": "inline.ui.0041.action.39c79645ef02",
           "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
           "line": 309,
           "column": 9,
@@ -12452,7 +12160,217 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/publicDashboard/LanguageSelector.tsx:32:9:action",
+          "id": "inline.ui.0051.action.998263c4bc81",
+          "source": "src/components/JamCard.tsx",
+          "line": 112,
+          "column": 13,
+          "ownerComponentId": "ui.0051",
+          "tag": "Link",
+          "staticClassTokens": [
+            "btn",
+            "btn-outline",
+            "ds-control",
+            "ds-focusable",
+            "ds-type-ui",
+            "gap-1.5"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0051.action.df9f8f021a85",
+          "source": "src/components/JamCard.tsx",
+          "line": 116,
+          "column": 11,
+          "ownerComponentId": "ui.0051",
+          "tag": "Link",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary",
+            "ds-control",
+            "ds-focusable",
+            "ds-type-ui"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0055.action.06430e4aaaa7",
+          "source": "src/components/Modal.tsx",
+          "line": 152,
+          "column": 9,
+          "ownerComponentId": "ui.0055",
+          "tag": "button",
+          "staticClassTokens": [],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0055.action.dfadafd80204",
+          "source": "src/components/Modal.tsx",
+          "line": 99,
+          "column": 17,
+          "ownerComponentId": "ui.0055",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-circle",
+            "btn-ghost",
+            "btn-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0055.action.dfadafd80204",
+          "source": "src/components/Modal.tsx",
+          "line": 128,
+          "column": 17,
+          "ownerComponentId": "ui.0055",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-circle",
+            "btn-ghost",
+            "btn-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0056.action.0fbabc44f409",
+          "source": "src/components/ModalFooter.tsx",
+          "line": 47,
+          "column": 9,
+          "ownerComponentId": "ui.0056",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0056.action.6775938f3e2e",
+          "source": "src/components/ModalFooter.tsx",
+          "line": 38,
+          "column": 7,
+          "ownerComponentId": "ui.0056",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0062.action.39c79645ef02",
+          "source": "src/components/MusicModal.tsx",
+          "line": 209,
+          "column": 9,
+          "ownerComponentId": "ui.0062",
+          "tag": "button",
+          "staticClassTokens": [
+            "hidden"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0066.action.3c8b213fb73d",
+          "source": "src/components/Navbar.tsx",
+          "line": 119,
+          "column": 15,
+          "ownerComponentId": "ui.0066",
+          "tag": "a",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary",
+            "min-h-[44px]",
+            "whitespace-nowrap"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0066.action.68ea9d79c1a1",
+          "source": "src/components/Navbar.tsx",
+          "line": 63,
+          "column": 9,
+          "ownerComponentId": "ui.0066",
+          "tag": "a",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost",
+            "md:text-xl",
+            "sm:text-lg",
+            "text-base"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0068.action.39c79645ef02",
+          "source": "src/components/OnboardingModal.tsx",
+          "line": 209,
+          "column": 9,
+          "ownerComponentId": "ui.0068",
+          "tag": "button",
+          "staticClassTokens": [
+            "hidden"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0073.action.0f9ca806c12d",
+          "source": "src/components/ProfileSetupModal.tsx",
+          "line": 99,
+          "column": 11,
+          "ownerComponentId": "ui.0073",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0073.action.39c79645ef02",
+          "source": "src/components/ProfileSetupModal.tsx",
+          "line": 193,
+          "column": 9,
+          "ownerComponentId": "ui.0073",
+          "tag": "button",
+          "staticClassTokens": [
+            "hidden"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0073.action.7259264a8426",
+          "source": "src/components/ProfileSetupModal.tsx",
+          "line": 91,
+          "column": 11,
+          "ownerComponentId": "ui.0073",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0075.action.cd0b0ac251cb",
+          "source": "src/components/publicDashboard/carousel/CarouselIndicator.tsx",
+          "line": 18,
+          "column": 11,
+          "ownerComponentId": "ui.0075",
+          "tag": "button",
+          "staticClassTokens": [
+            "bg-transparent",
+            "ds-control",
+            "ds-control--shared-display",
+            "ds-focusable",
+            "flex",
+            "items-center",
+            "justify-center",
+            "rounded-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0085.action.6ff2b69f8725",
           "source": "src/components/publicDashboard/LanguageSelector.tsx",
           "line": 32,
           "column": 9,
@@ -12472,26 +12390,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/publicDashboard/carousel/CarouselIndicator.tsx:18:11:action",
-          "source": "src/components/publicDashboard/carousel/CarouselIndicator.tsx",
-          "line": 18,
-          "column": 11,
-          "ownerComponentId": "ui.0075",
-          "tag": "button",
-          "staticClassTokens": [
-            "bg-transparent",
-            "ds-control",
-            "ds-control--shared-display",
-            "ds-focusable",
-            "flex",
-            "items-center",
-            "justify-center",
-            "rounded-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/MusicianSlotRow.tsx:59:9:action",
+          "id": "inline.ui.0108.action.fe0fecd0ce65",
           "source": "src/components/schedule/MusicianSlotRow.tsx",
           "line": 59,
           "column": 9,
@@ -12513,7 +12412,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/RegistrationList.tsx:132:45:action",
+          "id": "inline.ui.0110.action.b4550f6f91d7",
           "source": "src/components/schedule/RegistrationList.tsx",
           "line": 132,
           "column": 45,
@@ -12530,7 +12429,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:103:9:action",
+          "id": "inline.ui.0113.action.fddc76b19af3",
           "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
           "line": 103,
           "column": 9,
@@ -12549,7 +12448,73 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/AboutPage.tsx:160:13:action",
+          "id": "inline.ui.0127.action.b059ebdc6f66",
+          "source": "src/components/SpotifyExportModal.tsx",
+          "line": 120,
+          "column": 11,
+          "ownerComponentId": "ui.0127",
+          "tag": "a",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary",
+            "ds-control",
+            "ds-focusable",
+            "ds-type-ui",
+            "gap-2"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0130.action.f046247be362",
+          "source": "src/components/SpotifyPreview.tsx",
+          "line": 95,
+          "column": 5,
+          "ownerComponentId": "ui.0130",
+          "tag": "a",
+          "staticClassTokens": [
+            "btn",
+            "btn-circle",
+            "btn-ghost",
+            "ds-control",
+            "ds-focusable",
+            "hover:bg-success/20",
+            "text-success"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0131.action.a28cc700984b",
+          "source": "src/components/SpotifyPreview.tsx",
+          "line": 62,
+          "column": 5,
+          "ownerComponentId": "ui.0131",
+          "tag": "a",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost",
+            "ds-control",
+            "ds-focusable",
+            "gap-1",
+            "hover:bg-success/10",
+            "text-success"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0136.action.00184941bb64",
+          "source": "src/pages/AboutPage.tsx",
+          "line": 184,
+          "column": 15,
+          "ownerComponentId": "ui.0136",
+          "tag": "Link",
+          "staticClassTokens": [
+            "btn",
+            "btn-outline"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0136.action.8a7990fbd69f",
           "source": "src/pages/AboutPage.tsx",
           "line": 160,
           "column": 13,
@@ -12563,7 +12528,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/AboutPage.tsx:181:15:action",
+          "id": "inline.ui.0136.action.96a334eb6eb0",
           "source": "src/pages/AboutPage.tsx",
           "line": 181,
           "column": 15,
@@ -12576,20 +12541,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/AboutPage.tsx:184:15:action",
-          "source": "src/pages/AboutPage.tsx",
-          "line": 184,
-          "column": 15,
-          "ownerComponentId": "ui.0136",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/BrowseJamsPage.tsx:275:17:action",
+          "id": "inline.ui.0137.action.1dd0b008a9ef",
           "source": "src/pages/BrowseJamsPage.tsx",
           "line": 275,
           "column": 17,
@@ -12607,106 +12559,33 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:450:17:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 450,
-          "column": 17,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "join-item"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:457:17:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 457,
-          "column": 17,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "join-item"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:482:17:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 482,
-          "column": 17,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "join-item"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:489:17:action",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 489,
-          "column": 17,
-          "ownerComponentId": "ui.0149",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "join-item"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/NotFoundPage.tsx:36:13:action",
-          "source": "src/pages/NotFoundPage.tsx",
-          "line": 36,
-          "column": 13,
-          "ownerComponentId": "ui.0150",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/NotFoundPage.tsx:40:13:action",
-          "source": "src/pages/NotFoundPage.tsx",
-          "line": 40,
-          "column": 13,
-          "ownerComponentId": "ui.0150",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:320:11:action",
+          "id": "inline.ui.0138.action.54ec90266fe5",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 320,
-          "column": 11,
+          "line": 649,
+          "column": 13,
           "ownerComponentId": "ui.0138",
           "tag": "button",
           "staticClassTokens": [
             "btn",
-            "btn-ghost",
-            "btn-sm",
-            "mb-4"
+            "btn-error"
           ],
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:338:17:action",
+          "id": "inline.ui.0138.action.66160410e1da",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 595,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.action.6eddb1414edb",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 338,
           "column": 17,
@@ -12727,7 +12606,35 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:575:17:action",
+          "id": "inline.ui.0138.action.7b07ac140f54",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 320,
+          "column": 11,
+          "ownerComponentId": "ui.0138",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost",
+            "btn-sm",
+            "mb-4"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.action.7f2367eca031",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 642,
+          "column": 13,
+          "ownerComponentId": "ui.0138",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.action.9ee8e9b4d3ba",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 575,
           "column": 17,
@@ -12740,7 +12647,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:585:19:action",
+          "id": "inline.ui.0138.action.f05672707818",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 585,
           "column": 19,
@@ -12754,46 +12661,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:595:17:action",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 595,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:642:13:action",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 642,
-          "column": 13,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:649:13:action",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 649,
-          "column": 13,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/FeedbackPage.tsx:127:13:action",
+          "id": "inline.ui.0140.action.10ad6ce1887e",
           "source": "src/pages/host/FeedbackPage.tsx",
           "line": 127,
           "column": 13,
@@ -12808,7 +12676,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/FeedbackPage.tsx:195:17:action",
+          "id": "inline.ui.0140.action.e3313d24431b",
           "source": "src/pages/host/FeedbackPage.tsx",
           "line": 195,
           "column": 17,
@@ -12822,7 +12690,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/FeedbackPage.tsx:210:17:action",
+          "id": "inline.ui.0140.action.f86ec59cb6fb",
           "source": "src/pages/host/FeedbackPage.tsx",
           "line": 210,
           "column": 17,
@@ -12836,7 +12704,23 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:143:25:action",
+          "id": "inline.ui.0141.action.0340e02aa1e2",
+          "source": "src/pages/host/HostDashboardPage.tsx",
+          "line": 150,
+          "column": 25,
+          "ownerComponentId": "ui.0141",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-outline",
+            "btn-sm",
+            "hidden",
+            "sm:inline-flex"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0141.action.09e0a16fbe50",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 143,
           "column": 25,
@@ -12852,23 +12736,32 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:150:25:action",
+          "id": "inline.ui.0141.action.2365031eb3a4",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 150,
-          "column": 25,
+          "line": 172,
+          "column": 37,
           "ownerComponentId": "ui.0141",
           "tag": "button",
+          "staticClassTokens": [],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0141.action.80919867aed7",
+          "source": "src/pages/host/HostDashboardPage.tsx",
+          "line": 166,
+          "column": 29,
+          "ownerComponentId": "ui.0141",
+          "tag": "div",
           "staticClassTokens": [
             "btn",
-            "btn-outline",
+            "btn-ghost",
             "btn-sm",
-            "hidden",
-            "sm:inline-flex"
+            "btn-square"
           ],
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:157:25:action",
+          "id": "inline.ui.0141.action.8f5f82b1a1f6",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 157,
           "column": 25,
@@ -12884,32 +12777,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:166:29:action",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 166,
-          "column": 29,
-          "ownerComponentId": "ui.0141",
-          "tag": "div",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "btn-square"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostDashboardPage.tsx:170:37:action",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 170,
-          "column": 37,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostDashboardPage.tsx:171:37:action",
+          "id": "inline.ui.0141.action.d372c6ca8f39",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 171,
           "column": 37,
@@ -12919,9 +12787,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:172:37:action",
+          "id": "inline.ui.0141.action.d3ba29dbf38f",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 172,
+          "line": 170,
           "column": 37,
           "ownerComponentId": "ui.0141",
           "tag": "button",
@@ -12929,7 +12797,19 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:295:25:action",
+          "id": "inline.ui.0142.action.1854699bbfb9",
+          "source": "src/pages/host/HostDashboardPage.tsx",
+          "line": 300,
+          "column": 33,
+          "ownerComponentId": "ui.0142",
+          "tag": "button",
+          "staticClassTokens": [
+            "text-error"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0142.action.80919867aed7",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 295,
           "column": 25,
@@ -12944,7 +12824,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:299:33:action",
+          "id": "inline.ui.0142.action.9e18b100dc7d",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 299,
           "column": 33,
@@ -12954,47 +12834,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:300:33:action",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 300,
-          "column": 33,
-          "ownerComponentId": "ui.0142",
-          "tag": "button",
-          "staticClassTokens": [
-            "text-error"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:138:11:action",
-          "source": "src/pages/host/HostJamSongsPage.tsx",
-          "line": 138,
-          "column": 11,
-          "ownerComponentId": "ui.0143",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "mb-4"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:150:13:action",
-          "source": "src/pages/host/HostJamSongsPage.tsx",
-          "line": 150,
-          "column": 13,
-          "ownerComponentId": "ui.0143",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:234:17:action",
+          "id": "inline.ui.0143.action.04dcbf960e93",
           "source": "src/pages/host/HostJamSongsPage.tsx",
           "line": 234,
           "column": 17,
@@ -13008,62 +12848,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostJamSongsPage.tsx:265:21:action",
-          "source": "src/pages/host/HostJamSongsPage.tsx",
-          "line": 265,
-          "column": 21,
-          "ownerComponentId": "ui.0143",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-secondary",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:279:17:action",
-          "source": "src/pages/host/HostJamSongsPage.tsx",
-          "line": 279,
-          "column": 17,
-          "ownerComponentId": "ui.0143",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:330:23:action",
-          "source": "src/pages/host/HostJamSongsPage.tsx",
-          "line": 330,
-          "column": 23,
-          "ownerComponentId": "ui.0143",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:339:23:action",
-          "source": "src/pages/host/HostJamSongsPage.tsx",
-          "line": 339,
-          "column": 23,
-          "ownerComponentId": "ui.0143",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:347:21:action",
+          "id": "inline.ui.0143.action.0cb67403f8a8",
           "source": "src/pages/host/HostJamSongsPage.tsx",
           "line": 347,
           "column": 21,
@@ -13078,7 +12863,103 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/JamManagementPage.tsx:194:21:action",
+          "id": "inline.ui.0143.action.172ad49aabc8",
+          "source": "src/pages/host/HostJamSongsPage.tsx",
+          "line": 339,
+          "column": 23,
+          "ownerComponentId": "ui.0143",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost",
+            "btn-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0143.action.39b88e19d34b",
+          "source": "src/pages/host/HostJamSongsPage.tsx",
+          "line": 265,
+          "column": 21,
+          "ownerComponentId": "ui.0143",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-secondary",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0143.action.5f404e6c5dde",
+          "source": "src/pages/host/HostJamSongsPage.tsx",
+          "line": 279,
+          "column": 17,
+          "ownerComponentId": "ui.0143",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0143.action.733b34d26ae4",
+          "source": "src/pages/host/HostJamSongsPage.tsx",
+          "line": 150,
+          "column": 13,
+          "ownerComponentId": "ui.0143",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0143.action.c7224d425e3a",
+          "source": "src/pages/host/HostJamSongsPage.tsx",
+          "line": 330,
+          "column": 23,
+          "ownerComponentId": "ui.0143",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost",
+            "btn-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0143.action.f30ad90a15b4",
+          "source": "src/pages/host/HostJamSongsPage.tsx",
+          "line": 138,
+          "column": 11,
+          "ownerComponentId": "ui.0143",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost",
+            "btn-sm",
+            "mb-4"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0144.action.929d73ee5132",
+          "source": "src/pages/host/JamManagementPage.tsx",
+          "line": 227,
+          "column": 33,
+          "ownerComponentId": "ui.0144",
+          "tag": "button",
+          "staticClassTokens": [
+            "link",
+            "link-hover"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0144.action.f371bceec7a1",
           "source": "src/pages/host/JamManagementPage.tsx",
           "line": 194,
           "column": 21,
@@ -13092,20 +12973,20 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/JamManagementPage.tsx:227:33:action",
-          "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 227,
-          "column": 33,
-          "ownerComponentId": "ui.0144",
+          "id": "inline.ui.0145.action.089fb2941062",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 412,
+          "column": 23,
+          "ownerComponentId": "ui.0145",
           "tag": "button",
           "staticClassTokens": [
-            "link",
-            "link-hover"
+            "btn",
+            "btn-sm"
           ],
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:323:23:action",
+          "id": "inline.ui.0145.action.2076eb39fae5",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 323,
           "column": 23,
@@ -13120,34 +13001,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:376:25:action",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 376,
-          "column": 25,
-          "ownerComponentId": "ui.0145",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/MusiciansPage.tsx:412:23:action",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 412,
-          "column": 23,
-          "ownerComponentId": "ui.0145",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/MusiciansPage.tsx:434:23:action",
+          "id": "inline.ui.0145.action.4d6b1d213141",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 434,
           "column": 23,
@@ -13160,21 +13014,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:447:25:action",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 447,
-          "column": 25,
-          "ownerComponentId": "ui.0145",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm",
-            "join-item"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/MusiciansPage.tsx:455:25:action",
+          "id": "inline.ui.0145.action.5b4ae785a84c",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 455,
           "column": 25,
@@ -13188,7 +13028,21 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:481:25:action",
+          "id": "inline.ui.0145.action.66884209f969",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 376,
+          "column": 25,
+          "ownerComponentId": "ui.0145",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary",
+            "btn-xs"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0145.action.711e49093a1a",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 481,
           "column": 25,
@@ -13202,7 +13056,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:489:25:action",
+          "id": "inline.ui.0145.action.b0c1f98c7b08",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 489,
           "column": 25,
@@ -13216,20 +13070,105 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/AuthCallbackPage.tsx:123:15:action",
-          "source": "src/pages/tabs/AuthCallbackPage.tsx",
-          "line": 123,
-          "column": 15,
-          "ownerComponentId": "ui.0156",
-          "tag": "a",
+          "id": "inline.ui.0145.action.da2ccfdf8dea",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 447,
+          "column": 25,
+          "ownerComponentId": "ui.0145",
+          "tag": "button",
           "staticClassTokens": [
             "btn",
-            "btn-primary"
+            "btn-sm",
+            "join-item"
           ],
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/AuthCallbackPage.tsx:126:15:action",
+          "id": "inline.ui.0149.action.13992e296a37",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 482,
+          "column": 17,
+          "ownerComponentId": "ui.0149",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-sm",
+            "join-item"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.action.66ccf2efc3cc",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 450,
+          "column": 17,
+          "ownerComponentId": "ui.0149",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-sm",
+            "join-item"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.action.8f783887c351",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 457,
+          "column": 17,
+          "ownerComponentId": "ui.0149",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-sm",
+            "join-item"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.action.ffc3d5a3e973",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 489,
+          "column": 17,
+          "ownerComponentId": "ui.0149",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-sm",
+            "join-item"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0150.action.7a732819e71d",
+          "source": "src/pages/NotFoundPage.tsx",
+          "line": 40,
+          "column": 13,
+          "ownerComponentId": "ui.0150",
+          "tag": "Link",
+          "staticClassTokens": [
+            "btn",
+            "btn-outline",
+            "gap-2"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0150.action.ad399f270378",
+          "source": "src/pages/NotFoundPage.tsx",
+          "line": 36,
+          "column": 13,
+          "ownerComponentId": "ui.0150",
+          "tag": "Link",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary",
+            "gap-2"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0156.action.275fc0c0934a",
           "source": "src/pages/tabs/AuthCallbackPage.tsx",
           "line": 126,
           "column": 15,
@@ -13242,7 +13181,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/AuthCallbackPage.tsx:97:15:action",
+          "id": "inline.ui.0156.action.d857aa222e77",
           "source": "src/pages/tabs/AuthCallbackPage.tsx",
           "line": 97,
           "column": 15,
@@ -13255,7 +13194,20 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/DashboardTab.tsx:17:13:action",
+          "id": "inline.ui.0156.action.d857aa222e77",
+          "source": "src/pages/tabs/AuthCallbackPage.tsx",
+          "line": 123,
+          "column": 15,
+          "ownerComponentId": "ui.0156",
+          "tag": "a",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0157.action.bae5b533f94d",
           "source": "src/pages/tabs/DashboardTab.tsx",
           "line": 17,
           "column": 13,
@@ -13268,7 +13220,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/OverviewTab.tsx:101:21:action",
+          "id": "inline.ui.0161.action.430827641e9d",
           "source": "src/pages/tabs/OverviewTab.tsx",
           "line": 101,
           "column": 21,
@@ -13283,7 +13235,21 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/OverviewTab.tsx:110:21:action",
+          "id": "inline.ui.0161.action.8e26b7ddb3d8",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 83,
+          "column": 17,
+          "ownerComponentId": "ui.0161",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "gap-2",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0161.action.a2b1847bbf16",
           "source": "src/pages/tabs/OverviewTab.tsx",
           "line": 110,
           "column": 21,
@@ -13298,21 +13264,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/OverviewTab.tsx:83:17:action",
-          "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 83,
-          "column": 17,
-          "ownerComponentId": "ui.0161",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "gap-2",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/tabs/OverviewTab.tsx:94:21:action",
+          "id": "inline.ui.0161.action.d5afae87e211",
           "source": "src/pages/tabs/OverviewTab.tsx",
           "line": 94,
           "column": 21,
@@ -13327,51 +13279,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:108:19:action",
-          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
-          "line": 108,
-          "column": 19,
-          "ownerComponentId": "ui.0165",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "ds-focusable"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:120:19:action",
-          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
-          "line": 120,
-          "column": 19,
-          "ownerComponentId": "ui.0165",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "ds-control",
-            "ds-focusable"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:121:19:action",
-          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
-          "line": 121,
-          "column": 19,
-          "ownerComponentId": "ui.0165",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "ds-control",
-            "ds-focusable"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:16:13:action",
+          "id": "inline.ui.0164.action.49759727702d",
           "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
           "line": 16,
           "column": 13,
@@ -13386,7 +13294,36 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:61:11:action",
+          "id": "inline.ui.0165.action.3b5dbdb8b387",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 108,
+          "column": 19,
+          "ownerComponentId": "ui.0165",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-ghost",
+            "btn-sm",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0165.action.4887870f7836",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 120,
+          "column": 19,
+          "ownerComponentId": "ui.0165",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "ds-control",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0165.action.5567f13c2209",
           "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
           "line": 61,
           "column": 11,
@@ -13401,96 +13338,75 @@
             "w-fit"
           ],
           "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0165.action.fe708c3ba7ed",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 121,
+          "column": 19,
+          "ownerComponentId": "ui.0165",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-error",
+            "ds-control",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0166.action.bcd852a27998",
+          "source": "src/components/Action.tsx",
+          "line": 58,
+          "column": 5,
+          "ownerComponentId": "ui.0166",
+          "tag": "button",
+          "staticClassTokens": [],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0191.action.d9e82b4db73b",
+          "source": "src/components/Navigation.tsx",
+          "line": 62,
+          "column": 13,
+          "ownerComponentId": "ui.0191",
+          "tag": "button",
+          "staticClassTokens": [
+            "ds-tab"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0194.action.d43d82020bdb",
+          "source": "src/components/Navigation.tsx",
+          "line": 258,
+          "column": 17,
+          "ownerComponentId": "ui.0194",
+          "tag": "button",
+          "staticClassTokens": [],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0195.action.b0becf9266a0",
+          "source": "src/components/Navigation.tsx",
+          "line": 306,
+          "column": 7,
+          "ownerComponentId": "ui.0195",
+          "tag": "button",
+          "staticClassTokens": [
+            "ds-control",
+            "ds-dropdown__trigger",
+            "ds-focusable"
+          ],
+          "dynamicClasses": false
         }
       ]
     },
     {
       "family": "badge",
-      "assessment": "review-candidate",
-      "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/JamCardSkeleton.tsx:15:11:badge",
-          "source": "src/components/JamCardSkeleton.tsx",
-          "line": 15,
-          "column": 11,
-          "ownerComponentId": "ui.0052",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "h-6",
-            "rounded",
-            "skeleton",
-            "sm:h-7",
-            "w-20"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicTable.tsx:112:11:badge",
-          "source": "src/components/MusicTable.tsx",
-          "line": 112,
-          "column": 11,
-          "ownerComponentId": "ui.0065",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm",
-            "gap-0.5"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileHeader.tsx:65:9:badge",
-          "source": "src/components/ProfileHeader.tsx",
-          "line": 65,
-          "column": 9,
-          "ownerComponentId": "ui.0072",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-lg",
-            "badge-outline",
-            "border-white",
-            "mt-2",
-            "text-white"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/ScheduleCardSkeleton.tsx:25:17:badge",
-          "source": "src/components/ScheduleCardSkeleton.tsx",
-          "line": 25,
-          "column": 17,
-          "ownerComponentId": "ui.0123",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "h-6",
-            "rounded",
-            "skeleton",
-            "w-20"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ScheduleCardSkeleton.tsx:26:17:badge",
-          "source": "src/components/ScheduleCardSkeleton.tsx",
-          "line": 26,
-          "column": 17,
-          "ownerComponentId": "ui.0123",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "h-6",
-            "rounded",
-            "skeleton",
-            "w-20"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/DualActionFAB.tsx:140:17:badge",
+          "id": "inline.ui.0036.badge.fcb3c3413a33",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
           "line": 140,
           "column": 17,
@@ -13507,7 +13423,55 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/InstrumentBadges.tsx:40:9:badge",
+          "id": "inline.ui.0052.badge.6726979863dc",
+          "source": "src/components/JamCardSkeleton.tsx",
+          "line": 15,
+          "column": 11,
+          "ownerComponentId": "ui.0052",
+          "tag": "div",
+          "staticClassTokens": [
+            "badge",
+            "h-6",
+            "rounded",
+            "skeleton",
+            "sm:h-7",
+            "w-20"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0065.badge.a042cc40c545",
+          "source": "src/components/MusicTable.tsx",
+          "line": 112,
+          "column": 11,
+          "ownerComponentId": "ui.0065",
+          "tag": "span",
+          "staticClassTokens": [
+            "badge",
+            "badge-sm",
+            "gap-0.5"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0072.badge.cda50a3d9d9f",
+          "source": "src/components/ProfileHeader.tsx",
+          "line": 65,
+          "column": 9,
+          "ownerComponentId": "ui.0072",
+          "tag": "div",
+          "staticClassTokens": [
+            "badge",
+            "badge-lg",
+            "badge-outline",
+            "border-white",
+            "mt-2",
+            "text-white"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0102.badge.384375b91c2c",
           "source": "src/components/schedule/InstrumentBadges.tsx",
           "line": 40,
           "column": 9,
@@ -13521,7 +13485,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/InstrumentBadges.tsx:47:13:badge",
+          "id": "inline.ui.0102.badge.571da121368a",
           "source": "src/components/schedule/InstrumentBadges.tsx",
           "line": 47,
           "column": 13,
@@ -13534,7 +13498,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/InstrumentsSummary.tsx:50:13:badge",
+          "id": "inline.ui.0103.badge.b37524a569fd",
           "source": "src/components/schedule/InstrumentsSummary.tsx",
           "line": 50,
           "column": 13,
@@ -13548,7 +13512,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/MusicianSlotRow.tsx:77:9:badge",
+          "id": "inline.ui.0108.badge.8fe3e68fc485",
           "source": "src/components/schedule/MusicianSlotRow.tsx",
           "line": 77,
           "column": 9,
@@ -13564,44 +13528,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/RegistrationList.tsx:156:57:badge",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 156,
-          "column": 57,
-          "ownerComponentId": "ui.0110",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm",
-            "bg-success/10",
-            "border-success",
-            "flex",
-            "gap-1",
-            "items-center",
-            "text-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/RegistrationList.tsx:162:57:badge",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 162,
-          "column": 57,
-          "ownerComponentId": "ui.0110",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-error",
-            "badge-sm",
-            "flex",
-            "gap-1",
-            "items-center",
-            "text-error-content"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/schedule/RegistrationList.tsx:168:57:badge",
+          "id": "inline.ui.0110.badge.39460fa4ad05",
           "source": "src/components/schedule/RegistrationList.tsx",
           "line": 168,
           "column": 57,
@@ -13620,7 +13547,26 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/RegistrationList.tsx:184:61:badge",
+          "id": "inline.ui.0110.badge.6ad924faf0fc",
+          "source": "src/components/schedule/RegistrationList.tsx",
+          "line": 156,
+          "column": 57,
+          "ownerComponentId": "ui.0110",
+          "tag": "div",
+          "staticClassTokens": [
+            "badge",
+            "badge-sm",
+            "bg-success/10",
+            "border-success",
+            "flex",
+            "gap-1",
+            "items-center",
+            "text-success"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0110.badge.b2afb2cea6af",
           "source": "src/components/schedule/RegistrationList.tsx",
           "line": 184,
           "column": 61,
@@ -13636,7 +13582,25 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:113:13:badge",
+          "id": "inline.ui.0110.badge.ef85a8827234",
+          "source": "src/components/schedule/RegistrationList.tsx",
+          "line": 162,
+          "column": 57,
+          "ownerComponentId": "ui.0110",
+          "tag": "div",
+          "staticClassTokens": [
+            "badge",
+            "badge-error",
+            "badge-sm",
+            "flex",
+            "gap-1",
+            "items-center",
+            "text-error-content"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0113.badge.01c4dbd97efe",
           "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
           "line": 113,
           "column": 13,
@@ -13653,7 +13617,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCollapsibleCard.tsx:132:13:badge",
+          "id": "inline.ui.0113.badge.583a9ab66ea6",
           "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
           "line": 132,
           "column": 13,
@@ -13672,7 +13636,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleCompactCard.tsx:68:13:badge",
+          "id": "inline.ui.0114.badge.d2ba0e50560b",
           "source": "src/components/schedule/ScheduleCompactCard.tsx",
           "line": 68,
           "column": 13,
@@ -13688,7 +13652,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/ScheduleStatusBadge.tsx:22:5:badge",
+          "id": "inline.ui.0119.badge.b9fd1af2830b",
           "source": "src/components/schedule/ScheduleStatusBadge.tsx",
           "line": 22,
           "column": 5,
@@ -13700,7 +13664,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/SlotFillIndicator.tsx:27:5:badge",
+          "id": "inline.ui.0120.badge.ba852613dff5",
           "source": "src/components/schedule/SlotFillIndicator.tsx",
           "line": 27,
           "column": 5,
@@ -13716,7 +13680,39 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:293:21:badge",
+          "id": "inline.ui.0123.badge.8559cf525a20",
+          "source": "src/components/ScheduleCardSkeleton.tsx",
+          "line": 25,
+          "column": 17,
+          "ownerComponentId": "ui.0123",
+          "tag": "div",
+          "staticClassTokens": [
+            "badge",
+            "h-6",
+            "rounded",
+            "skeleton",
+            "w-20"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0123.badge.8559cf525a20",
+          "source": "src/components/ScheduleCardSkeleton.tsx",
+          "line": 26,
+          "column": 17,
+          "ownerComponentId": "ui.0123",
+          "tag": "div",
+          "staticClassTokens": [
+            "badge",
+            "h-6",
+            "rounded",
+            "skeleton",
+            "w-20"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0142.badge.3854256bcbff",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 293,
           "column": 21,
@@ -13729,7 +13725,19 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:305:27:badge",
+          "id": "inline.ui.0145.badge.0c40efe10576",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 366,
+          "column": 25,
+          "ownerComponentId": "ui.0145",
+          "tag": "span",
+          "staticClassTokens": [
+            "badge"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0145.badge.0c97f35472e2",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 305,
           "column": 27,
@@ -13742,19 +13750,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:366:25:badge",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 366,
-          "column": 25,
-          "ownerComponentId": "ui.0145",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/tabs/RegistrationsTab.tsx:31:37:badge",
+          "id": "inline.ui.0162.badge.05d41c5cf463",
           "source": "src/pages/tabs/RegistrationsTab.tsx",
           "line": 31,
           "column": 37,
@@ -13772,11 +13768,9 @@
     },
     {
       "family": "card",
-      "assessment": "review-candidate",
-      "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/ErrorBoundary.tsx:35:11:card",
+          "id": "inline.ui.0021.card.ad218e4c73ec",
           "source": "src/components/ErrorBoundary.tsx",
           "line": 35,
           "column": 11,
@@ -13793,127 +13787,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/JamCard.tsx:61:5:card",
-          "source": "src/components/JamCard.tsx",
-          "line": 61,
-          "column": 5,
-          "ownerComponentId": "ui.0051",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "hover:shadow-xl",
-            "shadow-lg",
-            "transition-shadow"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/JamCardSkeleton.tsx:8:5:card",
-          "source": "src/components/JamCardSkeleton.tsx",
-          "line": 8,
-          "column": 5,
-          "ownerComponentId": "ui.0052",
-          "tag": "div",
-          "staticClassTokens": [
-            "animate-pulse",
-            "bg-base-200",
-            "card",
-            "shadow-lg"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/JamContextDisplay.tsx:45:5:card",
-          "source": "src/components/JamContextDisplay.tsx",
-          "line": 45,
-          "column": 5,
-          "ownerComponentId": "ui.0053",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "mb-6"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/MusicFilters.tsx:36:5:card",
-          "source": "src/components/MusicFilters.tsx",
-          "line": 36,
-          "column": 5,
-          "ownerComponentId": "ui.0060",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "shadow"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileFormSection.tsx:35:5:card",
-          "source": "src/components/ProfileFormSection.tsx",
-          "line": 35,
-          "column": 5,
-          "ownerComponentId": "ui.0071",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "duration-300",
-            "shadow-lg",
-            "transition-all"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileHeader.tsx:52:5:card",
-          "source": "src/components/ProfileHeader.tsx",
-          "line": 52,
-          "column": 5,
-          "ownerComponentId": "ui.0072",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-gradient-to-r",
-            "card",
-            "shadow-xl",
-            "text-primary-content"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/ScheduleCardSkeleton.tsx:8:5:card",
-          "source": "src/components/ScheduleCardSkeleton.tsx",
-          "line": 8,
-          "column": 5,
-          "ownerComponentId": "ui.0123",
-          "tag": "div",
-          "staticClassTokens": [
-            "animate-pulse",
-            "bg-gradient-to-br",
-            "card",
-            "from-base-200",
-            "to-base-300"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SidebarSectionSkeleton.tsx:8:5:card",
-          "source": "src/components/SidebarSectionSkeleton.tsx",
-          "line": 8,
-          "column": 5,
-          "ownerComponentId": "ui.0126",
-          "tag": "div",
-          "staticClassTokens": [
-            "animate-pulse",
-            "bg-base-200",
-            "card"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/JamRegistrationForm.tsx:82:7:card",
+          "id": "inline.ui.0026.card.25817e902f0b",
           "source": "src/components/forms/JamRegistrationForm.tsx",
           "line": 82,
           "column": 7,
@@ -13926,7 +13800,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/forms/JamRegistrationForm.tsx:93:5:card",
+          "id": "inline.ui.0026.card.25817e902f0b",
           "source": "src/components/forms/JamRegistrationForm.tsx",
           "line": 93,
           "column": 5,
@@ -13939,7 +13813,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/CollapsibleSection.tsx:37:5:card",
+          "id": "inline.ui.0034.card.25817e902f0b",
           "source": "src/components/jam-detail-v2/CollapsibleSection.tsx",
           "line": 37,
           "column": 5,
@@ -13952,20 +13826,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:104:25:card",
-          "source": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx",
-          "line": 104,
-          "column": 25,
-          "ownerComponentId": "ui.0039",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-100/50",
-            "card"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:47:13:card",
+          "id": "inline.ui.0039.card.31d245cad4b5",
           "source": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx",
           "line": 47,
           "column": 13,
@@ -13980,7 +13841,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:55:13:card",
+          "id": "inline.ui.0039.card.31d245cad4b5",
           "source": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx",
           "line": 55,
           "column": 13,
@@ -13995,7 +13856,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx:70:13:card",
+          "id": "inline.ui.0039.card.31d245cad4b5",
           "source": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx",
           "line": 70,
           "column": 13,
@@ -14010,7 +13871,20 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx:113:5:card",
+          "id": "inline.ui.0039.card.fdd714540ab4",
+          "source": "src/components/jam-detail-v2/JamDetailLoadingSkeleton.tsx",
+          "line": 104,
+          "column": 25,
+          "ownerComponentId": "ui.0039",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-100/50",
+            "card"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0044.card.9f2bafa4204d",
           "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
           "line": 113,
           "column": 5,
@@ -14032,7 +13906,97 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/schedule/ScheduleCompactCard.tsx:62:5:card",
+          "id": "inline.ui.0051.card.2dcb594eef3c",
+          "source": "src/components/JamCard.tsx",
+          "line": 61,
+          "column": 5,
+          "ownerComponentId": "ui.0051",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "hover:shadow-xl",
+            "shadow-lg",
+            "transition-shadow"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0052.card.23a4f84ec232",
+          "source": "src/components/JamCardSkeleton.tsx",
+          "line": 8,
+          "column": 5,
+          "ownerComponentId": "ui.0052",
+          "tag": "div",
+          "staticClassTokens": [
+            "animate-pulse",
+            "bg-base-200",
+            "card",
+            "shadow-lg"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0053.card.15ce7f2c5911",
+          "source": "src/components/JamContextDisplay.tsx",
+          "line": 45,
+          "column": 5,
+          "ownerComponentId": "ui.0053",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "mb-6"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0060.card.4f770448212d",
+          "source": "src/components/MusicFilters.tsx",
+          "line": 36,
+          "column": 5,
+          "ownerComponentId": "ui.0060",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "shadow"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0071.card.056ceaebd3f3",
+          "source": "src/components/ProfileFormSection.tsx",
+          "line": 35,
+          "column": 5,
+          "ownerComponentId": "ui.0071",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "duration-300",
+            "shadow-lg",
+            "transition-all"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0072.card.0c2ddd740560",
+          "source": "src/components/ProfileHeader.tsx",
+          "line": 52,
+          "column": 5,
+          "ownerComponentId": "ui.0072",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-gradient-to-r",
+            "card",
+            "shadow-xl",
+            "text-primary-content"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0114.card.8e1c5f236d45",
           "source": "src/components/schedule/ScheduleCompactCard.tsx",
           "line": 62,
           "column": 5,
@@ -14045,118 +14009,37 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/pages/JamRegisterPage.tsx:103:13:card",
-          "source": "src/pages/JamRegisterPage.tsx",
-          "line": 103,
-          "column": 13,
-          "ownerComponentId": "ui.0146",
+          "id": "inline.ui.0123.card.436f8ef9ea1b",
+          "source": "src/components/ScheduleCardSkeleton.tsx",
+          "line": 8,
+          "column": 5,
+          "ownerComponentId": "ui.0123",
           "tag": "div",
           "staticClassTokens": [
+            "animate-pulse",
+            "bg-gradient-to-br",
+            "card",
+            "from-base-200",
+            "to-base-300"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0126.card.baebd380de22",
+          "source": "src/components/SidebarSectionSkeleton.tsx",
+          "line": 8,
+          "column": 5,
+          "ownerComponentId": "ui.0126",
+          "tag": "div",
+          "staticClassTokens": [
+            "animate-pulse",
             "bg-base-200",
             "card"
           ],
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/JamRegisterPage.tsx:152:11:card",
-          "source": "src/pages/JamRegisterPage.tsx",
-          "line": 152,
-          "column": 11,
-          "ownerComponentId": "ui.0146",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/JamRegisterPage.tsx:87:13:card",
-          "source": "src/pages/JamRegisterPage.tsx",
-          "line": 87,
-          "column": 13,
-          "ownerComponentId": "ui.0146",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/JamRegisterPage.tsx:96:13:card",
-          "source": "src/pages/JamRegisterPage.tsx",
-          "line": 96,
-          "column": 13,
-          "ownerComponentId": "ui.0146",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:301:11:card",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 301,
-          "column": 11,
-          "ownerComponentId": "ui.0149",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "mb-4",
-            "p-3"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:309:15:card",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 309,
-          "column": 15,
-          "ownerComponentId": "ui.0149",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "p-3"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/ProfilePage.tsx:119:11:card",
-          "source": "src/pages/ProfilePage.tsx",
-          "line": 119,
-          "column": 11,
-          "ownerComponentId": "ui.0151",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "mb-6",
-            "shadow-lg"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/ProfilePage.tsx:132:11:card",
-          "source": "src/pages/ProfilePage.tsx",
-          "line": 132,
-          "column": 11,
-          "ownerComponentId": "ui.0151",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "mb-6",
-            "shadow-lg"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:265:11:card",
+          "id": "inline.ui.0138.card.ca6213990919",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 265,
           "column": 11,
@@ -14170,7 +14053,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:333:9:card",
+          "id": "inline.ui.0138.card.ca6213990919",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 333,
           "column": 9,
@@ -14184,7 +14067,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/FeedbackPage.tsx:262:5:card",
+          "id": "inline.ui.0139.card.4f770448212d",
           "source": "src/pages/host/FeedbackPage.tsx",
           "line": 262,
           "column": 5,
@@ -14198,7 +14081,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:279:13:card",
+          "id": "inline.ui.0142.card.a466fe497136",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 279,
           "column": 13,
@@ -14215,7 +14098,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostJamSongsPage.tsx:310:15:card",
+          "id": "inline.ui.0143.card.c0ec99e6a6e7",
           "source": "src/pages/host/HostJamSongsPage.tsx",
           "line": 310,
           "column": 15,
@@ -14229,7 +14112,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/JamManagementPage.tsx:173:21:card",
+          "id": "inline.ui.0144.card.25817e902f0b",
           "source": "src/pages/host/JamManagementPage.tsx",
           "line": 173,
           "column": 21,
@@ -14242,7 +14125,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:164:11:card",
+          "id": "inline.ui.0145.card.15ce7f2c5911",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 164,
           "column": 11,
@@ -14256,20 +14139,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:193:15:card",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 193,
-          "column": 15,
-          "ownerComponentId": "ui.0145",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/MusiciansPage.tsx:235:9:card",
+          "id": "inline.ui.0145.card.15ce7f2c5911",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 235,
           "column": 9,
@@ -14283,7 +14153,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:285:11:card",
+          "id": "inline.ui.0145.card.25817e902f0b",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 285,
           "column": 11,
@@ -14296,7 +14166,20 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:299:17:card",
+          "id": "inline.ui.0145.card.56ddd6651c4a",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 193,
+          "column": 15,
+          "ownerComponentId": "ui.0145",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0145.card.57283d4b3fc2",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 299,
           "column": 17,
@@ -14309,7 +14192,118 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/AnalyticsTab.tsx:21:17:card",
+          "id": "inline.ui.0146.card.25817e902f0b",
+          "source": "src/pages/JamRegisterPage.tsx",
+          "line": 87,
+          "column": 13,
+          "ownerComponentId": "ui.0146",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0146.card.25817e902f0b",
+          "source": "src/pages/JamRegisterPage.tsx",
+          "line": 96,
+          "column": 13,
+          "ownerComponentId": "ui.0146",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0146.card.25817e902f0b",
+          "source": "src/pages/JamRegisterPage.tsx",
+          "line": 103,
+          "column": 13,
+          "ownerComponentId": "ui.0146",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0146.card.25817e902f0b",
+          "source": "src/pages/JamRegisterPage.tsx",
+          "line": 152,
+          "column": 11,
+          "ownerComponentId": "ui.0146",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.card.9352e5e75f37",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 309,
+          "column": 15,
+          "ownerComponentId": "ui.0149",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "p-3"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.card.b9a21d7bb545",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 301,
+          "column": 11,
+          "ownerComponentId": "ui.0149",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "mb-4",
+            "p-3"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0151.card.bdf9d53ac9bf",
+          "source": "src/pages/ProfilePage.tsx",
+          "line": 119,
+          "column": 11,
+          "ownerComponentId": "ui.0151",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "mb-6",
+            "shadow-lg"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0151.card.bdf9d53ac9bf",
+          "source": "src/pages/ProfilePage.tsx",
+          "line": 132,
+          "column": 11,
+          "ownerComponentId": "ui.0151",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "mb-6",
+            "shadow-lg"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0155.card.4f770448212d",
           "source": "src/pages/tabs/AnalyticsTab.tsx",
           "line": 21,
           "column": 17,
@@ -14323,7 +14317,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/AnalyticsTab.tsx:27:17:card",
+          "id": "inline.ui.0155.card.4f770448212d",
           "source": "src/pages/tabs/AnalyticsTab.tsx",
           "line": 27,
           "column": 17,
@@ -14337,7 +14331,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/AnalyticsTab.tsx:33:17:card",
+          "id": "inline.ui.0155.card.4f770448212d",
           "source": "src/pages/tabs/AnalyticsTab.tsx",
           "line": 33,
           "column": 17,
@@ -14351,22 +14345,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/AuthCallbackPage.tsx:111:9:card",
-          "source": "src/pages/tabs/AuthCallbackPage.tsx",
-          "line": 111,
-          "column": 9,
-          "ownerComponentId": "ui.0156",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "max-w-md",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/tabs/AuthCallbackPage.tsx:84:9:card",
+          "id": "inline.ui.0156.card.dc35c1bc2c06",
           "source": "src/pages/tabs/AuthCallbackPage.tsx",
           "line": 84,
           "column": 9,
@@ -14381,7 +14360,22 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/OverviewTab.tsx:136:17:card",
+          "id": "inline.ui.0156.card.dc35c1bc2c06",
+          "source": "src/pages/tabs/AuthCallbackPage.tsx",
+          "line": 111,
+          "column": 9,
+          "ownerComponentId": "ui.0156",
+          "tag": "div",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "max-w-md",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.card.05967e332e13",
           "source": "src/pages/tabs/OverviewTab.tsx",
           "line": 136,
           "column": 17,
@@ -14395,7 +14389,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/RegistrationsTab.tsx:22:25:card",
+          "id": "inline.ui.0162.card.e42ed8b1e407",
           "source": "src/pages/tabs/RegistrationsTab.tsx",
           "line": 22,
           "column": 25,
@@ -14409,7 +14403,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/tabs/ScheduleTab.tsx:466:17:card",
+          "id": "inline.ui.0163.card.6199aa1a86c4",
           "source": "src/pages/tabs/ScheduleTab.tsx",
           "line": 466,
           "column": 17,
@@ -14423,7 +14417,22 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:54:5:card",
+          "id": "inline.ui.0164.card.88d062c72332",
+          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
+          "line": 8,
+          "column": 5,
+          "ownerComponentId": "ui.0164",
+          "tag": "section",
+          "staticClassTokens": [
+            "bg-base-200",
+            "card",
+            "max-w-2xl",
+            "shadow-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0165.card.028667a4178a",
           "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
           "line": 54,
           "column": 5,
@@ -14438,7 +14447,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:78:13:card",
+          "id": "inline.ui.0165.card.e6b82dc9a79c",
           "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
           "line": 78,
           "column": 13,
@@ -14452,61 +14461,14 @@
             "w-full"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx:8:5:card",
-          "source": "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
-          "line": 8,
-          "column": 5,
-          "ownerComponentId": "ui.0164",
-          "tag": "section",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card",
-            "max-w-2xl",
-            "shadow-sm"
-          ],
-          "dynamicClasses": false
         }
       ]
     },
     {
       "family": "field",
-      "assessment": "review-candidate",
-      "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/DesktopUserMenu.tsx:174:13:field",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 174,
-          "column": 13,
-          "ownerComponentId": "ui.0010",
-          "tag": "select",
-          "staticClassTokens": [
-            "flex-1",
-            "select",
-            "select-bordered",
-            "select-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/DesktopUserMenu.tsx:187:13:field",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 187,
-          "column": 13,
-          "ownerComponentId": "ui.0010",
-          "tag": "select",
-          "staticClassTokens": [
-            "flex-1",
-            "select",
-            "select-bordered",
-            "select-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/DesktopUserMenu.tsx:82:15:field",
+          "id": "inline.ui.0010.field.83cf07fce210",
           "source": "src/components/DesktopUserMenu.tsx",
           "line": 82,
           "column": 15,
@@ -14521,7 +14483,22 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/DesktopUserMenu.tsx:95:15:field",
+          "id": "inline.ui.0010.field.83cf07fce210",
+          "source": "src/components/DesktopUserMenu.tsx",
+          "line": 174,
+          "column": 13,
+          "ownerComponentId": "ui.0010",
+          "tag": "select",
+          "staticClassTokens": [
+            "flex-1",
+            "select",
+            "select-bordered",
+            "select-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0010.field.faae46012791",
           "source": "src/components/DesktopUserMenu.tsx",
           "line": 95,
           "column": 15,
@@ -14536,7 +14513,22 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/FeedbackModal.tsx:144:19:field",
+          "id": "inline.ui.0010.field.faae46012791",
+          "source": "src/components/DesktopUserMenu.tsx",
+          "line": 187,
+          "column": 13,
+          "ownerComponentId": "ui.0010",
+          "tag": "select",
+          "staticClassTokens": [
+            "flex-1",
+            "select",
+            "select-bordered",
+            "select-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0024.field.e76b8944b19c",
           "source": "src/components/FeedbackModal.tsx",
           "line": 144,
           "column": 19,
@@ -14550,110 +14542,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/ProfileSetupModal.tsx:123:11:field",
-          "source": "src/components/ProfileSetupModal.tsx",
-          "line": 123,
-          "column": 11,
-          "ownerComponentId": "ui.0073",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileSetupModal.tsx:139:11:field",
-          "source": "src/components/ProfileSetupModal.tsx",
-          "line": 139,
-          "column": 11,
-          "ownerComponentId": "ui.0073",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileSetupModal.tsx:159:11:field",
-          "source": "src/components/ProfileSetupModal.tsx",
-          "line": 159,
-          "column": 11,
-          "ownerComponentId": "ui.0073",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/ProfileSetupModal.tsx:179:11:field",
-          "source": "src/components/ProfileSetupModal.tsx",
-          "line": 179,
-          "column": 11,
-          "ownerComponentId": "ui.0073",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:178:13:field",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 178,
-          "column": 13,
-          "ownerComponentId": "ui.0094",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "px-1",
-            "tabular-nums",
-            "text-center",
-            "w-12"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/QuickEditPanel.tsx:188:13:field",
-          "source": "src/components/QuickEditPanel.tsx",
-          "line": 188,
-          "column": 13,
-          "ownerComponentId": "ui.0094",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "px-1",
-            "tabular-nums",
-            "text-center",
-            "w-12"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/SpotifyExportModal.tsx:161:15:field",
-          "source": "src/components/SpotifyExportModal.tsx",
-          "line": 161,
-          "column": 15,
-          "ownerComponentId": "ui.0127",
-          "tag": "input",
-          "staticClassTokens": [
-            "toggle",
-            "toggle-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/JamRegistrationForm.tsx:150:15:field",
+          "id": "inline.ui.0026.field.5719863ad50b",
           "source": "src/components/forms/JamRegistrationForm.tsx",
           "line": 150,
           "column": 15,
@@ -14666,17 +14555,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/forms/SearchableSelect.tsx:142:16:field",
-          "source": "src/components/forms/SearchableSelect.tsx",
-          "line": 142,
-          "column": 16,
-          "ownerComponentId": "ui.0028",
-          "tag": "input",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/components/forms/SearchableSelect.tsx:145:7:field",
+          "id": "inline.ui.0028.field.08897267b064",
           "source": "src/components/forms/SearchableSelect.tsx",
           "line": 145,
           "column": 7,
@@ -14697,7 +14576,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/forms/SearchableSelect.tsx:197:13:field",
+          "id": "inline.ui.0028.field.49cf2aaca6d9",
           "source": "src/components/forms/SearchableSelect.tsx",
           "line": 197,
           "column": 13,
@@ -14712,7 +14591,107 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/components/schedule/NotesEditor.tsx:30:9:field",
+          "id": "inline.ui.0028.field.f4e4c9af21dc",
+          "source": "src/components/forms/SearchableSelect.tsx",
+          "line": 142,
+          "column": 16,
+          "ownerComponentId": "ui.0028",
+          "tag": "input",
+          "staticClassTokens": [],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0073.field.04c7d44f22e7",
+          "source": "src/components/ProfileSetupModal.tsx",
+          "line": 179,
+          "column": 11,
+          "ownerComponentId": "ui.0073",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0073.field.552babd6490f",
+          "source": "src/components/ProfileSetupModal.tsx",
+          "line": 139,
+          "column": 11,
+          "ownerComponentId": "ui.0073",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "select-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0073.field.70b992692dca",
+          "source": "src/components/ProfileSetupModal.tsx",
+          "line": 159,
+          "column": 11,
+          "ownerComponentId": "ui.0073",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "select-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0073.field.d973beecd490",
+          "source": "src/components/ProfileSetupModal.tsx",
+          "line": 123,
+          "column": 11,
+          "ownerComponentId": "ui.0073",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0094.field.75d6307d0371",
+          "source": "src/components/QuickEditPanel.tsx",
+          "line": 178,
+          "column": 13,
+          "ownerComponentId": "ui.0094",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "input-sm",
+            "px-1",
+            "tabular-nums",
+            "text-center",
+            "w-12"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0094.field.7f2154df812d",
+          "source": "src/components/QuickEditPanel.tsx",
+          "line": 188,
+          "column": 13,
+          "ownerComponentId": "ui.0094",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "input-sm",
+            "px-1",
+            "tabular-nums",
+            "text-center",
+            "w-12"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0109.field.c20fc644c0c3",
           "source": "src/components/schedule/NotesEditor.tsx",
           "line": 30,
           "column": 9,
@@ -14728,37 +14707,20 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/MusicPage.tsx:433:15:field",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 433,
+          "id": "inline.ui.0127.field.4136f565e298",
+          "source": "src/components/SpotifyExportModal.tsx",
+          "line": 161,
           "column": 15,
-          "ownerComponentId": "ui.0149",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "select-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/MusicPage.tsx:467:17:field",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 467,
-          "column": 17,
-          "ownerComponentId": "ui.0149",
+          "ownerComponentId": "ui.0127",
           "tag": "input",
           "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "text-center",
-            "w-14"
+            "toggle",
+            "toggle-primary"
           ],
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:354:17:field",
+          "id": "inline.ui.0138.field.06014e27ad84",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 354,
           "column": 17,
@@ -14772,7 +14734,63 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:379:17:field",
+          "id": "inline.ui.0138.field.5e03e415187d",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 441,
+          "column": 19,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.6cbf6f1811bc",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 556,
+          "column": 19,
+          "ownerComponentId": "ui.0138",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "select-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.field.7dcd1fa55220",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 503,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.field.8bdd4c9e72b5",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 522,
+          "column": 21,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.field.e515c8e563b4",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 379,
           "column": 17,
@@ -14786,7 +14804,36 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:408:19:field",
+          "id": "inline.ui.0138.field.e91bb31a1f0e",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 462,
+          "column": 19,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.eaeeb3cf74fd",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 486,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "textarea",
+          "staticClassTokens": [
+            "resize-y",
+            "textarea",
+            "textarea-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.field.f77935e49433",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 408,
           "column": 19,
@@ -14804,78 +14851,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:441:19:field",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 441,
-          "column": 19,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:462:19:field",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 462,
-          "column": 19,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:486:17:field",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 486,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "textarea",
-          "staticClassTokens": [
-            "resize-y",
-            "textarea",
-            "textarea-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:503:17:field",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 503,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:522:21:field",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 522,
-          "column": 21,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/CreateJamPage.tsx:536:21:field",
+          "id": "inline.ui.0138.field.fe9d7a86dd1a",
           "source": "src/pages/host/CreateJamPage.tsx",
           "line": 536,
           "column": 21,
@@ -14889,34 +14865,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/CreateJamPage.tsx:556:19:field",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 556,
-          "column": 19,
-          "ownerComponentId": "ui.0138",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:177:19:field",
-          "source": "src/pages/host/HostJamSongsPage.tsx",
-          "line": 177,
-          "column": 19,
-          "ownerComponentId": "ui.0143",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:190:19:field",
+          "id": "inline.ui.0143.field.087fd8d054df",
           "source": "src/pages/host/HostJamSongsPage.tsx",
           "line": 190,
           "column": 19,
@@ -14929,20 +14878,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostJamSongsPage.tsx:204:21:field",
-          "source": "src/pages/host/HostJamSongsPage.tsx",
-          "line": 204,
-          "column": 21,
-          "ownerComponentId": "ui.0143",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:223:21:field",
+          "id": "inline.ui.0143.field.748bb25dc23b",
           "source": "src/pages/host/HostJamSongsPage.tsx",
           "line": 223,
           "column": 21,
@@ -14955,7 +14891,33 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostJamSongsPage.tsx:251:23:field",
+          "id": "inline.ui.0143.field.b6b1b386dc7e",
+          "source": "src/pages/host/HostJamSongsPage.tsx",
+          "line": 204,
+          "column": 21,
+          "ownerComponentId": "ui.0143",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "select-bordered"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0143.field.b8d1bc04ca61",
+          "source": "src/pages/host/HostJamSongsPage.tsx",
+          "line": 177,
+          "column": 19,
+          "ownerComponentId": "ui.0143",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0143.field.f8e5389af642",
           "source": "src/pages/host/HostJamSongsPage.tsx",
           "line": 251,
           "column": 23,
@@ -14968,7 +14930,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:241:17:field",
+          "id": "inline.ui.0145.field.1c692166840b",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 241,
           "column": 17,
@@ -14981,44 +14943,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:243:19:field",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 243,
-          "column": 19,
-          "ownerComponentId": "ui.0145",
-          "tag": "input",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/MusiciansPage.tsx:257:17:field",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 257,
-          "column": 17,
-          "ownerComponentId": "ui.0145",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/MusiciansPage.tsx:395:19:field",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 395,
-          "column": 19,
-          "ownerComponentId": "ui.0145",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "select-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "src/pages/host/MusiciansPage.tsx:421:25:field",
+          "id": "inline.ui.0145.field.29e654bf736a",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 421,
           "column": 25,
@@ -15034,7 +14959,30 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/MusiciansPage.tsx:466:25:field",
+          "id": "inline.ui.0145.field.2de566221baa",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 243,
+          "column": 19,
+          "ownerComponentId": "ui.0145",
+          "tag": "input",
+          "staticClassTokens": [],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0145.field.467feeb54644",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 257,
+          "column": 17,
+          "ownerComponentId": "ui.0145",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0145.field.8fdfc603b90f",
           "source": "src/pages/host/MusiciansPage.tsx",
           "line": 466,
           "column": 25,
@@ -15048,29 +14996,58 @@
             "w-16"
           ],
           "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0145.field.974ab352a3fe",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 395,
+          "column": 19,
+          "ownerComponentId": "ui.0145",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "select-bordered",
+            "select-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.field.29e654bf736a",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 467,
+          "column": 17,
+          "ownerComponentId": "ui.0149",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "input-sm",
+            "text-center",
+            "w-14"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.field.37d484e07210",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 433,
+          "column": 15,
+          "ownerComponentId": "ui.0149",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "select-bordered",
+            "select-sm"
+          ],
+          "dynamicClasses": false
         }
       ]
     },
     {
       "family": "menu",
-      "assessment": "review-candidate",
-      "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/DesktopUserMenu.tsx:130:5:menu",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 130,
-          "column": 5,
-          "ownerComponentId": "ui.0010",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-end"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/components/DesktopUserMenu.tsx:64:7:menu",
+          "id": "inline.ui.0010.menu.4971e201356c",
           "source": "src/components/DesktopUserMenu.tsx",
           "line": 64,
           "column": 7,
@@ -15083,7 +15060,20 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/MobileDrawer.tsx:188:11:menu",
+          "id": "inline.ui.0010.menu.4971e201356c",
+          "source": "src/components/DesktopUserMenu.tsx",
+          "line": 130,
+          "column": 5,
+          "ownerComponentId": "ui.0010",
+          "tag": "div",
+          "staticClassTokens": [
+            "dropdown",
+            "dropdown-end"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0054.menu.0fc68a1fc731",
           "source": "src/components/MobileDrawer.tsx",
           "line": 188,
           "column": 11,
@@ -15097,7 +15087,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:165:25:menu",
+          "id": "inline.ui.0141.menu.1fdbd1ec99ad",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 165,
           "column": 25,
@@ -15111,7 +15101,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:169:29:menu",
+          "id": "inline.ui.0141.menu.d97e081f8535",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 169,
           "column": 29,
@@ -15130,7 +15120,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:294:21:menu",
+          "id": "inline.ui.0142.menu.869e80851761",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 294,
           "column": 21,
@@ -15143,7 +15133,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "src/pages/host/HostDashboardPage.tsx:298:25:menu",
+          "id": "inline.ui.0142.menu.fe84b02a8eab",
           "source": "src/pages/host/HostDashboardPage.tsx",
           "line": 298,
           "column": 25,
@@ -15165,11 +15155,9 @@
     },
     {
       "family": "modal",
-      "assessment": "review-candidate",
-      "equivalence": "unreviewed",
       "occurrences": [
         {
-          "id": "src/components/Modal.tsx:86:5:modal",
+          "id": "inline.ui.0055.modal.8a2e4c771428",
           "source": "src/components/Modal.tsx",
           "line": 86,
           "column": 5,
@@ -15182,20 +15170,7 @@
           "dynamicClasses": true
         },
         {
-          "id": "src/components/overlays/CanonicalOverlays.tsx:185:5:modal",
-          "source": "src/components/overlays/CanonicalOverlays.tsx",
-          "line": 185,
-          "column": 5,
-          "ownerComponentId": "ui.0185",
-          "tag": "dialog",
-          "staticClassTokens": [
-            "ds-overlay",
-            "ds-overlay--"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "src/pages/host/HostJamSongsPage.tsx:165:11:modal",
+          "id": "inline.ui.0143.modal.155300266174",
           "source": "src/pages/host/HostJamSongsPage.tsx",
           "line": 165,
           "column": 11,
@@ -15206,6 +15181,19 @@
             "modal-open"
           ],
           "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0185.modal.3bf9e96c9761",
+          "source": "src/components/overlays/CanonicalOverlays.tsx",
+          "line": 185,
+          "column": 5,
+          "ownerComponentId": "ui.0185",
+          "tag": "dialog",
+          "staticClassTokens": [
+            "ds-overlay",
+            "ds-overlay--"
+          ],
+          "dynamicClasses": true
         }
       ]
     }
