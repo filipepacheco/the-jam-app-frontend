@@ -1,6 +1,6 @@
-import type {JamResponseDto, MusicResponseDto, ScheduleResponseDto, ScheduleStatus} from "../../types/api.types.ts";
+import type {JamResponseDto, ScheduleResponseDto, ScheduleStatus} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {registrationService, scheduleService, musicService} from "../../services";
 import {Action, Alert, ConfirmDialog, EmptyState, Field, IconAction, Modal, ModalFooter, MusicModal} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
@@ -9,7 +9,8 @@ import {MusicianProfileModal} from "../../components/MusicianProfileModal";
 import {SearchableSelect} from "../../components/forms/SearchableSelect.tsx";
 import {Search, X, ListMusic} from "lucide-react";
 import {useNavigate} from "react-router-dom";
-import {hasCoreBand} from "../../utils/scheduleUtils";
+import {useHostScheduleController} from '../../hooks'
+import type {Music, Performance} from '../../lib/schedule/hostScheduleController'
 
 /**
  * Schedule Tab Component - Full management with nested registrations
@@ -23,18 +24,28 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
     const [showAddModal, setShowAddModal] = useState(false)
     const [showCreateMusicModal, setShowCreateMusicModal] = useState(false)
     const [selectedMusicId, setSelectedMusicId] = useState('')
-    const [musicCatalog, setMusicCatalog] = useState<MusicResponseDto[]>([])
-    const [loadingMusicCatalog, setLoadingMusicCatalog] = useState(false)
     const [showHostRegistrationModal, setShowHostRegistrationModal] = useState(false)
     const [selectedScheduleForRegistration, setSelectedScheduleForRegistration] = useState<ScheduleResponseDto | null>(null)
     const [selectedMusicianId, setSelectedMusicianId] = useState<string | null>(null)
-    const [rawSearch, setRawSearch] = useState('')
-    const [searchQuery, setSearchQuery] = useState('')
-    const [statusFilter, setStatusFilter] = useState<'all' | 'needs_musicians' | 'complete'>('all')
     const [success, setSuccess] = useState<string | null>(null)
     const [confirmAction, setConfirmAction] = useState<{
         title: string; message: string; onConfirm: () => Promise<void>
     } | null>(null)
+    const {state: scheduleState, commands: scheduleCommands} = useHostScheduleController(jam)
+    const {
+        performances: sortedSchedules,
+        filteredActivePerformances: filteredNonSuggested,
+        filteredSuggestedPerformances: filteredSuggested,
+        counts: {needsMusicians: needsCount, complete: completeCount, total: totalCount},
+        rawSearch,
+        appliedSearch: searchQuery,
+        filter: statusFilter,
+        catalogue: musicCatalogue,
+        availableMusic: availableSongs,
+    } = scheduleState
+    const musicCatalog = musicCatalogue.items
+    const loadingMusicCatalog = musicCatalogue.status === 'loading'
+    const loadingSongsFailedMessage = t('jams.loading_songs_failed')
 
     // Per-operation loading helpers
     const startLoading = useCallback((id: string) =>
@@ -43,103 +54,15 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         setLoadingIds(prev => { const next = new Set(prev); next.delete(id); return next }), [])
     const isAnyLoading = loadingIds.size > 0
 
-    // Debounce search input (200ms)
-    useEffect(() => {
-        const timer = setTimeout(() => setSearchQuery(rawSearch), 200)
-        return () => clearTimeout(timer)
-    }, [rawSearch])
-
-    const { sortedSchedules, nonSuggestedSchedules, suggestedSchedules } = useMemo(() => {
-        const sorted = [...(jam.schedules || [])].sort((a, b) => a.order - b.order)
-        return {
-            sortedSchedules: sorted,
-            nonSuggestedSchedules: sorted.filter(s => s.status !== 'SUGGESTED'),
-            suggestedSchedules: sorted.filter(s => s.status === 'SUGGESTED'),
-        }
-    }, [jam.schedules])
-
-    // Filtered schedules
-    const { filteredNonSuggested, filteredSuggested, needsCount, completeCount, totalCount } = useMemo(() => {
-        const query = searchQuery.toLowerCase().trim()
-
-        const matchesSearch = (s: ScheduleResponseDto) => {
-            if (!query) return true
-            const title = s.music?.title?.toLowerCase() || ''
-            const artist = s.music?.artist?.toLowerCase() || ''
-            const musicians = s.registrations?.map(r => r.musician?.name?.toLowerCase() || '').join(' ') || ''
-            return title.includes(query) || artist.includes(query) || musicians.includes(query)
-        }
-
-        const matchesFilter = (s: ScheduleResponseDto) => {
-            if (statusFilter === 'all') return true
-            if (statusFilter === 'needs_musicians') return !hasCoreBand(s)
-            if (statusFilter === 'complete') return hasCoreBand(s)
-            return true
-        }
-
-        const allNonSuggested = nonSuggestedSchedules.filter(s => matchesSearch(s) && matchesFilter(s))
-        const allSuggested = suggestedSchedules.filter(matchesSearch)
-
-        // Counts for filter chips (unfiltered, search-only)
-        const searchedNonSuggested = nonSuggestedSchedules.filter(matchesSearch)
-        const complete = searchedNonSuggested.filter(hasCoreBand).length
-        const needs = searchedNonSuggested.length - complete
-
-        const total = searchedNonSuggested.length + allSuggested.length
-
-        return { filteredNonSuggested: allNonSuggested, filteredSuggested: allSuggested, needsCount: needs, completeCount: complete, totalCount: total }
-    }, [nonSuggestedSchedules, suggestedSchedules, searchQuery, statusFilter])
-
-    // Build lookup: musicId -> { jamMusicId, notes }
-    const jamMusicMap = useMemo(() => {
-        const map = new Map<string, { id: string; notes?: string | null }>()
-        for (const jm of jam.jamMusics || []) {
-            map.set(jm.musicId, { id: jm.id, notes: jm.notes })
-        }
-        return map
-    }, [jam.jamMusics])
-
-    // Available catalog songs for add-song modal (not yet scheduled)
-    const availableSongs = useMemo(() => {
-        const scheduledMusicIds = new Set((jam.schedules || []).map(s => s.musicId))
-        return musicCatalog.filter(music => !scheduledMusicIds.has(music.id))
-    }, [musicCatalog, jam.schedules])
-
     // Load the searchable music catalog when the add-entry modal opens.
     useEffect(() => {
         if (!showAddModal) return
 
-        let cancelled = false
-        setLoadingMusicCatalog(true)
         setError(null)
-
-        const loadMusicCatalog = async () => {
-            const songs: MusicResponseDto[] = []
-            let skip = 0
-            let hasMore = true
-
-            while (hasMore) {
-                const response = await musicService.findAll(skip, 100, 'APPROVED')
-                songs.push(...(response.data || []))
-                hasMore = response.meta.hasMore
-                skip += 100
-            }
-
-            if (!cancelled) setMusicCatalog(songs)
-        }
-
-        void loadMusicCatalog()
-            .catch(() => {
-                if (!cancelled) setError(t('jams.loading_songs_failed'))
-            })
-            .finally(() => {
-                if (!cancelled) setLoadingMusicCatalog(false)
-            })
-
-        return () => {
-            cancelled = true
-        }
-    }, [showAddModal, t])
+        void scheduleCommands.loadMusicCatalogue().then((outcome) => {
+            if (outcome.code === 'failure') setError(loadingSongsFailedMessage)
+        })
+    }, [loadingSongsFailedMessage, scheduleCommands, showAddModal])
 
     const handleSaveNotes = useCallback((jamMusicId: string, notes: string) => {
         void (async () => {
@@ -320,8 +243,8 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
         return schedule.registrations?.some(r => loadingIds.has(r.id)) ?? false
     }, [loadingIds])
 
-    const renderCard = (schedule: ScheduleResponseDto, isSuggested: boolean) => {
-        const jm = jamMusicMap.get(schedule.musicId)
+    const renderCard = (schedule: Performance, isSuggested: boolean) => {
+        const jm = schedule.jamMusic
         return <ScheduleCollapsibleCard
             key={schedule.id}
             schedule={schedule}
@@ -364,14 +287,14 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                                     type="search"
                                     placeholder={t('schedule.search_placeholder', 'Search songs or musicians...')}
                                     value={rawSearch}
-                                    onChange={(e) => setRawSearch(e.target.value)}
+                                    onChange={(e) => scheduleCommands.setSearch(e.target.value)}
                                 />
                             </Field>
                             {rawSearch && (
                                 <IconAction
                                     variant="quiet"
                                     label={t('common.clear_filters', 'Clear filters')}
-                                    onClick={() => { setRawSearch(''); setSearchQuery('') }}
+                                    onClick={scheduleCommands.clearSearch}
                                 >
                                     <X className="size-4" />
                                 </IconAction>
@@ -392,21 +315,21 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                         <Action
                             variant={statusFilter === 'all' ? 'primary' : 'quiet'}
                             aria-pressed={statusFilter === 'all'}
-                            onClick={() => setStatusFilter('all')}
+                            onClick={() => scheduleCommands.setFilter('all')}
                         >
                             <Action.Label>{t('common.all', 'All')} ({totalCount})</Action.Label>
                         </Action>
                         <Action
                             variant={statusFilter === 'needs_musicians' ? 'primary' : 'quiet'}
                             aria-pressed={statusFilter === 'needs_musicians'}
-                            onClick={() => setStatusFilter('needs_musicians')}
+                            onClick={() => scheduleCommands.setFilter('needs_musicians')}
                         >
                             <Action.Label>{t('schedule.needs_musicians_short', 'Aguardando')} ({needsCount})</Action.Label>
                         </Action>
                         <Action
                             variant={statusFilter === 'complete' ? 'primary' : 'quiet'}
                             aria-pressed={statusFilter === 'complete'}
-                            onClick={() => setStatusFilter('complete')}
+                            onClick={() => scheduleCommands.setFilter('complete')}
                         >
                             <Action.Label>{t('schedule.band_complete_short', 'Pronto')} ({completeCount})</Action.Label>
                         </Action>
@@ -454,7 +377,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                             {(searchQuery || statusFilter !== 'all') && (
                                 <Action
                                     variant="quiet"
-                                    onClick={() => { setRawSearch(''); setSearchQuery(''); setStatusFilter('all') }}
+                                    onClick={() => { scheduleCommands.clearSearch(); scheduleCommands.setFilter('all') }}
                                 >
                                     <Action.Label>{t('common.clear_filters', 'Clear filters')}</Action.Label>
                                 </Action>
@@ -534,9 +457,9 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                         <label className="label" htmlFor="music-select">
                             <span className="label-text">{t('jam_management.schedule.song_label')}</span>
                         </label>
-                        <SearchableSelect<MusicResponseDto>
+                        <SearchableSelect<Music>
                             id="music-select"
-                            items={availableSongs}
+                            items={[...availableSongs]}
                             value={selectedMusicId}
                             onChange={setSelectedMusicId}
                             getItemLabel={(music) => music.title}
@@ -585,7 +508,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
             {showCreateMusicModal && (
                 <MusicModal
                     mode="add"
-                    existingSongs={musicCatalog}
+                    existingSongs={[...musicCatalog]}
                     onClose={() => {
                         setShowCreateMusicModal(false)
                         setShowAddModal(true)
@@ -593,7 +516,7 @@ export function ScheduleTab({jam, onReload}: { jam: JamResponseDto; onReload: ()
                     onSuccess={(music) => {
                         setShowCreateMusicModal(false)
                         if (music) {
-                            setMusicCatalog((songs) => [music, ...songs])
+                            scheduleCommands.addCatalogueMusic(music)
                             setSelectedMusicId(music.id)
                         }
                         setShowAddModal(true)

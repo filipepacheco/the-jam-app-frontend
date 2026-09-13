@@ -15,6 +15,7 @@ export { useOfflineQueue, type OfflineQueueState } from './useOfflineQueue'
 // UI utility hooks
 export { useAppLanguage } from './useAppLanguage'
 export { useTheme } from './useTheme'
+export { useHostScheduleController } from './useHostScheduleController'
 export { useFullscreen } from './useFullscreen'
 export { useConfettiOnSongChange, type UseConfettiOnSongChangeOptions } from './useConfettiOnSongChange'
 
