@@ -5,12 +5,12 @@
  * Route: /music
  */
 
-import { useCallback, useEffect, useMemo, useState, useRef } from 'react'
+import { useCallback, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useAuth, usePageAlerts } from '../hooks'
+import { useAuth, useMusicLibraryController, usePageAlerts } from '../hooks'
 import { musicService } from '../services'
-import type { MusicResponseDto, UpdateMusicDto, PaginationMeta } from '../types/api.types'
+import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import {
   Action,
   Badge,
@@ -24,14 +24,11 @@ import {
   OverlayModal,
   PageAlerts,
 } from '../components'
-import { filterAndSortMusic } from '../lib/musicUtils'
 import { GENRES } from '../lib/musicConstants'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { MusicDataCard } from '../components/music/MusicDataDisplay'
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100] as const
-const DEFAULT_PAGE_SIZE = 50
-
 type SortBy = 'title' | 'artist' | 'date'
 type ModalMode = 'add' | 'suggest' | null
 
@@ -40,75 +37,31 @@ export function MusicPage() {
   const { t } = useTranslation()
   const { user, isAuthenticated } = useAuth()
 
-  // Paginated data fetching
-  const [musicList, setMusicList] = useState<MusicResponseDto[]>([])
-  const [meta, setMeta] = useState<PaginationMeta | null>(null)
-  const [page, setPage] = useState(0)
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE)
-  const [isLoading, setIsLoading] = useState(true)
-  const [fetchError, setFetchError] = useState<string | null>(null)
-
+  const {state: musicState, commands: musicCommands} = useMusicLibraryController(Boolean(user?.isHost))
+  const {approved, query, suggestedCount, suggestedList, suggestedOpen, visibleMusic} = musicState
+  const musicList = approved.items
+  const meta = approved.meta
+  const page = query.page
+  const pageSize = query.pageSize
+  const isLoading = approved.status === 'loading'
+  const fetchError = [approved.error, suggestedCount.error, suggestedList.error]
+    .map((queryFailure) => queryFailure?.message)
+    .filter((message): message is string => Boolean(message))
+    .join(' · ') || null
   const totalPages = meta ? Math.ceil(meta.total / pageSize) : 0
-
-  const fetchMusic = useCallback(async (pageNum: number, take: number) => {
-    setIsLoading(true)
-    setFetchError(null)
-    try {
-      const response = await musicService.findAll(pageNum * take, take, 'APPROVED')
-      setMusicList(response.data)
-      setMeta(response.meta)
-    } catch (err: unknown) {
-      setFetchError(err instanceof Error ? err.message : 'Failed to fetch music')
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    void fetchMusic(page, pageSize)
-  }, [page, pageSize, fetchMusic])
-
-  const mutate = useCallback(() => fetchMusic(page, pageSize), [fetchMusic, page, pageSize])
-
-  // Suggested songs modal
-  const [suggestedModalOpen, setSuggestedModalOpen] = useState(false)
-  const [suggestedSongs, setSuggestedSongs] = useState<MusicResponseDto[]>([])
-  const [suggestedCount, setSuggestedCount] = useState(0)
-  const [suggestedLoading, setSuggestedLoading] = useState(false)
-
-  const fetchSuggestedCount = useCallback(async () => {
-    try {
-      const response = await musicService.findAll(0, 1, 'SUGGESTED')
-      setSuggestedCount(response.meta.total)
-    } catch { /* ignore */ }
-  }, [])
-
-  useEffect(() => {
-    void fetchSuggestedCount()
-  }, [fetchSuggestedCount])
-
-  const openSuggestedModal = useCallback(async () => {
-    setSuggestedModalOpen(true)
-    setSuggestedLoading(true)
-    try {
-      const response = await musicService.findAll(0, 100, 'SUGGESTED')
-      setSuggestedSongs(response.data)
-    } catch { /* ignore */ }
-    setSuggestedLoading(false)
-  }, [])
-
-  const closeSuggestedModal = useCallback(() => {
-    setSuggestedModalOpen(false)
-    setSuggestedSongs([])
-  }, [])
+  const mutate = musicCommands.refreshApproved
+  const openSuggestedModal = musicCommands.openSuggested
+  const closeSuggestedModal = musicCommands.closeSuggested
+  const suggestedSongs = suggestedList.items
+  const suggestedLoading = suggestedList.status === 'loading'
 
   const [actionLoading, setActionLoading] = useState(false)
   const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
 
   // Filter states
-  const [searchTerm, setSearchTerm] = useState('')
-  const [genreFilter, setGenreFilter] = useState<string>('')
-  const [sortBy, setSortBy] = useState<SortBy>('title')
+  const searchTerm = query.searchTerm
+  const genreFilter = query.genre
+  const sortBy: SortBy = query.sort
 
   // Quick edit expanded card
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
@@ -148,19 +101,8 @@ export function MusicPage() {
   }, [closeConfirm])
 
   const handleClearFilters = useCallback(() => {
-    setSearchTerm('')
-    setGenreFilter('')
-    setSortBy('title')
-  }, [])
-
-  const filteredAndSortedMusic = useMemo(() => {
-    return filterAndSortMusic(musicList, {
-      status: 'all',
-      searchTerm,
-      genreFilter,
-      sortBy,
-    })
-  }, [musicList, searchTerm, genreFilter, sortBy])
+    musicCommands.clearFilters()
+  }, [musicCommands])
 
   const handleToggleExpand = useCallback((musicId: string) => {
     setExpandedCardId((prev: string | null) => prev === musicId ? null : musicId)
@@ -184,12 +126,8 @@ export function MusicPage() {
   }, [t, mutate, setError, setSuccess])
 
   const refreshSuggested = useCallback(async () => {
-    try {
-      const response = await musicService.findAll(0, 100, 'SUGGESTED')
-      setSuggestedSongs(response.data)
-      setSuggestedCount(response.meta.total)
-    } catch { /* ignore */ }
-  }, [])
+    await Promise.all([musicCommands.refreshSuggestedCount(), musicCommands.refreshSuggestedList()])
+  }, [musicCommands])
 
   const handleApprove = useCallback(
     async (music: MusicResponseDto) => {
@@ -364,10 +302,10 @@ export function MusicPage() {
           </div>
 
           {/* Suggested songs button - hosts only */}
-          {user?.isHost && suggestedCount > 0 && (
+          {user?.isHost && suggestedCount.count > 0 && (
             <Action variant="secondary" onClick={() => void openSuggestedModal()} className="gap-2">
               {t('music_library.suggested_songs')}
-              <Badge size="sm">{suggestedCount}</Badge>
+              <Badge size="sm">{suggestedCount.count}</Badge>
             </Action>
           )}
         </div>
@@ -386,11 +324,11 @@ export function MusicPage() {
       <div className="container mx-auto max-w-7xl px-4 py-4">
         <MusicFilters
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
+          onSearchChange={musicCommands.setSearch}
           genreFilter={genreFilter}
-          onGenreChange={setGenreFilter}
+          onGenreChange={musicCommands.setGenre}
           sortBy={sortBy}
-          onSortChange={setSortBy}
+          onSortChange={musicCommands.setSort}
           onClearFilters={handleClearFilters}
           genres={GENRES}
         />
@@ -398,11 +336,11 @@ export function MusicPage() {
 
       {/* Music List */}
       <div className="container mx-auto max-w-7xl px-4 pb-8">
-        {filteredAndSortedMusic.length === 0 ? (
+        {visibleMusic.length === 0 ? (
           <MusicEmptyState hasFilters={!!searchTerm || !!genreFilter} isHost={user?.isHost || false} />
         ) : (
           <div className="space-y-2">
-            {filteredAndSortedMusic.map((music) => (
+            {visibleMusic.map((music) => (
               <MusicCard
                 key={music.id}
                 music={music}
@@ -433,7 +371,7 @@ export function MusicPage() {
               <select
                 className="select select-sm select-bordered"
                 value={pageSize}
-                onChange={(e) => { setPageSize(Number(e.target.value)); setPage(0) }}
+                onChange={(e) => { void musicCommands.setPageSize(Number(e.target.value)) }}
               >
                 {PAGE_SIZE_OPTIONS.map(size => (
                   <option key={size} value={size}>{size}</option>
@@ -450,14 +388,14 @@ export function MusicPage() {
                 <button
                   className="join-item btn btn-sm"
                   disabled={page === 0}
-                  onClick={() => setPage(0)}
+                  onClick={() => { void musicCommands.setPage(0) }}
                 >
                   <ChevronsLeft className="size-4" />
                 </button>
                 <button
                   className="join-item btn btn-sm"
                   disabled={page === 0}
-                  onClick={() => setPage(p => p - 1)}
+                  onClick={() => { void musicCommands.setPage(page - 1) }}
                 >
                   <ChevronLeft className="size-4" />
                 </button>
@@ -472,7 +410,7 @@ export function MusicPage() {
                   value={page + 1}
                   onChange={(e) => {
                     const val = parseInt(e.target.value, 10)
-                    if (val >= 1 && val <= totalPages) setPage(val - 1)
+                    if (val >= 1 && val <= totalPages) void musicCommands.setPage(val - 1)
                   }}
                 />
                 <span className="text-base-content/60">/ {totalPages}</span>
@@ -482,14 +420,14 @@ export function MusicPage() {
                 <button
                   className="join-item btn btn-sm"
                   disabled={!meta.hasMore}
-                  onClick={() => setPage(p => p + 1)}
+                  onClick={() => { void musicCommands.setPage(page + 1) }}
                 >
                   <ChevronRight className="size-4" />
                 </button>
                 <button
                   className="join-item btn btn-sm"
                   disabled={!meta.hasMore}
-                  onClick={() => setPage(totalPages - 1)}
+                  onClick={() => { void musicCommands.setPage(totalPages - 1) }}
                 >
                   <ChevronsRight className="size-4" />
                 </button>
@@ -503,7 +441,7 @@ export function MusicPage() {
       {modalState.mode === 'add' && (
         <MusicModal
           mode="add"
-          existingSongs={musicList}
+          existingSongs={[...musicList]}
           onClose={handleModalClose}
           onSuccess={handleModalSuccess}
           setError={setError}
@@ -515,7 +453,7 @@ export function MusicPage() {
       {modalState.mode === 'suggest' && (
         <MusicModal
           mode="suggest"
-          existingSongs={musicList}
+          existingSongs={[...musicList]}
           onClose={handleModalClose}
           onSuccess={handleModalSuccess}
           setError={setError}
@@ -530,7 +468,7 @@ export function MusicPage() {
           control, scrollable body). It now uses the canonical OverlayModal,
           which also adds the focus trap and the escape-key dismissal. */}
       <OverlayModal
-        isOpen={suggestedModalOpen}
+        isOpen={suggestedOpen}
         onDismiss={closeSuggestedModal}
         title={t('music_library.suggested_songs')}
         closeLabel={t('common.close')}

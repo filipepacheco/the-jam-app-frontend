@@ -16,6 +16,7 @@ export { useOfflineQueue, type OfflineQueueState } from './useOfflineQueue'
 export { useAppLanguage } from './useAppLanguage'
 export { useTheme } from './useTheme'
 export { useHostScheduleController } from './useHostScheduleController'
+export { useMusicLibraryController } from './useMusicLibraryController'
 export { useFullscreen } from './useFullscreen'
 export { useConfettiOnSongChange, type UseConfettiOnSongChangeOptions } from './useConfettiOnSongChange'
 
