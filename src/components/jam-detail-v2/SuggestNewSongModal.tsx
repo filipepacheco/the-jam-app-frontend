@@ -6,32 +6,30 @@
 
 import { type FormEvent, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { musicService, scheduleService } from '../../services'
 import { spotifyService } from '../../services'
 import { MusicModalFormFields } from '../MusicModalFormFields'
 import { parseDuration } from '../../lib/musicUtils'
 import { formatDuration } from '../../lib/formatters'
 import { isValidSpotifyTrackUrl } from '../../lib/spotifyUtils'
 import type { CreateMusicDto } from '../../types/api.types'
+import type {JamParticipationOutcome} from '../../lib/jam-participation/jamParticipationController'
 import { Alert } from '../Alert'
 import { Modal } from '../Modal'
 import { Action } from '../Action'
 import { Field, FormSubmissionFeedback } from '../Field'
 
 interface SuggestNewSongModalProps {
-  jamId: string
   isOpen: boolean
   onClose: () => void
-  onSuccess: () => void
+  onSubmit: (data: CreateMusicDto) => Promise<JamParticipationOutcome>
 }
 
 type SubmitStep = 'idle' | 'creating' | 'linking'
 
 export function SuggestNewSongModal({
-  jamId,
   isOpen,
   onClose,
-  onSuccess,
+  onSubmit,
 }: SuggestNewSongModalProps) {
   const { t } = useTranslation()
 
@@ -151,7 +149,6 @@ export function SuggestNewSongModal({
     setSubmitting(true)
 
     try {
-      // Step 1: Create the music
       setSubmitStep('creating')
 
       const payload: CreateMusicDto = {
@@ -170,42 +167,18 @@ export function SuggestNewSongModal({
         neededKeys: formData.neededKeys,
       }
 
-      const musicResult = await musicService.create(payload)
-
-      if (!musicResult.success || !musicResult.data) {
-        setError(musicResult.error || t('music_library.errors.failed_to_add'))
-        setSubmitting(false)
-        setSubmitStep('idle')
-        return
-      }
-
-      // Step 2: Link to jam via schedule
       setSubmitStep('linking')
-
-      const scheduleResult = await scheduleService.create({
-        jamId,
-        musicId: musicResult.data.id,
-        order: 0,
-        status: 'SUGGESTED',
-      } as any)
-
-      if (!scheduleResult.success) {
-        // Music was created but linking failed - still show partial success
-        setError(t('jams.suggest_failed'))
-        setSubmitting(false)
-        setSubmitStep('idle')
-        return
+      const outcome = await onSubmit(payload)
+      if (outcome.code === 'failure' || outcome.code === 'partial_success' || outcome.code === 'refresh_failure') {
+        setError(outcome.error.message || t('jams.suggest_failed'))
       }
-
-      // Success!
-      onSuccess()
     } catch (err) {
       setError(err instanceof Error ? err.message : t('jams.suggest_failed'))
       setSubmitStep('idle')
     } finally {
       setSubmitting(false)
     }
-  }, [formData, jamId, onSuccess, t])
+  }, [formData, onSubmit, t])
 
   // Get submit button label based on current step
   const getSubmitLabel = () => {

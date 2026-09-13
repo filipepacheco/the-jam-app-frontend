@@ -9,11 +9,8 @@ import { QRCodeSVG } from 'qrcode.react'
 import { Share2, Copy } from 'lucide-react'
 import {
   getJamShareUrlFromJam,
-  copyToClipboard,
-  shareViaWhatsApp,
-  canUseNativeShare,
-  nativeShare,
 } from '../utils/shareUtils'
+import type {JamParticipationOutcome} from '../lib/jam-participation/jamParticipationController'
 import { Modal } from './Modal'
 import { Action } from './Action'
 import { Status } from './FeedbackStates'
@@ -24,15 +21,20 @@ interface ShareModalProps {
   jamId: string
   jamSlug?: string | null
   jamName?: string
+  nativeShareAvailable: boolean
+  onCopy: (text: string, method?: 'copy' | 'instagram') => Promise<JamParticipationOutcome>
+  onWhatsApp: (input: {url: string; message: string}) => JamParticipationOutcome
+  onNativeShare: (input: {title: string; url: string}) => Promise<JamParticipationOutcome>
 }
 
 type FeedbackType = 'success' | 'instagram' | null
 
-export function ShareModal({ isOpen, onClose, jamId, jamSlug, jamName }: ShareModalProps) {
+export function ShareModal({
+  isOpen, onClose, jamId, jamSlug, jamName, nativeShareAvailable, onCopy, onWhatsApp, onNativeShare,
+}: ShareModalProps) {
   const { t } = useTranslation()
   const [feedback, setFeedback] = useState<FeedbackType>(null)
   const shareUrl = getJamShareUrlFromJam({ id: jamId, slug: jamSlug })
-  const showNativeShare = canUseNativeShare()
 
   // Reset feedback when modal opens
   useEffect(() => {
@@ -58,8 +60,8 @@ export function ShareModal({ isOpen, onClose, jamId, jamSlug, jamName }: ShareMo
   }
 
   const handleCopyLink = async () => {
-    const success = await copyToClipboard(getInvitationMessage())
-    if (success) {
+    const outcome = await onCopy(getInvitationMessage())
+    if (outcome.code === 'share_success') {
       setFeedback('success')
     }
   }
@@ -68,19 +70,19 @@ export function ShareModal({ isOpen, onClose, jamId, jamSlug, jamName }: ShareMo
     const message = jamName
       ? t('share.whatsapp_message', { name: jamName })
       : t('share.whatsapp_message_default')
-    shareViaWhatsApp(shareUrl, message)
+    onWhatsApp({url: shareUrl, message})
   }
 
   const handleInstagram = async () => {
-    const success = await copyToClipboard(getInvitationMessage())
-    if (success) {
+    const outcome = await onCopy(getInvitationMessage(), 'instagram')
+    if (outcome.code === 'share_success') {
       setFeedback('instagram')
     }
   }
 
   const handleNativeShare = async () => {
     const title = jamName || t('share.default_title')
-    await nativeShare(title, shareUrl)
+    await onNativeShare({title, url: shareUrl})
   }
 
   if (!isOpen) return null
@@ -182,7 +184,7 @@ export function ShareModal({ isOpen, onClose, jamId, jamSlug, jamName }: ShareMo
         </Action>
 
         {/* Native Share (mobile only) */}
-        {showNativeShare && (
+        {nativeShareAvailable && (
           <Action
             variant="secondary"
             onClick={handleNativeShare}

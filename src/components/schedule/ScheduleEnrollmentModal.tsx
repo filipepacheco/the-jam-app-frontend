@@ -4,8 +4,8 @@
  */
 
 import type {ScheduleResponseDto} from '../../types/api.types'
-import {registrationService} from '../../services'
-import {useAuth, useFormState} from '../../hooks'
+import type {JamParticipationOutcome} from '../../lib/jam-participation/jamParticipationController'
+import {useFormState} from '../../hooks'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
@@ -20,14 +20,13 @@ interface ScheduleEnrollmentModalProps {
   schedule: ScheduleResponseDto
   isOpen: boolean
   onClose: () => void
-  onSuccess: () => void
+  onSubmit: (instrument: string) => Promise<JamParticipationOutcome>
 }
 
 export function ScheduleEnrollmentModal({
-                                            schedule, isOpen, onClose, onSuccess,
+                                            schedule, isOpen, onClose, onSubmit,
                                         }: ScheduleEnrollmentModalProps) {
     const { t } = useTranslation()
-    const { user } = useAuth()
     const [selectedInstrument, setSelectedInstrument] = useState('')
     const { error, setError, isLoading: enrollLoading, setIsLoading: setEnrollLoading } = useFormState({ navigateOnSuccess: false })
 
@@ -48,23 +47,14 @@ export function ScheduleEnrollmentModal({
       return
     }
 
-    if (!user?.id) {
-      setError(t('errors.no_token_found'))
-      return
-    }
-
     setEnrollLoading(true)
     setError(null)
 
     try {
-      await registrationService.create({
-        musicianId: user.id,
-        scheduleId: schedule.id,
-        instrument: selectedInstrument,
-      })
-
-      onClose()
-      onSuccess()
+      const outcome = await onSubmit(selectedInstrument)
+      if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
+        setError(outcome.error.message || t('errors.failed_to_enroll'))
+      }
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err))
       setError(error.message || t('errors.failed_to_enroll'))

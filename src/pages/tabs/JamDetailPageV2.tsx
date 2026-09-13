@@ -33,9 +33,6 @@ import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from 
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
 import {MapPin, Calendar, Share2, ArrowLeft} from 'lucide-react'
 
-// Constants
-const SUCCESS_TOAST_DURATION = 3000
-
 export function JamDetailPageV2() {
     const {t} = useTranslation()
     const {jamId} = useParams<{ jamId: string }>()
@@ -50,12 +47,8 @@ export function JamDetailPageV2() {
         jam,
         isAuthenticated,
         user?.id ?? null,
+        () => mutateJam(),
     )
-
-    const [enrollSuccess, setEnrollSuccess] = useState<string | null>(null)
-
-    // State for suggest song modal
-    const [suggestSuccess, setSuggestSuccess] = useState<string | null>(null)
 
     // State for suggested songs section collapse
     const [isSuggestedExpanded, setIsSuggestedExpanded] = useState(true)
@@ -65,9 +58,6 @@ export function JamDetailPageV2() {
 
     // State for description truncation
     const [descriptionExpanded, setDescriptionExpanded] = useState(false)
-
-    // State for error feedback
-    const [errorMessage] = useState<string | null>(null)
 
     // Handle copy location to clipboard
     const handleCopyLocation = useCallback(async () => {
@@ -127,14 +117,6 @@ export function JamDetailPageV2() {
         if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
     }, [navigate, participationCommands])
 
-    // Handle enrollment success
-    const handleEnrollmentSuccess = useCallback(async () => {
-        participationCommands.closeOverlay()
-        setEnrollSuccess(t('jams.enroll_success'))
-        await mutateJam()
-        setTimeout(() => setEnrollSuccess(null), SUCCESS_TOAST_DURATION)
-    }, [participationCommands, t, mutateJam])
-
     // Handle FAB register click
     const handleFABRegisterClick = useCallback(() => {
         const outcome = participationCommands.beginRegistration()
@@ -147,26 +129,10 @@ export function JamDetailPageV2() {
         if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
     }, [navigate, participationCommands])
 
-    // Handle suggest success
-    const handleSuggestSuccess = useCallback(async () => {
-        participationCommands.closeOverlay()
-        setSuggestSuccess(t('jams.suggest_success'))
-        await mutateJam()
-        setTimeout(() => setSuggestSuccess(null), SUCCESS_TOAST_DURATION)
-    }, [participationCommands, t, mutateJam])
-
     // Handle create new song click (from SuggestSongModal)
     const handleCreateNewSong = useCallback(() => {
         participationCommands.beginNewMusic()
     }, [participationCommands])
-
-    // Handle new song creation success
-    const handleNewSongSuccess = useCallback(async () => {
-        participationCommands.closeOverlay()
-        setSuggestSuccess(t('jams.song_created_success'))
-        await mutateJam()
-        setTimeout(() => setSuggestSuccess(null), SUCCESS_TOAST_DURATION)
-    }, [participationCommands, t, mutateJam])
 
     // Loading state
     if (isLoading && !jam) {
@@ -241,27 +207,22 @@ export function JamDetailPageV2() {
                 jsonLd={jamJsonLd}
             />
             {/* Success Alerts */}
-            {enrollSuccess && (
+            {participation.feedback === 'registration_success' && (
                 <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
                     <div className="container mx-auto max-w-4xl px-4 py-3">
-                        <Status tone="info" role="alert" title={enrollSuccess} />
+                        <Status tone="info" role="alert" title={t('jams.enroll_success')} />
                     </div>
                 </div>
             )}
 
-            {suggestSuccess && (
+            {(participation.feedback === 'suggestion_success' || participation.feedback === 'new_music_success') && (
                 <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
                     <div className="container mx-auto max-w-4xl px-4 py-3">
-                        <Status tone="success" role="alert" title={suggestSuccess} />
-                    </div>
-                </div>
-            )}
-
-            {/* Error Alert */}
-            {errorMessage && (
-                <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
-                    <div className="container mx-auto max-w-4xl px-4 py-3">
-                        <Status tone="error" role="alert" title={errorMessage} />
+                        <Status
+                            tone="success"
+                            role="alert"
+                            title={participation.feedback === 'new_music_success' ? t('jams.song_created_success') : t('jams.suggest_success')}
+                        />
                     </div>
                 </div>
             )}
@@ -377,6 +338,10 @@ export function JamDetailPageV2() {
                     jamId={jam.id}
                     jamSlug={jam.slug}
                     jamName={jam.name}
+                    nativeShareAvailable={participation.shareCapability.native}
+                    onCopy={participationCommands.shareCopy}
+                    onWhatsApp={participationCommands.shareWhatsApp}
+                    onNativeShare={participationCommands.shareNative}
                 />
             )}
 
@@ -457,23 +422,21 @@ export function JamDetailPageV2() {
                     schedule={selectedScheduleForEnroll}
                     isOpen={participation.activeOverlay === 'enrollment'}
                     onClose={participationCommands.closeOverlay}
-                    onSuccess={handleEnrollmentSuccess}
+                    onSubmit={participationCommands.register}
                 />
             )}
 
             <SuggestSongModal
-                jamId={jam?.id || ''}
                 isOpen={participation.activeOverlay === 'suggestion'}
                 onClose={participationCommands.closeOverlay}
-                onSuccess={handleSuggestSuccess}
+                onSuggest={participationCommands.suggestMusic}
                 onCreateNewSong={handleCreateNewSong}
             />
 
             <SuggestNewSongModal
-                jamId={jam?.id || ''}
                 isOpen={participation.activeOverlay === 'new_music'}
                 onClose={participationCommands.closeOverlay}
-                onSuccess={handleNewSongSuccess}
+                onSubmit={participationCommands.createAndSuggestMusic}
             />
 
             <PerformanceSelectionModal
