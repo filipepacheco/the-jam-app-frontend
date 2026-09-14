@@ -965,6 +965,7 @@
   },
   "publicDashboard": {
     "title": "{{name}}",
+    "loading": "Loading dashboard",
     "errorTitle": "Error Loading Dashboard",
     "offlineIndicator": "You are offline - showing cached data",
     "dashboardControls": "Dashboard controls",

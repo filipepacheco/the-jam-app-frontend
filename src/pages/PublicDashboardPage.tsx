@@ -26,32 +26,50 @@ import {useConfettiOnSongChange} from '../hooks'
 import {useFullscreen} from '../hooks'
 import {useOfflineQueue} from '../hooks'
 import {useDashboardLayout} from '../hooks'
-import {Alert} from '../components'
+import {Action, Alert} from '../components'
 import {useTranslation} from 'react-i18next'
 import type {LiveDashboardResponseDto} from '../types/api.types'
+import type {DashboardLayout} from '../hooks/useDashboardLayout'
 
-export function PublicDashboardPage() {
+export type PublicDashboardViewState =
+  | {status: 'loading'}
+  | {status: 'error'; message: string}
+  | {status: 'loaded'; data: LiveDashboardResponseDto}
+
+interface PublicDashboardPageProps {
+  viewState?: PublicDashboardViewState
+  onRetry?: () => void | Promise<void>
+  layoutOverride?: DashboardLayout
+}
+
+export function PublicDashboardPage({viewState, onRetry, layoutOverride}: PublicDashboardPageProps = {}) {
   const { t } = useTranslation()
   const { jamId } = useParams<{ jamId: string }>()
   const { currentLang, changeLanguage } = useAppLanguage()
   const { isOfflineMode } = useOfflineQueue()
 
   // Layout toggle
-  const { layout, setLayout, carouselIntervalMs, setCarouselIntervalMs } = useDashboardLayout()
+  const dashboardLayout = useDashboardLayout()
+  const layout = layoutOverride ?? dashboardLayout.layout
+  const {setLayout, carouselIntervalMs, setCarouselIntervalMs} = dashboardLayout
 
   // Polling interval (ms) - default 5s, presets available
   const [pollingMs, setPollingMs] = useState<number>(5000)
 
   // Fetch live dashboard data with SWR
-  const swrKey = jamId ? `/jams/${jamId}/live/dashboard` : null
+  const swrKey = !viewState && jamId ? `/jams/${jamId}/live/dashboard` : null
   const {
-    data: dashboardData,
-    error,
-    isLoading,
+    data: fetchedDashboardData,
+    error: fetchError,
+    isLoading: fetchLoading,
+    mutate,
   } = useSWR<LiveDashboardResponseDto>(swrKey, {
     ...SWR_DEFAULTS,
     refreshInterval: pollingMs,
   })
+  const dashboardData = viewState?.status === 'loaded' ? viewState.data : fetchedDashboardData
+  const error = viewState?.status === 'error' ? new Error(viewState.message) : fetchError
+  const isLoading = viewState?.status === 'loading' || (!viewState && fetchLoading)
 
   // Extract fields from response
   const jamName = dashboardData?.jamName ?? null
@@ -89,7 +107,13 @@ export function PublicDashboardPage() {
   // Show loading state
   if (isLoading && !currentSong) {
     return (
-      <div className="min-h-screen bg-base-300 text-base-content ds-shared-display">
+      <div
+        className="min-h-screen bg-base-300 text-base-content ds-shared-display"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <span className="sr-only">{t('publicDashboard.loading', 'Loading dashboard')}</span>
         <div className="pt-20 pb-8 px-4 md:px-8">
           <div className="max-w-6xl mx-auto animate-pulse">
             {/* Now Playing skeleton */}
@@ -119,7 +143,19 @@ export function PublicDashboardPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center p-4 ds-shared-display">
-        <Alert type="error" message={error.message} title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')} />
+        <Alert
+          type="error"
+          message={error.message}
+          title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')}
+          action={(
+            <Action
+              variant="quiet"
+              onClick={() => onRetry ? void onRetry() : void mutate()}
+            >
+              {t('common.try_again')}
+            </Action>
+          )}
+        />
       </div>
     )
   }

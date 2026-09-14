@@ -983,6 +983,7 @@
   },
   "publicDashboard": {
     "title": "{{name}}",
+    "loading": "Carregando o painel",
     "errorTitle": "Erro ao carregar o painel",
     "offlineIndicator": "Você está offline - mostrando dados em cache",
     "dashboardControls": "Controles do painel",

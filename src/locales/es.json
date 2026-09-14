@@ -963,6 +963,7 @@
   },
   "publicDashboard": {
     "title": "{{name}}",
+    "loading": "Cargando el tablero",
     "errorTitle": "Error al cargar el tablero",
     "offlineIndicator": "Estás sin conexión - mostrando datos en caché",
     "dashboardControls": "Controles del panel",

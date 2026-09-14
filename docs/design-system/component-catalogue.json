@@ -311,6 +311,7 @@
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
@@ -4006,7 +4007,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4075,7 +4077,8 @@
         "src/components/publicDashboard/carousel/CarouselDashboard.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4136,7 +4139,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4197,7 +4201,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4261,7 +4266,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4325,7 +4331,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4386,7 +4393,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4450,7 +4458,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4516,7 +4525,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4593,7 +4603,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4666,7 +4677,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4740,7 +4752,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4810,7 +4823,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4894,7 +4908,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4970,7 +4985,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5103,7 +5119,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5179,7 +5196,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5253,7 +5271,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -8863,9 +8882,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8897,21 +8919,25 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "loading",
-          "error",
-          "offline",
+          "recoverable-error",
+          "starting-soon",
           "live",
-          "finished"
+          "finished",
+          "classic",
+          "carousel",
+          "venue",
+          "reduced-motion"
         ],
         "candidateFamily": null,
         "notes": [
-          "Route-level polling and fullscreen orchestration remain exempt; all reusable Public Dashboard visuals and controls are reviewed directly."
+          "Reviewed through deterministic full-page transition compositions in Pages/Screen refinement/Public Dashboard transitions; reusable cards and controls retain their domain stories."
         ]
       }
     },
@@ -9746,6 +9772,7 @@
         "src/pages/JamRegisterPage.tsx",
         "src/pages/MusicPage.tsx",
         "src/pages/ProfilePage.tsx",
+        "src/pages/PublicDashboardPage.tsx",
         "src/pages/host/HostDashboardPage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
@@ -9775,6 +9802,7 @@
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
@@ -9878,6 +9906,7 @@
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
@@ -11016,6 +11045,7 @@
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
@@ -11637,6 +11667,7 @@
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx",
@@ -11721,6 +11752,7 @@
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx",
@@ -12178,6 +12210,10 @@
       "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."
     },
     {
+      "source": "src/workbench/stories/PublicDashboardPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Public Dashboard transition evidence; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/RemainingUI.stories.tsx",
       "reason": "Private Storybook composition for remaining reviewed product UI; not product UI itself."
     },
@@ -12207,9 +12243,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 174,
+    "eligibleSources": 175,
     "representedSources": 138,
-    "ignoredSources": 36,
+    "ignoredSources": 37,
     "workbench": {
       "activeReusableVisualComponents": 133,
       "ready": 122,
