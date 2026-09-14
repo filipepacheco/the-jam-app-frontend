@@ -40,16 +40,17 @@ function liveHostHandlers(
   jamId: string,
   liveState: LiveStateResponseDto,
   reorderFailure?: string,
+  refreshFailure?: string,
 ) {
+  let liveStateReads = 0
   return [
     http.get(`*/jams/${jamId}`, () => HttpResponse.json({
       success: true,
       data: managementJam(jamId),
     })),
-    http.get(`*/jams/${jamId}/live/state`, () => HttpResponse.json({
-      success: true,
-      data: liveState,
-    })),
+    http.get(`*/jams/${jamId}/live/state`, () => refreshFailure && liveStateReads++ > 0
+      ? HttpResponse.json({success: false, error: refreshFailure})
+      : HttpResponse.json({success: true, data: liveState})),
     http.post(`*/jams/${jamId}/control/reorder`, async () => {
       if (reorderFailure) {
         await delay(450)
@@ -168,5 +169,36 @@ export const SaveFailureRollsBack: Story = {
     await expect(await panel.findByText('Saving order…')).toBeVisible()
     await expect(await canvas.findByText(reorderFailure)).toBeVisible()
     await expect(panel.getAllByRole('listitem')[0]).toHaveAccessibleName(/Psycho Killer/i)
+  },
+}
+
+export const RefreshFailureKeepsQueueContext: Story = {
+  render: renderManagementPage,
+  globals: {
+    authRole: 'host',
+    locale: 'en',
+    route: '/host/jams/jam-live-host-refresh-failure/manage',
+    theme: 'jam-light',
+    viewport: { value: 'phone', isRotated: false },
+  },
+  parameters: {
+    a11y: {test: 'error'},
+    msw: {handlers: liveHostHandlers(
+      'jam-live-host-refresh-failure',
+      readyLiveState,
+      undefined,
+      'The refreshed Jam could not be loaded.',
+    )},
+  },
+  play: async ({canvas, userEvent}) => {
+    await userEvent.click(await canvas.findByRole('tab', {name: /Ordem|Reorder/i}))
+    const panel = within(canvas.getByRole('tabpanel'))
+    await userEvent.click(await panel.findByRole('button', {name: /Reorder/i}))
+    const firstItem = panel.getAllByRole('listitem')[0]
+    firstItem.focus()
+    await userEvent.keyboard('{ArrowDown}')
+    await userEvent.click(panel.getByRole('button', {name: /Save order/i}))
+    await expect(await canvas.findByText('The refreshed Jam could not be loaded.')).toBeVisible()
+    await expect(panel.getAllByRole('listitem')[0]).toBeVisible()
   },
 }
