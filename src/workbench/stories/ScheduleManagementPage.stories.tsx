@@ -5,7 +5,7 @@ import {ScheduleTab} from '../../pages/tabs/ScheduleTab'
 import {jamFixtures, musicFixtures, scheduleFixtures} from '../jamMusicFixtures'
 
 const meta = {
-  title: 'Pages/Screen refinement/Schedule management',
+  title: 'Human review/Screen refinement/Schedule management',
   component: ScheduleTab,
   args: {jam: jamFixtures.active, onReload: async () => jamFixtures.active},
   parameters: {a11y: {test: 'error'}, layout: 'fullscreen'},

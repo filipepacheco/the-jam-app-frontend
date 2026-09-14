@@ -36,6 +36,10 @@ This index is the starting point for the remaining repository gates. Story
 names are stable workbench identifiers; linked tests are the narrow application
 checks to run before paying for an integrated gate.
 
+For the pending batch gate, all eight compositions are grouped in the Storybook
+sidebar under `Human review/Screen refinement`. This keeps required human work
+separate from the general component catalogue.
+
 | Track | Direct composition | Focused application evidence | Human review |
 | --- | --- | --- | --- |
 | 1. Live host control | [`Pages/Screen refinement/Live host control`](../src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx) | [`LiveJamControlPanel.test.tsx`](../src/__tests__/LiveJamControlPanel.test.tsx), [`liveQueueController.test.ts`](../src/__tests__/liveQueueController.test.ts), and [`liveQueueAdapters.test.ts`](../src/__tests__/liveQueueAdapters.test.ts) | Pending batch review |

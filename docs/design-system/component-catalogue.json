@@ -8012,7 +8012,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic discovery, distinct empty-state, refreshing, and recoverable stale-result compositions in Pages/Screen refinement/Browse Jams hierarchy."
+          "Reviewed through deterministic discovery, distinct empty-state, refreshing, and recoverable stale-result compositions in Human review/Screen refinement/Browse Jams hierarchy."
         ]
       }
     },
@@ -8087,7 +8087,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic create-validation and edit-confirmation compositions in Pages/Screen refinement/Create Jam and Musicians."
+          "Reviewed through deterministic create-validation and edit-confirmation compositions in Human review/Screen refinement/Create Jam and Musicians."
         ]
       }
     },
@@ -8267,7 +8267,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Pages/Screen refinement/Host dashboard."
+          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Human review/Screen refinement/Host dashboard."
         ]
       }
     },
@@ -8326,7 +8326,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Pages/Screen refinement/Host dashboard."
+          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Human review/Screen refinement/Host dashboard."
         ]
       }
     },
@@ -8473,7 +8473,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic management-shell, DJ playback, and Live Queue compositions in Pages/Screen refinement/Live host control."
+          "Reviewed through deterministic management-shell, DJ playback, and Live Queue compositions in Human review/Screen refinement/Live host control."
         ]
       }
     },
@@ -8546,7 +8546,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic directory, empty, filtered, pagination, and recoverable-query compositions in Pages/Screen refinement/Create Jam and Musicians."
+          "Reviewed through deterministic directory, empty, filtered, pagination, and recoverable-query compositions in Human review/Screen refinement/Create Jam and Musicians."
         ]
       }
     },
@@ -8789,7 +8789,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic viewer, host moderation, empty-library, pagination, and recoverable-query compositions in Pages/Screen refinement/Music library."
+          "Reviewed through deterministic viewer, host moderation, empty-library, pagination, and recoverable-query compositions in Human review/Screen refinement/Music library."
         ]
       }
     },
@@ -8985,7 +8985,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic full-page transition compositions in Pages/Screen refinement/Public Dashboard transitions; reusable cards and controls retain their domain stories."
+          "Reviewed through deterministic full-page transition compositions in Human review/Screen refinement/Public Dashboard transitions; reusable cards and controls retain their domain stories."
         ]
       }
     },
@@ -9391,7 +9391,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed inside the production management shell through deterministic DJ playback and Live Queue compositions in Pages/Screen refinement/Live host control."
+          "Reviewed inside the production management shell through deterministic DJ playback and Live Queue compositions in Human review/Screen refinement/Live host control."
         ]
       }
     },
@@ -9473,7 +9473,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic loaded, no-Performance, recoverable-error, and not-found compositions in Pages/Screen refinement/Jam detail."
+          "Reviewed through deterministic loaded, no-Performance, recoverable-error, and not-found compositions in Human review/Screen refinement/Jam detail."
         ]
       }
     },
@@ -9661,7 +9661,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic operational grouping, small-schedule add, and empty compositions in Pages/Screen refinement/Schedule management."
+          "Reviewed through deterministic operational grouping, small-schedule add, and empty compositions in Human review/Screen refinement/Schedule management."
         ]
       }
     },
@@ -12197,7 +12197,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Pages/Screen refinement/Host dashboard."
+          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Human review/Screen refinement/Host dashboard."
         ]
       }
     }

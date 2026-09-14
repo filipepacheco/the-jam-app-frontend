@@ -32,7 +32,7 @@ const failedPort: MusicLibraryQueryPort = {
 }
 
 const meta = {
-  title: 'Pages/Screen refinement/Music library',
+  title: 'Human review/Screen refinement/Music library',
   component: MusicPage,
   args: {queryPort: cataloguePort, mutationPort},
   parameters: {a11y: {test: 'error'}, layout: 'fullscreen'},

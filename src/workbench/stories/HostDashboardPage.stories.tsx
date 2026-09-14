@@ -60,7 +60,7 @@ function cardQueries(heading: HTMLElement) {
 }
 
 const meta = {
-  title: 'Pages/Screen refinement/Host dashboard',
+  title: 'Human review/Screen refinement/Host dashboard',
   component: HostDashboardPage,
   args: {port: operationalPort},
   parameters: {a11y: {test: 'error'}, layout: 'fullscreen'},

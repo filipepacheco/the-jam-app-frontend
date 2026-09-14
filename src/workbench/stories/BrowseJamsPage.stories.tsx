@@ -11,7 +11,7 @@ const jams = [
 ]
 
 const meta = {
-  title: 'Pages/Screen refinement/Browse Jams hierarchy',
+  title: 'Human review/Screen refinement/Browse Jams hierarchy',
   component: BrowseJamsPage,
   args: {viewState: {status: 'loaded', data: jams}},
   decorators: [(Story) => <HelmetProvider><Story /></HelmetProvider>],

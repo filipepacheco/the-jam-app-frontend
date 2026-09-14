@@ -9,7 +9,7 @@ import { liveStateFixture } from '../djFixtures'
 import { jamFixtures } from '../jamMusicFixtures'
 
 const meta = {
-  title: 'Pages/Screen refinement/Live host control',
+  title: 'Human review/Screen refinement/Live host control',
   parameters: {
     a11y: { test: 'error' },
     layout: 'fullscreen',

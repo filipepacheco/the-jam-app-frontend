@@ -18,7 +18,7 @@ const liveDashboard: LiveDashboardResponseDto = {
 const retry = fn(async () => undefined)
 
 const meta = {
-  title: 'Pages/Screen refinement/Public Dashboard transitions',
+  title: 'Human review/Screen refinement/Public Dashboard transitions',
   component: PublicDashboardPage,
   args: {viewState: {status: 'loaded', data: liveDashboard}, layoutOverride: 'classic'},
   parameters: {a11y: {test: 'error'}, layout: 'fullscreen'},

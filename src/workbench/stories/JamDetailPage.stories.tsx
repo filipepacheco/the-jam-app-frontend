@@ -5,7 +5,7 @@ import {JamDetailPageV2} from '../../pages/tabs/JamDetailPageV2'
 import {jamFixtures} from '../jamMusicFixtures'
 
 const meta = {
-  title: 'Pages/Screen refinement/Jam detail',
+  title: 'Human review/Screen refinement/Jam detail',
   component: JamDetailPageV2,
   parameters: {a11y: {test: 'error'}, layout: 'fullscreen'},
 } satisfies Meta<typeof JamDetailPageV2>

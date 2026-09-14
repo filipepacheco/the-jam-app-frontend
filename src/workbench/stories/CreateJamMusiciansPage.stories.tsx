@@ -25,7 +25,7 @@ const failedMusiciansPort: MusiciansPagePort = {
 }
 
 const meta = {
-  title: 'Pages/Screen refinement/Create Jam and Musicians',
+  title: 'Human review/Screen refinement/Create Jam and Musicians',
   parameters: {a11y: {test: 'error'}, layout: 'fullscreen'},
 } satisfies Meta
 
