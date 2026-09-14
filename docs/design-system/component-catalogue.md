@@ -402,7 +402,7 @@ Only `ready` and reasoned `exempt` entries satisfy the reviewed baseline. `needs
 
 ### action
 
-99 occurrences.
+98 occurrences.
 
 - `src/components/Alert.tsx:77:9` — candidate `inline.ui.0006.action.8f18b740ef0d`; owner `ui.0006`; tag `<button>`; static classes: `btn`, `btn-ghost`, `btn-sm`, `ds-control`, `ds-focusable`; dynamic classes: no; disposition: ungoverned.
 - `src/components/dj-control/SongQueueTimeline.tsx:152:11` — candidate `inline.ui.0015.action.91810193303e`; owner `ui.0015`; tag `<button>`; static classes: `flex`, `font-semibold`, `gap-2`, `hover:text-success`, `items-center`, `mb-2`, `px-3`, `text-success/70`, `text-xs`, `tracking-wider`, `transition-colors`, `uppercase`; dynamic classes: no; disposition: ungoverned.
@@ -415,7 +415,6 @@ Only `ready` and reasoned `exempt` entries satisfy the reviewed baseline. `needs
 - `src/components/jam-detail-v2/DualActionFAB.tsx:127:9` — candidate `inline.ui.0036.action.cb261c0949bd`; owner `ui.0036`; tag `<button>`; static classes: `btn`, `btn-primary`, `shadow-2xl`; dynamic classes: yes; disposition: ungoverned.
 - `src/components/jam-detail-v2/DualActionFAB.tsx:94:15` — candidate `inline.ui.0036.action.e65f82f680e5`; owner `ui.0036`; tag `<button>`; static classes: `btn`, `btn-circle`, `btn-lg`, `btn-secondary`, `shadow-2xl`; dynamic classes: no; disposition: ungoverned.
 - `src/components/jam-detail-v2/PerformanceSelectionModal.tsx:80:13` — candidate `inline.ui.0040.action.1386d114b37f`; owner `ui.0040`; tag `<button>`; static classes: `focus-visible:ring-2`, `focus-visible:ring-offset-2`, `focus-visible:ring-primary`, `p-4`, `rounded-lg`, `text-left`, `transition-colors`, `w-full`; dynamic classes: yes; disposition: ungoverned.
-- `src/components/jam-detail-v2/SuggestNewSongModal.tsx:282:9` — candidate `inline.ui.0041.action.11396c5a462b`; owner `ui.0041`; tag `<button>`; static classes: `hidden`; dynamic classes: no; disposition: ungoverned.
 - `src/components/JamCard.tsx:92:13` — candidate `inline.ui.0051.action.998263c4bc81`; owner `ui.0051`; tag `<Link>`; static classes: `btn`, `btn-outline`, `ds-control`, `ds-focusable`, `ds-type-ui`, `gap-1.5`; dynamic classes: no; disposition: ungoverned.
 - `src/components/JamCard.tsx:96:11` — candidate `inline.ui.0051.action.df9f8f021a85`; owner `ui.0051`; tag `<Link>`; static classes: `btn`, `btn-primary`, `ds-control`, `ds-focusable`, `ds-type-ui`; dynamic classes: no; disposition: ungoverned.
 - `src/components/Modal.tsx:159:9` — candidate `inline.ui.0055.action.06430e4aaaa7`; owner `ui.0055`; tag `<button>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.

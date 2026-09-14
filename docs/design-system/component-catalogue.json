@@ -12141,18 +12141,6 @@
           "dynamicClasses": true
         },
         {
-          "id": "inline.ui.0041.action.11396c5a462b",
-          "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
-          "line": 282,
-          "column": 9,
-          "ownerComponentId": "ui.0041",
-          "tag": "button",
-          "staticClassTokens": [
-            "hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "inline.ui.0051.action.998263c4bc81",
           "source": "src/components/JamCard.tsx",
           "line": 92,
