@@ -191,6 +191,157 @@ discovery may run before Jam detail, as shown by the dotted relationship, but
 its implementation is blocked from merge until Jam detail lands so the browsing
 promise matches its destination.
 
+## Proposed target contracts
+
+Status: awaiting user acceptance. These contracts turn the hierarchy targets
+below into explicit decision checkpoints. Acceptance authorizes creation of the
+one to three implementation issues for that track; it does not expand the
+frontier or waive its evidence matrix.
+
+### Contract 1: Live host control
+
+- **Hierarchy and action order:** Now Playing, queue authority, and the next
+  consequential playback action lead; queue inspection and reorder are
+  secondary modes; destructive playback changes remain confirmed and visually
+  separated.
+- **Above the fold:** phone and desktop both retain the current Performance,
+  next Performance, primary playback control, and authoritative/draft state;
+  desktop may expose more queue context without changing priority.
+- **Transitions and feedback:** pending controls disable safely; draft, saving,
+  conflict, rollback, persistence failure, and polling reconciliation remain
+  attached to the queue until the host can understand the authoritative result.
+- **Preserve / exclude:** preserve Live Queue controller sessions, keyboard and
+  touch reorder, playback behavior, and polling contracts; exclude backend
+  revision tokens and new DJ capabilities.
+- **Assertable acceptance:** the named Live host control stories and focused
+  controller/page tests prove that the current/next hierarchy and save/cancel
+  path survive ready, no-current, saving, conflict, failure, and rollback states.
+
+### Contract 2: Schedule management
+
+- **Hierarchy and action order:** Now Playing and scheduled Performances lead,
+  suggested and completed work follow, and the action that fills or resolves a
+  gap stays with its Performance; destructive removal remains secondary and
+  confirmed.
+- **Above the fold:** phone retains the active group and an Add Music path;
+  desktop adds dense operational context without moving the active group below
+  portfolio information.
+- **Transitions and feedback:** per-row pending, mutation, refresh, partial-bulk,
+  and destructive outcomes remain attached to the affected Performance.
+- **Preserve / exclude:** preserve the Host Schedule controller, registration
+  semantics, partial outcomes, notes, and Music selection; exclude backend
+  contract changes and server-side filtering.
+- **Assertable acceptance:** the named Schedule management stories and focused
+  tests prove operational group order, the one-to-three-Performance Add Music
+  path, actionable gaps, and row-local safety feedback.
+
+### Contract 3: Music library
+
+- **Hierarchy and action order:** Music title and artist lead; search/filter/sort
+  support discovery; Suggest is the viewer action; Add, edit, approve/reject,
+  and remove appear only with host context and never overpower Music identity.
+- **Above the fold:** phone retains the page promise, primary role-appropriate
+  action, search, and first results; desktop may add filters, counts, and
+  pagination without separating them from the result set.
+- **Transitions and feedback:** approved-list, suggestion-count, and suggestion-
+  list failures keep distinct retry paths; mutation, confirmation, and refresh
+  outcomes identify the affected Music.
+- **Preserve / exclude:** preserve the Music controller, pagination, long content,
+  requirements, and Spotify links; the Jam-specific Music route receives only a
+  language/destination compatibility audit.
+- **Assertable acceptance:** the named Music library stories and controller/page
+  tests prove viewer/host hierarchy, pagination access, distinct empty states,
+  targeted query recovery, and mutation safety.
+
+### Contract 4: Host dashboard
+
+- **Hierarchy and action order:** a LIVE or active Jam and its Manage action lead;
+  Create Jam is the persistent secondary portfolio action; import and feedback
+  are tertiary; destructive deletion stays in Jam-local overflow and confirmation.
+- **Above the fold:** phone retains the urgent Jam, Manage, and Create Jam outside
+  overflow; desktop adds planned inventory and portfolio totals after live work.
+- **Transitions and feedback:** initial loading, retryable query error, deletion
+  confirmation, pending deletion, and success/failure remain visible without
+  displacing the Jam being operated.
+- **Preserve / exclude:** preserve host authorization, navigation, Jam status,
+  import, and delete service behavior; exclude analytics or new portfolio
+  capabilities.
+- **Assertable acceptance:** the named Host dashboard stories and page tests prove
+  live-before-totals order, explicit Manage actions, long-content resilience,
+  phone overflow behavior, and constructive first-Jam onboarding.
+
+### Contract 5: Jam detail
+
+- **Hierarchy and action order:** Jam identity and date/location establish
+  context, the relevant participation action follows, and the active/upcoming
+  timeline leads secondary description, sharing, and suggestion actions.
+- **Above the fold:** phone retains Jam identity, participation state, and the
+  first relevant Performance without covering timeline content; desktop adds
+  summary detail while preserving that order.
+- **Transitions and feedback:** authentication, Performance selection,
+  enrollment, suggestion, sharing, loading, retry, and not-found transitions
+  preserve focus and keep outcomes near the initiating context.
+- **Preserve / exclude:** preserve eligibility and overlay controller contracts,
+  authentication redirects, and route behavior; exclude guest-musician support
+  and Performance terminology migration.
+- **Assertable acceptance:** the named Jam detail stories plus participation
+  controller evidence prove loaded, no-Performance, error, not-found, long-
+  content, timeline, and overlay states.
+
+### Contract 6: Public Dashboard transitions
+
+- **Hierarchy and action order:** Jam state, current Music, and Up Next dominate;
+  QR and passive join guidance follow; controls and fullscreen stay subordinate
+  until intentionally opened.
+- **Above the fold:** the 1920×1080 venue view retains state, current/starting
+  Music, and next information at distance; the phone fallback retains the same
+  meaning with reduced density.
+- **Transitions and feedback:** loading, starting, song change, no-next, finished,
+  offline/stale, and retry transitions use one state language; reduced motion
+  communicates every transition without movement.
+- **Preserve / exclude:** preserve polling, classic/carousel choice, QR,
+  fullscreen, and cached-data behavior; exclude a dashboard replatform or new
+  audience interactions.
+- **Assertable acceptance:** the named full-page transition stories and focused
+  tests prove classic/carousel parity, venue legibility, announced loading,
+  retry, and starting/live/finished state changes.
+
+### Contract 7: Browse Jams hierarchy
+
+- **Hierarchy and action order:** the browsing promise and current Jams lead;
+  search, sort, and status navigation refine results; past Jams are disclosed
+  secondarily; Clear Filters is primary only when filters caused the empty state.
+- **Above the fold:** phone retains the promise, filters, count, and first current
+  Jam or constructive empty action; desktop adds columns without promoting past
+  inventory over current results.
+- **Transitions and feedback:** initial loading replaces results, refreshing keeps
+  stale results visible, recoverable error pairs stale data with retry, and first-
+  use, section-empty, and filtered-empty states never compete.
+- **Preserve / exclude:** preserve client search/sort, section counts, past
+  disclosure, route links, and JamCard behavior; implementation remains blocked
+  from merge until the Jam detail promise is aligned.
+- **Assertable acceptance:** the named Browse Jams stories and page tests prove
+  distinct empties, keyboard/phone filtering, stale refresh/error behavior, long
+  content, and navigation into the refined Jam detail destination.
+
+### Contract 8: Create Jam and Musicians consistency
+
+- **Hierarchy and action order:** both host pages use one header/section rhythm;
+  Create/Update or Edit is primary, Cancel is quiet, and Delete is destructive
+  and confirmed; Spotify import remains an alternate creation path.
+- **Above the fold:** phone retains page identity, the first required fields or
+  directory search, and the primary action; desktop adds table density and
+  secondary controls without changing action priority.
+- **Transitions and feedback:** validation focuses the first invalid field;
+  create/update/delete and musician-edit pending, failure, and success states
+  remain visible; directory query failure has targeted retry.
+- **Preserve / exclude:** preserve authentication, Jam payloads, Spotify import,
+  musician update, pagination, and desktop/mobile representations; exclude new
+  administration capabilities and backend DTO changes.
+- **Assertable acceptance:** the named Create Jam and Musicians stories and
+  focused tests prove create/edit distinction, validation focus, destructive
+  confirmation, pagination access, distinct directory empties, and query retry.
+
 ## Tracks
 
 ### 0. Frontier foundation
