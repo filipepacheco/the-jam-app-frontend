@@ -9,7 +9,6 @@ import {
   WORKBENCH_LOCALES,
   WORKBENCH_ROLES,
   WORKBENCH_ROUTES,
-  WORKBENCH_THEMES,
   WORKBENCH_VIEWPORTS,
 } from '../src/workbench/config'
 import { createAuthFixture, type WorkbenchAuthRole } from '../src/workbench/fixtures'
@@ -21,10 +20,18 @@ const preview: Preview = {
   tags: ['autodocs'],
   globalTypes: {
     theme: {
-      description: 'DaisyUI theme',
+      description: 'Story theme preset',
+    },
+    reviewTheme: {
+      description: 'Review theme',
       toolbar: {
         icon: 'paintbrush',
-        items: WORKBENCH_THEMES.map((theme) => ({ value: theme, title: theme })),
+        dynamicTitle: true,
+        items: [
+          {value: 'story', title: 'Story default'},
+          {value: 'jam-light', title: 'Jam Light'},
+          {value: 'jam-dark', title: 'Jam Dark'},
+        ],
       },
     },
     locale: {
@@ -51,7 +58,8 @@ const preview: Preview = {
     },
   },
   initialGlobals: {
-    theme: 'light',
+    theme: 'jam-light',
+    reviewTheme: 'story',
     locale: 'pt',
     route: '/',
     authRole: 'host',
@@ -78,7 +86,11 @@ const preview: Preview = {
   ],
   decorators: [
     (Story, context) => {
-      const theme = String(context.globals.theme || 'light')
+      const storyTheme = String(context.globals.theme || 'jam-light')
+      const reviewTheme = String(context.globals.reviewTheme || 'story')
+      const theme = reviewTheme === 'jam-light' || reviewTheme === 'jam-dark'
+        ? reviewTheme
+        : storyTheme
       const locale = String(context.globals.locale || 'pt')
       const route = String(context.globals.route || '/')
       const authRole = String(context.globals.authRole || 'host') as WorkbenchAuthRole
