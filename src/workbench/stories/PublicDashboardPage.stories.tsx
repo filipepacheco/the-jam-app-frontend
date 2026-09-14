@@ -34,7 +34,7 @@ export const LiveClassic: Story = {
     viewport: {value: 'venue', isRotated: false},
   },
   play: async ({canvas}) => {
-    await expect(canvas.getByText('Psycho Killer')).toBeVisible()
+    await expect(canvas.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
     await expect(canvas.getByText(/tocando agora/i)).toBeVisible()
     await expect(canvas.getByText(/em seguida/i)).toBeVisible()
   },
@@ -46,7 +46,7 @@ export const StartingSoon: Story = {
   },
   globals: {locale: 'es', theme: 'jam-light', viewport: {value: 'venue', isRotated: false}, reducedMotion: true},
   play: async ({canvas}) => {
-    await expect(canvas.getByText(/comenzando pronto/i)).toBeVisible()
+    await expect(canvas.getByRole('heading', {level: 2, name: /comenzando pronto/i})).toBeVisible()
     await expect(canvas.getByText(dashboardSongs.next.title)).toBeVisible()
   },
 }

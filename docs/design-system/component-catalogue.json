@@ -1117,6 +1117,7 @@
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
         "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
@@ -2575,6 +2576,7 @@
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
@@ -2647,6 +2649,7 @@
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
@@ -7177,6 +7180,7 @@
         "src/pages/tabs/JamDetailPageV2.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx"
       ],
@@ -7950,9 +7954,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/SEO.tsx",
@@ -7980,15 +7987,25 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "discovery",
+          "filtered-empty",
+          "first-use",
+          "loading",
+          "refreshing",
+          "stale-error",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."
+          "Reviewed through deterministic discovery, distinct empty-state, refreshing, and recoverable stale-result compositions in Pages/Screen refinement/Browse Jams hierarchy."
         ]
       }
     },
@@ -9782,6 +9799,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
@@ -9893,6 +9911,7 @@
         "src/workbench/stories/Foundations/ActionControls.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
@@ -9984,6 +10003,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
@@ -10069,6 +10089,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
@@ -10273,6 +10294,7 @@
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
@@ -10339,6 +10361,7 @@
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
         "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
@@ -10426,6 +10449,7 @@
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
         "src/workbench/stories/JamComponents.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
@@ -11033,6 +11057,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
@@ -11660,6 +11685,7 @@
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
@@ -11745,6 +11771,7 @@
         "src/pages/LoginPage.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
@@ -12110,6 +12137,10 @@
       "reason": "Private Storybook composition providing merged-stack evidence for catalogued architecture workflows; not product UI."
     },
     {
+      "source": "src/workbench/stories/BrowseJamsPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Browse Jams screen-refinement evidence; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/DJControl.stories.tsx",
       "reason": "Private Storybook composition for reviewed DJ playback and queue states; not product UI."
     },
@@ -12243,9 +12274,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 175,
+    "eligibleSources": 176,
     "representedSources": 138,
-    "ignoredSources": 37,
+    "ignoredSources": 38,
     "workbench": {
       "activeReusableVisualComponents": 133,
       "ready": 122,
@@ -12818,7 +12849,7 @@
         {
           "id": "inline.ui.0137.action.1dd0b008a9ef",
           "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 275,
+          "line": 295,
           "column": 17,
           "ownerComponentId": "ui.0137",
           "tag": "button",
