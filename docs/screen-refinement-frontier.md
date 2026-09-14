@@ -30,6 +30,26 @@ The local browser-backed workbench run still requires the canonical Linux
 renderer; the final gate, rather than a dependency-symlinked macOS run, is the
 authority for interaction, accessibility, and visual results.
 
+### Current repository evidence index
+
+This index is the starting point for the remaining repository gates. Story
+names are stable workbench identifiers; linked tests are the narrow application
+checks to run before paying for an integrated gate.
+
+| Track | Direct composition | Focused application evidence |
+| --- | --- | --- |
+| 1. Live host control | [`Pages/Screen refinement/Live host control`](../src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx) | [`LiveJamControlPanel.test.tsx`](../src/__tests__/LiveJamControlPanel.test.tsx), [`liveQueueController.test.ts`](../src/__tests__/liveQueueController.test.ts), and [`liveQueueAdapters.test.ts`](../src/__tests__/liveQueueAdapters.test.ts) |
+| 2. Schedule management | [`Pages/Screen refinement/Schedule management`](../src/workbench/stories/ScheduleManagementPage.stories.tsx) | [`ScheduleTab.test.tsx`](../src/__tests__/ScheduleTab.test.tsx), [`hostScheduleController.test.ts`](../src/__tests__/hostScheduleController.test.ts), and [`hostScheduleAdapters.test.ts`](../src/__tests__/hostScheduleAdapters.test.ts) |
+| 3. Music library | [`Pages/Screen refinement/Music library`](../src/workbench/stories/MusicLibraryPage.stories.tsx) | [`MusicPage.test.tsx`](../src/__tests__/MusicPage.test.tsx), [`musicLibraryController.test.ts`](../src/__tests__/musicLibraryController.test.ts), and [`musicLibraryModeration.test.ts`](../src/__tests__/musicLibraryModeration.test.ts) |
+| 4. Host dashboard | [`Pages/Screen refinement/Host dashboard`](../src/workbench/stories/HostDashboardPage.stories.tsx) | [`HostDashboardPage.test.tsx`](../src/__tests__/HostDashboardPage.test.tsx) |
+| 5. Jam detail | [`Pages/Screen refinement/Jam detail`](../src/workbench/stories/JamDetailPage.stories.tsx) | [`jamParticipationController.test.ts`](../src/__tests__/jamParticipationController.test.ts) and the participation stories in [`ArchitectureCloseout.stories.tsx`](../src/workbench/stories/ArchitectureCloseout.stories.tsx) |
+| 6. Public Dashboard transitions | [`Pages/Screen refinement/Public Dashboard transitions`](../src/workbench/stories/PublicDashboardPage.stories.tsx) | [`PublicDashboardPage.test.tsx`](../src/__tests__/PublicDashboardPage.test.tsx) and [`PublicDashboardCarousel.stories.tsx`](../src/workbench/stories/PublicDashboardCarousel.stories.tsx) |
+| 7. Browse Jams hierarchy | [`Pages/Screen refinement/Browse Jams hierarchy`](../src/workbench/stories/BrowseJamsPage.stories.tsx) | [`BrowseJamsPage.test.tsx`](../src/__tests__/BrowseJamsPage.test.tsx) |
+| 8. Create Jam and Musicians | [`Pages/Screen refinement/Create Jam and Musicians`](../src/workbench/stories/CreateJamMusiciansPage.stories.tsx) | [`CreateJamMusiciansPage.test.tsx`](../src/__tests__/CreateJamMusiciansPage.test.tsx) |
+
+The index records where evidence lives, not that every matrix cell is already
+closed. The implementation ledger above remains authoritative for gaps.
+
 ## Destination
 
 Refine the eight priority product surfaces so that the Jam App feels energetic,
