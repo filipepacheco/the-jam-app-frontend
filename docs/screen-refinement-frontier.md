@@ -1,6 +1,7 @@
 # Screen Refinement Frontier
 
-Status: active. This plan begins after the completed architecture program in
+Status: active; last audited 2026-09-14. This plan begins after the completed
+architecture program in
 [`architecture-improvement-plan.md`](./architecture-improvement-plan.md).
 
 ## Implementation status
@@ -12,14 +13,14 @@ slice does not close the track.
 | Track | State | Integrated evidence | Remaining gate |
 | --- | --- | --- | --- |
 | 0. Frontier foundation | Complete | Both private workflows recognize `screen-refinement-gate`; the repository policy tests that path; application tests run in production CI; the screen-refinement pull-request evidence template is added. [Parent #127](https://github.com/filipepacheco/the-jam-app-frontend/issues/127) links the eight critique issues below. | None; begin each target from its critique issue and accept its contract before creating implementation issues. |
-| 1. Live host control | In progress | `Pages/Screen refinement/Live host control` composes the production management shell, DJ playback, and Live Queue for ready, no-current-Performance, saving, and rollback states. Reorder save/cancel controls remain visible and safely disabled while saving; success, conflict, rollback, refresh, and polling feedback stays attached to the queue. | Complete the remaining state matrix, strict affected-story review, and canonical visual decision. |
-| 2. Schedule management | In progress | `Pages/Screen refinement/Schedule management` directly covers active, upcoming, suggested, completed, small-schedule, empty, phone, and host-console compositions. The add-Music action remains reachable with one to three Performances, operational groups follow the live-state hierarchy, and mutation, refresh, and partial-bulk outcomes stay attached to affected rows. | Finish dense-card refinement and the remaining safety matrix, then run the track gate. |
-| 3. Music library | In progress | [Critique #130](https://github.com/filipepacheco/the-jam-app-frontend/issues/130) anchors discovery. `Pages/Screen refinement/Music library` directly covers viewer, host moderation, long content, pagination, empty-library, and recoverable query states. Approved, suggestion-count, and suggestion-list failures retain separate retry paths, and compact pagination controls have localized accessible names. | Finish filtered-empty, loading, mutation/confirmation/refresh safety, and compatibility evidence; accept the contract and run the track gate. |
-| 4. Host dashboard | In progress | [Critique #131](https://github.com/filipepacheco/the-jam-app-frontend/issues/131) anchors discovery. `Pages/Screen refinement/Host dashboard` directly covers operational, long-content, phone, desktop, reduced-motion, and first-Jam states. Live Jams and their explicit Manage actions lead portfolio totals; Create Jam remains primary outside the phone overflow menu. | Finish loading/error/mutation safety and category-empty evidence, accept the contract, then run the track gate. |
-| 5. Jam detail | In progress | `Pages/Screen refinement/Jam detail` covers the loaded participation hierarchy, no-Performances, recoverable error, and not-found states through a typed deterministic route-state seam. | Complete long-content/location/share feedback, authentication and overlay transitions, timeline emphasis, strict affected-story review, and canonical visual decision. |
-| 6. Public Dashboard transitions | In progress | [Critique #133](https://github.com/filipepacheco/the-jam-app-frontend/issues/133) anchors discovery. `Pages/Screen refinement/Public Dashboard transitions` directly covers loading, recoverable error, starting-soon, live, finished, classic, carousel, venue, and reduced-motion states. Loading is announced and full-page failure has an explicit retry path. | Finish offline/stale reconciliation and transition timing evidence, accept the contract, then run the track gate. |
-| 7. Browse Jams hierarchy | In progress | [Critique #134](https://github.com/filipepacheco/the-jam-app-frontend/issues/134) anchors discovery. `Pages/Screen refinement/Browse Jams hierarchy` directly covers discovery, first-use, filtered-empty, initial loading, refreshing/stale data, recoverable error, phone, and desktop states. Global empty guidance no longer competes with duplicate section empties, and stale results remain visible while refresh/retry feedback is announced. | Confirm alignment with the final Jam detail promise, accept the contract, and run the track gate after Track 5 lands. |
-| 8. Create Jam and Musicians | In progress | [Critique #135](https://github.com/filipepacheco/the-jam-app-frontend/issues/135) anchors discovery. `Pages/Screen refinement/Create Jam and Musicians` directly covers create/edit, validation focus, destructive confirmation, directory, pagination, distinct empty/filter states, query failure, phone, and desktop. Create Jam adopts canonical action and confirmation contracts; Musicians adds a deterministic data port, targeted retry, and localized pagination names. | Finish submit/update pending/failure evidence and shared long-content review, accept the contract, then run the track gate after shared host patterns land. |
+| 1. Live host control | In progress | [Critique #128](https://github.com/filipepacheco/the-jam-app-frontend/issues/128) anchors discovery. `Pages/Screen refinement/Live host control` composes the production management shell, DJ playback, and Live Queue for ready, no-current-Performance, saving, and rollback states. Reorder save/cancel controls remain visible and safely disabled while saving; success, conflict, rollback, refresh, and polling feedback stays attached to the queue. | **Repository:** remaining state matrix and strict affected-story review. **Decision:** accept Contract 1 and its canonical visual intent. **External:** pass the track gate and merge the final PR. |
+| 2. Schedule management | In progress | [Critique #129](https://github.com/filipepacheco/the-jam-app-frontend/issues/129) anchors discovery. `Pages/Screen refinement/Schedule management` directly covers active, upcoming, suggested, completed, small-schedule, empty, phone, and host-console compositions. The add-Music action remains reachable with one to three Performances, operational groups follow the live-state hierarchy, and mutation, refresh, and partial-bulk outcomes stay attached to affected rows. | **Repository:** dense-card refinement and remaining safety matrix. **Decision:** accept Contract 2 and its canonical visual intent. **External:** pass the track gate and merge the final PR. |
+| 3. Music library | In progress | [Critique #130](https://github.com/filipepacheco/the-jam-app-frontend/issues/130) anchors discovery. `Pages/Screen refinement/Music library` directly covers viewer, host moderation, long content, pagination, empty-library, and recoverable query states. Approved, suggestion-count, and suggestion-list failures retain separate retry paths, and compact pagination controls have localized accessible names. | **Repository:** filtered-empty, loading, mutation/confirmation/refresh safety, and compatibility evidence. **Decision:** accept Contract 3 and its canonical visual intent. **External:** pass the track gate and merge the final PR. |
+| 4. Host dashboard | In progress | [Critique #131](https://github.com/filipepacheco/the-jam-app-frontend/issues/131) anchors discovery. `Pages/Screen refinement/Host dashboard` directly covers operational, long-content, phone, desktop, reduced-motion, and first-Jam states. Live Jams and their explicit Manage actions lead portfolio totals; Create Jam remains primary outside the phone overflow menu. | **Repository:** loading/error/mutation safety and category-empty evidence. **Decision:** accept Contract 4 and its canonical visual intent. **External:** pass the track gate and merge the final PR. |
+| 5. Jam detail | In progress | [Critique #132](https://github.com/filipepacheco/the-jam-app-frontend/issues/132) anchors discovery. `Pages/Screen refinement/Jam detail` covers the loaded participation hierarchy, no-Performances, recoverable error, and not-found states through a typed deterministic route-state seam. | **Repository:** long-content/location/share feedback, authentication and overlay transitions, timeline emphasis, and strict affected-story review. **Decision:** accept Contract 5 and its canonical visual intent. **External:** pass the track gate and merge the final PR. |
+| 6. Public Dashboard transitions | In progress | [Critique #133](https://github.com/filipepacheco/the-jam-app-frontend/issues/133) anchors discovery. `Pages/Screen refinement/Public Dashboard transitions` directly covers loading, recoverable error, starting-soon, live, finished, classic, carousel, venue, and reduced-motion states. Loading is announced and full-page failure has an explicit retry path. | **Repository:** offline/stale reconciliation and transition-timing evidence. **Decision:** accept Contract 6 and its canonical visual intent. **External:** pass the track gate and merge the final PR. |
+| 7. Browse Jams hierarchy | In progress | [Critique #134](https://github.com/filipepacheco/the-jam-app-frontend/issues/134) anchors discovery. `Pages/Screen refinement/Browse Jams hierarchy` directly covers discovery, first-use, filtered-empty, initial loading, refreshing/stale data, recoverable error, phone, and desktop states. Global empty guidance no longer competes with duplicate section empties, and stale results remain visible while refresh/retry feedback is announced. | **Repository:** alignment with the final Jam detail participation promise. **Decision:** accept Contract 7 and its canonical visual intent. **Dependency:** Track 5 must land first. **External:** pass the track gate and merge the final PR. |
+| 8. Create Jam and Musicians | In progress | [Critique #135](https://github.com/filipepacheco/the-jam-app-frontend/issues/135) anchors discovery. `Pages/Screen refinement/Create Jam and Musicians` directly covers create/edit, validation focus, destructive confirmation, directory, pagination, distinct empty/filter states, query failure, phone, and desktop. Create Jam adopts canonical action and confirmation contracts; Musicians adds a deterministic data port, targeted retry, and localized pagination names. | **Repository:** submit/update pending/failure evidence and shared long-content review. **Decision:** accept Contract 8 and its canonical visual intent. **External:** pass the track gate and merge the final PR after shared host patterns land. |
 
 Current integrated verification: catalogue freshness, workbench typecheck,
 private visual privacy policy, progressive design-system enforcement, focused
@@ -197,6 +198,22 @@ Status: awaiting user acceptance. These contracts turn the hierarchy targets
 below into explicit decision checkpoints. Acceptance authorizes creation of the
 one to three implementation issues for that track; it does not expand the
 frontier or waive its evidence matrix.
+
+| Contract | Critique issue | Decision owner | Acceptance evidence | Implementation issues |
+| --- | --- | --- | --- | --- |
+| 1. Live host control | [#128](https://github.com/filipepacheco/the-jam-app-frontend/issues/128) | User | Pending | Not created |
+| 2. Schedule management | [#129](https://github.com/filipepacheco/the-jam-app-frontend/issues/129) | User | Pending | Not created |
+| 3. Music library | [#130](https://github.com/filipepacheco/the-jam-app-frontend/issues/130) | User | Pending | Not created |
+| 4. Host dashboard | [#131](https://github.com/filipepacheco/the-jam-app-frontend/issues/131) | User | Pending | Not created |
+| 5. Jam detail | [#132](https://github.com/filipepacheco/the-jam-app-frontend/issues/132) | User | Pending | Not created |
+| 6. Public Dashboard transitions | [#133](https://github.com/filipepacheco/the-jam-app-frontend/issues/133) | User | Pending | Not created |
+| 7. Browse Jams hierarchy | [#134](https://github.com/filipepacheco/the-jam-app-frontend/issues/134) | User | Pending | Not created |
+| 8. Create Jam and Musicians | [#135](https://github.com/filipepacheco/the-jam-app-frontend/issues/135) | User | Pending | Not created |
+
+Record acceptance with a dated link to the user decision in the corresponding
+critique issue, then replace `Not created` with the resulting implementation
+issue links. A contract may be accepted individually; numbered merge order and
+cross-track dependencies still apply.
 
 ### Contract 1: Live host control
 
@@ -410,7 +427,7 @@ Evidence starting points:
 - `Domain/DJ Control/Playback and queue`.
 - `LiveJamControlPanel.test.tsx` and `liveQueueController.test.ts`.
 
-Direct composition evidence to add:
+Direct composition evidence now available:
 `Pages/Screen refinement/Live host control`, covering the management shell,
 DJ playback, and Live Queue modes through deterministic adapters.
 
@@ -445,7 +462,7 @@ Evidence starting points:
 - `Domain/Schedule/Registration and cards`.
 - Host Schedule adapter/controller tests and `JamManagementPage.test.tsx`.
 
-Direct composition evidence to add:
+Direct composition evidence now available:
 `Pages/Screen refinement/Schedule management`, using the production controller
 interface with deterministic adapters.
 
@@ -482,7 +499,7 @@ Evidence starting points:
 - `Architecture/Closeout workflows/Existing Music Suggestion` and `New Music Suggestion`.
 - `musicLibraryController.test.ts`.
 
-Direct composition evidence to add:
+Direct composition evidence now available:
 `Pages/Screen refinement/Music library`, covering viewer and host modes.
 
 Primary contexts: 390×844 musician/host phone and 1440×900 host desktop.
@@ -511,7 +528,7 @@ Evidence starting points:
 - `HostDashboardPage.test.tsx`, `JamCard` stories, host navigation stories, and
   canonical Empty State stories.
 
-Direct composition evidence to add:
+Direct composition evidence now available:
 `Pages/Screen refinement/Host dashboard`, including first-use and mixed-status
 portfolio states.
 
@@ -544,7 +561,7 @@ Evidence starting points:
 - `Domain/Jam/Performance timeline`.
 - Jam Detail loading stories and Architecture closeout participation stories.
 
-Direct composition evidence to add:
+Direct composition evidence now available:
 `Pages/Screen refinement/Jam detail`, including the loaded participation path
 and the no-Performances state.
 
@@ -582,7 +599,7 @@ Evidence starting points:
 - Public Dashboard card stories and venue foundation stories.
 - Dashboard layout and polling tests.
 
-Direct composition evidence to add:
+Direct composition evidence now available:
 `Pages/Screen refinement/Public Dashboard transitions`, with deterministic
 clock/state adapters for the complete starting-to-finished sequence.
 
@@ -613,8 +630,8 @@ Evidence starting points:
 - Canonical Empty State and actionable-empty-state stories.
 - Jam summary/card stories and Browse page tests.
 
-Direct composition evidence to add:
-`Pages/Screen refinement/Browse Jams`, covering results, first-use, and
+Direct composition evidence now available:
+`Pages/Screen refinement/Browse Jams hierarchy`, covering results, first-use, and
 filtered-empty hierarchy.
 
 Primary contexts: 390×844 guest/musician phone and 1440×900 desktop. Required
@@ -648,9 +665,9 @@ Evidence starting points:
 - `Forms/Current components`, `Overlays/Jam forms`, Music empty states,
   registration stories, and Create Jam/Musicians page tests.
 
-Direct composition evidence to add:
-`Pages/Screen refinement/Create and edit Jam` and
-`Pages/Screen refinement/Musicians directory`.
+Direct composition evidence now available:
+`Pages/Screen refinement/Create Jam and Musicians`, with distinct create/edit
+Jam and Musicians-directory states.
 
 Primary contexts: 390×844 host phone and 1440×900 host desktop. Required states:
 auth loading, create/edit loading, field validation, save/delete pending and
