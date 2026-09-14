@@ -13218,7 +13218,7 @@
         {
           "id": "inline.ui.0145.action.2076eb39fae5",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 358,
+          "line": 360,
           "column": 23,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13233,7 +13233,7 @@
         {
           "id": "inline.ui.0145.action.33987644b906",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 492,
+          "line": 494,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13247,7 +13247,7 @@
         {
           "id": "inline.ui.0145.action.6431670ad87d",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 471,
+          "line": 473,
           "column": 23,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13260,7 +13260,7 @@
         {
           "id": "inline.ui.0145.action.66884209f969",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 411,
+          "line": 413,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13274,7 +13274,7 @@
         {
           "id": "inline.ui.0145.action.aabbb4d50b8b",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 527,
+          "line": 529,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13288,7 +13288,7 @@
         {
           "id": "inline.ui.0145.action.b9daf271e54c",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 519,
+          "line": 521,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13302,7 +13302,7 @@
         {
           "id": "inline.ui.0145.action.c7e34587e2ec",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 484,
+          "line": 486,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13316,7 +13316,7 @@
         {
           "id": "inline.ui.0145.action.dff80a407e2c",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 448,
+          "line": 450,
           "column": 23,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13970,7 +13970,7 @@
         {
           "id": "inline.ui.0145.badge.0c40efe10576",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 401,
+          "line": 403,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "span",
@@ -13982,7 +13982,7 @@
         {
           "id": "inline.ui.0145.badge.0c97f35472e2",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 340,
+          "line": 342,
           "column": 27,
           "ownerComponentId": "ui.0145",
           "tag": "span",
@@ -14414,7 +14414,7 @@
         {
           "id": "inline.ui.0145.card.57283d4b3fc2",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 334,
+          "line": 336,
           "column": 17,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -15165,7 +15165,7 @@
         {
           "id": "inline.ui.0145.field.104165b86fcd",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 430,
+          "line": 432,
           "column": 19,
           "ownerComponentId": "ui.0145",
           "tag": "select",
@@ -15179,7 +15179,7 @@
         {
           "id": "inline.ui.0145.field.188f0914aa9b",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 503,
+          "line": 505,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "input",
@@ -15216,22 +15216,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.field.467feeb54644",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 287,
-          "column": 17,
-          "ownerComponentId": "ui.0145",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "inline.ui.0145.field.604578557240",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 457,
+          "line": 459,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "input",
@@ -15241,6 +15228,19 @@
             "input-sm",
             "text-center",
             "w-14"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0145.field.6af0631b2980",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 287,
+          "column": 17,
+          "ownerComponentId": "ui.0145",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "w-full"
           ],
           "dynamicClasses": false
         },

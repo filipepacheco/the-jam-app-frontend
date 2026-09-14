@@ -224,9 +224,9 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
           />
         )}
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-balance">
+          <h2 className="text-lg font-bold text-balance">
             {isReorderMode ? t('live_control.up_next') : t('live_control.queue_title')}
-          </h3>
+          </h2>
           {isReorderMode ? (
             <div className="flex items-center gap-2">
               <Action

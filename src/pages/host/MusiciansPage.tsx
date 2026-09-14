@@ -283,8 +283,10 @@ export function MusiciansPage({port = musiciansPagePort}: MusiciansPageProps = {
 
               {/* Level Filter */}
               <fieldset className="fieldset md:w-64">
-                <legend className="fieldset-legend">{t('jam_management.musicians.filter_label')}</legend>
+                <legend id="musicians-level-filter-label" className="fieldset-legend">{t('jam_management.musicians.filter_label')}</legend>
                 <select
+                  id="musicians-level-filter"
+                  aria-labelledby="musicians-level-filter-label"
                   className="select w-full"
                   name="level"
                   value={selectedLevel}
