@@ -16,7 +16,7 @@ Interaction evidence: total 71; pass 71; fail 0; unhandled 0 (workbench-json-res
 
 ## Accessibility and visual baselines
 
-Accessibility modes — strict: 30; todo: 121; reviewed debt: 4; new violations: 0.
+Accessibility modes — strict: 45; todo: 106; reviewed debt: 4; new violations: 0.
 
 Visual baselines: 32; pass/change/missing/failure: 6/26/0/26; themes: jam-dark, jam-light; viewports: desktop, phone, venue; max differing-pixel ratio: 0.0005.
 

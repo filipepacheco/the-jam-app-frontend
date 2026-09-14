@@ -8,9 +8,9 @@ import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
 import {useFormState} from '../hooks'
 import {useTranslation} from 'react-i18next'
 import {INSTRUMENTS} from '../lib/instruments'
+import {Action} from './Action'
 import {Alert} from './Alert'
 import {Modal} from './Modal'
-import {ModalFooter} from './ModalFooter'
 import {Field} from './Field'
 
 interface EditMusicianModalProps {
@@ -86,18 +86,23 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
       scrollable
       responsive
       footer={
-        <ModalFooter
-          onCancel={onClose}
-          onSubmit={() => {
-            const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
-            void handleSubmit(syntheticEvent)
-          }}
-          submitLabel={isLoading ? t('common.saving') : t('common.save_changes')}
-          submitting={isLoading}
-        />
+        <>
+          <Action variant="quiet" onClick={onClose} state={isLoading ? 'disabled' : 'idle'}>
+            {t('common.cancel')}
+          </Action>
+          {isLoading ? (
+            <Action state="loading" loadingLabel={t('common.saving')}>
+              {t('common.saving')}
+            </Action>
+          ) : (
+            <Action type="submit" form="edit-musician-form">
+              {t('common.save_changes')}
+            </Action>
+          )}
+        </>
       }
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form id="edit-musician-form" onSubmit={handleSubmit} className="space-y-4">
         {/* Name */}
         <Field id="edit-musician-name" label={t('musician_form.name_label')} disabled={isLoading}>
           <Field.Input
@@ -182,8 +187,6 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
         {/* Error Alert */}
         <Alert type="error" message={error} />
 
-        {/* Hidden submit button for form Enter key submission */}
-        <button type="submit" className="hidden" />
       </form>
     </Modal>
   )

@@ -10,7 +10,7 @@ import { nextSong, registrationJam } from '../fixtures'
 
 const meta = {
   title: 'Workbench/Shared environment',
-  parameters: { a11y: { test: 'todo' } },
+  parameters: { a11y: { test: 'error' } },
 } satisfies Meta
 
 export default meta
@@ -74,6 +74,15 @@ export const FormInteraction: Story = {
 
 export const ThemeLocaleAndMotion: Story = {
   globals: { theme: 'synthwave', locale: 'es', reducedMotion: true },
+  parameters: {
+    a11y: { test: 'error' },
+    designSystem: {
+      interaction: {
+        status: 'not-applicable',
+        rationale: 'Static display-only environment fixture with no user-operated behavior.',
+      },
+    },
+  },
   render: () => <NextSongCard song={nextSong} />,
   play: async ({ canvasElement }) => {
     await expect(window.matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true)

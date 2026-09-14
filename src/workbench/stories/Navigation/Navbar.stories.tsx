@@ -8,7 +8,7 @@ import { createAuthFixture } from '../../fixtures'
 const meta = {
   title: 'Navigation/Application navigation',
   component: Navbar,
-  parameters: { a11y: { test: 'todo' }, layout: 'fullscreen' },
+  parameters: { a11y: { test: 'error' }, layout: 'fullscreen' },
 } satisfies Meta<typeof Navbar>
 
 export default meta
@@ -37,6 +37,11 @@ export const DesktopGuestWithSpanishLabels: Story = {
     route: '/jams',
     theme: 'cupcake',
     viewport: { value: 'desktop', isRotated: false },
+  },
+  play: async ({ canvas, userEvent }) => {
+    const homeLink = canvas.getByRole('link', { name: /inicio|home/i })
+    await userEvent.click(homeLink)
+    await expect(homeLink).toHaveClass('text-primary')
   },
 }
 
@@ -94,4 +99,13 @@ export const DesktopUserLoading: Story = {
     </AuthContext.Provider>
   ),
   globals: { authRole: 'host' },
+  parameters: {
+    a11y: { test: 'error' },
+    designSystem: {
+      interaction: {
+        status: 'not-applicable',
+        rationale: 'Static loading display with no user-operated behavior.',
+      },
+    },
+  },
 }

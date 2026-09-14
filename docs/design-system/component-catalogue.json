@@ -1027,10 +1027,10 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
           "src/components/Field.tsx",
           "src/components/Modal.tsx",
-          "src/components/ModalFooter.tsx",
           "src/hooks/index.ts",
           "src/lib/instruments.ts",
           "src/types/api.types.ts"
@@ -2883,7 +2883,6 @@
       ],
       "consumers": [
         "src/components/ConfirmDialog.tsx",
-        "src/components/EditMusicianModal.tsx",
         "src/components/SpotifyExportModal.tsx",
         "src/components/SpotifyImportModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
@@ -2892,8 +2891,7 @@
         "src/pages/tabs/ScheduleTab.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
-        "src/workbench/stories/JamOverlays.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -9517,6 +9515,7 @@
       "consumers": [
         "src/components/Action.tsx",
         "src/components/DesktopUserMenu.tsx",
+        "src/components/EditMusicianModal.tsx",
         "src/components/FeedbackButton.tsx",
         "src/components/FeedbackModal.tsx",
         "src/components/FeedbackStates.tsx",
@@ -11989,18 +11988,6 @@
             "tracking-wider",
             "transition-colors",
             "uppercase"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0018.action.39c79645ef02",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 186,
-          "column": 9,
-          "ownerComponentId": "ui.0018",
-          "tag": "button",
-          "staticClassTokens": [
-            "hidden"
           ],
           "dynamicClasses": false
         },

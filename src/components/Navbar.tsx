@@ -54,7 +54,7 @@ function Navbar() {
   }
 
   return (
-    <nav className="navbar bg-base-100 shadow-lg px-2 sm:px-4 py-2 sm:py-3 gap-1 sm:gap-2 md:gap-3">
+    <nav aria-label={t('nav.main_navigation')} className="navbar bg-base-100 shadow-lg px-2 sm:px-4 py-2 sm:py-3 gap-1 sm:gap-2 md:gap-3">
       {/* Navbar Start - Logo. Stays a plain anchor: it is a brand mark, not
           a product action or a NavigationLink destination in the tab set
           above, and its enlarged logo-plus-wordmark styling does not match

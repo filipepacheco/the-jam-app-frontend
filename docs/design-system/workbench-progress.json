@@ -26,8 +26,8 @@
     "evidence": "workbench-json-results"
   },
   "accessibility": {
-    "strict": 30,
-    "todo": 121,
+    "strict": 45,
+    "todo": 106,
     "reviewedDebt": 4,
     "newViolations": 0
   },
