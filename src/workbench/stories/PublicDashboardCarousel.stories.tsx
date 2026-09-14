@@ -28,17 +28,26 @@ export const LiveCarousel: Story = {
 
 export const StartingCarousel: Story = {
   render: () => <CarouselDashboard jamStatus="ACTIVE" currentSong={null} nextSongs={[dashboardSongs.next]} jamId="jam-public" intervalMs={60_000} />,
-  parameters: { designSystem: { interaction: { status: 'not-applicable', rationale: 'Passive venue transition state with no user-operated behavior.' } } },
+  parameters: {
+    a11y: { test: 'error' },
+    designSystem: { interaction: { status: 'not-applicable', rationale: 'Passive venue transition state with no user-operated behavior.' } },
+  },
 }
 export const FinishedCarousel: Story = {
   render: () => <CarouselDashboard jamStatus="FINISHED" currentSong={null} nextSongs={[]} intervalMs={60_000} />,
-  parameters: { designSystem: { interaction: { status: 'not-applicable', rationale: 'Passive finished venue state with no user-operated behavior.' } } },
+  parameters: {
+    a11y: { test: 'error' },
+    designSystem: { interaction: { status: 'not-applicable', rationale: 'Passive finished venue state with no user-operated behavior.' } },
+  },
 }
 
 export const PanelMatrix: Story = {
   render: () => <div className="space-y-20"><NowPlayingPanel song={dashboardSongs.current} /><UpNextPanel song={dashboardSongs.next} /><StartingSoonPanel song={dashboardSongs.next} /><FinishedPanel /><QRCodePanel jamId="jam-public" slug="friday-night-jam" /></div>,
   globals: { locale: 'es', theme: 'synthwave', viewport: { value: 'desktop', isRotated: false } },
-  parameters: { designSystem: { interaction: { status: 'not-applicable', rationale: 'Static venue panel matrix for hierarchy and localization review.' } } },
+  parameters: {
+    a11y: { test: 'error' },
+    designSystem: { interaction: { status: 'not-applicable', rationale: 'Static venue panel matrix for hierarchy and localization review.' } },
+  },
 }
 
 const languageChange = fn()
