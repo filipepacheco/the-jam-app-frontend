@@ -20,7 +20,7 @@ function Footer() {
           modifier-click and for the server fallback, while the onClick
           handler keeps client-side routing. See
           docs/design-system/canonical-navigation.md. */}
-      <nav className="flex flex-wrap justify-center gap-2 sm:gap-4">
+      <nav aria-label={t('nav.footer_navigation')} className="flex flex-wrap justify-center gap-2 sm:gap-4">
         {routes.map((route) => (
           <NavigationLink
             key={route.path}

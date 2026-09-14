@@ -90,9 +90,9 @@ const preview: Preview = {
         <MemoryRouter initialEntries={[route]} key={route}>
           <I18nextProvider i18n={i18n}>
             <AuthContext.Provider value={createAuthFixture(authRole)}>
-              <main data-theme={theme} data-workbench-root className="min-h-screen bg-base-100 p-4 text-base-content">
+              <div data-theme={theme} data-workbench-root className="min-h-screen bg-base-100 p-4 text-base-content">
                 <Story />
-              </main>
+              </div>
             </AuthContext.Provider>
           </I18nextProvider>
         </MemoryRouter>

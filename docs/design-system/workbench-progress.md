@@ -10,13 +10,13 @@ Lifecycle: active: 167; legacy: 2; uncertain: 13.
 
 ## Stories and interactions
 
-Story files: 28; stories: 151; declared play functions: 71; reachable catalogue components: 112; visual candidates/cells: 151/32.
+Story files: 28; stories: 151; declared play functions: 80; reachable catalogue components: 112; visual candidates/cells: 151/32.
 
-Interaction evidence: total 71; pass 71; fail 0; unhandled 0 (workbench-json-results).
+Interaction evidence: total 80; pass 80; fail 0; unhandled 0 (workbench-json-results).
 
 ## Accessibility and visual baselines
 
-Accessibility modes — strict: 45; todo: 106; reviewed debt: 4; new violations: 0.
+Accessibility modes — strict: 52; todo: 99; reviewed debt: 4; new violations: 0.
 
 Visual baselines: 32; pass/change/missing/failure: 6/26/0/26; themes: jam-dark, jam-light; viewports: desktop, phone, venue; max differing-pixel ratio: 0.0005.
 

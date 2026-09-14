@@ -13,21 +13,21 @@
   "stories": {
     "files": 28,
     "total": 151,
-    "playCoverage": 71,
+    "playCoverage": 80,
     "reachableCatalogueComponents": 112,
     "visualCandidates": 151,
     "visualCells": 32
   },
   "interactions": {
-    "total": 71,
-    "pass": 71,
+    "total": 80,
+    "pass": 80,
     "fail": 0,
     "unhandled": 0,
     "evidence": "workbench-json-results"
   },
   "accessibility": {
-    "strict": 45,
-    "todo": 106,
+    "strict": 52,
+    "todo": 99,
     "reviewedDebt": 4,
     "newViolations": 0
   },
