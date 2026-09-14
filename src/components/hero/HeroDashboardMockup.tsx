@@ -68,9 +68,9 @@ export function HeroDashboardMockup() {
           </p>
 
           {/* Song title - intentionally hardcoded: real, well-known song title */}
-          <h3 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-base-content mb-1 ds-wrap-user-content">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-base-content mb-1 ds-wrap-user-content">
             Don't Stop Believin'
-          </h3>
+          </h2>
 
           {/* Artist - intentionally hardcoded: real artist name */}
           <p className="text-sm sm:text-base text-base-content/70 mb-5 sm:mb-6">

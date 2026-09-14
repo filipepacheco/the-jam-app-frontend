@@ -5,7 +5,7 @@ import { PerformanceSelectionModal } from '../../components/jam-detail-v2/Perfor
 import { inProgressSchedule } from '../fixtures'
 import { scheduleFixtures } from '../jamMusicFixtures'
 
-const meta = { title: 'Overlays/Jam forms', parameters: { a11y: { test: 'todo' } } } satisfies Meta
+const meta = { title: 'Overlays/Jam forms', parameters: { a11y: { test: 'error' } } } satisfies Meta
 export default meta
 type Story = StoryObj<typeof meta>
 
@@ -28,7 +28,20 @@ export const PerformanceChoice: Story = {
   },
 }
 
-export const NoPerformances: Story = { render: () => <PerformanceSelectionModal performances={[]} isOpen onClose={fn()} onSelectPerformance={fn()} /> }
+export const NoPerformances: Story = {
+  render: () => <PerformanceSelectionModal performances={[]} isOpen onClose={fn()} onSelectPerformance={fn()} />,
+  parameters: {
+    a11y: { test: 'error' },
+    designSystem: {
+      interaction: {
+        status: 'not-applicable',
+        rationale: 'Static empty display with no user-operated Performance choice.',
+      },
+    },
+  },
+}
+
+const selectLongPerformance = fn()
 
 export const LongPerformanceChoice: Story = {
   render: () => (
@@ -36,12 +49,16 @@ export const LongPerformanceChoice: Story = {
       performances={[scheduleFixtures[0]]}
       isOpen
       onClose={fn()}
-      onSelectPerformance={fn()}
+      onSelectPerformance={selectLongPerformance}
     />
   ),
   globals: {
     locale: 'es',
     theme: 'jam-light',
     viewport: { value: 'phone', isRotated: false },
+  },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: /A Song Title Deliberately/i }))
+    await expect(selectLongPerformance).toHaveBeenCalledWith(scheduleFixtures[0])
   },
 }

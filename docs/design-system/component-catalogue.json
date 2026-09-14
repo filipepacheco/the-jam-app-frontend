@@ -300,6 +300,7 @@
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
@@ -1026,10 +1027,10 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
           "src/components/Field.tsx",
           "src/components/Modal.tsx",
-          "src/components/ModalFooter.tsx",
           "src/hooks/index.ts",
           "src/lib/instruments.ts",
           "src/types/api.types.ts"
@@ -1611,6 +1612,7 @@
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
@@ -2177,9 +2179,12 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -2212,10 +2217,10 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "validation",
@@ -2226,7 +2231,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Spotify import, music creation, and schedule linking are coupled to internal services; remove the exemption when injectable adapters or deterministic request scenarios cover the complete orchestration."
+          "Reviewed through the strict-a11y new-Music submission story in Architecture/Closeout workflows; mutation outcomes cross the production Jam participation interface."
         ]
       }
     },
@@ -2249,9 +2254,12 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -2283,10 +2291,10 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "loading",
@@ -2297,7 +2305,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Schedule-domain requests are performed through internal orchestration; remove the exemption when deterministic search and submission scenarios can be injected."
+          "Reviewed with deterministic catalogue loading and submission through the production Jam participation interface in Architecture/Closeout workflows."
         ]
       }
     },
@@ -2809,6 +2817,7 @@
         "src/workbench/stories/Environment.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
@@ -2874,7 +2883,6 @@
       ],
       "consumers": [
         "src/components/ConfirmDialog.tsx",
-        "src/components/EditMusicianModal.tsx",
         "src/components/SpotifyExportModal.tsx",
         "src/components/SpotifyImportModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
@@ -2883,7 +2891,7 @@
         "src/pages/tabs/ScheduleTab.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/JamOverlays.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3332,6 +3340,7 @@
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "dependencies": {
@@ -5837,6 +5846,7 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
@@ -5898,15 +5908,18 @@
         }
       ],
       "consumers": [
-        "src/pages/host/JamManagementPage.tsx"
+        "src/pages/host/JamManagementPage.tsx",
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
           "src/components/data-display/index.tsx",
-          "src/hooks/index.ts",
-          "src/types/api.types.ts"
+          "src/hooks/useLiveQueueController.ts",
+          "src/lib/live-queue/liveQueueController.ts"
         ],
         "external": [
           "lucide-react",
@@ -5914,7 +5927,6 @@
           "react-i18next"
         ],
         "contexts": [
-          "browser",
           "internationalization"
         ]
       },
@@ -5928,10 +5940,10 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "loading",
@@ -5941,7 +5953,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Polling and reorder hooks are internal; remove the exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
+          "LiveJamControlPanel and its private NowPlayingCard and QueueItem are reviewed through the strict-a11y deterministic Live Queue story in Architecture/Closeout workflows."
         ]
       }
     },
@@ -5949,16 +5961,19 @@
       "id": "ui.0105",
       "name": "NowPlayingCard",
       "source": "src/components/schedule/LiveJamControlPanel.tsx",
-      "declaration": "variable",
+      "declaration": "function",
       "visibility": "local",
       "exports": [],
       "consumers": [
         "src/components/schedule/LiveJamControlPanel.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/lib/formatters.ts",
+          "src/lib/live-queue/liveQueueController.ts",
           "src/lib/schedule/instrumentHelpers.tsx"
         ],
         "external": [
@@ -5979,10 +5994,10 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "loading",
@@ -5992,7 +6007,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Polling and reorder hooks are internal; remove the exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
+          "LiveJamControlPanel and its private NowPlayingCard and QueueItem are reviewed through the strict-a11y deterministic Live Queue story in Architecture/Closeout workflows."
         ]
       }
     },
@@ -6006,7 +6021,9 @@
       "consumers": [
         "src/components/schedule/LiveJamControlPanel.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+      ],
       "dependencies": {
         "internal": [],
         "external": [
@@ -6028,10 +6045,10 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "loading",
@@ -6041,7 +6058,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Polling and reorder hooks are internal; remove the exemption when deterministic adapters can be injected. Its private NowPlayingCard and QueueItem share this exemption."
+          "LiveJamControlPanel and its private NowPlayingCard and QueueItem are reviewed through the strict-a11y deterministic Live Queue story in Architecture/Closeout workflows."
         ]
       }
     },
@@ -6542,6 +6559,7 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "dependencies": {
@@ -6603,9 +6621,12 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -6615,7 +6636,6 @@
           "src/components/schedule/InstrumentsSummary.tsx",
           "src/components/schedule/ScheduleDetailsCard.tsx",
           "src/hooks/index.ts",
-          "src/services/index.ts",
           "src/utils/scheduleUtils.ts"
         ],
         "external": [
@@ -6623,7 +6643,6 @@
           "react-i18next"
         ],
         "contexts": [
-          "api",
           "internationalization"
         ]
       },
@@ -6637,10 +6656,10 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "default",
@@ -6650,7 +6669,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Enrollment mutation uses an internal service; remove the exemption when deterministic enrollment outcomes can be injected."
+          "Performance enrollment is reviewed directly in Architecture/Closeout workflows with a deterministic production-interface outcome."
         ]
       }
     },
@@ -7094,9 +7113,12 @@
         }
       ],
       "consumers": [
-        "src/pages/tabs/JamDetailPageV2.tsx"
+        "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -7124,10 +7146,10 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "default",
@@ -7137,7 +7159,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Clipboard and native-share branches depend on browser capabilities; remove the exemption when those capabilities have deterministic workbench adapters."
+          "Reviewed through the strict-a11y share-capability story in Architecture/Closeout workflows with deterministic sharing commands."
         ]
       }
     },
@@ -8515,8 +8537,6 @@
           "src/components/music/MusicDataDisplay.tsx",
           "src/hooks/index.ts",
           "src/lib/musicConstants.ts",
-          "src/lib/musicUtils.tsx",
-          "src/services/index.ts",
           "src/types/api.types.ts"
         ],
         "external": [
@@ -8526,7 +8546,6 @@
           "react-router-dom"
         ],
         "contexts": [
-          "api",
           "internationalization",
           "routing"
         ]
@@ -9340,9 +9359,9 @@
           "src/components/index.ts",
           "src/components/schedule/ScheduleCollapsibleCard.tsx",
           "src/components/schedule/index.ts",
-          "src/services/index.ts",
-          "src/types/api.types.ts",
-          "src/utils/scheduleUtils.ts"
+          "src/hooks/index.ts",
+          "src/lib/schedule/hostScheduleController.ts",
+          "src/types/api.types.ts"
         ],
         "external": [
           "lucide-react",
@@ -9351,7 +9370,6 @@
           "react-router-dom"
         ],
         "contexts": [
-          "api",
           "internationalization",
           "routing"
         ]
@@ -9497,6 +9515,7 @@
       "consumers": [
         "src/components/Action.tsx",
         "src/components/DesktopUserMenu.tsx",
+        "src/components/EditMusicianModal.tsx",
         "src/components/FeedbackButton.tsx",
         "src/components/FeedbackModal.tsx",
         "src/components/FeedbackStates.tsx",
@@ -9539,6 +9558,7 @@
         "src/workbench/stories/Overlays.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
@@ -9729,6 +9749,7 @@
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
@@ -9808,6 +9829,7 @@
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
@@ -10296,6 +10318,7 @@
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
@@ -10747,6 +10770,7 @@
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
@@ -10831,6 +10855,7 @@
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
@@ -11798,6 +11823,10 @@
       "reason": "Application bootstrap; renders the root but does not declare a component."
     },
     {
+      "source": "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+      "reason": "Private Storybook composition providing merged-stack evidence for catalogued architecture workflows; not product UI."
+    },
+    {
       "source": "src/workbench/stories/DJControl.stories.tsx",
       "reason": "Private Storybook composition for reviewed DJ playback and queue states; not product UI."
     },
@@ -11907,13 +11936,13 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 168,
+    "eligibleSources": 169,
     "representedSources": 138,
-    "ignoredSources": 30,
+    "ignoredSources": 31,
     "workbench": {
       "activeReusableVisualComponents": 133,
-      "ready": 114,
-      "exempt": 19,
+      "ready": 121,
+      "exempt": 12,
       "needsReview": 0,
       "unknown": 0,
       "readyWithoutStory": 0
@@ -11959,18 +11988,6 @@
             "tracking-wider",
             "transition-colors",
             "uppercase"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0018.action.39c79645ef02",
-          "source": "src/components/EditMusicianModal.tsx",
-          "line": 186,
-          "column": 9,
-          "ownerComponentId": "ui.0018",
-          "tag": "button",
-          "staticClassTokens": [
-            "hidden"
           ],
           "dynamicClasses": false
         },
@@ -12092,7 +12109,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0040.action.685d70f9b0e0",
+          "id": "inline.ui.0040.action.1386d114b37f",
           "source": "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
           "line": 80,
           "column": 13,
@@ -12109,18 +12126,6 @@
             "w-full"
           ],
           "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0041.action.39c79645ef02",
-          "source": "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
-          "line": 309,
-          "column": 9,
-          "ownerComponentId": "ui.0041",
-          "tag": "button",
-          "staticClassTokens": [
-            "hidden"
-          ],
-          "dynamicClasses": false
         },
         {
           "id": "inline.ui.0051.action.998263c4bc81",
@@ -12158,7 +12163,7 @@
         {
           "id": "inline.ui.0055.action.06430e4aaaa7",
           "source": "src/components/Modal.tsx",
-          "line": 152,
+          "line": 159,
           "column": 9,
           "ownerComponentId": "ui.0055",
           "tag": "button",
@@ -12168,7 +12173,7 @@
         {
           "id": "inline.ui.0055.action.dfadafd80204",
           "source": "src/components/Modal.tsx",
-          "line": 99,
+          "line": 106,
           "column": 17,
           "ownerComponentId": "ui.0055",
           "tag": "button",
@@ -12183,7 +12188,7 @@
         {
           "id": "inline.ui.0055.action.dfadafd80204",
           "source": "src/components/Modal.tsx",
-          "line": 128,
+          "line": 135,
           "column": 17,
           "ownerComponentId": "ui.0055",
           "tag": "button",
@@ -13047,9 +13052,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.13992e296a37",
+          "id": "inline.ui.0149.action.33d5079d27a5",
           "source": "src/pages/MusicPage.tsx",
-          "line": 482,
+          "line": 324,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13061,9 +13066,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.66ccf2efc3cc",
+          "id": "inline.ui.0149.action.6cdea5fa5223",
           "source": "src/pages/MusicPage.tsx",
-          "line": 450,
+          "line": 356,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13075,9 +13080,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.8f783887c351",
+          "id": "inline.ui.0149.action.b705ee1639fc",
           "source": "src/pages/MusicPage.tsx",
-          "line": 457,
+          "line": 349,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13089,9 +13094,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.ffc3d5a3e973",
+          "id": "inline.ui.0149.action.c041212696b0",
           "source": "src/pages/MusicPage.tsx",
-          "line": 489,
+          "line": 317,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -14213,7 +14218,7 @@
         {
           "id": "inline.ui.0149.card.9352e5e75f37",
           "source": "src/pages/MusicPage.tsx",
-          "line": 309,
+          "line": 176,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14227,7 +14232,7 @@
         {
           "id": "inline.ui.0149.card.b9a21d7bb545",
           "source": "src/pages/MusicPage.tsx",
-          "line": 301,
+          "line": 168,
           "column": 11,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14370,9 +14375,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0163.card.6199aa1a86c4",
+          "id": "inline.ui.0163.card.6aa26321762f",
           "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 466,
+          "line": 360,
           "column": 17,
           "ownerComponentId": "ui.0163",
           "tag": "EmptyState",
@@ -14979,9 +14984,23 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.field.29e654bf736a",
+          "id": "inline.ui.0149.field.bd06f9d565b2",
           "source": "src/pages/MusicPage.tsx",
-          "line": 467,
+          "line": 300,
+          "column": 15,
+          "ownerComponentId": "ui.0149",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "select-bordered",
+            "select-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.field.f15b75df87c3",
+          "source": "src/pages/MusicPage.tsx",
+          "line": 334,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "input",
@@ -14991,20 +15010,6 @@
             "input-sm",
             "text-center",
             "w-14"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0149.field.37d484e07210",
-          "source": "src/pages/MusicPage.tsx",
-          "line": 433,
-          "column": 15,
-          "ownerComponentId": "ui.0149",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "select-sm"
           ],
           "dynamicClasses": false
         }
@@ -15124,9 +15129,9 @@
       "family": "modal",
       "occurrences": [
         {
-          "id": "inline.ui.0055.modal.8a2e4c771428",
+          "id": "inline.ui.0055.modal.ff314e606b5a",
           "source": "src/components/Modal.tsx",
-          "line": 86,
+          "line": 87,
           "column": 5,
           "ownerComponentId": "ui.0055",
           "tag": "dialog",

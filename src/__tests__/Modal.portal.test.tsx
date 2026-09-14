@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { FeedbackModal } from '../components/FeedbackModal'
 import { Modal } from '../components/Modal'
@@ -12,6 +12,12 @@ vi.mock('../services', () => ({
 }))
 
 describe('Modal portal placement', () => {
+  it('exposes an open, named dialog to assistive technology', () => {
+    render(<Modal isOpen onClose={vi.fn()} title="Accessible modal">Contents</Modal>)
+
+    expect(screen.getByRole('dialog', { name: 'Accessible modal' })).toHaveAttribute('open')
+  })
+
   it('renders into the document body by default when portal rendering is enabled', () => {
     render(<Modal isOpen onClose={vi.fn()} title="Default portal" portal>Contents</Modal>)
 

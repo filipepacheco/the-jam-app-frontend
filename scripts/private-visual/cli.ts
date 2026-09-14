@@ -466,7 +466,13 @@ const generateProgress = async (root: string, check: boolean): Promise<void> => 
   }))
   const staleFiles = stale.filter((filename): filename is string => Boolean(filename))
   if (check) {
-    if (staleFiles.length > 0) throw new Error(`Private workbench progress is stale: ${staleFiles.map((filename) => path.relative(root, filename)).join(', ')}. Run npm run visual:progress.`)
+    if (staleFiles.length > 0) {
+      const expected = output
+        .filter(({ filename }) => staleFiles.includes(filename))
+        .map(({ filename, contents }) => `\n--- expected ${path.relative(root, filename)} ---\n${contents}`)
+        .join('')
+      throw new Error(`Private workbench progress is stale: ${staleFiles.map((filename) => path.relative(root, filename)).join(', ')}. Run npm run visual:progress.${expected}`)
+    }
     console.log('Private workbench progress is deterministic and up to date.')
     return
   }

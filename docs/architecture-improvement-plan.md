@@ -1,6 +1,6 @@
 # Architecture Improvement Plan
 
-Status: in progress. Decisions are recorded in `CONTEXT.md`, `docs/adr/`, and `docs/architecture-improvement-spec.md`.
+Status: complete. Decisions are recorded in `CONTEXT.md`, `docs/adr/`, and `docs/architecture-improvement-spec.md`; implementation and closeout are tracked by GitHub issues #101–#113 and PR #126.
 
 This plan captures the architecture work identified after the complete UI catalogue review. It deliberately separates behavior-preserving architecture work from later screen refinement.
 
@@ -105,11 +105,15 @@ The accepted specification is `docs/architecture-improvement-spec.md`.
 
 ### Phase 3: create tracer-bullet tickets
 
+Status: complete.
+
 Create one parent GitHub issue and approximately 10–14 self-contained child tickets. Encode blocking edges with GitHub issue dependencies. Tickets created from the specification are agent-ready and do not need triage.
 
 Completion criterion: every ticket produces a thin, testable end-to-end improvement, declares its blockers, and can be implemented without recovering missing decisions from this plan.
 
 ### Phase 4: implement and merge
+
+Status: complete.
 
 For each unblocked ticket:
 
@@ -127,6 +131,8 @@ Completion criterion: the ticket is merged, its child issue is closed, and depen
 
 ### Phase 5: architecture closeout
 
+Status: complete.
+
 Verify the merged stack, not isolated branches.
 
 Required closeout evidence:
@@ -140,6 +146,13 @@ Required closeout evidence:
 - Catalogue freshness, workbench, interaction, accessibility, visual, privacy, and production-isolation checks pass.
 
 Completion criterion: the parent architecture issue contains the evidence above and every child ticket is closed.
+
+Closeout evidence was verified on PR #126:
+
+- Production build and isolation: [Build and verify production output](https://github.com/filipepacheco/the-jam-app-frontend/actions/runs/34793680087/job/103822570917).
+- Catalogue freshness and reviewed baseline: [Check catalogue](https://github.com/filipepacheco/the-jam-app-frontend/actions/runs/34793680057/job/103822570850).
+- Interactions, strict accessibility, 32 canonical visual baselines, privacy, and deterministic workbench build: [Test and build privately](https://github.com/filipepacheco/the-jam-app-frontend/actions/runs/34793680081/job/103822570896).
+- Deferred backend contracts are recorded in `docs/backend-debt.md`.
 
 ## Planned Merge Sequence
 

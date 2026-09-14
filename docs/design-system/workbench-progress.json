@@ -1,34 +1,34 @@
 {
   "schemaVersion": 1,
   "inventory": {
-    "discovered": 183,
+    "discovered": 182,
     "represented": 138,
-    "ignored": 30,
+    "ignored": 31,
     "lifecycle": {
-      "active": 168,
+      "active": 167,
       "legacy": 2,
       "uncertain": 13
     }
   },
   "stories": {
-    "files": 27,
-    "total": 146,
-    "playCoverage": 66,
-    "reachableCatalogueComponents": 107,
-    "visualCandidates": 146,
+    "files": 28,
+    "total": 151,
+    "playCoverage": 80,
+    "reachableCatalogueComponents": 112,
+    "visualCandidates": 151,
     "visualCells": 32
   },
   "interactions": {
-    "total": 66,
-    "pass": 66,
+    "total": 80,
+    "pass": 80,
     "fail": 0,
     "unhandled": 0,
     "evidence": "workbench-json-results"
   },
   "accessibility": {
-    "strict": 25,
-    "todo": 121,
-    "reviewedDebt": 3,
+    "strict": 52,
+    "todo": 99,
+    "reviewedDebt": 4,
     "newViolations": 0
   },
   "visual": {
@@ -65,9 +65,9 @@
       "data-display": 1
     },
     "not-applicable": {
-      "unspecified": 5
+      "unspecified": 6
     },
-    "notRecorded": 148,
+    "notRecorded": 146,
     "inlinePatternCandidates": {
       "action": 1,
       "badge": 1,
