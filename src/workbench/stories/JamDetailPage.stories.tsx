@@ -17,6 +17,26 @@ const navigate = fn()
 const retry = fn(async () => undefined)
 const page = (content: React.ReactNode) => <HelmetProvider>{content}</HelmetProvider>
 
+export const Loading: Story = {
+  render: () => page(<JamDetailPageV2 viewState={{status: 'loading'}} onNavigate={navigate} />),
+  globals: {
+    authRole: 'guest',
+    locale: 'pt',
+    theme: 'jam-light',
+    viewport: {value: 'phone', isRotated: false},
+    reducedMotion: true,
+  },
+  parameters: {
+    a11y: {test: 'error'},
+    designSystem: {
+      interaction: {
+        status: 'not-applicable',
+        rationale: 'Static Jam detail loading state with no user interaction.',
+      },
+    },
+  },
+}
+
 export const LoadedParticipation: Story = {
   render: () => page(
     <JamDetailPageV2
@@ -44,6 +64,56 @@ export const LoadedParticipation: Story = {
     await userEvent.click(participate)
     await userEvent.click(documentView.getByRole('button', {name: /participar/i}))
     await expect(documentView.getByRole('dialog')).toBeVisible()
+  },
+}
+
+export const LongContentAndLocation: Story = {
+  render: () => page(
+    <JamDetailPageV2
+      viewState={{
+        status: 'loaded',
+        jam: {
+          ...jamFixtures.longContent,
+          location: 'Benjamin Social Club, Avenida da Música 1234, São Paulo',
+          slug: 'long-content-jam',
+        },
+      }}
+      onNavigate={navigate}
+    />,
+  ),
+  globals: {
+    authRole: 'user',
+    locale: 'en',
+    theme: 'jam-dark',
+    viewport: {value: 'desktop', isRotated: false},
+    reducedMotion: true,
+  },
+  play: async ({canvas, userEvent}) => {
+    await expect(canvas.getByRole('heading', {level: 1, name: /deliberately long venue/i})).toBeVisible()
+    await userEvent.click(canvas.getByRole('button', {name: /show more/i}))
+    await expect(canvas.getByText(/arrive before soundcheck/i)).toBeVisible()
+    await userEvent.click(canvas.getByRole('button', {name: /full address/i}))
+    await expect(canvas.getByText(/avenida da música 1234/i)).toBeVisible()
+  },
+}
+
+export const GuestParticipationRedirect: Story = {
+  render: () => page(
+    <JamDetailPageV2
+      viewState={{status: 'loaded', jam: jamFixtures.active}}
+      onNavigate={navigate}
+    />,
+  ),
+  globals: {
+    authRole: 'guest',
+    locale: 'en',
+    theme: 'jam-light',
+    viewport: {value: 'phone', isRotated: false},
+    reducedMotion: true,
+  },
+  play: async ({canvas, userEvent}) => {
+    await userEvent.click(canvas.getByRole('button', {name: /^register$/i}))
+    await expect(navigate).toHaveBeenCalledWith('/login?redirect=/jams/jam-friday')
   },
 }
 
