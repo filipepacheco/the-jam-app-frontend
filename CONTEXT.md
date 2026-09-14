@@ -43,3 +43,7 @@ _Avoid_: Musician type, slot
 **Suggestion**:
 A proposed Performance that is not part of the playable Schedule until a host approves it.
 _Avoid_: Scheduled Performance
+
+## Deferred contracts
+
+Guest Musicians, backend Performance naming, atomic Live Queue revisions, and server-wide Music filtering remain explicitly tracked in `docs/backend-debt.md`.

@@ -39,8 +39,8 @@ export const djWorkbenchCoverage = [
   { id: 'ui.0013', disposition: 'story' },
   { id: 'ui.0015', disposition: 'story' },
   { id: 'ui.0016', disposition: 'story', owner: 'parent' },
-  { id: 'ui.0104', disposition: 'exempt', reason: 'Polling and reorder hooks are internal; remove when deterministic adapters are injectable.' },
-  { id: 'ui.0105', disposition: 'exempt', reason: 'Private child is inspected through LiveJamControlPanel once its hooks are injectable.' },
-  { id: 'ui.0106', disposition: 'exempt', reason: 'Private child is inspected through LiveJamControlPanel once its hooks are injectable.' },
+  { id: 'ui.0104', disposition: 'story' },
+  { id: 'ui.0105', disposition: 'story', owner: 'parent' },
+  { id: 'ui.0106', disposition: 'story', owner: 'parent' },
   { id: 'ui.0159', disposition: 'exempt', reason: 'Route-level control orchestration has no injectable polling seam; primitives are covered directly.' },
 ] as const

@@ -29,6 +29,8 @@ Each workflow presents one small state-and-command interface. Production screens
 
 ## Compatibility exclusions and debt
 
+The durable register for these deferred contracts is `docs/backend-debt.md`.
+
 - Do not redesign screens during this program.
 - Do not rename backend `Schedule*` DTOs, fields, or endpoints. A backend contract migration to Performance terminology is recorded debt.
 - Do not add guest Musicians. Every Musician remains User-backed; guest Musician support is recorded product and backend debt.

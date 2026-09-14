@@ -3,7 +3,7 @@
  * Provides dialog wrapper with escape key, focus management, and backdrop handling
  */
 
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { X } from 'lucide-react'
@@ -50,6 +50,7 @@ export function Modal({
   const { t } = useTranslation()
   const Heading = headingLevel || 'h3'
   const modalRef = useRef<HTMLDivElement>(null)
+  const titleId = useId()
 
   // Focus management
   useEffect(() => {
@@ -83,7 +84,13 @@ export function Modal({
     : ''
 
   const content = (
-    <dialog className={`modal modal-open ${responsiveClass}`} role={role}>
+    <dialog
+      aria-labelledby={titleId}
+      aria-modal="true"
+      className={`modal modal-open ${responsiveClass}`}
+      open
+      role={role}
+    >
       <div
         ref={modalRef}
         className={`modal-box ${SIZE_CLASSES[size]} w-full ${scrollableClass} ${className}`}
@@ -92,7 +99,7 @@ export function Modal({
           <>
             {/* Fixed Header */}
             <div className="px-4 sm:px-6 py-4 border-b border-base-300 flex items-center justify-between shrink-0">
-              <Heading className="font-bold text-lg sm:text-xl">
+              <Heading id={titleId} className="font-bold text-lg sm:text-xl">
                 {title}
               </Heading>
               {!closeDisabled && (
@@ -121,7 +128,7 @@ export function Modal({
           <>
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
-              <Heading className="font-bold text-lg">
+              <Heading id={titleId} className="font-bold text-lg">
                 {title}
               </Heading>
               {!closeDisabled && (

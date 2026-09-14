@@ -114,6 +114,7 @@ export function ShareModal({
           size={160}
           level="M"
           includeMargin
+          aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')}
         />
       </div>
 

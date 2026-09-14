@@ -212,10 +212,8 @@ export function SuggestNewSongModal({
             </Action>
           ) : (
             <Action
-              onClick={() => {
-                const syntheticEvent = { preventDefault: () => {} } as FormEvent
-                void handleSubmit(syntheticEvent)
-              }}
+              type="submit"
+              form="suggest-new-song-form"
               state={!formData.title.trim() || !formData.artist.trim() ? 'disabled' : 'idle'}
             >
               {getSubmitLabel()}
@@ -224,7 +222,11 @@ export function SuggestNewSongModal({
         </>
       }
     >
-      <form onSubmit={(e) => { void handleSubmit(e) }} className="space-y-6">
+      <form
+        id="suggest-new-song-form"
+        onSubmit={(e) => { void handleSubmit(e) }}
+        className="space-y-6"
+      >
         {/* Description */}
         <p className="text-sm text-base-content/70">
           {t('jams.suggest_new_song_description')}
@@ -278,8 +280,6 @@ export function SuggestNewSongModal({
         {/* Form Fields */}
         <MusicModalFormFields formData={formData} onChange={handleFieldChange} />
 
-        {/* Hidden submit button for form Enter key submission */}
-        <button type="submit" className="hidden" />
       </form>
     </Modal>
   )
