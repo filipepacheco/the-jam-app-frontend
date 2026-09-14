@@ -33,10 +33,10 @@
   },
   "visual": {
     "baselines": 32,
-    "pass": 6,
-    "change": 26,
+    "pass": 32,
+    "change": 0,
     "missing": 0,
-    "failure": 26,
+    "failure": 0,
     "themes": [
       "jam-dark",
       "jam-light"

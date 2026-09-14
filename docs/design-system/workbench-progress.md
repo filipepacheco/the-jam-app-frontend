@@ -18,7 +18,7 @@ Interaction evidence: total 80; pass 80; fail 0; unhandled 0 (workbench-json-res
 
 Accessibility modes — strict: 52; todo: 99; reviewed debt: 4; new violations: 0.
 
-Visual baselines: 32; pass/change/missing/failure: 6/26/0/26; themes: jam-dark, jam-light; viewports: desktop, phone, venue; max differing-pixel ratio: 0.0005.
+Visual baselines: 32; pass/change/missing/failure: 32/0/0/0; themes: jam-dark, jam-light; viewports: desktop, phone, venue; max differing-pixel ratio: 0.0005.
 
 ## Canonical adoption and deprecation
 
