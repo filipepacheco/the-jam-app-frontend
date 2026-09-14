@@ -853,6 +853,7 @@
     "musicians": {
       "title": "Directorio de Músicos",
       "subtitle": "Gestiona y visualiza todos los músicos en tu sistema",
+      "loading": "Cargando músicos",
       "failed_to_load": "Error al cargar músicos",
       "update_success": "Músico actualizado con éxito",
       "update_failed": "Error al actualizar músico",
@@ -863,8 +864,11 @@
         "all_levels": "Todos los niveles"
       },
       "results_count": "Mostrando {{shown}} de {{total}} músicos",
-      "no_musicians": "No se encontraron músicos. Los músicos aparecerán aquí una vez que se registren.",
+      "no_musicians_title": "Aún no hay músicos",
+      "no_musicians": "Los músicos aparecerán aquí una vez que se registren.",
+      "no_match_title": "No hay músicos coincidentes",
       "no_match": "Ningún músico coincide con tus criterios de búsqueda.",
+      "clear_filters": "Limpiar filtros",
       "table": {
         "name": "Nombre",
         "instrument": "Instrumento",

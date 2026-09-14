@@ -855,6 +855,7 @@
     "musicians": {
       "title": "Musicians Directory",
       "subtitle": "Manage and view all musicians in your system",
+      "loading": "Loading musicians",
       "failed_to_load": "Failed to load musicians",
       "update_success": "Musician updated successfully",
       "update_failed": "Failed to update musician",
@@ -865,8 +866,11 @@
         "all_levels": "All Levels"
       },
       "results_count": "Showing {{shown}} of {{total}} musicians",
-      "no_musicians": "No musicians found. Musicians will appear here once they register.",
+      "no_musicians_title": "No musicians yet",
+      "no_musicians": "Musicians will appear here once they register.",
+      "no_match_title": "No matching musicians",
       "no_match": "No musicians match your search criteria.",
+      "clear_filters": "Clear filters",
       "table": {
         "name": "Name",
         "instrument": "Instrument",
