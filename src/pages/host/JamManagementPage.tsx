@@ -264,11 +264,7 @@ export function JamManagementPage() {
                 {activeTab === 'dj-control' && (useLegacyDJ ? (
                         <DJControlTab jam={jam} onReload={() => refreshJam()}/>) : (
                         <DJControlTabV2 jamId={jamId!} onReload={() => refreshJam()}/>))}
-                {activeTab === 'live' && (<LiveJamControlPanel
-                        jamId={jamId!}
-                        onActionSuccess={(msg) => setSuccess(msg)}
-                        onActionError={(err) => setError(err)}
-                    />)}
+                {activeTab === 'live' && <LiveJamControlPanel jamId={jamId!} />}
                 {activeTab === 'dashboard' && <DashboardTab jam={jam}/>}
                 {activeTab === 'analytics' && <AnalyticsTab jam={jam}/>}
             </div>

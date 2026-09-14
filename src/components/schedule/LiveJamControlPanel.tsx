@@ -1,5 +1,5 @@
 /** Host control interface for managing the active Jam's Live Queue. */
-import React, {useEffect, useMemo, useRef} from 'react'
+import React, {useMemo} from 'react'
 import {ArrowUpDown, Check, GripVertical, Loader2, X} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {useLiveQueueController} from '../../hooks/useLiveQueueController'
@@ -9,12 +9,11 @@ import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {CORE_BAND} from '../../utils/scheduleUtils'
 import {normalizeInstrument} from '../../utils/musicianUtils'
 import {Action} from '../Action'
+import {Alert} from '../Alert'
 import {DataCard} from '../data-display'
 
 interface LiveJamControlPanelProps {
   jamId: string
-  onActionSuccess?: (message: string) => void
-  onActionError?: (error: string) => void
 }
 
 type LiveQueueMusician = LiveQueuePerformance['musicians'][number]
@@ -169,41 +168,30 @@ function outcomeError(outcome: LiveQueueOutcome, conflictMessage: string): strin
   return null
 }
 
-export function LiveJamControlPanel({jamId, onActionSuccess, onActionError}: LiveJamControlPanelProps) {
+export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
   const {t} = useTranslation()
   const {state, commands, interactions, isLoading, error} = useLiveQueueController(jamId)
-  const lastReportedErrorRef = useRef<string | null>(null)
-  const lastOutcomeRef = useRef<LiveQueueOutcome | null>(null)
   const currentPerformance = state.server.currentPerformance
   const performances = state.draftPerformances
   const isReorderMode = state.session.status === 'editing'
   const isReordering = state.persistence.status !== 'idle'
   const activeInput = state.input.mode === 'idle' ? null : state.input
   const dragOverId = activeInput ? performances[activeInput.targetIndex]?.id ?? null : null
-
-  useEffect(() => {
-    if (error && error !== lastReportedErrorRef.current) {
-      lastReportedErrorRef.current = error
-      onActionError?.(error)
-    } else if (!error) {
-      lastReportedErrorRef.current = null
-    }
-  }, [error, onActionError])
-
-  useEffect(() => {
-    const outcome = state.latestOutcome
-    if (!outcome || outcome === lastOutcomeRef.current) return
-    lastOutcomeRef.current = outcome
-    if (outcome.code === 'success') {
-      onActionSuccess?.(t('live_control.reordered_feedback'))
-      return
-    }
-    const message = outcomeError(
-      outcome,
-      t('live_control.reorder_conflict', 'The Live Queue changed. Reload it and reapply your order.'),
-    )
-    if (message) onActionError?.(message)
-  }, [onActionError, onActionSuccess, state.latestOutcome, t])
+  const outcomeMessage = state.latestOutcome?.code === 'success'
+    ? t('live_control.reordered_feedback')
+    : state.latestOutcome
+      ? outcomeError(
+          state.latestOutcome,
+          t('live_control.reorder_conflict', 'The Live Queue changed. Reload it and reapply your order.'),
+        )
+      : null
+  const conflictMessage = state.conflict
+    ? t('live_control.reorder_conflict', 'The Live Queue changed. Reload it and reapply your order.')
+    : null
+  const queueFeedback = error ?? conflictMessage ?? outcomeMessage
+  const queueFeedbackType = !error && !conflictMessage && state.latestOutcome?.code === 'success'
+    ? 'success' as const
+    : 'error' as const
 
   if (isLoading && !currentPerformance && performances.length === 0) {
     return (
@@ -228,26 +216,38 @@ export function LiveJamControlPanel({jamId, onActionSuccess, onActionError}: Liv
       )}
 
       <DataCard as="section" className="p-6">
+        {queueFeedback && (
+          <Alert
+            type={queueFeedbackType}
+            message={queueFeedback}
+            className="mb-4"
+          />
+        )}
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold text-balance">{t('live_control.up_next')}</h3>
           {isReorderMode ? (
             <div className="flex items-center gap-2">
+              <Action
+                variant="quiet"
+                state={isReordering ? 'disabled' : 'idle'}
+                onClick={commands.cancelReorder}
+              >
+                <Action.Icon><X className="size-4" /></Action.Icon>
+                <Action.Label>{t('live_control.reorder_cancel', 'Cancel')}</Action.Label>
+              </Action>
               {isReordering ? (
-                <div className="flex items-center gap-2 text-sm text-base-content/60">
-                  <Loader2 className="size-4 animate-spin" />
-                  <span>{t('live_control.saving_order')}</span>
-                </div>
+                <Action
+                  variant="primary"
+                  state="loading"
+                  loadingLabel={t('live_control.saving_order')}
+                >
+                  <Action.Label>{t('live_control.reorder_save', 'Save order')}</Action.Label>
+                </Action>
               ) : (
-                <>
-                  <Action variant="quiet" onClick={commands.cancelReorder}>
-                    <Action.Icon><X className="size-4" /></Action.Icon>
-                    <Action.Label>{t('live_control.reorder_cancel', 'Cancel')}</Action.Label>
-                  </Action>
-                  <Action variant="primary" onClick={() => { void commands.saveReorder() }}>
-                    <Action.Icon><Check className="size-4" /></Action.Icon>
-                    <Action.Label>{t('live_control.reorder_save', 'Save order')}</Action.Label>
-                  </Action>
-                </>
+                <Action variant="primary" onClick={() => { void commands.saveReorder() }}>
+                  <Action.Icon><Check className="size-4" /></Action.Icon>
+                  <Action.Label>{t('live_control.reorder_save', 'Save order')}</Action.Label>
+                </Action>
               )}
             </div>
           ) : performances.length > 1 ? (

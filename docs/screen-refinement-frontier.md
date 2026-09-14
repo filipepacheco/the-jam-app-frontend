@@ -1,7 +1,32 @@
 # Screen Refinement Frontier
 
-Status: proposed. This plan begins after the completed architecture program in
+Status: active. This plan begins after the completed architecture program in
 [`architecture-improvement-plan.md`](./architecture-improvement-plan.md).
+
+## Implementation status
+
+This document is also the durable frontier ledger. A track is marked complete
+only after its full checklist and integrated gate pass; landing an evidence
+slice does not close the track.
+
+| Track | State | Integrated evidence | Remaining gate |
+| --- | --- | --- | --- |
+| 0. Frontier foundation | Complete | Both private workflows recognize `screen-refinement-gate`; the repository policy tests that path; application tests run in production CI; the screen-refinement pull-request evidence template is added. [Parent #127](https://github.com/filipepacheco/the-jam-app-frontend/issues/127) links the eight critique issues below. | None; begin each target from its critique issue and accept its contract before creating implementation issues. |
+| 1. Live host control | In progress | `Pages/Screen refinement/Live host control` composes the production management shell, DJ playback, and Live Queue for ready, no-current-Performance, saving, and rollback states. Reorder save/cancel controls remain visible and safely disabled while saving; success, conflict, rollback, refresh, and polling feedback stays attached to the queue. | Complete the remaining state matrix, strict affected-story review, and canonical visual decision. |
+| 2. Schedule management | In progress | `Pages/Screen refinement/Schedule management` directly covers active, upcoming, suggested, completed, small-schedule, empty, phone, and host-console compositions. The add-Music action remains reachable with one to three Performances, operational groups follow the live-state hierarchy, and mutation, refresh, and partial-bulk outcomes stay attached to affected rows. | Finish dense-card refinement and the remaining safety matrix, then run the track gate. |
+| 3. Music library | In progress | [Critique #130](https://github.com/filipepacheco/the-jam-app-frontend/issues/130) anchors discovery. `Pages/Screen refinement/Music library` directly covers viewer, host moderation, long content, pagination, empty-library, and recoverable query states. Approved, suggestion-count, and suggestion-list failures retain separate retry paths, and compact pagination controls have localized accessible names. | Finish filtered-empty, loading, mutation/confirmation/refresh safety, and compatibility evidence; accept the contract and run the track gate. |
+| 4. Host dashboard | Not started | Existing application and component evidence is listed below. | Critique, contract, implementation, and track gate. |
+| 5. Jam detail | In progress | `Pages/Screen refinement/Jam detail` covers the loaded participation hierarchy, no-Performances, recoverable error, and not-found states through a typed deterministic route-state seam. | Complete long-content/location/share feedback, authentication and overlay transitions, timeline emphasis, strict affected-story review, and canonical visual decision. |
+| 6. Public Dashboard transitions | Not started | Existing card, carousel, and control evidence is listed below. | Critique, contract, implementation, and track gate. |
+| 7. Browse Jams hierarchy | Not started | Existing Jam and canonical empty-state evidence is listed below. | Critique, contract, implementation, and track gate after Track 5. |
+| 8. Create Jam and Musicians | Not started | Existing form, overlay, and page-test evidence is listed below. | Critique, contract, implementation, and track gate after the shared host patterns land. |
+
+Current integrated verification: catalogue freshness, workbench typecheck,
+private visual privacy policy, progressive design-system enforcement, focused
+Live Queue tests, the application suite, and the production-isolation build.
+The local browser-backed workbench run still requires the canonical Linux
+renderer; the final gate, rather than a dependency-symlinked macOS run, is the
+authority for interaction, accessibility, and visual results.
 
 ## Destination
 
@@ -170,6 +195,18 @@ promise matches its destination.
 ### 0. Frontier foundation
 
 Purpose: make every later screen decision reviewable without repeating setup.
+
+GitHub coordination:
+
+- [Parent frontier issue #127](https://github.com/filipepacheco/the-jam-app-frontend/issues/127)
+- [Live host control critique #128](https://github.com/filipepacheco/the-jam-app-frontend/issues/128)
+- [Schedule management critique #129](https://github.com/filipepacheco/the-jam-app-frontend/issues/129)
+- [Music library critique #130](https://github.com/filipepacheco/the-jam-app-frontend/issues/130)
+- [Host dashboard critique #131](https://github.com/filipepacheco/the-jam-app-frontend/issues/131)
+- [Jam detail critique #132](https://github.com/filipepacheco/the-jam-app-frontend/issues/132)
+- [Public Dashboard transitions critique #133](https://github.com/filipepacheco/the-jam-app-frontend/issues/133)
+- [Browse Jams hierarchy critique #134](https://github.com/filipepacheco/the-jam-app-frontend/issues/134)
+- [Create Jam and Musicians critique #135](https://github.com/filipepacheco/the-jam-app-frontend/issues/135)
 
 Deliverables:
 

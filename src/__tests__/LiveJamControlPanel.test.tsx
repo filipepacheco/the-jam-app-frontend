@@ -139,6 +139,38 @@ describe('LiveJamControlPanel', () => {
     expect(reorder).not.toHaveBeenCalled()
   })
 
+  it('keeps reorder actions visible and safely disabled while saving', () => {
+    vi.useFakeTimers()
+    vi.spyOn(jamControlService, 'reorderQueue').mockImplementation(() => new Promise(() => {}))
+    render(<LiveJamControlPanel jamId="jam-1" />)
+    fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
+    fireEvent.keyDown(screen.getAllByRole('listitem')[1], {key: 'ArrowUp'})
+    fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_save'}))
+
+    act(() => { vi.advanceTimersByTime(300) })
+
+    expect(screen.getByRole('button', {name: 'live_control.reorder_cancel'})).toBeDisabled()
+    expect(screen.getByRole('button', {name: 'live_control.saving_order'})).toBeDisabled()
+    expect(screen.getByRole('button', {name: 'live_control.saving_order'})).toHaveAttribute('aria-busy', 'true')
+  })
+
+  it('keeps a failed reorder attached to the queue after rollback', async () => {
+    vi.useFakeTimers()
+    vi.spyOn(jamControlService, 'reorderQueue').mockResolvedValue({
+      success: false,
+      error: {message: 'The original order was restored.'},
+    })
+    render(<LiveJamControlPanel jamId="jam-1" />)
+    fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
+    fireEvent.keyDown(screen.getAllByRole('listitem')[1], {key: 'ArrowUp'})
+    fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_save'}))
+
+    await act(async () => { await vi.advanceTimersByTimeAsync(300) })
+
+    expect(screen.getByRole('alert')).toHaveTextContent('The original order was restored.')
+    expect(screen.getAllByRole('listitem')[0]).toHaveTextContent('Music a')
+  })
+
   it('aborts in-flight persistence on unmount', () => {
     vi.useFakeTimers()
     let signal: AbortSignal | undefined

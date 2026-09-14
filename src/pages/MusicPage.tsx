@@ -10,8 +10,10 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth, useMusicLibraryController, usePageAlerts } from '../hooks'
 import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
+import type { MusicLibraryMutationPort, MusicLibraryQueryPort } from '../lib/music/musicLibraryController'
 import {
   Action,
+  Alert,
   Badge,
   ConfirmDialog,
   EmptyState,
@@ -30,12 +32,21 @@ import { MusicDataCard } from '../components/music/MusicDataDisplay'
 const PAGE_SIZE_OPTIONS = [20, 50, 100] as const
 type SortBy = 'title' | 'artist' | 'date'
 
-export function MusicPage() {
+interface MusicPageProps {
+  queryPort?: MusicLibraryQueryPort
+  mutationPort?: MusicLibraryMutationPort
+}
+
+export function MusicPage({ queryPort, mutationPort }: MusicPageProps = {}) {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { user, isAuthenticated } = useAuth()
 
-  const {state: musicState, commands: musicCommands} = useMusicLibraryController(Boolean(user?.isHost))
+  const {state: musicState, commands: musicCommands} = useMusicLibraryController(
+    Boolean(user?.isHost),
+    queryPort,
+    mutationPort,
+  )
   const {
     approved, query, suggestedCount, suggestedList, suggestedOpen, visibleMusic,
     pendingEntityIds, pendingConfirmation, modalIntent,
@@ -45,11 +56,6 @@ export function MusicPage() {
   const page = query.page
   const pageSize = query.pageSize
   const isLoading = approved.status === 'loading'
-  const fetchError = [approved, suggestedCount, suggestedList]
-    .filter((queryState) => queryState.status === 'failed')
-    .map((queryState) => queryState.error?.message || t('music_library.errors.failed_to_load'))
-    .filter((message): message is string => Boolean(message))
-    .join(' · ') || null
   const totalPages = meta ? Math.ceil(meta.total / pageSize) : 0
   const openSuggestedModal = musicCommands.openSuggested
   const closeSuggestedModal = musicCommands.closeSuggested
@@ -242,12 +248,38 @@ export function MusicPage() {
 
       {/* Alerts */}
       <PageAlerts
-        error={error || fetchError || null}
+        error={error}
         success={success}
         onDismissError={clearError}
         onDismissSuccess={clearSuccess}
         className="container mx-auto max-w-7xl px-4 mt-4"
       />
+      {(approved.status === 'failed' || (user?.isHost && suggestedCount.status === 'failed')) && (
+        <div className="container mx-auto max-w-7xl space-y-3 px-4 mt-4">
+          {approved.status === 'failed' && (
+            <Alert
+              type="error"
+              message={approved.error?.message || t('music_library.errors.failed_to_load')}
+              action={(
+                <Action variant="quiet" onClick={() => void musicCommands.refreshApproved()}>
+                  {t('common.try_again')}
+                </Action>
+              )}
+            />
+          )}
+          {user?.isHost && suggestedCount.status === 'failed' && (
+            <Alert
+              type="error"
+              message={suggestedCount.error?.message || t('music_library.errors.failed_to_load')}
+              action={(
+                <Action variant="quiet" onClick={() => void musicCommands.refreshSuggestedCount()}>
+                  {t('common.try_again')}
+                </Action>
+              )}
+            />
+          )}
+        </div>
+      )}
 
       {/* Search & Filter */}
       <div className="container mx-auto max-w-7xl px-4 py-4">
@@ -299,6 +331,7 @@ export function MusicPage() {
               <span>{t('common.show')}</span>
               <select
                 className="select select-sm select-bordered"
+                aria-label={t('music_library.pagination.page_size')}
                 value={pageSize}
                 onChange={(e) => { void musicCommands.setPageSize(Number(e.target.value)) }}
               >
@@ -316,17 +349,19 @@ export function MusicPage() {
               <div className="join">
                 <button
                   className="join-item btn btn-sm"
+                  aria-label={t('music_library.pagination.first')}
                   disabled={page === 0}
                   onClick={() => { void musicCommands.setPage(0) }}
                 >
-                  <ChevronsLeft className="size-4" />
+                  <ChevronsLeft className="size-4" aria-hidden="true" />
                 </button>
                 <button
                   className="join-item btn btn-sm"
+                  aria-label={t('music_library.pagination.previous')}
                   disabled={page === 0}
                   onClick={() => { void musicCommands.setPage(page - 1) }}
                 >
-                  <ChevronLeft className="size-4" />
+                  <ChevronLeft className="size-4" aria-hidden="true" />
                 </button>
               </div>
 
@@ -334,6 +369,7 @@ export function MusicPage() {
                 <input
                   type="number"
                   className="input input-sm input-bordered w-14 text-center"
+                  aria-label={t('music_library.pagination.page_number')}
                   min={1}
                   max={totalPages}
                   value={page + 1}
@@ -348,17 +384,19 @@ export function MusicPage() {
               <div className="join">
                 <button
                   className="join-item btn btn-sm"
+                  aria-label={t('music_library.pagination.next')}
                   disabled={!meta.hasMore}
                   onClick={() => { void musicCommands.setPage(page + 1) }}
                 >
-                  <ChevronRight className="size-4" />
+                  <ChevronRight className="size-4" aria-hidden="true" />
                 </button>
                 <button
                   className="join-item btn btn-sm"
+                  aria-label={t('music_library.pagination.last')}
                   disabled={!meta.hasMore}
                   onClick={() => { void musicCommands.setPage(totalPages - 1) }}
                 >
-                  <ChevronsRight className="size-4" />
+                  <ChevronsRight className="size-4" aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -403,11 +441,23 @@ export function MusicPage() {
         closeLabel={t('common.close')}
         size="lg"
       >
-        {suggestedLoading ? (
+        {suggestedList.status === 'failed' && (
+          <Alert
+            type="error"
+            message={suggestedList.error?.message || t('music_library.errors.failed_to_load')}
+            className="mb-3"
+            action={(
+              <Action variant="quiet" onClick={() => void musicCommands.refreshSuggestedList()}>
+                {t('common.try_again')}
+              </Action>
+            )}
+          />
+        )}
+        {suggestedLoading && suggestedSongs.length === 0 ? (
           <LoadingState label={t('common.loading')} className="py-8" />
-        ) : suggestedSongs.length === 0 ? (
+        ) : suggestedSongs.length === 0 && suggestedList.status !== 'failed' ? (
           <EmptyState kind="content" title={t('music_library.no_suggested')} />
-        ) : (
+        ) : suggestedSongs.length > 0 ? (
           <div className="space-y-3 overflow-y-auto">
             {suggestedSongs.map((music) => (
               <MusicDataCard key={music.id} music={music} density="comfortable">
@@ -439,7 +489,7 @@ export function MusicPage() {
               </MusicDataCard>
             ))}
           </div>
-        )}
+        ) : null}
       </OverlayModal>
 
       {/* Confirm Dialog */}

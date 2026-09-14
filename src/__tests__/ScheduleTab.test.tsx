@@ -45,6 +45,45 @@ const jam: JamResponseDto = {
 }
 
 describe('ScheduleTab', () => {
+    it('keeps add-new-song action available for up to three schedules and opens add-entry modal', async () => {
+        const user = userEvent.setup()
+        const makeSchedule = (index: number): JamResponseDto['schedules'][number] => ({
+            id: `schedule-${index}`,
+            jamId: 'jam-1',
+            musicId: `music-${index}`,
+            order: index + 1,
+            status: 'SCHEDULED',
+            createdAt: '2026-09-24T18:00:00.000Z',
+            music: {
+                id: `music-${index}`,
+                title: `Song ${index + 1}`,
+                artist: `Artist ${index + 1}`,
+                createdAt: '2026-09-24T18:00:00.000Z',
+            },
+            registrations: [],
+        })
+
+        for (const scheduleCount of [1, 2, 3] as const) {
+            const jamWithSchedules: JamResponseDto = {
+                ...jam,
+                schedules: Array.from({length: scheduleCount}, (_, index) => makeSchedule(index)),
+            }
+
+            const {unmount} = render(
+                <MemoryRouter>
+                    <ScheduleTab jam={jamWithSchedules} onReload={vi.fn()}/>
+                </MemoryRouter>,
+            )
+
+            const addSongButtons = screen.getAllByRole('button', {name: 'jam_management.schedule.add_new_song'})
+            expect(addSongButtons).toHaveLength(1)
+            await user.click(addSongButtons[0])
+
+            expect(await screen.findByText('jam_management.schedule.add_entry_modal')).toBeInTheDocument()
+            unmount()
+        }
+    })
+
     it('loads searchable music options when the add-entry modal opens', async () => {
         const user = userEvent.setup()
 

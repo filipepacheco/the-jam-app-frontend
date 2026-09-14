@@ -741,6 +741,14 @@
       "seconds": "Segundos",
       "more_options": "Mais opções"
     },
+    "pagination": {
+      "page_size": "Resultados por página",
+      "page_number": "Número da página",
+      "first": "Primeira página",
+      "previous": "Página anterior",
+      "next": "Próxima página",
+      "last": "Última página"
+    },
     "errors": {
       "failed_to_load": "Falha ao carregar músicas",
       "failed_to_approve": "Falha ao aprovar música",

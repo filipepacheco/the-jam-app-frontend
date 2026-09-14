@@ -13,7 +13,6 @@ import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
 import {
     Action,
-    Alert,
     DropdownMenu,
     IconAction,
     ScheduleEnrollmentModal,
@@ -33,21 +32,48 @@ import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from 
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
 import {MapPin, Calendar, Share2, ArrowLeft} from 'lucide-react'
 
-export function JamDetailPageV2() {
+export type JamDetailViewState =
+    | {status: 'loaded'; jam: JamResponseDto}
+    | {status: 'loading'}
+    | {status: 'error'; message: string}
+    | {status: 'not-found'}
+
+interface JamDetailPageV2Props {
+    /** Deterministic route-state seam for direct composition evidence. */
+    viewState?: JamDetailViewState
+    onNavigate?: (path: string) => void
+    onRetry?: () => void | Promise<void>
+}
+
+export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV2Props = {}) {
     const {t} = useTranslation()
     const {jamId} = useParams<{ jamId: string }>()
     const navigate = useNavigate()
     const {isAuthenticated, user} = useAuth()
 
-    const {data: jam, error: jamError, isLoading, mutate: mutateJam} = useSWR<JamResponseDto | null>(
-        jamId ? `/jams/${jamId}` : null
+    const {data: routeJam, error: routeError, isLoading: routeLoading, mutate: mutateJam} = useSWR<JamResponseDto | null>(
+        jamId && !viewState ? `/jams/${jamId}` : null
     )
+    const jam = viewState?.status === 'loaded' ? viewState.jam : routeJam
+    const jamError = viewState?.status === 'error' ? new Error(viewState.message) : routeError
+    const isLoading = viewState?.status === 'loading' || (!viewState && routeLoading)
+    const goTo = useCallback((path: string) => {
+        if (onNavigate) {
+            onNavigate(path)
+            return
+        }
+        void navigate(path)
+    }, [navigate, onNavigate])
+    const reloadJam = useCallback(async () => {
+        if (viewState?.status === 'loaded') return viewState.jam
+        return mutateJam()
+    }, [mutateJam, viewState])
 
     const {state: participation, commands: participationCommands} = useJamParticipationController(
         jam,
         isAuthenticated,
         user?.id ?? null,
-        () => mutateJam(),
+        reloadJam,
     )
 
     // State for suggested songs section collapse
@@ -114,20 +140,20 @@ export function JamDetailPageV2() {
     // Handle enrollment click
     const handleEnrollClick = useCallback((schedule: ScheduleResponseDto) => {
         const outcome = participationCommands.beginRegistration(schedule.id)
-        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
-    }, [navigate, participationCommands])
+        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+    }, [goTo, participationCommands])
 
     // Handle FAB register click
     const handleFABRegisterClick = useCallback(() => {
         const outcome = participationCommands.beginRegistration()
-        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
-    }, [navigate, participationCommands])
+        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+    }, [goTo, participationCommands])
 
     // Handle suggest click
     const handleSuggestClick = useCallback(() => {
         const outcome = participationCommands.beginSuggestion()
-        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
-    }, [navigate, participationCommands])
+        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+    }, [goTo, participationCommands])
 
     // Handle create new song click (from SuggestSongModal)
     const handleCreateNewSong = useCallback(() => {
@@ -140,13 +166,42 @@ export function JamDetailPageV2() {
     }
 
     // Error state
-    if (jamError || !jam) {
+    if (jamError) {
         return (
-            <div className="min-h-screen bg-base-100 p-4">
-                <div className="container mx-auto max-w-4xl">
-                    <Alert type="error" message={jamError?.message || t('jams.not_found')} title={t('jams.error_loading_jam')}/>
+            <main className="min-h-screen bg-base-100 px-4 py-12 sm:py-20">
+                <div className="container mx-auto max-w-xl">
+                    <h1 className="ds-type-heading text-3xl font-extrabold text-base-content sm:text-4xl">
+                        {t('jams.error_loading_jam')}
+                    </h1>
+                    <p className="mt-3 text-base-content/70" role="alert">{jamError.message}</p>
+                    <div className="mt-8 flex flex-wrap gap-3">
+                        <Action onClick={() => {
+                            if (onRetry) void onRetry()
+                            else void mutateJam()
+                        }}>
+                            {t('common.try_again')}
+                        </Action>
+                        <Action variant="quiet" onClick={() => goTo('/jams')}>
+                            {t('jams.back_to_jams')}
+                        </Action>
+                    </div>
                 </div>
-            </div>
+            </main>
+        )
+    }
+
+    if (!jam) {
+        return (
+            <main className="min-h-screen bg-base-100 px-4 py-12 sm:py-20">
+                <div className="container mx-auto max-w-xl">
+                    <h1 className="ds-type-heading text-3xl font-extrabold text-base-content sm:text-4xl">
+                        {t('jams.not_found')}
+                    </h1>
+                    <Action className="mt-8" onClick={() => goTo('/jams')}>
+                        {t('jams.back_to_jams')}
+                    </Action>
+                </div>
+            </main>
         )
     }
 
@@ -235,7 +290,7 @@ export function JamDetailPageV2() {
                         <div className="flex items-start gap-2 min-w-0">
                             <IconAction
                                 variant="quiet"
-                                onClick={() => navigate('/jams')}
+                                onClick={() => goTo('/jams')}
                                 className="shrink-0 mt-0.5"
                                 label={t('common.back')}
                             >

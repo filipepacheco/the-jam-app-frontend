@@ -94,6 +94,7 @@ export function DualActionFAB({
               <button
                 onClick={handleSuggestClick}
                 className="btn btn-secondary btn-circle btn-lg shadow-2xl"
+                aria-label={t('jams.how_it_works.suggest_btn')}
                 type="button"
               >
                 <Sparkles className="size-6" />
@@ -108,6 +109,7 @@ export function DualActionFAB({
               <button
                 onClick={handleRegisterClick}
                 className="btn btn-accent btn-circle btn-lg shadow-2xl"
+                aria-label={t('jams.register')}
                 type="button"
               >
                 <div className="relative">

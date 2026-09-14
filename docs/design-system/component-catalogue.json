@@ -280,8 +280,10 @@
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
+        "src/components/schedule/LiveJamControlPanel.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/JamRegisterPage.tsx",
+        "src/pages/MusicPage.tsx",
         "src/pages/ProfilePage.tsx",
         "src/pages/PublicDashboardPage.tsx",
         "src/pages/host/CreateJamPage.tsx",
@@ -294,7 +296,6 @@
         "src/pages/tabs/DJControlTab.tsx",
         "src/pages/tabs/DJControlTabV2.tsx",
         "src/pages/tabs/DashboardTab.tsx",
-        "src/pages/tabs/JamDetailPageV2.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
@@ -304,11 +305,15 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
-        "src/workbench/stories/RemainingUI.stories.tsx"
+        "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -369,7 +374,9 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/RemainingUI.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -489,7 +496,11 @@
         "src/pages/MusicPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Modal.tsx",
@@ -619,7 +630,8 @@
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -680,7 +692,8 @@
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -747,7 +760,8 @@
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -819,7 +833,9 @@
       "consumers": [
         "src/pages/tabs/DJControlTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -902,7 +918,8 @@
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -958,7 +975,8 @@
         "src/components/dj-control/SongQueueTimeline.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1098,6 +1116,9 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "dependencies": {
@@ -1613,7 +1634,10 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
-        "src/workbench/stories/Forms.stories.tsx"
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1928,7 +1952,8 @@
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/JamComponents.stories.tsx"
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1989,7 +2014,8 @@
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/JamComponents.stories.tsx"
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2057,6 +2083,7 @@
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
@@ -2114,6 +2141,7 @@
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
@@ -2183,7 +2211,8 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2258,7 +2287,8 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2332,6 +2362,7 @@
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
@@ -2393,6 +2424,7 @@
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
@@ -2462,6 +2494,7 @@
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
@@ -2819,7 +2852,11 @@
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/JamOverlays.stories.tsx"
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2891,7 +2928,11 @@
         "src/pages/tabs/ScheduleTab.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2952,7 +2993,8 @@
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3015,7 +3057,8 @@
         "src/components/MusicCard.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3076,7 +3119,8 @@
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3141,7 +3185,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3200,7 +3245,10 @@
       "consumers": [
         "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Avatar.tsx",
@@ -3269,7 +3317,11 @@
         "src/pages/MusicPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -3341,7 +3393,11 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
-        "src/workbench/stories/Forms.stories.tsx"
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3653,7 +3709,9 @@
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5249,7 +5307,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5312,7 +5371,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5646,8 +5706,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5707,7 +5769,10 @@
       "consumers": [
         "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -5786,8 +5851,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5847,8 +5914,11 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
-        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5912,18 +5982,18 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/Alert.tsx",
           "src/components/data-display/index.tsx",
-          "src/hooks/useLiveQueueController.ts",
-          "src/lib/live-queue/liveQueueController.ts"
+          "src/hooks/useLiveQueueController.ts"
         ],
         "external": [
           "lucide-react",
-          "react",
           "react-i18next"
         ],
         "contexts": [
@@ -5968,7 +6038,8 @@
         "src/components/schedule/LiveJamControlPanel.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6022,7 +6093,8 @@
         "src/components/schedule/LiveJamControlPanel.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6086,7 +6158,9 @@
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6152,7 +6226,9 @@
         "src/components/schedule/MusicianSlotList.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6216,7 +6292,9 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6420,7 +6498,9 @@
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6560,7 +6640,10 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
-        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6625,7 +6708,8 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6697,8 +6781,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6828,8 +6914,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6952,8 +7040,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7062,6 +7152,7 @@
         "src/pages/tabs/JamDetailPageV2.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
@@ -7117,7 +7208,8 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -7231,7 +7323,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -7301,7 +7395,9 @@
         "src/pages/host/HostDashboardPage.tsx",
         "src/pages/tabs/OverviewTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -7365,8 +7461,10 @@
         "src/components/SpotifyPreview.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
@@ -7425,6 +7523,7 @@
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
@@ -7487,6 +7586,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
@@ -8227,9 +8327,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8269,15 +8372,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "live",
+          "no-current-performance",
+          "reorder",
+          "saving",
+          "rollback",
+          "phone",
+          "host-console"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."
+          "Reviewed through deterministic management-shell, DJ playback, and Live Queue compositions in Pages/Screen refinement/Live host control."
         ]
       }
     },
@@ -8528,9 +8639,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8560,15 +8674,26 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "viewer",
+          "host-moderation",
+          "long-content",
+          "pagination",
+          "empty-library",
+          "query-failure",
+          "retry",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route-level data composition is deferred to page catalogue work; reusable Music UI is covered here."
+          "Reviewed through deterministic viewer, host moderation, empty-library, pagination, and recoverable-query compositions in Pages/Screen refinement/Music library."
         ]
       }
     },
@@ -8889,7 +9014,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8999,7 +9126,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9053,7 +9182,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9113,7 +9244,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/dj-control/index.ts",
@@ -9141,19 +9274,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
-          "loading",
-          "error",
-          "live"
+          "live",
+          "no-current-performance",
+          "disabled",
+          "phone",
+          "host-console"
         ],
         "candidateFamily": null,
         "notes": [
-          "Route-level control orchestration has no injectable polling seam; DJ primitives are reviewed directly."
+          "Reviewed inside the production management shell through deterministic DJ playback and Live Queue compositions in Pages/Screen refinement/Live host control."
         ]
       }
     },
@@ -9176,9 +9311,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/SEO.tsx",
@@ -9215,15 +9353,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loaded",
+          "participation",
+          "empty-schedule",
+          "error",
+          "not-found",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Production page composition is deferred to page catalogue work; reusable Jam detail UI is covered here."
+          "Reviewed through deterministic loaded, no-Performance, recoverable-error, and not-found compositions in Pages/Screen refinement/Jam detail."
         ]
       }
     },
@@ -9243,7 +9390,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9300,7 +9449,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/types/api.types.ts"
@@ -9349,9 +9500,13 @@
         }
       ],
       "consumers": [
-        "src/pages/host/JamManagementPage.tsx"
+        "src/pages/host/JamManagementPage.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/MusicianProfileModal.tsx",
@@ -9384,15 +9539,26 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "active",
+          "upcoming",
+          "suggested",
+          "completed",
+          "small-schedule",
+          "empty",
+          "add-entry",
+          "phone",
+          "host-console",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route composition is catalogued by #39."
+          "Reviewed through deterministic operational grouping, small-schedule add, and empty compositions in Pages/Screen refinement/Schedule management."
         ]
       }
     },
@@ -9566,10 +9732,12 @@
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
@@ -9577,8 +9745,10 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
@@ -9668,16 +9838,20 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -9753,9 +9927,13 @@
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
@@ -9830,6 +10008,10 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
@@ -10031,7 +10213,9 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/DJControl.stories.tsx",
-        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10095,9 +10279,13 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "dependencies": {
@@ -10178,8 +10366,12 @@
       "workbenchStories": [
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
         "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10248,7 +10440,9 @@
       "workbenchStories": [
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10322,7 +10516,10 @@
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10454,7 +10651,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10573,7 +10771,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10692,7 +10891,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10774,13 +10974,17 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
-        "src/workbench/stories/RemainingUI.stories.tsx"
+        "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10858,7 +11062,8 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/Foundations/FieldControls.stories.tsx"
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10919,6 +11124,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -11006,6 +11212,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -11235,6 +11442,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -11389,13 +11597,16 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11470,13 +11681,16 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11611,8 +11825,10 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11684,6 +11900,7 @@
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "dependencies": {
@@ -11875,6 +12092,10 @@
       "reason": "Private Storybook composition for reviewed Jam components; not product UI."
     },
     {
+      "source": "src/workbench/stories/JamDetailPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Jam detail screen-refinement evidence; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/JamOverlays.stories.tsx",
       "reason": "Private Storybook composition for catalogued Jam overlay components; not product UI."
     },
@@ -11889,6 +12110,10 @@
     {
       "source": "src/workbench/stories/MusicLibrary.stories.tsx",
       "reason": "Private Storybook composition for reviewed Music components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/MusicLibraryPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Music library screen-refinement evidence; not product UI itself."
     },
     {
       "source": "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
@@ -11919,12 +12144,20 @@
       "reason": "Private Storybook composition for remaining reviewed product UI; not product UI itself."
     },
     {
+      "source": "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Schedule management screen-refinement evidence; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/SchedulePrimitives.stories.tsx",
       "reason": "Private Storybook composition for reviewed Schedule primitives and actions; not product UI."
     },
     {
       "source": "src/workbench/stories/ScheduleRegistration.stories.tsx",
       "reason": "Private Storybook composition for reviewed Schedule registration and card states; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Live host control screen-refinement evidence; not product UI itself."
     },
     {
       "source": "src/workbench/stories/States/EmptyState.stories.tsx",
@@ -11936,9 +12169,9 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 169,
+    "eligibleSources": 173,
     "representedSources": 138,
-    "ignoredSources": 31,
+    "ignoredSources": 35,
     "workbench": {
       "activeReusableVisualComponents": 133,
       "ready": 121,
@@ -12063,9 +12296,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0036.action.997eb302d3fc",
+          "id": "inline.ui.0036.action.15dd62ed10e5",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
-          "line": 108,
+          "line": 109,
           "column": 15,
           "ownerComponentId": "ui.0036",
           "tag": "button",
@@ -12079,21 +12312,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0036.action.cb261c0949bd",
-          "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
-          "line": 127,
-          "column": 9,
-          "ownerComponentId": "ui.0036",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "shadow-2xl"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0036.action.e65f82f680e5",
+          "id": "inline.ui.0036.action.569738f38fba",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
           "line": 94,
           "column": 15,
@@ -12107,6 +12326,20 @@
             "shadow-2xl"
           ],
           "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0036.action.cb261c0949bd",
+          "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
+          "line": 129,
+          "column": 9,
+          "ownerComponentId": "ui.0036",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary",
+            "shadow-2xl"
+          ],
+          "dynamicClasses": true
         },
         {
           "id": "inline.ui.0040.action.1386d114b37f",
@@ -13052,9 +13285,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.33d5079d27a5",
+          "id": "inline.ui.0149.action.175df37e0f43",
           "source": "src/pages/MusicPage.tsx",
-          "line": 324,
+          "line": 385,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13066,9 +13299,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.6cdea5fa5223",
+          "id": "inline.ui.0149.action.49d5ad7da5cf",
           "source": "src/pages/MusicPage.tsx",
-          "line": 356,
+          "line": 393,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13080,9 +13313,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.b705ee1639fc",
+          "id": "inline.ui.0149.action.6553b618da26",
           "source": "src/pages/MusicPage.tsx",
-          "line": 349,
+          "line": 358,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13094,9 +13327,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.c041212696b0",
+          "id": "inline.ui.0149.action.821a1bc772cb",
           "source": "src/pages/MusicPage.tsx",
-          "line": 317,
+          "line": 350,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13376,7 +13609,7 @@
         {
           "id": "inline.ui.0036.badge.fcb3c3413a33",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
-          "line": 140,
+          "line": 142,
           "column": 17,
           "ownerComponentId": "ui.0036",
           "tag": "span",
@@ -14218,7 +14451,7 @@
         {
           "id": "inline.ui.0149.card.9352e5e75f37",
           "source": "src/pages/MusicPage.tsx",
-          "line": 176,
+          "line": 182,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14232,7 +14465,7 @@
         {
           "id": "inline.ui.0149.card.b9a21d7bb545",
           "source": "src/pages/MusicPage.tsx",
-          "line": 168,
+          "line": 174,
           "column": 11,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14377,7 +14610,7 @@
         {
           "id": "inline.ui.0163.card.6aa26321762f",
           "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 360,
+          "line": 407,
           "column": 17,
           "ownerComponentId": "ui.0163",
           "tag": "EmptyState",
@@ -14984,9 +15217,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.field.bd06f9d565b2",
+          "id": "inline.ui.0149.field.085b67c6ed72",
           "source": "src/pages/MusicPage.tsx",
-          "line": 300,
+          "line": 332,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "select",
@@ -14998,9 +15231,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.field.f15b75df87c3",
+          "id": "inline.ui.0149.field.5f9ba7a19e3d",
           "source": "src/pages/MusicPage.tsx",
-          "line": 334,
+          "line": 369,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "input",
