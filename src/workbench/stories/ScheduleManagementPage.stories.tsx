@@ -87,3 +87,21 @@ export const EmptySchedule: Story = {
     await expect(canvas.getByRole('button', {name: /agregar nueva canción/i})).toBeVisible()
   },
 }
+
+export const FilteredEmpty: Story = {
+  render: () => <ScheduleTab jam={jamFixtures.active} onReload={fn(async () => jamFixtures.active)} />,
+  globals: {
+    authRole: 'host',
+    locale: 'en',
+    theme: 'jam-light',
+    viewport: {value: 'phone', isRotated: false},
+    reducedMotion: true,
+  },
+  parameters: {a11y: {test: 'error'}},
+  play: async ({canvas, userEvent}) => {
+    const search = canvas.getByRole('searchbox', {name: /search songs or musicians/i})
+    await userEvent.type(search, 'no matching performance')
+    await expect(await canvas.findByText('No results found')).toBeVisible()
+    await expect(canvas.getByRole('button', {name: /clear filters/i})).toBeVisible()
+  },
+}
