@@ -544,6 +544,7 @@
   "live_control": {
     "now_playing": "Sonando Ahora",
     "up_next": "A Continuación (Reordenable)",
+    "queue_title": "A continuación",
     "song_playing_feedback": "Canción sonando",
     "song_paused_feedback": "Canción pausada",
     "skipped_feedback": "Saltado a la siguiente canción",

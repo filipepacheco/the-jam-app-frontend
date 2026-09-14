@@ -546,6 +546,7 @@
   "live_control": {
     "now_playing": "Now Playing",
     "up_next": "Up Next (Reorderable)",
+    "queue_title": "Up Next",
     "song_playing_feedback": "Song playing",
     "song_paused_feedback": "Song paused",
     "skipped_feedback": "Skipped to next song",

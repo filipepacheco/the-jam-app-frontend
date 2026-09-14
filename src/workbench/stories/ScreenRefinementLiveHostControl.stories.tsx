@@ -95,9 +95,10 @@ export const ReadyPlaybackAndQueueModes: Story = {
     await userEvent.click(canvas.getByRole('tab', {name: /Ordem|Reorder/i}))
     const panel = within(canvas.getByRole('tabpanel'))
     await expect(await panel.findByText('Now Playing')).toBeVisible()
-    await expect(panel.getByText('Up Next (Reorderable)')).toBeVisible()
+    await expect(panel.getByRole('heading', {name: 'Up Next'})).toBeVisible()
 
     await userEvent.click(panel.getByRole('button', {name: /Reorder/i}))
+    await expect(panel.getByRole('heading', {name: 'Up Next (Reorderable)'})).toBeVisible()
     const items = panel.getAllByRole('listitem')
     items[0].focus()
     await userEvent.keyboard('{ArrowDown}')

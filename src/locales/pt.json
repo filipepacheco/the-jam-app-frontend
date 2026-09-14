@@ -551,7 +551,8 @@
   },
   "live_control": {
     "now_playing": "Tocando agora",
-    "up_next": "Reordenar",
+    "up_next": "Próximas (reordenável)",
+    "queue_title": "Próximas",
     "song_playing_feedback": "Música tocando",
     "song_paused_feedback": "Música pausada",
     "skipped_feedback": "Pulou para a próxima música",
