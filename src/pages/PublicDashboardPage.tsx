@@ -34,6 +34,7 @@ import type {DashboardLayout} from '../hooks/useDashboardLayout'
 export type PublicDashboardViewState =
   | {status: 'loading'}
   | {status: 'error'; message: string}
+  | {status: 'stale'; data: LiveDashboardResponseDto; message: string}
   | {status: 'loaded'; data: LiveDashboardResponseDto}
 
 interface PublicDashboardPageProps {
@@ -67,8 +68,12 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
     ...SWR_DEFAULTS,
     refreshInterval: pollingMs,
   })
-  const dashboardData = viewState?.status === 'loaded' ? viewState.data : fetchedDashboardData
-  const error = viewState?.status === 'error' ? new Error(viewState.message) : fetchError
+  const dashboardData = viewState?.status === 'loaded' || viewState?.status === 'stale'
+    ? viewState.data
+    : fetchedDashboardData
+  const error = viewState?.status === 'error' || viewState?.status === 'stale'
+    ? new Error(viewState.message)
+    : fetchError
   const isLoading = viewState?.status === 'loading' || (!viewState && fetchLoading)
 
   // Extract fields from response
@@ -140,7 +145,9 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
   }
 
   // Show error state
-  if (error) {
+  // Keep the last usable dashboard visible during a transient polling failure;
+  // the offline/stale banner communicates that recovery is in progress.
+  if (error && !dashboardData) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center p-4 ds-shared-display">
         <Alert
@@ -171,7 +178,12 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
       </Suspense>
 
       {/* Offline Indicator */}
-      <OfflineBanner visible={isOfflineMode} message={t('publicDashboard.offlineIndicator', 'You are offline - showing cached data')} />
+      <OfflineBanner
+        visible={isOfflineMode || Boolean(error)}
+        message={isOfflineMode
+          ? t('publicDashboard.offlineIndicator', 'You are offline - showing cached data')
+          : t('publicDashboard.staleIndicator', 'Updates paused - showing the last known Jam state')}
+      />
 
       {/* Header with controls-panel toggle and fullscreen button */}
       <Header

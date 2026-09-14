@@ -974,6 +974,7 @@
     "loading": "Loading dashboard",
     "errorTitle": "Error Loading Dashboard",
     "offlineIndicator": "You are offline - showing cached data",
+    "staleIndicator": "Updates paused - showing the last known Jam state",
     "dashboardControls": "Dashboard controls",
     "toggleControls": "Toggle dashboard controls",
     "fullscreen": "Toggle fullscreen",

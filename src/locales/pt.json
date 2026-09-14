@@ -992,6 +992,7 @@
     "loading": "Carregando o painel",
     "errorTitle": "Erro ao carregar o painel",
     "offlineIndicator": "Você está offline - mostrando dados em cache",
+    "staleIndicator": "Atualizações pausadas - mostrando o último estado conhecido do Jam",
     "dashboardControls": "Controles do painel",
     "toggleControls": "Alternar controles do painel",
     "fullscreen": "Alternar tela cheia",

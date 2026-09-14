@@ -972,6 +972,7 @@
     "loading": "Cargando el tablero",
     "errorTitle": "Error al cargar el tablero",
     "offlineIndicator": "Estás sin conexión - mostrando datos en caché",
+    "staleIndicator": "Actualizaciones en pausa - se muestra el último estado conocido del Jam",
     "dashboardControls": "Controles del panel",
     "toggleControls": "Alternar controles del panel",
     "fullscreen": "Alternar pantalla completa",

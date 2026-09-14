@@ -2,14 +2,34 @@ import {act, render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {describe, expect, it, vi} from 'vitest'
 import {PublicDashboardPage} from '../pages/PublicDashboardPage'
+import type {LiveDashboardResponseDto} from '../types/api.types'
+
+const liveDashboard: LiveDashboardResponseDto = {
+  jamId: 'jam-public',
+  jamName: 'Friday Night Jam',
+  qrCode: null,
+  slug: 'friday-night-jam',
+  shortCode: 'FNJ26',
+  jamStatus: 'LIVE',
+  currentSong: {
+    id: 'song-current',
+    title: 'Psycho Killer',
+    artist: 'Talking Heads',
+    duration: 261,
+    musicians: [],
+  },
+  nextSongs: [],
+}
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, fallback?: string) => {
-      if (key === 'publicDashboard.loading') return fallback ?? 'Loading dashboard'
-      if (key === 'publicDashboard.errorTitle') return fallback ?? 'Error'
+    t: (key: string, fallback?: string | Record<string, string>) => {
+      if (key === 'publicDashboard.title' && typeof fallback === 'object') return fallback.name
+      if (key === 'publicDashboard.loading') return typeof fallback === 'string' ? fallback : 'Loading dashboard'
+      if (key === 'publicDashboard.errorTitle') return typeof fallback === 'string' ? fallback : 'Error'
+      if (key === 'publicDashboard.staleIndicator') return typeof fallback === 'string' ? fallback : 'Updates paused'
       if (key === 'common.try_again') return 'Try Again'
-      return fallback ?? key
+      return typeof fallback === 'string' ? fallback : key
     },
   }),
 }))
@@ -22,6 +42,7 @@ vi.mock('../hooks', () => ({
     containerRef: {current: null},
   }),
   useOfflineQueue: () => ({isOfflineMode: false}),
+  useReducedMotion: () => ({prefersReducedMotion: true, transition: {duration: 0}}),
   useDashboardLayout: () => ({
     layout: 'standard',
     setLayout: vi.fn(),
@@ -56,5 +77,16 @@ describe('PublicDashboardPage', () => {
 
     await userEvent.setup().click(screen.getByRole('button', {name: 'Try Again'}))
     expect(onRetry).toHaveBeenCalledOnce()
+  })
+
+  it('keeps the last known Jam state visible when polling is stale', () => {
+    render(
+      <PublicDashboardPage
+        viewState={{status: 'stale', data: liveDashboard, message: 'Refresh failed'}}
+      />,
+    )
+
+    expect(screen.getByText('Updates paused - showing the last known Jam state')).toBeInTheDocument()
+    expect(screen.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeInTheDocument()
   })
 })

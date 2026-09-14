@@ -90,3 +90,18 @@ export const RecoverableError: Story = {
     await expect(retry).toHaveBeenCalledOnce()
   },
 }
+
+export const StaleData: Story = {
+  args: {
+    viewState: {
+      status: 'stale',
+      data: liveDashboard,
+      message: 'The venue display could not refresh.',
+    },
+  },
+  globals: {locale: 'en', theme: 'jam-dark', viewport: {value: 'venue', isRotated: false}, reducedMotion: true},
+  play: async ({canvas}) => {
+    await expect(canvas.getByText(/updates paused/i)).toBeVisible()
+    await expect(canvas.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
+  },
+}
