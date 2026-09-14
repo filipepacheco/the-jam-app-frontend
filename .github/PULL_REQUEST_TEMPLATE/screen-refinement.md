@@ -21,6 +21,15 @@ Link the exact track and [evidence matrix](../../docs/screen-refinement-frontier
 
 Baseline cells, decision link, and reviewer:
 
+## Human Storybook comparison
+
+- [ ] A human reviewer opened the affected stories and compared them with the accepted contract and current canonical baseline.
+- [ ] Every applicable theme, language, viewport, and reduced-motion context was reviewed.
+
+Story names, contexts, reviewer, and decision:
+
+This approval is required even when automated Storybook, accessibility, interaction, and visual checks pass.
+
 ## Review axes
 
 - [ ] **Standards:** repository conventions, design foundations, accessibility, localization, responsive behavior, and test quality pass.

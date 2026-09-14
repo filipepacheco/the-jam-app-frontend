@@ -699,6 +699,10 @@ intermediate slice:
 
 - Every pull request keeps the production build as a CI gate and records the
   focused application and workbench tests run for its affected behavior.
+- Every pull request that adds or materially changes UI components requires a
+  human Storybook comparison. The reviewer opens the affected stories, checks
+  every applicable theme, language, viewport, and motion mode, and records the
+  decision in the pull request. Automated checks do not replace this gate.
 - The final pull request of each numbered track runs the full catalogue and
   private workbench workflows with the screen-refinement gate.
 - Tracks 1–4 form the **host operations milestone**.
@@ -722,6 +726,9 @@ local macOS comparison output is diagnostic, not update authority.
 - All new copy exists in `en`, `es`, and `pt`.
 - Both reference themes, long content, and primary responsive contexts pass.
 - Catalogue metadata and generated progress are current.
+- A human reviewer has opened the affected Storybook stories, compared them
+  with the accepted contract and canonical baseline in every applicable
+  context, and recorded approval in the pull request.
 - Intentional visual changes have approved canonical baselines.
 - Standards and Spec reviews pass against the fixed merge base.
 - The final track pull request is green and merged before the dependent track.
@@ -746,6 +753,8 @@ Required evidence:
 - Catalogue, design-system enforcement, application tests, production isolation,
   private workbench interactions/accessibility, canonical visual comparison,
   privacy, and deterministic build all pass.
+- Every new or materially changed UI component has recorded human Storybook
+  approval. No automated result is used as a substitute for this decision.
 - The parent frontier issue contains links to every critique, contract, merged
   pull request, intentional baseline decision, and final CI run.
 

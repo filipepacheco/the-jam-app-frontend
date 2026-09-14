@@ -64,7 +64,16 @@ Dashboard work. Detailed contracts remain in the linked sources.
    accessibility checks use `a11y.test: 'error'` after known violations are
    resolved.
 
-5. **Run the private checks.** The commands and configuration, rather than
+5. **Get human Storybook approval.** For every new or materially changed UI
+   component, a human reviewer must open the affected Storybook stories and
+   compare them with the accepted contract and current canonical baseline.
+   Review every applicable theme, language, viewport, and motion mode. Record
+   the story names, contexts, reviewer, and decision in the pull request.
+   Automated Storybook, accessibility, interaction, and visual checks support
+   this review but do not replace it. **Complete when:** the reviewer records
+   explicit approval or the implementation returns for changes.
+
+6. **Run the private checks.** The commands and configuration, rather than
    this document, are authoritative. Run `npm run catalogue:baseline`,
    `npm run workbench:test`, and `npm run workbench:verify-build` when the
    change affects their surfaces. Finish with the application checks required
