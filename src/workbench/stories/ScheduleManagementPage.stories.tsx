@@ -26,7 +26,7 @@ export const OperationalGroups: Story = {
     authRole: 'host',
     locale: 'pt',
     theme: 'jam-dark',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
   },
   play: async ({canvas}) => {
     const active = canvas.getByRole('heading', {level: 2, name: /tocando agora/i})
@@ -54,7 +54,7 @@ export const SmallScheduleAddPath: Story = {
     authRole: 'host',
     locale: 'en',
     theme: 'jam-light',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   parameters: {a11y: {test: 'error'}, msw: {handlers: [musicCatalogueHandler]}},
@@ -79,7 +79,7 @@ export const EmptySchedule: Story = {
     authRole: 'host',
     locale: 'es',
     theme: 'jam-dark',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas}) => {
@@ -94,7 +94,7 @@ export const FilteredEmpty: Story = {
     authRole: 'host',
     locale: 'en',
     theme: 'jam-light',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   parameters: {a11y: {test: 'error'}},

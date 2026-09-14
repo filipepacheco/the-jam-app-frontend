@@ -34,7 +34,7 @@ type Story = StoryObj<typeof meta>
 
 export const CreateValidationAndFocus: Story = {
   render: () => <CreateJamPage />,
-  globals: {authRole: 'host', locale: 'pt', theme: 'jam-light', route: '/host/create-jam', viewport: {value: 'phone', isRotated: false}, reducedMotion: true},
+  globals: {authRole: 'host', locale: 'pt', theme: 'jam-light', route: '/host/create-jam', reviewDefaultViewport: 'phone', reducedMotion: true},
   play: async ({canvas, userEvent}) => {
     const submit = await canvas.findByRole('button', {name: /criar jam/i})
     await userEvent.click(submit)
@@ -51,7 +51,7 @@ export const EditDeleteConfirmation: Story = {
       <Route path="/host/jams/:id/edit" element={<CreateJamPage />} />
     </Routes>
   ),
-  globals: {authRole: 'host', locale: 'en', theme: 'jam-dark', route: '/host/jams/jam-edit/edit', viewport: {value: 'desktop', isRotated: false}},
+  globals: {authRole: 'host', locale: 'en', theme: 'jam-dark', route: '/host/jams/jam-edit/edit', reviewDefaultViewport: 'desktop'},
   parameters: {
     a11y: {test: 'error'},
     msw: {handlers: [
@@ -68,7 +68,7 @@ export const EditDeleteConfirmation: Story = {
 
 export const MusicianDirectory: Story = {
   render: () => <MusiciansPage port={musiciansPort} />,
-  globals: {authRole: 'host', locale: 'en', theme: 'jam-light', viewport: {value: 'desktop', isRotated: false}},
+  globals: {authRole: 'host', locale: 'en', theme: 'jam-light', reviewDefaultViewport: 'desktop'},
   play: async ({canvas}) => {
     await expect(await canvas.findByRole('heading', {level: 1, name: /musicians directory/i})).toBeVisible()
     await expect(canvas.getByRole('button', {name: /edit ana host/i})).toBeVisible()
@@ -79,7 +79,7 @@ export const MusicianDirectory: Story = {
 
 export const MusicianFilteredEmpty: Story = {
   render: () => <MusiciansPage port={musiciansPort} />,
-  globals: {authRole: 'host', locale: 'es', theme: 'jam-dark', viewport: {value: 'phone', isRotated: false}, reducedMotion: true},
+  globals: {authRole: 'host', locale: 'es', theme: 'jam-dark', reviewDefaultViewport: 'phone', reducedMotion: true},
   play: async ({canvas, userEvent}) => {
     const search = await canvas.findByRole('searchbox')
     await userEvent.type(search, 'no matching musician')
@@ -90,7 +90,7 @@ export const MusicianFilteredEmpty: Story = {
 
 export const EmptyMusicianDirectory: Story = {
   render: () => <MusiciansPage port={emptyMusiciansPort} />,
-  globals: {authRole: 'host', locale: 'pt', theme: 'jam-light', viewport: {value: 'phone', isRotated: false}, reducedMotion: true},
+  globals: {authRole: 'host', locale: 'pt', theme: 'jam-light', reviewDefaultViewport: 'phone', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(await canvas.findByRole('heading', {name: /nenhum músico ainda/i})).toBeVisible()
   },
@@ -98,7 +98,7 @@ export const EmptyMusicianDirectory: Story = {
 
 export const RecoverableMusicianError: Story = {
   render: () => <MusiciansPage port={failedMusiciansPort} />,
-  globals: {authRole: 'host', locale: 'en', theme: 'jam-dark', viewport: {value: 'desktop', isRotated: false}, reducedMotion: true},
+  globals: {authRole: 'host', locale: 'en', theme: 'jam-dark', reviewDefaultViewport: 'desktop', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(await canvas.findByRole('alert')).toHaveTextContent('The musician directory could not refresh.')
     await expect(canvas.getByRole('button', {name: /try again/i})).toBeVisible()

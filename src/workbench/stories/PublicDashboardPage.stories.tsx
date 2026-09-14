@@ -31,7 +31,7 @@ export const LiveClassic: Story = {
   globals: {
     locale: 'pt',
     theme: 'jam-dark',
-    viewport: {value: 'venue', isRotated: false},
+    reviewDefaultViewport: 'venue',
   },
   play: async ({canvas}) => {
     await expect(canvas.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
@@ -44,7 +44,7 @@ export const StartingSoon: Story = {
   args: {
     viewState: {status: 'loaded', data: {...liveDashboard, jamStatus: 'ACTIVE', currentSong: null}},
   },
-  globals: {locale: 'es', theme: 'jam-light', viewport: {value: 'venue', isRotated: false}, reducedMotion: true},
+  globals: {locale: 'es', theme: 'jam-light', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(canvas.getByRole('heading', {level: 2, name: /comenzando pronto/i})).toBeVisible()
     await expect(canvas.getByText(dashboardSongs.next.title)).toBeVisible()
@@ -58,7 +58,7 @@ export const Finished: Story = {
       data: {...liveDashboard, jamStatus: 'FINISHED', currentSong: null, nextSongs: []},
     },
   },
-  globals: {locale: 'en', theme: 'jam-dark', viewport: {value: 'venue', isRotated: false}, reducedMotion: true},
+  globals: {locale: 'en', theme: 'jam-dark', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(canvas.getByRole('heading', {level: 2, name: /that's a wrap/i})).toBeVisible()
   },
@@ -66,7 +66,7 @@ export const Finished: Story = {
 
 export const LiveCarousel: Story = {
   args: {layoutOverride: 'carousel'},
-  globals: {locale: 'en', theme: 'jam-light', viewport: {value: 'venue', isRotated: false}, reducedMotion: true},
+  globals: {locale: 'en', theme: 'jam-light', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(canvas.getAllByRole('tab')).toHaveLength(3)
     await expect(canvas.getByText('Psycho Killer')).toBeVisible()
@@ -75,7 +75,7 @@ export const LiveCarousel: Story = {
 
 export const Loading: Story = {
   args: {viewState: {status: 'loading'}},
-  globals: {locale: 'pt', theme: 'jam-dark', viewport: {value: 'venue', isRotated: false}, reducedMotion: true},
+  globals: {locale: 'pt', theme: 'jam-dark', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(canvas.getByRole('status', {name: /carregando o painel/i})).toHaveAttribute('aria-busy', 'true')
   },
@@ -83,7 +83,7 @@ export const Loading: Story = {
 
 export const RecoverableError: Story = {
   args: {viewState: {status: 'error', message: 'The venue display could not refresh.'}, onRetry: retry},
-  globals: {locale: 'en', theme: 'jam-light', viewport: {value: 'venue', isRotated: false}, reducedMotion: true},
+  globals: {locale: 'en', theme: 'jam-light', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas, userEvent}) => {
     await expect(canvas.getByRole('alert')).toHaveTextContent('The venue display could not refresh.')
     await userEvent.click(canvas.getByRole('button', {name: /try again/i}))
@@ -99,7 +99,7 @@ export const StaleData: Story = {
       message: 'The venue display could not refresh.',
     },
   },
-  globals: {locale: 'en', theme: 'jam-dark', viewport: {value: 'venue', isRotated: false}, reducedMotion: true},
+  globals: {locale: 'en', theme: 'jam-dark', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(canvas.getByText(/updates paused/i)).toBeVisible()
     await expect(canvas.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()

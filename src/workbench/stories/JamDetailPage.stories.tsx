@@ -23,7 +23,7 @@ export const Loading: Story = {
     authRole: 'guest',
     locale: 'pt',
     theme: 'jam-light',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   parameters: {
@@ -48,7 +48,7 @@ export const LoadedParticipation: Story = {
     authRole: 'user',
     locale: 'pt',
     theme: 'jam-light',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas, canvasElement, userEvent}) => {
@@ -85,7 +85,7 @@ export const LongContentAndLocation: Story = {
     authRole: 'user',
     locale: 'en',
     theme: 'jam-dark',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
     reducedMotion: true,
   },
   play: async ({canvas, userEvent}) => {
@@ -108,7 +108,7 @@ export const GuestParticipationRedirect: Story = {
     authRole: 'guest',
     locale: 'en',
     theme: 'jam-light',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas, userEvent}) => {
@@ -131,7 +131,7 @@ export const NoPerformances: Story = {
     authRole: 'user',
     locale: 'es',
     theme: 'jam-dark',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas, canvasElement, userEvent}) => {
@@ -155,7 +155,7 @@ export const RecoverableError: Story = {
     authRole: 'guest',
     locale: 'en',
     theme: 'jam-dark',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
     reducedMotion: true,
   },
   play: async ({canvas, userEvent}) => {
@@ -174,7 +174,7 @@ export const NotFound: Story = {
     authRole: 'guest',
     locale: 'pt',
     theme: 'jam-light',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas, userEvent}) => {

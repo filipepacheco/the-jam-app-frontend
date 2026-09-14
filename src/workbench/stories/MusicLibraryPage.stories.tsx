@@ -46,7 +46,7 @@ export const ViewerCatalogue: Story = {
     authRole: 'viewer',
     locale: 'pt',
     theme: 'jam-light',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas}) => {
@@ -62,7 +62,7 @@ export const HostModeration: Story = {
     authRole: 'host',
     locale: 'en',
     theme: 'jam-dark',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
   },
   play: async ({canvas, userEvent}) => {
     const suggested = await canvas.findByRole('button', {name: /suggested songs/i})
@@ -79,7 +79,7 @@ export const EmptyLibrary: Story = {
     authRole: 'viewer',
     locale: 'es',
     theme: 'jam-dark',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas}) => {
@@ -93,7 +93,7 @@ export const RecoverableQueryFailure: Story = {
     authRole: 'viewer',
     locale: 'en',
     theme: 'jam-light',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
     reducedMotion: true,
   },
   play: async ({canvas, userEvent}) => {

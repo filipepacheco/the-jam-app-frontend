@@ -81,7 +81,7 @@ export const ReadyPlaybackAndQueueModes: Story = {
     locale: 'en',
     route: '/host/jams/jam-live-host-ready/manage',
     theme: 'jam-dark',
-    viewport: { value: 'desktop', isRotated: false },
+    reviewDefaultViewport: 'desktop',
   },
   parameters: {
     a11y: {test: 'error'},
@@ -122,7 +122,7 @@ export const NoCurrentPerformance: Story = {
     locale: 'en',
     route: '/host/jams/jam-live-host-no-current/manage',
     theme: 'jam-light',
-    viewport: { value: 'phone', isRotated: false },
+    reviewDefaultViewport: 'phone',
   },
   parameters: {
     a11y: {test: 'error'},
@@ -148,7 +148,7 @@ export const SaveFailureRollsBack: Story = {
     locale: 'en',
     route: '/host/jams/jam-live-host-failure/manage',
     theme: 'jam-dark',
-    viewport: { value: 'phone', isRotated: false },
+    reviewDefaultViewport: 'phone',
   },
   parameters: {
     a11y: {test: 'error'},
@@ -179,7 +179,7 @@ export const RefreshFailureKeepsQueueContext: Story = {
     locale: 'en',
     route: '/host/jams/jam-live-host-refresh-failure/manage',
     theme: 'jam-light',
-    viewport: { value: 'phone', isRotated: false },
+    reviewDefaultViewport: 'phone',
   },
   parameters: {
     a11y: {test: 'error'},

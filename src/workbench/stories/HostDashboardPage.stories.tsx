@@ -74,7 +74,7 @@ export const OperationalPriority: Story = {
     authRole: 'host',
     locale: 'pt',
     theme: 'jam-dark',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
   },
   play: async ({canvas}) => {
     const active = await canvas.findByRole('heading', {level: 2, name: /em andamento/i})
@@ -92,7 +92,7 @@ export const HostPhone: Story = {
     authRole: 'host',
     locale: 'en',
     theme: 'jam-light',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas}) => {
@@ -108,7 +108,7 @@ export const FirstJamOnboarding: Story = {
     authRole: 'host',
     locale: 'es',
     theme: 'jam-dark',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas}) => {
@@ -123,7 +123,7 @@ export const InitialLoading: Story = {
     authRole: 'host',
     locale: 'pt',
     theme: 'jam-light',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
     reducedMotion: true,
   },
   parameters: {
@@ -143,7 +143,7 @@ export const QueryFailureAndRetry: Story = {
     authRole: 'host',
     locale: 'en',
     theme: 'jam-dark',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas}) => {
@@ -160,7 +160,7 @@ export const NoLiveCategory: Story = {
     authRole: 'host',
     locale: 'en',
     theme: 'jam-light',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
   },
   play: async ({canvas}) => {
     await expect(await canvas.findByRole('heading', {level: 2, name: /planned/i})).toBeVisible()
@@ -176,7 +176,7 @@ export const DeletePending: Story = {
     authRole: 'host',
     locale: 'pt',
     theme: 'jam-dark',
-    viewport: {value: 'phone', isRotated: false},
+    reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
   play: async ({canvas}) => {
@@ -195,7 +195,7 @@ export const DeleteFailure: Story = {
     authRole: 'host',
     locale: 'en',
     theme: 'jam-light',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
   },
   play: async ({canvas}) => {
     const jam = await canvas.findByRole('heading', {level: 3, name: /friday jam/i})
@@ -213,7 +213,7 @@ export const DeleteSuccess: Story = {
     authRole: 'host',
     locale: 'en',
     theme: 'jam-dark',
-    viewport: {value: 'desktop', isRotated: false},
+    reviewDefaultViewport: 'desktop',
   },
   play: async ({canvas}) => {
     const jam = await canvas.findByRole('heading', {level: 3, name: /sunday jam/i})
