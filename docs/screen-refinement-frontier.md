@@ -23,7 +23,8 @@ slice does not close the track.
 
 Current integrated verification: catalogue freshness, workbench typecheck,
 private visual privacy policy, progressive design-system enforcement, focused
-Live Queue tests, the application suite, and the production-isolation build.
+screen tests, the serial application suite (51 files and 261 tests), and the
+production-isolation build.
 The local browser-backed workbench run still requires the canonical Linux
 renderer; the final gate, rather than a dependency-symlinked macOS run, is the
 authority for interaction, accessibility, and visual results.
