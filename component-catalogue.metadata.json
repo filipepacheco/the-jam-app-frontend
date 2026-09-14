@@ -6,7 +6,7 @@
     ],
     "candidates": [
       {
-        "id": "inline.ui.0142.card.a466fe497136",
+        "id": "inline.ui.0142.card.f8da82501a95",
         "disposition": {
           "status": "intentionally-distinct",
           "rationale": "The compact host-owned Jam summary exposes management actions and operational counts, unlike the browse JamCard used by musicians to discover and open a Jam."
@@ -157,7 +157,7 @@
     {"source": "src/components/music/MusiciansBadges.tsx", "metadata": {"productArea": "music", "readiness": {"workbench": "ready", "accessibility": "needs-review", "internationalization": "verified", "theme": "verified"}, "uiStates": ["instrument-requirements", "no-requirements"], "notes": ["MusiciansBadges is directly reviewed in Domain/Music/Library; its former unreachable table row and private actions are recorded under retired components."]}},
     {"source": "src/pages/BrowseJamsPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."]}},
     {"source": "src/pages/host/CreateJamPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."]}},
-    {"source": "src/pages/host/HostDashboardPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["The route-local HostJamSummaryCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."]}},
+    {"source": "src/pages/host/HostDashboardPage.tsx", "metadata": {"readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "verified", "theme": "verified"}, "uiStates": ["live", "planned", "past", "first-use", "long-content", "phone", "desktop", "reduced-motion"], "notes": ["Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Pages/Screen refinement/Host dashboard."]}},
     {"source": "src/pages/host/HostJamSongsPage.tsx", "metadata": {"readiness": {"workbench": "exempt"}, "notes": ["Route-level data composition is deferred to page catalogue work; reusable Music UI is covered here."]}},
     {"source": "src/pages/host/JamManagementPage.tsx", "metadata": {"readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "verified", "theme": "verified"}, "uiStates": ["live", "no-current-performance", "reorder", "saving", "rollback", "phone", "host-console"], "notes": ["Reviewed through deterministic management-shell, DJ playback, and Live Queue compositions in Pages/Screen refinement/Live host control."]}},
     {"source": "src/pages/MusicPage.tsx", "metadata": {"readiness": {"workbench": "ready", "accessibility": "verified", "internationalization": "verified", "theme": "verified"}, "uiStates": ["viewer", "host-moderation", "long-content", "pagination", "empty-library", "query-failure", "retry", "phone", "desktop", "reduced-motion"], "notes": ["Reviewed through deterministic viewer, host moderation, empty-library, pagination, and recoverable-query compositions in Pages/Screen refinement/Music library."]}},

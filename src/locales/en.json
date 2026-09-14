@@ -824,7 +824,9 @@
       "delete_success": "Jam deleted successfully",
       "delete_failed": "Failed to delete jam",
       "loading_jams": "Loading your jams...",
+      "no_jams_title": "Create your first Jam",
       "no_jams_desc": "You have no jam sessions yet. Create your first jam to get started.",
+      "more_actions": "More Jam actions",
       "stats": {
         "total_jams": "Total Jams",
         "musicians": "Musicians",

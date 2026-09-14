@@ -83,6 +83,7 @@ export const ReadyPlaybackAndQueueModes: Story = {
     viewport: { value: 'desktop', isRotated: false },
   },
   parameters: {
+    a11y: {test: 'error'},
     msw: {handlers: liveHostHandlers('jam-live-host-ready', readyLiveState)},
   },
   play: async ({canvas, userEvent}) => {
@@ -122,6 +123,7 @@ export const NoCurrentPerformance: Story = {
     viewport: { value: 'phone', isRotated: false },
   },
   parameters: {
+    a11y: {test: 'error'},
     msw: {handlers: liveHostHandlers('jam-live-host-no-current', noCurrentLiveState)},
   },
   play: async ({canvas, userEvent}) => {
@@ -147,6 +149,7 @@ export const SaveFailureRollsBack: Story = {
     viewport: { value: 'phone', isRotated: false },
   },
   parameters: {
+    a11y: {test: 'error'},
     msw: {handlers: liveHostHandlers('jam-live-host-failure', readyLiveState, reorderFailure)},
   },
   play: async ({canvas, userEvent}) => {

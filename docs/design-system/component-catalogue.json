@@ -288,7 +288,6 @@
         "src/pages/PublicDashboardPage.tsx",
         "src/pages/host/CreateJamPage.tsx",
         "src/pages/host/FeedbackPage.tsx",
-        "src/pages/host/HostDashboardPage.tsx",
         "src/pages/host/HostJamSongsPage.tsx",
         "src/pages/host/JamManagementPage.tsx",
         "src/pages/host/MusiciansPage.tsx",
@@ -305,6 +304,7 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
@@ -1110,12 +1110,14 @@
       "consumers": [
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
+        "src/pages/host/HostDashboardPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
@@ -2644,6 +2646,7 @@
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
@@ -2852,6 +2855,7 @@
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
@@ -2929,6 +2933,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
@@ -3710,6 +3715,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
@@ -7396,6 +7402,7 @@
         "src/pages/tabs/OverviewTab.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
@@ -8154,14 +8161,16 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
           "src/hooks/index.ts",
-          "src/services/jamService.ts",
           "src/types/api.types.ts"
         ],
         "external": [
@@ -8171,7 +8180,6 @@
           "react-router-dom"
         ],
         "contexts": [
-          "api",
           "internationalization",
           "routing"
         ]
@@ -8186,15 +8194,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "live",
+          "planned",
+          "past",
+          "first-use",
+          "long-content",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "The route-local HostJamSummaryCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
+          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Pages/Screen refinement/Host dashboard."
         ]
       }
     },
@@ -8208,9 +8225,12 @@
       "consumers": [
         "src/pages/host/HostDashboardPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
+          "src/components/index.ts",
           "src/lib/i18nUtils.ts",
           "src/lib/statusUtils.ts",
           "src/utils/jamUrl.ts"
@@ -8233,15 +8253,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "live",
+          "planned",
+          "past",
+          "first-use",
+          "long-content",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "The route-local HostJamSummaryCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
+          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Pages/Screen refinement/Host dashboard."
         ]
       }
     },
@@ -9717,6 +9746,7 @@
         "src/pages/JamRegisterPage.tsx",
         "src/pages/MusicPage.tsx",
         "src/pages/ProfilePage.tsx",
+        "src/pages/host/HostDashboardPage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
@@ -9732,6 +9762,7 @@
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
@@ -9927,6 +9958,7 @@
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
@@ -10279,6 +10311,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
@@ -10974,6 +11007,7 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
@@ -12088,6 +12122,10 @@
       "reason": "Private Storybook composition demonstrating typography, spacing, sizing, and responsive foundations; not product UI itself."
     },
     {
+      "source": "src/workbench/stories/HostDashboardPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Host dashboard screen-refinement evidence; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/JamComponents.stories.tsx",
       "reason": "Private Storybook composition for reviewed Jam components; not product UI."
     },
@@ -12169,13 +12207,13 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 173,
+    "eligibleSources": 174,
     "representedSources": 138,
-    "ignoredSources": 35,
+    "ignoredSources": 36,
     "workbench": {
       "activeReusableVisualComponents": 133,
-      "ready": 121,
-      "exempt": 12,
+      "ready": 122,
+      "exempt": 11,
       "needsReview": 0,
       "unknown": 0,
       "readyWithoutStory": 0
@@ -12907,7 +12945,7 @@
         {
           "id": "inline.ui.0141.action.0340e02aa1e2",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 150,
+          "line": 168,
           "column": 25,
           "ownerComponentId": "ui.0141",
           "tag": "button",
@@ -12923,7 +12961,7 @@
         {
           "id": "inline.ui.0141.action.09e0a16fbe50",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 143,
+          "line": 161,
           "column": 25,
           "ownerComponentId": "ui.0141",
           "tag": "button",
@@ -12937,19 +12975,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0141.action.2365031eb3a4",
+          "id": "inline.ui.0141.action.cd04bf8501a3",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 172,
-          "column": 37,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.80919867aed7",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 166,
+          "line": 184,
           "column": 29,
           "ownerComponentId": "ui.0141",
           "tag": "div",
@@ -12962,25 +12990,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0141.action.8f5f82b1a1f6",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 157,
-          "column": 25,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-sm",
-            "hidden",
-            "sm:inline-flex"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "inline.ui.0141.action.d372c6ca8f39",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 171,
+          "line": 194,
           "column": 37,
           "ownerComponentId": "ui.0141",
           "tag": "button",
@@ -12990,7 +13002,7 @@
         {
           "id": "inline.ui.0141.action.d3ba29dbf38f",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 170,
+          "line": 193,
           "column": 37,
           "ownerComponentId": "ui.0141",
           "tag": "button",
@@ -13000,7 +13012,7 @@
         {
           "id": "inline.ui.0142.action.1854699bbfb9",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 300,
+          "line": 333,
           "column": 33,
           "ownerComponentId": "ui.0142",
           "tag": "button",
@@ -13010,9 +13022,19 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0142.action.80919867aed7",
+          "id": "inline.ui.0142.action.9e18b100dc7d",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 295,
+          "line": 332,
+          "column": 33,
+          "ownerComponentId": "ui.0142",
+          "tag": "button",
+          "staticClassTokens": [],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0142.action.cd04bf8501a3",
+          "source": "src/pages/host/HostDashboardPage.tsx",
+          "line": 323,
           "column": 25,
           "ownerComponentId": "ui.0142",
           "tag": "div",
@@ -13022,16 +13044,6 @@
             "btn-sm",
             "btn-square"
           ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.action.9e18b100dc7d",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 299,
-          "column": 33,
-          "ownerComponentId": "ui.0142",
-          "tag": "button",
-          "staticClassTokens": [],
           "dynamicClasses": false
         },
         {
@@ -13915,7 +13927,7 @@
         {
           "id": "inline.ui.0142.badge.3854256bcbff",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 293,
+          "line": 321,
           "column": 21,
           "ownerComponentId": "ui.0142",
           "tag": "div",
@@ -14282,16 +14294,15 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0142.card.a466fe497136",
+          "id": "inline.ui.0142.card.f8da82501a95",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 279,
+          "line": 310,
           "column": 13,
           "ownerComponentId": "ui.0142",
-          "tag": "div",
+          "tag": "article",
           "staticClassTokens": [
             "bg-base-200",
             "card",
-            "cursor-pointer",
             "hover:shadow-md",
             "shadow-sm",
             "transition-shadow"
@@ -15294,7 +15305,7 @@
         {
           "id": "inline.ui.0141.menu.1fdbd1ec99ad",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 165,
+          "line": 183,
           "column": 25,
           "ownerComponentId": "ui.0141",
           "tag": "div",
@@ -15308,7 +15319,7 @@
         {
           "id": "inline.ui.0141.menu.d97e081f8535",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 169,
+          "line": 192,
           "column": 29,
           "ownerComponentId": "ui.0141",
           "tag": "ul",
@@ -15325,9 +15336,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0142.menu.869e80851761",
+          "id": "inline.ui.0142.menu.a5e6be9e8a5e",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 294,
+          "line": 322,
           "column": 21,
           "ownerComponentId": "ui.0142",
           "tag": "div",
@@ -15340,7 +15351,7 @@
         {
           "id": "inline.ui.0142.menu.fe84b02a8eab",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 298,
+          "line": 331,
           "column": 25,
           "ownerComponentId": "ui.0142",
           "tag": "ul",

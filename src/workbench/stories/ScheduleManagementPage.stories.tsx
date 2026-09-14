@@ -57,7 +57,7 @@ export const SmallScheduleAddPath: Story = {
     viewport: {value: 'phone', isRotated: false},
     reducedMotion: true,
   },
-  parameters: {msw: {handlers: [musicCatalogueHandler]}},
+  parameters: {a11y: {test: 'error'}, msw: {handlers: [musicCatalogueHandler]}},
   play: async ({canvas, canvasElement, userEvent}) => {
     const add = canvas.getByRole('button', {name: /add new song/i})
     await expect(add).toBeVisible()

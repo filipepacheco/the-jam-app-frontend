@@ -834,7 +834,9 @@
       "delete_success": "Jam excluído com sucesso",
       "delete_failed": "Falha ao excluir o jam",
       "loading_jams": "Carregando seus jams...",
+      "no_jams_title": "Crie seu primeiro Jam",
       "no_jams_desc": "Você ainda não tem sessões de jam. Crie seu primeiro jam para começar.",
+      "more_actions": "Mais ações do Jam",
       "stats": {
         "total_jams": "Total de Jams",
         "musicians": "Músicos",

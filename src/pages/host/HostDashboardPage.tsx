@@ -9,7 +9,7 @@ import {useNavigate} from 'react-router-dom'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {Alert, JamCardSkeleton, PageAlerts, SpotifyImportModal} from '../../components'
+import {Action, EmptyState, JamCardSkeleton, PageAlerts, SpotifyImportModal} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
@@ -22,7 +22,26 @@ interface JamCategory {
     past: JamResponseDto[]
 }
 
-export function HostDashboardPage() {
+export interface HostDashboardPort {
+    list(): Promise<readonly JamResponseDto[]>
+    remove(jamId: string): Promise<void>
+}
+
+const hostDashboardPort: HostDashboardPort = {
+    async list() {
+        const result = await jamService.findAll()
+        return result.data || []
+    },
+    async remove(jamId) {
+        await jamService.deleteFn(jamId)
+    },
+}
+
+interface HostDashboardPageProps {
+    port?: HostDashboardPort
+}
+
+export function HostDashboardPage({port = hostDashboardPort}: HostDashboardPageProps = {}) {
     const {t} = useTranslation()
     const navigate = useNavigate()
     const {isAuthenticated, isLoading: authLoading} = useAuth()
@@ -36,8 +55,7 @@ export function HostDashboardPage() {
         setError(null)
 
         try {
-            const result = await jamService.findAll()
-            setJams(result.data || [])
+            setJams([...await port.list()])
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : t('jam_management.host_dashboard.failed_to_load')
             console.error('❌ Error loading jams:', err)
@@ -45,7 +63,7 @@ export function HostDashboardPage() {
         } finally {
             setLoading(false)
         }
-    }, [t])
+    }, [port, setError, t])
 
     // Load jams once auth is ready
     useEffect(() => {
@@ -91,7 +109,7 @@ export function HostDashboardPage() {
         setError(null)
 
         try {
-            await jamService.deleteFn(jamId)
+            await port.remove(jamId)
             setSuccess(t('jam_management.host_dashboard.delete_success'))
             await loadJams()
         } catch (err) {
@@ -154,22 +172,26 @@ export function HostDashboardPage() {
                         >
                             {t('spotify.import_button')}
                         </button>
-                        <button
+                        <Action
                             onClick={() => navigate('/host/create-jam')}
-                            className="btn btn-primary btn-sm hidden sm:inline-flex"
-                            disabled={loading}
+                            className="shrink-0"
+                            state={loading ? 'disabled' : 'idle'}
                         >
                             {t('jam_management.host_dashboard.create_jam_btn')}
-                        </button>
+                        </Action>
                         {/* Mobile overflow actions */}
                         <div className="dropdown dropdown-end sm:hidden">
-                            <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-square">
-                                <EllipsisVertical className="size-4" />
+                            <div
+                                tabIndex={0}
+                                role="button"
+                                aria-label={t('jam_management.host_dashboard.more_actions')}
+                                className="btn btn-ghost btn-sm btn-square"
+                            >
+                                <EllipsisVertical className="size-4" aria-hidden="true" />
                             </div>
                             <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-52 p-2 shadow-lg z-10">
                                 <li><button onClick={() => navigate('/host/feedback')}>{t('feedback_page.title')}</button></li>
                                 <li><button onClick={() => setShowImportModal(true)}>{t('spotify.import_button')}</button></li>
-                                <li><button onClick={() => navigate('/host/create-jam')}>{t('jam_management.host_dashboard.create_jam_btn')}</button></li>
                             </ul>
                         </div>
                     </div>
@@ -177,22 +199,6 @@ export function HostDashboardPage() {
 
                 {/* Alerts */}
                 <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} />
-            </div>
-
-            {/* Stats - Single horizontal bar */}
-            <div className="stats stats-horizontal w-full bg-base-200 shadow-sm mb-3 sm:mb-6">
-                <div className="stat place-items-center py-2 px-3">
-                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.total_jams')}</div>
-                    <div className="stat-value text-lg">{stats.totalJams}</div>
-                </div>
-                <div className="stat place-items-center py-2 px-3">
-                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.registrations')}</div>
-                    <div className="stat-value text-lg">{stats.totalRegistrations}</div>
-                </div>
-                <div className="stat place-items-center py-2 px-3">
-                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.songs')}</div>
-                    <div className="stat-value text-lg">{stats.totalSongs}</div>
-                </div>
             </div>
 
             {loading && jams.length === 0 ? (
@@ -203,7 +209,16 @@ export function HostDashboardPage() {
                     </div>
                 </div>
             ) : jams.length === 0 ? (
-                <Alert type="info" message={t('jam_management.host_dashboard.no_jams_desc')} className="mb-6 sm:mb-8" />
+                <EmptyState
+                    kind="first-use"
+                    title={t('jam_management.host_dashboard.no_jams_title')}
+                    description={t('jam_management.host_dashboard.no_jams_desc')}
+                    action={{
+                        label: t('jam_management.host_dashboard.create_jam_btn'),
+                        onClick: () => navigate('/host/create-jam'),
+                    }}
+                    className="mb-6 sm:mb-8"
+                />
             ) : (<>
                 {/* In Progress Jams */}
                 {categories.inProgress.length > 0 && (<div className="mb-3 sm:mb-6">
@@ -218,6 +233,22 @@ export function HostDashboardPage() {
                         />))}
                     </div>
                 </div>)}
+
+                {/* Portfolio totals follow operational work instead of leading it. */}
+                <div className="stats stats-horizontal w-full bg-base-200 shadow-sm mb-3 sm:mb-6">
+                    <div className="stat place-items-center py-2 px-3">
+                        <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.total_jams')}</div>
+                        <div className="stat-value text-lg">{stats.totalJams}</div>
+                    </div>
+                    <div className="stat place-items-center py-2 px-3">
+                        <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.registrations')}</div>
+                        <div className="stat-value text-lg">{stats.totalRegistrations}</div>
+                    </div>
+                    <div className="stat place-items-center py-2 px-3">
+                        <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.songs')}</div>
+                        <div className="stat-value text-lg">{stats.totalSongs}</div>
+                    </div>
+                </div>
 
                 {/* Planned Jams */}
                 {categories.planned.length > 0 && (<div className="mb-3 sm:mb-6">
@@ -270,16 +301,13 @@ interface HostJamSummaryCardProps {
     loading: boolean
 }
 
-function HostJamSummaryCard({jam, onDelete, onNavigate}: HostJamSummaryCardProps) {
+function HostJamSummaryCard({jam, onDelete, onNavigate, loading}: HostJamSummaryCardProps) {
     const {t} = useTranslation()
 
     const registrationCount = jam._count?.registrations ?? 0
     const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
 
-    return (<div
-        className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-        onClick={() => onNavigate(`/host/jams/${jam.id}/manage`)}
-    >
+    return (<article className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow">
         <div className="card-body p-3 sm:p-4">
             <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
@@ -291,9 +319,14 @@ function HostJamSummaryCard({jam, onDelete, onNavigate}: HostJamSummaryCardProps
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
                     <div className={`badge badge-xs ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
-                    <div className="dropdown dropdown-end" onClick={(e) => e.stopPropagation()}>
-                        <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-square">
-                            <EllipsisVertical className="size-4" />
+                    <div className="dropdown dropdown-end">
+                        <div
+                            tabIndex={0}
+                            role="button"
+                            aria-label={t('jam_management.host_dashboard.more_actions')}
+                            className="btn btn-ghost btn-sm btn-square"
+                        >
+                            <EllipsisVertical className="size-4" aria-hidden="true" />
                         </div>
                         <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-44 p-2 shadow-lg z-10">
                             <li><button onClick={() => onNavigate(getJamPath(jam))}>{t('jam_management.host_dashboard.view_public')}</button></li>
@@ -303,8 +336,15 @@ function HostJamSummaryCard({jam, onDelete, onNavigate}: HostJamSummaryCardProps
                 </div>
             </div>
             {jam.description && <p className="text-xs text-base-content/50 truncate mt-1">{jam.description}</p>}
+            <Action
+                onClick={() => onNavigate(`/host/jams/${jam.id}/manage`)}
+                state={loading ? 'disabled' : 'idle'}
+                className="mt-2 w-full"
+            >
+                {t('jam_management.host_dashboard.manage_btn')}
+            </Action>
         </div>
-    </div>)
+    </article>)
 }
 
 export default HostDashboardPage
