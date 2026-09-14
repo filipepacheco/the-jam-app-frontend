@@ -673,6 +673,7 @@
   "music_library": {
     "title": "Music Library",
     "page_title": "Music Library",
+    "results_heading": "Music results",
     "create_new": "Create New Song",
     "add_song": "+ Add Song",
     "suggest_song": "Suggest Song",

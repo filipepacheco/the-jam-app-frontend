@@ -21,8 +21,7 @@ export default mergeConfig(
           ],
           test: {
             name: 'storybook',
-            // Story files share the process-wide i18n singleton; run files
-            // serially so locale setup cannot race across browser workers.
+            // Keep browser resource usage deterministic on the canonical runner.
             fileParallelism: false,
             browser: {
               enabled: true,

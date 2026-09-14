@@ -671,6 +671,7 @@
   "music_library": {
     "title": "Biblioteca de Música",
     "page_title": "Biblioteca de Música",
+    "results_heading": "Resultados de música",
     "create_new": "Crear Nueva Canción",
     "add_song": "+ Agregar Canción",
     "suggest_song": "Sugerir Canción",

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { expect, fn, waitFor } from 'storybook/test'
+import { expect, fn, waitFor, within } from 'storybook/test'
 import DashboardControlsPanel from '../../components/publicDashboard/DashboardControlsPanel'
 import { LanguageSelector } from '../../components/publicDashboard/LanguageSelector'
 import QRCodeCorner from '../../components/publicDashboard/QRCodeCorner'
@@ -11,7 +11,7 @@ import { StartingSoonPanel } from '../../components/publicDashboard/carousel/Sta
 import { UpNextPanel } from '../../components/publicDashboard/carousel/UpNextPanel'
 import { dashboardSongs } from '../publicDashboardFixtures'
 
-const meta = { title: 'Domain/Public Dashboard/Carousel and controls', parameters: { a11y: { test: 'todo' }, layout: 'fullscreen' } } satisfies Meta
+const meta = { title: 'Domain/Public Dashboard/Carousel and controls', parameters: { a11y: { test: 'error' }, layout: 'fullscreen' } } satisfies Meta
 export default meta
 type Story = StoryObj<typeof meta>
 
@@ -26,12 +26,19 @@ export const LiveCarousel: Story = {
   },
 }
 
-export const StartingCarousel: Story = { render: () => <CarouselDashboard jamStatus="ACTIVE" currentSong={null} nextSongs={[dashboardSongs.next]} jamId="jam-public" intervalMs={60_000} /> }
-export const FinishedCarousel: Story = { render: () => <CarouselDashboard jamStatus="FINISHED" currentSong={null} nextSongs={[]} intervalMs={60_000} /> }
+export const StartingCarousel: Story = {
+  render: () => <CarouselDashboard jamStatus="ACTIVE" currentSong={null} nextSongs={[dashboardSongs.next]} jamId="jam-public" intervalMs={60_000} />,
+  parameters: { designSystem: { interaction: { status: 'not-applicable', rationale: 'Passive venue transition state with no user-operated behavior.' } } },
+}
+export const FinishedCarousel: Story = {
+  render: () => <CarouselDashboard jamStatus="FINISHED" currentSong={null} nextSongs={[]} intervalMs={60_000} />,
+  parameters: { designSystem: { interaction: { status: 'not-applicable', rationale: 'Passive finished venue state with no user-operated behavior.' } } },
+}
 
 export const PanelMatrix: Story = {
   render: () => <div className="space-y-20"><NowPlayingPanel song={dashboardSongs.current} /><UpNextPanel song={dashboardSongs.next} /><StartingSoonPanel song={dashboardSongs.next} /><FinishedPanel /><QRCodePanel jamId="jam-public" slug="friday-night-jam" /></div>,
   globals: { locale: 'es', theme: 'synthwave', viewport: { value: 'desktop', isRotated: false } },
+  parameters: { designSystem: { interaction: { status: 'not-applicable', rationale: 'Static venue panel matrix for hierarchy and localization review.' } } },
 }
 
 const languageChange = fn()
@@ -50,6 +57,8 @@ export const ControlsPanel: Story = {
   render: () => <DashboardControlsPanel visible jamId="jam-public" jamSlug="friday-night-jam" onClose={close} currentLang="pt" onChangeLanguage={languageChange} pollingMs={5000} onPollingChange={fn()} layout="carousel" onLayoutChange={fn()} carouselIntervalMs={8000} onCarouselIntervalChange={fn()} />,
   globals: { reducedMotion: true },
   play: async ({ canvasElement, userEvent }) => {
+    const body = within(canvasElement.ownerDocument.body)
+    await expect(body.getByRole('button', { name: /close|cerrar|fechar/i })).toBeVisible()
     const backdrop = canvasElement.querySelector<HTMLElement>('div.fixed.inset-0')!
     await userEvent.click(backdrop)
     await expect(close).toHaveBeenCalled()
@@ -60,11 +69,11 @@ export const ExpandableQr: Story = {
   render: () => <QRCodeCorner jamId="jam-public" shortCode="JAM26" position="bottom-right" />,
   globals: { viewport: { value: 'desktop', isRotated: false }, reducedMotion: true },
   play: async ({ canvasElement, userEvent }) => {
-    const body = canvasElement.ownerDocument.body
-    const trigger = body.querySelector<HTMLButtonElement>('button[aria-label*="QR" i]')!
+    const body = within(canvasElement.ownerDocument.body)
+    const trigger = body.getByRole('button', { name: /expand qr|expandir.*qr|ampliar.*qr/i })
     await userEvent.click(trigger)
-    await expect(body.querySelector('[role="dialog"]')).not.toBeNull()
+    await expect(body.getByRole('dialog')).toBeVisible()
     await userEvent.keyboard('{Escape}')
-    await waitFor(() => expect(body.querySelector('[role="dialog"]')).toBeNull())
+    await waitFor(() => expect(body.queryByRole('dialog')).toBeNull())
   },
 }

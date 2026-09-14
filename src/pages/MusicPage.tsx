@@ -297,6 +297,7 @@ export function MusicPage({ queryPort, mutationPort }: MusicPageProps = {}) {
 
       {/* Music List */}
       <div className="container mx-auto max-w-7xl px-4 pb-8">
+        <h2 className="sr-only">{t('music_library.results_heading')}</h2>
         {visibleMusic.length === 0 ? (
           <MusicEmptyState hasFilters={!!searchTerm || !!genreFilter} isHost={user?.isHost || false} />
         ) : (

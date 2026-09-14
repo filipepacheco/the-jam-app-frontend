@@ -108,7 +108,7 @@ export const MusicCard = memo(function MusicCard({
           {/* Title, Artist & Meta - flows horizontally on tablet */}
           <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center sm:gap-3">
             <div className="min-w-0 shrink-0 sm:shrink">
-              <h2 className="ds-type-ui ds-wrap-user-content font-bold">{music.title}</h2>
+              <h3 className="ds-type-ui ds-wrap-user-content font-bold">{music.title}</h3>
               <p className="ds-wrap-user-content text-sm text-base-content/70">{music.artist}</p>
             </div>
             {music.status && <MusicStatusIndicator status={music.status} />}

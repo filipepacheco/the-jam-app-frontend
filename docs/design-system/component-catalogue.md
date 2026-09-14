@@ -470,10 +470,10 @@ Only `ready` and reasoned `exempt` entries satisfy the reviewed baseline. `needs
 - `src/pages/host/MusiciansPage.tsx:521:25` — candidate `inline.ui.0145.action.b9daf271e54c`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
 - `src/pages/host/MusiciansPage.tsx:486:25` — candidate `inline.ui.0145.action.c7e34587e2ec`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
 - `src/pages/host/MusiciansPage.tsx:450:23` — candidate `inline.ui.0145.action.dff80a407e2c`; owner `ui.0145`; tag `<button>`; static classes: `btn`, `btn-sm`; dynamic classes: no; disposition: ungoverned.
-- `src/pages/MusicPage.tsx:385:17` — candidate `inline.ui.0149.action.175df37e0f43`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
-- `src/pages/MusicPage.tsx:393:17` — candidate `inline.ui.0149.action.49d5ad7da5cf`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
-- `src/pages/MusicPage.tsx:358:17` — candidate `inline.ui.0149.action.6553b618da26`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
-- `src/pages/MusicPage.tsx:350:17` — candidate `inline.ui.0149.action.821a1bc772cb`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:386:17` — candidate `inline.ui.0149.action.175df37e0f43`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:394:17` — candidate `inline.ui.0149.action.49d5ad7da5cf`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:359:17` — candidate `inline.ui.0149.action.6553b618da26`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:351:17` — candidate `inline.ui.0149.action.821a1bc772cb`; owner `ui.0149`; tag `<button>`; static classes: `btn`, `btn-sm`, `join-item`; dynamic classes: no; disposition: ungoverned.
 - `src/pages/NotFoundPage.tsx:40:13` — candidate `inline.ui.0150.action.7a732819e71d`; owner `ui.0150`; tag `<Link>`; static classes: `btn`, `btn-outline`, `gap-2`; dynamic classes: no; disposition: ungoverned.
 - `src/pages/NotFoundPage.tsx:36:13` — candidate `inline.ui.0150.action.ad399f270378`; owner `ui.0150`; tag `<Link>`; static classes: `btn`, `btn-primary`, `gap-2`; dynamic classes: no; disposition: ungoverned.
 - `src/pages/tabs/AuthCallbackPage.tsx:126:15` — candidate `inline.ui.0156.action.275fc0c0934a`; owner `ui.0156`; tag `<a>`; static classes: `btn`, `btn-ghost`; dynamic classes: no; disposition: ungoverned.
@@ -616,8 +616,8 @@ Only `ready` and reasoned `exempt` entries satisfy the reviewed baseline. `needs
 - `src/pages/host/MusiciansPage.tsx:273:19` — candidate `inline.ui.0145.field.2de566221baa`; owner `ui.0145`; tag `<input>`; static classes: none detected; dynamic classes: no; disposition: ungoverned.
 - `src/pages/host/MusiciansPage.tsx:459:25` — candidate `inline.ui.0145.field.604578557240`; owner `ui.0145`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-14`; dynamic classes: no; disposition: ungoverned.
 - `src/pages/host/MusiciansPage.tsx:287:17` — candidate `inline.ui.0145.field.6af0631b2980`; owner `ui.0145`; tag `<select>`; static classes: `select`, `w-full`; dynamic classes: no; disposition: ungoverned.
-- `src/pages/MusicPage.tsx:332:15` — candidate `inline.ui.0149.field.085b67c6ed72`; owner `ui.0149`; tag `<select>`; static classes: `select`, `select-bordered`, `select-sm`; dynamic classes: no; disposition: ungoverned.
-- `src/pages/MusicPage.tsx:369:17` — candidate `inline.ui.0149.field.5f9ba7a19e3d`; owner `ui.0149`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-14`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:333:15` — candidate `inline.ui.0149.field.085b67c6ed72`; owner `ui.0149`; tag `<select>`; static classes: `select`, `select-bordered`, `select-sm`; dynamic classes: no; disposition: ungoverned.
+- `src/pages/MusicPage.tsx:370:17` — candidate `inline.ui.0149.field.5f9ba7a19e3d`; owner `ui.0149`; tag `<input>`; static classes: `input`, `input-bordered`, `input-sm`, `text-center`, `w-14`; dynamic classes: no; disposition: ungoverned.
 
 ### menu
 

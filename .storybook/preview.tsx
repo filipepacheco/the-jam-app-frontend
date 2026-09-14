@@ -72,7 +72,6 @@ const preview: Preview = {
     }),
     async (context) => {
       const locale = String(context.globals.locale || 'pt')
-      await i18n.changeLanguage(locale)
       document.documentElement.lang = locale
       return {}
     },
@@ -80,17 +79,19 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const theme = String(context.globals.theme || 'light')
+      const locale = String(context.globals.locale || 'pt')
       const route = String(context.globals.route || '/')
       const authRole = String(context.globals.authRole || 'host') as WorkbenchAuthRole
+      const storyI18n = i18n.cloneInstance({ lng: locale, initAsync: false })
 
       document.documentElement.dataset.theme = theme
       installReducedMotionPreference(String(context.globals.reducedMotion) === 'true')
 
       return (
         <MemoryRouter initialEntries={[route]} key={route}>
-          <I18nextProvider i18n={i18n}>
+          <I18nextProvider i18n={storyI18n}>
             <AuthContext.Provider value={createAuthFixture(authRole)}>
-              <div data-theme={theme} data-workbench-root className="min-h-screen bg-base-100 p-4 text-base-content">
+              <div lang={locale} data-theme={theme} data-workbench-root className="min-h-screen bg-base-100 p-4 text-base-content">
                 <Story />
               </div>
             </AuthContext.Provider>
