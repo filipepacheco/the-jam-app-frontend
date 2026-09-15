@@ -14,7 +14,6 @@ import {
     DashboardControlsPanel,
     NextSongCard,
     OfflineBanner,
-    StartingSoonCard,
     CarouselDashboard
 } from '../components/publicDashboard'
 
@@ -91,10 +90,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
   )
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef)
 
-  // When jam hasn't started, StartingSoonCard shows nextSongs[0],
-  // so NextSongCard should show nextSongs[1] to avoid duplicate
-  const isNotStarted = !currentSong
-  const nextSongToShow = isNotStarted ? nextSongs[1] : nextSongs[0]
+  const nextSongToShow = nextSongs[0]
 
   // Build ticker text for carousel header
   const tickerText = (() => {
@@ -225,7 +221,8 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
         <>
           <div className="relative pt-20 pb-8 px-4 md:px-8 z-10">
             <div className="max-w-6xl mx-auto">
-              {/* Current Song / Starting Soon Section */}
+              {/* Now Playing stays visible while the Jam waits for a current
+                  Performance. The next Performance remains a separate region. */}
               {jamStatus === 'FINISHED' ? (
                 <div className="mb-12 text-center">
                   <div className="bg-base-200/80 border border-base-300 rounded-2xl p-8 md:p-12">
@@ -234,10 +231,8 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                     <p className="text-lg md:text-2xl text-base-content/70">{t('publicDashboard.thankYou', 'Thanks for jamming with us!')}</p>
                   </div>
                 </div>
-              ) : currentSong ? (
-                <CurrentSongCard song={currentSong} />
               ) : (
-                <StartingSoonCard song={nextSongs[0] ?? null} />
+                <CurrentSongCard song={currentSong} />
               )}
 
               {/* Next Song Section - only if there's a different song to show */}

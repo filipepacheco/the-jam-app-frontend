@@ -27,7 +27,7 @@ import {
 } from '../components'
 import { GENRES } from '../lib/musicConstants'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
-import { MusicDataCard } from '../components/music/MusicDataDisplay'
+import { MusicDataCard, MusicStatusIndicator } from '../components/music/MusicDataDisplay'
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100] as const
 type SortBy = 'title' | 'artist' | 'date'
@@ -466,6 +466,9 @@ export function MusicPage({ queryPort, mutationPort }: MusicPageProps = {}) {
                     <div className="min-w-0 flex-1">
                       <p className="ds-type-ui ds-wrap-user-content font-semibold">{music.title}</p>
                       <p className="ds-wrap-user-content text-sm text-base-content/70">{music.artist}</p>
+                      {music.status === 'SUGGESTED' && (
+                        <div className="mt-1"><MusicStatusIndicator status={music.status} /></div>
+                      )}
                       {music.genre && <Badge size="sm" className="mt-1">{music.genre}</Badge>}
                       {music.description && <p className="ds-wrap-user-content mt-1 text-sm text-base-content/50">{music.description}</p>}
                     </div>

@@ -6,9 +6,9 @@
 
 import { type FormEvent, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { spotifyService } from '../../services'
+import { musicService, spotifyService } from '../../services'
 import { MusicModalFormFields } from '../MusicModalFormFields'
-import { parseDuration } from '../../lib/musicUtils'
+import { isDuplicate, parseDuration } from '../../lib/musicUtils'
 import { formatDuration } from '../../lib/formatters'
 import { isValidSpotifyTrackUrl } from '../../lib/spotifyUtils'
 import type { CreateMusicDto } from '../../types/api.types'
@@ -25,6 +25,7 @@ interface SuggestNewSongModalProps {
 }
 
 type SubmitStep = 'idle' | 'creating' | 'linking'
+type EntryMode = 'manual' | 'spotify'
 
 export function SuggestNewSongModal({
   isOpen,
@@ -32,6 +33,7 @@ export function SuggestNewSongModal({
   onSubmit,
 }: SuggestNewSongModalProps) {
   const { t } = useTranslation()
+  const [entryMode, setEntryMode] = useState<EntryMode | null>(null)
 
   // Spotify import state
   const [spotifyUrl, setSpotifyUrl] = useState('')
@@ -63,6 +65,7 @@ export function SuggestNewSongModal({
   // Reset state when modal opens/closes
   useEffect(() => {
     if (isOpen) {
+      setEntryMode(null)
       setSpotifyUrl('')
       setImportLoading(false)
       setImportError(null)
@@ -137,6 +140,20 @@ export function SuggestNewSongModal({
     if (!formData.artist.trim()) {
       setError(t('music_library.validation.artist_required'))
       return
+    }
+
+    try {
+      const existing = await musicService.findAll()
+      if (isDuplicate(existing.data ?? [], formData.title.trim(), formData.artist.trim())) {
+        setError(t('music_library.feedback.duplicate_error', {
+          title: formData.title.trim(),
+          artist: formData.artist.trim(),
+        }))
+        return
+      }
+    } catch {
+      // The create endpoint remains authoritative. A failed preflight must not
+      // turn a recoverable catalogue request into a blocked suggestion.
     }
 
     // Parse duration
@@ -214,7 +231,7 @@ export function SuggestNewSongModal({
             <Action
               type="submit"
               form="suggest-new-song-form"
-              state={!formData.title.trim() || !formData.artist.trim() ? 'disabled' : 'idle'}
+              state={!entryMode || !formData.title.trim() || !formData.artist.trim() ? 'disabled' : 'idle'}
             >
               {getSubmitLabel()}
             </Action>
@@ -227,22 +244,46 @@ export function SuggestNewSongModal({
         onSubmit={(e) => { void handleSubmit(e) }}
         className="space-y-6"
       >
-        {/* Description */}
-        <p className="text-sm text-base-content/70">
-          {t('jams.suggest_new_song_description')}
-        </p>
+        <fieldset>
+          <legend className="mb-2 text-sm font-semibold text-base-content">
+            {t('jams.suggestion_source_title')}
+          </legend>
+          <p className="mb-3 text-sm text-base-content/70">
+            {t('jams.suggestion_source_help')}
+          </p>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <Action
+              type="button"
+              variant={entryMode === 'manual' ? 'primary' : 'secondary'}
+              aria-pressed={entryMode === 'manual'}
+              onClick={() => setEntryMode('manual')}
+            >
+              {t('jams.suggestion_source_manual')}
+            </Action>
+            <Action
+              type="button"
+              variant={entryMode === 'spotify' ? 'primary' : 'secondary'}
+              aria-pressed={entryMode === 'spotify'}
+              onClick={() => setEntryMode('spotify')}
+            >
+              {t('jams.suggestion_source_spotify')}
+            </Action>
+          </div>
+        </fieldset>
 
         {/* Error Alert */}
         <Alert type="error" message={error} />
 
-        {/* Spotify Import Section */}
-        <div className="bg-base-200 rounded-lg p-4 space-y-3">
+        {/* Spotify is an explicit entry path, not an optional block that leads
+            every manual suggestion. */}
+        {entryMode === 'spotify' && <div className="border-y border-base-300 py-4 space-y-3">
           {/* Field wraps exactly one control, so the import Action is a sibling
               of the Field, not a child of it. */}
           <div className="flex gap-2 items-end">
             <Field
               id="spotify-url"
               label={t('jams.spotify_url_label')}
+              hint={t('jams.spotify_url_hint')}
               className="flex-1"
               disabled={importLoading || submitting}
               error={importError ?? undefined}
@@ -275,10 +316,10 @@ export function SuggestNewSongModal({
           {importSuccess && (
             <FormSubmissionFeedback state="success" message={t('jams.import_success')} />
           )}
-        </div>
+        </div>}
 
         {/* Form Fields */}
-        <MusicModalFormFields formData={formData} onChange={handleFieldChange} />
+        {entryMode && <MusicModalFormFields formData={formData} onChange={handleFieldChange} />}
 
       </form>
     </Modal>

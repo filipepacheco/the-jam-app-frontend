@@ -36,6 +36,18 @@ afterEach(() => {
 })
 
 describe('LiveJamControlPanel', () => {
+  it('identifies the first upcoming Performance as Next', () => {
+    render(<LiveJamControlPanel jamId="jam-1" />)
+
+    expect(screen.getByText('dj_control.now_playing.next_up')).toBeVisible()
+    expect(screen.getByText('Music a').closest('[role="listitem"]')).toHaveTextContent(
+      'dj_control.now_playing.next_up',
+    )
+    expect(screen.getByText('Music b').closest('[role="listitem"]')).not.toHaveTextContent(
+      'dj_control.now_playing.next_up',
+    )
+  })
+
   it('routes mouse reordering through the Live Queue interface', () => {
     render(<LiveJamControlPanel jamId="jam-1" />)
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))

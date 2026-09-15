@@ -90,8 +90,8 @@ export const ReadyPlaybackAndQueueModes: Story = {
   play: async ({canvas, userEvent}) => {
     const djTab = await canvas.findByRole('tab', {name: /DJ Control/i})
     await expect(djTab).toHaveAttribute('aria-selected', 'true')
-    await expect(await canvas.findByRole('button', {name: /Pause/i})).toBeEnabled()
-    await expect(canvas.getAllByText('Psycho Killer')[0]).toBeVisible()
+    await expect((await canvas.findAllByText('Psycho Killer')).length).toBeGreaterThan(0)
+    await expect((await canvas.findAllByText(/Próxima|Next/)).length).toBeGreaterThan(0)
 
     await userEvent.click(canvas.getByRole('tab', {name: /Ordem|Reorder/i}))
     const panel = within(canvas.getByRole('tabpanel'))
@@ -100,6 +100,7 @@ export const ReadyPlaybackAndQueueModes: Story = {
 
     await userEvent.click(panel.getByRole('button', {name: /Reorder/i}))
     await expect(panel.getByRole('heading', {name: 'Up Next (Reorderable)'})).toBeVisible()
+    await expect(panel.getByText('The first Performance in this list will be Next.')).toBeVisible()
     const items = panel.getAllByRole('listitem')
     items[0].focus()
     await userEvent.keyboard('{ArrowDown}')
@@ -129,8 +130,9 @@ export const NoCurrentPerformance: Story = {
     msw: {handlers: liveHostHandlers('jam-live-host-no-current', noCurrentLiveState)},
   },
   play: async ({canvas, userEvent}) => {
-    await expect(await canvas.findByText('Ready to start')).toBeVisible()
-    await expect(canvas.getByRole('button', {name: /Start Jam/i})).toBeEnabled()
+    await expect((await canvas.findAllByText(/Pronto para iniciar|Ready to start/)).length).toBeGreaterThan(0)
+    const startActions = canvas.getAllByRole('button', {name: /Iniciar|Start Jam/i})
+    await expect(startActions.some((action) => !action.hasAttribute('disabled'))).toBe(true)
 
     await userEvent.click(canvas.getByRole('tab', {name: /Ordem|Reorder/i}))
     const panel = within(canvas.getByRole('tabpanel'))

@@ -5,8 +5,7 @@ import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
 import {TimelineItemV2Waveform} from './TimelineItemV2Waveform'
 import {useState} from 'react'
-import {Music, Users, Flag, ClipboardList} from 'lucide-react'
-import {formatJamDuration} from '../../lib/formatters'
+import {Flag, ClipboardList} from 'lucide-react'
 import {Action} from '../Action'
 import {CanonicalEmptyState} from '../FeedbackStates'
 
@@ -48,12 +47,6 @@ export function TimelineShowcaseV2Waveform({
     if (hasCoreBand(schedule)) return 'bg-success/70 border-success/30'
     return 'bg-base-300 border-base-300/50'
   }
-
-  // Compute stats for schedule header
-  const uniqueMusicians = new Set(
-    schedules.flatMap(s => s.registrations || []).map(r => r.musician?.id || r.musician?.contact)
-  ).size
-  const totalDuration = schedules.reduce((sum, s) => sum + (s.music?.duration || 0), 0)
 
   // Check if a schedule is relevant for a given instrument filter:
   // - Has explicit requirement for that instrument (needed > 0), OR
@@ -100,29 +93,20 @@ export function TimelineShowcaseV2Waveform({
 
   return (
     <div className="space-y-6">
-      {/* Timeline Header with stats */}
-      <div className="flex items-baseline justify-between gap-2 flex-wrap">
+      {/* The Schedule heading owns participation help. Jam-level facts live
+          with the Jam identity above instead of competing with this task. */}
+      <div className="space-y-1">
         <h2 className="text-2xl sm:text-3xl font-extrabold scroll-mt-20">{t('jams.performance_schedule_title')}</h2>
-        <div className="flex items-center gap-3 text-xs text-base-content/50 tabular-nums">
-          <span className="inline-flex items-center gap-1">
-            <Music className="size-3" />
-            {schedules.length}
-          </span>
-          {uniqueMusicians > 0 && (
-            <span className="inline-flex items-center gap-1">
-              <Users className="size-3" />
-              {uniqueMusicians}
-            </span>
-          )}
-          {totalDuration > 0 && (
-            <span>{formatJamDuration(totalDuration)}</span>
-          )}
-        </div>
+        <p className="ds-type-body text-sm text-base-content/65">
+          {t('jams.performance_registration_help')}
+        </p>
       </div>
 
-      {/* Instrument filter pills + help toggle */}
+      {/* Instrument filter controls retain 44px targets. On a phone, the
+          instrument names collapse visually while their accessible names stay. */}
       {availableFilters.length > 1 && (
-        <div className="flex items-center gap-2">
+        <div className="space-y-1.5">
+          <p className="text-xs font-semibold text-base-content/60">{t('jams.filter_by_instrument')}</p>
           <div className="flex gap-1.5 overflow-x-auto pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             <Action
               onClick={() => { setInstrumentFilter(null); setMineFilter(false) }}
@@ -149,9 +133,10 @@ export function TimelineShowcaseV2Waveform({
                 variant={instrumentFilter === inst ? 'primary' : 'quiet'}
                 aria-pressed={instrumentFilter === inst}
                 className="gap-1 shrink-0"
+                aria-label={t(`schedule.instruments.${inst}`)}
               >
-                <span>{getInstrumentEmoji(inst)}</span>
-                <span>{t(`schedule.instruments.${inst}`)}</span>
+                <span aria-hidden="true">{getInstrumentEmoji(inst)}</span>
+                <span className="hidden sm:inline">{t(`schedule.instruments.${inst}`)}</span>
               </Action>
             ))}
           </div>

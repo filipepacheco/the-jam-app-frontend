@@ -36,6 +36,7 @@ export const CreateValidationAndFocus: Story = {
   render: () => <CreateJamPage />,
   globals: {authRole: 'host', locale: 'pt', theme: 'jam-light', route: '/host/create-jam', reviewDefaultViewport: 'phone', reducedMotion: true},
   play: async ({canvas, userEvent}) => {
+    await expect(canvas.getByRole('button', {name: /importar playlist/i})).toBeVisible()
     const submit = await canvas.findByRole('button', {name: /criar jam/i})
     await userEvent.click(submit)
     const name = canvas.getByRole('textbox', {name: /nome do jam/i})

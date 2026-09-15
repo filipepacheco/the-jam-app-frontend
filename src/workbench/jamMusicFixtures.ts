@@ -206,6 +206,7 @@ export const jamFixtures = {
     hostName: 'Ana Host and the Benjamin Social Club Production Collective',
     description: 'Bring your instrument, arrive before soundcheck, and speak with the host about arrangements. This intentionally long description checks three-line truncation and translated layouts.',
     date: '2026-10-24T19:30:00.000Z',
+    location: 'Centro Cultural Benjamin, Rua das Harmonias, 347',
     status: 'LIVE',
     createdAt: '2026-09-01T12:00:00.000Z',
     updatedAt: '2026-09-11T12:00:00.000Z',

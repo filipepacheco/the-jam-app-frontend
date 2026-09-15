@@ -49,7 +49,7 @@ const failedDeletePort: HostDashboardPort = {
 
 const deletedJam = {...jamFixtures.active, id: 'jam-delete-success', name: 'Sunday Jam', status: 'ACTIVE' as const}
 const successfulDeletePort: HostDashboardPort = {
-  list: fn().mockResolvedValueOnce([deletedJam]).mockResolvedValue([]),
+  list: fn(async () => [deletedJam]),
   remove: fn(async () => undefined),
 }
 
@@ -84,6 +84,8 @@ export const OperationalPriority: Story = {
     await expect(active.compareDocumentPosition(totals) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(totals.compareDocumentPosition(planned) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(canvas.getAllByRole('button', {name: /gerenciar/i})[0]).toBeVisible()
+    await expect(canvas.queryByRole('button', {name: /importar do spotify/i})).toBeNull()
+    await expect(canvas.queryByRole('button', {name: /feedback/i})).toBeNull()
   },
 }
 
@@ -99,6 +101,8 @@ export const HostPhone: Story = {
     await expect(await canvas.findByRole('button', {name: /create new jam/i})).toBeVisible()
     await expect(canvas.getAllByRole('button', {name: /manage/i})[0]).toBeVisible()
     await expect(canvas.getAllByRole('button', {name: /more jam actions/i})[0]).toBeVisible()
+    await expect(canvas.getByText(/centro cultural benjamin/i)).toBeVisible()
+    await expect(canvas.getAllByText(/\d{1,2}:\d{2}/)[0]).toBeVisible()
   },
 }
 
@@ -183,9 +187,9 @@ export const DeletePending: Story = {
     const jam = await canvas.findByRole('heading', {level: 3})
     const card = cardQueries(jam)
     await userEvent.click(card.getByRole('button', {name: /mais ações do jam/i}))
-    await userEvent.click(card.getByRole('button', {name: /excluir/i}))
-    await expect(card.getByRole('button', {name: /excluir/i})).toBeDisabled()
+    await userEvent.click(card.getByRole('menuitem', {name: /excluir/i}))
     await expect(card.getByRole('button', {name: /gerenciar/i})).toBeDisabled()
+    await expect(pendingRemove).toHaveBeenCalledWith('jam-delete-pending')
   },
 }
 
@@ -201,7 +205,7 @@ export const DeleteFailure: Story = {
     const jam = await canvas.findByRole('heading', {level: 3, name: /friday jam/i})
     const card = cardQueries(jam)
     await userEvent.click(card.getByRole('button', {name: /more jam actions/i}))
-    await userEvent.click(card.getByRole('button', {name: /delete/i}))
+    await userEvent.click(card.getByRole('menuitem', {name: /delete/i}))
     await expect(await card.findByRole('alert')).toHaveTextContent(/could not be deleted/i)
     await expect(card.getByRole('button', {name: /manage/i})).toBeEnabled()
   },
@@ -219,9 +223,10 @@ export const DeleteSuccess: Story = {
     const jam = await canvas.findByRole('heading', {level: 3, name: /sunday jam/i})
     const card = cardQueries(jam)
     await userEvent.click(card.getByRole('button', {name: /more jam actions/i}))
-    await userEvent.click(card.getByRole('button', {name: /delete/i}))
+    await userEvent.click(card.getByRole('menuitem', {name: /delete/i}))
     const outcome = await canvas.findByRole('status')
     await expect(outcome).toHaveTextContent(/deleted successfully/i)
     await expect(outcome).toHaveTextContent(/sunday jam/i)
+    await expect(canvas.queryByRole('heading', {level: 3, name: /sunday jam/i})).toBeNull()
   },
 }

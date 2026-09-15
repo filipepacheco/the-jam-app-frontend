@@ -13,16 +13,15 @@ import {
     Action,
     EmptyState,
     ErrorState,
-    IconAction,
     JamCardSkeleton,
-    Status,
-    SpotifyImportModal,
+    OverflowMenu,
+    type NavigationMenuItem,
 } from '../../components'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
 import {getJamPath} from '../../utils/jamUrl'
-import {EllipsisVertical} from 'lucide-react'
+import {AlertCircle, CalendarClock, CheckCircle2, ExternalLink, MapPin, Music2, Trash2, Users} from 'lucide-react'
 
 interface JamCategory {
     planned: JamResponseDto[]
@@ -74,7 +73,6 @@ export function HostDashboardPage({
     const [deletingJamId, setDeletingJamId] = useState<string | null>(null)
     const [jamMutationFeedback, setJamMutationFeedback] = useState<JamMutationFeedback | null>(null)
     const {error, setError} = usePageAlerts()
-    const [showImportModal, setShowImportModal] = useState(false)
 
     const loadJams = useCallback(async () => {
         setLoading(true)
@@ -136,12 +134,6 @@ export function HostDashboardPage({
                 message: t('jam_management.host_dashboard.delete_success'),
                 tone: 'success',
             })
-
-            try {
-                setJams([...await port.list()])
-            } catch (err) {
-                setError(err instanceof Error ? err.message : t('jam_management.host_dashboard.failed_to_load'))
-            }
         } catch (err) {
             setJamMutationFeedback({
                 jam,
@@ -190,22 +182,8 @@ export function HostDashboardPage({
             {/* Header */}
             <div className="mb-3 sm:mb-6">
                 <div className="flex items-center justify-between gap-2 mb-3">
-                    <h1 className="text-lg sm:text-2xl font-bold">{t('jam_management.host_dashboard.title')}</h1>
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => navigate('/host/feedback')}
-                            className="btn btn-ghost btn-sm hidden sm:inline-flex"
-                            disabled={loading}
-                        >
-                            {t('feedback_page.title')}
-                        </button>
-                        <button
-                            onClick={() => setShowImportModal(true)}
-                            className="btn btn-outline btn-sm hidden sm:inline-flex"
-                            disabled={loading}
-                        >
-                            {t('spotify.import_button')}
-                        </button>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-balance">{t('jam_management.host_dashboard.title')}</h1>
+                    <div className="flex items-center">
                         <Action
                             onClick={() => navigate('/host/create-jam')}
                             className="shrink-0"
@@ -213,21 +191,6 @@ export function HostDashboardPage({
                         >
                             {t('jam_management.host_dashboard.create_jam_btn')}
                         </Action>
-                        {/* Mobile overflow actions */}
-                        <div className="dropdown dropdown-end sm:hidden">
-                            <div
-                                tabIndex={0}
-                                role="button"
-                                aria-label={t('jam_management.host_dashboard.more_actions')}
-                                className="btn btn-ghost btn-sm btn-square"
-                            >
-                                <EllipsisVertical className="size-4" aria-hidden="true" />
-                            </div>
-                            <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-52 p-2 shadow-lg z-10">
-                                <li><button onClick={() => navigate('/host/feedback')}>{t('feedback_page.title')}</button></li>
-                                <li><button onClick={() => setShowImportModal(true)}>{t('spotify.import_button')}</button></li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
 
@@ -314,14 +277,6 @@ export function HostDashboardPage({
             </>)}
         </div>
 
-        <SpotifyImportModal
-            isOpen={showImportModal}
-            onClose={() => setShowImportModal(false)}
-            onSuccess={(jamId) => {
-                setShowImportModal(false)
-                navigate(`/host/jams/${jamId}/manage`)
-            }}
-        />
     </div>)
 }
 
@@ -330,6 +285,7 @@ export function HostDashboardPage({
  */
 interface HostJamSummaryCardProps {
     jam: JamResponseDto
+    category: keyof JamCategory
     onDelete: (jamId: string) => void
     onNavigate: (path: string) => void
     deleting: boolean
@@ -360,69 +316,86 @@ function HostJamCategory({
     if (jams.length === 0 && !successForCategory) return null
 
     return (<section className="mb-3 sm:mb-6" aria-labelledby={`host-jams-${category}`}>
-        <h2 id={`host-jams-${category}`} className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{title}</h2>
+        <h2 id={`host-jams-${category}`} className="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{title}</h2>
+        {successForCategory && <p
+            className="mb-3 flex items-center gap-2 text-sm text-success"
+            role="status"
+        >
+            <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
+            <span>{mutationFeedback.message}: <strong>{mutationFeedback.jam.name}</strong></span>
+        </p>}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {jams.map((jam) => (<HostJamSummaryCard
                 key={jam.id}
                 jam={jam}
+                category={category}
                 onDelete={onDelete}
                 onNavigate={onNavigate}
                 deleting={deletingJamId === jam.id}
                 mutationFeedback={mutationFeedback?.jam.id === jam.id ? mutationFeedback : null}
             />))}
-            {successForCategory && <div className="rounded-box bg-base-200 p-3 sm:p-4">
-                <Status
-                    tone="success"
-                    title={mutationFeedback.message}
-                    description={mutationFeedback.jam.name}
-                />
-            </div>}
         </div>
     </section>)
 }
 
-function HostJamSummaryCard({jam, onDelete, onNavigate, deleting, mutationFeedback}: HostJamSummaryCardProps) {
-    const {t} = useTranslation()
+function HostJamSummaryCard({jam, category, onDelete, onNavigate, deleting, mutationFeedback}: HostJamSummaryCardProps) {
+    const {t, i18n} = useTranslation()
 
     const registrationCount = jam._count?.registrations ?? 0
     const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
+    const formattedDate = jam.date && !Number.isNaN(new Date(jam.date).getTime())
+        ? new Intl.DateTimeFormat(i18n.language, {dateStyle: 'medium', timeStyle: 'short'}).format(new Date(jam.date))
+        : null
+    const menuItems: NavigationMenuItem[] = [
+        {
+            id: 'public-page',
+            label: t('jam_management.host_dashboard.view_public'),
+            icon: <ExternalLink className="size-4" />,
+            disabled: deleting,
+            onSelect: () => onNavigate(getJamPath(jam)),
+        },
+        {
+            id: 'delete',
+            label: t('jam_management.host_dashboard.delete_btn'),
+            icon: <Trash2 className="size-4" />,
+            destructive: true,
+            disabled: deleting,
+            onSelect: () => onDelete(jam.id),
+        },
+    ]
 
     return (<article className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow">
         <div className="card-body p-3 sm:p-4">
             <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                    <h3 className="font-bold text-base truncate">{jam.name}</h3>
-                    <div className="text-xs text-base-content/60 mt-0.5">
-                        {jam.date && <span>{new Date(jam.date).toLocaleDateString('pt-BR')} · </span>}
-                        <span>{songCount} {safeT(t, 'jam_management.host_dashboard.stats.songs').toLowerCase()} · {registrationCount} {safeT(t, 'jam_management.host_dashboard.stats.registrations').toLowerCase()}</span>
+                <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-base text-pretty">{jam.name}</h3>
+                    <div className="mt-2 grid gap-1 text-xs text-base-content/65">
+                        <span className="inline-flex min-w-0 items-center gap-1.5 tabular-nums">
+                            <CalendarClock className="size-3.5 shrink-0" aria-hidden="true" />
+                            <span>{formattedDate ?? t('jams.date_tba')}</span>
+                        </span>
+                        {jam.location && <span className="inline-flex min-w-0 items-center gap-1.5">
+                            <MapPin className="size-3.5 shrink-0" aria-hidden="true" />
+                            <span className="truncate" title={jam.location}>{jam.location}</span>
+                        </span>}
+                        <span className="flex flex-wrap gap-x-3 gap-y-1">
+                            <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                                <Music2 className="size-3.5 shrink-0" aria-hidden="true" />
+                                {songCount} {safeT(t, 'jam_management.host_dashboard.stats.songs').toLowerCase()}
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                                <Users className="size-3.5 shrink-0" aria-hidden="true" />
+                                {registrationCount} {safeT(t, 'jam_management.host_dashboard.stats.registrations').toLowerCase()}
+                            </span>
+                        </span>
                     </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
-                    <div className={`badge badge-xs ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
-                    <div className="dropdown dropdown-end">
-                        <IconAction
-                            label={t('jam_management.host_dashboard.more_actions')}
-                            variant="quiet"
-                            className="btn-sm"
-                        >
-                            <EllipsisVertical className="size-4" aria-hidden="true" />
-                        </IconAction>
-                        <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-44 p-2 shadow-lg z-10">
-                            <li><button onClick={() => onNavigate(getJamPath(jam))}>{t('jam_management.host_dashboard.view_public')}</button></li>
-                            <li>
-                                {deleting ? <Action
-                                    variant="destructive"
-                                    state="loading"
-                                    loadingLabel={t('jam_management.host_dashboard.delete_btn')}
-                                    className="w-full justify-start"
-                                >{t('jam_management.host_dashboard.delete_btn')}</Action> : <Action
-                                    variant="destructive"
-                                    onClick={() => onDelete(jam.id)}
-                                    className="w-full justify-start"
-                                >{t('jam_management.host_dashboard.delete_btn')}</Action>}
-                            </li>
-                        </ul>
-                    </div>
+                    {category !== 'planned' && <div className={`badge badge-xs ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>}
+                    <OverflowMenu
+                        label={t('jam_management.host_dashboard.more_actions')}
+                        items={menuItems}
+                    />
                 </div>
             </div>
             {jam.description && <p className="text-xs text-base-content/50 truncate mt-1">{jam.description}</p>}
@@ -433,13 +406,10 @@ function HostJamSummaryCard({jam, onDelete, onNavigate, deleting, mutationFeedba
             >
                 {t('jam_management.host_dashboard.manage_btn')}
             </Action>
-            {mutationFeedback?.tone === 'error' && <Status
-                tone="error"
-                role="alert"
-                title={mutationFeedback.message}
-                description={jam.name}
-                className="mt-2"
-            />}
+            {mutationFeedback?.tone === 'error' && <p className="mt-2 flex items-start gap-2 text-sm text-error" role="alert">
+                <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                <span>{mutationFeedback.message}</span>
+            </p>}
         </div>
     </article>)
 }

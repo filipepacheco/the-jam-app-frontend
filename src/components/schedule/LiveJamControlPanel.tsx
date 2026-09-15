@@ -10,7 +10,7 @@ import {CORE_BAND} from '../../utils/scheduleUtils'
 import {normalizeInstrument} from '../../utils/musicianUtils'
 import {Action} from '../Action'
 import {Alert} from '../Alert'
-import {DataCard} from '../data-display'
+import {Badge, DataCard} from '../data-display'
 
 interface LiveJamControlPanelProps {
   jamId: string
@@ -84,6 +84,7 @@ const readinessStyles = {
 
 interface QueueItemProps {
   performance: LiveQueuePerformance
+  isNext: boolean
   isReorderMode: boolean
   isReordering: boolean
   isDragging: boolean
@@ -98,6 +99,7 @@ interface QueueItemProps {
 
 const QueueItem = React.memo(function QueueItem({
   performance,
+  isNext,
   isReorderMode,
   isReordering,
   isDragging,
@@ -119,10 +121,13 @@ const QueueItem = React.memo(function QueueItem({
     ? 'bg-primary/5 border-primary/30 cursor-wait'
     : isReorderMode
       ? readinessStyles[readiness] + ' cursor-move hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
-      : readinessStyles[readiness]
+      : isNext
+        ? 'bg-secondary/10 border-secondary/40 ring-1 ring-secondary/20'
+        : readinessStyles[readiness]
   const className = [
     'rounded-lg p-2 sm:p-3 flex items-center gap-2 border-2 transition-colors duration-200 select-none',
     baseStyle,
+    isNext ? 'ring-1 ring-secondary/30' : '',
     isDragOver ? 'bg-primary/10 border-primary' : '',
     isDragging ? 'opacity-50 border-primary border-dashed z-10 relative' : 'opacity-100',
   ].join(' ')
@@ -155,7 +160,14 @@ const QueueItem = React.memo(function QueueItem({
         {performance.order}.
       </span>
       <div className={'min-w-0 flex-1 ' + (isReordering ? 'text-base-content/70' : 'text-base-content')}>
-        <p className="text-sm font-semibold truncate">{performance.music.title || t('schedule.song_tba')}</p>
+        <div className="flex min-w-0 items-center gap-2">
+          <p className="min-w-0 truncate text-sm font-semibold">{performance.music.title || t('schedule.song_tba')}</p>
+          {isNext && (
+            <Badge className="shrink-0" size="sm" tone="info">
+              {t('dj_control.now_playing.next_up', 'Next')}
+            </Badge>
+          )}
+        </div>
         {musicianNames && <p className="text-xs text-base-content/60 truncate">{musicianNames}</p>}
       </div>
     </div>
@@ -223,16 +235,17 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
             className="mb-4"
           />
         )}
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-lg font-bold text-balance">
             {isReorderMode ? t('live_control.up_next') : t('live_control.queue_title')}
           </h2>
           {isReorderMode ? (
-            <div className="flex items-center gap-2">
+            <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
               <Action
                 variant="quiet"
                 state={isReordering ? 'disabled' : 'idle'}
                 onClick={commands.cancelReorder}
+                className="min-w-0"
               >
                 <Action.Icon><X className="size-4" /></Action.Icon>
                 <Action.Label>{t('live_control.reorder_cancel', 'Cancel')}</Action.Label>
@@ -242,11 +255,12 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
                   variant="primary"
                   state="loading"
                   loadingLabel={t('live_control.saving_order')}
+                  className="min-w-0"
                 >
                   <Action.Label>{t('live_control.reorder_save', 'Save order')}</Action.Label>
                 </Action>
               ) : (
-                <Action variant="primary" onClick={() => { void commands.saveReorder() }}>
+                <Action className="min-w-0" variant="primary" onClick={() => { void commands.saveReorder() }}>
                   <Action.Icon><Check className="size-4" /></Action.Icon>
                   <Action.Label>{t('live_control.reorder_save', 'Save order')}</Action.Label>
                 </Action>
@@ -262,6 +276,9 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
 
         {isReorderMode && performances.length > 1 && (
           <>
+            <p className="mb-2 text-sm text-base-content/70">
+              {t('live_control.reorder_next_hint', 'The first Performance in this list will be Next.')}
+            </p>
             <p className="text-xs text-base-content/50 mb-2 md:hidden">{t('live_control.reorder_hint_mobile')}</p>
             <p className="sr-only">{t('live_control.reorder_hint_keyboard', 'Use arrow keys to reorder songs')}</p>
           </>
@@ -274,10 +291,11 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
             role="list"
             aria-label={t('live_control.up_next')}
           >
-            {performances.map((performance) => (
+            {performances.map((performance, index) => (
               <QueueItem
                 key={performance.id}
                 performance={performance}
+                isNext={index === 0}
                 isReorderMode={isReorderMode}
                 isReordering={isReordering}
                 isDragging={activeInput?.performanceId === performance.id}

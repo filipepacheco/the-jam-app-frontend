@@ -52,7 +52,7 @@ export function ConfirmDialog({
         />
       }
     >
-      <p className="text-base-content/80 whitespace-pre-line">
+      <p className="ds-wrap-user-content whitespace-pre-line text-pretty text-base-content/80">
         {message}
       </p>
     </Modal>

@@ -22,13 +22,121 @@ slice does not close the track.
 | 7. Browse Jams hierarchy | Repository complete; review pending | [Critique #134](https://github.com/filipepacheco/the-jam-app-frontend/issues/134) anchors discovery. `Pages/Screen refinement/Browse Jams hierarchy` covers discovery, first-use, filtered-empty, initial loading, refreshing/stale data, recoverable error, phone, and desktop states. Global empty guidance no longer competes with duplicate section empties, stale results remain visible during recovery, and the navigation promise matches Jam detail participation. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun. Then merge. |
 | 8. Create Jam and Musicians | Repository complete; review pending | [Critique #135](https://github.com/filipepacheco/the-jam-app-frontend/issues/135) anchors discovery. `Pages/Screen refinement/Create Jam and Musicians` covers create/edit, validation focus, submit/update pending and failure, destructive confirmation, directory, pagination, distinct empty/filter states, query failure, long content, phone, and desktop. Create Jam uses canonical action and confirmation contracts; Musicians has targeted retry and localized pagination names. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun. Then merge. |
 
-Current integrated verification: refreshed catalogue, workbench typecheck,
-focused screen tests, the serial application suite (51 files and 261 tests),
-and the production-isolation build. Production build and isolation pass on the
-current branch. The private browser-backed workbench has known non-critical
-locale and carousel failures. Per the user decision on 2026-09-14, those checks
-and the human Storybook decisions are deferred to one review batch; they do not
-block completion of the repository implementation.
+Current integrated verification: workbench typecheck, i18n smoke tests, 46
+focused application tests, four focused browser-backed correction stories,
+lint with no errors, and the production-isolation build pass. In the serial
+application run, 52 files and 273 tests pass; the only failure is the expected
+deferred component-catalogue coverage entry for `ui.0197`. The private
+browser-backed workbench retains its known non-critical catalogue, locale, and
+carousel debt. Per the user decision on 2026-09-14, those catalogue/workbench
+checks and the human Storybook decisions are deferred to one review batch; they
+do not block completion of the repository implementation.
+
+### Human review correction ledger
+
+The user requested changes during the deferred batch review. Each bullet below
+is a separate finding. Similar wording does not make two findings duplicates.
+The linked critique comments preserve the original review record.
+
+#### Live host control — [#128](https://github.com/filipepacheco/the-jam-app-frontend/issues/128)
+
+- Implemented: highlight the first upcoming Performance as **Next**.
+- Implemented: make Suggested Performances collapsible.
+- Implemented: keep Save order inside the queue card at phone width.
+- Implemented: keep Previous usable when its visible label does not fit.
+- Implemented: improve the Save order and Cancel composition.
+- Implemented: explain that the first reordered Performance becomes Next.
+- Verified existing contract: save refreshes Live Queue state from the server;
+  the Schedule tab refreshes its separate Jam cache when the host opens it.
+
+#### Schedule management — [#129](https://github.com/filipepacheco/the-jam-app-frontend/issues/129)
+
+- Implemented: replace the bare add icon with an explicit Add Music action.
+- Implemented: give Playing now, Schedule, Suggested, and Completed different
+  operational priority.
+- Implemented: reduce unused Performance-card space.
+- Implemented: make the overflow menu float without moving card content.
+- Implemented: wrap the delete-confirmation description.
+- Implemented: replace the Completed status option with the guarded **Mark as
+  completed** action.
+- Implemented: improve Start, Finish, and Reactivate labels and hierarchy.
+- Implemented: add `jam_management.schedule.confirm_delete_named` in English,
+  Portuguese, and Spanish.
+- Deferred API dependency: Jam-level automatic registration approval is
+  tracked separately in [#153](https://github.com/filipepacheco/the-jam-app-frontend/issues/153).
+
+#### Music library — [#130](https://github.com/filipepacheco/the-jam-app-frontend/issues/130)
+
+- Implemented: remove the redundant Approved badge from approved Music.
+- Preserved: Suggested status remains visible in the moderation list, where it
+  changes the host's decision.
+
+#### Host dashboard — [#131](https://github.com/filipepacheco/the-jam-app-frontend/issues/131)
+
+- Implemented: keep Create Jam as the single main page action.
+- Implemented: keep Spotify import inside the Create Jam flow.
+- Implemented: remove app-level User feedback from Jam-scoped controls.
+- Implemented: make Manage explicit on each operational Jam.
+- Implemented: use the canonical floating menu for Public page and Delete.
+- Implemented: remove a deleted Jam from its visible category.
+- Implemented: keep restrained success/failure feedback with the affected Jam
+  or category; a toast is not the sole result.
+- Implemented: add phone location and localized date plus time.
+- Implemented: keep registration counts on one line.
+- Implemented: strengthen the page-title versus section-heading hierarchy.
+- Implemented: remove the redundant Coming Soon badge inside Planned.
+
+#### Jam detail and Jam website — [#132](https://github.com/filipepacheco/the-jam-app-frontend/issues/132)
+
+- Implemented: add the missing `jams.hint_tap_song` translation.
+- Implemented: normalize the Show more/less scale.
+- Implemented: integrate location disclosure with the Jam facts and correct its
+  panel spacing.
+- Implemented: group Performance, Musician, and duration facts with date and
+  location.
+- Implemented: remove false expand affordance from non-completed Performances.
+- Implemented: replace the instrument dropdown with visible choices.
+- Implemented: preselect the Musician's preferred available instrument.
+- Implemented: pass the selected instrument with the current Musician in the
+  Performance Registration command.
+- Implemented: allow the current Musician to register again for another
+  available instrument; this is distinct from restoring the first registration
+  action.
+- Implemented: retain **Quero participar** for eligible Performances.
+- Implemented: explain how Performance Registration works near the Schedule.
+- Implemented: make Filter by instrument explicit and proportionate.
+- Implemented: begin Music suggestion with a Manual or Spotify choice, then
+  show the Music fields and instrument requirements.
+- Implemented: explain the optional Spotify URL.
+- Implemented as early feedback: check loaded Music for duplicates before
+  creation.
+- Deferred authoritative dependency: atomic server duplicate rejection is
+  tracked separately in [#154](https://github.com/filipepacheco/the-jam-app-frontend/issues/154).
+- Deferred data dependency: persisted album artwork is tracked separately in
+  [#155](https://github.com/filipepacheco/the-jam-app-frontend/issues/155).
+
+The Enter Jam card finding belongs to Browse Jams, not to the participation
+overlay: the redundant CTA is removed while the Jam card keeps one accessible
+navigation target.
+
+#### Public Dashboard — [#133](https://github.com/filipepacheco/the-jam-app-frontend/issues/133)
+
+- Implemented: animate Musician changes with reduced-motion parity.
+- Implemented: always render Now Playing, including the waiting state.
+- Implemented: distinguish Now Playing from What's Next through type, spacing,
+  border weight, and semantic surface treatment.
+
+#### Browse Jams — [#134](https://github.com/filipepacheco/the-jam-app-frontend/issues/134)
+
+- Implemented: add localized Jam start time to each result with the existing
+  date-not-available fallback.
+- Implemented: remove the redundant Enter Jam CTA and keep the card title as a
+  stretched accessible link; Dashboard and Spotify remain separate links.
+
+All changed component and page states are available under
+`Human review/Screen refinement`. The new Jam-detail instrument-choice and
+Music-suggestion-source stories are included there directly. This correction
+pass remains unapproved until the user completes the batch review.
 
 ### Current repository evidence index
 

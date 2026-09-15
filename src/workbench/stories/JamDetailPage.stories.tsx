@@ -2,7 +2,10 @@ import type {Meta, StoryObj} from '@storybook/react-vite'
 import {HelmetProvider} from 'react-helmet-async'
 import {expect, fn, within} from 'storybook/test'
 import {JamDetailPageV2} from '../../pages/tabs/JamDetailPageV2'
-import {jamFixtures} from '../jamMusicFixtures'
+import {SuggestNewSongModal} from '../../components/jam-detail-v2/SuggestNewSongModal'
+import {ScheduleEnrollmentModal} from '../../components/schedule/ScheduleEnrollmentModal'
+import type {JamParticipationOutcome} from '../../lib/jam-participation/jamParticipationController'
+import {jamFixtures, scheduleFixtures} from '../jamMusicFixtures'
 
 const meta = {
   title: 'Human review/Screen refinement/Jam detail',
@@ -16,6 +19,16 @@ type Story = StoryObj<typeof meta>
 const navigate = fn()
 const retry = fn(async () => undefined)
 const page = (content: React.ReactNode) => <HelmetProvider>{content}</HelmetProvider>
+const participationSuccess = async (): Promise<JamParticipationOutcome> => ({
+  code: 'success',
+  operation: 'registration',
+  entityId: 'review-registration',
+})
+const suggestionSuccess = async (): Promise<JamParticipationOutcome> => ({
+  code: 'success',
+  operation: 'suggestion',
+  entityId: 'review-music',
+})
 
 export const Loading: Story = {
   render: () => page(<JamDetailPageV2 viewState={{status: 'loading'}} onNavigate={navigate} />),
@@ -64,6 +77,50 @@ export const LoadedParticipation: Story = {
     await userEvent.click(participate)
     await userEvent.click(documentView.getByRole('button', {name: /participar/i}))
     await expect(documentView.getByRole('dialog')).toBeVisible()
+  },
+}
+
+export const ReviewInstrumentChoice: Story = {
+  render: () => page(
+    <ScheduleEnrollmentModal
+      schedule={scheduleFixtures[0]}
+      isOpen
+      musicianId="musician-fixture"
+      preferredInstrument="guitars"
+      onClose={fn()}
+      onSubmit={participationSuccess}
+    />,
+  ),
+  globals: {
+    authRole: 'user',
+    locale: 'pt',
+    theme: 'jam-light',
+    reviewDefaultViewport: 'phone',
+    reducedMotion: true,
+  },
+  play: async ({canvas}) => {
+    await expect(canvas.getByRole('button', {name: /guitarr/i})).toHaveAttribute('aria-pressed', 'true')
+  },
+}
+
+export const ReviewNewMusicSuggestion: Story = {
+  render: () => page(
+    <SuggestNewSongModal
+      isOpen
+      onClose={fn()}
+      onSubmit={suggestionSuccess}
+    />,
+  ),
+  globals: {
+    authRole: 'user',
+    locale: 'pt',
+    theme: 'jam-light',
+    reviewDefaultViewport: 'phone',
+    reducedMotion: true,
+  },
+  play: async ({canvas}) => {
+    await expect(canvas.getByRole('button', {name: /manualmente/i})).toBeVisible()
+    await expect(canvas.getByRole('button', {name: /spotify/i})).toBeVisible()
   },
 }
 

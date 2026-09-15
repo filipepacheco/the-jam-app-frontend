@@ -2,8 +2,10 @@ import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {useMemo, useState} from "react";
+import type {ReactNode} from "react";
 import {Pencil, ExternalLink, Play, Square, RotateCcw, Download} from "lucide-react";
 import {SpotifyImportModal} from "../../components";
+import {Action, type ActionVariant} from "../../components/Action";
 import {getJamDashboardPath} from "../../utils/jamUrl";
 
 /**
@@ -37,35 +39,40 @@ export function OverviewTab({
 
     // Get status control button config
     // New lifecycle: INACTIVE → ACTIVE → LIVE → FINISHED → INACTIVE
-    const getStatusButton = () => {
+    const getStatusButton = (): {
+        label: string
+        icon: ReactNode
+        variant: ActionVariant
+        onClick: () => void
+    } => {
         switch (jam.status) {
             case 'INACTIVE':
                 return {
-                    label: t('jam_management.overview.activate_jam'),
+                    label: t('jam_management.overview.actions.activate', 'Activate Jam'),
                     icon: <RotateCcw className="size-4" />,
-                    variant: 'btn-info',
+                    variant: 'secondary',
                     onClick: () => onStatusChange('ACTIVE')
                 }
             case 'ACTIVE':
                 return {
-                    label: t('jam_management.overview.start_jam'),
+                    label: t('jam_management.overview.actions.start', 'Start Jam'),
                     icon: <Play className="size-4" />,
-                    variant: 'btn-success',
+                    variant: 'primary',
                     onClick: () => onStatusChange('LIVE')
                 }
             case 'LIVE':
                 return {
-                    label: t('jam_management.overview.end_jam'),
+                    label: t('jam_management.overview.actions.finish', 'Finish Jam'),
                     icon: <Square className="size-4" />,
-                    variant: 'btn-error',
+                    variant: 'destructive',
                     onClick: () => onStatusChange('FINISHED')
                 }
             case 'FINISHED':
             default:
                 return {
-                    label: t('jam_management.overview.reactivate_jam'),
+                    label: t('jam_management.overview.actions.prepare_again', 'Prepare Jam again'),
                     icon: <RotateCcw className="size-4" />,
-                    variant: 'btn-warning',
+                    variant: 'secondary',
                     onClick: () => onStatusChange('INACTIVE')
                 }
         }
@@ -80,14 +87,15 @@ export function OverviewTab({
             <div className="space-y-3">
 
                 {/* Lifecycle Action - Full width, dominant */}
-                <button
+                <Action
                     onClick={statusButton.onClick}
-                    className={`btn w-full ${statusButton.variant} gap-2`}
-                    disabled={loading}
+                    className="w-full"
+                    variant={statusButton.variant}
+                    state={loading ? 'disabled' : 'idle'}
                 >
-                    {statusButton.icon}
-                    {statusButton.label}
-                </button>
+                    <Action.Icon>{statusButton.icon}</Action.Icon>
+                    <Action.Label>{statusButton.label}</Action.Label>
+                </Action>
 
                 {/* Secondary Actions Row */}
                 <div className="flex flex-wrap items-center gap-2">

@@ -84,7 +84,7 @@ describe('canonical data display primitives', () => {
   })
 
   it('integrates the canonical card and status mapping into the music consumer', () => {
-    render(
+    const {rerender} = render(
       <MusicCard
         music={{
           id: 'music-display-test',
@@ -99,6 +99,21 @@ describe('canonical data display primitives', () => {
     )
 
     expect(screen.getByRole('article', { name: 'Psycho Killer' })).toHaveClass('ds-data-card', 'ds-data-card--compact')
-    expect(screen.getByRole('status')).toHaveTextContent(/approved/i)
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+
+    rerender(
+      <MusicCard
+        music={{
+          id: 'suggested-music-display-test',
+          title: 'Suggested Music',
+          artist: 'Suggested Artist',
+          status: 'SUGGESTED',
+          createdAt: '2026-09-11T12:00:00.000Z',
+        }}
+        isHost
+        onDelete={vi.fn()}
+      />,
+    )
+    expect(screen.getByRole('status')).toHaveTextContent(/suggested/i)
   })
 })

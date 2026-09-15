@@ -238,7 +238,11 @@ export function ScheduleTab({jam, onReload}: {
         return schedule.registrations?.some(r => loadingIds.has(r.id)) ?? false
     }, [loadingIds])
 
-    const renderCard = (schedule: Performance, isSuggested: boolean) => {
+    const renderCard = (
+        schedule: Performance,
+        isSuggested: boolean,
+        priority: 'current' | 'queue' | 'secondary',
+    ) => {
         const jm = schedule.jamMusic
         const feedback = rowFeedback[schedule.id]
         return <div key={schedule.id} className="space-y-2">
@@ -257,6 +261,7 @@ export function ScheduleTab({jam, onReload}: {
                 schedule={schedule}
                 loading={isCardLoading(schedule)}
                 isSuggested={isSuggested}
+                priority={priority}
                 defaultExpanded={schedule.status === 'IN_PROGRESS'}
                 notes={jm?.notes}
                 jamMusicId={jm?.id}
@@ -279,14 +284,22 @@ export function ScheduleTab({jam, onReload}: {
         label: string,
         performances: readonly Performance[],
         isSuggested = false,
+        priority: 'current' | 'queue' | 'secondary' = 'queue',
     ) => performances.length > 0 && (
-        <section aria-labelledby={id}>
-            <div className="flex items-center gap-2 py-2 text-xs font-bold text-base-content/70 uppercase tracking-wide">
-                <h2 id={id} className="text-xs font-bold">{label} ({performances.length})</h2>
+        <section aria-labelledby={id} data-performance-priority={priority}>
+            <div className={`flex items-center gap-2 py-2 font-bold uppercase tracking-wide ${
+                priority === 'current'
+                    ? 'text-sm text-base-content'
+                    : priority === 'secondary'
+                        ? 'text-xs text-base-content/50'
+                        : 'text-xs text-base-content/70'
+            }`}>
+                {priority === 'current' && <span className="size-2 shrink-0 rounded-full bg-warning" aria-hidden="true" />}
+                <h2 id={id} className="font-bold">{label} ({performances.length})</h2>
                 <div className="flex-1 border-t border-base-300/50" />
             </div>
             <div className="space-y-2">
-                {performances.map((schedule) => renderCard(schedule, isSuggested))}
+                {performances.map((schedule) => renderCard(schedule, isSuggested, priority))}
             </div>
         </section>
     )
@@ -341,16 +354,16 @@ export function ScheduleTab({jam, onReload}: {
                                 </IconAction>
                             )}
                         </div>
-                        <IconAction
+                        <Action
                             onClick={() => setShowAddModal(true)}
                             variant="primary"
                             {...(loadingIds.has(selectedMusicId)
                                 ? {state: 'loading' as const, loadingLabel: t('common.adding')}
                                 : {state: 'idle' as const})}
-                            label={t('jam_management.schedule.add_new_song')}
                         >
-                            +
-                        </IconAction>
+                            <Action.Icon><ListMusic className="size-4" /></Action.Icon>
+                            <Action.Label>{t('jam_management.schedule.add_new_song')}</Action.Label>
+                        </Action>
                     </div>
                     <div className="flex flex-wrap gap-2" role="group" aria-label={t('jam_management.schedule.title')}>
                         <Action
@@ -381,10 +394,10 @@ export function ScheduleTab({jam, onReload}: {
             {/* Schedule List */}
             {sortedSchedules.length > 0 ? (
                 <div className="space-y-3">
-                    {renderGroup('schedule-active', t('schedule.now_playing'), activePerformances)}
+                    {renderGroup('schedule-active', t('schedule.now_playing'), activePerformances, false, 'current')}
                     {renderGroup('schedule-upcoming', t('schedule.statuses.scheduled'), upcomingPerformances)}
-                    {renderGroup('schedule-suggested', t('jam_management.schedule.suggested_songs'), filteredSuggested, true)}
-                    {renderGroup('schedule-completed', t('schedule.statuses.completed'), completedPerformances)}
+                    {renderGroup('schedule-suggested', t('jam_management.schedule.suggested_songs'), filteredSuggested, true, 'secondary')}
+                    {renderGroup('schedule-completed', t('schedule.statuses.completed'), completedPerformances, false, 'secondary')}
 
                     {/* No results after filtering */}
                     {filteredNonSuggested.length === 0 && filteredSuggested.length === 0 && (

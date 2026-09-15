@@ -7,7 +7,7 @@ import {jamFixtures} from '../workbench/jamMusicFixtures'
 
 vi.mock('react-i18next', () => {
     const t = (key: string) => key
-    return {useTranslation: () => ({t})}
+    return {useTranslation: () => ({t, i18n: {language: 'en'}})}
 })
 
 vi.mock('../hooks', async (importOriginal) => ({
@@ -31,7 +31,13 @@ vi.mock('../components', () => ({
             {state === 'loading' ? loadingLabel : children}
         </button>
     ),
-    IconAction: ({children, label}: {children: ReactNode; label: string}) => <button aria-label={label}>{children}</button>,
+    OverflowMenu: ({items, label}: {
+        items: Array<{id: string; label: string; disabled?: boolean; onSelect?: () => void}>
+        label: string
+    }) => <div>
+        <button aria-label={label} />
+        {items.map((item) => <button key={item.id} disabled={item.disabled} onClick={item.onSelect}>{item.label}</button>)}
+    </div>,
     EmptyState: ({action}: {action?: {label: string; onClick: () => void}}) => (
         action ? <button onClick={action.onClick}>{action.label}</button> : null
     ),
@@ -41,10 +47,6 @@ vi.mock('../components', () => ({
         title: string
     }) => <div role="alert"><strong>{title}</strong>{description}<button onClick={action?.onClick}>{action?.label}</button></div>,
     JamCardSkeleton: () => null,
-    Status: ({description, role = 'status', title}: {description?: string; role?: 'status' | 'alert'; title: string}) => (
-        <div role={role}><strong>{title}</strong>{description}</div>
-    ),
-    SpotifyImportModal: () => null,
 }))
 
 describe('HostDashboardPage', () => {
@@ -58,6 +60,8 @@ describe('HostDashboardPage', () => {
         await waitFor(() => expect(screen.getAllByRole('button', {
             name: 'jam_management.host_dashboard.create_jam_btn',
         })).toHaveLength(2))
+        expect(screen.queryByRole('button', {name: 'spotify.import_button'})).toBeNull()
+        expect(screen.queryByRole('button', {name: 'feedback_page.title'})).toBeNull()
     })
 
     it('offers a retry after the initial Jam query fails', async () => {
@@ -145,6 +149,8 @@ describe('HostDashboardPage', () => {
         const outcome = await screen.findByRole('status')
         expect(outcome).toHaveTextContent('jam_management.host_dashboard.delete_success')
         expect(outcome).toHaveTextContent('Sunday Jam')
+        expect(screen.queryByRole('heading', {level: 3, name: 'Sunday Jam'})).toBeNull()
+        expect(list).toHaveBeenCalledTimes(1)
         expect(screen.getByRole('heading', {level: 2, name: 'jam_management.host_dashboard.categories.in_progress'})).toBeVisible()
     })
 })

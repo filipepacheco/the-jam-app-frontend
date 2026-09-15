@@ -45,23 +45,24 @@ const jam: JamResponseDto = {
 }
 
 describe('ScheduleTab', () => {
+    const makeSchedule = (index: number, status: JamResponseDto['schedules'][number]['status'] = 'SCHEDULED'): JamResponseDto['schedules'][number] => ({
+        id: `schedule-${index}`,
+        jamId: 'jam-1',
+        musicId: `music-${index}`,
+        order: index + 1,
+        status,
+        createdAt: '2026-09-24T18:00:00.000Z',
+        music: {
+            id: `music-${index}`,
+            title: `Song ${index + 1}`,
+            artist: `Artist ${index + 1}`,
+            createdAt: '2026-09-24T18:00:00.000Z',
+        },
+        registrations: [],
+    })
+
     it('keeps add-new-song action available for up to three schedules and opens add-entry modal', async () => {
         const user = userEvent.setup()
-        const makeSchedule = (index: number): JamResponseDto['schedules'][number] => ({
-            id: `schedule-${index}`,
-            jamId: 'jam-1',
-            musicId: `music-${index}`,
-            order: index + 1,
-            status: 'SCHEDULED',
-            createdAt: '2026-09-24T18:00:00.000Z',
-            music: {
-                id: `music-${index}`,
-                title: `Song ${index + 1}`,
-                artist: `Artist ${index + 1}`,
-                createdAt: '2026-09-24T18:00:00.000Z',
-            },
-            registrations: [],
-        })
 
         for (const scheduleCount of [1, 2, 3] as const) {
             const jamWithSchedules: JamResponseDto = {
@@ -82,6 +83,35 @@ describe('ScheduleTab', () => {
             expect(await screen.findByText('jam_management.schedule.add_entry_modal')).toBeInTheDocument()
             unmount()
         }
+    })
+
+    it('keeps a visible Add Music label and floats the current Performance actions', async () => {
+        const user = userEvent.setup()
+        const jamWithSchedules: JamResponseDto = {
+            ...jam,
+            schedules: [
+                makeSchedule(0, 'IN_PROGRESS'),
+                makeSchedule(1),
+                makeSchedule(2),
+                makeSchedule(3),
+            ],
+        }
+
+        render(
+            <MemoryRouter>
+                <ScheduleTab jam={jamWithSchedules} onReload={vi.fn()}/>
+            </MemoryRouter>,
+        )
+
+        expect(screen.getByRole('button', {name: 'jam_management.schedule.add_new_song'})).toBeVisible()
+        const current = screen.getByRole('button', {name: 'Song 1 - Artist 1'}).closest('article')
+        expect(current).not.toBeNull()
+        expect(current).toHaveAttribute('data-performance-priority', 'current')
+        expect(current).toHaveClass('overflow-visible')
+
+        await user.click(screen.getAllByRole('button', {name: 'common.actions'})[0])
+        expect(screen.getByRole('menu')).toBeVisible()
+        expect(screen.getByRole('menuitem', {name: 'schedule.actions.mark_completed'})).toBeVisible()
     })
 
     it('loads searchable music options when the add-entry modal opens', async () => {

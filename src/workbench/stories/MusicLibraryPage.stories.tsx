@@ -52,6 +52,7 @@ export const ViewerCatalogue: Story = {
   play: async ({canvas}) => {
     await expect(await canvas.findByRole('heading', {level: 1, name: /biblioteca musical/i})).toBeVisible()
     await expect(await canvas.findByText('Psycho Killer')).toBeVisible()
+    await expect(canvas.queryByRole('status', {name: /aprovado/i})).not.toBeInTheDocument()
     await expect(canvas.getByRole('spinbutton', {name: /número da página/i})).toBeVisible()
     await expect(canvas.getByRole('button', {name: /próxima página/i})).toBeEnabled()
   },
@@ -68,6 +69,7 @@ export const HostModeration: Story = {
     const suggested = await canvas.findByRole('button', {name: /suggested songs/i})
     await userEvent.click(suggested)
     await expect(await canvas.findByText("(I Can't Get No) Satisfaction")).toBeVisible()
+    await expect(canvas.getByRole('status', {name: /suggested/i})).toBeVisible()
     await expect(canvas.getByRole('button', {name: /approve/i})).toBeVisible()
     await expect(canvas.getByRole('button', {name: /reject/i})).toBeVisible()
   },

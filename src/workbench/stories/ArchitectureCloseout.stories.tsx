@@ -71,6 +71,7 @@ export const NewMusicSuggestion: Story = {
   render: () => <SuggestNewSongModal isOpen onClose={fn()} onSubmit={suggestNew} />,
   globals: { locale: 'en', viewport: { value: 'phone', isRotated: false } },
   play: async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole('button', { name: /enter details manually/i }))
     await userEvent.type(canvas.getByLabelText(/title/i, { selector: 'input' }), 'Once in a Lifetime')
     await userEvent.type(canvas.getByLabelText(/artist/i, { selector: 'input' }), 'Talking Heads')
     await userEvent.click(canvas.getByRole('button', { name: /suggest song/i }))
@@ -89,13 +90,15 @@ export const PerformanceEnrollment: Story = {
     <ScheduleEnrollmentModal
       schedule={scheduleFixtures[0]}
       isOpen
+      musicianId="musician-fixture"
+      preferredInstrument="guitars"
       onClose={fn()}
       onSubmit={enroll}
     />
   ),
   globals: { locale: 'en', viewport: { value: 'phone', isRotated: false } },
   play: async ({ canvas, userEvent }) => {
-    await userEvent.selectOptions(canvas.getByRole('combobox'), 'guitars')
+    await expect(canvas.getByRole('button', {name: /guitarists/i})).toHaveAttribute('aria-pressed', 'true')
     await userEvent.click(canvas.getByRole('button', { name: /enroll now/i }))
     await expect(enroll).toHaveBeenCalledWith('guitars')
   },

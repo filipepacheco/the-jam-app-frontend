@@ -28,7 +28,7 @@ export const OperationalGroups: Story = {
     theme: 'jam-dark',
     reviewDefaultViewport: 'desktop',
   },
-  play: async ({canvas}) => {
+  play: async ({canvas, userEvent}) => {
     const active = canvas.getByRole('heading', {level: 2, name: /tocando agora/i})
     const upcoming = canvas.getByRole('heading', {level: 2, name: /agendada/i})
     const suggested = canvas.getByRole('heading', {level: 2, name: /músicas sugeridas/i})
@@ -39,6 +39,12 @@ export const OperationalGroups: Story = {
     await expect(completed).toBeVisible()
     await expect(active.compareDocumentPosition(upcoming) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(upcoming.compareDocumentPosition(suggested) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    await expect(active.closest('[data-performance-priority="current"]')).not.toBeNull()
+    await expect(suggested.closest('[data-performance-priority="secondary"]')).not.toBeNull()
+    await expect(completed.closest('[data-performance-priority="secondary"]')).not.toBeNull()
+    const menu = canvas.getAllByRole('button', {name: /actions|ações/i})[0]
+    await userEvent.click(menu)
+    await expect(canvas.getByRole('menu')).toBeVisible()
   },
 }
 

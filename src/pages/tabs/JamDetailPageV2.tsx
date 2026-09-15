@@ -30,7 +30,8 @@ import {
 } from '../../components/jam-detail-v2/'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
-import {MapPin, Calendar, Share2, ArrowLeft} from 'lucide-react'
+import {formatJamDuration} from '../../lib/formatters'
+import {MapPin, Calendar, Share2, ArrowLeft, Music, Users, Clock3} from 'lucide-react'
 
 export type JamDetailViewState =
     | {status: 'loaded'; jam: JamResponseDto}
@@ -46,7 +47,7 @@ interface JamDetailPageV2Props {
 }
 
 export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV2Props = {}) {
-    const {t} = useTranslation()
+    const {t, i18n} = useTranslation()
     const {jamId} = useParams<{ jamId: string }>()
     const navigate = useNavigate()
     const {isAuthenticated, user} = useAuth()
@@ -130,6 +131,20 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
         }
         return registrations
     }, [jam?.schedules, user?.id])
+
+    const jamFacts = useMemo(() => {
+        const musicians = new Set(
+            nonSuggestedSchedules
+                .flatMap(({registrations}) => registrations ?? [])
+                .map(({musicianId, musician}) => musician?.id ?? musicianId)
+                .filter(Boolean),
+        ).size
+        const duration = nonSuggestedSchedules.reduce(
+            (total, schedule) => total + (schedule.music?.duration ?? 0),
+            0,
+        )
+        return {musicians, duration, performances: nonSuggestedSchedules.length}
+    }, [nonSuggestedSchedules])
 
     const eligibleSchedules = useMemo(() => {
         const eligibleIds = new Set(participation.eligiblePerformances.map(({id}) => id))
@@ -308,12 +323,13 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         </IconAction>
                     </div>
 
-                    {/* Single metadata line: date, location, status */}
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-base-content/60">
+                    {/* Jam facts stay together so date, place, size, and duration
+                        read as one identity block. */}
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 border-y border-base-300 py-2 text-sm text-base-content/70">
                         {jam.date && (
-                            <span className="inline-flex items-center gap-1">
-                                <Calendar className="size-3" />
-                                {new Intl.DateTimeFormat(navigator.language || 'pt-BR', {
+                            <span className="inline-flex min-h-11 items-center gap-1.5">
+                                <Calendar className="size-4" aria-hidden="true" />
+                                {new Intl.DateTimeFormat(i18n.language || 'pt-BR', {
                                     month: 'short',
                                     day: 'numeric',
                                     hour: '2-digit',
@@ -325,19 +341,38 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         {jam.location && (
                             <DropdownMenu
                                 label={t('jams.info.full_address')}
+                                className="[&_.ds-dropdown__trigger]:border-0 [&_.ds-dropdown__trigger]:bg-transparent [&_.ds-dropdown__trigger]:px-0"
                                 trigger={
-                                    <span className="inline-flex items-center gap-1">
-                                        <MapPin className="size-3" />
-                                        <span className="truncate max-w-[180px]">{jam.location}</span>
+                                    <span className="inline-flex items-center gap-1.5 text-base-content/70">
+                                        <MapPin className="size-4" aria-hidden="true" />
+                                        <span className="max-w-[16rem] truncate">{jam.location}</span>
                                     </span>
                                 }
                             >
-                                <p className="text-sm font-semibold mb-2">{t('jams.info.full_address')}</p>
-                                <p className="ds-wrap-user-content text-sm text-base-content/80 mb-3">{jam.location}</p>
-                                <Action variant="secondary" onClick={handleCopyLocation} className="w-full">
-                                    {locationCopied ? t('common.copied') : t('common.copy_address')}
-                                </Action>
+                                <div className="w-64 space-y-3 p-2">
+                                    <p className="ds-type-ui font-semibold">{t('jams.info.full_address')}</p>
+                                    <p className="ds-wrap-user-content text-sm leading-relaxed text-base-content/80">{jam.location}</p>
+                                    <Action variant="secondary" onClick={handleCopyLocation} className="w-full">
+                                        {locationCopied ? t('common.copied') : t('common.copy_address')}
+                                    </Action>
+                                </div>
                             </DropdownMenu>
+                        )}
+                        <span className="inline-flex min-h-11 items-center gap-1.5">
+                            <Music className="size-4" aria-hidden="true" />
+                            {jamFacts.performances} {t('jams.info.performances').toLowerCase()}
+                        </span>
+                        {jamFacts.musicians > 0 && (
+                            <span className="inline-flex min-h-11 items-center gap-1.5">
+                                <Users className="size-4" aria-hidden="true" />
+                                {jamFacts.musicians} {t('jams.info.musicians').toLowerCase()}
+                            </span>
+                        )}
+                        {jamFacts.duration > 0 && (
+                            <span className="inline-flex min-h-11 items-center gap-1.5">
+                                <Clock3 className="size-4" aria-hidden="true" />
+                                {formatJamDuration(jamFacts.duration)}
+                            </span>
                         )}
                     </div>
 
@@ -364,9 +399,11 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                                 <Action
                                     variant="quiet"
                                     onClick={() => setDescriptionExpanded(prev => !prev)}
-                                    className="mt-1 text-primary"
+                                    className="mt-1 justify-start px-0 text-primary"
                                 >
-                                    {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
+                                    <span className="text-xs">
+                                        {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
+                                    </span>
                                 </Action>
                             )}
                         </div>
@@ -411,7 +448,6 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                             schedules={nonSuggestedSchedules}
                             user={user}
                             onRegisterClick={handleEnrollClick}
-                            jam={jam}
                             jamStatus={jam.status}
                         />
 
@@ -474,9 +510,11 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             {/* Modals */}
             {selectedScheduleForEnroll && (
                 <ScheduleEnrollmentModal
-                    schedule={selectedScheduleForEnroll}
-                    isOpen={participation.activeOverlay === 'enrollment'}
-                    onClose={participationCommands.closeOverlay}
+                schedule={selectedScheduleForEnroll}
+                isOpen={participation.activeOverlay === 'enrollment'}
+                musicianId={user?.id}
+                preferredInstrument={user?.instrument}
+                onClose={participationCommands.closeOverlay}
                     onSubmit={participationCommands.register}
                 />
             )}
