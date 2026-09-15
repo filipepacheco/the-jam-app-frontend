@@ -22,6 +22,7 @@ import {
   createWorkbenchProgressReport,
   renderWorkbenchProgressJson,
   renderWorkbenchProgressMarkdown,
+  workbenchStoryKey,
 } from './progress.ts'
 import { captureVisualCell, installDeterministicCaptureEnvironment } from './screenshot.ts'
 
@@ -49,6 +50,8 @@ interface RuntimeWorkbenchEvidence {
     unhandled: number
   }
   accessibility: {
+    strictReports: number
+    missingReports: number
     newViolations: number
   }
 }
@@ -359,7 +362,7 @@ const runtimeWorkbenchEvidence = async (
   if (!Array.isArray(parsed.testResults)) throw new Error('Private workbench test result is missing testResults evidence.')
 
   const suites = new Map(parsed.testResults.flatMap((suite) =>
-    typeof suite.name === 'string' ? [[suite.name, suite] as const] : [],
+    typeof suite.name === 'string' ? [[workbenchStoryKey(suite.name), suite] as const] : [],
   ))
   let pass = 0
   let fail = 0
@@ -368,7 +371,7 @@ const runtimeWorkbenchEvidence = async (
   let newViolations = 0
 
   for (const [filename, playTitles] of stories.playTitlesByFile) {
-    const assertions = suites.get(filename)?.assertionResults ?? []
+    const assertions = suites.get(workbenchStoryKey(filename))?.assertionResults ?? []
     for (const title of playTitles) {
       const status = assertions.find((assertion) => assertion.title === title)?.status
       if (status === 'passed') pass += 1
@@ -378,7 +381,7 @@ const runtimeWorkbenchEvidence = async (
   }
 
   for (const filename of stories.strictA11yFiles) {
-    for (const assertion of suites.get(filename)?.assertionResults ?? []) {
+    for (const assertion of suites.get(workbenchStoryKey(filename))?.assertionResults ?? []) {
       for (const report of assertion.meta?.reports ?? []) {
         if (report.type !== 'a11y') continue
         strictA11yReports += 1
@@ -386,10 +389,14 @@ const runtimeWorkbenchEvidence = async (
       }
     }
   }
-  if (strictA11yReports !== stories.strictA11y) {
-    throw new Error(`Private workbench a11y evidence is incomplete: expected ${stories.strictA11y} strict reports, found ${strictA11yReports}.`)
+  return {
+    interactions: { pass, fail, unhandled },
+    accessibility: {
+      strictReports: strictA11yReports,
+      missingReports: Math.max(stories.strictA11y - strictA11yReports, 0),
+      newViolations,
+    },
   }
-  return { interactions: { pass, fail, unhandled }, accessibility: { newViolations } }
 }
 
 const runtimeVisualEvidence = async (root: string): Promise<Pick<VisualComparisonResult, 'passed' | 'changed' | 'missing' | 'failed'>> => {

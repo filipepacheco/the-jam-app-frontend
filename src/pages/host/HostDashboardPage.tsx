@@ -11,6 +11,7 @@ import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
 import {
     Action,
+    ActionGroup,
     EmptyState,
     ErrorState,
     JamCardSkeleton,
@@ -348,13 +349,6 @@ function HostJamSummaryCard({jam, category, onDelete, onNavigate, deleting, muta
         : null
     const menuItems: NavigationMenuItem[] = [
         {
-            id: 'public-page',
-            label: t('jam_management.host_dashboard.view_public'),
-            icon: <ExternalLink className="size-4" />,
-            disabled: deleting,
-            onSelect: () => onNavigate(getJamPath(jam)),
-        },
-        {
             id: 'delete',
             label: t('jam_management.host_dashboard.delete_btn'),
             icon: <Trash2 className="size-4" />,
@@ -363,6 +357,7 @@ function HostJamSummaryCard({jam, category, onDelete, onNavigate, deleting, muta
             onSelect: () => onDelete(jam.id),
         },
     ]
+    const hasPublicPage = category === 'inProgress'
 
     return (<article className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow">
         <div className="card-body p-3 sm:p-4">
@@ -399,13 +394,27 @@ function HostJamSummaryCard({jam, category, onDelete, onNavigate, deleting, muta
                 </div>
             </div>
             {jam.description && <p className="text-xs text-base-content/50 truncate mt-1">{jam.description}</p>}
-            <Action
-                onClick={() => onNavigate(`/host/jams/${jam.id}/manage`)}
-                state={deleting ? 'disabled' : 'idle'}
-                className="mt-2 w-full"
-            >
-                {t('jam_management.host_dashboard.manage_btn')}
-            </Action>
+            <ActionGroup
+                className="mt-2"
+                primary={(
+                    <Action
+                        onClick={() => onNavigate(`/host/jams/${jam.id}/manage`)}
+                        state={deleting ? 'disabled' : 'idle'}
+                    >
+                        {t('jam_management.host_dashboard.manage_btn')}
+                    </Action>
+                )}
+                secondary={hasPublicPage ? (
+                    <Action
+                        variant="quiet"
+                        onClick={() => onNavigate(getJamPath(jam))}
+                        state={deleting ? 'disabled' : 'idle'}
+                    >
+                        <ExternalLink className="size-4" aria-hidden="true" />
+                        {t('jam_management.host_dashboard.view_public')}
+                    </Action>
+                ) : undefined}
+            />
             {mutationFeedback?.tone === 'error' && <p className="mt-2 flex items-start gap-2 text-sm text-error" role="alert">
                 <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                 <span>{mutationFeedback.message}</span>

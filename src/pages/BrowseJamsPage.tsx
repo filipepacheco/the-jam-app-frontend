@@ -6,7 +6,8 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import useSWR from 'swr'
-import {Action, Badge, EmptyState, ErrorState, Field, LoadingState, NavigationTabs} from '../components'
+import {X} from 'lucide-react'
+import {Action, Badge, EmptyState, ErrorState, Field, IconAction, LoadingState, NavigationTabs} from '../components'
 import type {NavigationTabItem} from '../components'
 import {SITE_URL} from '../lib/api'
 import {JamCard} from '../components'
@@ -153,7 +154,7 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
       {/* Hero Section */}
       <div className="bg-primary text-primary-content">
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
-          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
+          <div className="space-y-1">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
               {t('jams.browse.title')}
             </h1>
@@ -204,21 +205,10 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
             </Field>
           </div>
 
-          {/* Status Filter Tabs.
-              NavigationTabs keeps the tablist and tab roles and adds arrow-key
-              roving focus. The per-tab title tooltips are not part of the
-              canonical contract and are dropped. */}
-          <NavigationTabs
-            aria-label={t('jams.browse.filter_label')}
-            className="text-xs sm:text-sm"
-            items={statusTabs}
-            value={statusFilter}
-            onValueChange={handleStatusTabChange}
-          />
-
-          {/* Results Count & Clear Filters */}
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <Badge tone="info" size="md">
+          {/* Result count and status filters form one stable control row. The
+              count stays visible while the tablist scrolls on narrow screens. */}
+          <div className="flex items-center gap-2">
+            <Badge tone="info" size="md" className="shrink-0">
               {(() => {
                 const count = visibleCount
                 const key = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
@@ -226,14 +216,38 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
               })()}
             </Badge>
 
+            {/* NavigationTabs keeps the tablist and tab roles and adds
+                arrow-key roving focus. */}
+            <NavigationTabs
+              aria-label={t('jams.browse.filter_label')}
+              className="min-w-0 flex-1 text-xs sm:text-sm"
+              items={statusTabs}
+              value={statusFilter}
+              onValueChange={handleStatusTabChange}
+            />
+
             {hasActiveFilters && (
-              <Action
-                variant="quiet"
-                onClick={clearFilters}
-                state={isLoading ? 'disabled' : 'idle'}
-              >
-                {t('jams.browse.clear_filters')}
-              </Action>
+              <>
+                <span className="shrink-0 sm:hidden">
+                  <IconAction
+                    variant="quiet"
+                    label={t('jams.browse.clear_filters')}
+                    onClick={clearFilters}
+                    state={isLoading ? 'disabled' : 'idle'}
+                  >
+                    <X aria-hidden="true" />
+                  </IconAction>
+                </span>
+                <span className="hidden shrink-0 sm:block">
+                  <Action
+                    variant="quiet"
+                    onClick={clearFilters}
+                    state={isLoading ? 'disabled' : 'idle'}
+                  >
+                    {t('jams.browse.clear_filters')}
+                  </Action>
+                </span>
+              </>
             )}
           </div>
         </div>

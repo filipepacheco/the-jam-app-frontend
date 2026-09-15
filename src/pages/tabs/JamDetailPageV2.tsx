@@ -19,6 +19,7 @@ import {
     Status,
 } from '../../components'
 import {ShareModal} from '../../components/ShareModal'
+import {SpotifyLogo} from '../../components/SpotifyPreview'
 import {
     CollapsibleSection,
     DualActionFAB,
@@ -300,28 +301,60 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             {/* Header - compact: title + meta on one line, details muted below */}
             <div className="bg-base-200 border-b border-base-300">
                 <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-4 sm:py-5">
-                    {/* Title row with back + share */}
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                        <div className="flex items-start gap-2 min-w-0">
+                    {/* Title and Jam-level actions share one aligned identity row. */}
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex items-center gap-2 min-w-0">
                             <IconAction
                                 variant="quiet"
                                 onClick={() => goTo('/jams')}
-                                className="shrink-0 mt-0.5"
+                                className="shrink-0"
                                 label={t('common.back')}
                             >
                                 <ArrowLeft className="size-4" />
                             </IconAction>
                             <h1 className="ds-type-heading ds-wrap-user-content font-extrabold leading-tight sm:text-3xl md:text-4xl">{jam.name}</h1>
                         </div>
-                        <IconAction
-                            variant="quiet"
-                            onClick={participationCommands.beginShare}
-                            className="shrink-0"
-                            label={t('share.share_button')}
-                        >
-                            <Share2 className="size-4" />
-                        </IconAction>
+                        <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
+                            {jam.spotifyPlaylistUrl && (
+                                <a
+                                    href={jam.spotifyPlaylistUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="ds-action ds-control ds-focusable ds-action--quiet ds-action--idle"
+                                >
+                                    <SpotifyLogo />
+                                    {t('jams.listen_on_spotify', 'Playlist no Spotify')}
+                                </a>
+                            )}
+                            <Action
+                                variant="secondary"
+                                onClick={participationCommands.beginShare}
+                            >
+                                <Share2 className="size-4" aria-hidden="true" />
+                                {t('share.share_button')}
+                            </Action>
+                        </div>
                     </div>
+
+                    {/* Description is the first supporting information after identity. */}
+                    {jam.description && (
+                        <div className="mt-3">
+                            <p className={`max-w-3xl whitespace-pre-line text-sm text-pretty text-base-content/70 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
+                                {jam.description}
+                            </p>
+                            {jam.description.length > 100 && (
+                                <Action
+                                    variant="quiet"
+                                    onClick={() => setDescriptionExpanded(prev => !prev)}
+                                    className="mt-1 justify-start px-0 text-primary"
+                                >
+                                    <span className="text-xs">
+                                        {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
+                                    </span>
+                                </Action>
+                            )}
+                        </div>
+                    )}
 
                     {/* Jam facts stay together so date, place, size, and duration
                         read as one identity block. */}
@@ -349,10 +382,9 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                                     </span>
                                 }
                             >
-                                <div className="w-64 space-y-3 p-2">
-                                    <p className="ds-type-ui font-semibold">{t('jams.info.full_address')}</p>
+                                <div className="w-64 space-y-1 p-2">
                                     <p className="ds-wrap-user-content text-sm leading-relaxed text-base-content/80">{jam.location}</p>
-                                    <Action variant="secondary" onClick={handleCopyLocation} className="w-full">
+                                    <Action variant="quiet" onClick={() => void handleCopyLocation()} className="min-h-11 justify-start px-0 text-sm text-primary underline underline-offset-4">
                                         {locationCopied ? t('common.copied') : t('common.copy_address')}
                                     </Action>
                                 </div>
@@ -376,38 +408,6 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         )}
                     </div>
 
-                    {/* Spotify Playlist Link */}
-                    {jam.spotifyPlaylistUrl && (
-                        <a
-                            href={jam.spotifyPlaylistUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="ds-control ds-focusable inline-flex items-center gap-1.5 text-xs text-success hover:text-success/80 transition-colors mt-2"
-                        >
-                            <span aria-hidden="true">🎧</span>
-                            {t('jams.listen_on_spotify', 'Playlist no Spotify')}
-                        </a>
-                    )}
-
-                    {/* Description - truncated, single line */}
-                    {jam.description && (
-                        <div className="mt-2">
-                            <p className={`text-base-content/70 text-xs text-pretty max-w-3xl whitespace-pre-line ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
-                                {jam.description}
-                            </p>
-                            {jam.description.length > 100 && (
-                                <Action
-                                    variant="quiet"
-                                    onClick={() => setDescriptionExpanded(prev => !prev)}
-                                    className="mt-1 justify-start px-0 text-primary"
-                                >
-                                    <span className="text-xs">
-                                        {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
-                                    </span>
-                                </Action>
-                            )}
-                        </div>
-                    )}
                 </div>
             </div>
 

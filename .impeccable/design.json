@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-15T00:00:00Z",
+  "title": "Design System: Jam App",
+  "extensions": {
+    "colorMeta": {
+      "stage-violet": {
+        "role": "primary",
+        "displayName": "Stage Violet",
+        "canonical": "var(--color-primary)",
+        "tonalRamp": ["oklch(15% 0.08 300)", "oklch(25% 0.12 300)", "oklch(35% 0.17 300)", "oklch(43% 0.2 300)", "oklch(56% 0.19 300)", "oklch(68% 0.17 300)", "oklch(82% 0.11 300)", "oklch(95% 0.03 300)"]
+      },
+      "encore-magenta": {
+        "role": "secondary",
+        "displayName": "Encore Magenta",
+        "canonical": "var(--color-secondary)",
+        "tonalRamp": ["oklch(15% 0.06 330)", "oklch(25% 0.09 330)", "oklch(38% 0.12 330)", "oklch(54% 0.14 330)", "oklch(65% 0.14 330)", "oklch(76% 0.11 330)", "oklch(86% 0.07 330)", "oklch(95% 0.025 330)"]
+      },
+      "spotlight-amber": {
+        "role": "tertiary",
+        "displayName": "Spotlight Amber",
+        "canonical": "var(--color-accent)",
+        "tonalRamp": ["oklch(15% 0.04 55)", "oklch(25% 0.07 55)", "oklch(38% 0.1 55)", "oklch(52% 0.13 55)", "oklch(62% 0.14 55)", "oklch(74% 0.12 55)", "oklch(86% 0.08 55)", "oklch(95% 0.025 55)"]
+      },
+      "house-light": {"role": "neutral", "displayName": "House Light", "canonical": "var(--color-base-100)", "tonalRamp": ["oklch(17% 0.025 300)", "oklch(24% 0.03 300)", "oklch(35% 0.03 300)", "oklch(48% 0.025 300)", "oklch(62% 0.02 300)", "oklch(76% 0.018 300)", "oklch(88% 0.015 300)", "oklch(98% 0.012 300)"]},
+      "house-raised": {"role": "neutral", "displayName": "Raised House", "canonical": "var(--color-base-200)", "tonalRamp": ["oklch(17% 0.025 300)", "oklch(24% 0.03 300)", "oklch(35% 0.03 300)", "oklch(48% 0.025 300)", "oklch(62% 0.02 300)", "oklch(76% 0.018 300)", "oklch(88% 0.015 300)", "oklch(95% 0.018 300)"]},
+      "house-sunken": {"role": "neutral", "displayName": "Sunken House", "canonical": "var(--color-base-300)", "tonalRamp": ["oklch(17% 0.025 300)", "oklch(27% 0.038 300)", "oklch(38% 0.035 300)", "oklch(50% 0.03 300)", "oklch(62% 0.028 300)", "oklch(74% 0.026 300)", "oklch(84% 0.025 300)", "oklch(90% 0.025 300)"]},
+      "house-ink": {"role": "neutral", "displayName": "House Ink", "canonical": "var(--color-base-content)", "tonalRamp": ["oklch(15% 0.035 300)", "oklch(24% 0.035 300)", "oklch(36% 0.03 300)", "oklch(50% 0.025 300)", "oklch(64% 0.02 300)", "oklch(76% 0.018 300)", "oklch(86% 0.016 300)", "oklch(92% 0.015 300)"]},
+      "live-green": {"role": "success", "displayName": "Live Green", "canonical": "var(--color-success)", "tonalRamp": ["oklch(15% 0.04 155)", "oklch(25% 0.075 155)", "oklch(43% 0.12 155)", "oklch(55% 0.13 155)", "oklch(66% 0.125 155)", "oklch(76% 0.1 155)", "oklch(86% 0.065 155)", "oklch(95% 0.02 155)"]},
+      "caution-amber": {"role": "warning", "displayName": "Caution Amber", "canonical": "var(--color-warning)", "tonalRamp": ["oklch(15% 0.04 75)", "oklch(28% 0.075 75)", "oklch(42% 0.105 75)", "oklch(56% 0.13 75)", "oklch(72% 0.14 75)", "oklch(80% 0.11 75)", "oklch(88% 0.07 75)", "oklch(95% 0.025 75)"]},
+      "stop-red": {"role": "error", "displayName": "Stop Red", "canonical": "var(--color-error)", "tonalRamp": ["oklch(15% 0.055 25)", "oklch(26% 0.1 25)", "oklch(36% 0.15 25)", "oklch(45% 0.18 25)", "oklch(58% 0.17 25)", "oklch(72% 0.14 25)", "oklch(84% 0.085 25)", "oklch(95% 0.025 25)"]}
+    },
+    "typographyMeta": {
+      "display": {"displayName": "Display", "purpose": "Current Music and major live or venue state."},
+      "heading": {"displayName": "Heading", "purpose": "Page regions and operational groups."},
+      "body": {"displayName": "Body", "purpose": "Readable product content and feedback."},
+      "label": {"displayName": "Label", "purpose": "Controls, fields, and short operational metadata."}
+    },
+    "shadows": [
+      {"name": "focus-offset", "value": "0 0 0 2px var(--ds-focus-offset)", "purpose": "Separate the focus outline from its surface."},
+      {"name": "menu-lift", "value": "0 0.75rem 2rem color-mix(in oklch, var(--ds-content-primary) 18%, transparent)", "purpose": "Lift transient menus above page content."},
+      {"name": "overlay-lift", "value": "0 1.5rem 4rem color-mix(in oklch, var(--ds-content-primary) 28%, transparent)", "purpose": "Communicate modal and drawer stacking."}
+    ],
+    "motion": [
+      {"name": "feedback", "value": "120ms", "purpose": "Immediate hover, focus, and press response."},
+      {"name": "state", "value": "220ms", "purpose": "Local state transitions."},
+      {"name": "enter", "value": "320ms", "purpose": "Incoming content or overlay transitions."},
+      {"name": "exit", "value": "160ms", "purpose": "Shorter exit transitions."},
+      {"name": "ease-out", "value": "cubic-bezier(0.25, 1, 0.5, 1)", "purpose": "Default responsive easing."}
+    ],
+    "breakpoints": [
+      {"name": "host", "value": "64rem"},
+      {"name": "venue", "value": "90rem"}
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Action",
+      "kind": "button",
+      "refersTo": "action-primary",
+      "description": "The main operation on a surface, with tactile press and strong focus feedback.",
+      "html": "<button class=\"ds-action-primary\">Start performance</button>",
+      "css": ".ds-action-primary { min-height: var(--ds-control-touch); display: inline-flex; align-items: center; justify-content: center; gap: var(--ds-space-compact); border: 1px solid var(--ds-action-primary); border-radius: var(--radius-field); background: var(--ds-action-primary); color: var(--ds-action-primary-content); padding: 0.5rem var(--ds-space-control); font: 600 var(--ds-text-ui)/var(--ds-leading-ui) var(--font-body); transition: background-color var(--ds-motion-feedback) var(--ds-ease-out), transform var(--ds-motion-feedback) var(--ds-ease-out); } .ds-action-primary:hover { background: color-mix(in oklch, var(--ds-action-primary) 88%, var(--ds-surface-canvas)); } .ds-action-primary:focus-visible { outline: 3px solid var(--ds-focus-ring); outline-offset: 3px; box-shadow: 0 0 0 2px var(--ds-focus-offset); } .ds-action-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Quiet Action",
+      "kind": "button",
+      "description": "A low-emphasis operation that gains a tonal surface only on interaction.",
+      "html": "<button class=\"ds-action-quiet\">View details</button>",
+      "css": ".ds-action-quiet { min-height: var(--ds-control-touch); display: inline-flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: var(--radius-field); background: transparent; color: var(--ds-content-primary); padding: 0.5rem var(--ds-space-control); font: 500 var(--ds-text-ui)/var(--ds-leading-ui) var(--font-body); transition: background-color var(--ds-motion-feedback) var(--ds-ease-out), transform var(--ds-motion-feedback) var(--ds-ease-out); } .ds-action-quiet:hover { background: var(--ds-surface-raised); } .ds-action-quiet:focus-visible { outline: 3px solid var(--ds-focus-ring); outline-offset: 3px; box-shadow: 0 0 0 2px var(--ds-focus-offset); } .ds-action-quiet:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "A theme-aware field with explicit label and stable focus treatment.",
+      "html": "<label class=\"ds-field-demo\"><span>Music title</span><input value=\"Águas de Março\" /></label>",
+      "css": ".ds-field-demo { display: grid; gap: var(--ds-space-related); color: var(--ds-content-primary); font: 600 var(--ds-text-ui)/var(--ds-leading-ui) var(--font-body); } .ds-field-demo input { min-height: var(--ds-control-touch); width: 100%; border: 1px solid var(--ds-border-subtle); border-radius: var(--radius-field); background: var(--ds-surface-canvas); color: var(--ds-content-primary); padding: var(--ds-space-compact) var(--ds-space-control); font: 400 var(--ds-text-body)/var(--ds-leading-body) var(--font-body); transition: border-color var(--ds-motion-feedback) var(--ds-ease-out); } .ds-field-demo input:hover { border-color: var(--ds-border-strong); } .ds-field-demo input:focus-visible { border-color: var(--ds-border-interactive); outline: 3px solid var(--ds-focus-ring); outline-offset: 3px; box-shadow: 0 0 0 2px var(--ds-focus-offset); }"
+    },
+    {
+      "name": "Current Navigation Link",
+      "kind": "nav",
+      "description": "A quiet destination link whose current state uses a low-chroma violet field.",
+      "html": "<a class=\"ds-nav-current\" href=\"#\" aria-current=\"page\">Jams</a>",
+      "css": ".ds-nav-current { min-height: var(--ds-control-touch); display: inline-flex; align-items: center; border: 1px solid transparent; border-radius: var(--radius-field); background: color-mix(in oklch, var(--ds-action-primary) 12%, transparent); color: var(--ds-content-link); padding: 0 var(--ds-space-control); font: 500 var(--ds-text-ui)/var(--ds-leading-ui) var(--font-body); text-decoration: none; transition: background-color var(--ds-motion-feedback) var(--ds-ease-out); } .ds-nav-current:hover { background: color-mix(in oklch, var(--ds-action-primary) 18%, transparent); } .ds-nav-current:focus-visible { outline: 3px solid var(--ds-focus-ring); outline-offset: 3px; box-shadow: 0 0 0 2px var(--ds-focus-offset); }"
+    },
+    {
+      "name": "Data Card",
+      "kind": "card",
+      "refersTo": "data-card",
+      "description": "A raised tonal group with restrained border and no resting shadow.",
+      "html": "<article class=\"ds-data-card-demo\"><strong>Next performance</strong><span>Marina · Vocals</span></article>",
+      "css": ".ds-data-card-demo { display: grid; gap: var(--ds-space-compact); min-width: 0; border: 1px solid var(--ds-border-subtle); border-radius: var(--radius-box); background: var(--ds-surface-raised); color: var(--ds-content-primary); padding: var(--ds-space-section); font-family: var(--font-body); } .ds-data-card-demo strong { font-size: var(--ds-text-subheading); line-height: var(--ds-leading-heading); } .ds-data-card-demo span { color: var(--ds-content-secondary); font-size: var(--ds-text-secondary); } .ds-data-card-demo:hover { border-color: var(--ds-border-strong); } .ds-data-card-demo:focus-within { box-shadow: 0 0 0 2px color-mix(in oklch, var(--ds-focus-ring) 28%, transparent); }"
+    },
+    {
+      "name": "Live Status",
+      "kind": "chip",
+      "description": "A label-plus-dot status treatment that stays meaningful without motion.",
+      "html": "<span class=\"ds-live-status\"><i></i>Live</span>",
+      "css": ".ds-live-status { display: inline-flex; align-items: center; gap: var(--ds-space-compact); color: var(--ds-content-primary); font: 500 var(--ds-text-secondary)/var(--ds-leading-compact) var(--font-body); } .ds-live-status i { width: 0.625rem; height: 0.625rem; border-radius: 999px; background: var(--ds-status-success); box-shadow: 0 0 0 2px var(--ds-surface-canvas); } .ds-live-status:hover { color: var(--ds-content-link); } .ds-live-status:focus-visible { outline: 3px solid var(--ds-focus-ring); outline-offset: 3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Live Stage Console",
+    "overview": "Jam App combines live-music energy with the clarity of equipment trusted during a performance. The current Music, live state, and next useful action hold visual authority; supporting controls stay disciplined so the interface feels lively without becoming noisy or generic administrative software. The system adapts its density rather than changing identity. Musician phone surfaces are reachable and forgiving, host controls are compact and precise, and audience displays are sparse, large, and legible at venue distance.",
+    "keyCharacteristics": ["Music-first hierarchy with explicit live-state feedback.", "Violet-led identity supported by semantic status color.", "Tonal, layered surfaces with restrained structural elevation.", "Tactile, confident controls and quieter passive presentation.", "Context-aware density across phone, host console, and venue display."],
+    "rules": [
+      {"name": "The Semantic Cue Rule", "body": "Components consume semantic --ds-* roles; they do not hard-code presentation colors or use raw Tailwind text colors.", "section": "colors"},
+      {"name": "The Status Has a Voice Rule", "body": "Information, success, warning, and danger color always travel with text, iconography, or another explicit state cue.", "section": "colors"},
+      {"name": "The One Spotlight Rule", "body": "Stage Violet identifies the main action or dominant live state; repeating it across peer actions destroys its authority.", "section": "colors"},
+      {"name": "The Music Leads Rule", "body": "Display typography belongs to current Music and major live state, not routine settings, repeated card headings, or decorative slogans.", "section": "typography"},
+      {"name": "The Operational Sentence Rule", "body": "Labels and feedback use sentence case and plain language that survives Portuguese, English, and Spanish expansion.", "section": "typography"},
+      {"name": "The Layer Before Shadow Rule", "body": "Use tonal surface changes and borders for ordinary hierarchy; add shadow only when an element truly occupies a higher interaction layer.", "section": "elevation"}
+    ],
+    "dos": ["Do put current Music, live state, and the next consequential action at the top of the hierarchy.", "Do choose density for the actual musician, host, or venue context.", "Do use canonical Action, Field, Navigation, feedback, overlay, and data-display contracts when their semantics fit.", "Do verify jam-light, jam-dark, Portuguese reference copy, long English or Spanish copy, and reduced motion in representative pairs.", "Do keep pending, stale, failure, rollback, and recovery feedback attached to the affected operation."],
+    "donts": ["Don't replace semantic colors with raw Tailwind text colors or hard-coded status hues.", "Don't turn every region into an equally weighted card or repeat Stage Violet across peer actions.", "Don't use decorative gradients, glow-heavy dark UI, or excessive glass effects as the default visual language.", "Don't normalize musician, host, and audience density when their operating contexts require different contracts.", "Don't change Jam, Performance, Schedule, Live Queue, Music, or Musician behavior as a side effect of visual refinement."]
+  }
+}

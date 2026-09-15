@@ -3,14 +3,17 @@
  * Responsive modal with scrollable content and fixed footer
  */
 
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { musicService } from '../services'
+import { musicService, spotifyService } from '../services'
 import type { CreateMusicDto, MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import { MusicModalFormFields } from './MusicModalFormFields'
 import { isDuplicate as checkDuplicate, parseDuration } from '../lib/musicUtils'
+import { formatDuration } from '../lib/formatters'
+import { isValidSpotifyTrackUrl } from '../lib/spotifyUtils'
 import { Modal } from './Modal'
 import { Action } from './Action'
+import { Field, FormSubmissionFeedback } from './Field'
 
 interface MusicModalProps {
   mode: 'add' | 'edit' | 'suggest'
@@ -33,6 +36,11 @@ export function MusicModal({
 }: MusicModalProps) {
   const { t } = useTranslation()
   const [submitting, setSubmitting] = useState(false)
+  const [entryMode, setEntryMode] = useState<'manual' | 'spotify' | null>(mode === 'edit' ? 'manual' : null)
+  const [spotifyUrl, setSpotifyUrl] = useState('')
+  const [importLoading, setImportLoading] = useState(false)
+  const [importError, setImportError] = useState<string | null>(null)
+  const [importSuccess, setImportSuccess] = useState(false)
   const [formData, setFormData] = useState({
     title: music?.title || '',
     artist: music?.artist || '',
@@ -53,6 +61,36 @@ export function MusicModal({
   const handleFieldChange = (field: keyof typeof formData, value: string | number) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
+
+  const handleSpotifyImport = useCallback(async () => {
+    if (!isValidSpotifyTrackUrl(spotifyUrl)) {
+      setImportError(t('jams.invalid_spotify_url'))
+      return
+    }
+
+    setImportLoading(true)
+    setImportError(null)
+    try {
+      const result = await spotifyService.getTrackMetadata(spotifyUrl)
+
+      if (result.success && result.data) {
+        setFormData((current) => ({
+          ...current,
+          title: result.data.title,
+          artist: result.data.artist,
+          link: result.data.spotifyUrl,
+          duration: formatDuration(result.data.durationMs, 'ms'),
+        }))
+        setImportSuccess(true)
+      } else {
+        setImportError(result.error || t('jams.spotify_import_error'))
+      }
+    } catch (error) {
+      setImportError(error instanceof Error ? error.message : t('jams.spotify_import_error'))
+    } finally {
+      setImportLoading(false)
+    }
+  }, [spotifyUrl, t])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -166,6 +204,9 @@ export function MusicModal({
     }
   }
 
+  const showMusicFields = mode === 'edit' || entryMode === 'manual' || importSuccess
+  const submitDisabled = !showMusicFields || !formData.title.trim() || !formData.artist.trim()
+
   return (
     <Modal
       isOpen={true}
@@ -195,7 +236,7 @@ export function MusicModal({
                 void handleSubmit(syntheticEvent)
               }}
               variant="primary"
-              state="idle"
+              state={submitDisabled ? 'disabled' : 'idle'}
             >
               <Action.Label>{getSubmitLabel()}</Action.Label>
             </Action>
@@ -203,10 +244,87 @@ export function MusicModal({
         </>
       }
     >
-      <form onSubmit={(e) => { void handleSubmit(e) }}>
-        <MusicModalFormFields formData={formData} onChange={handleFieldChange} />
+      <form onSubmit={(e) => { void handleSubmit(e) }} className="space-y-6">
+        {mode !== 'edit' && (
+          <fieldset>
+            <legend className="mb-2 text-sm font-semibold text-base-content">
+              {t('jams.suggestion_source_title')}
+            </legend>
+            <p className="mb-3 text-sm text-base-content/70">
+              {t('jams.suggestion_source_help')}
+            </p>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <Action
+                type="button"
+                variant={entryMode === 'manual' ? 'primary' : 'secondary'}
+                aria-pressed={entryMode === 'manual'}
+                onClick={() => {
+                  setEntryMode('manual')
+                  setImportError(null)
+                }}
+              >
+                {t('jams.suggestion_source_manual')}
+              </Action>
+              <Action
+                type="button"
+                variant={entryMode === 'spotify' ? 'primary' : 'secondary'}
+                aria-pressed={entryMode === 'spotify'}
+                onClick={() => {
+                  setEntryMode('spotify')
+                  setImportSuccess(false)
+                }}
+              >
+                {t('jams.suggestion_source_spotify')}
+              </Action>
+            </div>
+          </fieldset>
+        )}
+
+        {mode !== 'edit' && entryMode === 'spotify' && !importSuccess && (
+          <div className="space-y-3 border-y border-base-300 py-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+              <Field
+                id="music-spotify-url"
+                label={t('jams.spotify_url_label')}
+                hint={t('jams.spotify_url_hint')}
+                error={importError ?? undefined}
+                disabled={importLoading || submitting}
+                className="flex-1"
+              >
+                <Field.Input
+                  value={spotifyUrl}
+                  onChange={(event) => {
+                    setSpotifyUrl(event.target.value)
+                    setImportError(null)
+                  }}
+                  placeholder={t('jams.spotify_url_placeholder')}
+                />
+              </Field>
+              {importLoading ? (
+                <Action variant="secondary" state="loading" loadingLabel={t('jams.importing_metadata')}>
+                  {t('jams.importing_metadata')}
+                </Action>
+              ) : (
+                <Action
+                  type="button"
+                  variant="secondary"
+                  onClick={() => void handleSpotifyImport()}
+                  state={!spotifyUrl.trim() ? 'disabled' : 'idle'}
+                >
+                  {t('jams.import_from_spotify')}
+                </Action>
+              )}
+            </div>
+          </div>
+        )}
+
+        {mode !== 'edit' && entryMode === 'spotify' && importSuccess && (
+          <FormSubmissionFeedback state="success" message={t('jams.import_success')} />
+        )}
+
+        {showMusicFields && <MusicModalFormFields formData={formData} onChange={handleFieldChange} />}
         {/* Hidden submit button for form Enter key submission */}
-        <button type="submit" className="hidden" />
+        <button type="submit" className="hidden" aria-label={getSubmitLabel()} />
       </form>
     </Modal>
   )

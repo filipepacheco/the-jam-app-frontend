@@ -20,6 +20,17 @@ const musicCatalogueHandler = http.get('*/musicas', () => HttpResponse.json({
   meta: {total: 3, skip: 0, take: 100, hasMore: false},
 }))
 
+const spotifyTrackHandler = http.post('*/spotify/track', () => HttpResponse.json({
+  success: true,
+  data: {
+    id: 'spotify-track-fixture',
+    title: 'Once in a Lifetime',
+    artist: 'Talking Heads',
+    durationMs: 259000,
+    spotifyUrl: 'https://open.spotify.com/track/fixture',
+  },
+}))
+
 export const OperationalGroups: Story = {
   render: () => <ScheduleTab jam={jamFixtures.active} onReload={fn(async () => jamFixtures.active)} />,
   globals: {
@@ -63,13 +74,24 @@ export const SmallScheduleAddPath: Story = {
     reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
-  parameters: {a11y: {test: 'error'}, msw: {handlers: [musicCatalogueHandler]}},
+  parameters: {a11y: {test: 'error'}, msw: {handlers: [musicCatalogueHandler, spotifyTrackHandler]}},
   play: async ({canvas, canvasElement, userEvent}) => {
     const add = canvas.getByRole('button', {name: /add new song/i})
     await expect(add).toBeVisible()
     await userEvent.click(add)
     const documentView = within(canvasElement.ownerDocument.body)
     await expect(await documentView.findByRole('dialog', {name: /add performance entry/i})).toBeVisible()
+    await userEvent.click(documentView.getByRole('button', {name: /create new song/i}))
+    const createDialog = await documentView.findByRole('dialog', {name: /add new song/i})
+    await expect(within(createDialog).getByRole('button', {name: /enter details manually/i})).toBeVisible()
+    await userEvent.click(within(createDialog).getByRole('button', {name: /import from spotify/i}))
+    const spotifyUrl = within(createDialog).getByRole('textbox', {name: /spotify url/i})
+    await userEvent.type(spotifyUrl, 'https://open.spotify.com/track/fixture')
+    await userEvent.click(within(createDialog).getByRole('button', {name: /^import$/i}))
+    await expect(await within(createDialog).findByDisplayValue('Once in a Lifetime')).toBeVisible()
+    await expect(within(createDialog).getByDisplayValue('Talking Heads')).toBeVisible()
+    await expect(within(createDialog).getByRole('combobox', {name: /genre/i})).toBeVisible()
+    await expect(within(createDialog).getByRole('spinbutton', {name: /drummers/i})).toBeVisible()
   },
 }
 

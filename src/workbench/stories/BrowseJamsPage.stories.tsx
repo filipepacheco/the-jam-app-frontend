@@ -25,10 +25,18 @@ export const DiscoveryHierarchy: Story = {
   globals: {authRole: 'viewer', locale: 'pt', theme: 'jam-light', reviewDefaultViewport: 'phone', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(canvas.getByRole('heading', {level: 1, name: /explorar sessões de jam/i})).toBeVisible()
+    await expect(canvas.getByText(/descubra e participe de sessões de jam/i)).toBeVisible()
+    const resultCount = canvas.getByText(/3 jams/i)
+    const statusFilter = canvas.getByRole('navigation', {name: /filtrar por status/i})
+    await expect(resultCount.parentElement?.parentElement).toContainElement(statusFilter)
     await expect(canvas.getByText(jamFixtures.longContent.name)).toBeVisible()
     await expect(canvas.getByRole('link', {name: jamFixtures.longContent.name})).toBeVisible()
     await expect(canvas.getAllByText(/\d{1,2}:\d{2}/)[0]).toBeVisible()
-    await expect(canvas.queryByRole('link', {name: /detalhes/i})).toBeNull()
+    await expect(canvas.getByText(jamFixtures.longContent.location)).toHaveClass('truncate')
+    await expect(canvas.getAllByText(/27 músicas/i)[0]).toBeVisible()
+    await expect(canvas.getAllByText(/48 músicos inscritos/i)[0]).toBeVisible()
+    await expect(canvas.getAllByRole('link', {name: /ver jam/i})[0]).toBeVisible()
+    await expect(canvas.getAllByRole('link', {name: /ver painel ao vivo/i})[0]).toBeVisible()
     await expect(canvas.getByRole('button', {name: /jams anteriores/i})).toHaveAttribute('aria-expanded', 'false')
   },
 }

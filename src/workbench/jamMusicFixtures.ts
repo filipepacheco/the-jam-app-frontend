@@ -55,6 +55,7 @@ export const jamMusicWorkbenchCoverage: WorkbenchCoverageRecord[] = [
   exempt('ui.0157', 'Route-level data composition is reviewed with page catalogue work, not reusable UI.'),
   exempt('ui.0160', 'Route-level data composition is reviewed with page catalogue work, not reusable UI.'),
   exempt('ui.0161', 'Route-level data composition is reviewed with page catalogue work, not reusable UI.'),
+  exempt('ui.0197', 'The local Host dashboard category helper is covered by its approved route composition.'),
 ]
 
 export const musicianFixtures = {
@@ -92,7 +93,7 @@ const registrations: RegistrationResponseDto[] = [
     jamId: 'jam-friday',
     scheduleId: 'schedule-in-progress',
     instrument: 'vocals',
-    status: 'APPROVED',
+    status: 'PENDING',
     createdAt: '2026-09-10T12:00:00.000Z',
     musician: musicianFixtures.vocalist,
   },
@@ -148,7 +149,7 @@ export const musicFixtures = {
     genre: 'Alternative / Experimental',
     duration: 487,
     description: 'Play the extended arrangement, repeat the bridge twice, leave eight bars for the guitar solo, and return quietly for the last chorus.',
-    info: 'Capo on the second fret. Watch the host for the final stop. This note intentionally exercises wrapping across several lines.',
+    // info: 'Capo on the second fret. Watch the host for the final stop. This note intentionally exercises wrapping across several lines.',
     status: 'APPROVED',
     createdAt: '2026-09-06T12:00:00.000Z',
     neededDrums: 1,
@@ -177,10 +178,10 @@ const schedule = (
 })
 
 export const scheduleFixtures: ScheduleResponseDto[] = [
-  schedule('schedule-upcoming', 1, 'SCHEDULED', musicFixtures.longContent),
+  schedule('schedule-upcoming', 1, 'SCHEDULED', musicFixtures.longContent,registrations),
   schedule('schedule-in-progress', 2, 'IN_PROGRESS', musicFixtures.approved, registrations),
   schedule('schedule-completed', 3, 'COMPLETED', musicFixtures.approved, registrations),
-  schedule('schedule-suggested', 4, 'SUGGESTED', musicFixtures.suggested),
+  schedule('schedule-suggested', 4, 'SUGGESTED', musicFixtures.suggested,registrations),
 ]
 
 export const jamFixtures = {

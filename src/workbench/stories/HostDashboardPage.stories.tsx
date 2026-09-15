@@ -84,6 +84,12 @@ export const OperationalPriority: Story = {
     await expect(active.compareDocumentPosition(totals) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(totals.compareDocumentPosition(planned) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(canvas.getAllByRole('button', {name: /gerenciar/i})[0]).toBeVisible()
+    const liveCard = cardQueries(canvas.getByRole('heading', {level: 3, name: /deliberately long/i}))
+    const plannedCard = cardQueries(canvas.getByRole('heading', {level: 3, name: /next month jam/i}))
+    const pastCard = cardQueries(canvas.getByRole('heading', {level: 3, name: /last month jam/i}))
+    await expect(liveCard.getByRole('button', {name: /ver página pública/i})).toBeVisible()
+    await expect(plannedCard.queryByRole('button', {name: /ver página pública/i})).toBeNull()
+    await expect(pastCard.queryByRole('button', {name: /ver página pública/i})).toBeNull()
     await expect(canvas.queryByRole('button', {name: /importar do spotify/i})).toBeNull()
     await expect(canvas.queryByRole('button', {name: /feedback/i})).toBeNull()
   },

@@ -7,10 +7,19 @@ const storySourceRoot = realpathSync(new URL('../src', import.meta.url))
 const config: StorybookConfig = {
   stories: ['../src/workbench/stories/**/*.stories.@(ts|tsx)'],
   staticDirs: ['./public'],
-  addons: ['@storybook/addon-a11y', '@storybook/addon-themes', '@storybook/addon-vitest', 'msw-storybook-addon'],
+  addons: [
+    '@storybook/addon-a11y',
+    '@storybook/addon-themes',
+    '@storybook/addon-vitest',
+    '@storybook/addon-mcp',
+    'msw-storybook-addon',
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},
+  },
+  features: {
+    componentsManifest: true,
   },
   core: {
     builder: {

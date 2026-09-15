@@ -13,7 +13,6 @@ import {normalizeInstrument} from '../../utils/musicianUtils'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
 import {Alert} from '../Alert'
 import {Action} from '../Action'
-import {InstrumentsSummary} from './InstrumentsSummary'
 import {Modal} from '../Modal'
 import {ModalFooter} from '../ModalFooter'
 
@@ -94,10 +93,13 @@ export function ScheduleEnrollmentModal({
         onClose={onClose}
         title={t('schedule.enroll_title')}
         size="sm"
+        responsive
+        scrollable
+        className="max-h-[calc(100dvh-1rem)] sm:max-h-[85vh]"
         footer={
           <ModalFooter
             onCancel={onClose}
-            onSubmit={handleEnroll}
+            onSubmit={() => void handleEnroll()}
             submitLabel={enrollLoading ? t('schedule.enrolling') : t('schedule.enroll_now')}
             submitting={enrollLoading}
             submitDisabled={!selectedInstrument}
@@ -109,11 +111,11 @@ export function ScheduleEnrollmentModal({
 
         {/* Instrument choice is a visible set of options, not a dropdown whose
             contents the Musician must inspect one item at a time. */}
-        <fieldset className="mb-4" disabled={enrollLoading}>
+        <fieldset disabled={enrollLoading}>
           <legend className="mb-2 text-sm font-semibold text-base-content">
             {t('schedule.select_your_instrument')}
           </legend>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <div className="grid grid-cols-2 gap-2">
             {instrumentOptions.map((option) => {
               const isUnlimited = option.needed === -1
               const remaining = isUnlimited ? Infinity : option.needed - option.registered
@@ -136,20 +138,18 @@ export function ScheduleEnrollmentModal({
                   state={isUnavailable || enrollLoading ? 'disabled' : 'idle'}
                   aria-pressed={selectedInstrument === option.key}
                   onClick={() => setSelectedInstrument(option.key)}
-                  className="min-w-0 justify-start text-left"
+                  className="min-w-0 justify-start px-2 text-left"
                 >
-                  <span aria-hidden="true">{option.emoji}</span>
-                  <span className="min-w-0">
-                    <span className="block font-semibold">{option.label}</span>
-                    <span className="block text-xs opacity-75">{detail}</span>
+                  <span className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+                    <span aria-hidden="true">{option.emoji}</span>
+                    <span className="font-semibold">{option.label}</span>
+                    <span className="text-[11px] opacity-75">{detail}</span>
                   </span>
                 </Action>
               )
             })}
           </div>
         </fieldset>
-
-        <InstrumentsSummary instrumentOptions={instrumentOptions} />
       </Modal>
     )
 }

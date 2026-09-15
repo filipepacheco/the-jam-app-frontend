@@ -1,0 +1,18 @@
+{
+  "matrix": "src/workbench/visualMatrix.ts",
+  "baselines": "tests/visual/baselines",
+  "artifacts": "tests/visual/.artifacts",
+  "reports": {
+    "json": "docs/design-system/workbench-progress.json",
+    "markdown": "docs/design-system/workbench-progress.md"
+  },
+  "maxCells": 32,
+  "threshold": {
+    "maxDiffPixels": 0,
+    "maxDiffRatio": 0
+  },
+  "storybook": {
+    "port": 6106,
+    "startupTimeoutMs": 120000
+  }
+}

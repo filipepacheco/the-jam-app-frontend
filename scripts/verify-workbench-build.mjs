@@ -27,6 +27,17 @@ async function snapshotTree(root) {
           delete projectMetadata.generatedAt
           delete projectMetadata.userSince
           contents = Buffer.from(JSON.stringify(projectMetadata))
+        } else if (outputPath === 'manifests/components.json') {
+          const componentManifest = JSON.parse(contents.toString())
+          delete componentManifest.meta?.durationMs
+          contents = Buffer.from(JSON.stringify(componentManifest))
+        } else if (outputPath === 'manifests/components.html') {
+          contents = Buffer.from(
+            contents.toString().replace(
+              /Generation took <strong>[^<]+<\/strong>/,
+              'Generation took <strong>[normalized]</strong>',
+            ),
+          )
         }
         entries.push({
           path: outputPath,

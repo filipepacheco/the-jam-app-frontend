@@ -3,7 +3,7 @@ import { resolve } from 'node:path'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { Action, IconAction } from '../components/Action'
+import { Action, ActionGroup, IconAction } from '../components/Action'
 import { ScheduleActionButtons } from '../components/schedule/ScheduleActionButtons'
 
 vi.mock('react-i18next', () => ({
@@ -79,6 +79,31 @@ describe('canonical action controls', () => {
     expect(css).toContain('var(--ds-action-secondary)')
     expect(css).toContain('var(--ds-action-danger)')
     expect(css).toContain('var(--ds-surface-raised)')
+  })
+
+  it('keeps primary, supporting, overflow, and danger choices in a stable action hierarchy', () => {
+    render(
+      <ActionGroup
+        primary={<Action>Save jam</Action>}
+        secondary={<Action variant="quiet">Cancel</Action>}
+        overflow={<IconAction variant="quiet" label="More jam actions">•••</IconAction>}
+        danger={<Action variant="destructive">Remove jam</Action>}
+      />,
+    )
+
+    const slots = screen.getByRole('button', {name: 'Save jam'}).closest('.ds-action-group')
+      ?.querySelectorAll('[data-action-group-slot]')
+    expect(Array.from(slots ?? []).map((slot) => slot.getAttribute('data-action-group-slot')))
+      .toEqual(['primary', 'supporting', 'danger'])
+    expect(screen.getByRole('button', {name: 'Remove jam'}).closest('[data-action-group-slot]'))
+      .toHaveAttribute('data-action-group-slot', 'danger')
+  })
+
+  it('keeps loading present while reserving reduced opacity for unavailable actions', () => {
+    const css = readFileSync(resolve(process.cwd(), 'src/components/Action.css'), 'utf8')
+
+    expect(css).toMatch(/\.ds-action--loading\s*\{\s*cursor: wait;/)
+    expect(css).toMatch(/\.ds-action--disabled\s*\{\s*cursor: not-allowed;\s*opacity: 0\.58;/)
   })
 
   it('integrates the family into schedule approval and destructive actions', async () => {

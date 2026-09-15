@@ -5,9 +5,10 @@ import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
 import {TimelineItemV2Waveform} from './TimelineItemV2Waveform'
 import {useState} from 'react'
-import {Flag, ClipboardList} from 'lucide-react'
+import {Flag, ClipboardList, CircleHelp} from 'lucide-react'
 import {Action} from '../Action'
 import {CanonicalEmptyState} from '../FeedbackStates'
+import {Modal} from '../Modal'
 
 interface TimelineUser {
   id: string
@@ -34,9 +35,7 @@ export function TimelineShowcaseV2Waveform({
   const [expandedScheduleId, setExpandedScheduleId] = useState<string | null>(null)
   const [instrumentFilter, setInstrumentFilter] = useState<string | null>(null)
   const [mineFilter, setMineFilter] = useState(false)
-  const [hintDismissed, setHintDismissed] = useState(() =>
-    typeof localStorage !== 'undefined' && localStorage.getItem('jam_hint_dismissed') === '1'
-  )
+  const [howItWorksOpen, setHowItWorksOpen] = useState(false)
 
   // Helper to get dot style based on status
   const getDotStyle = (schedule: ScheduleResponseDto) => {
@@ -81,10 +80,6 @@ export function TimelineShowcaseV2Waveform({
 
   const toggleExpanded = (scheduleId: string) => {
     setExpandedScheduleId(prev => prev === scheduleId ? null : scheduleId)
-    if (!hintDismissed) {
-      setHintDismissed(true)
-      try { localStorage.setItem('jam_hint_dismissed', '1') } catch { /* localStorage may be unavailable */ }
-    }
   }
 
   if (schedules.length === 0) {
@@ -95,11 +90,12 @@ export function TimelineShowcaseV2Waveform({
     <div className="space-y-6">
       {/* The Schedule heading owns participation help. Jam-level facts live
           with the Jam identity above instead of competing with this task. */}
-      <div className="space-y-1">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-2xl sm:text-3xl font-extrabold scroll-mt-20">{t('jams.performance_schedule_title')}</h2>
-        <p className="ds-type-body text-sm text-base-content/65">
-          {t('jams.performance_registration_help')}
-        </p>
+        <Action variant="quiet" onClick={() => setHowItWorksOpen(true)} className="px-3 text-sm">
+          <CircleHelp className="size-4" aria-hidden="true" />
+          {t('jams.how_it_works.title')}
+        </Action>
       </div>
 
       {/* Instrument filter controls retain 44px targets. On a phone, the
@@ -112,7 +108,7 @@ export function TimelineShowcaseV2Waveform({
               onClick={() => { setInstrumentFilter(null); setMineFilter(false) }}
               variant={instrumentFilter === null && !mineFilter ? 'primary' : 'quiet'}
               aria-pressed={instrumentFilter === null && !mineFilter}
-              className="gap-1 shrink-0"
+              className="min-h-9 gap-1 shrink-0 px-3 text-xs"
             >
               {t('common.all')}
             </Action>
@@ -121,7 +117,7 @@ export function TimelineShowcaseV2Waveform({
                 onClick={() => { setMineFilter(prev => !prev); setInstrumentFilter(null) }}
                 variant={mineFilter ? 'secondary' : 'quiet'}
                 aria-pressed={mineFilter}
-                className="gap-1 shrink-0"
+                className="min-h-9 gap-1 shrink-0 px-3 text-xs"
               >
                 {t('jams.my_registrations_short', 'Minhas')}
               </Action>
@@ -132,7 +128,7 @@ export function TimelineShowcaseV2Waveform({
                 onClick={() => { setInstrumentFilter(prev => prev === inst ? null : inst); setMineFilter(false) }}
                 variant={instrumentFilter === inst ? 'primary' : 'quiet'}
                 aria-pressed={instrumentFilter === inst}
-                className="gap-1 shrink-0"
+                className="min-h-9 gap-1 shrink-0 px-3 text-xs"
                 aria-label={t(`schedule.instruments.${inst}`)}
               >
                 <span aria-hidden="true">{getInstrumentEmoji(inst)}</span>
@@ -141,11 +137,6 @@ export function TimelineShowcaseV2Waveform({
             ))}
           </div>
         </div>
-      )}
-
-      {/* First-visit hint */}
-      {!hintDismissed && schedules.length > 0 && (
-        <p className="text-xs text-base-content/60 -mt-3 mb-1">{t('jams.hint_tap_song')}</p>
       )}
 
       {/* Unified Timeline - Responsive sizing */}
@@ -220,6 +211,35 @@ export function TimelineShowcaseV2Waveform({
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={howItWorksOpen}
+        onClose={() => setHowItWorksOpen(false)}
+        title={t('jams.how_it_works.title')}
+        headingLevel="h3"
+        size="sm"
+        portal
+        responsive
+        scrollable
+        className="max-h-[calc(100dvh-1rem)] sm:max-h-[85vh]"
+      >
+        <ol className="space-y-3">
+          {(['view_schedule', 'register_songs', 'suggest_songs', 'collaborate', 'performance_time'] as const).map((step, index) => (
+            <li key={step} className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5">
+              <span className="flex size-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-content" aria-hidden="true">
+                {index + 1}
+              </span>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-base-content">{t(`jams.how_it_works.${step}`)}</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-base-content/70">{t(`jams.how_it_works.${step}_desc`)}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+        <Action className="mt-4 w-full" onClick={() => setHowItWorksOpen(false)}>
+          {t('common.close')}
+        </Action>
+      </Modal>
     </div>
   )
 }

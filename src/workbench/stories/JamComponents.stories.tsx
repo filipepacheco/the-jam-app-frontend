@@ -17,6 +17,11 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const SummaryCard: Story = {
+  globals: {
+    locale: 'pt',
+    theme: 'jam-light',
+    reviewDefaultViewport: 'desktop',
+  },
   parameters: {
     a11y: {test: 'error'},
     designSystem: {interaction: {status: 'not-applicable', rationale: 'Static Jam summary hierarchy; navigation behavior is covered by page composition evidence.'}},
@@ -27,7 +32,8 @@ export const LongTranslatedSummary: Story = {
   args: { jam: jamFixtures.longContent },
   globals: {
     locale: 'es',
-    theme: 'synthwave',
+    theme: 'jam-dark',
+    reviewDefaultViewport: 'phone',
     viewport: { value: 'phone', isRotated: false },
   },
   parameters: {

@@ -305,7 +305,6 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
@@ -320,6 +319,7 @@
       "dependencies": {
         "internal": [],
         "external": [
+          "lucide-react",
           "react",
           "react-i18next"
         ],
@@ -928,6 +928,7 @@
       "dependencies": {
         "internal": [],
         "external": [
+          "lucide-react",
           "react",
           "react-i18next"
         ],
@@ -985,6 +986,7 @@
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/data-display/index.tsx",
           "src/types/jamControl.types.ts"
         ],
         "external": [
@@ -2218,7 +2220,8 @@
       ],
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx",
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
@@ -2510,9 +2513,9 @@
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/Modal.tsx",
           "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
           "src/hooks/index.ts",
-          "src/lib/formatters.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/types/api.types.ts",
           "src/utils/scheduleUtils.ts"
@@ -2523,7 +2526,6 @@
           "react-i18next"
         ],
         "contexts": [
-          "browser",
           "internationalization"
         ]
       },
@@ -2587,6 +2589,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Navigation.tsx",
           "src/components/data-display/index.tsx",
           "src/lib/i18nUtils.ts",
           "src/lib/statusUtils.ts",
@@ -2615,20 +2618,25 @@
         "readiness": {
           "workbench": "ready",
           "accessibility": "needs-review",
-          "internationalization": "needs-review",
+          "internationalization": "verified",
           "theme": "verified"
         },
         "uiStates": [
           "active",
           "live",
           "long-content",
+          "localized-dashboard-action",
           "mobile",
           "desktop"
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Domain/Jam/Summary and actions; the workbench exposes an existing missing live-dashboard translation key."
-        ]
+          "Reviewed in Domain/Jam/Summary and actions; the card uses the canonical destination-link treatment, bounded reading width, single-line venue truncation, compact Spotify support, and responsive destination hierarchy in every supported locale."
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "navigation"
+        }
       }
     },
     {
@@ -2856,6 +2864,7 @@
         "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
+        "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
@@ -2865,9 +2874,9 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
@@ -2944,7 +2953,6 @@
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
-        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
@@ -3341,9 +3349,12 @@
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/MusicModalFormFields.tsx",
+          "src/lib/formatters.ts",
           "src/lib/musicUtils.tsx",
+          "src/lib/spotifyUtils.ts",
           "src/services/index.ts",
           "src/types/api.types.ts"
         ],
@@ -5201,12 +5212,10 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx",
-        "src/workbench/stories/PublicDashboardPage.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5943,11 +5952,9 @@
       "consumers": [
         "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
-        "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
@@ -6131,7 +6138,9 @@
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
         "external": [
           "lucide-react",
           "react",
@@ -6739,7 +6748,8 @@
       ],
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx",
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
@@ -6747,13 +6757,13 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
-          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/ModalFooter.tsx",
-          "src/components/schedule/InstrumentsSummary.tsx",
           "src/components/schedule/ScheduleDetailsCard.tsx",
           "src/hooks/index.ts",
+          "src/utils/musicianUtils.ts",
           "src/utils/scheduleUtils.ts"
         ],
         "external": [
@@ -7426,13 +7436,9 @@
         }
       ],
       "consumers": [
-        "src/pages/host/CreateJamPage.tsx",
-        "src/pages/host/HostDashboardPage.tsx",
         "src/pages/tabs/OverviewTab.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
-        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
@@ -7492,10 +7498,17 @@
       "name": "SpotifyLogo",
       "source": "src/components/SpotifyPreview.tsx",
       "declaration": "variable",
-      "visibility": "local",
-      "exports": [],
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "SpotifyLogo",
+          "module": "src/components/SpotifyPreview.tsx"
+        }
+      ],
       "consumers": [
-        "src/components/SpotifyPreview.tsx"
+        "src/components/SpotifyPreview.tsx",
+        "src/pages/tabs/JamDetailPageV2.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/JamDetailPage.stories.tsx",
@@ -7975,6 +7988,7 @@
           "src/types/api.types.ts"
         ],
         "external": [
+          "lucide-react",
           "react",
           "react-i18next",
           "swr"
@@ -8045,10 +8059,10 @@
         "internal": [
           "src/components/index.ts",
           "src/hooks/index.ts",
-          "src/services/jamService.ts"
+          "src/services/jamService.ts",
+          "src/services/spotifyService.ts"
         ],
         "external": [
-          "lucide-react",
           "react",
           "react-i18next",
           "react-router-dom"
@@ -8229,7 +8243,6 @@
           "src/types/api.types.ts"
         ],
         "external": [
-          "lucide-react",
           "react",
           "react-i18next",
           "react-router-dom"
@@ -9424,10 +9437,12 @@
         "internal": [
           "src/components/SEO.tsx",
           "src/components/ShareModal.tsx",
+          "src/components/SpotifyPreview.tsx",
           "src/components/index.ts",
           "src/components/jam-detail-v2/index.ts",
           "src/hooks/index.ts",
           "src/lib/api/index.ts",
+          "src/lib/formatters.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/types/api.types.ts",
           "src/utils/jamUrl.ts"
@@ -9498,6 +9513,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/index.ts",
           "src/types/api.types.ts",
           "src/utils/jamUrl.ts"
@@ -9816,6 +9832,7 @@
         "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
+        "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/JamRegisterPage.tsx",
         "src/pages/MusicPage.tsx",
@@ -9825,6 +9842,7 @@
         "src/pages/host/HostDashboardPage.tsx",
         "src/pages/host/MusiciansPage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/pages/tabs/OverviewTab.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
@@ -9842,6 +9860,7 @@
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
         "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
@@ -9893,6 +9912,9 @@
           "quiet",
           "destructive",
           "icon-only",
+          "action-group",
+          "localized-long-labels",
+          "mobile-stack",
           "loading",
           "disabled",
           "keyboard",
@@ -9900,7 +9922,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+          "Reviewed in Foundations/Action controls with one-primary action-group hierarchy, responsive grouping, deferred danger emphasis, localized expansion, keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
         ],
         "canonicalAdoption": {
           "status": "adopted",
@@ -9933,6 +9955,7 @@
         "src/components/Navigation.tsx",
         "src/components/QuickEditPanel.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
+        "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/components/publicDashboard/Header.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
@@ -9940,7 +9963,7 @@
         "src/components/schedule/NotesEditor.tsx",
         "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
-        "src/pages/host/HostDashboardPage.tsx",
+        "src/pages/BrowseJamsPage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx"
@@ -9952,7 +9975,9 @@
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
@@ -9998,6 +10023,9 @@
           "quiet",
           "destructive",
           "icon-only",
+          "action-group",
+          "localized-long-labels",
+          "mobile-stack",
           "loading",
           "disabled",
           "keyboard",
@@ -10005,7 +10033,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+          "Reviewed in Foundations/Action controls with one-primary action-group hierarchy, responsive grouping, deferred danger emphasis, localized expansion, keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
         ],
         "canonicalAdoption": {
           "status": "adopted",
@@ -10034,7 +10062,6 @@
       "consumers": [
         "src/components/FeedbackStates.tsx",
         "src/components/ShareModal.tsx",
-        "src/pages/host/HostDashboardPage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
@@ -10483,16 +10510,20 @@
         "src/components/MusicCard.tsx",
         "src/components/MusicianProfileModal.tsx",
         "src/components/dj-control/QueueStats.tsx",
+        "src/components/dj-control/SongQueueTimeline.tsx",
         "src/components/jam-detail-v2/CollapsibleSection.tsx",
         "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
         "src/components/music/MusicDataDisplay.tsx",
+        "src/components/schedule/LiveJamControlPanel.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
         "src/pages/host/JamManagementPage.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
         "src/workbench/stories/JamComponents.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
@@ -10896,6 +10927,7 @@
       ],
       "consumers": [
         "src/components/MusicCard.tsx",
+        "src/pages/MusicPage.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
@@ -11081,6 +11113,7 @@
         "src/components/Field.tsx",
         "src/components/MobileDrawer.tsx",
         "src/components/MusicFilters.tsx",
+        "src/components/MusicModal.tsx",
         "src/components/MusicModalFormFields.tsx",
         "src/components/OnboardingModal.tsx",
         "src/components/ProfileFormSection.tsx",
@@ -11093,7 +11126,6 @@
         "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/components/publicDashboard/PollingControls.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
-        "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
@@ -11105,7 +11137,6 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
-        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
@@ -11187,6 +11218,7 @@
         }
       ],
       "consumers": [
+        "src/components/MusicModal.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
@@ -11196,7 +11228,10 @@
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
-        "src/workbench/stories/JamDetailPage.stories.tsx"
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11731,6 +11766,8 @@
       "workbenchStories": [
         "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
@@ -11808,6 +11845,7 @@
         "src/components/CallToAction.tsx",
         "src/components/EnhancedHero.tsx",
         "src/components/Footer.tsx",
+        "src/components/JamCard.tsx",
         "src/components/MobileDrawer.tsx",
         "src/components/Navbar.tsx",
         "src/components/Navigation.tsx",
@@ -11817,6 +11855,8 @@
       "workbenchStories": [
         "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
@@ -11958,9 +11998,11 @@
       ],
       "consumers": [
         "src/components/schedule/ScheduleOverflowMenu.tsx",
+        "src/pages/host/HostDashboardPage.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
@@ -12164,10 +12206,10 @@
         "src/workbench/stories/HostDashboardPage.stories.tsx"
       ],
       "dependencies": {
-        "internal": [
-          "src/components/index.ts"
+        "internal": [],
+        "external": [
+          "lucide-react"
         ],
-        "external": [],
         "contexts": []
       },
       "metadata": {
@@ -12199,6 +12241,78 @@
         "notes": [
           "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Human review/Screen refinement/Host dashboard."
         ]
+      }
+    },
+    {
+      "id": "ui.0198",
+      "name": "ActionGroup",
+      "source": "src/components/Action.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "ActionGroup",
+          "module": "src/components/Action.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "ActionGroup",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/pages/host/HostDashboardPage.tsx",
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Action.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "primary",
+          "secondary",
+          "quiet",
+          "destructive",
+          "icon-only",
+          "action-group",
+          "localized-long-labels",
+          "mobile-stack",
+          "loading",
+          "disabled",
+          "keyboard",
+          "focus"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "Reviewed in Foundations/Action controls with one-primary action-group hierarchy, responsive grouping, deferred danger emphasis, localized expansion, keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "action"
+        }
       }
     }
   ],
@@ -12377,8 +12491,8 @@
     "representedSources": 138,
     "ignoredSources": 39,
     "workbench": {
-      "activeReusableVisualComponents": 133,
-      "ready": 122,
+      "activeReusableVisualComponents": 134,
+      "ready": 123,
       "exempt": 11,
       "needsReview": 0,
       "unknown": 0,
@@ -12390,25 +12504,53 @@
       "family": "action",
       "occurrences": [
         {
-          "id": "inline.ui.0006.action.8f18b740ef0d",
+          "id": "inline.ui.0006.action.4c2028bfcb6d",
           "source": "src/components/Alert.tsx",
-          "line": 77,
-          "column": 9,
+          "line": 78,
+          "column": 11,
           "ownerComponentId": "ui.0006",
           "tag": "button",
           "staticClassTokens": [
+            "-m-1",
             "btn",
+            "btn-circle",
             "btn-ghost",
             "btn-sm",
-            "ds-control",
             "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0015.action.89a98516cfc1",
+          "source": "src/components/dj-control/SongQueueTimeline.tsx",
+          "line": 141,
+          "column": 11,
+          "ownerComponentId": "ui.0015",
+          "tag": "button",
+          "staticClassTokens": [
+            "ds-control",
+            "ds-focusable",
+            "flex",
+            "font-semibold",
+            "gap-2",
+            "hover:bg-warning/10",
+            "items-center",
+            "px-3",
+            "rounded-lg",
+            "text-left",
+            "text-warning",
+            "text-xs",
+            "tracking-wider",
+            "transition-colors",
+            "uppercase",
+            "w-full"
           ],
           "dynamicClasses": false
         },
         {
           "id": "inline.ui.0015.action.91810193303e",
           "source": "src/components/dj-control/SongQueueTimeline.tsx",
-          "line": 152,
+          "line": 175,
           "column": 11,
           "ownerComponentId": "ui.0015",
           "tag": "button",
@@ -12565,39 +12707,6 @@
           "dynamicClasses": true
         },
         {
-          "id": "inline.ui.0051.action.998263c4bc81",
-          "source": "src/components/JamCard.tsx",
-          "line": 92,
-          "column": 13,
-          "ownerComponentId": "ui.0051",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "ds-control",
-            "ds-focusable",
-            "ds-type-ui",
-            "gap-1.5"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0051.action.df9f8f021a85",
-          "source": "src/components/JamCard.tsx",
-          "line": 96,
-          "column": 11,
-          "ownerComponentId": "ui.0051",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "ds-control",
-            "ds-focusable",
-            "ds-type-ui"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "inline.ui.0055.action.06430e4aaaa7",
           "source": "src/components/Modal.tsx",
           "line": 159,
@@ -12663,9 +12772,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0062.action.39c79645ef02",
+          "id": "inline.ui.0062.action.d1416a2c33bc",
           "source": "src/components/MusicModal.tsx",
-          "line": 209,
+          "line": 327,
           "column": 9,
           "ownerComponentId": "ui.0062",
           "tag": "button",
@@ -12870,7 +12979,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0130.action.f046247be362",
+          "id": "inline.ui.0130.action.13999d6b4dc5",
           "source": "src/components/SpotifyPreview.tsx",
           "line": 95,
           "column": 5,
@@ -12880,9 +12989,10 @@
             "btn",
             "btn-circle",
             "btn-ghost",
-            "ds-control",
+            "btn-sm",
             "ds-focusable",
             "hover:bg-success/20",
+            "shrink-0",
             "text-success"
           ],
           "dynamicClasses": false
@@ -12948,7 +13058,7 @@
         {
           "id": "inline.ui.0137.action.1dd0b008a9ef",
           "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 295,
+          "line": 309,
           "column": 17,
           "ownerComponentId": "ui.0137",
           "tag": "button",
@@ -12960,27 +13070,6 @@
             "items-center",
             "mb-3",
             "sm:mb-4"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.action.6eddb1414edb",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 339,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "bg-success/10",
-            "flex",
-            "gap-3",
-            "hover:bg-success/20",
-            "items-center",
-            "p-3",
-            "rounded-lg",
-            "text-left",
-            "transition-colors",
-            "w-full"
           ],
           "dynamicClasses": false
         },
@@ -13025,83 +13114,6 @@
             "btn-circle",
             "btn-sm"
           ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.0340e02aa1e2",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 202,
-          "column": 25,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "btn-sm",
-            "hidden",
-            "sm:inline-flex"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.09e0a16fbe50",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 195,
-          "column": 25,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "hidden",
-            "sm:inline-flex"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.cd04bf8501a3",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 218,
-          "column": 29,
-          "ownerComponentId": "ui.0141",
-          "tag": "div",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "btn-square"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.d372c6ca8f39",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 228,
-          "column": 37,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.d3ba29dbf38f",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 227,
-          "column": 37,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.action.9e18b100dc7d",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 411,
-          "column": 33,
-          "ownerComponentId": "ui.0142",
-          "tag": "button",
-          "staticClassTokens": [],
           "dynamicClasses": false
         },
         {
@@ -13493,7 +13505,7 @@
         {
           "id": "inline.ui.0161.action.430827641e9d",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 101,
+          "line": 109,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "a",
@@ -13506,23 +13518,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0161.action.8e26b7ddb3d8",
-          "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 83,
-          "column": 17,
-          "ownerComponentId": "ui.0161",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "gap-2",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
           "id": "inline.ui.0161.action.a2b1847bbf16",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 110,
+          "line": 118,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "button",
@@ -13537,7 +13535,7 @@
         {
           "id": "inline.ui.0161.action.d5afae87e211",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 94,
+          "line": 102,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "button",
@@ -13628,7 +13626,7 @@
         {
           "id": "inline.ui.0166.action.bcd852a27998",
           "source": "src/components/Action.tsx",
-          "line": 58,
+          "line": 65,
           "column": 5,
           "ownerComponentId": "ui.0166",
           "tag": "button",
@@ -13985,8 +13983,8 @@
         {
           "id": "inline.ui.0142.badge.3854256bcbff",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 401,
-          "column": 21,
+          "line": 389,
+          "column": 48,
           "ownerComponentId": "ui.0142",
           "tag": "div",
           "staticClassTokens": [
@@ -14155,21 +14153,15 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0044.card.9f2bafa4204d",
+          "id": "inline.ui.0044.card.0c32573fb5e9",
           "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
-          "line": 113,
+          "line": 99,
           "column": 5,
           "ownerComponentId": "ui.0044",
           "tag": "div",
           "staticClassTokens": [
             "card",
-            "cursor-pointer",
             "duration-300",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary",
-            "hover:shadow-lg",
-            "outline-none",
             "text-left",
             "transition-shadow",
             "w-full"
@@ -14177,18 +14169,20 @@
           "dynamicClasses": true
         },
         {
-          "id": "inline.ui.0051.card.2dcb594eef3c",
+          "id": "inline.ui.0051.card.d4c40aa39092",
           "source": "src/components/JamCard.tsx",
-          "line": 41,
+          "line": 53,
           "column": 5,
           "ownerComponentId": "ui.0051",
-          "tag": "div",
+          "tag": "article",
           "staticClassTokens": [
             "bg-base-200",
+            "border",
+            "border-base-content/10",
             "card",
-            "hover:shadow-xl",
-            "shadow-lg",
-            "transition-shadow"
+            "max-w-3xl",
+            "relative",
+            "w-full"
           ],
           "dynamicClasses": false
         },
@@ -14312,7 +14306,7 @@
         {
           "id": "inline.ui.0138.card.ca6213990919",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 265,
+          "line": 330,
           "column": 11,
           "ownerComponentId": "ui.0138",
           "tag": "div",
@@ -14326,7 +14320,7 @@
         {
           "id": "inline.ui.0138.card.ca6213990919",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 334,
+          "line": 431,
           "column": 9,
           "ownerComponentId": "ui.0138",
           "tag": "div",
@@ -14354,7 +14348,7 @@
         {
           "id": "inline.ui.0142.card.f8da82501a95",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 390,
+          "line": 362,
           "column": 13,
           "ownerComponentId": "ui.0142",
           "tag": "article",
@@ -14638,7 +14632,7 @@
         {
           "id": "inline.ui.0161.card.05967e332e13",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 136,
+          "line": 144,
           "column": 17,
           "ownerComponentId": "ui.0161",
           "tag": "div",
@@ -14666,7 +14660,7 @@
         {
           "id": "inline.ui.0163.card.6aa26321762f",
           "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 407,
+          "line": 420,
           "column": 17,
           "ownerComponentId": "ui.0163",
           "tag": "EmptyState",
@@ -14981,65 +14975,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.06014e27ad84",
+          "id": "inline.ui.0138.field.157ca45f3c9e",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 355,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0138.field.5e03e415187d",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 442,
-          "column": 19,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0138.field.6cbf6f1811bc",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 557,
-          "column": 19,
-          "ownerComponentId": "ui.0138",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.field.7dcd1fa55220",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 504,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.field.8bdd4c9e72b5",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 523,
+          "line": 628,
           "column": 21,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -15051,37 +14989,23 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.e515c8e563b4",
+          "id": "inline.ui.0138.field.255287ce8db9",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 380,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0138.field.e91bb31a1f0e",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 463,
+          "line": 647,
           "column": 19,
           "ownerComponentId": "ui.0138",
-          "tag": "input",
+          "tag": "select",
           "staticClassTokens": [
-            "input",
-            "input-bordered",
+            "select",
+            "select-bordered",
             "w-full"
           ],
-          "dynamicClasses": true
+          "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.eaeeb3cf74fd",
+          "id": "inline.ui.0138.field.abb142a94892",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 487,
+          "line": 573,
           "column": 17,
           "ownerComponentId": "ui.0138",
           "tag": "textarea",
@@ -15094,9 +15018,37 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.f77935e49433",
+          "id": "inline.ui.0138.field.aee483a6970d",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 409,
+          "line": 464,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.b8d6190bb88b",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 439,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.c89317d87b6f",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 493,
           "column": 19,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -15112,9 +15064,51 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.fe9d7a86dd1a",
+          "id": "inline.ui.0138.field.d375fb5ba4a9",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 537,
+          "line": 548,
+          "column": 19,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.d75a6e63eca1",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 590,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.field.ec01c2029bc9",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 526,
+          "column": 19,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.fbbb293c8683",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 614,
           "column": 21,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -15346,71 +15340,6 @@
             "p-0"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.menu.1fdbd1ec99ad",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 217,
-          "column": 25,
-          "ownerComponentId": "ui.0141",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-end",
-            "sm:hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.menu.d97e081f8535",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 226,
-          "column": 29,
-          "ownerComponentId": "ui.0141",
-          "tag": "ul",
-          "staticClassTokens": [
-            "bg-base-200",
-            "dropdown-content",
-            "menu",
-            "p-2",
-            "rounded-box",
-            "shadow-lg",
-            "w-52",
-            "z-10"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.menu.a5e6be9e8a5e",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 402,
-          "column": 21,
-          "ownerComponentId": "ui.0142",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-end"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.menu.fe84b02a8eab",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 410,
-          "column": 25,
-          "ownerComponentId": "ui.0142",
-          "tag": "ul",
-          "staticClassTokens": [
-            "bg-base-200",
-            "dropdown-content",
-            "menu",
-            "p-2",
-            "rounded-box",
-            "shadow-lg",
-            "w-44",
-            "z-10"
-          ],
-          "dynamicClasses": false
         }
       ]
     },
@@ -15418,7 +15347,7 @@
       "family": "modal",
       "occurrences": [
         {
-          "id": "inline.ui.0055.modal.ff314e606b5a",
+          "id": "inline.ui.0055.modal.4fdf19705a56",
           "source": "src/components/Modal.tsx",
           "line": 87,
           "column": 5,
@@ -15426,7 +15355,8 @@
           "tag": "dialog",
           "staticClassTokens": [
             "modal",
-            "modal-open"
+            "modal-open",
+            "z-[10000]"
           ],
           "dynamicClasses": true
         },
