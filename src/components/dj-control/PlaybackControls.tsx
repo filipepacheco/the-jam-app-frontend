@@ -83,23 +83,23 @@ export function PlaybackControls({
       )}
 
       {/* Transport row */}
-      <div className="flex items-center gap-2">
+      <div className="grid grid-cols-[minmax(2.75rem,1fr)_minmax(0,2fr)_minmax(2.75rem,1fr)] items-center gap-2">
         <Action
           onClick={() => { void handleAction(onPrevious, 'previous') }}
           variant="secondary"
           {...actionState('previous', prevDisabled)}
-          className="flex-1"
+          className="min-w-0 px-2"
           aria-label={t('dj_control.actions.previous_tooltip', 'Anterior')}
         >
           <Action.Icon><SkipBack className="size-4" /></Action.Icon>
-          <Action.Label className="hidden sm:inline">{t('dj_control.actions.previous', 'Anterior')}</Action.Label>
+          <Action.Label className="hidden sm:inline lg:hidden 2xl:inline">{t('dj_control.actions.previous', 'Anterior')}</Action.Label>
         </Action>
 
         <Action
           onClick={() => { void handleAction(centerButton.action, 'center') }}
           variant={centerButton.variant}
           {...actionState('center', centerDisabled)}
-          className="flex-[2]"
+          className="min-w-0 px-2"
         >
           <Action.Icon><centerButton.Icon className="size-5" /></Action.Icon>
           <Action.Label>{centerButton.label}</Action.Label>
@@ -109,10 +109,10 @@ export function PlaybackControls({
           onClick={() => { void handleAction(onNext, 'next') }}
           variant="primary"
           {...actionState('next', nextDisabled)}
-          className="flex-1"
+          className="min-w-0 px-2"
           aria-label={t('dj_control.actions.next_tooltip', 'Proxima')}
         >
-          <Action.Label className="hidden sm:inline">{t('dj_control.actions.next', 'Proxima')}</Action.Label>
+          <Action.Label className="hidden sm:inline lg:hidden 2xl:inline">{t('dj_control.actions.next', 'Proxima')}</Action.Label>
           <Action.Icon><SkipForward className="size-4" /></Action.Icon>
         </Action>
       </div>

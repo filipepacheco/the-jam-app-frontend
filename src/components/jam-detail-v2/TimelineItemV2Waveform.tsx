@@ -39,7 +39,7 @@ export function TimelineItemV2Waveform({
 
   const userRegistered = user?.id
     ? schedule.registrations?.some(
-        (reg: RegistrationResponseDto) => reg.musician?.id === user.id
+        (reg: RegistrationResponseDto) => reg.musicianId === user.id || reg.musician?.id === user.id
       )
     : false
 
@@ -84,6 +84,7 @@ export function TimelineItemV2Waveform({
 
   // Check if schedule is ready to play (all musician slots filled)
   const isReadyToPlay = !isCompleted && !isInProgress && !isSuggested && hasCoreBand(schedule)
+  const isExpandable = isCompleted
 
   // Override card styling for ready-to-play songs
   const finalBg = isReadyToPlay ? 'bg-success/8' : bgClasses
@@ -105,19 +106,16 @@ export function TimelineItemV2Waveform({
   }, [isCompleted, isInProgress, isSuggested, isReadyToPlay, t])
 
   return (
-    /* Documented exception: the whole card keeps role="button" so that a tap
-       anywhere expands the performance. data-display.md asks cards not to
-       manufacture button semantics, but removing the click-to-expand behaviour
-       is a product change, not a migration. See
-       docs/design-system/jam-music-migration.md. */
+    /* Only completed Performances collapse. Other cards must not advertise an
+       expand action when every detail is already visible. */
     <div
-      role="button"
-      tabIndex={0}
-      className={`card w-full ${finalBg} ${finalBorder} transition-shadow duration-300 cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none text-left ${isInProgress && !prefersReducedMotion ? 'animate-breathe-glow' : ''}`}
-      onClick={handleCardClick}
-      onKeyDown={handleCardKeyDown}
-      aria-expanded={isExpanded}
-      aria-label={`${schedule.music?.title} by ${schedule.music?.artist}. ${status.text}`}
+      role={isExpandable ? 'button' : undefined}
+      tabIndex={isExpandable ? 0 : undefined}
+      className={`card w-full ${finalBg} ${finalBorder} transition-shadow duration-300 outline-none text-left ${isExpandable ? 'cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2' : ''} ${isInProgress && !prefersReducedMotion ? 'animate-breathe-glow' : ''}`}
+      onClick={isExpandable ? handleCardClick : undefined}
+      onKeyDown={isExpandable ? handleCardKeyDown : undefined}
+      aria-expanded={isExpandable ? isExpanded : undefined}
+      aria-label={isExpandable ? `${schedule.music?.title} by ${schedule.music?.artist}. ${status.text}` : undefined}
     >
       <div className="card-body p-3 overflow-hidden">
 
@@ -135,7 +133,9 @@ export function TimelineItemV2Waveform({
             </h3>
             <p className="ds-wrap-user-content flex items-center gap-1 text-sm text-base-content/70">
               {schedule.music?.artist}
-              <ChevronDown className={`size-3 text-base-content/60 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+              {isExpandable && (
+                <ChevronDown className={`size-3 text-base-content/60 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} aria-hidden="true" />
+              )}
             </p>
           </div>
           {/* Status + meta - right column */}
@@ -144,14 +144,8 @@ export function TimelineItemV2Waveform({
                 <span className={`${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse will-change-transform' : ''}`} aria-hidden="true">{status.icon}</span>
                 <span className="whitespace-nowrap"> {status.text}</span>
             </div>
-              <div className="flex items-center justify-end gap-2">
-            {schedule.registrations && schedule.registrations.length > 0 && (
-              <p className="text-xs sm:text-sm text-base-content/70 ">
-                {schedule.registrations.length} {schedule.registrations.length === 1 ? t('jams.info.musician') : t('jams.info.musicians')}
-                {isCompleted && <span className="text-[10px] ml-0.5" aria-hidden="true">{isExpanded ? '▲' : '▼'}</span>}
-              </p>
-            )}
-            <span onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-end">
+            <span onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
                 <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
             </span>
               </div>

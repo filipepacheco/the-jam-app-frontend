@@ -11,7 +11,7 @@
  * card's distance-legible type scale (`text-5xl` to `text-8xl`).
  */
 
-import {motion} from 'framer-motion'
+import {AnimatePresence, motion} from 'framer-motion'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useReducedMotion} from '../../hooks'
@@ -22,7 +22,7 @@ import {formatDuration} from '../../lib/formatters'
 import type {DashboardSongDto} from '../../types/api.types'
 
 interface CurrentSongCardProps {
-  song: DashboardSongDto
+  song: DashboardSongDto | null
 }
 
 // Animation configurations for optimal performance
@@ -54,43 +54,68 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
 
   return (
     <motion.div
-      key={`current-${song.id}`}
-      {...CARD_ENTRY_ANIMATION}
+      key={`current-${song?.id ?? 'waiting'}`}
+      initial={prefersReducedMotion ? false : CARD_ENTRY_ANIMATION.initial}
+      animate={CARD_ENTRY_ANIMATION.animate}
       transition={transition}
       className="mb-12"
     >
       <motion.div
-        className="bg-base-200/80 border border-primary/20 rounded-2xl p-8 md:p-12"
+        className="bg-primary/15 border-2 border-primary/40 rounded-2xl p-8 md:p-12"
         animate={prefersReducedMotion ? {} : CARD_PULSE_ANIMATION}
         transition={pulseTransition}
       >
         <p className="text-primary text-sm md:text-lg font-semibold mb-4">
           {t('publicDashboard.nowPlaying', 'Now Playing')}
         </p>
-        <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 ds-wrap-user-content">{song.title}</h2>
-        <WaveformVisualizer className="my-4" />
-        <p className="md:text-3xl text-base-content/80 mb-2 ds-wrap-user-content">
-          {t('publicDashboard.by', 'by')} {song.artist}
-        </p>
-        {song.duration && (
-          <p className="text-lg md:text-xl text-base-content/70 mb-8">
-            <span aria-hidden="true">⏱️</span> {formatDuration(song.duration)}
-          </p>
-        )}
-
-        {song.musicians && song.musicians.length > 0 ? (
-          <div className="mt-8">
-            <p className="text-lg md:text-2xl font-bold text-base-content mb-6">
-              {t('publicDashboard.currentMusicians', 'Current Musicians')}
+        {song ? (
+          <>
+            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 ds-wrap-user-content">{song.title}</h2>
+            <WaveformVisualizer className="my-4" />
+            <p className="md:text-3xl text-base-content/80 mb-2 ds-wrap-user-content">
+              {t('publicDashboard.by', 'by')} {song.artist}
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {Object.entries(groupMusiciansByInstrument(song.musicians)).map(([instrument, musicians]) => (
-                <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="lg" />
-              ))}
-            </div>
-          </div>
+            {song.duration && (
+              <p className="text-lg md:text-xl text-base-content/70 mb-8">
+                <span aria-hidden="true">⏱️</span> {formatDuration(song.duration)}
+              </p>
+            )}
+
+            {song.musicians && song.musicians.length > 0 ? (
+              <div className="mt-8">
+                <p className="text-lg md:text-2xl font-bold text-base-content mb-6">
+                  {t('publicDashboard.currentMusicians', 'Current Musicians')}
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <AnimatePresence initial={false} mode="popLayout">
+                    {Object.entries(groupMusiciansByInstrument(song.musicians)).map(([instrument, musicians]) => (
+                      <motion.div
+                        key={`${instrument}:${musicians.map(({id}) => id).join(',')}`}
+                        layout={!prefersReducedMotion}
+                        initial={prefersReducedMotion ? false : {opacity: 0, y: 8}}
+                        animate={{opacity: 1, y: 0}}
+                        exit={prefersReducedMotion ? undefined : {opacity: 0, y: -8}}
+                        transition={transition}
+                      >
+                        <InstrumentGroup instrument={instrument} musicians={musicians} size="lg" />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
+              </div>
+            ) : (
+              <p className="text-base-content/70 text-lg">{t('publicDashboard.noMusicians', 'No musicians registered yet')}</p>
+            )}
+          </>
         ) : (
-          <p className="text-base-content/70 text-lg">{t('publicDashboard.noMusicians', 'No musicians registered yet')}</p>
+          <div className="py-6 md:py-10">
+            <h2 className="text-4xl font-black text-base-content md:text-6xl">
+              {t('publicDashboard.waitingForPerformance')}
+            </h2>
+            <p className="mt-4 text-lg text-base-content/70 md:text-2xl">
+              {t('publicDashboard.waitingForPerformanceHelp')}
+            </p>
+          </div>
         )}
       </motion.div>
     </motion.div>

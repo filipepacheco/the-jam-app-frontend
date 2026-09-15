@@ -14,7 +14,6 @@ import {
     DashboardControlsPanel,
     NextSongCard,
     OfflineBanner,
-    StartingSoonCard,
     CarouselDashboard
 } from '../components/publicDashboard'
 
@@ -26,32 +25,55 @@ import {useConfettiOnSongChange} from '../hooks'
 import {useFullscreen} from '../hooks'
 import {useOfflineQueue} from '../hooks'
 import {useDashboardLayout} from '../hooks'
-import {Alert} from '../components'
+import {Action, Alert} from '../components'
 import {useTranslation} from 'react-i18next'
 import type {LiveDashboardResponseDto} from '../types/api.types'
+import type {DashboardLayout} from '../hooks/useDashboardLayout'
 
-export function PublicDashboardPage() {
+export type PublicDashboardViewState =
+  | {status: 'loading'}
+  | {status: 'error'; message: string}
+  | {status: 'stale'; data: LiveDashboardResponseDto; message: string}
+  | {status: 'loaded'; data: LiveDashboardResponseDto}
+
+interface PublicDashboardPageProps {
+  viewState?: PublicDashboardViewState
+  onRetry?: () => void | Promise<void>
+  layoutOverride?: DashboardLayout
+}
+
+export function PublicDashboardPage({viewState, onRetry, layoutOverride}: PublicDashboardPageProps = {}) {
   const { t } = useTranslation()
   const { jamId } = useParams<{ jamId: string }>()
   const { currentLang, changeLanguage } = useAppLanguage()
   const { isOfflineMode } = useOfflineQueue()
 
   // Layout toggle
-  const { layout, setLayout, carouselIntervalMs, setCarouselIntervalMs } = useDashboardLayout()
+  const dashboardLayout = useDashboardLayout()
+  const layout = layoutOverride ?? dashboardLayout.layout
+  const {setLayout, carouselIntervalMs, setCarouselIntervalMs} = dashboardLayout
 
   // Polling interval (ms) - default 5s, presets available
   const [pollingMs, setPollingMs] = useState<number>(5000)
 
   // Fetch live dashboard data with SWR
-  const swrKey = jamId ? `/jams/${jamId}/live/dashboard` : null
+  const swrKey = !viewState && jamId ? `/jams/${jamId}/live/dashboard` : null
   const {
-    data: dashboardData,
-    error,
-    isLoading,
+    data: fetchedDashboardData,
+    error: fetchError,
+    isLoading: fetchLoading,
+    mutate,
   } = useSWR<LiveDashboardResponseDto>(swrKey, {
     ...SWR_DEFAULTS,
     refreshInterval: pollingMs,
   })
+  const dashboardData = viewState?.status === 'loaded' || viewState?.status === 'stale'
+    ? viewState.data
+    : fetchedDashboardData
+  const error = viewState?.status === 'error' || viewState?.status === 'stale'
+    ? new Error(viewState.message)
+    : fetchError
+  const isLoading = viewState?.status === 'loading' || (!viewState && fetchLoading)
 
   // Extract fields from response
   const jamName = dashboardData?.jamName ?? null
@@ -68,10 +90,7 @@ export function PublicDashboardPage() {
   )
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef)
 
-  // When jam hasn't started, StartingSoonCard shows nextSongs[0],
-  // so NextSongCard should show nextSongs[1] to avoid duplicate
-  const isNotStarted = !currentSong
-  const nextSongToShow = isNotStarted ? nextSongs[1] : nextSongs[0]
+  const nextSongToShow = nextSongs[0]
 
   // Build ticker text for carousel header
   const tickerText = (() => {
@@ -89,7 +108,13 @@ export function PublicDashboardPage() {
   // Show loading state
   if (isLoading && !currentSong) {
     return (
-      <div className="min-h-screen bg-base-300 text-base-content ds-shared-display">
+      <div
+        className="min-h-screen bg-base-300 text-base-content ds-shared-display"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <span className="sr-only">{t('publicDashboard.loading', 'Loading dashboard')}</span>
         <div className="pt-20 pb-8 px-4 md:px-8">
           <div className="max-w-6xl mx-auto animate-pulse">
             {/* Now Playing skeleton */}
@@ -116,10 +141,24 @@ export function PublicDashboardPage() {
   }
 
   // Show error state
-  if (error) {
+  // Keep the last usable dashboard visible during a transient polling failure;
+  // the offline/stale banner communicates that recovery is in progress.
+  if (error && !dashboardData) {
     return (
       <div className="min-h-screen bg-base-100 flex items-center justify-center p-4 ds-shared-display">
-        <Alert type="error" message={error.message} title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')} />
+        <Alert
+          type="error"
+          message={error.message}
+          title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')}
+          action={(
+            <Action
+              variant="quiet"
+              onClick={() => onRetry ? void onRetry() : void mutate()}
+            >
+              {t('common.try_again')}
+            </Action>
+          )}
+        />
       </div>
     )
   }
@@ -135,7 +174,12 @@ export function PublicDashboardPage() {
       </Suspense>
 
       {/* Offline Indicator */}
-      <OfflineBanner visible={isOfflineMode} message={t('publicDashboard.offlineIndicator', 'You are offline - showing cached data')} />
+      <OfflineBanner
+        visible={isOfflineMode || Boolean(error)}
+        message={isOfflineMode
+          ? t('publicDashboard.offlineIndicator', 'You are offline - showing cached data')
+          : t('publicDashboard.staleIndicator', 'Updates paused - showing the last known Jam state')}
+      />
 
       {/* Header with controls-panel toggle and fullscreen button */}
       <Header
@@ -177,7 +221,8 @@ export function PublicDashboardPage() {
         <>
           <div className="relative pt-20 pb-8 px-4 md:px-8 z-10">
             <div className="max-w-6xl mx-auto">
-              {/* Current Song / Starting Soon Section */}
+              {/* Now Playing stays visible while the Jam waits for a current
+                  Performance. The next Performance remains a separate region. */}
               {jamStatus === 'FINISHED' ? (
                 <div className="mb-12 text-center">
                   <div className="bg-base-200/80 border border-base-300 rounded-2xl p-8 md:p-12">
@@ -186,10 +231,8 @@ export function PublicDashboardPage() {
                     <p className="text-lg md:text-2xl text-base-content/70">{t('publicDashboard.thankYou', 'Thanks for jamming with us!')}</p>
                   </div>
                 </div>
-              ) : currentSong ? (
-                <CurrentSongCard song={currentSong} />
               ) : (
-                <StartingSoonCard song={nextSongs[0] ?? null} />
+                <CurrentSongCard song={currentSong} />
               )}
 
               {/* Next Song Section - only if there's a different song to show */}

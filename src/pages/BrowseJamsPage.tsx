@@ -12,13 +12,29 @@ import {SITE_URL} from '../lib/api'
 import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
 import {SEO} from '../components/SEO'
-import type {JamStatus} from '../types/api.types'
+import type {JamResponseDto, JamStatus} from '../types/api.types'
 
 type DateSortOption = 'newest' | 'oldest' | 'upcoming'
 
-export function BrowseJamsPage() {
+export type BrowseJamsViewState =
+  | {status: 'loading'}
+  | {status: 'loaded'; data: readonly JamResponseDto[]}
+  | {status: 'refreshing'; data: readonly JamResponseDto[]}
+  | {status: 'error'; message: string; data?: readonly JamResponseDto[]}
+
+interface BrowseJamsPageProps {
+  viewState?: BrowseJamsViewState
+  onRetry?: () => void | Promise<void>
+}
+
+export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
   const { t } = useTranslation()
-  const { data: jams, error, isLoading, mutate } = useSWR('/jams')
+  const swrKey = viewState ? null : '/jams'
+  const {data: fetchedJams, error: fetchError, isLoading: fetchLoading, isValidating, mutate} = useSWR<JamResponseDto[]>(swrKey)
+  const jams = viewState && 'data' in viewState ? [...(viewState.data ?? [])] : fetchedJams
+  const error = viewState?.status === 'error' ? new Error(viewState.message) : fetchError
+  const isLoading = viewState?.status === 'loading' || (!viewState && fetchLoading)
+  const isRefreshing = viewState?.status === 'refreshing' || (!viewState && isValidating && Boolean(fetchedJams))
 
 
   // Filter state
@@ -223,7 +239,7 @@ export function BrowseJamsPage() {
         </div>
 
         {/* Loading State */}
-        {isLoading && (
+        {isLoading && !jams?.length && (
           <div>
             <LoadingState label={t('jams.browse.loading')} className="mb-8" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
@@ -239,15 +255,19 @@ export function BrowseJamsPage() {
           <ErrorState
             title={t('jams.browse.error_title')}
             description={typeof error === 'string' ? error : t('jams.browse.error_description')}
-            action={{ label: t('jams.browse.retry'), onClick: () => void mutate() }}
+            action={{label: t('jams.browse.retry'), onClick: () => onRetry ? void onRetry() : void mutate()}}
           />
         )}
 
+        {isRefreshing && (
+          <LoadingState label={t('jams.browse.loading')} className="mb-4" />
+        )}
+
         {/* Jam Sections */}
-        {!isLoading && !error && (
+        {!isLoading && (!error || Boolean(jams?.length)) && (
           <>
             {/* Current Jams Section */}
-            {showCurrentSection && (
+            {visibleCount > 0 && showCurrentSection && (
               <div className="mb-6 sm:mb-8">
                 <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-base-content">
                   {t('jams.browse.section_current')}
@@ -266,7 +286,7 @@ export function BrowseJamsPage() {
             )}
 
             {/* Past Jams Section - Collapsible */}
-            {showPastSection && (
+            {visibleCount > 0 && showPastSection && (
               <div>
                 {/* Documented exception: this toggle stays hand-rolled. Disclosure
                     renders native <details>/<summary>, which does not set
@@ -324,4 +344,3 @@ export function BrowseJamsPage() {
     </div>
   )
 }
-

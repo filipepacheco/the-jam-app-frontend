@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { validatePrivateVisualPolicy } from '../../scripts/private-visual/policy.ts'
 
 const privateWorkflow = `
+if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'architecture-track-gate') || contains(github.event.pull_request.labels.*.name, 'screen-refinement-gate')
 container:
   image: mcr.microsoft.com/playwright:v1.55.1-noble
   options: --ipc=host
@@ -20,6 +21,10 @@ env:
   run: npm run workbench:verify-build
 `
 
+const componentCatalogueWorkflow = `
+if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'architecture-track-gate') || contains(github.event.pull_request.labels.*.name, 'screen-refinement-gate')
+`
+
 const privateScripts = {
   'visual:privacy': 'tsx scripts/private-visual/cli.ts --privacy',
   'visual:compare': 'tsx scripts/private-visual/cli.ts --compare',
@@ -35,6 +40,44 @@ describe('private visual policy', () => {
       workflow: privateWorkflow,
       gitignore: 'private-visual-baselines/actual/\nprivate-visual-baselines/diff/\nprivate-visual-baselines/failures/\nprivate-visual-baselines/.runtime/\n',
     })).toEqual([])
+  })
+
+  it('requires the screen refinement gate in the catalogue and private workbench workflows', () => {
+    const workflows = [
+      { path: '.github/workflows/private-workbench.yml', contents: privateWorkflow },
+      { path: '.github/workflows/component-catalogue.yml', contents: componentCatalogueWorkflow },
+    ]
+
+    expect(validatePrivateVisualPolicy({
+      packageJson: { scripts: privateScripts },
+      workflow: privateWorkflow,
+      workflows,
+      gitignore: 'private-visual-baselines/actual/\nprivate-visual-baselines/diff/\nprivate-visual-baselines/failures/\nprivate-visual-baselines/.runtime/\n',
+    })).toEqual([])
+
+    const withoutScreenRefinementGate = (workflow: string) =>
+      workflow.replace(" || contains(github.event.pull_request.labels.*.name, 'screen-refinement-gate')", '')
+
+    const diagnostics = validatePrivateVisualPolicy({
+      packageJson: { scripts: privateScripts },
+      workflow: withoutScreenRefinementGate(privateWorkflow),
+      workflows: [
+        {
+          path: '.github/workflows/private-workbench.yml',
+          contents: withoutScreenRefinementGate(privateWorkflow),
+        },
+        {
+          path: '.github/workflows/component-catalogue.yml',
+          contents: withoutScreenRefinementGate(componentCatalogueWorkflow),
+        },
+      ],
+      gitignore: 'private-visual-baselines/actual/\nprivate-visual-baselines/diff/\nprivate-visual-baselines/failures/\nprivate-visual-baselines/.runtime/\n',
+    })
+
+    expect(diagnostics).toEqual(expect.arrayContaining([
+      'screen refinement gate requires "screen-refinement-gate" in ".github/workflows/private-workbench.yml"',
+      'screen refinement gate requires "screen-refinement-gate" in ".github/workflows/component-catalogue.yml"',
+    ]))
   })
 
   it('rejects public visual services, update mode in CI, upload steps, and unignored evidence', () => {

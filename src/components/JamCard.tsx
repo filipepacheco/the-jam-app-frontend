@@ -10,7 +10,7 @@ import {useTranslation} from 'react-i18next'
 import {safeT} from '../lib/i18nUtils'
 import {getJamStatusLabel, getJamStatusTone} from '../lib/statusUtils'
 import {getJamPath, getJamDashboardPath} from '../utils/jamUrl'
-import {Calendar, Music, ExternalLink, Radio} from 'lucide-react'
+import {CalendarClock, Music, ExternalLink, Radio} from 'lucide-react'
 import {Badge} from './data-display'
 
 interface JamCardProps {
@@ -20,13 +20,13 @@ interface JamCardProps {
 /**
  * Format ISO date string to readable format using current locale
  */
-function formatDate(isoString: string, locale?: string): string {
+function formatDateTime(isoString: string, locale?: string): string | null {
   const date = new Date(isoString)
-  return date.toLocaleDateString(locale || navigator.language, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  if (Number.isNaN(date.getTime())) return null
+  return new Intl.DateTimeFormat(locale || navigator.language, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date)
 }
 
 /**
@@ -35,26 +35,32 @@ function formatDate(isoString: string, locale?: string): string {
 export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
   const { t, i18n } = useTranslation()
   const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
+  const formattedDate = jam.date ? formatDateTime(jam.date, i18n.language) : null
 
 
   return (
-    <div className="card bg-base-200 shadow-lg hover:shadow-xl transition-shadow">
+    <article className="card relative bg-base-200 shadow-lg hover:shadow-xl transition-shadow">
       <div className="card-body p-3 sm:p-6">
         {/* Header: Name + Status Badge */}
         <div className="flex justify-between items-center gap-2">
-          <h3 className="card-title ds-type-ui ds-wrap-user-content min-w-0">{jam.name || t('jams.no_name')}</h3>
+          <h3 className="card-title ds-type-ui ds-wrap-user-content min-w-0">
+            <Link
+              to={getJamPath(jam)}
+              className="ds-focusable after:absolute after:inset-0 after:rounded-box"
+            >
+              {jam.name || t('jams.no_name')}
+            </Link>
+          </h3>
           <Badge tone={getJamStatusTone(jam.status)} className="flex-shrink-0 font-semibold">
             {getJamStatusLabel(jam.status, t)}
           </Badge>
         </div>
 
         {/* Date */}
-        {jam.date && (
-          <p className="flex items-center gap-1.5 text-sm sm:text-base text-base-content/70">
-            <Calendar className="size-4 shrink-0" aria-hidden="true" />
-            {formatDate(jam.date, i18n.language)}
-          </p>
-        )}
+        <p className="flex items-center gap-1.5 text-sm sm:text-base text-base-content/70 tabular-nums">
+          <CalendarClock className="size-4 shrink-0" aria-hidden="true" />
+          {formattedDate ?? t('jams.date_tba')}
+        </p>
 
         {/* Description */}
         {jam.description && (
@@ -75,7 +81,7 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
             href={jam.spotifyPlaylistUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="ds-control ds-focusable flex items-center gap-1.5 text-sm text-success hover:underline mt-2"
+            className="ds-control ds-focusable relative z-10 flex items-center gap-1.5 text-sm text-success hover:underline mt-2"
             onClick={(e) => e.stopPropagation()}
           >
             <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" />
@@ -83,21 +89,16 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
           </a>
         )}
 
-        {/* Action Buttons.
-            These stay react-router <Link> elements: Action renders a native
-            <button> only, so it cannot give an href, a route transition, or the
-            browser "open in new tab" behaviour. Same exception as the external
-            Spotify anchor above. See docs/design-system/jam-music-migration.md. */}
-        <div className="card-actions justify-end gap-2 mt-4 sm:mt-6">
+        {/* The Jam-name link stretches across the card. This secondary link
+            remains above that surface so the Public Dashboard stays a distinct
+            destination with normal link behaviour. */}
+        <div className="card-actions relative z-10 justify-end gap-2 mt-4 sm:mt-6">
             <Link to={getJamDashboardPath(jam)} className="btn btn-outline ds-control ds-focusable ds-type-ui gap-1.5" title="View live dashboard">
               <Radio className="size-3.5" aria-hidden="true" />
               {t('jams.live_dashboard', 'Dashboard ao vivo')}
             </Link>
-          <Link to={getJamPath(jam)} className="btn btn-primary ds-control ds-focusable ds-type-ui">
-            {t('common.details')}
-          </Link>
         </div>
       </div>
-    </div>
+    </article>
   )
 })

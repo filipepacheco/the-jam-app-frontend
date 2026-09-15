@@ -142,12 +142,14 @@ The performance rows in `PerformanceSelectionModal.tsx` are full-width option
 cards with a multi-line layout. `Action` renders one canonical control shell and
 cannot hold that layout. The rows stay hand-rolled buttons.
 
-### 5. Clickable timeline card
+### 5. Completed Performance disclosure
 
-`TimelineItemV2Waveform.tsx` keeps `role="button"` on the whole card, so that a
-tap anywhere expands the performance. `docs/design-system/data-display.md` asks
-cards not to manufacture button semantics. To remove the click-to-expand
-behavior is a product change, not a migration.
+`TimelineItemV2Waveform.tsx` gives the whole card `role="button"` only for a
+completed Performance, because only that state hides and shows details. An
+active or upcoming Performance shows its details directly and does not expose
+a false expand affordance. This reviewed product decision narrows the earlier
+clickable-card exception while it preserves keyboard operation for the real
+disclosure.
 
 ### 6. Skeletons stay hand-rolled
 

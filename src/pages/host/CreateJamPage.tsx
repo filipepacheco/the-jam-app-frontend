@@ -9,7 +9,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import {Alert, Modal, PageAlerts, SpotifyImportModal} from '../../components'
+import {Action, Alert, ConfirmDialog, PageAlerts, SpotifyImportModal} from '../../components'
 import {ListMusic} from 'lucide-react'
 
 interface FormData {
@@ -317,12 +317,13 @@ export function CreateJamPage() {
       <div className="container mx-auto max-w-2xl">
         {/* Header */}
         <div className="mb-6">
-          <button
+          <Action
+            variant="quiet"
             onClick={() => { void navigate('/host/dashboard') }}
-            className="btn btn-ghost btn-sm mb-4"
+            className="mb-4"
           >
             ← {t('create_jam.back_to_dashboard')}
-          </button>
+          </Action>
           <h1 className="text-2xl sm:text-4xl font-bold">{title}</h1>
         </div>
 
@@ -572,42 +573,35 @@ export function CreateJamPage() {
               {/* Action Buttons */}
               <div className="divider my-1" />
               <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
-                <button
+                <Action
+                  variant="quiet"
                   type="button"
                   onClick={() => { void navigate('/host/dashboard') }}
-                  className="btn btn-ghost"
-                  disabled={loading}
+                  state={loading ? 'disabled' : 'idle'}
                 >
                   {t('create_jam.actions.cancel')}
-                </button>
+                </Action>
 
                 {mode === 'edit' && (
-                  <button
+                  <Action
+                    variant="destructive"
                     type="button"
                     onClick={() => setDeleteConfirmOpen(true)}
-                    className="btn btn-error btn-outline"
-                    disabled={loading}
+                    state={loading ? 'disabled' : 'idle'}
                   >
                     {t('create_jam.actions.delete')}
-                  </button>
+                  </Action>
                 )}
 
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <span className="loading loading-spinner loading-sm"></span>
-                      {t('create_jam.actions.saving')}
-                    </>
-                  ) : mode === 'create' ? (
-                    t('create_jam.actions.create')
-                  ) : (
-                    t('create_jam.actions.update')
-                  )}
-                </button>
+                {loading ? (
+                  <Action type="submit" state="loading" loadingLabel={t('create_jam.actions.saving')}>
+                    {t('create_jam.actions.saving')}
+                  </Action>
+                ) : (
+                  <Action type="submit">
+                    {mode === 'create' ? t('create_jam.actions.create') : t('create_jam.actions.update')}
+                  </Action>
+                )}
               </div>
             </form>
           </div>
@@ -631,33 +625,17 @@ export function CreateJamPage() {
       />
 
       {/* Delete Confirmation Modal */}
-      <Modal
+      <ConfirmDialog
         isOpen={deleteConfirmOpen}
-        onClose={() => setDeleteConfirmOpen(false)}
         title={t('create_jam.messages.confirm_delete_title')}
-        size="sm"
-        role="alertdialog"
-        footer={
-          <>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => setDeleteConfirmOpen(false)}
-            >
-              {t('common.cancel')}
-            </button>
-            <button
-              type="button"
-              className="btn btn-error"
-              onClick={() => { void handleDeleteConfirm() }}
-            >
-              {t('create_jam.actions.confirm_delete')}
-            </button>
-          </>
-        }
-      >
-        <p>{t('create_jam.messages.confirm_delete')}</p>
-      </Modal>
+        message={t('create_jam.messages.confirm_delete')}
+        confirmLabel={t('create_jam.actions.confirm_delete')}
+        cancelLabel={t('common.cancel')}
+        variant="destructive"
+        loading={loading}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteConfirmOpen(false)}
+      />
     </div>
   )
 }

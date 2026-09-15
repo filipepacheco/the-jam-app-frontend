@@ -29,3 +29,27 @@ These items are deliberately outside the behavior-preserving frontend architectu
 - Needed contract: accept query, filter, and sort parameters server-side and return totals for the filtered result set.
 - Frontend boundary: preserve current-page filtering semantics until that contract exists and remains represented explicitly in the Music library controller.
 - Complete when: the backend supports the query contract, pagination metadata reflects filtered results, the frontend delegates filtering/sorting, and multi-page integration tests pass.
+
+## `backend.automatic-registration-approval` — Jam-level automatic approval
+
+- Tracking issue: [#153](https://github.com/filipepacheco/the-jam-app-frontend/issues/153).
+- Current constraint: Jam read and update contracts do not expose an automatic-approval setting.
+- Needed contract: persist the Jam setting, authorize host updates, define its default, and apply it when a Performance Registration is created.
+- Frontend boundary: do not simulate this behavior with local state. Add the management control only after the API can return and update the authoritative value.
+- Complete when: read, update, registration-creation, authorization, migration, and end-to-end contract tests pass.
+
+## `backend.music-duplicate-identity` — Server-authoritative duplicate rejection
+
+- Tracking issue: [#154](https://github.com/filipepacheco/the-jam-app-frontend/issues/154).
+- Current constraint: a frontend check can inspect only loaded or paginated Music and cannot prevent concurrent duplicate creation.
+- Needed contract: define normalized Music identity, reject duplicates atomically, and return a stable error code plus the existing Music identity when appropriate.
+- Frontend boundary: a preflight check can improve feedback speed, but the create endpoint remains authoritative.
+- Complete when: manual and Spotify identities, normalization edge cases, and concurrent create requests have contract tests and localized frontend recovery.
+
+## `backend.music-album-artwork` — Persisted Music artwork
+
+- Tracking issue: [#155](https://github.com/filipepacheco/the-jam-app-frontend/issues/155).
+- Current constraint: Music and Performance responses do not contain persisted album artwork for Jam detail.
+- Needed contract: persist an optional artwork URL and source, return it with Music, validate remote sources, and define unavailable-image behavior.
+- Frontend boundary: retain the current media fallback; do not infer artwork from a Spotify link during Jam rendering.
+- Complete when: imported and manual Music responses, image-source validation, fallback behavior, and Jam-detail integration tests pass.

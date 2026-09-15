@@ -167,7 +167,8 @@ Closeout evidence was verified on PR #126:
 
 ## Screen Phase Handoff
 
-Screen work begins only after architecture closeout. Start with:
+Screen work begins only after architecture closeout. The detailed program is
+[`screen-refinement-frontier.md`](./screen-refinement-frontier.md). Start with:
 
 1. Live host control.
 2. Schedule management.

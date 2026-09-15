@@ -15,7 +15,7 @@ concurrency:
 jobs:
   verify:
     name: Test and build privately
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'architecture-track-gate')
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.pull_request.labels.*.name, 'architecture-track-gate') || contains(github.event.pull_request.labels.*.name, 'screen-refinement-gate')
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.55.1-noble

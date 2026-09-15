@@ -7,14 +7,29 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useAuth} from '../../hooks'
 import {musicianService} from '../../services'
-import type {MusicianLevel, MusicianResponseDto, PaginationMeta} from '../../types/api.types.ts'
+import type {MusicianLevel, MusicianResponseDto, PaginationMeta, UpdateMusicianDto} from '../../types/api.types.ts'
 import {EditMusicianModal} from '../../components/EditMusicianModal.tsx'
-import {Alert} from '../../components'
+import {Action, Alert, EmptyState, LoadingState} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Music, Search} from 'lucide-react'
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const
 const DEFAULT_PAGE_SIZE = 20
+
+export interface MusiciansPagePort {
+  list(skip: number, take: number): Promise<{data: MusicianResponseDto[]; meta: PaginationMeta}>
+  update(id: string, musician: UpdateMusicianDto): Promise<void>
+}
+
+const musiciansPagePort: MusiciansPagePort = {
+  async list(skip, take) {
+    const response = await musicianService.findAll(skip, take)
+    return {data: response.data, meta: response.meta}
+  },
+  async update(id, musician) {
+    await musicianService.update(id, musician)
+  },
+}
 
 /** Map level values to badge color variants */
 function getLevelBadgeClass(level: string | null | undefined): string {
@@ -33,7 +48,11 @@ function formatLevel(level: string | null | undefined, t: (key: string) => strin
   return t(`schedule.levels.${level}`)
 }
 
-export function MusiciansPage() {
+interface MusiciansPageProps {
+  port?: MusiciansPagePort
+}
+
+export function MusiciansPage({port = musiciansPagePort}: MusiciansPageProps = {}) {
   const { t, i18n } = useTranslation()
   const { user, isLoading: authLoading } = useAuth()
 
@@ -58,7 +77,7 @@ export function MusiciansPage() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await musicianService.findAll(pageNum * take, take)
+      const response = await port.list(pageNum * take, take)
       setMusicians(response.data)
       setMeta(response.meta)
     } catch (err: unknown) {
@@ -66,7 +85,7 @@ export function MusiciansPage() {
     } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [port])
 
   useEffect(() => {
     if (user?.isHost) {
@@ -116,7 +135,7 @@ export function MusiciansPage() {
 
   const handleUpdateMusician = useCallback(async (updatedMusician: MusicianResponseDto) => {
     try {
-      await musicianService.update(updatedMusician.id, {
+      await port.update(updatedMusician.id, {
         name: updatedMusician.name ?? undefined,
         instrument: updatedMusician.instrument ?? undefined,
         level: updatedMusician.level ?? undefined,
@@ -228,7 +247,18 @@ export function MusiciansPage() {
         </div>
 
         {/* Alerts */}
-        {error && <Alert type="error" message={error} title={t('common.error')} />}
+        {error && (
+          <Alert
+            type="error"
+            message={error}
+            title={t('common.error')}
+            action={(
+              <Action variant="quiet" onClick={() => void fetchMusicians(page, pageSize)}>
+                {t('common.try_again')}
+              </Action>
+            )}
+          />
+        )}
         {success && <Alert type="success" message={success} title={t('common.success')} />}
 
         {/* Search and Filter Bar */}
@@ -253,8 +283,10 @@ export function MusiciansPage() {
 
               {/* Level Filter */}
               <fieldset className="fieldset md:w-64">
-                <legend className="fieldset-legend">{t('jam_management.musicians.filter_label')}</legend>
+                <legend id="musicians-level-filter-label" className="fieldset-legend">{t('jam_management.musicians.filter_label')}</legend>
                 <select
+                  id="musicians-level-filter"
+                  aria-labelledby="musicians-level-filter-label"
                   className="select w-full"
                   name="level"
                   value={selectedLevel}
@@ -278,19 +310,24 @@ export function MusiciansPage() {
 
         {/* Loading State */}
         {isLoading ? (
-          <div className="flex justify-center py-12">
-            <div className="loading loading-spinner loading-lg"></div>
-          </div>
+          <LoadingState label={t('jam_management.musicians.loading')} className="my-12 justify-center" />
         ) : filteredMusicians.length === 0 ? (
-          <div className="card bg-base-200">
-            <div className="card-body text-center">
-              <p className="text-base-content/60">
-                {(meta?.total ?? 0) === 0
-                  ? t('jam_management.musicians.no_musicians')
-                  : t('jam_management.musicians.no_match')}
-              </p>
-            </div>
-          </div>
+          <EmptyState
+            kind={(meta?.total ?? 0) === 0 ? 'first-use' : 'results'}
+            title={(meta?.total ?? 0) === 0
+              ? t('jam_management.musicians.no_musicians_title')
+              : t('jam_management.musicians.no_match_title')}
+            description={(meta?.total ?? 0) === 0
+              ? t('jam_management.musicians.no_musicians')
+              : t('jam_management.musicians.no_match')}
+            action={(meta?.total ?? 0) > 0 ? {
+              label: t('jam_management.musicians.clear_filters'),
+              onClick: () => {
+                setSearchQuery('')
+                setSelectedLevel('ALL')
+              },
+            } : undefined}
+          />
         ) : (
           <>
             {/* Mobile: Card List */}
@@ -394,6 +431,7 @@ export function MusiciansPage() {
                 <div className="hidden sm:flex items-center gap-2 text-sm">
                   <select
                     className="select select-sm select-bordered"
+                    aria-label={t('music_library.pagination.page_size')}
                     value={pageSize}
                     onChange={(e) => handlePageSizeChange(Number(e.target.value))}
                   >
@@ -413,14 +451,15 @@ export function MusiciansPage() {
                         className="btn btn-sm"
                         disabled={page === 0}
                         onClick={() => setPage(p => p - 1)}
-                        aria-label={t('dj_control.previous')}
+                        aria-label={t('music_library.pagination.previous')}
                       >
-                        <ChevronLeft className="size-4" />
+                        <ChevronLeft className="size-4" aria-hidden="true" />
                       </button>
                       <div className="flex items-center gap-1 text-sm" style={{ fontVariantNumeric: 'tabular-nums' }}>
                         <input
                           type="number"
                           className="input input-sm input-bordered w-14 text-center"
+                          aria-label={t('music_library.pagination.page_number')}
                           min={1}
                           max={totalPages}
                           value={page + 1}
@@ -435,9 +474,9 @@ export function MusiciansPage() {
                         className="btn btn-sm"
                         disabled={!meta.hasMore}
                         onClick={() => setPage(p => p + 1)}
-                        aria-label={t('dj_control.next')}
+                        aria-label={t('music_library.pagination.next')}
                       >
-                        <ChevronRight className="size-4" />
+                        <ChevronRight className="size-4" aria-hidden="true" />
                       </button>
                     </div>
 
@@ -448,17 +487,17 @@ export function MusiciansPage() {
                           className="join-item btn btn-sm"
                           disabled={page === 0}
                           onClick={() => setPage(0)}
-                          aria-label={t('dj_control.previous')}
+                          aria-label={t('music_library.pagination.first')}
                         >
-                          <ChevronsLeft className="size-4" />
+                          <ChevronsLeft className="size-4" aria-hidden="true" />
                         </button>
                         <button
                           className="join-item btn btn-sm"
                           disabled={page === 0}
                           onClick={() => setPage(p => p - 1)}
-                          aria-label={t('dj_control.previous')}
+                          aria-label={t('music_library.pagination.previous')}
                         >
-                          <ChevronLeft className="size-4" />
+                          <ChevronLeft className="size-4" aria-hidden="true" />
                         </button>
                       </div>
 
@@ -466,6 +505,7 @@ export function MusiciansPage() {
                         <input
                           type="number"
                           className="input input-sm input-bordered w-16 text-center"
+                          aria-label={t('music_library.pagination.page_number')}
                           min={1}
                           max={totalPages}
                           value={page + 1}
@@ -482,17 +522,17 @@ export function MusiciansPage() {
                           className="join-item btn btn-sm"
                           disabled={!meta.hasMore}
                           onClick={() => setPage(p => p + 1)}
-                          aria-label={t('dj_control.next')}
+                          aria-label={t('music_library.pagination.next')}
                         >
-                          <ChevronRight className="size-4" />
+                          <ChevronRight className="size-4" aria-hidden="true" />
                         </button>
                         <button
                           className="join-item btn btn-sm"
                           disabled={!meta.hasMore}
                           onClick={() => setPage(totalPages - 1)}
-                          aria-label={t('dj_control.next')}
+                          aria-label={t('music_library.pagination.last')}
                         >
-                          <ChevronsRight className="size-4" />
+                          <ChevronsRight className="size-4" aria-hidden="true" />
                         </button>
                       </div>
                     </div>

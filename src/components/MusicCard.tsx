@@ -111,7 +111,7 @@ export const MusicCard = memo(function MusicCard({
               <h3 className="ds-type-ui ds-wrap-user-content font-bold">{music.title}</h3>
               <p className="ds-wrap-user-content text-sm text-base-content/70">{music.artist}</p>
             </div>
-            {music.status && <MusicStatusIndicator status={music.status} />}
+            {music.status === 'SUGGESTED' && <MusicStatusIndicator status={music.status} />}
             <div className="hidden sm:block">{metaInfo}</div>
           </div>
 

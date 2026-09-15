@@ -23,6 +23,7 @@ interface ScheduleCollapsibleCardProps {
   schedule: ScheduleResponseDto
   loading?: boolean
   isSuggested?: boolean
+  priority?: 'current' | 'queue' | 'secondary'
   defaultExpanded?: boolean
   notes?: string | null
   jamMusicId?: string
@@ -42,6 +43,7 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
   schedule,
   loading = false,
   isSuggested = false,
+  priority = 'queue',
   defaultExpanded = false,
   onStatusChange,
   onDelete,
@@ -81,22 +83,20 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
       : 'bg-warning/10'
   }
 
-  // Border styling based on status, with readiness coloring for scheduled items
-  const borderClass = schedule.status === 'IN_PROGRESS'
-    ? 'bg-warning/10'
-    : schedule.status === 'COMPLETED'
-      ? 'bg-success/10 text-base-content/60'
-      : schedule.status === 'CANCELED'
-        ? 'bg-base-200 text-base-content/60'
-        : isSuggested
-          ? 'bg-info/10'
-          : getReadinessClass()
+  // Keep the current Performance visually dominant. Suggested and completed
+  // Performances remain available without competing with the live Schedule.
+  const surfaceClass = priority === 'current'
+    ? 'border-warning bg-warning/10 shadow-sm'
+    : priority === 'secondary'
+      ? 'border-base-300/60 bg-base-200/40 text-base-content/65'
+      : getReadinessClass()
 
   return (
     <DataCard
       as="article"
       density="compact"
-      className={`overflow-hidden p-0 ${borderClass}`}
+      className={`relative overflow-visible p-0 ${surfaceClass}`}
+      data-performance-priority={priority}
     >
       {/* Collapsed row - always visible */}
       <div className="flex items-center gap-2 px-2.5 py-1.5">
@@ -146,6 +146,21 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
             />
           )}
         </button>
+
+        {!isSuggested && (
+          <div className="shrink-0" onClick={(event) => event.stopPropagation()}>
+            <ScheduleOverflowMenu
+              status={schedule.status}
+              loading={loading}
+              hasPendingRegistrations={pendingCount > 0}
+              onStatusChange={(status) => onStatusChange?.(schedule.id, status)}
+              onDelete={() => onDelete?.(schedule.id)}
+              onAddMusician={() => onAddMusician?.(schedule.id)}
+              onApproveAll={() => onApproveAllRegistrations?.(schedule.id)}
+              onEditMusic={music?.id ? () => onEditMusic?.(music.id) : undefined}
+            />
+          </div>
+        )}
 
         {isSuggested && (
           <div className="flex gap-1.5 shrink-0">
@@ -215,23 +230,6 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
                 neededVocals={music?.neededVocals}
                 neededKeys={music?.neededKeys}
               />
-
-              {/* Actions row */}
-              {!isSuggested && (
-                <div className="flex items-center gap-1 pt-1" onClick={(e) => e.stopPropagation()}>
-                  <div className="flex-1" />
-                  <ScheduleOverflowMenu
-                    status={schedule.status}
-                    loading={loading}
-                    hasPendingRegistrations={pendingCount > 0}
-                    onStatusChange={(status) => onStatusChange?.(schedule.id, status)}
-                    onDelete={() => onDelete?.(schedule.id)}
-                    onAddMusician={() => onAddMusician?.(schedule.id)}
-                    onApproveAll={() => onApproveAllRegistrations?.(schedule.id)}
-                    onEditMusic={music?.id ? () => onEditMusic?.(music.id) : undefined}
-                  />
-                </div>
-              )}
             </div>
           </motion.div>
         )}

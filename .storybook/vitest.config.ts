@@ -21,6 +21,8 @@ export default mergeConfig(
           ],
           test: {
             name: 'storybook',
+            // Keep browser resource usage deterministic on the canonical runner.
+            fileParallelism: false,
             browser: {
               enabled: true,
               provider: playwright({}),

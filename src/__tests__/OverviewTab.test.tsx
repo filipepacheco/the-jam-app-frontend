@@ -22,6 +22,17 @@ const jam: JamResponseDto = {
 }
 
 describe('OverviewTab', () => {
+    it('uses a clear primary Jam lifecycle action', () => {
+        render(
+            <MemoryRouter>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} loading={false}/>
+            </MemoryRouter>,
+        )
+
+        expect(screen.getByRole('button', {name: 'jam_management.overview.actions.start'}))
+            .toHaveAttribute('data-action-variant', 'primary')
+    })
+
     it('presents only Spotify import like the other secondary actions', () => {
         render(
             <MemoryRouter>

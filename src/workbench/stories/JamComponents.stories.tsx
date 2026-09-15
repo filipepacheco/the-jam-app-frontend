@@ -9,14 +9,19 @@ import { jamFixtures } from '../jamMusicFixtures'
 const meta = {
   title: 'Domain/Jam/Summary and actions',
   component: JamCard,
-  parameters: { a11y: { test: 'todo' } },
+  parameters: { a11y: { test: 'error' } },
   args: { jam: jamFixtures.active },
 } satisfies Meta<typeof JamCard>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-export const SummaryCard: Story = {}
+export const SummaryCard: Story = {
+  parameters: {
+    a11y: {test: 'error'},
+    designSystem: {interaction: {status: 'not-applicable', rationale: 'Static Jam summary hierarchy; navigation behavior is covered by page composition evidence.'}},
+  },
+}
 
 export const LongTranslatedSummary: Story = {
   args: { jam: jamFixtures.longContent },
@@ -24,6 +29,10 @@ export const LongTranslatedSummary: Story = {
     locale: 'es',
     theme: 'synthwave',
     viewport: { value: 'phone', isRotated: false },
+  },
+  parameters: {
+    a11y: {test: 'error'},
+    designSystem: {interaction: {status: 'not-applicable', rationale: 'Static long-content and localization resilience review.'}},
   },
 }
 
@@ -34,6 +43,10 @@ export const RegistrationContext: Story = {
     theme: 'corporate',
     viewport: { value: 'desktop', isRotated: false },
   },
+  parameters: {
+    a11y: {test: 'error'},
+    designSystem: {interaction: {status: 'not-applicable', rationale: 'Static registration context summary with no user-operated behavior.'}},
+  },
 }
 
 export const RegistrationContextWithoutSongs: Story = {
@@ -41,6 +54,10 @@ export const RegistrationContextWithoutSongs: Story = {
     <JamContextDisplay jam={{ ...jamFixtures.active, schedules: [], date: undefined }} />
   ),
   globals: { viewport: { value: 'phone', isRotated: false } },
+  parameters: {
+    a11y: {test: 'error'},
+    designSystem: {interaction: {status: 'not-applicable', rationale: 'Static no-songs context summary with no user-operated behavior.'}},
+  },
 }
 
 export const CollapsibleInteraction: Story = {
