@@ -1,6 +1,6 @@
 # Screen Refinement Frontier
 
-Status: active; last audited 2026-09-14. This plan begins after the completed
+Status: complete; human review approved 2026-09-15. This plan begins after the completed
 architecture program in
 [`architecture-improvement-plan.md`](./architecture-improvement-plan.md).
 
@@ -13,14 +13,14 @@ slice does not close the track.
 | Track | State | Integrated evidence | Remaining gate |
 | --- | --- | --- | --- |
 | 0. Frontier foundation | Complete | Both private workflows recognize `screen-refinement-gate`; the repository policy tests that path; application tests run in production CI; the screen-refinement pull-request evidence template is added. [Parent #127](https://github.com/filipepacheco/the-jam-app-frontend/issues/127) links the eight critique issues below. Contracts 1–8 were accepted on 2026-09-14 and their implementation issues are linked in the decision record. | None. |
-| 1. Live host control | Repository complete; review pending | [Critique #128](https://github.com/filipepacheco/the-jam-app-frontend/issues/128) anchors discovery. `Pages/Screen refinement/Live host control` composes the production management shell, DJ playback, and Live Queue for ready, no-current-Performance, saving, rollback, and post-save refresh-failure states. Inspection and reorder use distinct localized headings. Reorder save/cancel controls remain visible and safely disabled while saving; controller evidence covers stale-save conflict, polling reconciliation, rollback, pending-save rejection, and authoritative refresh. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun and visual decision on [#139](https://github.com/filipepacheco/the-jam-app-frontend/issues/139) and [#136](https://github.com/filipepacheco/the-jam-app-frontend/issues/136). Then merge. |
-| 2. Schedule management | Repository complete; review pending | [Critique #129](https://github.com/filipepacheco/the-jam-app-frontend/issues/129) anchors discovery. `Pages/Screen refinement/Schedule management` covers active, upcoming, suggested, completed, small-schedule, first-use, filtered-empty, phone, and host-console compositions. The add-Music action remains reachable with one to three Performances, operational groups follow the live-state hierarchy, and mutation, refresh, and partial-bulk outcomes stay attached to affected rows. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun. Then merge. |
-| 3. Music library | Repository complete; review pending | [Critique #130](https://github.com/filipepacheco/the-jam-app-frontend/issues/130) anchors discovery. `Pages/Screen refinement/Music library` covers viewer, host moderation, loading, filtered-empty, long content, pagination, empty-library, mutation feedback, confirmation, refresh failure, and recoverable query states. Separate failures retain separate retry paths, and compact pagination controls have localized accessible names. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun. Then merge. |
-| 4. Host dashboard | Repository complete; review pending | [Critique #131](https://github.com/filipepacheco/the-jam-app-frontend/issues/131) anchors discovery. `Pages/Screen refinement/Host dashboard` covers operational, long-content, phone, desktop, reduced-motion, first-Jam, initial loading, query failure/retry, category-empty, and Jam-local delete pending/failure/success states. Live Jams and their explicit Manage actions lead portfolio totals; Create Jam remains primary outside the phone overflow menu. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun. Then merge. |
-| 5. Jam detail | Repository complete; review pending | [Critique #132](https://github.com/filipepacheco/the-jam-app-frontend/issues/132) anchors discovery. `Pages/Screen refinement/Jam detail` covers loaded participation, loading, no-Performances, long content and full location disclosure, guest registration redirect, recoverable error, and not-found states through a typed deterministic route-state seam. Existing closeout stories cover Suggestion, Performance Registration, sharing, and overlay transitions. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun. Then merge. |
-| 6. Public Dashboard transitions | Repository complete; review pending | [Critique #133](https://github.com/filipepacheco/the-jam-app-frontend/issues/133) anchors discovery. `Pages/Screen refinement/Public Dashboard transitions` covers loading, recoverable error, stale data, starting-soon, live, finished, classic, carousel, venue, and reduced-motion states. A transient polling failure keeps the last known Jam and current Music visible with an accurate paused-update banner. | **Batch gate:** human Storybook approval. **Deferred:** private workbench interaction, accessibility, and visual rerun. Then merge. |
-| 7. Browse Jams hierarchy | Repository complete; review pending | [Critique #134](https://github.com/filipepacheco/the-jam-app-frontend/issues/134) anchors discovery. `Pages/Screen refinement/Browse Jams hierarchy` covers discovery, first-use, filtered-empty, initial loading, refreshing/stale data, recoverable error, phone, and desktop states. Global empty guidance no longer competes with duplicate section empties, stale results remain visible during recovery, and the navigation promise matches Jam detail participation. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun. Then merge. |
-| 8. Create Jam and Musicians | Repository complete; review pending | [Critique #135](https://github.com/filipepacheco/the-jam-app-frontend/issues/135) anchors discovery. `Pages/Screen refinement/Create Jam and Musicians` covers create/edit, validation focus, submit/update pending and failure, destructive confirmation, directory, pagination, distinct empty/filter states, query failure, long content, phone, and desktop. Create Jam uses canonical action and confirmation contracts; Musicians has targeted retry and localized pagination names. | **Batch gate:** human Storybook approval. **Deferred:** private workbench rerun. Then merge. |
+| 1. Live host control | Complete | [Critique #128](https://github.com/filipepacheco/the-jam-app-frontend/issues/128) anchors discovery. `Pages/Screen refinement/Live host control` composes the production management shell, DJ playback, and Live Queue for ready, no-current-Performance, saving, rollback, and post-save refresh-failure states. Inspection and reorder use distinct localized headings. Reorder save/cancel controls remain visible and safely disabled while saving; controller evidence covers stale-save conflict, polling reconciliation, rollback, pending-save rejection, and authoritative refresh. | Human Storybook review approved 2026-09-15. |
+| 2. Schedule management | Complete | [Critique #129](https://github.com/filipepacheco/the-jam-app-frontend/issues/129) anchors discovery. `Pages/Screen refinement/Schedule management` covers active, upcoming, suggested, completed, small-schedule, first-use, filtered-empty, phone, and host-console compositions. The add-Music action remains reachable with one to three Performances, operational groups follow the live-state hierarchy, and mutation, refresh, and partial-bulk outcomes stay attached to affected rows. | Human Storybook review approved 2026-09-15. |
+| 3. Music library | Complete | [Critique #130](https://github.com/filipepacheco/the-jam-app-frontend/issues/130) anchors discovery. `Pages/Screen refinement/Music library` covers viewer, host moderation, loading, filtered-empty, long content, pagination, empty-library, mutation feedback, confirmation, refresh failure, and recoverable query states. Separate failures retain separate retry paths, and compact pagination controls have localized accessible names. | Human Storybook review approved 2026-09-15. |
+| 4. Host dashboard | Complete | [Critique #131](https://github.com/filipepacheco/the-jam-app-frontend/issues/131) anchors discovery. `Pages/Screen refinement/Host dashboard` covers operational, long-content, phone, desktop, reduced-motion, first-Jam, initial loading, query failure/retry, category-empty, and Jam-local delete pending/failure/success states. Live Jams and their explicit Manage actions lead portfolio totals; Create Jam remains primary outside the phone overflow menu. | Human Storybook review approved 2026-09-15. |
+| 5. Jam detail | Complete | [Critique #132](https://github.com/filipepacheco/the-jam-app-frontend/issues/132) anchors discovery. `Pages/Screen refinement/Jam detail` covers loaded participation, loading, no-Performances, long content and full location disclosure, guest registration redirect, recoverable error, and not-found states through a typed deterministic route-state seam. Existing closeout stories cover Suggestion, Performance Registration, sharing, and overlay transitions. | Human Storybook review approved 2026-09-15. |
+| 6. Public Dashboard transitions | Complete | [Critique #133](https://github.com/filipepacheco/the-jam-app-frontend/issues/133) anchors discovery. `Pages/Screen refinement/Public Dashboard transitions` covers loading, recoverable error, stale data, starting-soon, live, finished, classic, carousel, venue, and reduced-motion states. A transient polling failure keeps the last known Jam and current Music visible with an accurate paused-update banner. | Human Storybook review approved 2026-09-15. |
+| 7. Browse Jams hierarchy | Complete | [Critique #134](https://github.com/filipepacheco/the-jam-app-frontend/issues/134) anchors discovery. `Pages/Screen refinement/Browse Jams hierarchy` covers discovery, first-use, filtered-empty, initial loading, refreshing/stale data, recoverable error, phone, and desktop states. Global empty guidance no longer competes with duplicate section empties, stale results remain visible during recovery, and the navigation promise matches Jam detail participation. | Human Storybook review approved 2026-09-15. |
+| 8. Create Jam and Musicians | Complete | [Critique #135](https://github.com/filipepacheco/the-jam-app-frontend/issues/135) anchors discovery. `Pages/Screen refinement/Create Jam and Musicians` covers create/edit, validation focus, submit/update pending and failure, destructive confirmation, directory, pagination, distinct empty/filter states, query failure, long content, phone, and desktop. Create Jam uses canonical action and confirmation contracts; Musicians has targeted retry and localized pagination names. | Human Storybook review approved 2026-09-15. |
 
 Current integrated verification: workbench typecheck, i18n smoke tests, 46
 focused application tests, four focused browser-backed correction stories,
@@ -29,8 +29,8 @@ application run, 52 files and 273 tests pass; the only failure is the expected
 deferred component-catalogue coverage entry for `ui.0197`. The private
 browser-backed workbench retains its known non-critical catalogue, locale, and
 carousel debt. Per the user decision on 2026-09-14, those catalogue/workbench
-checks and the human Storybook decisions are deferred to one review batch; they
-do not block completion of the repository implementation.
+checks remain deferred and do not block this closeout. The user completed and
+approved the Human Storybook review batch on 2026-09-15.
 
 ### Human review correction ledger
 
@@ -136,7 +136,7 @@ navigation target.
 All changed component and page states are available under
 `Human review/Screen refinement`. The new Jam-detail instrument-choice and
 Music-suggestion-source stories are included there directly. This correction
-pass remains unapproved until the user completes the batch review.
+pass was approved by the user on 2026-09-15 after reviewing all eight groups.
 
 ### Current repository evidence index
 
@@ -144,20 +144,20 @@ This index is the starting point for the remaining repository gates. Story
 names are stable workbench identifiers; linked tests are the narrow application
 checks to run before paying for an integrated gate.
 
-For the pending batch gate, all eight compositions are grouped in the Storybook
+For the completed batch gate, all eight compositions are grouped in the Storybook
 sidebar under `Human review/Screen refinement`. This keeps required human work
 separate from the general component catalogue.
 
 | Track | Direct composition | Focused application evidence | Human review |
 | --- | --- | --- | --- |
-| 1. Live host control | [`Pages/Screen refinement/Live host control`](../src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx) | [`LiveJamControlPanel.test.tsx`](../src/__tests__/LiveJamControlPanel.test.tsx), [`liveQueueController.test.ts`](../src/__tests__/liveQueueController.test.ts), and [`liveQueueAdapters.test.ts`](../src/__tests__/liveQueueAdapters.test.ts) | Pending batch review |
-| 2. Schedule management | [`Pages/Screen refinement/Schedule management`](../src/workbench/stories/ScheduleManagementPage.stories.tsx) | [`ScheduleTab.test.tsx`](../src/__tests__/ScheduleTab.test.tsx), [`hostScheduleController.test.ts`](../src/__tests__/hostScheduleController.test.ts), and [`hostScheduleAdapters.test.ts`](../src/__tests__/hostScheduleAdapters.test.ts) | Pending batch review |
-| 3. Music library | [`Pages/Screen refinement/Music library`](../src/workbench/stories/MusicLibraryPage.stories.tsx) | [`MusicPage.test.tsx`](../src/__tests__/MusicPage.test.tsx), [`musicLibraryController.test.ts`](../src/__tests__/musicLibraryController.test.ts), and [`musicLibraryModeration.test.ts`](../src/__tests__/musicLibraryModeration.test.ts) | Pending batch review |
-| 4. Host dashboard | [`Pages/Screen refinement/Host dashboard`](../src/workbench/stories/HostDashboardPage.stories.tsx) | [`HostDashboardPage.test.tsx`](../src/__tests__/HostDashboardPage.test.tsx) | Pending batch review |
-| 5. Jam detail | [`Pages/Screen refinement/Jam detail`](../src/workbench/stories/JamDetailPage.stories.tsx) | [`jamParticipationController.test.ts`](../src/__tests__/jamParticipationController.test.ts) and the participation stories in [`ArchitectureCloseout.stories.tsx`](../src/workbench/stories/ArchitectureCloseout.stories.tsx) | Pending batch review |
-| 6. Public Dashboard transitions | [`Pages/Screen refinement/Public Dashboard transitions`](../src/workbench/stories/PublicDashboardPage.stories.tsx) | [`PublicDashboardPage.test.tsx`](../src/__tests__/PublicDashboardPage.test.tsx) and [`PublicDashboardCarousel.stories.tsx`](../src/workbench/stories/PublicDashboardCarousel.stories.tsx) | Pending batch review |
-| 7. Browse Jams hierarchy | [`Pages/Screen refinement/Browse Jams hierarchy`](../src/workbench/stories/BrowseJamsPage.stories.tsx) | [`BrowseJamsPage.test.tsx`](../src/__tests__/BrowseJamsPage.test.tsx) | Pending batch review |
-| 8. Create Jam and Musicians | [`Pages/Screen refinement/Create Jam and Musicians`](../src/workbench/stories/CreateJamMusiciansPage.stories.tsx) | [`CreateJamMusiciansPage.test.tsx`](../src/__tests__/CreateJamMusiciansPage.test.tsx) | Pending batch review |
+| 1. Live host control | [`Pages/Screen refinement/Live host control`](../src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx) | [`LiveJamControlPanel.test.tsx`](../src/__tests__/LiveJamControlPanel.test.tsx), [`liveQueueController.test.ts`](../src/__tests__/liveQueueController.test.ts), and [`liveQueueAdapters.test.ts`](../src/__tests__/liveQueueAdapters.test.ts) | Approved 2026-09-15 |
+| 2. Schedule management | [`Pages/Screen refinement/Schedule management`](../src/workbench/stories/ScheduleManagementPage.stories.tsx) | [`ScheduleTab.test.tsx`](../src/__tests__/ScheduleTab.test.tsx), [`hostScheduleController.test.ts`](../src/__tests__/hostScheduleController.test.ts), and [`hostScheduleAdapters.test.ts`](../src/__tests__/hostScheduleAdapters.test.ts) | Approved 2026-09-15 |
+| 3. Music library | [`Pages/Screen refinement/Music library`](../src/workbench/stories/MusicLibraryPage.stories.tsx) | [`MusicPage.test.tsx`](../src/__tests__/MusicPage.test.tsx), [`musicLibraryController.test.ts`](../src/__tests__/musicLibraryController.test.ts), and [`musicLibraryModeration.test.ts`](../src/__tests__/musicLibraryModeration.test.ts) | Approved 2026-09-15 |
+| 4. Host dashboard | [`Pages/Screen refinement/Host dashboard`](../src/workbench/stories/HostDashboardPage.stories.tsx) | [`HostDashboardPage.test.tsx`](../src/__tests__/HostDashboardPage.test.tsx) | Approved 2026-09-15 |
+| 5. Jam detail | [`Pages/Screen refinement/Jam detail`](../src/workbench/stories/JamDetailPage.stories.tsx) | [`jamParticipationController.test.ts`](../src/__tests__/jamParticipationController.test.ts) and the participation stories in [`ArchitectureCloseout.stories.tsx`](../src/workbench/stories/ArchitectureCloseout.stories.tsx) | Approved 2026-09-15 |
+| 6. Public Dashboard transitions | [`Pages/Screen refinement/Public Dashboard transitions`](../src/workbench/stories/PublicDashboardPage.stories.tsx) | [`PublicDashboardPage.test.tsx`](../src/__tests__/PublicDashboardPage.test.tsx) and [`PublicDashboardCarousel.stories.tsx`](../src/workbench/stories/PublicDashboardCarousel.stories.tsx) | Approved 2026-09-15 |
+| 7. Browse Jams hierarchy | [`Pages/Screen refinement/Browse Jams hierarchy`](../src/workbench/stories/BrowseJamsPage.stories.tsx) | [`BrowseJamsPage.test.tsx`](../src/__tests__/BrowseJamsPage.test.tsx) | Approved 2026-09-15 |
+| 8. Create Jam and Musicians | [`Pages/Screen refinement/Create Jam and Musicians`](../src/workbench/stories/CreateJamMusiciansPage.stories.tsx) | [`CreateJamMusiciansPage.test.tsx`](../src/__tests__/CreateJamMusiciansPage.test.tsx) | Approved 2026-09-15 |
 
 The index records where evidence lives, not that every matrix cell is already
 closed. The implementation ledger above remains authoritative for gaps.
@@ -848,6 +848,14 @@ local macOS comparison output is diagnostic, not update authority.
 ## Frontier closeout
 
 After Track 8, verify the integrated product rather than the final branch alone.
+
+Closeout decision (2026-09-15): the user approved all eight Human review
+Storybook groups. The focused application, i18n, workbench typecheck, and local
+production-isolation evidence passed. The known component-catalogue and private
+workbench CI failures are non-critical and were explicitly deferred by the
+user; they are recorded debt, not silent passes. The three API/data additions
+discovered during review remain independently tracked in #153, #154, and #155
+and are not part of this frontend frontier.
 
 Required evidence:
 
