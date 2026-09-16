@@ -9,6 +9,7 @@ import {useTranslation} from 'react-i18next'
 import {translateDynamicValue} from '../lib/i18n/translationKeys'
 import {useAppLanguage} from '../hooks'
 import {formatDate} from '../lib/i18n/applicationLocale'
+import {Badge} from './data-display'
 
 interface ProfileHeaderProps {
   user: AuthUser
@@ -26,17 +27,6 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         return 'from-secondary to-secondary/80'
       default:
         return 'from-neutral to-neutral/80'
-    }
-  }
-
-  const getRoleBadgeColor = () => {
-    switch (user.role) {
-      case 'host':
-        return 'badge-secondary'
-      case 'user':
-        return 'badge-primary'
-      default:
-        return 'badge-neutral'
     }
   }
 
@@ -66,9 +56,9 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         <h1 className="card-title text-3xl font-bold">{user.name || 'Complete Your Profile'}</h1>
 
         {/* Role Badge */}
-        <div className={`badge badge-lg ${getRoleBadgeColor()} badge-outline text-white border-white mt-2`}>
+        <Badge tone="neutral" size="lg" className="mt-2">
           {getRoleLabel(user.role, t)}
-        </div>
+        </Badge>
 
         {/* Member Since */}
         <p className="text-sm opacity-90 mt-3">

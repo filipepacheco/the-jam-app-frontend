@@ -50,7 +50,15 @@ export const FilterControls: Story = {
   globals: { viewport: { value: 'phone', isRotated: false } },
 }
 
-export const MusicFields: Story = { render: () => <MusicModalFormFields formData={blankMusicForm} onChange={fn()} /> }
+export const MusicFields: Story = {
+  render: () => <MusicModalFormFields formData={blankMusicForm} onChange={fn()} />,
+  globals: { locale: 'en', viewport: { value: 'phone', isRotated: false } },
+  play: async ({ canvas }) => {
+    await expect(canvas.queryByText('Optional. A brief description of the song.')).not.toBeInTheDocument()
+    await expect(canvas.queryByText('Optional. Link to the song (e.g., YouTube, Spotify)')).not.toBeInTheDocument()
+    await expect(canvas.queryByText('Optional. Format: minutes:seconds (e.g., 4:30)')).not.toBeInTheDocument()
+  },
+}
 
 export const ProfileFields: Story = {
   render: () => <ProfileFormSection title="Musician profile" icon="🎸" isEditMode fields={[{ name: 'bio', label: 'Biography', type: 'textarea', value: 'A'.repeat(240), onChange: fn<(event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void>(), disabled: false, readOnly: false, fullWidth: true }]} />,

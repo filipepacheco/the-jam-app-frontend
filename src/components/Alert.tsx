@@ -22,11 +22,11 @@ const ALERT_ICONS: Record<AlertType, string> = {
   warning: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z',
 }
 
-const ALERT_CLASSES: Record<AlertType, string> = {
-  error: 'alert-error',
-  warning: 'alert-warning',
-  success: 'alert-success',
-  info: 'alert-info',
+const ALERT_ICON_CLASSES: Record<AlertType, string> = {
+  error: 'text-error',
+  warning: 'text-warning',
+  success: 'text-success',
+  info: 'text-info',
 }
 
 export const Alert = memo(function Alert({
@@ -51,15 +51,16 @@ export const Alert = memo(function Alert({
 
   return (
     <div
-      className={`alert ${ALERT_CLASSES[type]} flex flex-col items-stretch gap-1.5 rounded-box border border-current/15 px-3 py-2.5 sm:px-4 sm:py-3 ${className}`}
+      className={`flex flex-col items-stretch gap-1.5 border-b border-base-content/15 bg-transparent py-3 text-base-content ${className}`}
       role={type === 'error' ? 'alert' : 'status'}
       aria-live={type === 'error' ? 'assertive' : 'polite'}
       aria-atomic="true"
+      data-alert-presentation="inline"
     >
       <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="mt-0.5 size-4 shrink-0 stroke-current"
+          className={`mt-0.5 size-4 shrink-0 stroke-current ${ALERT_ICON_CLASSES[type]}`}
           fill="none"
           viewBox="0 0 24 24"
         >

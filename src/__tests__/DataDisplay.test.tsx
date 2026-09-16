@@ -24,6 +24,8 @@ describe('canonical data display primitives', () => {
     const badge = screen.getByLabelText('Approved song')
     expect(badge).toHaveClass('ds-badge', 'ds-badge--success', 'ds-badge--sm', 'ds-truncate-single')
     expect(badge).toHaveAttribute('data-display-tone', 'success')
+    expect(badge).toHaveAttribute('data-display-presentation', 'filled')
+    expect(badge.querySelector('.ds-badge__marker')).toHaveAttribute('aria-hidden', 'true')
   })
 
   it('exposes status text alongside the semantic indicator', () => {

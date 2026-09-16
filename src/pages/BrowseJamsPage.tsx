@@ -153,9 +153,9 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
         jsonLd={browseJsonLd}
       />
       {/* Hero Section */}
-      <div className="bg-primary text-primary-content">
+      <div className="border-b border-base-300 bg-base-200 text-base-content">
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
-          <div className="space-y-1">
+          <div className="space-y-1 border-l-4 border-primary pl-3 sm:pl-4">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
               {t('jams.browse.title')}
             </h1>

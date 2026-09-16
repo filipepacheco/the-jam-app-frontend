@@ -10,7 +10,7 @@ import type { ScheduleResponseDto } from '../../types/api.types'
 import { useTranslation } from 'react-i18next'
 import { Check, ChevronDown, X } from 'lucide-react'
 import { IconAction } from '../Action'
-import { DataCard } from '../data-display'
+import { Badge, DataCard } from '../data-display'
 import { InstrumentBadges } from './InstrumentBadges'
 import { NotesEditor } from './NotesEditor'
 import { ScheduleOverflowMenu } from './ScheduleOverflowMenu'
@@ -129,12 +129,14 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
 
           {/* Pending approval count - hidden on mobile */}
           {pendingCount > 0 && schedule.status !== 'COMPLETED' && schedule.status !== 'CANCELED' && (
-            <span
-              className="hidden sm:inline-flex badge badge-xs badge-outline badge-warning font-semibold shrink-0"
+            <Badge
+              tone="warning"
+              size="sm"
+              className="hidden shrink-0 sm:inline-flex"
               title={t('schedule.pending_approvals', { count: pendingCount })}
             >
               {pendingCount} {t('schedule.pending_short')}
-            </span>
+            </Badge>
           )}
 
           <StatusDot status={schedule.status} />

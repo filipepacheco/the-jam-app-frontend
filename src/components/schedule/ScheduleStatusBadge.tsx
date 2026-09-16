@@ -4,7 +4,8 @@
  */
 
 import {useTranslation} from 'react-i18next'
-import {getStatusColor, getStatusLabel, getStatusIcon} from '../../lib/schedule/statusHelpers'
+import {getStatusLabel} from '../../lib/schedule/statusHelpers'
+import {Badge, type DataDisplayTone} from '../data-display'
 
 interface ScheduleStatusBadgeProps {
   status: string | undefined
@@ -14,15 +15,16 @@ interface ScheduleStatusBadgeProps {
 export function ScheduleStatusBadge({ status, isSuggested = false }: ScheduleStatusBadgeProps) {
   const { t } = useTranslation()
 
-  const colorClass = getStatusColor(status, isSuggested)
   const label = getStatusLabel(status, isSuggested, t)
-  const icon = getStatusIcon(status, isSuggested)
+  const tone: DataDisplayTone = isSuggested
+    ? 'info'
+    : status === 'IN_PROGRESS'
+      ? 'warning'
+      : status === 'APPROVED' || status === 'COMPLETED'
+        ? 'success'
+        : status === 'CANCELED'
+          ? 'neutral'
+          : 'info'
 
-  return (
-    <div className={`badge ${colorClass}`}>
-      {icon && `${icon} `}
-      {label}
-    </div>
-  )
+  return <Badge tone={tone}>{label}</Badge>
 }
-

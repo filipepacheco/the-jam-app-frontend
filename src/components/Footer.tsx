@@ -14,13 +14,14 @@ function Footer() {
   ]
 
   return (
-    <footer className="footer footer-center bg-base-300 text-base-content p-4 sm:p-8 lg:p-10">
+    <footer className="bg-base-300 px-4 py-5 text-base-content sm:px-6 sm:py-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-2 sm:gap-3">
       {/* These are destinations, not operations, so they use NavigationLink.
           It renders a native anchor, so the href stays intact for
           modifier-click and for the server fallback, while the onClick
           handler keeps client-side routing. See
           docs/design-system/canonical-navigation.md. */}
-      <nav aria-label={t('nav.footer_navigation')} className="flex flex-wrap justify-center gap-2 sm:gap-4">
+      <nav aria-label={t('nav.footer_navigation')} className="flex flex-wrap justify-center gap-x-3 gap-y-0 sm:gap-x-4">
         {routes.map((route) => (
           <NavigationLink
             key={route.path}
@@ -36,11 +37,12 @@ function Footer() {
           {t('common.privacy_policy')}
         </NavigationLink>
       </nav>
-      <aside>
-        <p className="text-xs sm:text-sm">
+      <aside className="text-center">
+        <p className="max-w-sm text-xs leading-relaxed sm:text-sm">
           {t('common.copyright')} &copy; {new Date().getFullYear()} - {t('common.app_name')}. {t('common.all_rights_reserved')}
         </p>
       </aside>
+      </div>
     </footer>
   )
 }

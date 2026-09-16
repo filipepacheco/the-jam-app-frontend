@@ -60,6 +60,31 @@ export const MobileHostKeyboardDismissal: Story = {
     await expect(drawer).toBeInTheDocument()
     await waitFor(() => expect(page.getByRole('button', { name: /fechar menu|close menu/i })).toHaveFocus())
 
+    const drawerView = within(drawer)
+    const navigationRows = [
+      drawerView.getByRole('link', { name: /início|home/i }),
+      drawerView.getByRole('link', { name: /explorar jams|browse jams/i }),
+      drawerView.getByRole('button', { name: /feedback/i }),
+    ]
+    const iconOffsets = navigationRows.map((row) => row.querySelector('svg')?.getBoundingClientRect().left ?? -1)
+    await expect(Math.max(...iconOffsets) - Math.min(...iconOffsets)).toBeLessThan(1)
+
+    const languagePicker = page.getByRole('button', { name: /selecionar idioma|select language/i })
+    await userEvent.click(languagePicker)
+    const languageList = page.getByRole('listbox')
+    await expect(languageList).toBeVisible()
+    await expect(page.queryByRole('textbox')).not.toBeInTheDocument()
+    await userEvent.click(within(languageList).getByRole('option', { name: /english/i }))
+    await expect(drawer).not.toHaveClass('pointer-events-none')
+
+    const themePicker = page.getByRole('button', { name: /selecionar tema|select theme/i })
+    await userEvent.click(themePicker)
+    const themeList = page.getByRole('listbox')
+    await expect(themeList).toBeVisible()
+    await expect(page.queryByRole('textbox')).not.toBeInTheDocument()
+    await userEvent.click(within(themeList).getByRole('option', { name: /jam dark/i }))
+    await expect(drawer).not.toHaveClass('pointer-events-none')
+
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(trigger).toHaveFocus())
     await expect(drawer).toHaveClass('pointer-events-none')
@@ -82,10 +107,15 @@ export const DesktopUserSettings: Story = {
     const userMenu = canvas.getByRole('button', { name: /menu do usuário|user menu/i })
     await userEvent.click(userMenu)
 
+    const settingsDialog = canvas.getByRole('dialog', { name: /menu do usuário|user menu/i })
+    const languageSelect = canvas.getByRole('combobox', { name: /idioma|language/i })
     const themeSelect = canvas.getByRole('combobox', { name: /tema|theme/i })
+    await userEvent.selectOptions(languageSelect, 'en')
     await userEvent.selectOptions(themeSelect, 'synthwave')
     await waitFor(async () => {
       await expect(canvasElement.ownerDocument.documentElement.dataset.theme).toBe('synthwave')
+      await expect(userMenu).toHaveAttribute('aria-expanded', 'true')
+      await expect(settingsDialog).toBeVisible()
     })
   },
 }

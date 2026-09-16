@@ -48,3 +48,17 @@ export const ConversionAndFooter: Story = {
     await expect(canvas.getAllByRole('heading')[0]).toHaveAccessibleName(/.+/)
   },
 }
+
+export const ConversionAndFooterMobile: Story = {
+  render: () => <><CallToAction /><Footer /></>,
+  globals: {
+    locale: 'pt',
+    theme: 'jam-light',
+    reducedMotion: true,
+    viewport: { value: 'phone', isRotated: false },
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole('navigation', { name: /rodapé|footer/i })).toBeVisible()
+    await expect(canvas.getByRole('link', { name: /política de privacidade/i })).toBeVisible()
+  },
+}

@@ -7,7 +7,9 @@
 import { useCallback, useLayoutEffect, useState, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
+import { ChevronDown } from 'lucide-react'
 import { useSearchableSelect } from '../../hooks'
+import '../Field.css'
 
 interface SearchableSelectProps<T extends { id: string }> {
   /** Unique identifier for the component */
@@ -38,6 +40,8 @@ interface SearchableSelectProps<T extends { id: string }> {
   ariaLabel?: string
   /** Custom filter function */
   filterFn?: (item: T, searchTerm: string) => boolean
+  /** Whether to show a search field above the options */
+  searchable?: boolean
 }
 
 export function SearchableSelect<T extends { id: string }>({
@@ -55,6 +59,7 @@ export function SearchableSelect<T extends { id: string }>({
   name,
   ariaLabel,
   filterFn,
+  searchable = true,
 }: SearchableSelectProps<T>) {
   const { t } = useTranslation()
   const [dropdownStyle, setDropdownStyle] = useState<CSSProperties>()
@@ -128,6 +133,10 @@ export function SearchableSelect<T extends { id: string }>({
     }
   }
 
+  const activeOptionId = isOpen && filteredItems[highlightedIndex]
+    ? `${id}-option-${highlightedIndex}`
+    : undefined
+
   const handleItemClick = (item: T) => {
     selectItem(item)
   }
@@ -149,11 +158,12 @@ export function SearchableSelect<T extends { id: string }>({
         disabled={disabled || loading}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-controls={`${id}-listbox`}
+        aria-activedescendant={activeOptionId}
         aria-labelledby={ariaLabel ? undefined : `${id}-label`}
         aria-label={ariaLabel}
         className={`
-          select select-bordered w-full text-left flex items-center justify-between
-          focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+          ds-field__control ds-control ds-focusable flex w-full items-center justify-between text-left
           ${disabled || loading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
       >
@@ -173,42 +183,40 @@ export function SearchableSelect<T extends { id: string }>({
             defaultPlaceholder
           )}
         </span>
-        <svg
-          className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+        <ChevronDown
+          className="size-4 shrink-0"
           aria-hidden="true"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+        />
       </button>
 
       {/* Dropdown */}
       {isOpen && dropdownStyle && createPortal(
         <div
-          className="z-[1000] flex flex-col bg-base-100 border border-base-300 rounded-box shadow-lg overflow-hidden"
+          className="z-[10010] flex flex-col bg-base-100 border border-base-300 rounded-box shadow-lg overflow-hidden"
           role="presentation"
           style={dropdownStyle}
           onMouseDown={(event) => event.stopPropagation()}
         >
           {/* Search Input */}
-          <div className="p-2 border-b border-base-300">
-            <input
-              ref={searchInputRef}
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={defaultSearchPlaceholder}
-              className="input input-bordered input-sm w-full"
-              aria-label={defaultSearchPlaceholder}
-              autoComplete="off"
-            />
-          </div>
+          {searchable && (
+            <div className="border-b border-base-300 p-2">
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder={defaultSearchPlaceholder}
+                className="input input-bordered input-sm w-full"
+                aria-label={defaultSearchPlaceholder}
+                autoComplete="off"
+              />
+            </div>
+          )}
 
           {/* Options List */}
           <ul
             ref={listRef}
+            id={`${id}-listbox`}
             role="listbox"
             aria-labelledby={id}
             className="min-h-0 flex-1 overflow-y-auto py-1"
@@ -225,6 +233,7 @@ export function SearchableSelect<T extends { id: string }>({
                 return (
                   <li
                     key={item.id}
+                    id={`${id}-option-${index}`}
                     role="option"
                     aria-selected={isSelected}
                     onClick={() => handleItemClick(item)}

@@ -4,7 +4,7 @@
   max-inline-size: 100%;
   align-items: center;
   gap: var(--ds-space-related);
-  border: 1px solid var(--ds-border-subtle);
+  border: 1px solid transparent;
   border-radius: 999px;
   padding-inline: var(--ds-space-compact);
   font-family: var(--font-body);
@@ -22,32 +22,36 @@
 }
 
 .ds-badge--neutral {
-  background: var(--ds-surface-raised);
-  color: var(--ds-content-primary);
+  background: var(--color-neutral);
+  color: var(--color-neutral-content);
 }
 
 .ds-badge--info {
-  border-color: var(--ds-status-info);
-  background: color-mix(in oklch, var(--ds-status-info) 16%, var(--ds-surface-canvas));
-  color: var(--ds-content-primary);
+  background: var(--ds-status-info);
+  color: var(--ds-status-info-content);
 }
 
 .ds-badge--success {
-  border-color: var(--ds-status-success);
-  background: color-mix(in oklch, var(--ds-status-success) 16%, var(--ds-surface-canvas));
-  color: var(--ds-content-primary);
+  background: var(--ds-status-success);
+  color: var(--ds-status-success-content);
 }
 
 .ds-badge--warning {
-  border-color: var(--ds-status-warning);
-  background: color-mix(in oklch, var(--ds-status-warning) 20%, var(--ds-surface-canvas));
-  color: var(--ds-content-primary);
+  background: var(--ds-status-warning);
+  color: var(--ds-status-warning-content);
 }
 
 .ds-badge--danger {
-  border-color: var(--ds-status-danger);
-  background: color-mix(in oklch, var(--ds-status-danger) 16%, var(--ds-surface-canvas));
-  color: var(--ds-content-primary);
+  background: var(--ds-status-danger);
+  color: var(--ds-status-danger-content);
+}
+
+.ds-badge__marker {
+  flex: 0 0 auto;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border-radius: 999px;
+  background: currentColor;
 }
 
 .ds-badge__label { min-inline-size: 0; }
