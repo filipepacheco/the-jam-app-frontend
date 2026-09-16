@@ -7,14 +7,15 @@ import {Action, IconAction} from '../Action'
 import {Field} from '../Field'
 import {NavigationLink} from '../Navigation'
 import type {DashboardLayout} from '../../hooks'
+import type {AppLocale} from '../../lib/i18n/applicationLocale'
 
 interface DashboardControlsPanelProps {
   visible: boolean
   jamId?: string
   jamSlug?: string | null
   onClose: () => void
-  currentLang: string
-  onChangeLanguage: (lang: string) => void
+  currentLang: AppLocale
+  onChangeLanguage: (lang: AppLocale) => void
   pollingMs?: number
   onPollingChange?: (ms: number) => void
   layout?: DashboardLayout
@@ -51,8 +52,8 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
     onClose()
   }
 
-  const closePanelLabel = t('publicDashboard.closeControls', 'Close dashboard controls')
-  const layoutLabel = t('publicDashboard.layoutLabel', 'Layout')
+  const closePanelLabel = t('publicDashboard.closeControls')
+  const layoutLabel = t('publicDashboard.layoutLabel')
 
   return (
     <>
@@ -75,15 +76,15 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
         transition={transition}
         className="fixed top-16 left-0 right-0 z-40 max-h-[calc(100vh-4rem)] overflow-y-auto bg-base-200 border-b border-base-300 p-4"
         role="region"
-        aria-label={t('publicDashboard.dashboardControls', 'Dashboard controls')}
+        aria-label={t('publicDashboard.dashboardControls')}
       >
         <div className="flex flex-wrap items-center gap-4 max-w-6xl mx-auto">
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
             <NavigationLink href="/" onClick={onClose}>
-              {t('publicDashboard.backToHome', '← Back to Home')}
+              {t('publicDashboard.backToHome')}
             </NavigationLink>
             <NavigationLink href={`/jams/${jamSlug || jamId}`} onClick={onClose}>
-              {t('publicDashboard.viewDetails', 'View Full Details →')}
+              {t('publicDashboard.viewDetails')}
             </NavigationLink>
           </div>
 
@@ -100,7 +101,7 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
                     aria-pressed={layout === 'classic'}
                     onClick={() => onLayoutChange('classic')}
                   >
-                    <Action.Label>{t('publicDashboard.layoutClassic', 'Classic')}</Action.Label>
+                    <Action.Label>{t('publicDashboard.layoutClassic')}</Action.Label>
                   </Action>
                   <Action
                     variant={layout === 'carousel' ? 'primary' : 'secondary'}
@@ -108,7 +109,7 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
                     aria-pressed={layout === 'carousel'}
                     onClick={() => onLayoutChange('carousel')}
                   >
-                    <Action.Label>{t('publicDashboard.layoutCarousel', 'Carousel')}</Action.Label>
+                    <Action.Label>{t('publicDashboard.layoutCarousel')}</Action.Label>
                   </Action>
                 </div>
               </div>
@@ -117,7 +118,7 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
             {layout === 'carousel' && onCarouselIntervalChange && (
               <Field
                 id="carousel-slide-duration"
-                label={t('publicDashboard.slideDuration', 'Slide Duration')}
+                label={t('publicDashboard.slideDuration')}
               >
                 <Field.Select
                   value={carouselIntervalMs}
@@ -135,13 +136,13 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
             {onPollingChange && (
               <Field
                 id="dashboard-polling-interval"
-                label={t('publicDashboard.autoRefresh', 'Auto-refresh')}
+                label={t('publicDashboard.autoRefresh')}
               >
                 <Field.Select
                   value={pollingMs}
                   onChange={(e) => onPollingChange(Number(e.target.value))}
                 >
-                  <option value={0}>{t('publicDashboard.off', 'Off')}</option>
+                  <option value={0}>{t('publicDashboard.off')}</option>
                   <option value={5000}>5s</option>
                   <option value={10000}>10s</option>
                   <option value={30000}>30s</option>

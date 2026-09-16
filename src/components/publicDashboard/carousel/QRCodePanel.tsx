@@ -22,7 +22,7 @@ export function QRCodePanel({ jamId, slug }: QRCodePanelProps) {
           size={400}
           fgColor="#000000"
           bgColor="#ffffff"
-          aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')}
+          aria-label={t('publicDashboard.qrCodeAlt')}
         />
       </div>
 
@@ -31,7 +31,7 @@ export function QRCodePanel({ jamId, slug }: QRCodePanelProps) {
       </p>
 
       <p className="text-2xl md:text-3xl text-base-content/70">
-        {t('publicDashboard.scanToJoin', 'Scan to join')}
+        {t('publicDashboard.scanToJoin')}
       </p>
     </div>
   )

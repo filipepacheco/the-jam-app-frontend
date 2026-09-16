@@ -120,7 +120,7 @@ export function ScheduleTab({jam, onReload}: {
             const outcome = await scheduleCommands.updateNotes(jamMusicId, notes)
             reportMutationOutcome(
                 outcome,
-                t('jam_management.schedule.notes_saved', 'Notes saved'),
+                t('jam_management.schedule.notes_saved'),
                 t('errors.failed_to_execute_action'),
             )
         })()
@@ -133,7 +133,7 @@ export function ScheduleTab({jam, onReload}: {
             const outcome = await scheduleCommands.transitionPerformance(scheduleId, newStatus as PerformanceStatus)
             reportMutationOutcome(
                 outcome,
-                t('jam_management.schedule.status_updated', 'Status updated'),
+                t('jam_management.schedule.status_updated'),
                 t('errors.failed_to_execute_action'),
             )
         })()
@@ -155,7 +155,7 @@ export function ScheduleTab({jam, onReload}: {
             const outcome = await scheduleCommands.createPerformance(selectedMusicId)
             if (reportMutationOutcome(
                 outcome,
-                t('jam_management.schedule.added_success', 'Song added to schedule'),
+                t('jam_management.schedule.added_success'),
                 t('errors.failed_to_execute_action'),
             )) {
                 setShowAddModal(false)
@@ -176,7 +176,7 @@ export function ScheduleTab({jam, onReload}: {
             const outcome = await scheduleCommands.approveRegistration(registrationId)
             reportMutationOutcome(
                 outcome,
-                t('jam_management.schedule.registration_approved', 'Musician approved'),
+                t('jam_management.schedule.registration_approved'),
                 t('errors.failed_to_execute_action'),
             )
         })()
@@ -189,7 +189,7 @@ export function ScheduleTab({jam, onReload}: {
             const outcome = await scheduleCommands.approveAllRegistrations(scheduleId)
             reportMutationOutcome(
                 outcome,
-                t('schedule.all_registrations_approved', 'All musicians approved'),
+                t('schedule.all_registrations_approved'),
                 t('errors.failed_to_execute_action'),
             )
         })()
@@ -212,10 +212,10 @@ export function ScheduleTab({jam, onReload}: {
             reportMutationOutcome(
                 outcome,
                 operation === 'remove_performance'
-                    ? t('jam_management.schedule.deleted_success', 'Song removed from schedule')
-                    : t('jam_management.schedule.registration_removed', 'Registration removed'),
+                    ? t('jam_management.schedule.deleted_success')
+                    : t('jam_management.schedule.registration_removed'),
                 operation === 'remove_performance'
-                    ? t('errors.failed_to_remove')
+                    ? t('host_songs.failed_to_remove')
                     : t('errors.failed_to_execute_action'),
             )
         })()
@@ -225,8 +225,8 @@ export function ScheduleTab({jam, onReload}: {
         ? sortedSchedules.find(({id}) => id === pendingConfirmation.performanceId)
         : undefined
     const confirmationTitle = pendingConfirmation?.kind === 'remove_performance'
-        ? t('jam_management.schedule.confirm_delete_title', 'Delete song')
-        : t('jam_management.schedule.confirm_reject_title', 'Remove registration')
+        ? t('jam_management.schedule.confirm_delete_title')
+        : t('jam_management.schedule.confirm_reject_title')
     const confirmationMessage = pendingConfirmation?.kind === 'remove_performance'
         ? (confirmationPerformance?.music.title
             ? t('jam_management.schedule.confirm_delete_named', {name: confirmationPerformance.music.title})
@@ -334,12 +334,12 @@ export function ScheduleTab({jam, onReload}: {
                             <Search className="mb-3 size-4 shrink-0 text-base-content/60" aria-hidden="true" />
                             <Field
                                 id="schedule-search"
-                                label={<span className="sr-only">{t('schedule.search_placeholder', 'Search songs or musicians...')}</span>}
+                                label={<span className="sr-only">{t('schedule.search_placeholder')}</span>}
                                 className="min-w-0 flex-1"
                             >
                                 <Field.Input
                                     type="search"
-                                    placeholder={t('schedule.search_placeholder', 'Search songs or musicians...')}
+                                    placeholder={t('schedule.search_placeholder')}
                                     value={rawSearch}
                                     onChange={(e) => scheduleCommands.setSearch(e.target.value)}
                                 />
@@ -347,7 +347,7 @@ export function ScheduleTab({jam, onReload}: {
                             {rawSearch && (
                                 <IconAction
                                     variant="quiet"
-                                    label={t('common.clear_filters', 'Clear filters')}
+                                    label={t('common.clear_filters')}
                                     onClick={scheduleCommands.clearSearch}
                                 >
                                     <X className="size-4" />
@@ -371,21 +371,21 @@ export function ScheduleTab({jam, onReload}: {
                             aria-pressed={statusFilter === 'all'}
                             onClick={() => scheduleCommands.setFilter('all')}
                         >
-                            <Action.Label>{t('common.all', 'All')} ({totalCount})</Action.Label>
+                            <Action.Label>{t('common.all')} ({totalCount})</Action.Label>
                         </Action>
                         <Action
                             variant={statusFilter === 'needs_musicians' ? 'primary' : 'quiet'}
                             aria-pressed={statusFilter === 'needs_musicians'}
                             onClick={() => scheduleCommands.setFilter('needs_musicians')}
                         >
-                            <Action.Label>{t('schedule.needs_musicians_short', 'Aguardando')} ({needsCount})</Action.Label>
+                            <Action.Label>{t('schedule.needs_musicians_short')} ({needsCount})</Action.Label>
                         </Action>
                         <Action
                             variant={statusFilter === 'complete' ? 'primary' : 'quiet'}
                             aria-pressed={statusFilter === 'complete'}
                             onClick={() => scheduleCommands.setFilter('complete')}
                         >
-                            <Action.Label>{t('schedule.band_complete_short', 'Pronto')} ({completeCount})</Action.Label>
+                            <Action.Label>{t('schedule.band_complete_short')} ({completeCount})</Action.Label>
                         </Action>
                     </div>
                 </div>
@@ -403,14 +403,14 @@ export function ScheduleTab({jam, onReload}: {
                     {filteredNonSuggested.length === 0 && filteredSuggested.length === 0 && (
                         <div className="text-center py-6 space-y-2">
                             <p className="text-sm text-base-content/50">
-                                {t('common.no_results', 'No results found')}
+                                {t('common.no_results')}
                             </p>
                             {(searchQuery || statusFilter !== 'all') && (
                                 <Action
                                     variant="quiet"
                                     onClick={() => { scheduleCommands.clearSearch(); scheduleCommands.setFilter('all') }}
                                 >
-                                    <Action.Label>{t('common.clear_filters', 'Clear filters')}</Action.Label>
+                                    <Action.Label>{t('common.clear_filters')}</Action.Label>
                                 </Action>
                             )}
                         </div>
@@ -456,7 +456,7 @@ export function ScheduleTab({jam, onReload}: {
                             setSelectedScheduleForRegistration(null)
                         }
                         if (outcome.kind !== 'failure') {
-                            setSuccess(t('jam_management.schedule.musicians_registered', 'Musicians registered'))
+                            setSuccess(t('jam_management.schedule.musicians_registered'))
                         }
                         if (outcome.kind !== 'failure' || outcome.refreshRequired) void onReload()
                     }}

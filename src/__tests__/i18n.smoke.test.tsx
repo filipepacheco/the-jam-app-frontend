@@ -32,7 +32,7 @@ describe('i18n smoke', () => {
   });
 
   it.each([
-    ['pt', ['Nenhuma música', '1 música', '12 músicas']],
+    ['pt-BR', ['Nenhuma música', '1 música', '12 músicas']],
     ['en', ['No songs', '1 song', '12 songs']],
     ['es', ['No hay canciones', '1 canción', '12 canciones']],
   ] as const)('uses i18next zero, one, and many plural forms for %s', async (locale, expected) => {
@@ -41,4 +41,14 @@ describe('i18n smoke', () => {
 
     expect([0, 1, 12].map((count) => t('jams.songs_count', { count }))).toEqual(expected)
   });
+
+  it('keeps pt as an input alias without advertising pt-PT or object returns', async () => {
+    await waitForI18n()
+
+    expect(i18n.getFixedT('pt')('nav.home')).toBe(i18n.getFixedT('pt-BR')('nav.home'))
+    expect(i18n.options.supportedLngs).toEqual(expect.arrayContaining(['pt-BR', 'en', 'es', 'pt']))
+    expect(i18n.options.supportedLngs).not.toContain('pt-PT')
+    expect(i18n.options.returnObjects).toBe(false)
+    expect(i18n.hasResourceBundle('pt-PT', 'translation')).toBe(false)
+  })
 });

@@ -8,11 +8,11 @@ export function FinishedPanel() {
       <p className="text-7xl md:text-9xl mb-8" aria-hidden="true">👏</p>
 
       <h2 className="text-6xl md:text-8xl lg:text-9xl font-black mb-6 ds-wrap-user-content">
-        {t('publicDashboard.jamFinished', "That's a wrap!")}
+        {t('publicDashboard.jamFinished')}
       </h2>
 
       <p className="text-2xl md:text-4xl text-base-content/70">
-        {t('publicDashboard.thankYou', 'Thanks for jamming with us!')}
+        {t('publicDashboard.thankYou')}
       </p>
     </div>
   )

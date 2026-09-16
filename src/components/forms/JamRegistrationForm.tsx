@@ -9,6 +9,7 @@ import {Action, Field, FormSubmissionFeedback} from '../index'
 import type {JamDetails} from '../../services'
 import {useFormState} from '../../hooks'
 import {useTranslation} from 'react-i18next'
+import {translationKey} from '../../lib/i18n/translationKeys'
 
 export const MUSIC_LEVELS = ['beginner', 'intermediate', 'advanced', 'professional'] as const
 
@@ -138,7 +139,7 @@ export function JamRegistrationForm({
               <option value="">{t('schedule.choose_level')}</option>
               {MUSIC_LEVELS.map((lv) => (
                 <option key={lv} value={lv}>
-                  {t(`schedule.levels.${lv}`)}
+                  {t(translationKey('schedule.levels', lv))}
                 </option>
               ))}
             </Field.Select>

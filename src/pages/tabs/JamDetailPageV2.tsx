@@ -11,6 +11,8 @@ import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
+import {translationKey} from '../../lib/i18n/translationKeys'
+import {formatDateTime, normalizeLocale} from '../../lib/i18n/applicationLocale'
 import {
     Action,
     DropdownMenu,
@@ -235,7 +237,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
         {
             '@type': 'MusicEvent',
             name: jam.name,
-            description: jam.description || t('seo.jam.fallback_description', { defaultValue: 'Jam session on Jam App. Join as a musician or watch live.' }),
+            description: jam.description || t('seo.jam.fallback_description'),
             ...(jam.date && { startDate: jam.date }),
             location: jam.location
                 ? { '@type': 'Place', name: jam.location }
@@ -323,7 +325,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                                     className="ds-action ds-control ds-focusable ds-action--quiet ds-action--idle"
                                 >
                                     <SpotifyLogo />
-                                    {t('jams.listen_on_spotify', 'Playlist no Spotify')}
+                                    {t('jams.listen_on_spotify')}
                                 </a>
                             )}
                             <Action
@@ -362,13 +364,13 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         {jam.date && (
                             <span className="inline-flex min-h-11 items-center gap-1.5">
                                 <Calendar className="size-4" aria-hidden="true" />
-                                {new Intl.DateTimeFormat(i18n.language || 'pt-BR', {
+                                {formatDateTime(jam.date, normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR', {
                                     month: 'short',
                                     day: 'numeric',
                                     hour: '2-digit',
                                     minute: '2-digit',
                                     timeZone: 'UTC',
-                                }).format(new Date(jam.date))}
+                                })}
                             </span>
                         )}
                         {jam.location && (
@@ -416,7 +418,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 <div className="bg-base-300/50 border-b border-base-300">
                     <div className="container mx-auto max-w-4xl px-4 py-2 text-center">
                         <p className="text-xs text-base-content/50 font-medium">
-                            {t(`jams.banner.${jam.status.toLowerCase()}`)}
+                            {t(translationKey('jams.banner', jam.status.toLowerCase()))}
                         </p>
                     </div>
                 </div>
@@ -454,7 +456,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         {/* Suggested Songs Section */}
                         {suggestedSchedules.length > 0 && (
                             <CollapsibleSection
-                                title={t('jams.suggested_songs_short', 'Sugeridas')}
+                                title={t('jams.suggested_songs_short')}
                                 isExpanded={isSuggestedExpanded}
                                 onToggle={() => setIsSuggestedExpanded(!isSuggestedExpanded)}
                                 badge={`${suggestedSchedules.length}`}

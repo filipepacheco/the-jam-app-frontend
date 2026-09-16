@@ -8,7 +8,7 @@ function Footer() {
 
   const routes = [
     { path: '/jams', label: t('nav.jams') },
-    { path: '/host/dashboard', label: t('nav.for_hosts', 'For Hosts') },
+    { path: '/host/dashboard', label: t('nav.for_hosts') },
     { path: '/about', label: t('nav.about') },
     { path: '/register', label: t('auth.sign_up') },
   ]

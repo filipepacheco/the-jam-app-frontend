@@ -13,7 +13,7 @@ import {
   MessageSquareHeart,
   LogOut,
 } from 'lucide-react'
-import { useAuth, useTheme } from '../hooks'
+import { useAppLanguage, useAuth, useTheme } from '../hooks'
 import { FeedbackModal } from './FeedbackModal'
 import { useState } from 'react'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
@@ -28,7 +28,8 @@ interface MobileDrawerProps {
 }
 
 export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const {currentLang, changeLanguage} = useAppLanguage()
   const navigate = useNavigate()
   const { isAuthenticated, user, logout, isViewer, isLoading } = useAuth()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
@@ -51,18 +52,8 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
     navigate(path)
   }, [onClose, navigate])
 
-  const changeLanguage = (lng: string) => {
-    void i18n.changeLanguage(lng)
-    try {
-      localStorage.setItem('i18nextLng', lng)
-    } catch {
-      // ignore
-    }
-  }
-
   const [currentTheme, setTheme] = useTheme()
 
-  const currentLang = (i18n.language || i18n.resolvedLanguage || 'pt').split('-')[0]
 
   // Body scroll lock
   useEffect(() => {

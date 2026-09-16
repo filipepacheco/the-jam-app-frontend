@@ -27,8 +27,8 @@ export function SlotFillIndicator({ registrations, music }: SlotFillIndicatorPro
     <span
       className={`badge badge-xs font-mono font-semibold shrink-0 ${badgeClass}`}
       title={bandComplete
-        ? t('schedule.band_complete', 'Band complete')
-        : t('schedule.musicians_registered_count', { defaultValue: '{{active}} of {{total}} musicians registered', active: activeCount, total: totalNeeded })}
+        ? t('schedule.band_complete')
+        : t('schedule.musicians_registered_count', { active: activeCount, total: totalNeeded })}
     >
       {activeCount}/{totalNeeded}
     </span>

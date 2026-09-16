@@ -133,7 +133,7 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
               className="hidden sm:inline-flex badge badge-xs badge-outline badge-warning font-semibold shrink-0"
               title={t('schedule.pending_approvals', { count: pendingCount })}
             >
-              {pendingCount} {t('schedule.pending_short', 'pending')}
+              {pendingCount} {t('schedule.pending_short')}
             </span>
           )}
 

@@ -11,6 +11,7 @@ import { Alert } from './Alert'
 import { Action } from './Action'
 import { Field } from './Field'
 import { OverlayActions, OverlayModal } from './overlays'
+import { translationKey } from '../lib/i18n/translationKeys'
 
 interface FeedbackModalProps {
   isOpen: boolean
@@ -148,7 +149,7 @@ export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: 
                     className="mask mask-star-2 bg-warning"
                     checked={rating === star}
                     onChange={() => setRating(star)}
-                    aria-label={t(`feedback.stars.${star}`)}
+                    aria-label={t(translationKey('feedback.stars', star))}
                     disabled={isSubmitting}
                   />
                 ))}
@@ -156,7 +157,7 @@ export function FeedbackModal({ isOpen, onClose, portal = true, portalTarget }: 
             </div>
             {rating > 0 && (
               <p className="text-center text-sm text-base-content/70">
-                {t(`feedback.stars.${rating}`)}
+                {t(translationKey('feedback.stars', rating))}
               </p>
             )}
           </div>

@@ -10,24 +10,24 @@ type MusicStatus = NonNullable<MusicResponseDto['status']>
 export function MusicBadge({ status }: Readonly<{ status: MusicStatus }>) {
   const { t } = useTranslation()
   const label = status === 'APPROVED'
-    ? t('common.statuses.approved', 'Approved')
-    : t('common.statuses.suggested', 'Suggested')
+    ? t('common.statuses.approved')
+    : t('common.statuses.suggested')
   return <Badge tone={status === 'APPROVED' ? 'success' : 'warning'}>{label}</Badge>
 }
 
 export function MusicStatusIndicator({ status }: Readonly<{ status: MusicStatus }>) {
   const { t } = useTranslation()
   const label = status === 'APPROVED'
-    ? t('common.statuses.approved', 'Approved')
-    : t('common.statuses.suggested', 'Suggested')
+    ? t('common.statuses.approved')
+    : t('common.statuses.suggested')
   return <StatusIndicator status={status === 'APPROVED' ? 'success' : 'pending'} label={label} />
 }
 
 export function MusicCompactMetadata({ music }: Readonly<{ music: MusicResponseDto }>) {
   const { t } = useTranslation()
   const items = [
-    music.genre ? { label: t('common.form_labels.genre', 'Genre'), value: music.genre } : null,
-    music.duration ? { label: t('music_library.table.duration', 'Duration'), value: formatDuration(music.duration) } : null,
+    music.genre ? { label: t('common.form_labels.genre'), value: music.genre } : null,
+    music.duration ? { label: t('music_library.table.duration'), value: formatDuration(music.duration) } : null,
   ].filter((item): item is { label: string; value: string } => item !== null)
   return <CompactMetadata items={items} />
 }

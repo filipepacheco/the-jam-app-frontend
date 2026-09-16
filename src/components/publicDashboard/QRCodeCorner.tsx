@@ -56,11 +56,11 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
         onClick={() => setIsExpanded(true)}
         className={`${positionClasses[position]} bg-neutral text-neutral-content hover:bg-neutral/90 border border-neutral-content/20 rounded-lg p-5 z-40 transition-colors cursor-pointer hidden md:block`}
         type="button"
-        aria-label={t('publicDashboard.expandQrCode', 'Expand QR code')}
+        aria-label={t('publicDashboard.expandQrCode')}
       >
         {/* The semantic foreground/surface pair preserves scanner and text contrast across themes. */}
-        <QRCodeSVG value={url} size={150} fgColor="currentColor" bgColor="transparent" aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')} />
-        <p className="text-xs text-center mt-2 text-neutral-content">{t('publicDashboard.scanToJoin', 'Scan to join')}</p>
+        <QRCodeSVG value={url} size={150} fgColor="currentColor" bgColor="transparent" aria-label={t('publicDashboard.qrCodeAlt')} />
+        <p className="text-xs text-center mt-2 text-neutral-content">{t('publicDashboard.scanToJoin')}</p>
       </motion.button>
 
       {/* Expanded QR Code Modal */}
@@ -76,7 +76,7 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
             style={{ background: 'var(--ds-surface-overlay)' }}
             role="dialog"
             aria-modal="true"
-            aria-label={t('publicDashboard.joinTheJam', 'Join the Jam')}
+            aria-label={t('publicDashboard.joinTheJam')}
           >
             <motion.div
               initial={prefersReducedMotion ? false : { scale: 0.8, opacity: 0 }}
@@ -86,11 +86,11 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
               onClick={(e) => e.stopPropagation()}
               className="relative bg-base-100 rounded-2xl p-8 max-w-md w-full flex flex-col items-center justify-center"
             >
-              <h2 className="text-2xl font-bold mb-6 text-base-content">{t('publicDashboard.joinTheJam', 'Join the Jam')}</h2>
+              <h2 className="text-2xl font-bold mb-6 text-base-content">{t('publicDashboard.joinTheJam')}</h2>
 
               <div className="bg-base-100 p-6 rounded-lg mb-4">
                 {/* Explicit black/white colors preserve scanner contrast in the modal. */}
-                <QRCodeSVG value={url} size={280} fgColor="#000000" bgColor="#ffffff" aria-label={t('publicDashboard.qrCodeAlt', 'QR code to join jam session')} />
+                <QRCodeSVG value={url} size={280} fgColor="#000000" bgColor="#ffffff" aria-label={t('publicDashboard.qrCodeAlt')} />
               </div>
 
               {shortCode && (
@@ -99,7 +99,7 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
                 </p>
               )}
               <p className="text-center text-base-content mb-2 ds-type-body ds-wrap-user-content">
-                {shortCode ? t('publicDashboard.scanOrTypeCode', 'Scan the QR code or type the code above') : t('publicDashboard.scanWithPhone', 'Scan the QR code with your phone')}
+                {shortCode ? t('publicDashboard.scanOrTypeCode') : t('publicDashboard.scanWithPhone')}
               </p>
               <p className="text-sm text-base-content/70 text-center ds-wrap-user-content">{url}</p>
 
@@ -108,7 +108,7 @@ export default function QRCodeCorner({ jamId, shortCode, position = 'bottom-left
                 onClick={() => setIsExpanded(false)}
                 className="mt-6 w-full"
               >
-                <Action.Label>{t('common.close', 'Close')}</Action.Label>
+                <Action.Label>{t('common.close')}</Action.Label>
               </Action>
             </motion.div>
           </motion.div>

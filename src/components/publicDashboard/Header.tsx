@@ -25,10 +25,10 @@ export default function Header({
   tickerText,
 }: HeaderProps) {
   const { t } = useTranslation()
-  const toggleControlsLabel = ariaToggleLabel || t('publicDashboard.toggleControls', 'Toggle dashboard controls')
+  const toggleControlsLabel = ariaToggleLabel || t('publicDashboard.toggleControls')
   const fullscreenLabel = isFullscreen
-    ? t('publicDashboard.exitFullscreen', 'Exit fullscreen')
-    : t('publicDashboard.enterFullscreen', 'Enter fullscreen')
+    ? t('publicDashboard.exitFullscreen')
+    : t('publicDashboard.enterFullscreen')
 
   return (
     <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 pointer-events-none">

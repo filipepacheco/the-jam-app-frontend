@@ -6,6 +6,7 @@
 import React, {useState} from 'react'
 import {useAuth, useFormState} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
+import {translationKey} from '../lib/i18n/translationKeys'
 import {useTranslation} from 'react-i18next'
 import type {MusicianLevel} from '../types/api.types'
 import {Alert} from './Alert'
@@ -181,7 +182,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             <option value="">{t('jams.onboarding.instrument_choose')}</option>
             {INSTRUMENTS.map((inst) => (
               <option key={inst} value={inst}>
-                {t(`schedule.instruments.${inst}`)}
+                {t(translationKey('schedule.instruments', inst))}
               </option>
             ))}
           </Field.Select>
@@ -196,7 +197,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
             <option value="">{t('jams.onboarding.level_choose')}</option>
             {SKILL_LEVELS.map((lv) => (
               <option key={lv} value={lv}>
-                {t(`schedule.levels.${lv}`)}
+                {t(translationKey('schedule.levels', lv))}
               </option>
             ))}
           </Field.Select>

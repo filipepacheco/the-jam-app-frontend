@@ -64,8 +64,8 @@ export const InstrumentGroup = memo(function InstrumentGroup({ instrument, music
       <div className="space-y-1">
         {musicians &&
           musicians.map((musician) => (
-            <p key={musician.id} className={`font-semibold text-base-content ${classes.text} ds-wrap-user-content`} title={musician.name || t('common.unknown', 'Unknown')}>
-              {musician.name || t('common.unknown', 'Unknown')}
+            <p key={musician.id} className={`font-semibold text-base-content ${classes.text} ds-wrap-user-content`} title={musician.name || t('common.unknown')}>
+              {musician.name || t('common.unknown')}
             </p>
           ))}
       </div>

@@ -57,10 +57,10 @@ export function PlaybackControls({
   // onto the closest available semantic variant. This is a forced, documented
   // color change, not an intentional redesign.
   const centerButton = isPlaying
-    ? { action: onPause, label: t('dj_control.actions.pause', 'Pausar'), Icon: Pause, variant: 'secondary' as ActionVariant }
+    ? { action: onPause, label: t('dj_control.actions.pause'), Icon: Pause, variant: 'secondary' as ActionVariant }
     : isPaused
-      ? { action: onResume, label: t('dj_control.actions.resume', 'Retomar'), Icon: Play, variant: 'primary' as ActionVariant }
-      : { action: onStart, label: t('dj_control.actions.start', 'Iniciar'), Icon: Play, variant: 'primary' as ActionVariant }
+      ? { action: onResume, label: t('dj_control.actions.resume'), Icon: Play, variant: 'primary' as ActionVariant }
+      : { action: onStart, label: t('dj_control.actions.start'), Icon: Play, variant: 'primary' as ActionVariant }
 
   const centerDisabled = busy || (isStopped && !hasNextSong)
   const prevDisabled = busy || !hasCurrentSong
@@ -89,10 +89,10 @@ export function PlaybackControls({
           variant="secondary"
           {...actionState('previous', prevDisabled)}
           className="min-w-0 justify-center overflow-hidden px-2"
-          aria-label={t('dj_control.actions.previous_tooltip', 'Anterior')}
+          aria-label={t('dj_control.actions.previous_tooltip')}
         >
           <Action.Icon><SkipBack className="size-4" /></Action.Icon>
-          <Action.Label className="hidden sm:inline lg:hidden 2xl:inline">{t('dj_control.actions.previous', 'Anterior')}</Action.Label>
+          <Action.Label className="hidden sm:inline lg:hidden 2xl:inline">{t('dj_control.actions.previous')}</Action.Label>
         </Action>
 
         <Action
@@ -110,9 +110,9 @@ export function PlaybackControls({
           variant="primary"
           {...actionState('next', nextDisabled)}
           className="min-w-0 justify-center overflow-hidden px-2"
-          aria-label={t('dj_control.actions.next_tooltip', 'Proxima')}
+          aria-label={t('dj_control.actions.next_tooltip')}
         >
-          <Action.Label className="hidden sm:inline lg:hidden 2xl:inline">{t('dj_control.actions.next', 'Proxima')}</Action.Label>
+          <Action.Label className="hidden sm:inline lg:hidden 2xl:inline">{t('dj_control.actions.next')}</Action.Label>
           <Action.Icon><SkipForward className="size-4" /></Action.Icon>
         </Action>
       </div>

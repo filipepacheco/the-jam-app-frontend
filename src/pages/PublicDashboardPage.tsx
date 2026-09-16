@@ -114,7 +114,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
         aria-live="polite"
         aria-busy="true"
       >
-        <span className="sr-only">{t('publicDashboard.loading', 'Loading dashboard')}</span>
+        <span className="sr-only">{t('publicDashboard.loading')}</span>
         <div className="pt-20 pb-8 px-4 md:px-8">
           <div className="max-w-6xl mx-auto animate-pulse">
             {/* Now Playing skeleton */}
@@ -149,7 +149,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
         <Alert
           type="error"
           message={error.message}
-          title={t('publicDashboard.errorTitle', 'Error Loading Dashboard')}
+          title={t('publicDashboard.errorTitle')}
           action={(
             <Action
               variant="quiet"
@@ -177,8 +177,8 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
       <OfflineBanner
         visible={isOfflineMode || Boolean(error)}
         message={isOfflineMode
-          ? t('publicDashboard.offlineIndicator', 'You are offline - showing cached data')
-          : t('publicDashboard.staleIndicator', 'Updates paused - showing the last known Jam state')}
+          ? t('publicDashboard.offlineIndicator')
+          : t('publicDashboard.staleIndicator')}
       />
 
       {/* Header with controls-panel toggle and fullscreen button */}
@@ -188,7 +188,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
         setShowControlsPanel={setShowControlsPanel}
         isFullscreen={isFullscreen}
         onToggleFullscreen={toggleFullscreen}
-        ariaToggleLabel={t('publicDashboard.toggleControls', 'Toggle dashboard controls')}
+        ariaToggleLabel={t('publicDashboard.toggleControls')}
         tickerText={tickerText}
       />
 
@@ -227,8 +227,8 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                 <div className="mb-12 text-center">
                   <div className="bg-base-200/80 border border-base-300 rounded-2xl p-8 md:p-12">
                     <p className="text-5xl md:text-7xl mb-6" aria-hidden="true">👏</p>
-                    <h2 className="text-4xl md:text-6xl font-black mb-4 ds-wrap-user-content">{t('publicDashboard.jamFinished', 'That\'s a wrap!')}</h2>
-                    <p className="text-lg md:text-2xl text-base-content/70">{t('publicDashboard.thankYou', 'Thanks for jamming with us!')}</p>
+                    <h2 className="text-4xl md:text-6xl font-black mb-4 ds-wrap-user-content">{t('publicDashboard.jamFinished')}</h2>
+                    <p className="text-lg md:text-2xl text-base-content/70">{t('publicDashboard.thankYou')}</p>
                   </div>
                 </div>
               ) : (

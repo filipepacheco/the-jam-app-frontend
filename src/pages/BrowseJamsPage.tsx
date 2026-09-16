@@ -14,6 +14,7 @@ import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
 import {SEO} from '../components/SEO'
 import type {JamResponseDto, JamStatus} from '../types/api.types'
+import type {TranslationKey} from '../locales/catalogue/catalogue'
 
 type DateSortOption = 'newest' | 'oldest' | 'upcoming'
 
@@ -125,7 +126,7 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
     {
       '@type': 'CollectionPage',
       name: t('jams.browse.title'),
-      description: t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') }),
+      description: t('seo.browse.description'),
       url: `${siteUrl}/jams`,
       isPartOf: {
         '@type': 'WebSite',
@@ -145,9 +146,9 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
   return (
     <div className="min-h-screen bg-base-100">
       <SEO
-        title={t('seo.browse.title', { defaultValue: t('jams.browse.title') })}
-        description={t('seo.browse.description', { defaultValue: t('jams.browse.subtitle') })}
-        keywords={t('seo.browse.keywords', { defaultValue: 'jam sessions, live music events, open mic, jam, jams, music meetup' })}
+        title={t('seo.browse.title')}
+        description={t('seo.browse.description')}
+        keywords={t('seo.browse.keywords')}
         canonical={`${siteUrl}/jams`}
         jsonLd={browseJsonLd}
       />
@@ -211,7 +212,7 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
             <Badge tone="info" size="md" className="shrink-0">
               {(() => {
                 const count = visibleCount
-                const key = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
+                const key: TranslationKey = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
                 return t(key, { count })
               })()}
             </Badge>

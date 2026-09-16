@@ -5,13 +5,16 @@
  */
 
 import {useCallback, useEffect, useMemo, useState} from 'react'
-import {useAuth} from '../../hooks'
+import {useAppLanguage, useAuth} from '../../hooks'
 import {musicianService} from '../../services'
 import type {MusicianLevel, MusicianResponseDto, PaginationMeta, UpdateMusicianDto} from '../../types/api.types.ts'
 import {EditMusicianModal} from '../../components/EditMusicianModal.tsx'
 import {Action, Alert, EmptyState, LoadingState} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Music, Search} from 'lucide-react'
+import type {TFunction} from 'i18next'
+import {translationKey} from '../../lib/i18n/translationKeys'
+import {formatDate} from '../../lib/i18n/applicationLocale'
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const
 const DEFAULT_PAGE_SIZE = 20
@@ -43,9 +46,9 @@ function getLevelBadgeClass(level: string | null | undefined): string {
 }
 
 /** Format level for display, handling null/undefined */
-function formatLevel(level: string | null | undefined, t: (key: string) => string): string {
+function formatLevel(level: string | null | undefined, t: TFunction): string {
   if (!level) return t('schedule.levels.not_specified')
-  return t(`schedule.levels.${level}`)
+  return t(translationKey('schedule.levels', level))
 }
 
 interface MusiciansPageProps {
@@ -54,6 +57,7 @@ interface MusiciansPageProps {
 
 export function MusiciansPage({port = musiciansPagePort}: MusiciansPageProps = {}) {
   const { t, i18n } = useTranslation()
+  const {currentLang} = useAppLanguage()
   const { user, isLoading: authLoading } = useAuth()
 
   // State
@@ -99,12 +103,6 @@ export function MusiciansPage({port = musiciansPagePort}: MusiciansPageProps = {
   }, [])
 
   // Date formatter using user's locale
-  const dateFormatter = useMemo(
-    () => new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }),
-    [i18n.language]
-  )
-
-
   // Apply search and filter with memoization
   const filteredMusicians = useMemo(() => {
     let filtered = musicians
@@ -160,10 +158,9 @@ export function MusiciansPage({port = musiciansPagePort}: MusiciansPageProps = {
   }
 
   // Ensure translations for the active language (or its base) are loaded before rendering
-  const currentLang = (i18n.language || i18n.resolvedLanguage || '').toString()
-  const baseLang = currentLang.split('-')[0]
+  const bundleLang = (i18n.resolvedLanguage || i18n.language || '').toString()
   const hasBundle = (typeof i18n.hasResourceBundle === 'function')
-    ? (i18n.hasResourceBundle(currentLang, 'translation') || i18n.hasResourceBundle(baseLang, 'translation'))
+    ? i18n.hasResourceBundle(bundleLang, 'translation')
     : true
 
   if (!hasBundle || authLoading) {
@@ -407,7 +404,7 @@ export function MusiciansPage({port = musiciansPagePort}: MusiciansPageProps = {
                       <td>{musician.contact || '—'}</td>
                       <td>{musician.phone || '—'}</td>
                       <td style={{ fontVariantNumeric: 'tabular-nums' }}>
-                        {musician.createdAt ? dateFormatter.format(new Date(musician.createdAt)) : '—'}
+                        {musician.createdAt ? formatDate(musician.createdAt, currentLang) : '—'}
                       </td>
                       <td>
                         <button

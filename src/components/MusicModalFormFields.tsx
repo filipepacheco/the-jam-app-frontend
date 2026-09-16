@@ -50,7 +50,7 @@ export function MusicModalFormFields({
           id="music-title"
           label={t('common.form_labels.title')}
           required
-          requiredLabel={t('common.required', 'required')}
+          requiredLabel={t('common.required')}
         >
           <Field.Input
             value={formData.title}
@@ -64,7 +64,7 @@ export function MusicModalFormFields({
           id="music-artist"
           label={t('common.form_labels.artist')}
           required
-          requiredLabel={t('common.required', 'required')}
+          requiredLabel={t('common.required')}
         >
           <Field.Input
             value={formData.artist}

@@ -148,7 +148,7 @@ const QueueItem = React.memo(function QueueItem({
       role="listitem"
       tabIndex={isReorderMode ? 0 : -1}
       aria-label={label}
-      aria-roledescription={isReorderMode ? t('live_control.reorderable_item', 'reorderable item') : undefined}
+      aria-roledescription={isReorderMode ? t('live_control.reorderable_item') : undefined}
       aria-busy={isReordering}
     >
       {isReorderMode && (
@@ -164,7 +164,7 @@ const QueueItem = React.memo(function QueueItem({
           <p className="min-w-0 truncate text-sm font-semibold">{performance.music.title || t('schedule.song_tba')}</p>
           {isNext && (
             <Badge className="shrink-0" size="sm" tone="info">
-              {t('dj_control.now_playing.next_up', 'Next')}
+              {t('dj_control.now_playing.next_up')}
             </Badge>
           )}
         </div>
@@ -194,11 +194,11 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
     : state.latestOutcome
       ? outcomeError(
           state.latestOutcome,
-          t('live_control.reorder_conflict', 'The Live Queue changed. Reload it and reapply your order.'),
+          t('live_control.reorder_conflict'),
         )
       : null
   const conflictMessage = state.conflict
-    ? t('live_control.reorder_conflict', 'The Live Queue changed. Reload it and reapply your order.')
+    ? t('live_control.reorder_conflict')
     : null
   const queueFeedback = error ?? conflictMessage ?? outcomeMessage
   const queueFeedbackType = !error && !conflictMessage && state.latestOutcome?.code === 'success'
@@ -248,7 +248,7 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
                 className="min-w-0"
               >
                 <Action.Icon><X className="size-4" /></Action.Icon>
-                <Action.Label>{t('live_control.reorder_cancel', 'Cancel')}</Action.Label>
+                <Action.Label>{t('live_control.reorder_cancel')}</Action.Label>
               </Action>
               {isReordering ? (
                 <Action
@@ -257,19 +257,19 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
                   loadingLabel={t('live_control.saving_order')}
                   className="min-w-0"
                 >
-                  <Action.Label>{t('live_control.reorder_save', 'Save order')}</Action.Label>
+                  <Action.Label>{t('live_control.reorder_save')}</Action.Label>
                 </Action>
               ) : (
                 <Action className="min-w-0" variant="primary" onClick={() => { void commands.saveReorder() }}>
                   <Action.Icon><Check className="size-4" /></Action.Icon>
-                  <Action.Label>{t('live_control.reorder_save', 'Save order')}</Action.Label>
+                  <Action.Label>{t('live_control.reorder_save')}</Action.Label>
                 </Action>
               )}
             </div>
           ) : performances.length > 1 ? (
             <Action variant="quiet" onClick={commands.beginReorder}>
               <Action.Icon><ArrowUpDown className="size-4" /></Action.Icon>
-              <Action.Label>{t('live_control.reorder_drag', 'Arrastar')}</Action.Label>
+              <Action.Label>{t('live_control.reorder_drag')}</Action.Label>
             </Action>
           ) : null}
         </div>
@@ -277,10 +277,10 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
         {isReorderMode && performances.length > 1 && (
           <>
             <p className="mb-2 text-sm text-base-content/70">
-              {t('live_control.reorder_next_hint', 'The first Performance in this list will be Next.')}
+              {t('live_control.reorder_next_hint')}
             </p>
             <p className="text-xs text-base-content/50 mb-2 md:hidden">{t('live_control.reorder_hint_mobile')}</p>
-            <p className="sr-only">{t('live_control.reorder_hint_keyboard', 'Use arrow keys to reorder songs')}</p>
+            <p className="sr-only">{t('live_control.reorder_hint_keyboard')}</p>
           </>
         )}
 

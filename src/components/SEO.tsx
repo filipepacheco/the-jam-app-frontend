@@ -8,6 +8,7 @@
 import {Helmet} from 'react-helmet-async'
 import {useAppLanguage} from '../hooks'
 import {SITE_URL} from '../lib/api'
+import {toOpenGraphLocale} from '../lib/i18n/applicationLocale'
 
 interface SEOProps {
   title?: string
@@ -49,7 +50,7 @@ export function SEO({
 
   return (
     <Helmet>
-      <html lang={currentLang === 'pt' ? 'pt-BR' : currentLang} />
+      <html lang={currentLang} />
       <title>{fullTitle}</title>
       {description && <meta name="description" content={description} />}
       {keywords && <meta name="keywords" content={keywords} />}
@@ -67,7 +68,7 @@ export function SEO({
       <meta property="og:image" content={ogImageUrl} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:locale" content={currentLang === 'pt' ? 'pt_BR' : currentLang === 'es' ? 'es_ES' : 'en_US'} />
+      <meta property="og:locale" content={toOpenGraphLocale(currentLang)} />
       <meta property="og:site_name" content="Jam App" />
 
       <meta name="twitter:card" content="summary_large_image" />

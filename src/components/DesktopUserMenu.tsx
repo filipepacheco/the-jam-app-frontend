@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, UserCircle, LogOut, Globe, Palette } from 'lucide-react'
-import { useAuth, useTheme } from '../hooks'
+import { useAppLanguage, useAuth, useTheme } from '../hooks'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
 import { Action } from './Action'
 
@@ -18,13 +18,13 @@ interface DesktopUserMenuProps {
 }
 
 export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const {currentLang, changeLanguage} = useAppLanguage()
   const navigate = useNavigate()
   const { isAuthenticated, user, logout, isLoading } = useAuth()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [currentTheme, setTheme] = useTheme()
 
-  const currentLang = (i18n.language || i18n.resolvedLanguage || 'pt').split('-')[0]
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
@@ -39,15 +39,6 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
   const closeDropdown = () => {
     const el = document.activeElement as HTMLElement | null
     el?.blur()
-  }
-
-  const changeLanguage = (lng: string) => {
-    void i18n.changeLanguage(lng)
-    try {
-      localStorage.setItem('i18nextLng', lng)
-    } catch {
-      // ignore
-    }
   }
 
   if (isLoading) {
@@ -66,7 +57,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
           variant="quiet"
           tabIndex={0}
           className="gap-1"
-          aria-label={t('nav.settings', { defaultValue: 'Settings' })}
+          aria-label={t('nav.settings')}
         >
           <Globe className="size-4" />
           <ChevronDown className="size-4" aria-hidden="true" />

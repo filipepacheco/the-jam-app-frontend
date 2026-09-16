@@ -7,12 +7,13 @@ import {memo, type MouseEvent} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 import type {JamResponseDto} from '../types/api.types'
 import {useTranslation} from 'react-i18next'
-import {safeT} from '../lib/i18nUtils'
 import {getJamStatusLabel, getJamStatusTone} from '../lib/statusUtils'
 import {getJamPath, getJamDashboardPath} from '../utils/jamUrl'
 import {ArrowRight, CalendarClock, ExternalLink, MapPin, Music, Radio, Users} from 'lucide-react'
 import {Badge} from './data-display'
 import {NavigationLink} from './Navigation'
+import {formatDateTime} from '../lib/i18n/applicationLocale'
+import {useAppLanguage} from '../hooks'
 
 interface JamCardProps {
   jam: JamResponseDto
@@ -21,24 +22,18 @@ interface JamCardProps {
 /**
  * Format ISO date string to readable format using current locale
  */
-function formatDateTime(isoString: string, locale?: string): string | null {
-  const date = new Date(isoString)
-  if (Number.isNaN(date.getTime())) return null
-  return new Intl.DateTimeFormat(locale || navigator.language, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(date)
-}
-
 /**
  * JamCard Component
  */
 export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const {currentLang} = useAppLanguage()
   const navigate = useNavigate()
   const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
   const musicianCount = jam._count?.registrations ?? 0
-  const formattedDate = jam.date ? formatDateTime(jam.date, i18n.language) : null
+  const formattedDate = jam.date && !Number.isNaN(new Date(jam.date).getTime())
+    ? formatDateTime(jam.date, currentLang)
+    : null
   const jamPath = getJamPath(jam)
   const dashboardPath = getJamDashboardPath(jam)
 
@@ -82,7 +77,7 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
           )}
           <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
             <Music className="size-4 shrink-0" aria-hidden="true" />
-            {safeT(t, 'jams.songs_count', { count: songCount })}
+            {t('jams.songs_count', {count: songCount})}
           </span>
           <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
             <Users className="size-4 shrink-0" aria-hidden="true" />
