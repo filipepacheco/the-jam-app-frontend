@@ -569,6 +569,7 @@
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/Navigation.tsx",
           "src/hooks/index.ts",
           "src/lib/uiConstants.ts"
         ],
@@ -579,7 +580,6 @@
           "react-router-dom"
         ],
         "contexts": [
-          "browser",
           "internationalization",
           "routing"
         ]
@@ -1057,6 +1057,7 @@
           "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/hooks/index.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/instruments.ts",
           "src/types/api.types.ts"
         ],
@@ -1387,6 +1388,7 @@
           "src/components/Alert.tsx",
           "src/components/Field.tsx",
           "src/components/overlays/index.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/services/index.ts"
         ],
         "external": [
@@ -1518,7 +1520,8 @@
       "dependencies": {
         "internal": [
           "src/components/index.ts",
-          "src/hooks/index.ts"
+          "src/hooks/index.ts",
+          "src/lib/i18n/translationKeys.ts"
         ],
         "external": [
           "react",
@@ -1640,22 +1643,28 @@
         }
       ],
       "consumers": [
+        "src/components/MobileDrawer.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Forms.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
+          "src/components/Field.css",
           "src/hooks/index.ts"
         ],
         "external": [
+          "lucide-react",
           "react",
           "react-dom",
           "react-i18next"
@@ -2384,6 +2393,7 @@
           "src/components/SpotifyPreview.tsx",
           "src/components/schedule/InstrumentsSummary.tsx",
           "src/hooks/index.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/types/api.types.ts",
           "src/utils/scheduleUtils.ts"
@@ -2516,6 +2526,7 @@
           "src/components/Modal.tsx",
           "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
           "src/hooks/index.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/types/api.types.ts",
           "src/utils/scheduleUtils.ts"
@@ -2591,7 +2602,8 @@
         "internal": [
           "src/components/Navigation.tsx",
           "src/components/data-display/index.tsx",
-          "src/lib/i18nUtils.ts",
+          "src/hooks/index.ts",
+          "src/lib/i18n/applicationLocale.ts",
           "src/lib/statusUtils.ts",
           "src/utils/jamUrl.ts"
         ],
@@ -2787,8 +2799,9 @@
         "internal": [
           "src/components/Action.tsx",
           "src/components/FeedbackModal.tsx",
-          "src/components/Field.tsx",
+          "src/components/MobileDrawer.css",
           "src/components/Navigation.tsx",
+          "src/components/forms/SearchableSelect.tsx",
           "src/hooks/index.ts",
           "src/lib/uiConstants.ts"
         ],
@@ -3279,6 +3292,9 @@
           "src/components/FeedbackStates.tsx",
           "src/components/Modal.tsx",
           "src/components/data-display/index.tsx",
+          "src/hooks/index.ts",
+          "src/lib/i18n/applicationLocale.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/services/index.ts",
           "src/types/api.types.ts"
@@ -3672,6 +3688,7 @@
           "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/hooks/index.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/instruments.ts",
           "src/types/api.types.ts"
         ],
@@ -3898,7 +3915,11 @@
       ],
       "dependencies": {
         "internal": [
-          "src/lib/auth/index.ts"
+          "src/components/data-display/index.tsx",
+          "src/hooks/index.ts",
+          "src/lib/auth/index.ts",
+          "src/lib/i18n/applicationLocale.ts",
+          "src/lib/i18n/translationKeys.ts"
         ],
         "external": [
           "react-i18next"
@@ -3962,6 +3983,7 @@
           "src/components/Alert.tsx",
           "src/components/Modal.tsx",
           "src/hooks/index.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/instruments.ts"
         ],
         "external": [
@@ -4777,7 +4799,8 @@
       ],
       "dependencies": {
         "internal": [
-          "src/config/languages.config.ts"
+          "src/config/languages.config.ts",
+          "src/lib/i18n/applicationLocale.ts"
         ],
         "external": [
           "react-i18next"
@@ -5826,6 +5849,7 @@
           "src/components/schedule/InstrumentsSummary.tsx",
           "src/components/schedule/ScheduleDetailsCard.tsx",
           "src/hooks/index.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/services/index.ts",
           "src/types/api.types.ts",
@@ -6276,6 +6300,7 @@
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/schedule/instrumentHelpers.tsx"
         ],
         "external": [
@@ -6414,6 +6439,8 @@
         "internal": [
           "src/components/Action.tsx",
           "src/components/Avatar.tsx",
+          "src/components/data-display/index.tsx",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/utils/musicianUtils.ts"
         ],
@@ -6903,6 +6930,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/data-display/index.tsx",
           "src/lib/schedule/statusHelpers.ts"
         ],
         "external": [
@@ -7090,7 +7118,9 @@
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/lib/i18n/translationKeys.ts"
+        ],
         "external": [
           "react-i18next"
         ],
@@ -7203,7 +7233,8 @@
       "dependencies": {
         "internal": [
           "src/hooks/index.ts",
-          "src/lib/api/index.ts"
+          "src/lib/api/index.ts",
+          "src/lib/i18n/applicationLocale.ts"
         ],
         "external": [
           "react-helmet-async"
@@ -7985,6 +8016,7 @@
           "src/components/SEO.tsx",
           "src/components/index.ts",
           "src/lib/api/index.ts",
+          "src/locales/catalogue/catalogue.ts",
           "src/types/api.types.ts"
         ],
         "external": [
@@ -8117,7 +8149,11 @@
       ],
       "workbenchStories": [],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/hooks/index.ts",
+          "src/lib/i18n/applicationLocale.ts",
+          "src/lib/i18n/translationKeys.ts"
+        ],
         "external": [
           "lucide-react",
           "react-i18next"
@@ -8300,7 +8336,8 @@
       "dependencies": {
         "internal": [
           "src/components/index.ts",
-          "src/lib/i18nUtils.ts",
+          "src/hooks/index.ts",
+          "src/lib/i18n/applicationLocale.ts",
           "src/lib/statusUtils.ts",
           "src/utils/jamUrl.ts"
         ],
@@ -8520,6 +8557,7 @@
           "src/components/EditMusicianModal.tsx",
           "src/components/index.ts",
           "src/hooks/index.ts",
+          "src/lib/i18n/applicationLocale.ts",
           "src/types/api.types.ts"
         ],
         "external": [
@@ -8759,6 +8797,7 @@
           "src/components/index.ts",
           "src/components/music/MusicDataDisplay.tsx",
           "src/hooks/index.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/musicConstants.ts",
           "src/types/api.types.ts"
         ],
@@ -9443,6 +9482,8 @@
           "src/hooks/index.ts",
           "src/lib/api/index.ts",
           "src/lib/formatters.ts",
+          "src/lib/i18n/applicationLocale.ts",
+          "src/lib/i18n/translationKeys.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/types/api.types.ts",
           "src/utils/jamUrl.ts"
@@ -9515,6 +9556,8 @@
         "internal": [
           "src/components/Action.tsx",
           "src/components/index.ts",
+          "src/hooks/index.ts",
+          "src/lib/i18n/applicationLocale.ts",
           "src/types/api.types.ts",
           "src/utils/jamUrl.ts"
         ],
@@ -9573,6 +9616,7 @@
       ],
       "dependencies": {
         "internal": [
+          "src/components/index.ts",
           "src/types/api.types.ts"
         ],
         "external": [
@@ -10509,15 +10553,20 @@
         "src/components/JamContextDisplay.tsx",
         "src/components/MusicCard.tsx",
         "src/components/MusicianProfileModal.tsx",
+        "src/components/ProfileHeader.tsx",
         "src/components/dj-control/QueueStats.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
         "src/components/jam-detail-v2/CollapsibleSection.tsx",
         "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
         "src/components/music/MusicDataDisplay.tsx",
         "src/components/schedule/LiveJamControlPanel.tsx",
+        "src/components/schedule/RegistrationList.tsx",
+        "src/components/schedule/ScheduleCollapsibleCard.tsx",
+        "src/components/schedule/ScheduleStatusBadge.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
         "src/pages/host/JamManagementPage.tsx",
+        "src/pages/tabs/RegistrationsTab.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
@@ -10530,7 +10579,10 @@
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
         "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
@@ -11111,7 +11163,6 @@
         "src/components/EditMusicianModal.tsx",
         "src/components/FeedbackModal.tsx",
         "src/components/Field.tsx",
-        "src/components/MobileDrawer.tsx",
         "src/components/MusicFilters.tsx",
         "src/components/MusicModal.tsx",
         "src/components/MusicModalFormFields.tsx",
@@ -12075,12 +12126,16 @@
         }
       ],
       "consumers": [
+        "src/components/DesktopUserMenu.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/JamDetailPage.stories.tsx",
-        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
+        "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -12506,7 +12561,7 @@
         {
           "id": "inline.ui.0006.action.4c2028bfcb6d",
           "source": "src/components/Alert.tsx",
-          "line": 78,
+          "line": 79,
           "column": 11,
           "ownerComponentId": "ui.0006",
           "tag": "button",
@@ -12597,21 +12652,19 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0028.action.08897267b064",
+          "id": "inline.ui.0028.action.075cf17e0dcf",
           "source": "src/components/forms/SearchableSelect.tsx",
-          "line": 145,
+          "line": 154,
           "column": 7,
           "ownerComponentId": "ui.0028",
           "tag": "button",
           "staticClassTokens": [
+            "ds-control",
+            "ds-field__control",
+            "ds-focusable",
             "flex",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary",
             "items-center",
             "justify-between",
-            "select",
-            "select-bordered",
             "text-left",
             "w-full"
           ],
@@ -12784,10 +12837,10 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0066.action.3c8b213fb73d",
+          "id": "inline.ui.0066.action.1ecbc3f500d5",
           "source": "src/components/Navbar.tsx",
-          "line": 119,
-          "column": 15,
+          "line": 124,
+          "column": 17,
           "ownerComponentId": "ui.0066",
           "tag": "a",
           "staticClassTokens": [
@@ -12817,7 +12870,7 @@
         {
           "id": "inline.ui.0068.action.39c79645ef02",
           "source": "src/components/OnboardingModal.tsx",
-          "line": 209,
+          "line": 210,
           "column": 9,
           "ownerComponentId": "ui.0068",
           "tag": "button",
@@ -12829,7 +12882,7 @@
         {
           "id": "inline.ui.0073.action.0f9ca806c12d",
           "source": "src/components/ProfileSetupModal.tsx",
-          "line": 99,
+          "line": 100,
           "column": 11,
           "ownerComponentId": "ui.0073",
           "tag": "button",
@@ -12842,7 +12895,7 @@
         {
           "id": "inline.ui.0073.action.39c79645ef02",
           "source": "src/components/ProfileSetupModal.tsx",
-          "line": 193,
+          "line": 194,
           "column": 9,
           "ownerComponentId": "ui.0073",
           "tag": "button",
@@ -12854,7 +12907,7 @@
         {
           "id": "inline.ui.0073.action.7259264a8426",
           "source": "src/components/ProfileSetupModal.tsx",
-          "line": 91,
+          "line": 92,
           "column": 11,
           "ownerComponentId": "ui.0073",
           "tag": "button",
@@ -12865,7 +12918,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0075.action.cd0b0ac251cb",
+          "id": "inline.ui.0075.action.cfa8fa5222cf",
           "source": "src/components/publicDashboard/carousel/CarouselIndicator.tsx",
           "line": 18,
           "column": 11,
@@ -12884,9 +12937,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0085.action.6ff2b69f8725",
+          "id": "inline.ui.0085.action.405c9200d013",
           "source": "src/components/publicDashboard/LanguageSelector.tsx",
-          "line": 32,
+          "line": 33,
           "column": 9,
           "ownerComponentId": "ui.0085",
           "tag": "button",
@@ -12906,7 +12959,7 @@
         {
           "id": "inline.ui.0108.action.fe0fecd0ce65",
           "source": "src/components/schedule/MusicianSlotRow.tsx",
-          "line": 59,
+          "line": 60,
           "column": 9,
           "ownerComponentId": "ui.0108",
           "tag": "button",
@@ -12928,7 +12981,7 @@
         {
           "id": "inline.ui.0110.action.b4550f6f91d7",
           "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 132,
+          "line": 135,
           "column": 45,
           "ownerComponentId": "ui.0110",
           "tag": "button",
@@ -13058,7 +13111,7 @@
         {
           "id": "inline.ui.0137.action.1dd0b008a9ef",
           "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 309,
+          "line": 310,
           "column": 17,
           "ownerComponentId": "ui.0137",
           "tag": "button",
@@ -13076,7 +13129,7 @@
         {
           "id": "inline.ui.0140.action.10ad6ce1887e",
           "source": "src/pages/host/FeedbackPage.tsx",
-          "line": 127,
+          "line": 129,
           "column": 13,
           "ownerComponentId": "ui.0140",
           "tag": "button",
@@ -13091,7 +13144,7 @@
         {
           "id": "inline.ui.0140.action.e3313d24431b",
           "source": "src/pages/host/FeedbackPage.tsx",
-          "line": 195,
+          "line": 197,
           "column": 17,
           "ownerComponentId": "ui.0140",
           "tag": "button",
@@ -13105,7 +13158,7 @@
         {
           "id": "inline.ui.0140.action.f86ec59cb6fb",
           "source": "src/pages/host/FeedbackPage.tsx",
-          "line": 210,
+          "line": 212,
           "column": 17,
           "ownerComponentId": "ui.0140",
           "tag": "button",
@@ -13258,7 +13311,7 @@
         {
           "id": "inline.ui.0145.action.2076eb39fae5",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 360,
+          "line": 357,
           "column": 23,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13273,7 +13326,7 @@
         {
           "id": "inline.ui.0145.action.33987644b906",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 494,
+          "line": 491,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13287,7 +13340,7 @@
         {
           "id": "inline.ui.0145.action.6431670ad87d",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 473,
+          "line": 470,
           "column": 23,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13300,7 +13353,7 @@
         {
           "id": "inline.ui.0145.action.66884209f969",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 413,
+          "line": 410,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13314,7 +13367,7 @@
         {
           "id": "inline.ui.0145.action.aabbb4d50b8b",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 529,
+          "line": 526,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13328,7 +13381,7 @@
         {
           "id": "inline.ui.0145.action.b9daf271e54c",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 521,
+          "line": 518,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13342,7 +13395,7 @@
         {
           "id": "inline.ui.0145.action.c7e34587e2ec",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 486,
+          "line": 483,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13356,7 +13409,7 @@
         {
           "id": "inline.ui.0145.action.dff80a407e2c",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 450,
+          "line": 447,
           "column": 23,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13369,7 +13422,7 @@
         {
           "id": "inline.ui.0149.action.175df37e0f43",
           "source": "src/pages/MusicPage.tsx",
-          "line": 386,
+          "line": 387,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13383,7 +13436,7 @@
         {
           "id": "inline.ui.0149.action.49d5ad7da5cf",
           "source": "src/pages/MusicPage.tsx",
-          "line": 394,
+          "line": 395,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13397,7 +13450,7 @@
         {
           "id": "inline.ui.0149.action.6553b618da26",
           "source": "src/pages/MusicPage.tsx",
-          "line": 359,
+          "line": 360,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13411,7 +13464,7 @@
         {
           "id": "inline.ui.0149.action.821a1bc772cb",
           "source": "src/pages/MusicPage.tsx",
-          "line": 351,
+          "line": 352,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13505,7 +13558,7 @@
         {
           "id": "inline.ui.0161.action.430827641e9d",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 109,
+          "line": 112,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "a",
@@ -13520,7 +13573,7 @@
         {
           "id": "inline.ui.0161.action.a2b1847bbf16",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 118,
+          "line": 121,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "button",
@@ -13535,7 +13588,7 @@
         {
           "id": "inline.ui.0161.action.d5afae87e211",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 102,
+          "line": 105,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "button",
@@ -13656,9 +13709,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0195.action.b0becf9266a0",
+          "id": "inline.ui.0195.action.7d4c56936129",
           "source": "src/components/Navigation.tsx",
-          "line": 306,
+          "line": 314,
           "column": 7,
           "ownerComponentId": "ui.0195",
           "tag": "button",
@@ -13723,23 +13776,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0072.badge.cda50a3d9d9f",
-          "source": "src/components/ProfileHeader.tsx",
-          "line": 65,
-          "column": 9,
-          "ownerComponentId": "ui.0072",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-lg",
-            "badge-outline",
-            "border-white",
-            "mt-2",
-            "text-white"
-          ],
-          "dynamicClasses": true
-        },
-        {
           "id": "inline.ui.0102.badge.384375b91c2c",
           "source": "src/components/schedule/InstrumentBadges.tsx",
           "line": 40,
@@ -13783,7 +13819,7 @@
         {
           "id": "inline.ui.0108.badge.8fe3e68fc485",
           "source": "src/components/schedule/MusicianSlotRow.tsx",
-          "line": 77,
+          "line": 78,
           "column": 9,
           "ownerComponentId": "ui.0108",
           "tag": "span",
@@ -13793,78 +13829,6 @@
             "badge-xs",
             "hidden",
             "lg:inline"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0110.badge.39460fa4ad05",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 168,
-          "column": 57,
-          "ownerComponentId": "ui.0110",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm",
-            "bg-warning/10",
-            "border-warning",
-            "flex",
-            "gap-1",
-            "items-center",
-            "text-warning"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0110.badge.6ad924faf0fc",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 156,
-          "column": 57,
-          "ownerComponentId": "ui.0110",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-sm",
-            "bg-success/10",
-            "border-success",
-            "flex",
-            "gap-1",
-            "items-center",
-            "text-success"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0110.badge.b2afb2cea6af",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 184,
-          "column": 61,
-          "ownerComponentId": "ui.0110",
-          "tag": "p",
-          "staticClassTokens": [
-            "badge",
-            "badge-ghost",
-            "badge-xs",
-            "text-base-content/50",
-            "text-xs"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0110.badge.ef85a8827234",
-          "source": "src/components/schedule/RegistrationList.tsx",
-          "line": 162,
-          "column": 57,
-          "ownerComponentId": "ui.0110",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-error",
-            "badge-sm",
-            "flex",
-            "gap-1",
-            "items-center",
-            "text-error-content"
           ],
           "dynamicClasses": false
         },
@@ -13886,25 +13850,6 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0113.badge.583a9ab66ea6",
-          "source": "src/components/schedule/ScheduleCollapsibleCard.tsx",
-          "line": 132,
-          "column": 13,
-          "ownerComponentId": "ui.0113",
-          "tag": "span",
-          "staticClassTokens": [
-            "badge",
-            "badge-outline",
-            "badge-warning",
-            "badge-xs",
-            "font-semibold",
-            "hidden",
-            "shrink-0",
-            "sm:inline-flex"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "inline.ui.0114.badge.d2ba0e50560b",
           "source": "src/components/schedule/ScheduleCompactCard.tsx",
           "line": 68,
@@ -13921,19 +13866,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0119.badge.b9fd1af2830b",
-          "source": "src/components/schedule/ScheduleStatusBadge.tsx",
-          "line": 22,
-          "column": 5,
-          "ownerComponentId": "ui.0119",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0120.badge.ba852613dff5",
+          "id": "inline.ui.0120.badge.62131450c229",
           "source": "src/components/schedule/SlotFillIndicator.tsx",
           "line": 27,
           "column": 5,
@@ -13983,7 +13916,7 @@
         {
           "id": "inline.ui.0142.badge.3854256bcbff",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 389,
+          "line": 391,
           "column": 48,
           "ownerComponentId": "ui.0142",
           "tag": "div",
@@ -13996,7 +13929,7 @@
         {
           "id": "inline.ui.0145.badge.0c40efe10576",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 403,
+          "line": 400,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "span",
@@ -14008,7 +13941,7 @@
         {
           "id": "inline.ui.0145.badge.0c97f35472e2",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 342,
+          "line": 339,
           "column": 27,
           "ownerComponentId": "ui.0145",
           "tag": "span",
@@ -14017,21 +13950,6 @@
             "badge-sm"
           ],
           "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0162.badge.05d41c5cf463",
-          "source": "src/pages/tabs/RegistrationsTab.tsx",
-          "line": 31,
-          "column": 37,
-          "ownerComponentId": "ui.0162",
-          "tag": "div",
-          "staticClassTokens": [
-            "badge",
-            "badge-outline",
-            "badge-xs",
-            "sm:badge-sm"
-          ],
-          "dynamicClasses": false
         }
       ]
     },
@@ -14058,7 +13976,7 @@
         {
           "id": "inline.ui.0026.card.25817e902f0b",
           "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 82,
+          "line": 83,
           "column": 7,
           "ownerComponentId": "ui.0026",
           "tag": "div",
@@ -14071,7 +13989,7 @@
         {
           "id": "inline.ui.0026.card.25817e902f0b",
           "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 93,
+          "line": 94,
           "column": 5,
           "ownerComponentId": "ui.0026",
           "tag": "div",
@@ -14155,7 +14073,7 @@
         {
           "id": "inline.ui.0044.card.0c32573fb5e9",
           "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
-          "line": 99,
+          "line": 100,
           "column": 5,
           "ownerComponentId": "ui.0044",
           "tag": "div",
@@ -14171,7 +14089,7 @@
         {
           "id": "inline.ui.0051.card.d4c40aa39092",
           "source": "src/components/JamCard.tsx",
-          "line": 53,
+          "line": 48,
           "column": 5,
           "ownerComponentId": "ui.0051",
           "tag": "article",
@@ -14248,7 +14166,7 @@
         {
           "id": "inline.ui.0072.card.0c2ddd740560",
           "source": "src/components/ProfileHeader.tsx",
-          "line": 52,
+          "line": 46,
           "column": 5,
           "ownerComponentId": "ui.0072",
           "tag": "div",
@@ -14334,7 +14252,7 @@
         {
           "id": "inline.ui.0139.card.4f770448212d",
           "source": "src/pages/host/FeedbackPage.tsx",
-          "line": 262,
+          "line": 264,
           "column": 5,
           "ownerComponentId": "ui.0139",
           "tag": "div",
@@ -14348,7 +14266,7 @@
         {
           "id": "inline.ui.0142.card.f8da82501a95",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 362,
+          "line": 364,
           "column": 13,
           "ownerComponentId": "ui.0142",
           "tag": "article",
@@ -14395,7 +14313,7 @@
         {
           "id": "inline.ui.0145.card.15ce7f2c5911",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 183,
+          "line": 180,
           "column": 11,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -14409,7 +14327,7 @@
         {
           "id": "inline.ui.0145.card.15ce7f2c5911",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 265,
+          "line": 262,
           "column": 9,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -14423,7 +14341,7 @@
         {
           "id": "inline.ui.0145.card.56ddd6651c4a",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 212,
+          "line": 209,
           "column": 15,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -14436,7 +14354,7 @@
         {
           "id": "inline.ui.0145.card.57283d4b3fc2",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 336,
+          "line": 333,
           "column": 17,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -14501,7 +14419,7 @@
         {
           "id": "inline.ui.0149.card.9352e5e75f37",
           "source": "src/pages/MusicPage.tsx",
-          "line": 182,
+          "line": 183,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14515,7 +14433,7 @@
         {
           "id": "inline.ui.0149.card.b9a21d7bb545",
           "source": "src/pages/MusicPage.tsx",
-          "line": 174,
+          "line": 175,
           "column": 11,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14632,7 +14550,7 @@
         {
           "id": "inline.ui.0161.card.05967e332e13",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 144,
+          "line": 147,
           "column": 17,
           "ownerComponentId": "ui.0161",
           "tag": "div",
@@ -14646,7 +14564,7 @@
         {
           "id": "inline.ui.0162.card.e42ed8b1e407",
           "source": "src/pages/tabs/RegistrationsTab.tsx",
-          "line": 22,
+          "line": 23,
           "column": 25,
           "ownerComponentId": "ui.0162",
           "tag": "div",
@@ -14725,7 +14643,7 @@
         {
           "id": "inline.ui.0010.field.83cf07fce210",
           "source": "src/components/DesktopUserMenu.tsx",
-          "line": 82,
+          "line": 72,
           "column": 15,
           "ownerComponentId": "ui.0010",
           "tag": "select",
@@ -14740,7 +14658,7 @@
         {
           "id": "inline.ui.0010.field.83cf07fce210",
           "source": "src/components/DesktopUserMenu.tsx",
-          "line": 174,
+          "line": 163,
           "column": 13,
           "ownerComponentId": "ui.0010",
           "tag": "select",
@@ -14755,7 +14673,7 @@
         {
           "id": "inline.ui.0010.field.faae46012791",
           "source": "src/components/DesktopUserMenu.tsx",
-          "line": 95,
+          "line": 85,
           "column": 15,
           "ownerComponentId": "ui.0010",
           "tag": "select",
@@ -14770,7 +14688,7 @@
         {
           "id": "inline.ui.0010.field.faae46012791",
           "source": "src/components/DesktopUserMenu.tsx",
-          "line": 187,
+          "line": 176,
           "column": 13,
           "ownerComponentId": "ui.0010",
           "tag": "select",
@@ -14783,9 +14701,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0024.field.e76b8944b19c",
+          "id": "inline.ui.0024.field.d5e37565c6cf",
           "source": "src/components/FeedbackModal.tsx",
-          "line": 144,
+          "line": 145,
           "column": 19,
           "ownerComponentId": "ui.0024",
           "tag": "input",
@@ -14799,7 +14717,7 @@
         {
           "id": "inline.ui.0026.field.5719863ad50b",
           "source": "src/components/forms/JamRegistrationForm.tsx",
-          "line": 150,
+          "line": 151,
           "column": 15,
           "ownerComponentId": "ui.0026",
           "tag": "input",
@@ -14810,31 +14728,10 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0028.field.08897267b064",
-          "source": "src/components/forms/SearchableSelect.tsx",
-          "line": 145,
-          "column": 7,
-          "ownerComponentId": "ui.0028",
-          "tag": "button",
-          "staticClassTokens": [
-            "flex",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary",
-            "items-center",
-            "justify-between",
-            "select",
-            "select-bordered",
-            "text-left",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
           "id": "inline.ui.0028.field.49cf2aaca6d9",
           "source": "src/components/forms/SearchableSelect.tsx",
-          "line": 197,
-          "column": 13,
+          "line": 203,
+          "column": 15,
           "ownerComponentId": "ui.0028",
           "tag": "input",
           "staticClassTokens": [
@@ -14848,7 +14745,7 @@
         {
           "id": "inline.ui.0028.field.f4e4c9af21dc",
           "source": "src/components/forms/SearchableSelect.tsx",
-          "line": 142,
+          "line": 151,
           "column": 16,
           "ownerComponentId": "ui.0028",
           "tag": "input",
@@ -14858,7 +14755,7 @@
         {
           "id": "inline.ui.0073.field.04c7d44f22e7",
           "source": "src/components/ProfileSetupModal.tsx",
-          "line": 179,
+          "line": 180,
           "column": 11,
           "ownerComponentId": "ui.0073",
           "tag": "input",
@@ -14871,7 +14768,7 @@
         {
           "id": "inline.ui.0073.field.552babd6490f",
           "source": "src/components/ProfileSetupModal.tsx",
-          "line": 139,
+          "line": 140,
           "column": 11,
           "ownerComponentId": "ui.0073",
           "tag": "select",
@@ -14885,7 +14782,7 @@
         {
           "id": "inline.ui.0073.field.70b992692dca",
           "source": "src/components/ProfileSetupModal.tsx",
-          "line": 159,
+          "line": 160,
           "column": 11,
           "ownerComponentId": "ui.0073",
           "tag": "select",
@@ -14899,7 +14796,7 @@
         {
           "id": "inline.ui.0073.field.d973beecd490",
           "source": "src/components/ProfileSetupModal.tsx",
-          "line": 123,
+          "line": 124,
           "column": 11,
           "ownerComponentId": "ui.0073",
           "tag": "input",
@@ -15187,7 +15084,7 @@
         {
           "id": "inline.ui.0145.field.104165b86fcd",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 432,
+          "line": 429,
           "column": 19,
           "ownerComponentId": "ui.0145",
           "tag": "select",
@@ -15201,7 +15098,7 @@
         {
           "id": "inline.ui.0145.field.188f0914aa9b",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 505,
+          "line": 502,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "input",
@@ -15217,7 +15114,7 @@
         {
           "id": "inline.ui.0145.field.1c692166840b",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 271,
+          "line": 268,
           "column": 17,
           "ownerComponentId": "ui.0145",
           "tag": "label",
@@ -15230,7 +15127,7 @@
         {
           "id": "inline.ui.0145.field.2de566221baa",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 273,
+          "line": 270,
           "column": 19,
           "ownerComponentId": "ui.0145",
           "tag": "input",
@@ -15240,7 +15137,7 @@
         {
           "id": "inline.ui.0145.field.604578557240",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 459,
+          "line": 456,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "input",
@@ -15256,7 +15153,7 @@
         {
           "id": "inline.ui.0145.field.6af0631b2980",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 287,
+          "line": 284,
           "column": 17,
           "ownerComponentId": "ui.0145",
           "tag": "select",
@@ -15269,7 +15166,7 @@
         {
           "id": "inline.ui.0149.field.085b67c6ed72",
           "source": "src/pages/MusicPage.tsx",
-          "line": 333,
+          "line": 334,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "select",
@@ -15283,7 +15180,7 @@
         {
           "id": "inline.ui.0149.field.5f9ba7a19e3d",
           "source": "src/pages/MusicPage.tsx",
-          "line": 370,
+          "line": 371,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "input",
@@ -15293,51 +15190,6 @@
             "input-sm",
             "text-center",
             "w-14"
-          ],
-          "dynamicClasses": false
-        }
-      ]
-    },
-    {
-      "family": "menu",
-      "occurrences": [
-        {
-          "id": "inline.ui.0010.menu.4971e201356c",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 64,
-          "column": 7,
-          "ownerComponentId": "ui.0010",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-end"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0010.menu.4971e201356c",
-          "source": "src/components/DesktopUserMenu.tsx",
-          "line": 130,
-          "column": 5,
-          "ownerComponentId": "ui.0010",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-end"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0054.menu.0fc68a1fc731",
-          "source": "src/components/MobileDrawer.tsx",
-          "line": 188,
-          "column": 11,
-          "ownerComponentId": "ui.0054",
-          "tag": "ul",
-          "staticClassTokens": [
-            "gap-0.5",
-            "menu",
-            "p-0"
           ],
           "dynamicClasses": false
         }

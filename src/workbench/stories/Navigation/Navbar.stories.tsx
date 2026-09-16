@@ -74,7 +74,7 @@ export const MobileHostKeyboardDismissal: Story = {
     const languageList = page.getByRole('listbox')
     await expect(languageList).toBeVisible()
     await expect(page.queryByRole('textbox')).not.toBeInTheDocument()
-    await userEvent.click(within(languageList).getByRole('option', { name: /english/i }))
+    await userEvent.click(within(languageList).getByRole('option', { name: /english|inglês/i }))
     await expect(drawer).not.toHaveClass('pointer-events-none')
 
     const themePicker = page.getByRole('button', { name: /selecionar tema|select theme/i })

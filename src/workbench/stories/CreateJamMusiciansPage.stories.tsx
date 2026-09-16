@@ -106,7 +106,11 @@ export const MusicianDirectory: Story = {
   play: async ({canvas}) => {
     await expect(await canvas.findByRole('heading', {level: 1, name: /musicians directory/i})).toBeVisible()
     await expect(canvas.getAllByRole('button', {name: /edit ana host/i}).length).toBeGreaterThan(0)
-    await expect(canvas.getByRole('spinbutton', {name: /page number/i})).toBeVisible()
+    const pageNumber = canvas
+      .getAllByRole('spinbutton', {name: /page number/i})
+      .find((candidate) => candidate.getClientRects().length > 0)
+    await expect(pageNumber).toBeDefined()
+    await expect(pageNumber!).toBeVisible()
     await expect(canvas.getByRole('button', {name: /last page/i})).toBeVisible()
   },
 }

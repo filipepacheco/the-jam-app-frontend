@@ -98,7 +98,10 @@ export const PerformanceEnrollment: Story = {
   ),
   globals: { locale: 'en', viewport: { value: 'phone', isRotated: false } },
   play: async ({ canvas, userEvent }) => {
-    await expect(canvas.getByRole('button', {name: /guitarists/i})).toHaveAttribute('aria-pressed', 'true')
+    const longMusic = scheduleFixtures[0].music!
+    await expect(canvas.getByText(longMusic.title)).toHaveClass('ds-wrap-user-content')
+    await expect(canvas.getByText(new RegExp(longMusic.artist, 'i'))).toHaveClass('ds-wrap-user-content')
+    await expect(canvas.getByRole('button', {name: /guitars/i})).toHaveAttribute('aria-pressed', 'true')
     await userEvent.click(canvas.getByRole('button', { name: /enroll now/i }))
     await expect(enroll).toHaveBeenCalledWith('guitars')
   },

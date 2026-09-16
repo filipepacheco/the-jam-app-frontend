@@ -16,10 +16,10 @@ export function ScheduleDetailsCard({ schedule }: ScheduleDetailsCardProps) {
 
   return (
     <div className="bg-base-200 rounded p-3 mb-4">
-      <p className="font-semibold text-sm truncate">
+      <p className="ds-wrap-user-content font-semibold text-sm">
         {schedule.music?.title || t('schedule.song_tba')}
       </p>
-      <p className="text-xs text-base-content/70 truncate">
+      <p className="ds-wrap-user-content text-xs text-base-content/70">
         {t('common.by')} {schedule.music?.artist || t('schedule.artist_tba')}
       </p>
       {schedule.music?.duration && (
