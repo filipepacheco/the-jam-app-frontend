@@ -8,6 +8,7 @@ import type {MusicianLevel, MusicianResponseDto} from '../types/api.types'
 import {useFormState} from '../hooks'
 import {useTranslation} from 'react-i18next'
 import {INSTRUMENTS} from '../lib/instruments'
+import {translationKey} from '../lib/i18n/translationKeys'
 import {Action} from './Action'
 import {Alert} from './Alert'
 import {Modal} from './Modal'
@@ -121,7 +122,7 @@ export function EditMusicianModal({ musician, onSave, onClose }: EditMusicianMod
               <option value="">{t('musician_form.instrument_placeholder')}</option>
               {INSTRUMENTS.map((inst) => (
                 <option key={inst} value={inst}>
-                  {t(`schedule.instruments.${inst}`)}
+                  {t(translationKey('schedule.instruments', inst))}
                 </option>
               ))}
             </Field.Select>

@@ -14,7 +14,7 @@ export function NowPlayingPanel({ song }: NowPlayingPanelProps) {
   return (
     <div className="flex flex-col items-center justify-center text-center px-6 py-8">
       <p className="text-2xl text-primary font-semibold mb-6">
-        {t('publicDashboard.nowPlaying', 'Now Playing')}
+        {t('publicDashboard.nowPlaying')}
       </p>
 
       <h2 className="text-7xl md:text-8xl lg:text-9xl font-black mb-4 leading-tight ds-wrap-user-content">
@@ -22,7 +22,7 @@ export function NowPlayingPanel({ song }: NowPlayingPanelProps) {
       </h2>
 
       <p className="text-3xl md:text-5xl text-base-content/80 mb-10 ds-wrap-user-content">
-        {t('publicDashboard.by', 'by')} {song.artist}
+        {t('publicDashboard.by')} {song.artist}
       </p>
 
       {song.musicians && song.musicians.length > 0 && (

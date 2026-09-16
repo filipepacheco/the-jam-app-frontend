@@ -2,6 +2,7 @@ import type {RegistrationResponseDto, ScheduleResponseDto} from '../../types/api
 import {useTranslation} from 'react-i18next'
 import {useReducedMotion} from '../../hooks'
 import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
+import {translationKey} from '../../lib/i18n/translationKeys'
 import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {InstrumentsSummary} from '../schedule/InstrumentsSummary'
 import {SpotifyPlayButton} from '../SpotifyPreview'
@@ -82,7 +83,7 @@ export function TimelineItemV2Waveform({
 
   // Get instrument options for showing available slots
   const instrumentOptions = useMemo(
-    () => getInstrumentOptions(schedule, (key) => t(`schedule.instruments.${key}`)),
+    () => getInstrumentOptions(schedule, (key) => t(translationKey('schedule.instruments', key))),
     [schedule, t]
   )
 

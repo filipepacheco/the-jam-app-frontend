@@ -66,14 +66,14 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
         transition={pulseTransition}
       >
         <p className="text-primary text-sm md:text-lg font-semibold mb-4">
-          {t('publicDashboard.nowPlaying', 'Now Playing')}
+          {t('publicDashboard.nowPlaying')}
         </p>
         {song ? (
           <>
             <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 ds-wrap-user-content">{song.title}</h2>
             <WaveformVisualizer className="my-4" />
             <p className="md:text-3xl text-base-content/80 mb-2 ds-wrap-user-content">
-              {t('publicDashboard.by', 'by')} {song.artist}
+              {t('publicDashboard.by')} {song.artist}
             </p>
             {song.duration && (
               <p className="text-lg md:text-xl text-base-content/70 mb-8">
@@ -84,7 +84,7 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
             {song.musicians && song.musicians.length > 0 ? (
               <div className="mt-8">
                 <p className="text-lg md:text-2xl font-bold text-base-content mb-6">
-                  {t('publicDashboard.currentMusicians', 'Current Musicians')}
+                  {t('publicDashboard.currentMusicians')}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   <AnimatePresence initial={false} mode="popLayout">
@@ -104,7 +104,7 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
                 </div>
               </div>
             ) : (
-              <p className="text-base-content/70 text-lg">{t('publicDashboard.noMusicians', 'No musicians registered yet')}</p>
+              <p className="text-base-content/70 text-lg">{t('publicDashboard.noMusicians')}</p>
             )}
           </>
         ) : (

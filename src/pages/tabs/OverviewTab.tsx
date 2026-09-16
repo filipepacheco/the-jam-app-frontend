@@ -7,6 +7,8 @@ import {Pencil, ExternalLink, Play, Square, RotateCcw, Download} from "lucide-re
 import {SpotifyImportModal} from "../../components";
 import {Action, type ActionVariant} from "../../components/Action";
 import {getJamDashboardPath} from "../../utils/jamUrl";
+import {useAppLanguage} from '../../hooks'
+import {formatDate} from '../../lib/i18n/applicationLocale'
 
 /**
  * Overview Tab Component
@@ -22,6 +24,7 @@ export function OverviewTab({
     loading: boolean
 }) {
     const {t} = useTranslation()
+    const {currentLang} = useAppLanguage()
     const navigate = useNavigate()
     const [showImportModal, setShowImportModal] = useState(false)
 
@@ -48,21 +51,21 @@ export function OverviewTab({
         switch (jam.status) {
             case 'INACTIVE':
                 return {
-                    label: t('jam_management.overview.actions.activate', 'Activate Jam'),
+                    label: t('jam_management.overview.actions.activate'),
                     icon: <RotateCcw className="size-4" />,
                     variant: 'secondary',
                     onClick: () => onStatusChange('ACTIVE')
                 }
             case 'ACTIVE':
                 return {
-                    label: t('jam_management.overview.actions.start', 'Start Jam'),
+                    label: t('jam_management.overview.actions.start'),
                     icon: <Play className="size-4" />,
                     variant: 'primary',
                     onClick: () => onStatusChange('LIVE')
                 }
             case 'LIVE':
                 return {
-                    label: t('jam_management.overview.actions.finish', 'Finish Jam'),
+                    label: t('jam_management.overview.actions.finish'),
                     icon: <Square className="size-4" />,
                     variant: 'destructive',
                     onClick: () => onStatusChange('FINISHED')
@@ -70,7 +73,7 @@ export function OverviewTab({
             case 'FINISHED':
             default:
                 return {
-                    label: t('jam_management.overview.actions.prepare_again', 'Prepare Jam again'),
+                    label: t('jam_management.overview.actions.prepare_again'),
                     icon: <RotateCcw className="size-4" />,
                     variant: 'secondary',
                     onClick: () => onStatusChange('INACTIVE')
@@ -156,7 +159,7 @@ export function OverviewTab({
                                     <p className="text-xs text-base-content/50">{t('common.date')}</p>
                                     <p className="text-sm font-medium">
                                         {hasDate
-                                            ? new Date(jam.date!).toLocaleDateString()
+                                            ? formatDate(jam.date!, currentLang)
                                             : <span className="text-base-content/40">{t('jam_management.overview.date_not_set')}</span>
                                         }
                                     </p>

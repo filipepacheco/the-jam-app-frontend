@@ -13,6 +13,7 @@ import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
 import type {InstrumentOption} from '../../utils/scheduleUtils'
 import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
+import {translateDynamicValue} from '../../lib/i18n/translationKeys'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
 import {Alert} from '../Alert'
 import {InstrumentsSummary} from './InstrumentsSummary'
@@ -271,7 +272,7 @@ export function HostMusicianRegistrationModal({
           <option value="">{t('schedule.choose_musician')}</option>
           {musicians.map((musician) => (
             <option key={musician.id} value={musician.id}>
-              {musician.name} ({musician.instrument ? t(`schedule.instruments.${musician.instrument}`, musician.instrument) : t('common.unknown')})
+              {musician.name} ({musician.instrument ? translateDynamicValue(t, 'schedule.instruments', musician.instrument) : t('common.unknown')})
             </option>
           ))}
         </Field.Select>

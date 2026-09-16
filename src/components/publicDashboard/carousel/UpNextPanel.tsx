@@ -22,7 +22,7 @@ export function UpNextPanel({ song }: UpNextPanelProps) {
       </h2>
 
       <p className="text-3xl md:text-5xl text-base-content/80 mb-10 ds-wrap-user-content">
-        {t('publicDashboard.by', 'by')} {song.artist}
+        {t('publicDashboard.by')} {song.artist}
       </p>
 
       {song.musicians && song.musicians.length > 0 && (

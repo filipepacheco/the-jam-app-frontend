@@ -35,7 +35,7 @@ export function ScheduleOverflowMenu({
   if (status === 'IN_PROGRESS') {
     items.push({
       id: 'complete',
-      label: t('schedule.actions.mark_completed', 'Mark as completed'),
+      label: t('schedule.actions.mark_completed'),
       icon: <CheckCircle className="w-3.5 h-3.5" />,
       disabled: loading,
       onSelect: () => onStatusChange?.('COMPLETED'),
@@ -55,7 +55,7 @@ export function ScheduleOverflowMenu({
   if (hasPendingRegistrations && onApproveAll) {
     items.push({
       id: 'approve-all',
-      label: t('schedule.approve_all', 'Approve all'),
+      label: t('schedule.approve_all'),
       icon: <CheckCheck className="w-3.5 h-3.5" />,
       disabled: loading,
       onSelect: onApproveAll,
@@ -65,7 +65,7 @@ export function ScheduleOverflowMenu({
   if (onEditMusic) {
     items.push({
       id: 'edit-music',
-      label: t('schedule.edit_music', 'Editar Música'),
+      label: t('schedule.edit_music'),
       icon: <Pencil className="w-3.5 h-3.5" />,
       disabled: loading,
       onSelect: onEditMusic,

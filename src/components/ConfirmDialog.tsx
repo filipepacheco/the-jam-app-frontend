@@ -45,7 +45,7 @@ export function ConfirmDialog({
         <ModalFooter
           onCancel={onCancel}
           onSubmit={onConfirm}
-          submitLabel={confirmLabel || t('common.confirm', 'Confirm')}
+          submitLabel={confirmLabel || t('common.confirm')}
           cancelLabel={cancelLabel}
           submitVariant={variant === 'destructive' ? 'error' : 'primary'}
           submitting={loading}

@@ -6,6 +6,9 @@
 import type {AuthUser} from '../types/auth.types'
 import {getRoleLabel} from '../lib/auth'
 import {useTranslation} from 'react-i18next'
+import {translateDynamicValue} from '../lib/i18n/translationKeys'
+import {useAppLanguage} from '../hooks'
+import {formatDate} from '../lib/i18n/applicationLocale'
 
 interface ProfileHeaderProps {
   user: AuthUser
@@ -13,6 +16,7 @@ interface ProfileHeaderProps {
 
 export function ProfileHeader({ user }: ProfileHeaderProps) {
   const { t } = useTranslation()
+  const {currentLang} = useAppLanguage()
   // Get role-based colors
   const getRoleBgColor = () => {
     switch (user.role) {
@@ -45,7 +49,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
 
   // Format member since date
   const memberSince = user.supabaseUserId
-    ? new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+    ? formatDate(new Date(), currentLang, {year: 'numeric', month: 'long'})
     : 'Recently joined'
 
   return (
@@ -63,7 +67,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
 
         {/* Role Badge */}
         <div className={`badge badge-lg ${getRoleBadgeColor()} badge-outline text-white border-white mt-2`}>
-          {getRoleLabel(user.role)}
+          {getRoleLabel(user.role, t)}
         </div>
 
         {/* Member Since */}
@@ -74,7 +78,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         {/* Additional Info Line */}
         {user.instrument && (
           <p className="text-sm opacity-90">
-            🎸 {t(`schedule.instruments.${user.instrument}`, user.instrument)}
+            🎸 {translateDynamicValue(t, 'schedule.instruments', user.instrument)}
             {user.level && ` • ${user.level}`}
           </p>
         )}
@@ -82,4 +86,3 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
     </div>
   )
 }
-

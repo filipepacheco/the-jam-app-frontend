@@ -224,7 +224,7 @@ export function QuickEditPanel({ music, onSave, onCancel }: QuickEditPanelProps)
           <Action.Label>{t('common.cancel')}</Action.Label>
         </Action>
         {saving ? (
-          <Action variant="primary" state="loading" loadingLabel={t('common.saving', { defaultValue: t('common.save') })} className="gap-1">
+          <Action variant="primary" state="loading" loadingLabel={t('common.saving')} className="gap-1">
             <Action.Label>{t('common.save')}</Action.Label>
           </Action>
         ) : (

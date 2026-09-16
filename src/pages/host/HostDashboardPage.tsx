@@ -19,10 +19,11 @@ import {
     type NavigationMenuItem,
 } from '../../components'
 import {useTranslation} from 'react-i18next'
-import {safeT} from '../../lib/i18nUtils.ts'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
 import {getJamPath} from '../../utils/jamUrl'
 import {AlertCircle, CalendarClock, CheckCircle2, ExternalLink, MapPin, Music2, Trash2, Users} from 'lucide-react'
+import {formatDateTime} from '../../lib/i18n/applicationLocale'
+import {useAppLanguage} from '../../hooks'
 
 interface JamCategory {
     planned: JamResponseDto[]
@@ -340,12 +341,13 @@ function HostJamCategory({
 }
 
 function HostJamSummaryCard({jam, category, onDelete, onNavigate, deleting, mutationFeedback}: HostJamSummaryCardProps) {
-    const {t, i18n} = useTranslation()
+    const {t} = useTranslation()
+    const {currentLang} = useAppLanguage()
 
     const registrationCount = jam._count?.registrations ?? 0
     const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
     const formattedDate = jam.date && !Number.isNaN(new Date(jam.date).getTime())
-        ? new Intl.DateTimeFormat(i18n.language, {dateStyle: 'medium', timeStyle: 'short'}).format(new Date(jam.date))
+        ? formatDateTime(jam.date, currentLang)
         : null
     const menuItems: NavigationMenuItem[] = [
         {
@@ -376,11 +378,11 @@ function HostJamSummaryCard({jam, category, onDelete, onNavigate, deleting, muta
                         <span className="flex flex-wrap gap-x-3 gap-y-1">
                             <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
                                 <Music2 className="size-3.5 shrink-0" aria-hidden="true" />
-                                {songCount} {safeT(t, 'jam_management.host_dashboard.stats.songs').toLowerCase()}
+                                {songCount} {t('jam_management.host_dashboard.stats.songs').toLowerCase()}
                             </span>
                             <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
                                 <Users className="size-3.5 shrink-0" aria-hidden="true" />
-                                {registrationCount} {safeT(t, 'jam_management.host_dashboard.stats.registrations').toLowerCase()}
+                                {registrationCount} {t('jam_management.host_dashboard.stats.registrations').toLowerCase()}
                             </span>
                         </span>
                     </div>

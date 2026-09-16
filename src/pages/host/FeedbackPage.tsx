@@ -8,10 +8,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Star, MessageSquare, User, Globe, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useAuth, usePageAlerts } from '../../hooks'
+import { useAppLanguage, useAuth, usePageAlerts } from '../../hooks'
 import { feedbackService } from '../../services'
 import type { FeedbackListItemDto, FeedbackListResponseDto } from '../../types/feedback.types'
 import { Alert } from '../../components'
+import { translationKey } from '../../lib/i18n/translationKeys'
+import { formatDateTime } from '../../lib/i18n/applicationLocale'
 
 export function FeedbackPage() {
   const { t } = useTranslation()
@@ -229,10 +231,10 @@ interface FeedbackCardProps {
 
 function FeedbackCard({ feedback }: FeedbackCardProps) {
   const { t } = useTranslation()
+  const {currentLang} = useAppLanguage()
 
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr)
-    return date.toLocaleDateString(undefined, {
+    return formatDateTime(dateStr, currentLang, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -265,7 +267,7 @@ function FeedbackCard({ feedback }: FeedbackCardProps) {
           <div className="flex items-center gap-3">
             {renderStars(feedback.rating)}
             <span className="text-sm font-medium">
-              {t(`feedback.stars.${feedback.rating}`)}
+              {t(translationKey('feedback.stars', feedback.rating))}
             </span>
           </div>
           <span className="text-xs text-base-content/60">

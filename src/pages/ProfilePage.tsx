@@ -159,7 +159,7 @@ export function ProfilePage() {
       <div className="max-w-2xl mx-auto">
         {/* Alerts */}
         {error && <Alert type="error" message={error} title={t('common.error')} />}
-        {success && <Alert type="success" message={success} title={t('common.success_title')} />}
+        {success && <Alert type="success" message={success} title={t('common.success')} />}
 
         {/* Profile Header */}
         <ProfileHeader user={user} />
@@ -299,4 +299,3 @@ export function ProfilePage() {
 }
 
 export default ProfilePage
-

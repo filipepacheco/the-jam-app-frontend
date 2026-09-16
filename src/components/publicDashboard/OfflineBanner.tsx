@@ -31,7 +31,7 @@ export default function OfflineBanner({ visible, message }: { visible: boolean; 
       role="status"
       aria-live="polite"
     >
-      {message || t('publicDashboard.offlineIndicator', 'You are offline — showing cached data')}
+      {message || t('publicDashboard.offlineIndicator')}
     </motion.div>
   )
 }

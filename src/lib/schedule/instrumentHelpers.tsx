@@ -4,6 +4,7 @@
  */
 
 import React from 'react'
+import type {TFunction} from 'i18next'
 
 /**
  * Get the Lucide icon for a given instrument
@@ -107,7 +108,7 @@ export interface InstrumentCount {
  * @param t - i18next t function for labels
  * @returns Array of { count, key, label } for each instrument slot
  */
-export function getInstrumentCounts(music: InstrumentSlots, t: (key: string) => string): InstrumentCount[] {
+export function getInstrumentCounts(music: InstrumentSlots, t: TFunction): InstrumentCount[] {
   return [
     { count: music.neededDrums || 0, key: 'drums', label: t('schedule.instruments.drums') },
     { count: music.neededGuitars || 0, key: 'guitars', label: t('schedule.instruments.guitars') },
@@ -116,4 +117,3 @@ export function getInstrumentCounts(music: InstrumentSlots, t: (key: string) => 
     { count: music.neededKeys || 0, key: 'keys', label: t('schedule.instruments.keys') },
   ]
 }
-

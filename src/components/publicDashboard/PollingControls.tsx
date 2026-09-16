@@ -20,12 +20,12 @@ export function PollingControls({ value, onChange }: PollingControlsProps) {
 
   return (
     <div className="px-4 md:px-8 mt-4 max-w-6xl mx-auto">
-      <Field id="polling-interval" label={t('publicDashboard.autoRefresh', 'Auto-refresh')}>
+      <Field id="polling-interval" label={t('publicDashboard.autoRefresh')}>
         <Field.Select
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
         >
-          <option value={0}>{t('publicDashboard.off', 'Off')}</option>
+          <option value={0}>{t('publicDashboard.off')}</option>
           <option value={5000}>5s</option>
           <option value={10000}>10s</option>
           <option value={30000}>30s</option>

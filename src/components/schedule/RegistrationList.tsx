@@ -10,10 +10,12 @@ import {Avatar} from '../Avatar'
 import {memo} from "react"
 import {groupRegistrationsByInstrument} from '../../utils/musicianUtils';
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
+import {translationKey} from '../../lib/i18n/translationKeys'
 import {Action, IconAction} from '../Action'
+import type {TFunction} from 'i18next'
 
 
-const getInstrumentDisplayName = (instrument: string, t: (key: string) => string): string => {
+const getInstrumentDisplayName = (instrument: string, t: TFunction): string => {
     const lower = instrument.toLowerCase()
     switch (lower) {
         case 'drums':
@@ -182,7 +184,7 @@ export const RegistrationList = memo(function RegistrationList({
                                                         )}
                                                         {registration.musician?.level && (
                                                             <p className="text-xs text-base-content/50 badge badge-xs badge-ghost">
-                                                                {t(`schedule.levels.${registration.musician.level}`)}
+                                                                {t(translationKey('schedule.levels', registration.musician.level))}
                                                             </p>
                                                         )}
                                                     </div>
