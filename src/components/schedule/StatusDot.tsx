@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { translationKey } from '../../lib/i18n/translationKeys'
+import { translateDynamicValue } from '../../lib/i18n/translationKeys'
 
 interface StatusDotProps {
   status: string
@@ -15,7 +15,7 @@ const COLOR_MAP: Record<string, string> = {
 
 export function StatusDot({ status }: StatusDotProps) {
   const { t } = useTranslation()
-  const label = t(translationKey('schedule.statuses', status.toLowerCase()))
+  const label = translateDynamicValue(t, 'schedule.statuses', status.toLowerCase())
   return (
     <span
       className={`w-2.5 h-2.5 rounded-full shrink-0 ${COLOR_MAP[status] || 'bg-base-content/30'}`}

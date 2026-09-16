@@ -42,6 +42,11 @@ export const common = {
   by: message({"pt-BR": "por", "en": "by", "es": "por"}),
   select_theme: message({"pt-BR": "Selecionar Tema", "en": "Select Theme", "es": "Seleccionar tema"}),
   select_language: message({"pt-BR": "Selecionar idioma", "en": "Select Language", "es": "Seleccionar idioma"}),
+  language_names: {
+    english: message({"pt-BR": "Inglês", "en": "English", "es": "Inglés"}),
+    spanish: message({"pt-BR": "Espanhol", "en": "Spanish", "es": "Español"}),
+    brazilian_portuguese: message({"pt-BR": "Português (Brasil)", "en": "Brazilian Portuguese", "es": "Portugués de Brasil"})
+  },
   unknown: message({"pt-BR": "Desconhecido", "en": "Unknown", "es": "Desconocido"}),
   you: message({"pt-BR": "Você", "en": "You", "es": "Tú"}),
   expanded: message({"pt-BR": "Expandido", "en": "Expanded", "es": "Expandido"}),

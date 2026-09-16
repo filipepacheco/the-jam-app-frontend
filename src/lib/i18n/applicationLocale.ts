@@ -1,4 +1,5 @@
 export const APP_LOCALES = ['pt-BR', 'en', 'es'] as const
+export const LEGACY_LOCALE_ALIASES = ['pt'] as const
 
 export type AppLocale = (typeof APP_LOCALES)[number]
 

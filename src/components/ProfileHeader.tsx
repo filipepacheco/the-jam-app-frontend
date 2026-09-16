@@ -6,7 +6,7 @@
 import type {AuthUser} from '../types/auth.types'
 import {getRoleLabel} from '../lib/auth'
 import {useTranslation} from 'react-i18next'
-import {translationKey} from '../lib/i18n/translationKeys'
+import {translateDynamicValue} from '../lib/i18n/translationKeys'
 import {useAppLanguage} from '../hooks'
 import {formatDate} from '../lib/i18n/applicationLocale'
 
@@ -78,7 +78,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         {/* Additional Info Line */}
         {user.instrument && (
           <p className="text-sm opacity-90">
-            🎸 {t(translationKey('schedule.instruments', user.instrument))}
+            🎸 {translateDynamicValue(t, 'schedule.instruments', user.instrument)}
             {user.level && ` • ${user.level}`}
           </p>
         )}

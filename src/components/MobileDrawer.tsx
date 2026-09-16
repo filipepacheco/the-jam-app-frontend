@@ -227,7 +227,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
                 value={currentLang}
               >
                 {LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code}>{lang.label}</option>
+                  <option key={lang.code} value={lang.code}>{t(lang.nameKey)}</option>
                 ))}
               </Field.Select>
             </Field>

@@ -1,4 +1,6 @@
 import {catalogue, type TranslationKey} from '../../locales/catalogue/catalogue'
+import {collectCatalogueKeys} from '../../locales/catalogue'
+import type {TFunction} from 'i18next'
 
 export const DYNAMIC_TRANSLATION_FAMILIES = [
   'feedback.stars',
@@ -7,6 +9,7 @@ export const DYNAMIC_TRANSLATION_FAMILIES = [
   'music_library.errors',
   'music_library.feedback',
   'registration.statuses',
+  'roles',
   'schedule.instruments',
   'schedule.levels',
   'schedule.statuses',
@@ -14,26 +17,26 @@ export const DYNAMIC_TRANSLATION_FAMILIES = [
 
 export type DynamicTranslationFamily = (typeof DYNAMIC_TRANSLATION_FAMILIES)[number]
 
-function collectKeys(node: object, prefix = ''): TranslationKey[] {
-  const keys: TranslationKey[] = []
-  for (const [key, value] of Object.entries(node)) {
-    const path = prefix ? `${prefix}.${key}` : key
-    if (value && typeof value === 'object' && 'kind' in value) {
-      keys.push(path as TranslationKey)
-    } else if (value && typeof value === 'object') {
-      keys.push(...collectKeys(value, path))
-    }
-  }
-  return keys
-}
+const knownTranslationKeys = new Set<TranslationKey>(collectCatalogueKeys(catalogue))
 
-const knownTranslationKeys = new Set<TranslationKey>(collectKeys(catalogue))
+function resolveTranslationKey(family: DynamicTranslationFamily, value: string | number): TranslationKey | undefined {
+  const candidate = `${family}.${String(value)}` as TranslationKey
+  return knownTranslationKeys.has(candidate) ? candidate : undefined
+}
 
 export function translationKey(
   family: DynamicTranslationFamily,
   value: string | number,
   fallback: TranslationKey = 'common.unknown',
 ): TranslationKey {
-  const candidate = `${family}.${String(value)}` as TranslationKey
-  return knownTranslationKeys.has(candidate) ? candidate : fallback
+  return resolveTranslationKey(family, value) ?? fallback
+}
+
+export function translateDynamicValue(
+  t: TFunction,
+  family: DynamicTranslationFamily,
+  value: string | number,
+): string {
+  const key = resolveTranslationKey(family, value)
+  return key ? t(key) : String(value)
 }

@@ -4,6 +4,8 @@ import {assembleResources} from './locales/catalogue'
 import {catalogue} from './locales/catalogue/catalogue'
 import {
   normalizeLocale,
+  APP_LOCALES,
+  LEGACY_LOCALE_ALIASES,
   persistLocale,
   resolveBrowserLocalePreference,
   syncDocumentLocale,
@@ -11,7 +13,7 @@ import {
 
 const missingI18nKeys: Array<{lng: string; ns: string; key: string}> = []
 
-function missingKeyHandler(lngs: readonly string[], ns: string, key: string) {
+function missingKeyHandler(lngs: readonly string[], ns: string, key: string): void {
   try {
     const lng = Array.isArray(lngs) ? lngs.join(',') : String(lngs || '')
     const entry = {lng, ns: String(ns || ''), key}
@@ -41,7 +43,7 @@ void i18n
       pt: ['pt-BR'],
       default: ['pt-BR'],
     },
-    supportedLngs: ['pt-BR', 'en', 'es', 'pt'],
+    supportedLngs: [...APP_LOCALES, ...LEGACY_LOCALE_ALIASES],
     load: 'currentOnly',
     debug: import.meta.env.DEV,
     ns: ['translation'],

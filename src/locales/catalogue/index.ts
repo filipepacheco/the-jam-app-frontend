@@ -42,6 +42,21 @@ function isLeaf(value: CatalogueTree | CatalogueLeaf): value is CatalogueLeaf {
   return 'kind' in value
 }
 
+export function collectCatalogueKeys<TCatalogue extends CatalogueTree>(tree: TCatalogue): Array<CatalogueKey<TCatalogue>> {
+  const keys: string[] = []
+
+  function visit(node: CatalogueTree, prefix = ''): void {
+    for (const [key, value] of Object.entries(node)) {
+      const path = prefix ? `${prefix}.${key}` : key
+      if (isLeaf(value)) keys.push(path)
+      else visit(value, path)
+    }
+  }
+
+  visit(tree)
+  return keys as Array<CatalogueKey<TCatalogue>>
+}
+
 function interpolationVariables(value: string): string[] {
   return [...value.matchAll(/{{\s*([\w.]+)(?:\s*,[^}]*)?\s*}}/g)]
     .map((match) => match[1])
@@ -55,7 +70,7 @@ function variablesMatch(reference: string, candidate: string): boolean {
 export function validateCatalogue(tree: CatalogueTree): string[] {
   const issues: string[] = []
 
-  function visit(node: CatalogueTree, prefix = '') {
+  function visit(node: CatalogueTree, prefix = ''): void {
     for (const [key, value] of Object.entries(node)) {
       const path = prefix ? `${prefix}.${key}` : key
       if (!isLeaf(value)) {
@@ -91,9 +106,13 @@ export function validateCatalogue(tree: CatalogueTree): string[] {
             issues.push(`${path}: ${locale} plural form ${required} is missing or empty`)
           }
         }
+        const localeCategories = new Set<string>([
+          'zero',
+          ...new Intl.PluralRules(locale).resolvedOptions().pluralCategories,
+        ])
         for (const form of Object.keys(forms) as PluralForm[]) {
-          if (!['zero', 'one', 'two', 'few', 'many', 'other'].includes(form)) {
-            issues.push(`${path}: ${locale} plural form ${form} is invalid`)
+          if (!localeCategories.has(form)) {
+            issues.push(`${path}: ${locale} plural form ${form} is invalid for this locale`)
           }
           const translation = forms[form]
           const referenceTranslation = reference?.[form]
@@ -133,7 +152,9 @@ function assembleTree(tree: CatalogueTree, locale: AppLocale): I18nextTree {
   return result
 }
 
-export function assembleResources<TCatalogue extends CatalogueTree>(catalogue: TCatalogue) {
+export function assembleResources<TCatalogue extends CatalogueTree>(
+  catalogue: TCatalogue,
+): Record<AppLocale, {translation: I18nextTree}> {
   return Object.fromEntries(APP_LOCALES.map((locale) => [
     locale,
     {translation: assembleTree(catalogue, locale)},

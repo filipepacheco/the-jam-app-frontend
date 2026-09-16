@@ -1,31 +1,29 @@
 import crypto from 'node:crypto'
 import fs from 'node:fs'
 import path from 'node:path'
+import {createInstance} from 'i18next'
 import ts from 'typescript'
-import {assembleResources, validateCatalogue, type CatalogueLeaf} from '../../src/locales/catalogue/index.ts'
+import {assembleResources, collectCatalogueKeys, validateCatalogue} from '../../src/locales/catalogue/index.ts'
 import {catalogue, type TranslationKey} from '../../src/locales/catalogue/catalogue.ts'
-import {normalizeLocale, resolveLocalePreference} from '../../src/lib/i18n/applicationLocale.ts'
+import {
+  APP_LOCALES,
+  LEGACY_LOCALE_ALIASES,
+  normalizeLocale,
+  resolveLocalePreference,
+} from '../../src/lib/i18n/applicationLocale.ts'
 import {DYNAMIC_TRANSLATION_FAMILIES} from '../../src/lib/i18n/translationKeys.ts'
 
 const MIGRATION_BASELINE_HASHES = {
-  'pt-BR': 'a936db8a40779913ccdad854b974cf03fd0928be98895c054254f0b71d9b6cd3',
-  en: '28ce64dffb6b9b4f890354e89cdb147085a167d02711fde61bf5b9b87d3973a1',
-  es: 'd4a864a252cc5adebc8bc969fad72f3f90b579b50dfd652bb91e98bb84b7477e',
+  'pt-BR': '161c4eed66e8d1a7f0d39066a4425a7ebae01cfd2aa0be62fdbb10502375fb2f',
+  en: 'bb8ac29913f83f3567391810242dd09ec31d273b2cbd89ee8db7ee99d466e494',
+  es: '579181a2a018a0e2853ee845d47865932d2af9766ae745ddcd5c38dccdd54d15',
 } as const
 
-function collectCatalogueKeys(node: object, prefix = '', result = new Set<TranslationKey>()) {
-  for (const [key, value] of Object.entries(node)) {
-    const current = prefix ? `${prefix}.${key}` : key
-    if (value && typeof value === 'object' && 'kind' in value) {
-      result.add(current as TranslationKey)
-    } else if (value && typeof value === 'object') {
-      collectCatalogueKeys(value, current, result)
-    }
-  }
-  return result
-}
-
-function flatten(node: Record<string, unknown>, prefix = '', result: Record<string, string> = {}) {
+function flatten(
+  node: Record<string, unknown>,
+  prefix = '',
+  result: Record<string, string> = {},
+): Record<string, string> {
   for (const [key, value] of Object.entries(node)) {
     const current = prefix ? `${prefix}.${key}` : key
     if (typeof value === 'string') result[current] = value
@@ -64,7 +62,7 @@ function verifyConsumers(knownKeys: ReadonlySet<TranslationKey>): string[] {
       file.endsWith('.tsx') ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
     )
 
-    function visit(node: ts.Node) {
+    function visit(node: ts.Node): void {
       if (ts.isCallExpression(node)) {
         const isTranslationCall = ts.isIdentifier(node.expression) && node.expression.text === 't'
           || ts.isPropertyAccessExpression(node.expression) && node.expression.name.text === 't'
@@ -100,7 +98,7 @@ function verifyConsumers(knownKeys: ReadonlySet<TranslationKey>): string[] {
 }
 
 const issues = validateCatalogue(catalogue)
-const knownKeys = collectCatalogueKeys(catalogue)
+const knownKeys = new Set<TranslationKey>(collectCatalogueKeys(catalogue))
 issues.push(...verifyConsumers(knownKeys))
 
 for (const family of DYNAMIC_TRANSLATION_FAMILIES) {
@@ -118,6 +116,28 @@ if (precedence.locale !== 'es' || precedence.source !== 'query' || !precedence.s
 }
 
 const resources = assembleResources(catalogue)
+const verificationI18n = createInstance()
+await verificationI18n.init({
+  lng: 'pt-BR',
+  fallbackLng: {pt: ['pt-BR'], default: ['pt-BR']},
+  supportedLngs: [...APP_LOCALES, ...LEGACY_LOCALE_ALIASES],
+  load: 'currentOnly',
+  returnObjects: false,
+  resources,
+})
+const fallbackProbeKey: TranslationKey = 'common.loading'
+const fallbackProbe = resources['pt-BR'].translation.common
+if (
+  typeof fallbackProbe !== 'object'
+  || verificationI18n.t(fallbackProbeKey, {lng: 'pt'}) !== fallbackProbe.loading
+  || verificationI18n.t(fallbackProbeKey, {lng: 'fr'}) !== fallbackProbe.loading
+) {
+  issues.push('i18next fallback: pt alias and unsupported locales must resolve through pt-BR')
+}
+if (verificationI18n.options.returnObjects !== false) {
+  issues.push('i18next safety: object-valued translation returns must remain disabled')
+}
+
 for (const [locale, expectedHash] of Object.entries(MIGRATION_BASELINE_HASHES)) {
   const actualHash = resourceHash(resources[locale as keyof typeof resources].translation)
   if (actualHash !== expectedHash) {

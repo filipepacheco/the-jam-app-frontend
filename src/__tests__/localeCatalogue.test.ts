@@ -1,5 +1,7 @@
 import {describe, expect, it} from 'vitest'
+import type {TFunction} from 'i18next'
 import {assembleResources, message, plural, validateCatalogue} from '../locales/catalogue'
+import {translateDynamicValue} from '../lib/i18n/translationKeys'
 
 describe('key-first locale catalogue', () => {
   it('assembles messages and plural forms into the existing i18next namespace', () => {
@@ -34,5 +36,26 @@ describe('key-first locale catalogue', () => {
       'greeting: es translation is empty',
       'greeting: interpolation variables differ for es',
     ])
+  })
+
+  it('rejects plural categories that the locale does not use', () => {
+    const issues = validateCatalogue({
+      item_count: plural({
+        'pt-BR': {one: '{{count}} item', other: '{{count}} itens'},
+        en: {one: '{{count}} item', few: '{{count}} items', other: '{{count}} items'},
+        es: {one: '{{count}} elemento', other: '{{count}} elementos'},
+      }),
+    })
+
+    expect(issues).toContain('item_count: en plural form few is invalid for this locale')
+  })
+
+  it('preserves an unknown dynamic value instead of replacing it with generic copy', () => {
+    const t = ((key: string) => `translated:${key}`) as unknown as TFunction
+
+    expect(translateDynamicValue(t, 'schedule.instruments', 'theremin')).toBe('theremin')
+    expect(translateDynamicValue(t, 'schedule.instruments', 'vocals')).toBe(
+      'translated:schedule.instruments.vocals',
+    )
   })
 })

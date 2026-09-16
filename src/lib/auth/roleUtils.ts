@@ -4,6 +4,8 @@
  */
 
 import {type UserRole} from '../../types/auth.types'
+import type {TFunction} from 'i18next'
+import {translationKey} from '../i18n/translationKeys'
 
 /**
  * Get role label for display
@@ -11,12 +13,10 @@ import {type UserRole} from '../../types/auth.types'
  * @param t - Translation function (optional)
  * @returns Human-readable role name or translation key
  */
-export function getRoleLabel(role: UserRole | undefined, t?: (key: string) => string): string {
+export function getRoleLabel(role: UserRole | undefined, t?: TFunction): string {
   // Defensive: handle undefined role by defaulting to 'viewer'
   const normalizedRole: UserRole = role || 'viewer'
-  const key = `roles.${normalizedRole}`
-  
-  if (t) return t(key)
+  if (t) return t(translationKey('roles', normalizedRole))
 
   switch (normalizedRole) {
     case 'host':
@@ -28,4 +28,3 @@ export function getRoleLabel(role: UserRole | undefined, t?: (key: string) => st
       return 'Viewer'
   }
 }
-

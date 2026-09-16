@@ -35,7 +35,7 @@ export function LanguageSelector({ currentLang, onChange, onSelectClose }: Langu
           type="button"
           onClick={() => handleLanguageClick(lang.code)}
           aria-label={t('publicDashboard.switchLanguage', {
-            language: lang.name,
+            language: t(lang.nameKey),
           })}
           aria-pressed={currentLang === lang.code}
           className={`ds-focusable px-3 py-1 rounded text-xs transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary ${
