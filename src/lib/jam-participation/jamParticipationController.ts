@@ -96,10 +96,7 @@ const browserClock: ParticipationClockPort = {
 
 function isEligible(performance: Performance, context: JamParticipationContext): boolean {
   if (!context.participationOpen || performance.status !== 'SCHEDULED') return false
-  if (!context.musicianId) return true
-  return !performance.registrations.some(({musicianId, musician}) => (
-    musicianId === context.musicianId || musician?.id === context.musicianId
-  ))
+  return true
 }
 
 function errorFrom(cause: unknown): ParticipationError {

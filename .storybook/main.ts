@@ -1,12 +1,25 @@
+import {realpathSync} from 'node:fs'
 import type { StorybookConfig } from '@storybook/react-vite'
+
+const dependencyRoot = realpathSync(new URL('../node_modules', import.meta.url))
+const storySourceRoot = realpathSync(new URL('../src', import.meta.url))
 
 const config: StorybookConfig = {
   stories: ['../src/workbench/stories/**/*.stories.@(ts|tsx)'],
   staticDirs: ['./public'],
-  addons: ['@storybook/addon-a11y', '@storybook/addon-themes', '@storybook/addon-vitest', 'msw-storybook-addon'],
+  addons: [
+    '@storybook/addon-a11y',
+    '@storybook/addon-themes',
+    '@storybook/addon-vitest',
+    '@storybook/addon-mcp',
+    'msw-storybook-addon',
+  ],
   framework: {
     name: '@storybook/react-vite',
     options: {},
+  },
+  features: {
+    componentsManifest: true,
   },
   core: {
     builder: {
@@ -16,6 +29,17 @@ const config: StorybookConfig = {
       },
     },
   },
+  viteFinal: async (viteConfig) => ({
+    ...viteConfig,
+    server: {
+      ...viteConfig.server,
+      host: '127.0.0.1',
+      fs: {
+        ...viteConfig.server?.fs,
+        allow: [...new Set([...(viteConfig.server?.fs?.allow ?? []), storySourceRoot, dependencyRoot])],
+      },
+    },
+  }),
 }
 
 export default config

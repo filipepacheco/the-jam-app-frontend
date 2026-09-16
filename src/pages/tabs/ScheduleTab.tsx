@@ -29,6 +29,7 @@ export function ScheduleTab({jam, onReload}: {
     const [selectedScheduleForRegistration, setSelectedScheduleForRegistration] = useState<ScheduleResponseDto | null>(null)
     const [selectedMusicianId, setSelectedMusicianId] = useState<string | null>(null)
     const [success, setSuccess] = useState<string | null>(null)
+    const [rowFeedback, setRowFeedback] = useState<Record<string, {type: 'error' | 'success'; message: string}>>({})
     const {state: scheduleState, commands: scheduleCommands} = useHostScheduleController(jam, onReload)
     const {
         performances: sortedSchedules,
@@ -46,6 +47,9 @@ export function ScheduleTab({jam, onReload}: {
     const musicCatalog = musicCatalogue.items
     const loadingMusicCatalog = musicCatalogue.status === 'loading'
     const loadingSongsFailedMessage = t('jams.loading_songs_failed')
+    const activePerformances = filteredNonSuggested.filter(({status}) => status === 'IN_PROGRESS')
+    const upcomingPerformances = filteredNonSuggested.filter(({status}) => status === 'SCHEDULED')
+    const completedPerformances = filteredNonSuggested.filter(({status}) => status === 'COMPLETED' || status === 'CANCELED')
 
     const isAnyLoading = loadingIds.size > 0
 
@@ -62,22 +66,42 @@ export function ScheduleTab({jam, onReload}: {
         successMessage: string,
         fallbackError: string,
     ) => {
+        const affectedIds = 'affectedIds' in outcome
+            ? outcome.affectedIds
+            : 'entityId' in outcome
+                ? [outcome.entityId]
+                : []
+        const affectedPerformanceId = sortedSchedules.find((performance) => affectedIds.some((id) => (
+            id === performance.id
+            || id === performance.jamMusic?.id
+            || performance.registrations.some((registration) => registration.id === id)
+        )))?.id
+        const report = (type: 'error' | 'success', message: string) => {
+            if (!affectedPerformanceId) return false
+            setRowFeedback((current) => ({...current, [affectedPerformanceId]: {type, message}}))
+            return true
+        }
+
         if (outcome.code === 'success') {
-            setSuccess(successMessage)
+            if (!report('success', successMessage)) setSuccess(successMessage)
             return true
         }
         if (outcome.code === 'partial_success' || outcome.code === 'bulk_failure') {
-            if (outcome.code === 'partial_success') setSuccess(successMessage)
-            setError(outcome.failed.map(({error: failure}) => failure.message).join(', ') || fallbackError)
+            const failureDetails = outcome.failed.map(({error: failure}) => failure.message).join(', ') || fallbackError
+            const failureMessage = outcome.code === 'partial_success'
+                ? `${t('schedule.batch.partial_error', {success: outcome.succeededIds.length, failed: outcome.failed.length})}: ${failureDetails}`
+                : failureDetails
+            if (!report('error', failureMessage)) setError(failureMessage)
             return false
         }
         if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
-            setError(outcome.error.message || fallbackError)
+            const message = outcome.error.message || fallbackError
+            if (!report('error', message)) setError(message)
             return false
         }
-        if (outcome.code === 'duplicate_pending') setError(fallbackError)
+        if (outcome.code === 'duplicate_pending' && !report('error', fallbackError)) setError(fallbackError)
         return false
-    }, [])
+    }, [sortedSchedules, t])
 
     // Load the searchable music catalog when the add-entry modal opens.
     useEffect(() => {
@@ -214,34 +238,93 @@ export function ScheduleTab({jam, onReload}: {
         return schedule.registrations?.some(r => loadingIds.has(r.id)) ?? false
     }, [loadingIds])
 
-    const renderCard = (schedule: Performance, isSuggested: boolean) => {
+    const renderCard = (
+        schedule: Performance,
+        isSuggested: boolean,
+        priority: 'current' | 'queue' | 'secondary',
+    ) => {
         const jm = schedule.jamMusic
-        return <ScheduleCollapsibleCard
-            key={schedule.id}
-            schedule={schedule}
-            loading={isCardLoading(schedule)}
-            isSuggested={isSuggested}
-            defaultExpanded={schedule.status === 'IN_PROGRESS'}
-            notes={jm?.notes}
-            jamMusicId={jm?.id}
-            onStatusChange={handleStatusChange}
-            onDelete={handleDeleteSchedule}
-            onApproveRegistration={handleApproveRegistration}
-            onRejectRegistration={handleRejectRegistration}
-            onDeleteRegistration={handleRejectRegistration}
-            onAddMusician={handleAddMusician}
-            onMusicianClick={setSelectedMusicianId}
-            onSaveNotes={handleSaveNotes}
-            onApproveAllRegistrations={handleApproveAllRegistrations}
-            onEditMusic={(musicId) => { void navigate(`/music?edit=${musicId}`) }}
-        />
+        const feedback = rowFeedback[schedule.id]
+        return <div key={schedule.id} className="space-y-2">
+            {feedback && (
+                <Alert
+                    type={feedback.type}
+                    message={feedback.message}
+                    onDismiss={() => setRowFeedback((current) => {
+                        const next = {...current}
+                        delete next[schedule.id]
+                        return next
+                    })}
+                />
+            )}
+            <ScheduleCollapsibleCard
+                schedule={schedule}
+                loading={isCardLoading(schedule)}
+                isSuggested={isSuggested}
+                priority={priority}
+                defaultExpanded={schedule.status === 'IN_PROGRESS'}
+                notes={jm?.notes}
+                jamMusicId={jm?.id}
+                onStatusChange={handleStatusChange}
+                onDelete={handleDeleteSchedule}
+                onApproveRegistration={handleApproveRegistration}
+                onRejectRegistration={handleRejectRegistration}
+                onDeleteRegistration={handleRejectRegistration}
+                onAddMusician={handleAddMusician}
+                onMusicianClick={setSelectedMusicianId}
+                onSaveNotes={handleSaveNotes}
+                onApproveAllRegistrations={handleApproveAllRegistrations}
+                onEditMusic={(musicId) => { void navigate(`/music?edit=${musicId}`) }}
+            />
+        </div>
     }
+
+    const renderGroup = (
+        id: string,
+        label: string,
+        performances: readonly Performance[],
+        isSuggested = false,
+        priority: 'current' | 'queue' | 'secondary' = 'queue',
+    ) => performances.length > 0 && (
+        <section aria-labelledby={id} data-performance-priority={priority}>
+            <div className={`flex items-center gap-2 py-2 font-bold uppercase tracking-wide ${
+                priority === 'current'
+                    ? 'text-sm text-base-content'
+                    : priority === 'secondary'
+                        ? 'text-xs text-base-content/50'
+                        : 'text-xs text-base-content/70'
+            }`}>
+                {priority === 'current' && <span className="size-2 shrink-0 rounded-full bg-warning" aria-hidden="true" />}
+                <h2 id={id} className="font-bold">{label} ({performances.length})</h2>
+                <div className="flex-1 border-t border-base-300/50" />
+            </div>
+            <div className="space-y-2">
+                {performances.map((schedule) => renderCard(schedule, isSuggested, priority))}
+            </div>
+        </section>
+    )
 
     return (
         <div className="space-y-3">
             {/* Alerts */}
             <Alert type="error" message={error} onDismiss={() => setError(null)} />
             <Alert type="success" message={success} onDismiss={() => setSuccess(null)} autoHide autoHideDelay={3000} />
+
+            {sortedSchedules.length > 0 && sortedSchedules.length <= 3 && (
+                <div className="flex justify-end">
+                    <Action
+                        onClick={() => setShowAddModal(true)}
+                        variant="primary"
+                        className="w-full sm:w-auto"
+                        {...(loadingIds.has(selectedMusicId)
+                            ? {state: 'loading' as const, loadingLabel: t('common.adding')}
+                            : {state: 'idle' as const})}
+                    >
+                        <Action.Icon><ListMusic className="size-4" /></Action.Icon>
+                        <Action.Label>{t('jam_management.schedule.add_new_song')}</Action.Label>
+                    </Action>
+                </div>
+            )}
 
             {/* Search + Filter Toolbar */}
             {sortedSchedules.length > 3 && (
@@ -271,16 +354,16 @@ export function ScheduleTab({jam, onReload}: {
                                 </IconAction>
                             )}
                         </div>
-                        <IconAction
+                        <Action
                             onClick={() => setShowAddModal(true)}
                             variant="primary"
                             {...(loadingIds.has(selectedMusicId)
                                 ? {state: 'loading' as const, loadingLabel: t('common.adding')}
                                 : {state: 'idle' as const})}
-                            label={t('jam_management.schedule.add_new_song')}
                         >
-                            +
-                        </IconAction>
+                            <Action.Icon><ListMusic className="size-4" /></Action.Icon>
+                            <Action.Label>{t('jam_management.schedule.add_new_song')}</Action.Label>
+                        </Action>
                     </div>
                     <div className="flex flex-wrap gap-2" role="group" aria-label={t('jam_management.schedule.title')}>
                         <Action
@@ -311,33 +394,10 @@ export function ScheduleTab({jam, onReload}: {
             {/* Schedule List */}
             {sortedSchedules.length > 0 ? (
                 <div className="space-y-3">
-                    {/* Suggested Schedules */}
-                    {filteredSuggested.length > 0 && (
-                        <div>
-                            <div className="flex items-center gap-2 py-2 text-xs font-bold text-base-content/70 uppercase tracking-wide">
-                                <span>{t('jam_management.schedule.suggested_songs')} ({filteredSuggested.length})</span>
-                                <div className="flex-1 border-t border-base-300/50" />
-                            </div>
-                            <div className="space-y-2">
-                                {filteredSuggested.map((schedule) => renderCard(schedule, true))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Scheduled/Active Songs */}
-                    {filteredNonSuggested.length > 0 && (
-                        <div>
-                            {filteredSuggested.length > 0 && (
-                                <div className="flex items-center gap-2 py-2 text-xs font-bold text-base-content/70 uppercase tracking-wide">
-                                    <span>{t('jam_management.schedule.title')} ({filteredNonSuggested.length})</span>
-                                    <div className="flex-1 border-t border-base-300/50" />
-                                </div>
-                            )}
-                            <div className="space-y-2">
-                                {filteredNonSuggested.map((schedule) => renderCard(schedule, false))}
-                            </div>
-                        </div>
-                    )}
+                    {renderGroup('schedule-active', t('schedule.now_playing'), activePerformances, false, 'current')}
+                    {renderGroup('schedule-upcoming', t('schedule.statuses.scheduled'), upcomingPerformances)}
+                    {renderGroup('schedule-suggested', t('jam_management.schedule.suggested_songs'), filteredSuggested, true, 'secondary')}
+                    {renderGroup('schedule-completed', t('schedule.statuses.completed'), completedPerformances, false, 'secondary')}
 
                     {/* No results after filtering */}
                     {filteredNonSuggested.length === 0 && filteredSuggested.length === 0 && (

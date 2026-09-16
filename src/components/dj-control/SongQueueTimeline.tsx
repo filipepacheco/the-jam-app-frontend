@@ -5,9 +5,11 @@
  */
 
 import {useState} from 'react'
+import {ChevronDown} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import type {LiveStateResponseDto, LiveStateSongDto} from '../../types/jamControl.types'
 import {Action, IconAction} from '../Action'
+import {Badge} from '../data-display'
 
 interface SongQueueTimelineProps {
   liveState?: LiveStateResponseDto
@@ -29,6 +31,7 @@ function SongRow({
   onRemove,
   onApprove,
   loading,
+  isNext = false,
 }: {
   song: LiveStateSongDto
   position?: number
@@ -36,6 +39,7 @@ function SongRow({
   onRemove?: (id: string) => void
   onApprove?: (id: string) => void
   loading?: boolean
+  isNext?: boolean
 }) {
   const {t} = useTranslation()
 
@@ -46,7 +50,7 @@ function SongRow({
   const statusStyles = {
     previous: 'opacity-50',
     current: 'bg-primary/10 border border-primary/40 ring-1 ring-primary/20',
-    upcoming: '',
+    upcoming: isNext ? 'bg-secondary/10 border border-secondary/40 ring-1 ring-secondary/20' : '',
     suggested: 'bg-warning/5 border border-warning/20',
   }
 
@@ -69,6 +73,11 @@ function SongRow({
       <div className="flex-1 min-w-0">
         <div className="flex items-baseline gap-2">
           <span className="font-semibold text-sm truncate">{song.music.title}</span>
+          {isNext && (
+            <Badge className="shrink-0" size="sm" tone="info">
+              {t('dj_control.now_playing.next_up', 'Next')}
+            </Badge>
+          )}
           <span className="text-xs text-base-content/50 shrink-0">{formatDuration(song.music.duration || undefined)}</span>
         </div>
         <div className="text-xs text-base-content/60 truncate">
@@ -122,27 +131,41 @@ export function SongQueueTimeline({
 
   const {previousSongs = [], currentSong = null, nextSongs = []} = liveState || {}
   const [playedCollapsed, setPlayedCollapsed] = useState(true)
+  const [suggestedCollapsed, setSuggestedCollapsed] = useState(false)
 
   return (
     <div className="space-y-4">
       {/* Suggested Songs */}
       {suggestedSongs.length > 0 && (
         <div>
-          <h3 className="text-xs font-semibold text-warning uppercase tracking-wider mb-2 px-3">
-            {t('dj_control.timeline.suggested_short', 'Sugeridas')} ({suggestedSongs.length})
-          </h3>
-          <div className="space-y-1">
-            {suggestedSongs.map((song) => (
-              <SongRow
-                key={song.id}
-                song={song}
-                status="suggested"
-                onRemove={onRemoveSong}
-                onApprove={onApproveSong}
-                loading={loading}
-              />
-            ))}
-          </div>
+          <button
+            type="button"
+            onClick={() => setSuggestedCollapsed((collapsed) => !collapsed)}
+            className="ds-control ds-focusable flex w-full items-center gap-2 rounded-lg px-3 text-left text-xs font-semibold uppercase tracking-wider text-warning transition-colors hover:bg-warning/10"
+            aria-expanded={!suggestedCollapsed}
+          >
+            <ChevronDown
+              className={`size-4 shrink-0 transition-transform duration-200 ${suggestedCollapsed ? '-rotate-90' : ''}`}
+              aria-hidden="true"
+            />
+            <span className="min-w-0 flex-1">
+              {t('dj_control.timeline.suggested_songs')} ({suggestedSongs.length})
+            </span>
+          </button>
+          {!suggestedCollapsed && (
+            <div className="mt-1 space-y-1">
+              {suggestedSongs.map((song) => (
+                <SongRow
+                  key={song.id}
+                  song={song}
+                  status="suggested"
+                  onRemove={onRemoveSong}
+                  onApprove={onApproveSong}
+                  loading={loading}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
@@ -199,6 +222,7 @@ export function SongQueueTimeline({
                 song={song}
                 position={idx + 1}
                 status="upcoming"
+                isNext={idx === 0}
                 onRemove={onRemoveSong}
                 loading={loading}
               />

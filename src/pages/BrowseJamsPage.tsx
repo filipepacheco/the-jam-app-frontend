@@ -6,19 +6,36 @@
 import {useCallback, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import useSWR from 'swr'
-import {Action, Badge, EmptyState, ErrorState, Field, LoadingState, NavigationTabs} from '../components'
+import {X} from 'lucide-react'
+import {Action, Badge, EmptyState, ErrorState, Field, IconAction, LoadingState, NavigationTabs} from '../components'
 import type {NavigationTabItem} from '../components'
 import {SITE_URL} from '../lib/api'
 import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
 import {SEO} from '../components/SEO'
-import type {JamStatus} from '../types/api.types'
+import type {JamResponseDto, JamStatus} from '../types/api.types'
 
 type DateSortOption = 'newest' | 'oldest' | 'upcoming'
 
-export function BrowseJamsPage() {
+export type BrowseJamsViewState =
+  | {status: 'loading'}
+  | {status: 'loaded'; data: readonly JamResponseDto[]}
+  | {status: 'refreshing'; data: readonly JamResponseDto[]}
+  | {status: 'error'; message: string; data?: readonly JamResponseDto[]}
+
+interface BrowseJamsPageProps {
+  viewState?: BrowseJamsViewState
+  onRetry?: () => void | Promise<void>
+}
+
+export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
   const { t } = useTranslation()
-  const { data: jams, error, isLoading, mutate } = useSWR('/jams')
+  const swrKey = viewState ? null : '/jams'
+  const {data: fetchedJams, error: fetchError, isLoading: fetchLoading, isValidating, mutate} = useSWR<JamResponseDto[]>(swrKey)
+  const jams = viewState && 'data' in viewState ? [...(viewState.data ?? [])] : fetchedJams
+  const error = viewState?.status === 'error' ? new Error(viewState.message) : fetchError
+  const isLoading = viewState?.status === 'loading' || (!viewState && fetchLoading)
+  const isRefreshing = viewState?.status === 'refreshing' || (!viewState && isValidating && Boolean(fetchedJams))
 
 
   // Filter state
@@ -137,7 +154,7 @@ export function BrowseJamsPage() {
       {/* Hero Section */}
       <div className="bg-primary text-primary-content">
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
-          <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
+          <div className="space-y-1">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
               {t('jams.browse.title')}
             </h1>
@@ -188,21 +205,10 @@ export function BrowseJamsPage() {
             </Field>
           </div>
 
-          {/* Status Filter Tabs.
-              NavigationTabs keeps the tablist and tab roles and adds arrow-key
-              roving focus. The per-tab title tooltips are not part of the
-              canonical contract and are dropped. */}
-          <NavigationTabs
-            aria-label={t('jams.browse.filter_label')}
-            className="text-xs sm:text-sm"
-            items={statusTabs}
-            value={statusFilter}
-            onValueChange={handleStatusTabChange}
-          />
-
-          {/* Results Count & Clear Filters */}
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <Badge tone="info" size="md">
+          {/* Result count and status filters form one stable control row. The
+              count stays visible while the tablist scrolls on narrow screens. */}
+          <div className="flex items-center gap-2">
+            <Badge tone="info" size="md" className="shrink-0">
               {(() => {
                 const count = visibleCount
                 const key = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
@@ -210,20 +216,44 @@ export function BrowseJamsPage() {
               })()}
             </Badge>
 
+            {/* NavigationTabs keeps the tablist and tab roles and adds
+                arrow-key roving focus. */}
+            <NavigationTabs
+              aria-label={t('jams.browse.filter_label')}
+              className="min-w-0 flex-1 text-xs sm:text-sm"
+              items={statusTabs}
+              value={statusFilter}
+              onValueChange={handleStatusTabChange}
+            />
+
             {hasActiveFilters && (
-              <Action
-                variant="quiet"
-                onClick={clearFilters}
-                state={isLoading ? 'disabled' : 'idle'}
-              >
-                {t('jams.browse.clear_filters')}
-              </Action>
+              <>
+                <span className="shrink-0 sm:hidden">
+                  <IconAction
+                    variant="quiet"
+                    label={t('jams.browse.clear_filters')}
+                    onClick={clearFilters}
+                    state={isLoading ? 'disabled' : 'idle'}
+                  >
+                    <X aria-hidden="true" />
+                  </IconAction>
+                </span>
+                <span className="hidden shrink-0 sm:block">
+                  <Action
+                    variant="quiet"
+                    onClick={clearFilters}
+                    state={isLoading ? 'disabled' : 'idle'}
+                  >
+                    {t('jams.browse.clear_filters')}
+                  </Action>
+                </span>
+              </>
             )}
           </div>
         </div>
 
         {/* Loading State */}
-        {isLoading && (
+        {isLoading && !jams?.length && (
           <div>
             <LoadingState label={t('jams.browse.loading')} className="mb-8" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
@@ -239,15 +269,19 @@ export function BrowseJamsPage() {
           <ErrorState
             title={t('jams.browse.error_title')}
             description={typeof error === 'string' ? error : t('jams.browse.error_description')}
-            action={{ label: t('jams.browse.retry'), onClick: () => void mutate() }}
+            action={{label: t('jams.browse.retry'), onClick: () => onRetry ? void onRetry() : void mutate()}}
           />
         )}
 
+        {isRefreshing && (
+          <LoadingState label={t('jams.browse.loading')} className="mb-4" />
+        )}
+
         {/* Jam Sections */}
-        {!isLoading && !error && (
+        {!isLoading && (!error || Boolean(jams?.length)) && (
           <>
             {/* Current Jams Section */}
-            {showCurrentSection && (
+            {visibleCount > 0 && showCurrentSection && (
               <div className="mb-6 sm:mb-8">
                 <h2 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-base-content">
                   {t('jams.browse.section_current')}
@@ -266,7 +300,7 @@ export function BrowseJamsPage() {
             )}
 
             {/* Past Jams Section - Collapsible */}
-            {showPastSection && (
+            {visibleCount > 0 && showPastSection && (
               <div>
                 {/* Documented exception: this toggle stays hand-rolled. Disclosure
                     renders native <details>/<summary>, which does not set
@@ -324,4 +358,3 @@ export function BrowseJamsPage() {
     </div>
   )
 }
-

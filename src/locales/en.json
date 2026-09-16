@@ -18,6 +18,7 @@
     "skip": "Skip",
     "search": "Search",
     "loading": "Loading...",
+    "try_again": "Try again",
     "or": "or",
     "required": "Required",
     "optional": "Optional",
@@ -43,6 +44,7 @@
     "expanded": "Expanded",
     "collapsed": "Collapsed",
     "collapse": "Collapse",
+    "expand": "Expand",
     "back": "Back",
     "about": "About",
     "features_label": "Features",
@@ -209,6 +211,10 @@
   },
   "jams": {
     "listen_on_spotify": "Listen on Spotify",
+    "live_dashboard": "View live dashboard",
+    "view_details": "View jam",
+    "musicians_count_one": "{{count}} musician registered",
+    "musicians_count_other": "{{count}} musicians registered",
     "register_for_jam_title": "Register for This Jam",
     "join_this_jam": "Join This Jam",
     "registering": "Registering...",
@@ -357,7 +363,12 @@
     "didnt_find_music": "Didn't find my music",
     "suggest_new_song_title": "Suggest a new song",
     "suggest_new_song_description": "Fill in the song details or import from Spotify.",
-    "spotify_url_label": "Spotify URL (optional)",
+    "suggestion_source_title": "How do you want to add this Music?",
+    "suggestion_source_help": "Start with manual details or import the basic Music information from Spotify. You will choose the required instruments next.",
+    "suggestion_source_manual": "Enter details manually",
+    "suggestion_source_spotify": "Import from Spotify",
+    "spotify_url_label": "Spotify URL",
+    "spotify_url_hint": "Paste a Spotify track link to fill the title, artist, and duration. You can review and edit the imported details before you suggest it.",
     "spotify_url_placeholder": "https://open.spotify.com/track/...",
     "import_from_spotify": "Import",
     "importing_metadata": "Importing...",
@@ -399,8 +410,13 @@
       "full_address": "Full address"
     },
     "performance_schedule_title": "Performance Schedule",
+    "performance_registration_help": "Choose a Performance, review the open instrument slots, and register. The host reviews registrations before the Jam.",
+    "hint_tap_song": "Select a completed Performance to show or hide its details.",
+    "filter_by_instrument": "Filter Performances by instrument",
     "suggested_songs_title": "Suggested Songs (Pending Approval)",
+    "suggested_songs_short": "Suggested",
     "suggested_songs_hint": "These songs are awaiting host approval.",
+    "my_registrations_short": "Mine",
     "instruments": "Instruments",
     "scheduled": "Scheduled",
     "suggested": "Suggested",
@@ -433,6 +449,7 @@
     "choose_instrument": "Choose an instrument...",
     "instruments_needed": "Instruments Needed:",
     "any_instrument_welcome": "Any instrument is welcome for this song!",
+    "already_registered": "You already registered with this instrument",
     "slots_available": "slots available",
     "slots_available_dynamic": "{{count}} slots available",
     "full": "Full",
@@ -474,6 +491,7 @@
     },
     "actions": {
       "start": "▶️ Start",
+      "mark_completed": "Mark as completed",
       "reschedule": "🔄 Reschedule",
       "approve_performance": "Approve performance",
       "reject_performance": "Reject performance",
@@ -546,6 +564,7 @@
   "live_control": {
     "now_playing": "Now Playing",
     "up_next": "Up Next (Reorderable)",
+    "queue_title": "Up Next",
     "song_playing_feedback": "Song playing",
     "song_paused_feedback": "Song paused",
     "skipped_feedback": "Skipped to next song",
@@ -556,6 +575,7 @@
     "reorder_drag": "Reorder",
     "reorder_cancel": "Cancel",
     "reorder_save": "Save order",
+    "reorder_next_hint": "The first Performance in this list will be Next.",
     "reorderable_item": "Reorderable item",
     "reorder_hint_keyboard": "Use the arrow keys to reorder performances",
     "reorder_hint_mobile": "Hold an item for a moment, then drag to reorder",
@@ -672,6 +692,7 @@
   "music_library": {
     "title": "Music Library",
     "page_title": "Music Library",
+    "results_heading": "Music results",
     "create_new": "Create New Song",
     "add_song": "+ Add Song",
     "suggest_song": "Suggest Song",
@@ -718,7 +739,7 @@
       "add_success": "Song \"{{title}}\" added successfully!",
       "suggest_success": "Song \"{{title}}\" suggested! Awaiting host approval.",
       "update_success": "Song \"{{title}}\" updated successfully!",
-      "duplicate_error": "Song \"{{title}}\" by {{artist}}\" already exists in the library",
+      "duplicate_error": "Song \"{{title}}\" by {{artist}} already exists in the library",
       "invalid_duration": "Invalid duration format. Use mm:ss (e.g., 4:30)"
     },
     "validation": {
@@ -730,6 +751,14 @@
       "minutes": "Minutes",
       "seconds": "Seconds",
       "more_options": "More options"
+    },
+    "pagination": {
+      "page_size": "Results per page",
+      "page_number": "Page number",
+      "first": "First page",
+      "previous": "Previous page",
+      "next": "Next page",
+      "last": "Last page"
     },
     "errors": {
       "failed_to_load": "Failed to load music",
@@ -757,6 +786,12 @@
     },
     "overview": {
       "actions_controls": "Actions & Controls",
+      "actions": {
+        "activate": "Activate Jam",
+        "start": "Start Jam",
+        "finish": "Finish Jam",
+        "prepare_again": "Prepare Jam again"
+      },
       "edit_jam": "Edit Jam",
       "view_public": "View Public Page",
       "activate_jam": "Activate",
@@ -791,6 +826,7 @@
       "select_song": "Select a song...",
       "add_to_schedule": "Add to Schedule",
       "confirm_delete": "Are you sure you want to delete this schedule entry?",
+      "confirm_delete_named": "Delete {{name}} from the Schedule?",
       "confirm_reject_reg": "Are you sure you want to reject this registration?",
       "no_schedule_yet": "No performance schedule yet",
       "add_entry_hint": "Click \"Add Entry\" to create your first schedule.",
@@ -816,7 +852,9 @@
       "delete_success": "Jam deleted successfully",
       "delete_failed": "Failed to delete jam",
       "loading_jams": "Loading your jams...",
+      "no_jams_title": "Create your first Jam",
       "no_jams_desc": "You have no jam sessions yet. Create your first jam to get started.",
+      "more_actions": "More Jam actions",
       "stats": {
         "total_jams": "Total Jams",
         "musicians": "Musicians",
@@ -845,6 +883,7 @@
     "musicians": {
       "title": "Musicians Directory",
       "subtitle": "Manage and view all musicians in your system",
+      "loading": "Loading musicians",
       "failed_to_load": "Failed to load musicians",
       "update_success": "Musician updated successfully",
       "update_failed": "Failed to update musician",
@@ -855,8 +894,11 @@
         "all_levels": "All Levels"
       },
       "results_count": "Showing {{shown}} of {{total}} musicians",
-      "no_musicians": "No musicians found. Musicians will appear here once they register.",
+      "no_musicians_title": "No musicians yet",
+      "no_musicians": "Musicians will appear here once they register.",
+      "no_match_title": "No matching musicians",
       "no_match": "No musicians match your search criteria.",
+      "clear_filters": "Clear filters",
       "table": {
         "name": "Name",
         "instrument": "Instrument",
@@ -955,8 +997,10 @@
   },
   "publicDashboard": {
     "title": "{{name}}",
+    "loading": "Loading dashboard",
     "errorTitle": "Error Loading Dashboard",
     "offlineIndicator": "You are offline - showing cached data",
+    "staleIndicator": "Updates paused - showing the last known Jam state",
     "dashboardControls": "Dashboard controls",
     "toggleControls": "Toggle dashboard controls",
     "fullscreen": "Toggle fullscreen",
@@ -967,6 +1011,8 @@
     "backToHome": "← Back to Home",
     "viewDetails": "View Full Details →",
     "nowPlaying": "Now Playing",
+    "waitingForPerformance": "Waiting for the next Performance",
+    "waitingForPerformanceHelp": "The host has not started a Performance yet.",
     "by": "by",
     "durationPrefix": "⏱️",
     "currentMusicians": "Current Musicians",
@@ -1214,6 +1260,7 @@
     "form": {
       "spotify_playlist_url": "Spotify Playlist URL",
       "placeholder_spotify_playlist_url": "https://open.spotify.com/playlist/...",
+      "spotify_import_hint": "If you add a playlist, its songs will be imported automatically after the jam is created.",
       "jam_name": "Jam Name",
       "description": "Description",
       "date": "Date",
@@ -1240,17 +1287,24 @@
       "create": "Create Jam",
       "update": "Update Jam",
       "saving": "Saving...",
+      "retry_spotify_import": "Try again",
+      "retrying_spotify_import": "Retrying import...",
+      "continue_without_import": "Continue without importing",
       "confirm_delete": "Yes, Delete"
     },
     "validation": {
       "name_required": "Jam name is required",
       "location_required": "Location is required",
       "host_id_required": "Host musician ID is required",
-      "time_required": "Time is required when date is specified",
+      "date_required": "Date is required",
+      "time_required": "Time is required",
       "date_required_with_time": "Date is required when time is specified"
     },
     "messages": {
       "create_success": "Jam \"{{name}}\" created successfully!",
+      "create_import_success": "Jam \"{{name}}\" created and its Spotify songs imported successfully!",
+      "spotify_import_error": "The Spotify playlist could not be imported",
+      "spotify_import_pending": "Jam created, but its Spotify songs could not be imported. Try again or continue to the dashboard.",
       "update_success": "Jam \"{{name}}\" updated successfully!",
       "delete_success": "Jam deleted successfully!",
       "load_error": "Failed to load jam",

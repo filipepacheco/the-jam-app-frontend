@@ -35,7 +35,7 @@ export function ScheduleOverflowMenu({
   if (status === 'IN_PROGRESS') {
     items.push({
       id: 'complete',
-      label: t('schedule.statuses.completed'),
+      label: t('schedule.actions.mark_completed', 'Mark as completed'),
       icon: <CheckCircle className="w-3.5 h-3.5" />,
       disabled: loading,
       onSelect: () => onStatusChange?.('COMPLETED'),

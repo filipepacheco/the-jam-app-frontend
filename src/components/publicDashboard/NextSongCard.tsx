@@ -22,17 +22,17 @@ interface NextSongCardProps {
 
 export function NextSongCard({ song }: NextSongCardProps) {
   const { t } = useTranslation()
-  const { transition } = useReducedMotion()
+  const { transition, prefersReducedMotion } = useReducedMotion()
 
   return (
     <motion.div
       key={`next-${song.id}`}
-      initial={{ opacity: 0, y: 20 }}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ ...transition, delay: transition.duration === 0 ? 0 : 0.1 }}
       className="mb-8"
     >
-      <div className="bg-base-200/80 border border-base-300 rounded-xl p-6 md:p-8">
+      <div className="bg-base-100/70 border border-base-300 rounded-xl p-6 md:p-8">
         <p className="text-secondary text-sm md:text-base font-semibold mb-3">
           {t('publicDashboard.upNext')}
         </p>

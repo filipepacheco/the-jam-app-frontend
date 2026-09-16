@@ -280,13 +280,14 @@
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
+        "src/components/schedule/LiveJamControlPanel.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/JamRegisterPage.tsx",
+        "src/pages/MusicPage.tsx",
         "src/pages/ProfilePage.tsx",
         "src/pages/PublicDashboardPage.tsx",
         "src/pages/host/CreateJamPage.tsx",
         "src/pages/host/FeedbackPage.tsx",
-        "src/pages/host/HostDashboardPage.tsx",
         "src/pages/host/HostJamSongsPage.tsx",
         "src/pages/host/JamManagementPage.tsx",
         "src/pages/host/MusiciansPage.tsx",
@@ -294,25 +295,31 @@
         "src/pages/tabs/DJControlTab.tsx",
         "src/pages/tabs/DJControlTabV2.tsx",
         "src/pages/tabs/DashboardTab.tsx",
-        "src/pages/tabs/JamDetailPageV2.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
-        "src/workbench/stories/RemainingUI.stories.tsx"
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
         "external": [
+          "lucide-react",
           "react",
           "react-i18next"
         ],
@@ -369,7 +376,9 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/RemainingUI.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -487,9 +496,15 @@
       ],
       "consumers": [
         "src/pages/MusicPage.tsx",
+        "src/pages/host/CreateJamPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Modal.tsx",
@@ -619,7 +634,8 @@
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -680,7 +696,8 @@
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -747,7 +764,8 @@
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -819,7 +837,9 @@
       "consumers": [
         "src/pages/tabs/DJControlTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -902,11 +922,13 @@
         "src/workbench/stories/DJControl.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
         "external": [
+          "lucide-react",
           "react",
           "react-i18next"
         ],
@@ -958,11 +980,13 @@
         "src/components/dj-control/SongQueueTimeline.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/DJControl.stories.tsx"
+        "src/workbench/stories/DJControl.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/data-display/index.tsx",
           "src/types/jamControl.types.ts"
         ],
         "external": [
@@ -1023,6 +1047,7 @@
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
@@ -1092,12 +1117,20 @@
       "consumers": [
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
+        "src/pages/host/HostDashboardPage.tsx",
+        "src/pages/host/MusiciansPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContentExamples.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "dependencies": {
@@ -1613,7 +1646,10 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
-        "src/workbench/stories/Forms.stories.tsx"
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1928,7 +1964,8 @@
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/JamComponents.stories.tsx"
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -1989,7 +2026,8 @@
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/JamComponents.stories.tsx"
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2057,6 +2095,7 @@
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
@@ -2114,6 +2153,7 @@
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx"
       ],
       "dependencies": {
@@ -2180,10 +2220,12 @@
       ],
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx",
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2258,7 +2300,8 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -2332,6 +2375,7 @@
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
@@ -2393,6 +2437,7 @@
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
@@ -2462,14 +2507,15 @@
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx"
       ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/Modal.tsx",
           "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
           "src/hooks/index.ts",
-          "src/lib/formatters.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/types/api.types.ts",
           "src/utils/scheduleUtils.ts"
@@ -2480,7 +2526,6 @@
           "react-i18next"
         ],
         "contexts": [
-          "browser",
           "internationalization"
         ]
       },
@@ -2539,10 +2584,12 @@
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/JamComponents.stories.tsx"
       ],
       "dependencies": {
         "internal": [
+          "src/components/Navigation.tsx",
           "src/components/data-display/index.tsx",
           "src/lib/i18nUtils.ts",
           "src/lib/statusUtils.ts",
@@ -2571,20 +2618,25 @@
         "readiness": {
           "workbench": "ready",
           "accessibility": "needs-review",
-          "internationalization": "needs-review",
+          "internationalization": "verified",
           "theme": "verified"
         },
         "uiStates": [
           "active",
           "live",
           "long-content",
+          "localized-dashboard-action",
           "mobile",
           "desktop"
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Domain/Jam/Summary and actions; the workbench exposes an existing missing live-dashboard translation key."
-        ]
+          "Reviewed in Domain/Jam/Summary and actions; the card uses the canonical destination-link treatment, bounded reading width, single-line venue truncation, compact Spotify support, and responsive destination hierarchy in every supported locale."
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "navigation"
+        }
       }
     },
     {
@@ -2611,6 +2663,8 @@
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
@@ -2810,16 +2864,22 @@
         "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/components/jam-detail-v2/SuggestSongModal.tsx",
+        "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/components/schedule/ScheduleEnrollmentModal.tsx",
-        "src/pages/host/CreateJamPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Environment.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/JamOverlays.stories.tsx"
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/JamOverlays.stories.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2891,7 +2951,12 @@
         "src/pages/tabs/ScheduleTab.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -2952,7 +3017,8 @@
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3015,7 +3081,8 @@
         "src/components/MusicCard.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -3076,7 +3143,8 @@
         "src/workbench/stories/MusicLibrary.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3141,7 +3209,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3200,7 +3269,10 @@
       "consumers": [
         "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Avatar.tsx",
@@ -3269,13 +3341,20 @@
         "src/pages/MusicPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/MusicModalFormFields.tsx",
+          "src/lib/formatters.ts",
           "src/lib/musicUtils.tsx",
+          "src/lib/spotifyUtils.ts",
           "src/services/index.ts",
           "src/types/api.types.ts"
         ],
@@ -3341,7 +3420,11 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
-        "src/workbench/stories/Forms.stories.tsx"
+        "src/workbench/stories/Forms.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3648,12 +3731,14 @@
       "consumers": [
         "src/pages/MusicPage.tsx",
         "src/pages/host/CreateJamPage.tsx",
-        "src/pages/host/HostDashboardPage.tsx",
         "src/pages/host/JamManagementPage.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -3942,7 +4027,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4011,7 +4097,8 @@
         "src/components/publicDashboard/carousel/CarouselDashboard.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4072,7 +4159,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4133,7 +4221,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4197,7 +4286,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4261,7 +4351,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4322,7 +4413,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4386,7 +4478,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -4452,7 +4545,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4529,7 +4623,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4602,7 +4697,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4676,7 +4772,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4746,7 +4843,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4830,7 +4928,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -4906,7 +5005,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5039,7 +5139,8 @@
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCarousel.stories.tsx"
+        "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5111,7 +5212,6 @@
         }
       ],
       "consumers": [
-        "src/pages/PublicDashboardPage.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
@@ -5189,7 +5289,8 @@
         "src/workbench/stories/PublicDashboardCards.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/PublicDashboardCards.stories.tsx"
+        "src/workbench/stories/PublicDashboardCards.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5249,7 +5350,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5312,7 +5414,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5646,8 +5749,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5707,7 +5812,10 @@
       "consumers": [
         "src/pages/tabs/ScheduleTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -5786,8 +5894,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5842,13 +5952,14 @@
       "consumers": [
         "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
-        "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
-        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -5912,18 +6023,18 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
+          "src/components/Alert.tsx",
           "src/components/data-display/index.tsx",
-          "src/hooks/useLiveQueueController.ts",
-          "src/lib/live-queue/liveQueueController.ts"
+          "src/hooks/useLiveQueueController.ts"
         ],
         "external": [
           "lucide-react",
-          "react",
           "react-i18next"
         ],
         "contexts": [
@@ -5968,7 +6079,8 @@
         "src/components/schedule/LiveJamControlPanel.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6022,10 +6134,13 @@
         "src/components/schedule/LiveJamControlPanel.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
-        "internal": [],
+        "internal": [
+          "src/components/data-display/index.tsx"
+        ],
         "external": [
           "lucide-react",
           "react",
@@ -6086,7 +6201,9 @@
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6152,7 +6269,9 @@
         "src/components/schedule/MusicianSlotList.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6216,7 +6335,9 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6420,7 +6541,9 @@
         "src/workbench/stories/ScheduleRegistration.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6560,7 +6683,10 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
-        "src/workbench/stories/SchedulePrimitives.stories.tsx"
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/SchedulePrimitives.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -6622,20 +6748,22 @@
       ],
       "consumers": [
         "src/pages/tabs/JamDetailPageV2.tsx",
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/Alert.tsx",
-          "src/components/Field.tsx",
           "src/components/Modal.tsx",
           "src/components/ModalFooter.tsx",
-          "src/components/schedule/InstrumentsSummary.tsx",
           "src/components/schedule/ScheduleDetailsCard.tsx",
           "src/hooks/index.ts",
+          "src/utils/musicianUtils.ts",
           "src/utils/scheduleUtils.ts"
         ],
         "external": [
@@ -6697,8 +6825,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6828,8 +6958,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -6952,8 +7084,10 @@
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [],
@@ -7062,6 +7196,8 @@
         "src/pages/tabs/JamDetailPageV2.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx"
       ],
       "dependencies": {
@@ -7117,7 +7253,8 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/ArchitectureCloseout.stories.tsx"
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -7231,7 +7368,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Alert.tsx",
@@ -7297,11 +7436,11 @@
         }
       ],
       "consumers": [
-        "src/pages/host/CreateJamPage.tsx",
-        "src/pages/host/HostDashboardPage.tsx",
         "src/pages/tabs/OverviewTab.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/Action.tsx",
@@ -7359,14 +7498,23 @@
       "name": "SpotifyLogo",
       "source": "src/components/SpotifyPreview.tsx",
       "declaration": "variable",
-      "visibility": "local",
-      "exports": [],
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "SpotifyLogo",
+          "module": "src/components/SpotifyPreview.tsx"
+        }
+      ],
       "consumers": [
-        "src/components/SpotifyPreview.tsx"
+        "src/components/SpotifyPreview.tsx",
+        "src/pages/tabs/JamDetailPageV2.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
@@ -7425,6 +7573,7 @@
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
@@ -7487,6 +7636,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx"
       ],
       "dependencies": {
@@ -7824,9 +7974,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/SEO.tsx",
@@ -7835,6 +7988,7 @@
           "src/types/api.types.ts"
         ],
         "external": [
+          "lucide-react",
           "react",
           "react-i18next",
           "swr"
@@ -7854,15 +8008,25 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "discovery",
+          "filtered-empty",
+          "first-use",
+          "loading",
+          "refreshing",
+          "stale-error",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."
+          "Reviewed through deterministic discovery, distinct empty-state, refreshing, and recoverable stale-result compositions in Human review/Screen refinement/Browse Jams hierarchy."
         ]
       }
     },
@@ -7885,17 +8049,20 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
           "src/hooks/index.ts",
-          "src/services/jamService.ts"
+          "src/services/jamService.ts",
+          "src/services/spotifyService.ts"
         ],
         "external": [
-          "lucide-react",
           "react",
           "react-i18next",
           "react-router-dom"
@@ -7917,15 +8084,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "create",
+          "edit",
+          "validation",
+          "focus",
+          "delete-confirmation",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."
+          "Reviewed through deterministic create-validation and edit-confirmation compositions in Human review/Screen refinement/Create Jam and Musicians."
         ]
       }
     },
@@ -8054,24 +8230,25 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
           "src/hooks/index.ts",
-          "src/services/jamService.ts",
           "src/types/api.types.ts"
         ],
         "external": [
-          "lucide-react",
           "react",
           "react-i18next",
           "react-router-dom"
         ],
         "contexts": [
-          "api",
+          "browser",
           "internationalization",
           "routing"
         ]
@@ -8086,15 +8263,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "live",
+          "planned",
+          "past",
+          "first-use",
+          "long-content",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "The route-local HostJamSummaryCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
+          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Human review/Screen refinement/Host dashboard."
         ]
       }
     },
@@ -8108,9 +8294,12 @@
       "consumers": [
         "src/pages/host/HostDashboardPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
+          "src/components/index.ts",
           "src/lib/i18nUtils.ts",
           "src/lib/statusUtils.ts",
           "src/utils/jamUrl.ts"
@@ -8133,15 +8322,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "live",
+          "planned",
+          "past",
+          "first-use",
+          "long-content",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "The route-local HostJamSummaryCard has no exported render seam and the page owns data orchestration; remove the exemption when the card is extracted or the route accepts deterministic data adapters."
+          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Human review/Screen refinement/Host dashboard."
         ]
       }
     },
@@ -8227,9 +8425,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8269,15 +8470,23 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "live",
+          "no-current-performance",
+          "reorder",
+          "saving",
+          "rollback",
+          "phone",
+          "host-console"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route-level data composition is deferred to page catalogue work; reusable Jam UI is covered here."
+          "Reviewed through deterministic management-shell, DJ playback, and Live Queue compositions in Human review/Screen refinement/Live host control."
         ]
       }
     },
@@ -8300,15 +8509,17 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/EditMusicianModal.tsx",
           "src/components/index.ts",
           "src/hooks/index.ts",
-          "src/services/index.ts",
           "src/types/api.types.ts"
         ],
         "external": [
@@ -8317,7 +8528,6 @@
           "react-i18next"
         ],
         "contexts": [
-          "api",
           "internationalization"
         ]
       },
@@ -8331,15 +8541,25 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "directory",
+          "pagination",
+          "filtered-empty",
+          "first-use",
+          "query-error",
+          "retry",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route composition is catalogued by #39."
+          "Reviewed through deterministic directory, empty, filtered, pagination, and recoverable-query compositions in Human review/Screen refinement/Create Jam and Musicians."
         ]
       }
     },
@@ -8528,9 +8748,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8560,15 +8783,26 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "viewer",
+          "host-moderation",
+          "long-content",
+          "pagination",
+          "empty-library",
+          "query-failure",
+          "retry",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route-level data composition is deferred to page catalogue work; reusable Music UI is covered here."
+          "Reviewed through deterministic viewer, host moderation, empty-library, pagination, and recoverable-query compositions in Human review/Screen refinement/Music library."
         ]
       }
     },
@@ -8709,9 +8943,12 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/PublicDashboardPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8743,21 +8980,25 @@
           "shared-screen"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
           "loading",
-          "error",
-          "offline",
+          "recoverable-error",
+          "starting-soon",
           "live",
-          "finished"
+          "finished",
+          "classic",
+          "carousel",
+          "venue",
+          "reduced-motion"
         ],
         "candidateFamily": null,
         "notes": [
-          "Route-level polling and fullscreen orchestration remain exempt; all reusable Public Dashboard visuals and controls are reviewed directly."
+          "Reviewed through deterministic full-page transition compositions in Human review/Screen refinement/Public Dashboard transitions; reusable cards and controls retain their domain stories."
         ]
       }
     },
@@ -8889,7 +9130,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -8999,7 +9242,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9053,7 +9298,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/index.ts",
@@ -9113,7 +9360,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/dj-control/index.ts",
@@ -9141,19 +9390,21 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
         "uiStates": [
-          "loading",
-          "error",
-          "live"
+          "live",
+          "no-current-performance",
+          "disabled",
+          "phone",
+          "host-console"
         ],
         "candidateFamily": null,
         "notes": [
-          "Route-level control orchestration has no injectable polling seam; DJ primitives are reviewed directly."
+          "Reviewed inside the production management shell through deterministic DJ playback and Live Queue compositions in Human review/Screen refinement/Live host control."
         ]
       }
     },
@@ -9176,17 +9427,22 @@
         }
       ],
       "consumers": [
-        "src/App.tsx"
+        "src/App.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/SEO.tsx",
           "src/components/ShareModal.tsx",
+          "src/components/SpotifyPreview.tsx",
           "src/components/index.ts",
           "src/components/jam-detail-v2/index.ts",
           "src/hooks/index.ts",
           "src/lib/api/index.ts",
+          "src/lib/formatters.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/types/api.types.ts",
           "src/utils/jamUrl.ts"
@@ -9215,15 +9471,24 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "loaded",
+          "participation",
+          "empty-schedule",
+          "error",
+          "not-found",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Production page composition is deferred to page catalogue work; reusable Jam detail UI is covered here."
+          "Reviewed through deterministic loaded, no-Performance, recoverable-error, and not-found compositions in Human review/Screen refinement/Jam detail."
         ]
       }
     },
@@ -9243,9 +9508,12 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
+          "src/components/Action.tsx",
           "src/components/index.ts",
           "src/types/api.types.ts",
           "src/utils/jamUrl.ts"
@@ -9300,7 +9568,9 @@
       "consumers": [
         "src/pages/host/JamManagementPage.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/types/api.types.ts"
@@ -9349,9 +9619,13 @@
         }
       ],
       "consumers": [
-        "src/pages/host/JamManagementPage.tsx"
+        "src/pages/host/JamManagementPage.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx"
       ],
-      "workbenchStories": [],
+      "workbenchStories": [
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
+      ],
       "dependencies": {
         "internal": [
           "src/components/MusicianProfileModal.tsx",
@@ -9384,15 +9658,26 @@
           "desktop"
         ],
         "readiness": {
-          "workbench": "exempt",
-          "accessibility": "unknown",
-          "internationalization": "unknown",
-          "theme": "unknown"
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
         },
-        "uiStates": [],
+        "uiStates": [
+          "active",
+          "upcoming",
+          "suggested",
+          "completed",
+          "small-schedule",
+          "empty",
+          "add-entry",
+          "phone",
+          "host-console",
+          "reduced-motion"
+        ],
         "candidateFamily": null,
         "notes": [
-          "Route composition is catalogued by #39."
+          "Reviewed through deterministic operational grouping, small-schedule add, and empty compositions in Human review/Screen refinement/Schedule management."
         ]
       }
     },
@@ -9547,11 +9832,17 @@
         "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleActionButtons.tsx",
         "src/components/schedule/ScheduleCompactCard.tsx",
+        "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/JamRegisterPage.tsx",
         "src/pages/MusicPage.tsx",
         "src/pages/ProfilePage.tsx",
+        "src/pages/PublicDashboardPage.tsx",
+        "src/pages/host/CreateJamPage.tsx",
+        "src/pages/host/HostDashboardPage.tsx",
+        "src/pages/host/MusiciansPage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
+        "src/pages/tabs/OverviewTab.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
@@ -9559,6 +9850,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
@@ -9566,19 +9859,26 @@
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
@@ -9612,6 +9912,9 @@
           "quiet",
           "destructive",
           "icon-only",
+          "action-group",
+          "localized-long-labels",
+          "mobile-stack",
           "loading",
           "disabled",
           "keyboard",
@@ -9619,7 +9922,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+          "Reviewed in Foundations/Action controls with one-primary action-group hierarchy, responsive grouping, deferred danger emphasis, localized expansion, keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
         ],
         "canonicalAdoption": {
           "status": "adopted",
@@ -9652,6 +9955,7 @@
         "src/components/Navigation.tsx",
         "src/components/QuickEditPanel.tsx",
         "src/components/dj-control/SongQueueTimeline.tsx",
+        "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/components/publicDashboard/Header.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
@@ -9659,25 +9963,35 @@
         "src/components/schedule/NotesEditor.tsx",
         "src/components/schedule/RegistrationList.tsx",
         "src/components/schedule/ScheduleCollapsibleCard.tsx",
+        "src/pages/BrowseJamsPage.tsx",
         "src/pages/tabs/JamDetailPageV2.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCards.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
         "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -9709,6 +10023,9 @@
           "quiet",
           "destructive",
           "icon-only",
+          "action-group",
+          "localized-long-labels",
+          "mobile-stack",
           "loading",
           "disabled",
           "keyboard",
@@ -9716,7 +10033,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Reviewed in Foundations/Action controls with keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+          "Reviewed in Foundations/Action controls with one-primary action-group hierarchy, responsive grouping, deferred danger emphasis, localized expansion, keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
         ],
         "canonicalAdoption": {
           "status": "adopted",
@@ -9750,12 +10067,19 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
@@ -9826,10 +10150,17 @@
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
         "src/pages/SpotifyCallbackPage.tsx",
+        "src/pages/host/MusiciansPage.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/Loading.stories.tsx"
       ],
       "dependencies": {
@@ -10027,11 +10358,16 @@
         "src/components/dj-control/QueueStats.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/SpotifyCallbackPage.tsx",
+        "src/pages/host/HostDashboardPage.tsx",
         "src/workbench/stories/Feedback/Alerts.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/DJControl.stories.tsx",
-        "src/workbench/stories/Feedback/Alerts.stories.tsx"
+        "src/workbench/stories/Feedback/Alerts.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10094,10 +10430,17 @@
         "src/components/jam-detail-v2/TimelineShowcaseV2Waveform.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
         "src/workbench/stories/States/EmptyState.stories.tsx"
       ],
       "dependencies": {
@@ -10167,19 +10510,28 @@
         "src/components/MusicCard.tsx",
         "src/components/MusicianProfileModal.tsx",
         "src/components/dj-control/QueueStats.tsx",
+        "src/components/dj-control/SongQueueTimeline.tsx",
         "src/components/jam-detail-v2/CollapsibleSection.tsx",
         "src/components/jam-detail-v2/PerformanceSelectionModal.tsx",
         "src/components/music/MusicDataDisplay.tsx",
+        "src/components/schedule/LiveJamControlPanel.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
         "src/pages/host/JamManagementPage.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
         "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10248,7 +10600,9 @@
       "workbenchStories": [
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10322,7 +10676,10 @@
         "src/workbench/stories/DJControl.stories.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10454,7 +10811,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10569,11 +10927,13 @@
       ],
       "consumers": [
         "src/components/MusicCard.tsx",
+        "src/pages/MusicPage.tsx",
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10692,7 +11052,8 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Foundations/DataDisplay.stories.tsx",
-        "src/workbench/stories/MusicLibrary.stories.tsx"
+        "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10752,6 +11113,7 @@
         "src/components/Field.tsx",
         "src/components/MobileDrawer.tsx",
         "src/components/MusicFilters.tsx",
+        "src/components/MusicModal.tsx",
         "src/components/MusicModalFormFields.tsx",
         "src/components/OnboardingModal.tsx",
         "src/components/ProfileFormSection.tsx",
@@ -10764,23 +11126,29 @@
         "src/components/publicDashboard/DashboardControlsPanel.tsx",
         "src/components/publicDashboard/PollingControls.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
-        "src/components/schedule/ScheduleEnrollmentModal.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/tabs/ScheduleTab.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
       ],
       "workbenchStories": [
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
+        "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/JamOverlays.stories.tsx",
         "src/workbench/stories/MusicLibrary.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
-        "src/workbench/stories/RemainingUI.stories.tsx"
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
+        "src/workbench/stories/RemainingUI.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10850,6 +11218,7 @@
         }
       ],
       "consumers": [
+        "src/components/MusicModal.tsx",
         "src/components/forms/JamRegistrationForm.tsx",
         "src/components/jam-detail-v2/SuggestNewSongModal.tsx",
         "src/workbench/stories/Foundations/FieldControls.stories.tsx"
@@ -10858,7 +11227,11 @@
         "src/workbench/stories/ArchitectureCloseout.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
         "src/workbench/stories/Forms.stories.tsx",
-        "src/workbench/stories/Foundations/FieldControls.stories.tsx"
+        "src/workbench/stories/Foundations/FieldControls.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -10919,6 +11292,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -11006,6 +11380,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -11235,6 +11610,7 @@
       ],
       "workbenchStories": [
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/MusicLibraryPage.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/Overlays.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
@@ -11388,14 +11764,21 @@
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11462,6 +11845,7 @@
         "src/components/CallToAction.tsx",
         "src/components/EnhancedHero.tsx",
         "src/components/Footer.tsx",
+        "src/components/JamCard.tsx",
         "src/components/MobileDrawer.tsx",
         "src/components/Navbar.tsx",
         "src/components/Navigation.tsx",
@@ -11469,14 +11853,21 @@
         "src/pages/LoginPage.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/BrowseJamsPage.stories.tsx",
         "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
+        "src/workbench/stories/JamComponents.stories.tsx",
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Marketing.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
         "src/workbench/stories/Navigation/Navbar.stories.tsx",
         "src/workbench/stories/PageCompositions.stories.tsx",
         "src/workbench/stories/PublicDashboardCarousel.stories.tsx",
+        "src/workbench/stories/PublicDashboardPage.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11607,12 +11998,16 @@
       ],
       "consumers": [
         "src/components/schedule/ScheduleOverflowMenu.tsx",
+        "src/pages/host/HostDashboardPage.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
+        "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
-        "src/workbench/stories/ScheduleRegistration.stories.tsx"
+        "src/workbench/stories/ScheduleRegistration.stories.tsx",
+        "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
       ],
       "dependencies": {
         "internal": [
@@ -11684,6 +12079,7 @@
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "workbenchStories": [
+        "src/workbench/stories/JamDetailPage.stories.tsx",
         "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx"
       ],
       "dependencies": {
@@ -11795,6 +12191,129 @@
           "family": "navigation"
         }
       }
+    },
+    {
+      "id": "ui.0197",
+      "name": "HostJamCategory",
+      "source": "src/pages/host/HostDashboardPage.tsx",
+      "declaration": "function",
+      "visibility": "local",
+      "exports": [],
+      "consumers": [
+        "src/pages/host/HostDashboardPage.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [],
+        "external": [
+          "lucide-react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "page-composition",
+        "layer": "page-composition",
+        "lifecycle": "active",
+        "productArea": "jam",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "verified",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "live",
+          "planned",
+          "past",
+          "first-use",
+          "long-content",
+          "phone",
+          "desktop",
+          "reduced-motion"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "Reviewed through deterministic operational hierarchy, phone action, and first-Jam onboarding compositions in Human review/Screen refinement/Host dashboard."
+        ]
+      }
+    },
+    {
+      "id": "ui.0198",
+      "name": "ActionGroup",
+      "source": "src/components/Action.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "ActionGroup",
+          "module": "src/components/Action.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "ActionGroup",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/pages/host/HostDashboardPage.tsx",
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Foundations/ActionControls.stories.tsx",
+        "src/workbench/stories/HostDashboardPage.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [
+          "src/components/Action.css"
+        ],
+        "external": [],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "primary",
+          "secondary",
+          "quiet",
+          "destructive",
+          "icon-only",
+          "action-group",
+          "localized-long-labels",
+          "mobile-stack",
+          "loading",
+          "disabled",
+          "keyboard",
+          "focus"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "Reviewed in Foundations/Action controls with one-primary action-group hierarchy, responsive grouping, deferred danger emphasis, localized expansion, keyboard, loading, disabled, icon-label, and semantic variant coverage. Consumers own localized action copy."
+        ],
+        "canonicalAdoption": {
+          "status": "adopted",
+          "family": "action"
+        }
+      }
     }
   ],
   "retiredComponents": [
@@ -11825,6 +12344,14 @@
     {
       "source": "src/workbench/stories/ArchitectureCloseout.stories.tsx",
       "reason": "Private Storybook composition providing merged-stack evidence for catalogued architecture workflows; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/BrowseJamsPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Browse Jams screen-refinement evidence; not product UI itself."
+    },
+    {
+      "source": "src/workbench/stories/CreateJamMusiciansPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Create Jam and Musicians consistency evidence; not product UI itself."
     },
     {
       "source": "src/workbench/stories/DJControl.stories.tsx",
@@ -11871,8 +12398,16 @@
       "reason": "Private Storybook composition demonstrating typography, spacing, sizing, and responsive foundations; not product UI itself."
     },
     {
+      "source": "src/workbench/stories/HostDashboardPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Host dashboard screen-refinement evidence; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/JamComponents.stories.tsx",
       "reason": "Private Storybook composition for reviewed Jam components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/JamDetailPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Jam detail screen-refinement evidence; not product UI itself."
     },
     {
       "source": "src/workbench/stories/JamOverlays.stories.tsx",
@@ -11889,6 +12424,10 @@
     {
       "source": "src/workbench/stories/MusicLibrary.stories.tsx",
       "reason": "Private Storybook composition for reviewed Music components; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/MusicLibraryPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Music library screen-refinement evidence; not product UI itself."
     },
     {
       "source": "src/workbench/stories/Navigation/CanonicalNavigation.stories.tsx",
@@ -11915,8 +12454,16 @@
       "reason": "Private Storybook composition for reviewed Public Dashboard carousel and control states; not product UI."
     },
     {
+      "source": "src/workbench/stories/PublicDashboardPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Public Dashboard transition evidence; not product UI itself."
+    },
+    {
       "source": "src/workbench/stories/RemainingUI.stories.tsx",
       "reason": "Private Storybook composition for remaining reviewed product UI; not product UI itself."
+    },
+    {
+      "source": "src/workbench/stories/ScheduleManagementPage.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Schedule management screen-refinement evidence; not product UI itself."
     },
     {
       "source": "src/workbench/stories/SchedulePrimitives.stories.tsx",
@@ -11925,6 +12472,10 @@
     {
       "source": "src/workbench/stories/ScheduleRegistration.stories.tsx",
       "reason": "Private Storybook composition for reviewed Schedule registration and card states; not product UI."
+    },
+    {
+      "source": "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx",
+      "reason": "Private Storybook composition for deterministic Live host control screen-refinement evidence; not product UI itself."
     },
     {
       "source": "src/workbench/stories/States/EmptyState.stories.tsx",
@@ -11936,13 +12487,13 @@
     }
   ],
   "coverage": {
-    "eligibleSources": 169,
+    "eligibleSources": 177,
     "representedSources": 138,
-    "ignoredSources": 31,
+    "ignoredSources": 39,
     "workbench": {
-      "activeReusableVisualComponents": 133,
-      "ready": 121,
-      "exempt": 12,
+      "activeReusableVisualComponents": 134,
+      "ready": 123,
+      "exempt": 11,
       "needsReview": 0,
       "unknown": 0,
       "readyWithoutStory": 0
@@ -11953,25 +12504,53 @@
       "family": "action",
       "occurrences": [
         {
-          "id": "inline.ui.0006.action.8f18b740ef0d",
+          "id": "inline.ui.0006.action.4c2028bfcb6d",
           "source": "src/components/Alert.tsx",
-          "line": 77,
-          "column": 9,
+          "line": 78,
+          "column": 11,
           "ownerComponentId": "ui.0006",
           "tag": "button",
           "staticClassTokens": [
+            "-m-1",
             "btn",
+            "btn-circle",
             "btn-ghost",
             "btn-sm",
-            "ds-control",
             "ds-focusable"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0015.action.89a98516cfc1",
+          "source": "src/components/dj-control/SongQueueTimeline.tsx",
+          "line": 141,
+          "column": 11,
+          "ownerComponentId": "ui.0015",
+          "tag": "button",
+          "staticClassTokens": [
+            "ds-control",
+            "ds-focusable",
+            "flex",
+            "font-semibold",
+            "gap-2",
+            "hover:bg-warning/10",
+            "items-center",
+            "px-3",
+            "rounded-lg",
+            "text-left",
+            "text-warning",
+            "text-xs",
+            "tracking-wider",
+            "transition-colors",
+            "uppercase",
+            "w-full"
           ],
           "dynamicClasses": false
         },
         {
           "id": "inline.ui.0015.action.91810193303e",
           "source": "src/components/dj-control/SongQueueTimeline.tsx",
-          "line": 152,
+          "line": 175,
           "column": 11,
           "ownerComponentId": "ui.0015",
           "tag": "button",
@@ -12063,9 +12642,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0036.action.997eb302d3fc",
+          "id": "inline.ui.0036.action.15dd62ed10e5",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
-          "line": 108,
+          "line": 109,
           "column": 15,
           "ownerComponentId": "ui.0036",
           "tag": "button",
@@ -12079,21 +12658,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0036.action.cb261c0949bd",
-          "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
-          "line": 127,
-          "column": 9,
-          "ownerComponentId": "ui.0036",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "shadow-2xl"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0036.action.e65f82f680e5",
+          "id": "inline.ui.0036.action.569738f38fba",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
           "line": 94,
           "column": 15,
@@ -12107,6 +12672,20 @@
             "shadow-2xl"
           ],
           "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0036.action.cb261c0949bd",
+          "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
+          "line": 129,
+          "column": 9,
+          "ownerComponentId": "ui.0036",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-primary",
+            "shadow-2xl"
+          ],
+          "dynamicClasses": true
         },
         {
           "id": "inline.ui.0040.action.1386d114b37f",
@@ -12126,39 +12705,6 @@
             "w-full"
           ],
           "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0051.action.998263c4bc81",
-          "source": "src/components/JamCard.tsx",
-          "line": 92,
-          "column": 13,
-          "ownerComponentId": "ui.0051",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "ds-control",
-            "ds-focusable",
-            "ds-type-ui",
-            "gap-1.5"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0051.action.df9f8f021a85",
-          "source": "src/components/JamCard.tsx",
-          "line": 96,
-          "column": 11,
-          "ownerComponentId": "ui.0051",
-          "tag": "Link",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "ds-control",
-            "ds-focusable",
-            "ds-type-ui"
-          ],
-          "dynamicClasses": false
         },
         {
           "id": "inline.ui.0055.action.06430e4aaaa7",
@@ -12226,9 +12772,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0062.action.39c79645ef02",
+          "id": "inline.ui.0062.action.d1416a2c33bc",
           "source": "src/components/MusicModal.tsx",
-          "line": 209,
+          "line": 327,
           "column": 9,
           "ownerComponentId": "ui.0062",
           "tag": "button",
@@ -12433,7 +12979,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0130.action.f046247be362",
+          "id": "inline.ui.0130.action.13999d6b4dc5",
           "source": "src/components/SpotifyPreview.tsx",
           "line": 95,
           "column": 5,
@@ -12443,9 +12989,10 @@
             "btn",
             "btn-circle",
             "btn-ghost",
-            "ds-control",
+            "btn-sm",
             "ds-focusable",
             "hover:bg-success/20",
+            "shrink-0",
             "text-success"
           ],
           "dynamicClasses": false
@@ -12511,7 +13058,7 @@
         {
           "id": "inline.ui.0137.action.1dd0b008a9ef",
           "source": "src/pages/BrowseJamsPage.tsx",
-          "line": 275,
+          "line": 309,
           "column": 17,
           "ownerComponentId": "ui.0137",
           "tag": "button",
@@ -12523,108 +13070,6 @@
             "items-center",
             "mb-3",
             "sm:mb-4"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.action.54ec90266fe5",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 649,
-          "column": 13,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.action.66160410e1da",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 595,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.action.6eddb1414edb",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 338,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "bg-success/10",
-            "flex",
-            "gap-3",
-            "hover:bg-success/20",
-            "items-center",
-            "p-3",
-            "rounded-lg",
-            "text-left",
-            "transition-colors",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.action.7b07ac140f54",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 320,
-          "column": 11,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "mb-4"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.action.7f2367eca031",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 642,
-          "column": 13,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.action.9ee8e9b4d3ba",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 575,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.action.f05672707818",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 585,
-          "column": 19,
-          "ownerComponentId": "ui.0138",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-error",
-            "btn-outline"
           ],
           "dynamicClasses": false
         },
@@ -12669,136 +13114,6 @@
             "btn-circle",
             "btn-sm"
           ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.0340e02aa1e2",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 150,
-          "column": 25,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-outline",
-            "btn-sm",
-            "hidden",
-            "sm:inline-flex"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.09e0a16fbe50",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 143,
-          "column": 25,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "hidden",
-            "sm:inline-flex"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.2365031eb3a4",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 172,
-          "column": 37,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.80919867aed7",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 166,
-          "column": 29,
-          "ownerComponentId": "ui.0141",
-          "tag": "div",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "btn-square"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.8f5f82b1a1f6",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 157,
-          "column": 25,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-primary",
-            "btn-sm",
-            "hidden",
-            "sm:inline-flex"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.d372c6ca8f39",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 171,
-          "column": 37,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.action.d3ba29dbf38f",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 170,
-          "column": 37,
-          "ownerComponentId": "ui.0141",
-          "tag": "button",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.action.1854699bbfb9",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 300,
-          "column": 33,
-          "ownerComponentId": "ui.0142",
-          "tag": "button",
-          "staticClassTokens": [
-            "text-error"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.action.80919867aed7",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 295,
-          "column": 25,
-          "ownerComponentId": "ui.0142",
-          "tag": "div",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "btn-square"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.action.9e18b100dc7d",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 299,
-          "column": 33,
-          "ownerComponentId": "ui.0142",
-          "tag": "button",
-          "staticClassTokens": [],
           "dynamicClasses": false
         },
         {
@@ -12941,22 +13256,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.action.089fb2941062",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 412,
-          "column": 23,
-          "ownerComponentId": "ui.0145",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "inline.ui.0145.action.2076eb39fae5",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 323,
+          "line": 360,
           "column": 23,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -12969,22 +13271,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.action.4d6b1d213141",
+          "id": "inline.ui.0145.action.33987644b906",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 434,
-          "column": 23,
-          "ownerComponentId": "ui.0145",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-sm"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0145.action.5b4ae785a84c",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 455,
+          "line": 494,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -12996,9 +13285,22 @@
           "dynamicClasses": false
         },
         {
+          "id": "inline.ui.0145.action.6431670ad87d",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 473,
+          "column": 23,
+          "ownerComponentId": "ui.0145",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
           "id": "inline.ui.0145.action.66884209f969",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 376,
+          "line": 413,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13010,9 +13312,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.action.711e49093a1a",
+          "id": "inline.ui.0145.action.aabbb4d50b8b",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 481,
+          "line": 529,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13024,9 +13326,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.action.b0c1f98c7b08",
+          "id": "inline.ui.0145.action.b9daf271e54c",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 489,
+          "line": 521,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13038,9 +13340,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.action.da2ccfdf8dea",
+          "id": "inline.ui.0145.action.c7e34587e2ec",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 447,
+          "line": 486,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "button",
@@ -13052,9 +13354,22 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.33d5079d27a5",
+          "id": "inline.ui.0145.action.dff80a407e2c",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 450,
+          "column": 23,
+          "ownerComponentId": "ui.0145",
+          "tag": "button",
+          "staticClassTokens": [
+            "btn",
+            "btn-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.action.175df37e0f43",
           "source": "src/pages/MusicPage.tsx",
-          "line": 324,
+          "line": 386,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13066,9 +13381,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.6cdea5fa5223",
+          "id": "inline.ui.0149.action.49d5ad7da5cf",
           "source": "src/pages/MusicPage.tsx",
-          "line": 356,
+          "line": 394,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13080,9 +13395,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.b705ee1639fc",
+          "id": "inline.ui.0149.action.6553b618da26",
           "source": "src/pages/MusicPage.tsx",
-          "line": 349,
+          "line": 359,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13094,9 +13409,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.action.c041212696b0",
+          "id": "inline.ui.0149.action.821a1bc772cb",
           "source": "src/pages/MusicPage.tsx",
-          "line": 317,
+          "line": 351,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "button",
@@ -13190,7 +13505,7 @@
         {
           "id": "inline.ui.0161.action.430827641e9d",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 101,
+          "line": 109,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "a",
@@ -13203,23 +13518,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0161.action.8e26b7ddb3d8",
-          "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 83,
-          "column": 17,
-          "ownerComponentId": "ui.0161",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "gap-2",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
           "id": "inline.ui.0161.action.a2b1847bbf16",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 110,
+          "line": 118,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "button",
@@ -13234,7 +13535,7 @@
         {
           "id": "inline.ui.0161.action.d5afae87e211",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 94,
+          "line": 102,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "button",
@@ -13325,7 +13626,7 @@
         {
           "id": "inline.ui.0166.action.bcd852a27998",
           "source": "src/components/Action.tsx",
-          "line": 58,
+          "line": 65,
           "column": 5,
           "ownerComponentId": "ui.0166",
           "tag": "button",
@@ -13376,7 +13677,7 @@
         {
           "id": "inline.ui.0036.badge.fcb3c3413a33",
           "source": "src/components/jam-detail-v2/DualActionFAB.tsx",
-          "line": 140,
+          "line": 142,
           "column": 17,
           "ownerComponentId": "ui.0036",
           "tag": "span",
@@ -13682,8 +13983,8 @@
         {
           "id": "inline.ui.0142.badge.3854256bcbff",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 293,
-          "column": 21,
+          "line": 389,
+          "column": 48,
           "ownerComponentId": "ui.0142",
           "tag": "div",
           "staticClassTokens": [
@@ -13695,7 +13996,7 @@
         {
           "id": "inline.ui.0145.badge.0c40efe10576",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 366,
+          "line": 403,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "span",
@@ -13707,7 +14008,7 @@
         {
           "id": "inline.ui.0145.badge.0c97f35472e2",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 305,
+          "line": 342,
           "column": 27,
           "ownerComponentId": "ui.0145",
           "tag": "span",
@@ -13852,21 +14153,15 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0044.card.9f2bafa4204d",
+          "id": "inline.ui.0044.card.0c32573fb5e9",
           "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
-          "line": 113,
+          "line": 99,
           "column": 5,
           "ownerComponentId": "ui.0044",
           "tag": "div",
           "staticClassTokens": [
             "card",
-            "cursor-pointer",
             "duration-300",
-            "focus-visible:ring-2",
-            "focus-visible:ring-offset-2",
-            "focus-visible:ring-primary",
-            "hover:shadow-lg",
-            "outline-none",
             "text-left",
             "transition-shadow",
             "w-full"
@@ -13874,18 +14169,20 @@
           "dynamicClasses": true
         },
         {
-          "id": "inline.ui.0051.card.2dcb594eef3c",
+          "id": "inline.ui.0051.card.d4c40aa39092",
           "source": "src/components/JamCard.tsx",
-          "line": 41,
+          "line": 53,
           "column": 5,
           "ownerComponentId": "ui.0051",
-          "tag": "div",
+          "tag": "article",
           "staticClassTokens": [
             "bg-base-200",
+            "border",
+            "border-base-content/10",
             "card",
-            "hover:shadow-xl",
-            "shadow-lg",
-            "transition-shadow"
+            "max-w-3xl",
+            "relative",
+            "w-full"
           ],
           "dynamicClasses": false
         },
@@ -14009,7 +14306,7 @@
         {
           "id": "inline.ui.0138.card.ca6213990919",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 265,
+          "line": 330,
           "column": 11,
           "ownerComponentId": "ui.0138",
           "tag": "div",
@@ -14023,7 +14320,7 @@
         {
           "id": "inline.ui.0138.card.ca6213990919",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 333,
+          "line": 431,
           "column": 9,
           "ownerComponentId": "ui.0138",
           "tag": "div",
@@ -14049,16 +14346,15 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0142.card.a466fe497136",
+          "id": "inline.ui.0142.card.f8da82501a95",
           "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 279,
+          "line": 362,
           "column": 13,
           "ownerComponentId": "ui.0142",
-          "tag": "div",
+          "tag": "article",
           "staticClassTokens": [
             "bg-base-200",
             "card",
-            "cursor-pointer",
             "hover:shadow-md",
             "shadow-sm",
             "transition-shadow"
@@ -14099,7 +14395,7 @@
         {
           "id": "inline.ui.0145.card.15ce7f2c5911",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 164,
+          "line": 183,
           "column": 11,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -14113,7 +14409,7 @@
         {
           "id": "inline.ui.0145.card.15ce7f2c5911",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 235,
+          "line": 265,
           "column": 9,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -14125,22 +14421,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.card.25817e902f0b",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 285,
-          "column": 11,
-          "ownerComponentId": "ui.0145",
-          "tag": "div",
-          "staticClassTokens": [
-            "bg-base-200",
-            "card"
-          ],
-          "dynamicClasses": false
-        },
-        {
           "id": "inline.ui.0145.card.56ddd6651c4a",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 193,
+          "line": 212,
           "column": 15,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -14153,7 +14436,7 @@
         {
           "id": "inline.ui.0145.card.57283d4b3fc2",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 299,
+          "line": 336,
           "column": 17,
           "ownerComponentId": "ui.0145",
           "tag": "div",
@@ -14218,7 +14501,7 @@
         {
           "id": "inline.ui.0149.card.9352e5e75f37",
           "source": "src/pages/MusicPage.tsx",
-          "line": 176,
+          "line": 182,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14232,7 +14515,7 @@
         {
           "id": "inline.ui.0149.card.b9a21d7bb545",
           "source": "src/pages/MusicPage.tsx",
-          "line": 168,
+          "line": 174,
           "column": 11,
           "ownerComponentId": "ui.0149",
           "tag": "div",
@@ -14349,7 +14632,7 @@
         {
           "id": "inline.ui.0161.card.05967e332e13",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 136,
+          "line": 144,
           "column": 17,
           "ownerComponentId": "ui.0161",
           "tag": "div",
@@ -14377,7 +14660,7 @@
         {
           "id": "inline.ui.0163.card.6aa26321762f",
           "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 360,
+          "line": 420,
           "column": 17,
           "ownerComponentId": "ui.0163",
           "tag": "EmptyState",
@@ -14692,65 +14975,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.06014e27ad84",
+          "id": "inline.ui.0138.field.157ca45f3c9e",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 354,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0138.field.5e03e415187d",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 441,
-          "column": 19,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0138.field.6cbf6f1811bc",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 556,
-          "column": 19,
-          "ownerComponentId": "ui.0138",
-          "tag": "select",
-          "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.field.7dcd1fa55220",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 503,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0138.field.8bdd4c9e72b5",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 522,
+          "line": 628,
           "column": 21,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14762,37 +14989,23 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.e515c8e563b4",
+          "id": "inline.ui.0138.field.255287ce8db9",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 379,
-          "column": 17,
-          "ownerComponentId": "ui.0138",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "w-full"
-          ],
-          "dynamicClasses": true
-        },
-        {
-          "id": "inline.ui.0138.field.e91bb31a1f0e",
-          "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 462,
+          "line": 647,
           "column": 19,
           "ownerComponentId": "ui.0138",
-          "tag": "input",
+          "tag": "select",
           "staticClassTokens": [
-            "input",
-            "input-bordered",
+            "select",
+            "select-bordered",
             "w-full"
           ],
-          "dynamicClasses": true
+          "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.eaeeb3cf74fd",
+          "id": "inline.ui.0138.field.abb142a94892",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 486,
+          "line": 573,
           "column": 17,
           "ownerComponentId": "ui.0138",
           "tag": "textarea",
@@ -14805,9 +15018,37 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.f77935e49433",
+          "id": "inline.ui.0138.field.aee483a6970d",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 408,
+          "line": 464,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.b8d6190bb88b",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 439,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.c89317d87b6f",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 493,
           "column": 19,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14823,9 +15064,51 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0138.field.fe9d7a86dd1a",
+          "id": "inline.ui.0138.field.d375fb5ba4a9",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 536,
+          "line": 548,
+          "column": 19,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.d75a6e63eca1",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 590,
+          "column": 17,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0138.field.ec01c2029bc9",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 526,
+          "column": 19,
+          "ownerComponentId": "ui.0138",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": true
+        },
+        {
+          "id": "inline.ui.0138.field.fbbb293c8683",
+          "source": "src/pages/host/CreateJamPage.tsx",
+          "line": 614,
           "column": 21,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14902,61 +15185,23 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.field.1c692166840b",
+          "id": "inline.ui.0145.field.104165b86fcd",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 241,
-          "column": 17,
-          "ownerComponentId": "ui.0145",
-          "tag": "label",
-          "staticClassTokens": [
-            "input",
-            "w-full"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0145.field.29e654bf736a",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 421,
-          "column": 25,
-          "ownerComponentId": "ui.0145",
-          "tag": "input",
-          "staticClassTokens": [
-            "input",
-            "input-bordered",
-            "input-sm",
-            "text-center",
-            "w-14"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0145.field.2de566221baa",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 243,
+          "line": 432,
           "column": 19,
-          "ownerComponentId": "ui.0145",
-          "tag": "input",
-          "staticClassTokens": [],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0145.field.467feeb54644",
-          "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 257,
-          "column": 17,
           "ownerComponentId": "ui.0145",
           "tag": "select",
           "staticClassTokens": [
             "select",
-            "w-full"
+            "select-bordered",
+            "select-sm"
           ],
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.field.8fdfc603b90f",
+          "id": "inline.ui.0145.field.188f0914aa9b",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 466,
+          "line": 505,
           "column": 25,
           "ownerComponentId": "ui.0145",
           "tag": "input",
@@ -14970,23 +15215,61 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0145.field.974ab352a3fe",
+          "id": "inline.ui.0145.field.1c692166840b",
           "source": "src/pages/host/MusiciansPage.tsx",
-          "line": 395,
-          "column": 19,
+          "line": 271,
+          "column": 17,
           "ownerComponentId": "ui.0145",
-          "tag": "select",
+          "tag": "label",
           "staticClassTokens": [
-            "select",
-            "select-bordered",
-            "select-sm"
+            "input",
+            "w-full"
           ],
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.field.bd06f9d565b2",
+          "id": "inline.ui.0145.field.2de566221baa",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 273,
+          "column": 19,
+          "ownerComponentId": "ui.0145",
+          "tag": "input",
+          "staticClassTokens": [],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0145.field.604578557240",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 459,
+          "column": 25,
+          "ownerComponentId": "ui.0145",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "input-sm",
+            "text-center",
+            "w-14"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0145.field.6af0631b2980",
+          "source": "src/pages/host/MusiciansPage.tsx",
+          "line": 287,
+          "column": 17,
+          "ownerComponentId": "ui.0145",
+          "tag": "select",
+          "staticClassTokens": [
+            "select",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0149.field.085b67c6ed72",
           "source": "src/pages/MusicPage.tsx",
-          "line": 300,
+          "line": 333,
           "column": 15,
           "ownerComponentId": "ui.0149",
           "tag": "select",
@@ -14998,9 +15281,9 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0149.field.f15b75df87c3",
+          "id": "inline.ui.0149.field.5f9ba7a19e3d",
           "source": "src/pages/MusicPage.tsx",
-          "line": 334,
+          "line": 370,
           "column": 17,
           "ownerComponentId": "ui.0149",
           "tag": "input",
@@ -15057,71 +15340,6 @@
             "p-0"
           ],
           "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.menu.1fdbd1ec99ad",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 165,
-          "column": 25,
-          "ownerComponentId": "ui.0141",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-end",
-            "sm:hidden"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0141.menu.d97e081f8535",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 169,
-          "column": 29,
-          "ownerComponentId": "ui.0141",
-          "tag": "ul",
-          "staticClassTokens": [
-            "bg-base-200",
-            "dropdown-content",
-            "menu",
-            "p-2",
-            "rounded-box",
-            "shadow-lg",
-            "w-52",
-            "z-10"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.menu.869e80851761",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 294,
-          "column": 21,
-          "ownerComponentId": "ui.0142",
-          "tag": "div",
-          "staticClassTokens": [
-            "dropdown",
-            "dropdown-end"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0142.menu.fe84b02a8eab",
-          "source": "src/pages/host/HostDashboardPage.tsx",
-          "line": 298,
-          "column": 25,
-          "ownerComponentId": "ui.0142",
-          "tag": "ul",
-          "staticClassTokens": [
-            "bg-base-200",
-            "dropdown-content",
-            "menu",
-            "p-2",
-            "rounded-box",
-            "shadow-lg",
-            "w-44",
-            "z-10"
-          ],
-          "dynamicClasses": false
         }
       ]
     },
@@ -15129,7 +15347,7 @@
       "family": "modal",
       "occurrences": [
         {
-          "id": "inline.ui.0055.modal.ff314e606b5a",
+          "id": "inline.ui.0055.modal.4fdf19705a56",
           "source": "src/components/Modal.tsx",
           "line": 87,
           "column": 5,
@@ -15137,7 +15355,8 @@
           "tag": "dialog",
           "staticClassTokens": [
             "modal",
-            "modal-open"
+            "modal-open",
+            "z-[10000]"
           ],
           "dynamicClasses": true
         },

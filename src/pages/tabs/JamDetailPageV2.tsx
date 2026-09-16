@@ -13,13 +13,13 @@ import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
 import {
     Action,
-    Alert,
     DropdownMenu,
     IconAction,
     ScheduleEnrollmentModal,
     Status,
 } from '../../components'
 import {ShareModal} from '../../components/ShareModal'
+import {SpotifyLogo} from '../../components/SpotifyPreview'
 import {
     CollapsibleSection,
     DualActionFAB,
@@ -31,23 +31,51 @@ import {
 } from '../../components/jam-detail-v2/'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
-import {MapPin, Calendar, Share2, ArrowLeft} from 'lucide-react'
+import {formatJamDuration} from '../../lib/formatters'
+import {MapPin, Calendar, Share2, ArrowLeft, Music, Users, Clock3} from 'lucide-react'
 
-export function JamDetailPageV2() {
-    const {t} = useTranslation()
+export type JamDetailViewState =
+    | {status: 'loaded'; jam: JamResponseDto}
+    | {status: 'loading'}
+    | {status: 'error'; message: string}
+    | {status: 'not-found'}
+
+interface JamDetailPageV2Props {
+    /** Deterministic route-state seam for direct composition evidence. */
+    viewState?: JamDetailViewState
+    onNavigate?: (path: string) => void
+    onRetry?: () => void | Promise<void>
+}
+
+export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV2Props = {}) {
+    const {t, i18n} = useTranslation()
     const {jamId} = useParams<{ jamId: string }>()
     const navigate = useNavigate()
     const {isAuthenticated, user} = useAuth()
 
-    const {data: jam, error: jamError, isLoading, mutate: mutateJam} = useSWR<JamResponseDto | null>(
-        jamId ? `/jams/${jamId}` : null
+    const {data: routeJam, error: routeError, isLoading: routeLoading, mutate: mutateJam} = useSWR<JamResponseDto | null>(
+        jamId && !viewState ? `/jams/${jamId}` : null
     )
+    const jam = viewState?.status === 'loaded' ? viewState.jam : routeJam
+    const jamError = viewState?.status === 'error' ? new Error(viewState.message) : routeError
+    const isLoading = viewState?.status === 'loading' || (!viewState && routeLoading)
+    const goTo = useCallback((path: string) => {
+        if (onNavigate) {
+            onNavigate(path)
+            return
+        }
+        void navigate(path)
+    }, [navigate, onNavigate])
+    const reloadJam = useCallback(async () => {
+        if (viewState?.status === 'loaded') return viewState.jam
+        return mutateJam()
+    }, [mutateJam, viewState])
 
     const {state: participation, commands: participationCommands} = useJamParticipationController(
         jam,
         isAuthenticated,
         user?.id ?? null,
-        () => mutateJam(),
+        reloadJam,
     )
 
     // State for suggested songs section collapse
@@ -105,6 +133,20 @@ export function JamDetailPageV2() {
         return registrations
     }, [jam?.schedules, user?.id])
 
+    const jamFacts = useMemo(() => {
+        const musicians = new Set(
+            nonSuggestedSchedules
+                .flatMap(({registrations}) => registrations ?? [])
+                .map(({musicianId, musician}) => musician?.id ?? musicianId)
+                .filter(Boolean),
+        ).size
+        const duration = nonSuggestedSchedules.reduce(
+            (total, schedule) => total + (schedule.music?.duration ?? 0),
+            0,
+        )
+        return {musicians, duration, performances: nonSuggestedSchedules.length}
+    }, [nonSuggestedSchedules])
+
     const eligibleSchedules = useMemo(() => {
         const eligibleIds = new Set(participation.eligiblePerformances.map(({id}) => id))
         return allSchedules.filter(({id}) => eligibleIds.has(id))
@@ -114,20 +156,20 @@ export function JamDetailPageV2() {
     // Handle enrollment click
     const handleEnrollClick = useCallback((schedule: ScheduleResponseDto) => {
         const outcome = participationCommands.beginRegistration(schedule.id)
-        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
-    }, [navigate, participationCommands])
+        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+    }, [goTo, participationCommands])
 
     // Handle FAB register click
     const handleFABRegisterClick = useCallback(() => {
         const outcome = participationCommands.beginRegistration()
-        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
-    }, [navigate, participationCommands])
+        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+    }, [goTo, participationCommands])
 
     // Handle suggest click
     const handleSuggestClick = useCallback(() => {
         const outcome = participationCommands.beginSuggestion()
-        if (outcome.code === 'auth_required') navigate(`/login?redirect=${outcome.redirect}`)
-    }, [navigate, participationCommands])
+        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+    }, [goTo, participationCommands])
 
     // Handle create new song click (from SuggestSongModal)
     const handleCreateNewSong = useCallback(() => {
@@ -140,13 +182,42 @@ export function JamDetailPageV2() {
     }
 
     // Error state
-    if (jamError || !jam) {
+    if (jamError) {
         return (
-            <div className="min-h-screen bg-base-100 p-4">
-                <div className="container mx-auto max-w-4xl">
-                    <Alert type="error" message={jamError?.message || t('jams.not_found')} title={t('jams.error_loading_jam')}/>
+            <main className="min-h-screen bg-base-100 px-4 py-12 sm:py-20">
+                <div className="container mx-auto max-w-xl">
+                    <h1 className="ds-type-heading text-3xl font-extrabold text-base-content sm:text-4xl">
+                        {t('jams.error_loading_jam')}
+                    </h1>
+                    <p className="mt-3 text-base-content/70" role="alert">{jamError.message}</p>
+                    <div className="mt-8 flex flex-wrap gap-3">
+                        <Action onClick={() => {
+                            if (onRetry) void onRetry()
+                            else void mutateJam()
+                        }}>
+                            {t('common.try_again')}
+                        </Action>
+                        <Action variant="quiet" onClick={() => goTo('/jams')}>
+                            {t('jams.back_to_jams')}
+                        </Action>
+                    </div>
                 </div>
-            </div>
+            </main>
+        )
+    }
+
+    if (!jam) {
+        return (
+            <main className="min-h-screen bg-base-100 px-4 py-12 sm:py-20">
+                <div className="container mx-auto max-w-xl">
+                    <h1 className="ds-type-heading text-3xl font-extrabold text-base-content sm:text-4xl">
+                        {t('jams.not_found')}
+                    </h1>
+                    <Action className="mt-8" onClick={() => goTo('/jams')}>
+                        {t('jams.back_to_jams')}
+                    </Action>
+                </div>
+            </main>
         )
     }
 
@@ -230,35 +301,68 @@ export function JamDetailPageV2() {
             {/* Header - compact: title + meta on one line, details muted below */}
             <div className="bg-base-200 border-b border-base-300">
                 <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-4 sm:py-5">
-                    {/* Title row with back + share */}
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                        <div className="flex items-start gap-2 min-w-0">
+                    {/* Title and Jam-level actions share one aligned identity row. */}
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div className="flex items-center gap-2 min-w-0">
                             <IconAction
                                 variant="quiet"
-                                onClick={() => navigate('/jams')}
-                                className="shrink-0 mt-0.5"
+                                onClick={() => goTo('/jams')}
+                                className="shrink-0"
                                 label={t('common.back')}
                             >
                                 <ArrowLeft className="size-4" />
                             </IconAction>
                             <h1 className="ds-type-heading ds-wrap-user-content font-extrabold leading-tight sm:text-3xl md:text-4xl">{jam.name}</h1>
                         </div>
-                        <IconAction
-                            variant="quiet"
-                            onClick={participationCommands.beginShare}
-                            className="shrink-0"
-                            label={t('share.share_button')}
-                        >
-                            <Share2 className="size-4" />
-                        </IconAction>
+                        <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
+                            {jam.spotifyPlaylistUrl && (
+                                <a
+                                    href={jam.spotifyPlaylistUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="ds-action ds-control ds-focusable ds-action--quiet ds-action--idle"
+                                >
+                                    <SpotifyLogo />
+                                    {t('jams.listen_on_spotify', 'Playlist no Spotify')}
+                                </a>
+                            )}
+                            <Action
+                                variant="secondary"
+                                onClick={participationCommands.beginShare}
+                            >
+                                <Share2 className="size-4" aria-hidden="true" />
+                                {t('share.share_button')}
+                            </Action>
+                        </div>
                     </div>
 
-                    {/* Single metadata line: date, location, status */}
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-base-content/60">
+                    {/* Description is the first supporting information after identity. */}
+                    {jam.description && (
+                        <div className="mt-3">
+                            <p className={`max-w-3xl whitespace-pre-line text-sm text-pretty text-base-content/70 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
+                                {jam.description}
+                            </p>
+                            {jam.description.length > 100 && (
+                                <Action
+                                    variant="quiet"
+                                    onClick={() => setDescriptionExpanded(prev => !prev)}
+                                    className="mt-1 justify-start px-0 text-primary"
+                                >
+                                    <span className="text-xs">
+                                        {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
+                                    </span>
+                                </Action>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Jam facts stay together so date, place, size, and duration
+                        read as one identity block. */}
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 border-y border-base-300 py-2 text-sm text-base-content/70">
                         {jam.date && (
-                            <span className="inline-flex items-center gap-1">
-                                <Calendar className="size-3" />
-                                {new Intl.DateTimeFormat(navigator.language || 'pt-BR', {
+                            <span className="inline-flex min-h-11 items-center gap-1.5">
+                                <Calendar className="size-4" aria-hidden="true" />
+                                {new Intl.DateTimeFormat(i18n.language || 'pt-BR', {
                                     month: 'short',
                                     day: 'numeric',
                                     hour: '2-digit',
@@ -270,52 +374,40 @@ export function JamDetailPageV2() {
                         {jam.location && (
                             <DropdownMenu
                                 label={t('jams.info.full_address')}
+                                className="[&_.ds-dropdown__trigger]:border-0 [&_.ds-dropdown__trigger]:bg-transparent [&_.ds-dropdown__trigger]:px-0"
                                 trigger={
-                                    <span className="inline-flex items-center gap-1">
-                                        <MapPin className="size-3" />
-                                        <span className="truncate max-w-[180px]">{jam.location}</span>
+                                    <span className="inline-flex items-center gap-1.5 text-base-content/70">
+                                        <MapPin className="size-4" aria-hidden="true" />
+                                        <span className="max-w-[16rem] truncate">{jam.location}</span>
                                     </span>
                                 }
                             >
-                                <p className="text-sm font-semibold mb-2">{t('jams.info.full_address')}</p>
-                                <p className="ds-wrap-user-content text-sm text-base-content/80 mb-3">{jam.location}</p>
-                                <Action variant="secondary" onClick={handleCopyLocation} className="w-full">
-                                    {locationCopied ? t('common.copied') : t('common.copy_address')}
-                                </Action>
+                                <div className="w-64 space-y-1 p-2">
+                                    <p className="ds-wrap-user-content text-sm leading-relaxed text-base-content/80">{jam.location}</p>
+                                    <Action variant="quiet" onClick={() => void handleCopyLocation()} className="min-h-11 justify-start px-0 text-sm text-primary underline underline-offset-4">
+                                        {locationCopied ? t('common.copied') : t('common.copy_address')}
+                                    </Action>
+                                </div>
                             </DropdownMenu>
+                        )}
+                        <span className="inline-flex min-h-11 items-center gap-1.5">
+                            <Music className="size-4" aria-hidden="true" />
+                            {jamFacts.performances} {t('jams.info.performances').toLowerCase()}
+                        </span>
+                        {jamFacts.musicians > 0 && (
+                            <span className="inline-flex min-h-11 items-center gap-1.5">
+                                <Users className="size-4" aria-hidden="true" />
+                                {jamFacts.musicians} {t('jams.info.musicians').toLowerCase()}
+                            </span>
+                        )}
+                        {jamFacts.duration > 0 && (
+                            <span className="inline-flex min-h-11 items-center gap-1.5">
+                                <Clock3 className="size-4" aria-hidden="true" />
+                                {formatJamDuration(jamFacts.duration)}
+                            </span>
                         )}
                     </div>
 
-                    {/* Spotify Playlist Link */}
-                    {jam.spotifyPlaylistUrl && (
-                        <a
-                            href={jam.spotifyPlaylistUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="ds-control ds-focusable inline-flex items-center gap-1.5 text-xs text-success hover:text-success/80 transition-colors mt-2"
-                        >
-                            <span aria-hidden="true">🎧</span>
-                            {t('jams.listen_on_spotify', 'Playlist no Spotify')}
-                        </a>
-                    )}
-
-                    {/* Description - truncated, single line */}
-                    {jam.description && (
-                        <div className="mt-2">
-                            <p className={`text-base-content/70 text-xs text-pretty max-w-3xl whitespace-pre-line ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
-                                {jam.description}
-                            </p>
-                            {jam.description.length > 100 && (
-                                <Action
-                                    variant="quiet"
-                                    onClick={() => setDescriptionExpanded(prev => !prev)}
-                                    className="mt-1 text-primary"
-                                >
-                                    {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
-                                </Action>
-                            )}
-                        </div>
-                    )}
                 </div>
             </div>
 
@@ -356,7 +448,6 @@ export function JamDetailPageV2() {
                             schedules={nonSuggestedSchedules}
                             user={user}
                             onRegisterClick={handleEnrollClick}
-                            jam={jam}
                             jamStatus={jam.status}
                         />
 
@@ -419,9 +510,11 @@ export function JamDetailPageV2() {
             {/* Modals */}
             {selectedScheduleForEnroll && (
                 <ScheduleEnrollmentModal
-                    schedule={selectedScheduleForEnroll}
-                    isOpen={participation.activeOverlay === 'enrollment'}
-                    onClose={participationCommands.closeOverlay}
+                schedule={selectedScheduleForEnroll}
+                isOpen={participation.activeOverlay === 'enrollment'}
+                musicianId={user?.id}
+                preferredInstrument={user?.instrument}
+                onClose={participationCommands.closeOverlay}
                     onSubmit={participationCommands.register}
                 />
             )}

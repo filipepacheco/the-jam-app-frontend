@@ -9,8 +9,8 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {useTranslation} from 'react-i18next'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
-import {Alert, Modal, PageAlerts, SpotifyImportModal} from '../../components'
-import {ListMusic} from 'lucide-react'
+import {spotifyService} from '../../services/spotifyService.ts'
+import {Action, Alert, ConfirmDialog, PageAlerts} from '../../components'
 
 interface FormData {
   name: string
@@ -21,9 +21,15 @@ interface FormData {
   slug: string
   spotifyPlaylistUrl: string
   hostMusicianId: string
-  hostName?: string
-  hostContact?: string
+  hostName: string
+  hostContact: string
   status: 'ACTIVE' | 'INACTIVE' | 'LIVE' | 'FINISHED'
+}
+
+interface PendingSpotifyImport {
+  jamId: string
+  jamName: string
+  playlistUrl: string
 }
 
 export function CreateJamPage() {
@@ -38,7 +44,7 @@ export function CreateJamPage() {
   const [loading, setLoading] = useState(false)
   const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
-  const [spotifyModalOpen, setSpotifyModalOpen] = useState(false)
+  const [pendingSpotifyImport, setPendingSpotifyImport] = useState<PendingSpotifyImport | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false)
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -49,6 +55,8 @@ export function CreateJamPage() {
     slug: '',
     spotifyPlaylistUrl: '',
     hostMusicianId: user?.id || '',
+    hostName: '',
+    hostContact: '',
     status: 'ACTIVE',
   })
 
@@ -114,7 +122,14 @@ export function CreateJamPage() {
   useEffect(() => {
     if (authLoading || !isAuthenticated) return
 
-    setFormData((prev) => ({ ...prev, hostMusicianId: user?.id || '' }))
+    setFormData((prev) => ({
+      ...prev,
+      hostMusicianId: user?.id || '',
+      ...(!jamId ? {
+        hostName: prev.hostName || user?.name || '',
+        hostContact: prev.hostContact || user?.contact || user?.email || '',
+      } : {}),
+    }))
 
     if (jamId) {
       setMode('edit')
@@ -122,7 +137,7 @@ export function CreateJamPage() {
     } else {
       setMode('create')
     }
-  }, [jamId, isAuthenticated, authLoading, user?.id, loadJamData])
+  }, [jamId, isAuthenticated, authLoading, user?.id, user?.name, user?.contact, user?.email, loadJamData])
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -154,11 +169,11 @@ export function CreateJamPage() {
     if (!formData.hostMusicianId) {
       errors.hostMusicianId = t('create_jam.validation.host_id_required')
     }
-    if (formData.date && !formData.time) {
-      errors.time = t('create_jam.validation.time_required')
+    if (!formData.date) {
+      errors.date = t('create_jam.validation.date_required')
     }
-    if (formData.time && !formData.date) {
-      errors.date = t('create_jam.validation.date_required_with_time')
+    if (!formData.time) {
+      errors.time = t('create_jam.validation.time_required')
     }
 
     setFieldErrors(errors)
@@ -171,6 +186,42 @@ export function CreateJamPage() {
       return false
     }
     return true
+  }
+
+  const navigateToDashboard = () => {
+    navTimeoutRef.current = setTimeout(() => navigate('/host/dashboard'), 1500)
+  }
+
+  const importSpotifyPlaylist = async (pendingImport: PendingSpotifyImport): Promise<boolean> => {
+    const response = await spotifyService.importPlaylist({
+      playlistUrl: pendingImport.playlistUrl,
+      jamId: pendingImport.jamId,
+    })
+
+    if (!response.success) {
+      throw new Error(response.error || t('create_jam.messages.spotify_import_error'))
+    }
+
+    setPendingSpotifyImport(null)
+    setSuccess(t('create_jam.messages.create_import_success', {name: pendingImport.jamName}))
+    navigateToDashboard()
+    return true
+  }
+
+  const handleSpotifyRetry = async () => {
+    if (!pendingSpotifyImport) return
+
+    setLoading(true)
+    clearError()
+
+    try {
+      await importSpotifyPlaylist(pendingSpotifyImport)
+    } catch (err) {
+      console.error('Error importing Spotify playlist:', err)
+      setError(null)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -210,12 +261,30 @@ export function CreateJamPage() {
 
       if (mode === 'create') {
         const result = await jamService.create(jamPayload)
-        setSuccess(t('create_jam.messages.create_success', { name: result.data.name }))
-        navTimeoutRef.current = setTimeout(() => navigate('/host/dashboard'), 1500)
+        const playlistUrl = formData.spotifyPlaylistUrl.trim()
+
+        if (playlistUrl) {
+          const pendingImport = {
+            jamId: result.data.id,
+            jamName: result.data.name,
+            playlistUrl,
+          }
+
+          try {
+            await importSpotifyPlaylist(pendingImport)
+          } catch (importError) {
+            console.error('Jam created, but Spotify import failed:', importError)
+            setPendingSpotifyImport(pendingImport)
+            setSuccess(t('create_jam.messages.create_success', {name: result.data.name}))
+          }
+        } else {
+          setSuccess(t('create_jam.messages.create_success', {name: result.data.name}))
+          navigateToDashboard()
+        }
       } else if (jamId) {
         const result = await jamService.update(jamId, jamPayload)
         setSuccess(t('create_jam.messages.update_success', { name: result.data.name }))
-        navTimeoutRef.current = setTimeout(() => navigate('/host/dashboard'), 1500)
+        navigateToDashboard()
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.save_error')
@@ -244,10 +313,6 @@ export function CreateJamPage() {
     } finally {
       setLoading(false)
     }
-  }
-
-  const handleSpotifySuccess = (newJamId: string) => {
-    void navigate(`/host/jams/${newJamId}/manage`)
   }
 
   // Show skeleton while auth is initializing
@@ -304,48 +369,68 @@ export function CreateJamPage() {
   }
 
   if (!isAuthenticated) {
-    navigate('/login')
+    void navigate('/login')
     return null
   }
 
   const title = mode === 'create'
     ? t('create_jam.title_create')
     : t('create_jam.title_edit', { name: formData.name })
+  const formLocked = loading || pendingSpotifyImport !== null
 
   return (
-    <div className="min-h-screen bg-base-100 p-4">
+    <div className="min-h-screen bg-base-100 px-3 py-4 sm:p-4">
       <div className="container mx-auto max-w-2xl">
         {/* Header */}
-        <div className="mb-6">
-          <button
+        <div className="mb-3">
+          <Action
+            variant="quiet"
             onClick={() => { void navigate('/host/dashboard') }}
-            className="btn btn-ghost btn-sm mb-4"
+            className="mb-2"
           >
             ← {t('create_jam.back_to_dashboard')}
-          </button>
+          </Action>
           <h1 className="text-2xl sm:text-4xl font-bold">{title}</h1>
         </div>
 
         {/* Alerts */}
-        <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} />
+        <PageAlerts
+          error={error}
+          success={pendingSpotifyImport ? null : success}
+          onDismissError={clearError}
+          onDismissSuccess={clearSuccess}
+          className="mb-3"
+        />
+        <Alert
+          type="warning"
+          message={pendingSpotifyImport ? t('create_jam.messages.spotify_import_pending') : null}
+          className="mb-3"
+          action={pendingSpotifyImport ? (
+            <>
+              {loading ? (
+                <Action state="loading" loadingLabel={t('create_jam.actions.retrying_spotify_import')}>
+                  {t('create_jam.actions.retry_spotify_import')}
+                </Action>
+              ) : (
+                <Action onClick={() => { void handleSpotifyRetry() }}>
+                  {t('create_jam.actions.retry_spotify_import')}
+                </Action>
+              )}
+              <Action
+                variant="quiet"
+                onClick={() => { void navigate('/host/dashboard') }}
+                state={loading ? 'disabled' : 'idle'}
+              >
+                {t('create_jam.actions.continue_without_import')}
+              </Action>
+            </>
+          ) : undefined}
+        />
 
         {/* Single unified card */}
         <div className="card bg-base-200 shadow-lg">
-          <div className="card-body">
-            <form onSubmit={(e) => { void handleSubmit(e) }} noValidate className="space-y-5">
-              {/* Spotify inline banner - create mode only */}
-              {mode === 'create' && (
-                <button
-                  type="button"
-                  onClick={() => setSpotifyModalOpen(true)}
-                  className="flex items-center gap-3 w-full p-3 rounded-lg bg-success/10 hover:bg-success/20 transition-colors text-left"
-                >
-                  <ListMusic className="size-5 shrink-0 text-success" />
-                  <span className="text-sm flex-1">{t('create_jam.spotify_import_inline')}</span>
-                  <span className="text-sm font-medium text-success">{t('create_jam.spotify_import_btn')} →</span>
-                </button>
-              )}
-
+          <div className="card-body p-4 sm:p-8">
+            <form onSubmit={(e) => { void handleSubmit(e) }} noValidate className="space-y-3 sm:space-y-5">
               {/* Jam Name */}
               <fieldset className="fieldset">
                 <label className="fieldset-legend" htmlFor={`${formId}-name`}>
@@ -360,7 +445,7 @@ export function CreateJamPage() {
                   placeholder={t('create_jam.form.placeholder_name')}
                   className={`input input-bordered w-full ${fieldErrors.name ? 'input-error' : ''}`}
                   required
-                  disabled={loading}
+                  disabled={formLocked}
                   aria-invalid={!!fieldErrors.name || undefined}
                   aria-describedby={fieldErrors.name ? `${formId}-name-error` : undefined}
                 />
@@ -385,7 +470,7 @@ export function CreateJamPage() {
                   placeholder={t('create_jam.form.placeholder_location')}
                   className={`input input-bordered w-full ${fieldErrors.location ? 'input-error' : ''}`}
                   required
-                  disabled={loading}
+                  disabled={formLocked}
                   aria-invalid={!!fieldErrors.location || undefined}
                   aria-describedby={fieldErrors.location ? `${formId}-location-error` : undefined}
                 />
@@ -423,7 +508,7 @@ export function CreateJamPage() {
                     }}
                     placeholder={slugPreview || t('create_jam.form.placeholder_slug')}
                     className="input input-bordered rounded-l-none font-mono text-sm flex-1 min-w-0"
-                    disabled={loading}
+                    disabled={formLocked}
                     maxLength={80}
                   />
                 </div>
@@ -436,7 +521,7 @@ export function CreateJamPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <fieldset className="fieldset">
                   <label className="fieldset-legend" htmlFor={`${formId}-date`}>
-                    {t('create_jam.form.date')}
+                    {t('create_jam.form.date')} <span className="text-error">*</span>
                   </label>
                   <input
                     id={`${formId}-date`}
@@ -445,7 +530,8 @@ export function CreateJamPage() {
                     value={formData.date}
                     onChange={handleInputChange}
                     className={`input input-bordered w-full ${fieldErrors.date ? 'input-error' : ''}`}
-                    disabled={loading}
+                    required
+                    disabled={formLocked}
                     aria-invalid={!!fieldErrors.date || undefined}
                     aria-describedby={fieldErrors.date ? `${formId}-date-error` : undefined}
                   />
@@ -457,7 +543,7 @@ export function CreateJamPage() {
                 </fieldset>
                 <fieldset className="fieldset">
                   <label className="fieldset-legend" htmlFor={`${formId}-time`}>
-                    {t('create_jam.form.time')}
+                    {t('create_jam.form.time')} <span className="text-error">*</span>
                   </label>
                   <input
                     id={`${formId}-time`}
@@ -466,7 +552,8 @@ export function CreateJamPage() {
                     value={formData.time}
                     onChange={handleInputChange}
                     className={`input input-bordered w-full ${fieldErrors.time ? 'input-error' : ''}`}
-                    disabled={loading}
+                    required
+                    disabled={formLocked}
                     aria-invalid={!!fieldErrors.time || undefined}
                     aria-describedby={fieldErrors.time ? `${formId}-time-error` : undefined}
                   />
@@ -491,7 +578,7 @@ export function CreateJamPage() {
                   placeholder={t('create_jam.form.placeholder_description')}
                   className="textarea textarea-bordered resize-y w-full"
                   rows={2}
-                  disabled={loading}
+                  disabled={formLocked}
                 />
               </fieldset>
 
@@ -508,13 +595,18 @@ export function CreateJamPage() {
                   onChange={handleInputChange}
                   placeholder={t('create_jam.form.placeholder_spotify_playlist_url')}
                   className="input input-bordered w-full"
-                  disabled={loading}
+                  disabled={formLocked}
+                  aria-describedby={mode === 'create' ? `${formId}-spotifyPlaylistUrl-hint` : undefined}
                 />
+                {mode === 'create' && (
+                  <p id={`${formId}-spotifyPlaylistUrl-hint`} className="fieldset-label text-base-content/60">
+                    {t('create_jam.form.spotify_import_hint')}
+                  </p>
+                )}
               </fieldset>
 
-              {/* Host Name and Contact - edit mode only */}
-              {mode === 'edit' && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Host Name and Contact */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <fieldset className="fieldset">
                     <label className="fieldset-legend" htmlFor={`${formId}-hostName`}>
                       {t('create_jam.form.host_name')}
@@ -526,7 +618,7 @@ export function CreateJamPage() {
                       value={formData.hostName}
                       onChange={handleInputChange}
                       className="input input-bordered w-full"
-                      disabled={loading}
+                      disabled={formLocked}
                     />
                   </fieldset>
                   <fieldset className="fieldset">
@@ -541,11 +633,10 @@ export function CreateJamPage() {
                       onChange={handleInputChange}
                       placeholder={t('create_jam.form.placeholder_contact')}
                       className="input input-bordered w-full"
-                      disabled={loading}
+                      disabled={formLocked}
                     />
                   </fieldset>
-                </div>
-              )}
+              </div>
 
               {/* Status - edit mode only */}
               {mode === 'edit' && (
@@ -559,7 +650,7 @@ export function CreateJamPage() {
                     value={formData.status}
                     onChange={handleInputChange}
                     className="select select-bordered w-full"
-                    disabled={loading}
+                    disabled={formLocked}
                   >
                     <option value="ACTIVE">{t('create_jam.form.status_active')}</option>
                     <option value="INACTIVE">{t('create_jam.form.status_inactive')}</option>
@@ -572,42 +663,35 @@ export function CreateJamPage() {
               {/* Action Buttons */}
               <div className="divider my-1" />
               <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
-                <button
+                <Action
+                  variant="quiet"
                   type="button"
                   onClick={() => { void navigate('/host/dashboard') }}
-                  className="btn btn-ghost"
-                  disabled={loading}
+                  state={formLocked ? 'disabled' : 'idle'}
                 >
                   {t('create_jam.actions.cancel')}
-                </button>
+                </Action>
 
                 {mode === 'edit' && (
-                  <button
+                  <Action
+                    variant="destructive"
                     type="button"
                     onClick={() => setDeleteConfirmOpen(true)}
-                    className="btn btn-error btn-outline"
-                    disabled={loading}
+                    state={formLocked ? 'disabled' : 'idle'}
                   >
                     {t('create_jam.actions.delete')}
-                  </button>
+                  </Action>
                 )}
 
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <span className="loading loading-spinner loading-sm"></span>
-                      {t('create_jam.actions.saving')}
-                    </>
-                  ) : mode === 'create' ? (
-                    t('create_jam.actions.create')
-                  ) : (
-                    t('create_jam.actions.update')
-                  )}
-                </button>
+                {loading ? (
+                  <Action type="submit" state="loading" loadingLabel={t('create_jam.actions.saving')}>
+                    {t('create_jam.actions.saving')}
+                  </Action>
+                ) : (
+                  <Action type="submit" state={formLocked ? 'disabled' : 'idle'}>
+                    {mode === 'create' ? t('create_jam.actions.create') : t('create_jam.actions.update')}
+                  </Action>
+                )}
               </div>
             </form>
           </div>
@@ -623,41 +707,18 @@ export function CreateJamPage() {
         />
       </div>
 
-      {/* Spotify Import Modal */}
-      <SpotifyImportModal
-        isOpen={spotifyModalOpen}
-        onClose={() => setSpotifyModalOpen(false)}
-        onSuccess={handleSpotifySuccess}
-      />
-
       {/* Delete Confirmation Modal */}
-      <Modal
+      <ConfirmDialog
         isOpen={deleteConfirmOpen}
-        onClose={() => setDeleteConfirmOpen(false)}
         title={t('create_jam.messages.confirm_delete_title')}
-        size="sm"
-        role="alertdialog"
-        footer={
-          <>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={() => setDeleteConfirmOpen(false)}
-            >
-              {t('common.cancel')}
-            </button>
-            <button
-              type="button"
-              className="btn btn-error"
-              onClick={() => { void handleDeleteConfirm() }}
-            >
-              {t('create_jam.actions.confirm_delete')}
-            </button>
-          </>
-        }
-      >
-        <p>{t('create_jam.messages.confirm_delete')}</p>
-      </Modal>
+        message={t('create_jam.messages.confirm_delete')}
+        confirmLabel={t('create_jam.actions.confirm_delete')}
+        cancelLabel={t('common.cancel')}
+        variant="destructive"
+        loading={loading}
+        onConfirm={() => { void handleDeleteConfirm() }}
+        onCancel={() => setDeleteConfirmOpen(false)}
+      />
     </div>
   )
 }

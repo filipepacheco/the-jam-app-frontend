@@ -121,7 +121,10 @@ const createFixture = async (): Promise<{root: string; base: string}> => {
   return {root, base}
 }
 
-describe('design-system check command', () => {
+// Fixture tests create temporary Git repositories and launch the TypeScript CLI
+// several times. Keep the default test timeout for normal tests, but allow
+// slower CI runners enough time to complete this intentional subprocess work.
+describe('design-system check command', {timeout: 15_000}, () => {
   it('reports reviewed unchanged debt as warnings without blocking the check', async () => {
     const {root, base} = await createFixture()
 

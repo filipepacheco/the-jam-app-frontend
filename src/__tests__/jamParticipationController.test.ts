@@ -52,7 +52,7 @@ function deferred<T>() {
 }
 
 describe('Jam participation controller eligibility and overlays', () => {
-  it('excludes Suggestions, non-enrollable Performances, and existing registrations', () => {
+  it('excludes non-enrollable Performances but permits another instrument registration', () => {
     const registered = performance('registered')
     registered.registrations = [{
       id: 'registration-1', musicianId: 'musician-1', jamId: 'jam-1',
@@ -67,7 +67,7 @@ describe('Jam participation controller eligibility and overlays', () => {
       registered,
     ]}))
 
-    expect(controller.getSnapshot().eligiblePerformances.map(({id}) => id)).toEqual(['eligible'])
+    expect(controller.getSnapshot().eligiblePerformances.map(({id}) => id)).toEqual(['eligible', 'registered'])
   })
 
   it('uses the same eligibility projection for the single shortcut and multi picker', () => {
@@ -123,6 +123,19 @@ describe('Jam participation controller eligibility and overlays', () => {
     await expect(controller.commands.register('vocals')).resolves.toMatchObject({code: 'failure', failure: 'resolved', error: {message: 'full'}})
     expect(adapter.refresh).not.toHaveBeenCalled()
     expect(controller.getSnapshot().feedback).toBeNull()
+  })
+
+  it('attaches the selected instrument and current Musician to the registration', async () => {
+    const adapter = operations()
+    const controller = createJamParticipationController(context(), {operations: adapter})
+    controller.commands.beginRegistration('eligible')
+
+    await expect(controller.commands.register('bass')).resolves.toMatchObject({
+      code: 'success', operation: 'registration', entityId: 'eligible',
+    })
+    expect(adapter.register).toHaveBeenCalledWith({
+      musicianId: 'musician-1', performanceId: 'eligible', instrument: 'bass',
+    })
   })
 
   it('does not refresh or show success after a resolved suggestion failure', async () => {

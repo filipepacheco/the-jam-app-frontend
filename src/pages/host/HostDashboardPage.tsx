@@ -9,12 +9,20 @@ import {useNavigate} from 'react-router-dom'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {Alert, JamCardSkeleton, PageAlerts, SpotifyImportModal} from '../../components'
+import {
+    Action,
+    ActionGroup,
+    EmptyState,
+    ErrorState,
+    JamCardSkeleton,
+    OverflowMenu,
+    type NavigationMenuItem,
+} from '../../components'
 import {useTranslation} from 'react-i18next'
 import {safeT} from '../../lib/i18nUtils.ts'
 import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
 import {getJamPath} from '../../utils/jamUrl'
-import {EllipsisVertical} from 'lucide-react'
+import {AlertCircle, CalendarClock, CheckCircle2, ExternalLink, MapPin, Music2, Trash2, Users} from 'lucide-react'
 
 interface JamCategory {
     planned: JamResponseDto[]
@@ -22,22 +30,57 @@ interface JamCategory {
     past: JamResponseDto[]
 }
 
-export function HostDashboardPage() {
+export interface HostDashboardPort {
+    list(): Promise<readonly JamResponseDto[]>
+    remove(jamId: string): Promise<void>
+}
+
+const hostDashboardPort: HostDashboardPort = {
+    async list() {
+        const result = await jamService.findAll()
+        return result.data || []
+    },
+    async remove(jamId) {
+        await jamService.deleteFn(jamId)
+    },
+}
+
+interface HostDashboardPageProps {
+    port?: HostDashboardPort
+    confirmDelete?: (message: string) => boolean
+}
+
+interface JamMutationFeedback {
+    jam: JamResponseDto
+    message: string
+    tone: 'success' | 'error'
+}
+
+function getJamCategory(jam: JamResponseDto): keyof JamCategory {
+    if (jam.status === 'FINISHED') return 'past'
+    if (jam.status === 'ACTIVE' || jam.status === 'LIVE') return 'inProgress'
+    return 'planned'
+}
+
+export function HostDashboardPage({
+    port = hostDashboardPort,
+    confirmDelete = (message) => window.confirm(message),
+}: HostDashboardPageProps = {}) {
     const {t} = useTranslation()
     const navigate = useNavigate()
     const {isAuthenticated, isLoading: authLoading} = useAuth()
     const [jams, setJams] = useState<JamResponseDto[]>([])
-    const [loading, setLoading] = useState(false)
-    const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
-    const [showImportModal, setShowImportModal] = useState(false)
+    const [loading, setLoading] = useState(true)
+    const [deletingJamId, setDeletingJamId] = useState<string | null>(null)
+    const [jamMutationFeedback, setJamMutationFeedback] = useState<JamMutationFeedback | null>(null)
+    const {error, setError} = usePageAlerts()
 
     const loadJams = useCallback(async () => {
         setLoading(true)
         setError(null)
 
         try {
-            const result = await jamService.findAll()
-            setJams(result.data || [])
+            setJams([...await port.list()])
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : t('jam_management.host_dashboard.failed_to_load')
             console.error('❌ Error loading jams:', err)
@@ -45,7 +88,7 @@ export function HostDashboardPage() {
         } finally {
             setLoading(false)
         }
-    }, [t])
+    }, [port, setError, t])
 
     // Load jams once auth is ready
     useEffect(() => {
@@ -59,15 +102,7 @@ export function HostDashboardPage() {
             planned: [], inProgress: [], past: [],
         }
 
-        jams.forEach((jam) => {
-            if (jam.status === 'FINISHED') {
-                categorized.past.push(jam)
-            } else if (jam.status === 'ACTIVE' || jam.status === 'LIVE') {
-                categorized.inProgress.push(jam)
-            } else {
-                categorized.planned.push(jam)
-            }
-        })
+        jams.forEach((jam) => categorized[getJamCategory(jam)].push(jam))
 
         return categorized
     }, [jams])
@@ -83,21 +118,31 @@ export function HostDashboardPage() {
     }, [jams])
 
     const handleDeleteJam = async (jamId: string) => {
-        if (!confirm(t('jam_management.host_dashboard.confirm_delete'))) {
+        const jam = jams.find((candidate) => candidate.id === jamId)
+        if (!jam || !confirmDelete(t('jam_management.host_dashboard.confirm_delete'))) {
             return
         }
 
-        setLoading(true)
+        setDeletingJamId(jamId)
+        setJamMutationFeedback(null)
         setError(null)
 
         try {
-            await jamService.deleteFn(jamId)
-            setSuccess(t('jam_management.host_dashboard.delete_success'))
-            await loadJams()
+            await port.remove(jamId)
+            setJams((current) => current.filter((candidate) => candidate.id !== jamId))
+            setJamMutationFeedback({
+                jam,
+                message: t('jam_management.host_dashboard.delete_success'),
+                tone: 'success',
+            })
         } catch (err) {
-            setError(err instanceof Error ? err.message : t('jam_management.host_dashboard.delete_failed'))
+            setJamMutationFeedback({
+                jam,
+                message: err instanceof Error ? err.message : t('jam_management.host_dashboard.delete_failed'),
+                tone: 'error',
+            })
         } finally {
-            setLoading(false)
+            setDeletingJamId(null)
         }
     }
 
@@ -138,125 +183,101 @@ export function HostDashboardPage() {
             {/* Header */}
             <div className="mb-3 sm:mb-6">
                 <div className="flex items-center justify-between gap-2 mb-3">
-                    <h1 className="text-lg sm:text-2xl font-bold">{t('jam_management.host_dashboard.title')}</h1>
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => navigate('/host/feedback')}
-                            className="btn btn-ghost btn-sm hidden sm:inline-flex"
-                            disabled={loading}
-                        >
-                            {t('feedback_page.title')}
-                        </button>
-                        <button
-                            onClick={() => setShowImportModal(true)}
-                            className="btn btn-outline btn-sm hidden sm:inline-flex"
-                            disabled={loading}
-                        >
-                            {t('spotify.import_button')}
-                        </button>
-                        <button
+                    <h1 className="text-2xl sm:text-3xl font-bold text-balance">{t('jam_management.host_dashboard.title')}</h1>
+                    <div className="flex items-center">
+                        <Action
                             onClick={() => navigate('/host/create-jam')}
-                            className="btn btn-primary btn-sm hidden sm:inline-flex"
-                            disabled={loading}
+                            className="shrink-0"
+                            state={loading ? 'disabled' : 'idle'}
                         >
                             {t('jam_management.host_dashboard.create_jam_btn')}
-                        </button>
-                        {/* Mobile overflow actions */}
-                        <div className="dropdown dropdown-end sm:hidden">
-                            <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-square">
-                                <EllipsisVertical className="size-4" />
-                            </div>
-                            <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-52 p-2 shadow-lg z-10">
-                                <li><button onClick={() => navigate('/host/feedback')}>{t('feedback_page.title')}</button></li>
-                                <li><button onClick={() => setShowImportModal(true)}>{t('spotify.import_button')}</button></li>
-                                <li><button onClick={() => navigate('/host/create-jam')}>{t('jam_management.host_dashboard.create_jam_btn')}</button></li>
-                            </ul>
-                        </div>
+                        </Action>
                     </div>
                 </div>
 
                 {/* Alerts */}
-                <PageAlerts error={error} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} />
-            </div>
-
-            {/* Stats - Single horizontal bar */}
-            <div className="stats stats-horizontal w-full bg-base-200 shadow-sm mb-3 sm:mb-6">
-                <div className="stat place-items-center py-2 px-3">
-                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.total_jams')}</div>
-                    <div className="stat-value text-lg">{stats.totalJams}</div>
-                </div>
-                <div className="stat place-items-center py-2 px-3">
-                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.registrations')}</div>
-                    <div className="stat-value text-lg">{stats.totalRegistrations}</div>
-                </div>
-                <div className="stat place-items-center py-2 px-3">
-                    <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.songs')}</div>
-                    <div className="stat-value text-lg">{stats.totalSongs}</div>
-                </div>
+                {error && jams.length > 0 && <ErrorState
+                    title={t('jam_management.host_dashboard.failed_to_load')}
+                    description={error === t('jam_management.host_dashboard.failed_to_load') ? undefined : error}
+                    action={{label: t('common.try_again'), onClick: () => void loadJams()}}
+                    className="mb-3"
+                />}
             </div>
 
             {loading && jams.length === 0 ? (
-                <div className="animate-pulse">
+                <div className="animate-pulse" role="status" aria-live="polite" aria-label={t('jam_management.host_dashboard.loading_jams')}>
+                    <span className="sr-only">{t('jam_management.host_dashboard.loading_jams')}</span>
                     <div className="skeleton h-6 w-40 rounded mb-3" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                         {[...Array(3)].map((_, i) => <JamCardSkeleton key={i} />)}
                     </div>
                 </div>
-            ) : jams.length === 0 ? (
-                <Alert type="info" message={t('jam_management.host_dashboard.no_jams_desc')} className="mb-6 sm:mb-8" />
+            ) : error && jams.length === 0 ? (
+                <ErrorState
+                    title={t('jam_management.host_dashboard.failed_to_load')}
+                    description={error === t('jam_management.host_dashboard.failed_to_load') ? undefined : error}
+                    action={{label: t('common.try_again'), onClick: () => void loadJams()}}
+                />
+            ) : jams.length === 0 && jamMutationFeedback?.tone !== 'success' ? (
+                <EmptyState
+                    kind="first-use"
+                    title={t('jam_management.host_dashboard.no_jams_title')}
+                    description={t('jam_management.host_dashboard.no_jams_desc')}
+                    action={{
+                        label: t('jam_management.host_dashboard.create_jam_btn'),
+                        onClick: () => navigate('/host/create-jam'),
+                    }}
+                    className="mb-6 sm:mb-8"
+                />
             ) : (<>
-                {/* In Progress Jams */}
-                {categories.inProgress.length > 0 && (<div className="mb-3 sm:mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.in_progress')}</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {categories.inProgress.map((jam) => (<HostJamSummaryCard
-                            key={jam.id}
-                            jam={jam}
-                            onDelete={handleDeleteJam}
-                            onNavigate={navigate}
-                            loading={loading}
-                        />))}
-                    </div>
-                </div>)}
+                <HostJamCategory
+                    category="inProgress"
+                    jams={categories.inProgress}
+                    title={t('jam_management.host_dashboard.categories.in_progress')}
+                    deletingJamId={deletingJamId}
+                    mutationFeedback={jamMutationFeedback}
+                    onDelete={handleDeleteJam}
+                    onNavigate={navigate}
+                />
 
-                {/* Planned Jams */}
-                {categories.planned.length > 0 && (<div className="mb-3 sm:mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.planned')}</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {categories.planned.map((jam) => (<HostJamSummaryCard
-                            key={jam.id}
-                            jam={jam}
-                            onDelete={handleDeleteJam}
-                            onNavigate={navigate}
-                            loading={loading}
-                        />))}
+                {/* Portfolio totals follow operational work instead of leading it. */}
+                <div className="stats stats-horizontal w-full bg-base-200 shadow-sm mb-3 sm:mb-6">
+                    <div className="stat place-items-center py-2 px-3">
+                        <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.total_jams')}</div>
+                        <div className="stat-value text-lg">{stats.totalJams}</div>
                     </div>
-                </div>)}
+                    <div className="stat place-items-center py-2 px-3">
+                        <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.registrations')}</div>
+                        <div className="stat-value text-lg">{stats.totalRegistrations}</div>
+                    </div>
+                    <div className="stat place-items-center py-2 px-3">
+                        <div className="stat-title text-xs">{t('jam_management.host_dashboard.stats.songs')}</div>
+                        <div className="stat-value text-lg">{stats.totalSongs}</div>
+                    </div>
+                </div>
 
-                {/* Past Jams */}
-                {categories.past.length > 0 && (<div className="mb-3 sm:mb-6">
-                    <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{t('jam_management.host_dashboard.categories.past')}</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-                        {categories.past.map((jam) => (<HostJamSummaryCard
-                            key={jam.id}
-                            jam={jam}
-                            onDelete={handleDeleteJam}
-                            onNavigate={navigate}
-                            loading={loading}
-                        />))}
-                    </div>
-                </div>)}
+                <HostJamCategory
+                    category="planned"
+                    jams={categories.planned}
+                    title={t('jam_management.host_dashboard.categories.planned')}
+                    deletingJamId={deletingJamId}
+                    mutationFeedback={jamMutationFeedback}
+                    onDelete={handleDeleteJam}
+                    onNavigate={navigate}
+                />
+
+                <HostJamCategory
+                    category="past"
+                    jams={categories.past}
+                    title={t('jam_management.host_dashboard.categories.past')}
+                    deletingJamId={deletingJamId}
+                    mutationFeedback={jamMutationFeedback}
+                    onDelete={handleDeleteJam}
+                    onNavigate={navigate}
+                />
             </>)}
         </div>
 
-        <SpotifyImportModal
-            isOpen={showImportModal}
-            onClose={() => setShowImportModal(false)}
-            onSuccess={(jamId) => {
-                setShowImportModal(false)
-                navigate(`/host/jams/${jamId}/manage`)
-            }}
-        />
     </div>)
 }
 
@@ -265,46 +286,141 @@ export function HostDashboardPage() {
  */
 interface HostJamSummaryCardProps {
     jam: JamResponseDto
+    category: keyof JamCategory
     onDelete: (jamId: string) => void
     onNavigate: (path: string) => void
-    loading: boolean
+    deleting: boolean
+    mutationFeedback: JamMutationFeedback | null
 }
 
-function HostJamSummaryCard({jam, onDelete, onNavigate}: HostJamSummaryCardProps) {
-    const {t} = useTranslation()
+interface HostJamCategoryProps {
+    category: keyof JamCategory
+    jams: JamResponseDto[]
+    title: string
+    deletingJamId: string | null
+    mutationFeedback: JamMutationFeedback | null
+    onDelete: (jamId: string) => void
+    onNavigate: (path: string) => void
+}
+
+function HostJamCategory({
+    category,
+    jams,
+    title,
+    deletingJamId,
+    mutationFeedback,
+    onDelete,
+    onNavigate,
+}: HostJamCategoryProps) {
+    const successForCategory = mutationFeedback?.tone === 'success' && getJamCategory(mutationFeedback.jam) === category
+
+    if (jams.length === 0 && !successForCategory) return null
+
+    return (<section className="mb-3 sm:mb-6" aria-labelledby={`host-jams-${category}`}>
+        <h2 id={`host-jams-${category}`} className="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{title}</h2>
+        {successForCategory && <p
+            className="mb-3 flex items-center gap-2 text-sm text-success"
+            role="status"
+        >
+            <CheckCircle2 className="size-4 shrink-0" aria-hidden="true" />
+            <span>{mutationFeedback.message}: <strong>{mutationFeedback.jam.name}</strong></span>
+        </p>}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            {jams.map((jam) => (<HostJamSummaryCard
+                key={jam.id}
+                jam={jam}
+                category={category}
+                onDelete={onDelete}
+                onNavigate={onNavigate}
+                deleting={deletingJamId === jam.id}
+                mutationFeedback={mutationFeedback?.jam.id === jam.id ? mutationFeedback : null}
+            />))}
+        </div>
+    </section>)
+}
+
+function HostJamSummaryCard({jam, category, onDelete, onNavigate, deleting, mutationFeedback}: HostJamSummaryCardProps) {
+    const {t, i18n} = useTranslation()
 
     const registrationCount = jam._count?.registrations ?? 0
     const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
+    const formattedDate = jam.date && !Number.isNaN(new Date(jam.date).getTime())
+        ? new Intl.DateTimeFormat(i18n.language, {dateStyle: 'medium', timeStyle: 'short'}).format(new Date(jam.date))
+        : null
+    const menuItems: NavigationMenuItem[] = [
+        {
+            id: 'delete',
+            label: t('jam_management.host_dashboard.delete_btn'),
+            icon: <Trash2 className="size-4" />,
+            destructive: true,
+            disabled: deleting,
+            onSelect: () => onDelete(jam.id),
+        },
+    ]
+    const hasPublicPage = category === 'inProgress'
 
-    return (<div
-        className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-        onClick={() => onNavigate(`/host/jams/${jam.id}/manage`)}
-    >
+    return (<article className="card bg-base-200 shadow-sm hover:shadow-md transition-shadow">
         <div className="card-body p-3 sm:p-4">
             <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                    <h3 className="font-bold text-base truncate">{jam.name}</h3>
-                    <div className="text-xs text-base-content/60 mt-0.5">
-                        {jam.date && <span>{new Date(jam.date).toLocaleDateString('pt-BR')} · </span>}
-                        <span>{songCount} {safeT(t, 'jam_management.host_dashboard.stats.songs').toLowerCase()} · {registrationCount} {safeT(t, 'jam_management.host_dashboard.stats.registrations').toLowerCase()}</span>
+                <div className="min-w-0 flex-1">
+                    <h3 className="font-bold text-base text-pretty">{jam.name}</h3>
+                    <div className="mt-2 grid gap-1 text-xs text-base-content/65">
+                        <span className="inline-flex min-w-0 items-center gap-1.5 tabular-nums">
+                            <CalendarClock className="size-3.5 shrink-0" aria-hidden="true" />
+                            <span>{formattedDate ?? t('jams.date_tba')}</span>
+                        </span>
+                        {jam.location && <span className="inline-flex min-w-0 items-center gap-1.5">
+                            <MapPin className="size-3.5 shrink-0" aria-hidden="true" />
+                            <span className="truncate" title={jam.location}>{jam.location}</span>
+                        </span>}
+                        <span className="flex flex-wrap gap-x-3 gap-y-1">
+                            <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                                <Music2 className="size-3.5 shrink-0" aria-hidden="true" />
+                                {songCount} {safeT(t, 'jam_management.host_dashboard.stats.songs').toLowerCase()}
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                                <Users className="size-3.5 shrink-0" aria-hidden="true" />
+                                {registrationCount} {safeT(t, 'jam_management.host_dashboard.stats.registrations').toLowerCase()}
+                            </span>
+                        </span>
                     </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
-                    <div className={`badge badge-xs ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>
-                    <div className="dropdown dropdown-end" onClick={(e) => e.stopPropagation()}>
-                        <div tabIndex={0} role="button" className="btn btn-ghost btn-sm btn-square">
-                            <EllipsisVertical className="size-4" />
-                        </div>
-                        <ul tabIndex={0} className="dropdown-content menu bg-base-200 rounded-box w-44 p-2 shadow-lg z-10">
-                            <li><button onClick={() => onNavigate(getJamPath(jam))}>{t('jam_management.host_dashboard.view_public')}</button></li>
-                            <li><button onClick={() => onDelete(jam.id)} className="text-error">{t('jam_management.host_dashboard.delete_btn')}</button></li>
-                        </ul>
-                    </div>
+                    {category !== 'planned' && <div className={`badge badge-xs ${getJamStatusBadgeClass(jam.status)}`}>{getJamStatusLabel(jam.status, t)}</div>}
+                    <OverflowMenu
+                        label={t('jam_management.host_dashboard.more_actions')}
+                        items={menuItems}
+                    />
                 </div>
             </div>
             {jam.description && <p className="text-xs text-base-content/50 truncate mt-1">{jam.description}</p>}
+            <ActionGroup
+                className="mt-2"
+                primary={(
+                    <Action
+                        onClick={() => onNavigate(`/host/jams/${jam.id}/manage`)}
+                        state={deleting ? 'disabled' : 'idle'}
+                    >
+                        {t('jam_management.host_dashboard.manage_btn')}
+                    </Action>
+                )}
+                secondary={hasPublicPage ? (
+                    <Action
+                        variant="quiet"
+                        onClick={() => onNavigate(getJamPath(jam))}
+                        state={deleting ? 'disabled' : 'idle'}
+                    >
+                        <ExternalLink className="size-4" aria-hidden="true" />
+                        {t('jam_management.host_dashboard.view_public')}
+                    </Action>
+                ) : undefined}
+            />
+            {mutationFeedback?.tone === 'error' && <p className="mt-2 flex items-start gap-2 text-sm text-error" role="alert">
+                <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+                <span>{mutationFeedback.message}</span>
+            </p>}
         </div>
-    </div>)
+    </article>)
 }
 
 export default HostDashboardPage

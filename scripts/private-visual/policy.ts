@@ -14,6 +14,12 @@ const APPROVED_WORKFLOW_COMMANDS = new Set([
   'npm run visual:progress:check',
   'npm run workbench:verify-build',
 ])
+const SCREEN_REFINEMENT_GATE = 'screen-refinement-gate'
+const SCREEN_REFINEMENT_GATE_CONDITION = `contains(github.event.pull_request.labels.*.name, '${SCREEN_REFINEMENT_GATE}')`
+const SCREEN_REFINEMENT_GATE_WORKFLOWS = new Set([
+  '.github/workflows/component-catalogue.yml',
+  '.github/workflows/private-workbench.yml',
+])
 export const PRIVATE_VISUAL_RENDERER_IMAGE = 'mcr.microsoft.com/playwright:v1.55.1-noble'
 export const PRIVATE_VISUAL_RENDERER_ID = 'playwright-v1.55.1-noble'
 const REQUIRED_IGNORES = [
@@ -57,6 +63,12 @@ export const validatePrivateVisualPolicy = ({ packageJson, workflows, workflow, 
   const workflowSources = workflows ?? [{ path: '.github/workflows/private-workbench.yml', contents: workflow }]
   const allWorkflowContents = workflowSources.map(({ path: filename, contents }) => `${filename}\n${contents}`).join('\n')
   const allConfiguration = `${JSON.stringify(packageJson)}\n${allWorkflowContents}`.toLowerCase()
+
+  for (const source of workflowSources) {
+    if (SCREEN_REFINEMENT_GATE_WORKFLOWS.has(source.path) && !source.contents.includes(SCREEN_REFINEMENT_GATE_CONDITION)) {
+      diagnostics.push(`screen refinement gate requires "${SCREEN_REFINEMENT_GATE}" in "${source.path}"`)
+    }
+  }
 
   for (const service of PUBLIC_VISUAL_SERVICES) {
     if (allConfiguration.includes(service)) {

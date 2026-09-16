@@ -87,7 +87,7 @@ export function Modal({
     <dialog
       aria-labelledby={titleId}
       aria-modal="true"
-      className={`modal modal-open ${responsiveClass}`}
+      className={`modal modal-open z-[10000] ${responsiveClass}`}
       open
       role={role}
     >

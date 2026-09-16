@@ -54,6 +54,8 @@ claude.md
 
 .github/*
 !.github/workflows/
+!.github/PULL_REQUEST_TEMPLATE/
+!.github/PULL_REQUEST_TEMPLATE/screen-refinement.md
 .cursor
 .claude
 .serena
@@ -62,3 +64,6 @@ docs/*
 !docs/architecture-improvement-plan.md
 !docs/architecture-improvement-spec.md
 .vercel
+.env*
+.impeccable.md
+.impeccable-cache/

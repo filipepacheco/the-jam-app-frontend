@@ -14,6 +14,7 @@
     "reject": "Rechazar",
     "search": "Buscar",
     "loading": "Cargando...",
+    "try_again": "Intentar de nuevo",
     "or": "o",
     "required": "Obligatorio",
     "optional": "Opcional",
@@ -40,6 +41,7 @@
     "expanded": "Expandido",
     "collapsed": "Contraído",
     "collapse": "Contraer",
+    "expand": "Expandir",
     "select_theme": "Seleccionar tema",
     "select_language": "Seleccionar idioma",
     "about": "Acerca de",
@@ -207,6 +209,10 @@
   },
   "jams": {
     "listen_on_spotify": "Escuchar en Spotify",
+    "live_dashboard": "Ver panel en vivo",
+    "view_details": "Ver jam",
+    "musicians_count_one": "{{count}} músico inscrito",
+    "musicians_count_other": "{{count}} músicos inscritos",
     "register_for_jam_title": "Registrarse para este Jam",
     "join_this_jam": "Unirse a este Jam",
     "registering": "Registrando...",
@@ -354,7 +360,12 @@
     "didnt_find_music": "No encontré mi música",
     "suggest_new_song_title": "Sugerir una nueva canción",
     "suggest_new_song_description": "Completa los detalles de la canción o importa desde Spotify.",
-    "spotify_url_label": "URL de Spotify (opcional)",
+    "suggestion_source_title": "¿Cómo quieres añadir esta canción?",
+    "suggestion_source_help": "Empieza con los datos manuales o importa la información básica desde Spotify. Después, elige los instrumentos necesarios.",
+    "suggestion_source_manual": "Introducir datos manualmente",
+    "suggestion_source_spotify": "Importar desde Spotify",
+    "spotify_url_label": "URL de Spotify",
+    "spotify_url_hint": "Pega el enlace de una pista de Spotify para completar el título, el artista y la duración. Puedes revisar y editar los datos antes de sugerirla.",
     "spotify_url_placeholder": "https://open.spotify.com/track/...",
     "import_from_spotify": "Importar",
     "importing_metadata": "Importando...",
@@ -394,9 +405,14 @@
       "performances_count": "{{count}} actuaciones",
       "full_address": "Dirección completa"
     },
-    "performance_schedule_title": "📋 Programación de Actuaciones",
+    "performance_schedule_title": "Programación de actuaciones",
+    "performance_registration_help": "Elige una actuación, revisa las plazas por instrumento e inscríbete. El anfitrión revisa las inscripciones antes del Jam.",
+    "hint_tap_song": "Selecciona una actuación terminada para mostrar u ocultar sus detalles.",
+    "filter_by_instrument": "Filtrar actuaciones por instrumento",
     "suggested_songs_title": "Canciones Sugeridas (Pendientes de Aprobación)",
+    "suggested_songs_short": "Sugeridas",
     "suggested_songs_hint": "Estas canciones están esperando la aprobación del anfitrión.",
+    "my_registrations_short": "Mías",
     "instruments": "Instrumentos",
     "scheduled": "Programado",
     "suggested": "Sugerido",
@@ -431,6 +447,7 @@
     "choose_instrument": "Elegir un instrumento...",
     "instruments_needed": "Instrumentos Necesarios:",
     "any_instrument_welcome": "¡Cualquier instrumento es bienvenido para esta canción!",
+    "already_registered": "Ya te inscribiste con este instrumento",
     "slots_available": "espacios disponibles",
     "slots_available_dynamic": "{{count}} espacios disponibles",
     "full": "Lleno",
@@ -472,6 +489,7 @@
     },
     "actions": {
       "start": "▶️ Iniciar",
+      "mark_completed": "Marcar como completada",
       "reschedule": "🔄 Reprogramar",
       "approve_performance": "Aprobar actuación",
       "reject_performance": "Rechazar actuación",
@@ -544,6 +562,7 @@
   "live_control": {
     "now_playing": "Sonando Ahora",
     "up_next": "A Continuación (Reordenable)",
+    "queue_title": "A continuación",
     "song_playing_feedback": "Canción sonando",
     "song_paused_feedback": "Canción pausada",
     "skipped_feedback": "Saltado a la siguiente canción",
@@ -554,6 +573,7 @@
     "reorder_drag": "Reordenar",
     "reorder_cancel": "Cancelar",
     "reorder_save": "Guardar orden",
+    "reorder_next_hint": "La primera actuación de esta lista será la siguiente.",
     "reorderable_item": "Elemento reordenable",
     "reorder_hint_keyboard": "Usa las flechas para reordenar las presentaciones",
     "reorder_hint_mobile": "Mantene presionado un item y arrastra para reordenar",
@@ -670,6 +690,7 @@
   "music_library": {
     "title": "Biblioteca de Música",
     "page_title": "Biblioteca de Música",
+    "results_heading": "Resultados de música",
     "create_new": "Crear Nueva Canción",
     "add_song": "+ Agregar Canción",
     "suggest_song": "Sugerir Canción",
@@ -716,7 +737,7 @@
       "add_success": "¡Canción \"{{title}}\" agregada con éxito!",
       "suggest_success": "¡Canción \"{{title}}\" sugerida! Esperando aprobación del anfitrión.",
       "update_success": "¡Canción \"{{title}}\" actualizada con éxito!",
-      "duplicate_error": "La canción \"{{title}}\" de {{artist}}\" ya existe en la biblioteca",
+      "duplicate_error": "La canción \"{{title}}\" de {{artist}} ya existe en la biblioteca",
       "invalid_duration": "Formato de duración inválido. Usa mm:ss (ej., 4:30)"
     },
     "validation": {
@@ -728,6 +749,14 @@
       "minutes": "Minutos",
       "seconds": "Segundos",
       "more_options": "Más opciones"
+    },
+    "pagination": {
+      "page_size": "Resultados por página",
+      "page_number": "Número de página",
+      "first": "Primera página",
+      "previous": "Página anterior",
+      "next": "Página siguiente",
+      "last": "Última página"
     },
     "errors": {
       "failed_to_load": "Error al cargar música",
@@ -755,6 +784,12 @@
     },
     "overview": {
       "actions_controls": "Acciones y Controles",
+      "actions": {
+        "activate": "Activar Jam",
+        "start": "Iniciar Jam",
+        "finish": "Finalizar Jam",
+        "prepare_again": "Preparar Jam de nuevo"
+      },
       "edit_jam": "Editar Jam",
       "view_public": "Ver Página Pública",
       "activate_jam": "Activar",
@@ -789,6 +824,7 @@
       "select_song": "Selecciona una canción...",
       "add_to_schedule": "Agregar a Programación",
       "confirm_delete": "¿Estás seguro de que quieres eliminar esta entrada?",
+      "confirm_delete_named": "¿Eliminar {{name}} de la programación?",
       "confirm_reject_reg": "¿Estás seguro de que quieres rechazar este registro?",
       "no_schedule_yet": "No hay programación aún",
       "add_entry_hint": "Haz clic en \"Agregar Entrada\" para crear tu primera programación.",
@@ -814,7 +850,9 @@
       "delete_success": "Jam eliminado con éxito",
       "delete_failed": "Error al eliminar el jam",
       "loading_jams": "Cargando tus jams...",
+      "no_jams_title": "Crea tu primer Jam",
       "no_jams_desc": "Aún no tienes sesiones de jam. Crea tu primer jam para comenzar.",
+      "more_actions": "Más acciones del Jam",
       "stats": {
         "total_jams": "Total de Jams",
         "musicians": "Músicos",
@@ -843,6 +881,7 @@
     "musicians": {
       "title": "Directorio de Músicos",
       "subtitle": "Gestiona y visualiza todos los músicos en tu sistema",
+      "loading": "Cargando músicos",
       "failed_to_load": "Error al cargar músicos",
       "update_success": "Músico actualizado con éxito",
       "update_failed": "Error al actualizar músico",
@@ -853,8 +892,11 @@
         "all_levels": "Todos los niveles"
       },
       "results_count": "Mostrando {{shown}} de {{total}} músicos",
-      "no_musicians": "No se encontraron músicos. Los músicos aparecerán aquí una vez que se registren.",
+      "no_musicians_title": "Aún no hay músicos",
+      "no_musicians": "Los músicos aparecerán aquí una vez que se registren.",
+      "no_match_title": "No hay músicos coincidentes",
       "no_match": "Ningún músico coincide con tus criterios de búsqueda.",
+      "clear_filters": "Limpiar filtros",
       "table": {
         "name": "Nombre",
         "instrument": "Instrumento",
@@ -953,8 +995,10 @@
   },
   "publicDashboard": {
     "title": "{{name}}",
+    "loading": "Cargando el tablero",
     "errorTitle": "Error al cargar el tablero",
     "offlineIndicator": "Estás sin conexión - mostrando datos en caché",
+    "staleIndicator": "Actualizaciones en pausa - se muestra el último estado conocido del Jam",
     "dashboardControls": "Controles del panel",
     "toggleControls": "Alternar controles del panel",
     "fullscreen": "Alternar pantalla completa",
@@ -965,6 +1009,8 @@
     "backToHome": "← Volver al inicio",
     "viewDetails": "Ver detalles →",
     "nowPlaying": "Reproduciendo ahora",
+    "waitingForPerformance": "Esperando la próxima actuación",
+    "waitingForPerformanceHelp": "El anfitrión todavía no ha iniciado una actuación.",
     "by": "por",
     "durationPrefix": "⏱️",
     "currentMusicians": "Músicos en el escenario",
@@ -1212,6 +1258,7 @@
     "form": {
       "spotify_playlist_url": "URL de la Playlist de Spotify",
       "placeholder_spotify_playlist_url": "https://open.spotify.com/playlist/...",
+      "spotify_import_hint": "Si agregas una playlist, sus canciones se importarán automáticamente después de crear el jam.",
       "jam_name": "Nombre del Jam",
       "description": "Descripción",
       "date": "Fecha",
@@ -1238,17 +1285,24 @@
       "create": "Crear Jam",
       "update": "Actualizar Jam",
       "saving": "Guardando...",
+      "retry_spotify_import": "Intentar de nuevo",
+      "retrying_spotify_import": "Reintentando importación...",
+      "continue_without_import": "Continuar sin importar",
       "confirm_delete": "Si, Eliminar"
     },
     "validation": {
       "name_required": "El nombre del jam es obligatorio",
       "location_required": "La ubicación es obligatoria",
       "host_id_required": "El ID del anfitrión es obligatorio",
-      "time_required": "La hora es obligatoria cuando se especifica una fecha",
+      "date_required": "La fecha es obligatoria",
+      "time_required": "La hora es obligatoria",
       "date_required_with_time": "La fecha es obligatoria cuando se especifica una hora"
     },
     "messages": {
       "create_success": "Jam \"{{name}}\" creado exitosamente!",
+      "create_import_success": "Jam \"{{name}}\" creado y sus canciones de Spotify importadas exitosamente!",
+      "spotify_import_error": "No se pudo importar la playlist de Spotify",
+      "spotify_import_pending": "El jam se creó, pero no se pudieron importar las canciones de Spotify. Inténtalo de nuevo o continúa al panel.",
       "update_success": "Jam \"{{name}}\" actualizado exitosamente!",
       "delete_success": "Jam eliminado exitosamente!",
       "load_error": "Error al cargar el jam",

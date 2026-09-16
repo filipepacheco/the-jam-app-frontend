@@ -6,31 +6,33 @@
 import type {ScheduleResponseDto} from '../../types/api.types'
 import type {JamParticipationOutcome} from '../../lib/jam-participation/jamParticipationController'
 import {useFormState} from '../../hooks'
-import {useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
+import {normalizeInstrument} from '../../utils/musicianUtils'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
 import {Alert} from '../Alert'
-import {InstrumentsSummary} from './InstrumentsSummary'
+import {Action} from '../Action'
 import {Modal} from '../Modal'
 import {ModalFooter} from '../ModalFooter'
-import {Field} from '../Field'
 
 interface ScheduleEnrollmentModalProps {
   schedule: ScheduleResponseDto
   isOpen: boolean
+  musicianId?: string | null
+  preferredInstrument?: string | null
   onClose: () => void
   onSubmit: (instrument: string) => Promise<JamParticipationOutcome>
 }
 
 export function ScheduleEnrollmentModal({
-                                            schedule, isOpen, onClose, onSubmit,
+                                            schedule, isOpen, musicianId, preferredInstrument, onClose, onSubmit,
                                         }: ScheduleEnrollmentModalProps) {
     const { t } = useTranslation()
     const [selectedInstrument, setSelectedInstrument] = useState('')
     const { error, setError, isLoading: enrollLoading, setIsLoading: setEnrollLoading } = useFormState({ navigateOnSuccess: false })
 
-    const instrumentOptions = getInstrumentOptions(schedule, (key) => {
+    const instrumentOptions = useMemo(() => getInstrumentOptions(schedule, (key) => {
         const instrumentKeyMap: Record<string, string> = {
             drums: t('schedule.instruments.drums'),
             guitars: t('schedule.instruments.guitars'),
@@ -39,7 +41,27 @@ export function ScheduleEnrollmentModal({
             keys: t('schedule.instruments.keys'),
         }
         return instrumentKeyMap[key] || key
-    })
+    }), [schedule, t])
+    const registeredInstruments = useMemo(() => new Set(
+      (schedule.registrations ?? [])
+        .filter((registration) => registration.musicianId === musicianId || registration.musician?.id === musicianId)
+        .map((registration) => normalizeInstrument(registration.instrument ?? '')),
+    ), [musicianId, schedule.registrations])
+
+    useEffect(() => {
+      if (!isOpen) return
+
+      const normalizedPreference = preferredInstrument
+        ? normalizeInstrument(preferredInstrument)
+        : ''
+      const preferredOption = instrumentOptions.find(({key, needed, registered}) =>
+        key === normalizedPreference
+        && !registeredInstruments.has(key)
+        && (needed === -1 || registered < needed)
+      )
+
+      setSelectedInstrument(preferredOption?.key ?? '')
+    }, [instrumentOptions, isOpen, preferredInstrument, registeredInstruments, schedule.id])
 
   const handleEnroll = async () => {
     if (!selectedInstrument) {
@@ -71,10 +93,13 @@ export function ScheduleEnrollmentModal({
         onClose={onClose}
         title={t('schedule.enroll_title')}
         size="sm"
+        responsive
+        scrollable
+        className="max-h-[calc(100dvh-1rem)] sm:max-h-[85vh]"
         footer={
           <ModalFooter
             onCancel={onClose}
-            onSubmit={handleEnroll}
+            onSubmit={() => void handleEnroll()}
             submitLabel={enrollLoading ? t('schedule.enrolling') : t('schedule.enroll_now')}
             submitting={enrollLoading}
             submitDisabled={!selectedInstrument}
@@ -84,31 +109,47 @@ export function ScheduleEnrollmentModal({
         <ScheduleDetailsCard schedule={schedule} />
         <Alert type="error" message={error} />
 
-        {/* Instrument Selection */}
-        <Field
-          id="enrollment-instrument"
-          label={t('schedule.select_your_instrument')}
-          disabled={enrollLoading}
-          className="mb-4"
-        >
-          <Field.Select
-            value={selectedInstrument}
-            onChange={(e) => setSelectedInstrument(e.target.value)}
-          >
-            <option value="">{t('schedule.choose_instrument')}</option>
+        {/* Instrument choice is a visible set of options, not a dropdown whose
+            contents the Musician must inspect one item at a time. */}
+        <fieldset disabled={enrollLoading}>
+          <legend className="mb-2 text-sm font-semibold text-base-content">
+            {t('schedule.select_your_instrument')}
+          </legend>
+          <div className="grid grid-cols-2 gap-2">
             {instrumentOptions.map((option) => {
-              // -1 means unlimited (no requirements defined)
               const isUnlimited = option.needed === -1
               const remaining = isUnlimited ? Infinity : option.needed - option.registered
               const isFull = !isUnlimited && remaining <= 0
-              return (<option key={option.key} value={option.key} disabled={isFull}>
-                {option.emoji} {option.label} {isFull ? t('schedule.full_parentheses') : isUnlimited ? '' : t('schedule.needed_count_parentheses', { count: remaining })}
-              </option>)
-            })}
-          </Field.Select>
-        </Field>
+              const isAlreadyRegistered = registeredInstruments.has(option.key)
+              const isUnavailable = isFull || isAlreadyRegistered
+              const detail = isAlreadyRegistered
+                ? t('schedule.already_registered')
+                : isFull
+                  ? t('schedule.full_parentheses')
+                  : isUnlimited
+                    ? t('schedule.any_instrument_welcome')
+                    : t('schedule.needed_count_parentheses', {count: remaining})
 
-        <InstrumentsSummary instrumentOptions={instrumentOptions} />
+              return (
+                <Action
+                  key={option.key}
+                  type="button"
+                  variant={selectedInstrument === option.key ? 'primary' : 'secondary'}
+                  state={isUnavailable || enrollLoading ? 'disabled' : 'idle'}
+                  aria-pressed={selectedInstrument === option.key}
+                  onClick={() => setSelectedInstrument(option.key)}
+                  className="min-w-0 justify-start px-2 text-left"
+                >
+                  <span className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+                    <span aria-hidden="true">{option.emoji}</span>
+                    <span className="font-semibold">{option.label}</span>
+                    <span className="text-[11px] opacity-75">{detail}</span>
+                  </span>
+                </Action>
+              )
+            })}
+          </div>
+        </fieldset>
       </Modal>
     )
 }
