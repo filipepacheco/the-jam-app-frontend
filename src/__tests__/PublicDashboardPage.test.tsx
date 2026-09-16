@@ -86,7 +86,7 @@ describe('PublicDashboardPage', () => {
       />,
     )
 
-    expect(screen.getByText('Updates paused - showing the last known Jam state')).toBeInTheDocument()
+    expect(screen.getByText('Updates paused')).toBeInTheDocument()
     expect(screen.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeInTheDocument()
   })
 })
