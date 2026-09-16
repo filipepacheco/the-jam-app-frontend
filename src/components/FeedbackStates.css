@@ -6,14 +6,13 @@
 }
 
 .ds-feedback {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: flex-start;
-  gap: var(--ds-space-control);
-  padding: var(--ds-space-control);
-  border: 1px solid color-mix(in oklch, var(--ds-feedback-color) 42%, transparent);
-  border-inline-start: 0.3rem solid var(--ds-feedback-color);
-  border-radius: var(--radius-field);
-  background: color-mix(in oklch, var(--ds-feedback-color) 12%, var(--ds-surface-raised));
+  gap: var(--ds-space-compact) var(--ds-space-control);
+  padding-block: var(--ds-space-control);
+  border-block-end: 1px solid var(--ds-border-subtle);
+  background: transparent;
   color: var(--ds-content-primary);
   transition: opacity var(--ds-motion-state) var(--ds-ease-out), transform var(--ds-motion-state) var(--ds-ease-out);
 }
@@ -24,26 +23,24 @@
 .ds-feedback--error { --ds-feedback-color: var(--ds-status-danger); }
 
 .ds-feedback__marker {
-  display: grid;
-  flex: 0 0 1.5rem;
-  block-size: 1.5rem;
-  place-items: center;
-  border-radius: 999px;
-  background: var(--ds-feedback-color);
-  color: var(--ds-surface-canvas);
-  font-weight: var(--ds-weight-heading);
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  margin-block-start: 0.125rem;
+  color: var(--ds-feedback-color);
 }
 
 .ds-feedback__body { flex: 1 1 auto; min-inline-size: 0; }
 .ds-feedback__body strong { display: block; font-weight: var(--ds-weight-heading); }
 .ds-feedback__body p { margin-block-start: var(--ds-space-related); color: var(--ds-content-secondary); }
+.ds-feedback > .ds-action {
+  grid-column: 2;
+  justify-self: start;
+}
 
 .ds-feedback--loading {
   align-items: center;
-  border-color: var(--ds-border-subtle);
-  border-inline-start-color: var(--ds-action-primary);
-  background: var(--ds-surface-raised);
 }
+.ds-feedback--loading .loading { color: var(--ds-action-primary); }
 
 .ds-feedback-skeleton {
   display: grid;

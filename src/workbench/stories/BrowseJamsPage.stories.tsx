@@ -24,7 +24,10 @@ type Story = StoryObj<typeof BrowseJamsPage>
 export const DiscoveryHierarchy: Story = {
   globals: {authRole: 'viewer', locale: 'pt', theme: 'jam-light', reviewDefaultViewport: 'phone', reducedMotion: true},
   play: async ({canvas}) => {
-    await expect(canvas.getByRole('heading', {level: 1, name: /explorar sessões de jam/i})).toBeVisible()
+    const pageHeading = canvas.getByRole('heading', {level: 1, name: /explorar sessões de jam/i})
+    await expect(pageHeading).toBeVisible()
+    await expect(pageHeading.parentElement).toHaveClass('border-primary')
+    await expect(pageHeading.parentElement?.parentElement?.parentElement).toHaveClass('bg-base-200', 'text-base-content')
     await expect(canvas.getByText(/descubra e participe de sessões de jam/i)).toBeVisible()
     const resultCount = canvas.getByText(/3 jams/i)
     const statusFilter = canvas.getByRole('navigation', {name: /filtrar por status/i})

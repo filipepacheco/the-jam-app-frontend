@@ -4,7 +4,7 @@
  */
 
 import type {RegistrationResponseDto} from '../../types/api.types'
-import {CheckCircle, Clock, Users, XCircle, Trash2} from 'lucide-react'
+import {Users, Trash2} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {Avatar} from '../Avatar'
 import {memo} from "react"
@@ -12,6 +12,7 @@ import {groupRegistrationsByInstrument} from '../../utils/musicianUtils';
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {translationKey} from '../../lib/i18n/translationKeys'
 import {Action, IconAction} from '../Action'
+import {Badge} from '../data-display'
 import type {TFunction} from 'i18next'
 
 
@@ -155,22 +156,13 @@ export const RegistrationList = memo(function RegistrationList({
                                                 {/* Status Badge */}
                                                 <div className="flex items-center gap-1">
                                                     {registration.status === 'APPROVED' && (
-                                                        <div className="flex items-center gap-1 badge badge-sm bg-success/10 text-success border-success">
-                                                            <CheckCircle className="w-3 h-3" />
-                                                            <span>{t('common.statuses.approved')}</span>
-                                                        </div>
+                                                        <Badge tone="success" size="sm">{t('common.statuses.approved')}</Badge>
                                                     )}
                                                     {registration.status === 'REJECTED' && (
-                                                        <div className="flex items-center gap-1 badge badge-sm badge-error text-error-content" >
-                                                            <XCircle className="w-3 h-3" />
-                                                            <span>{t('schedule.statuses.canceled')}</span>
-                                                        </div>
+                                                        <Badge tone="danger" size="sm">{t('schedule.statuses.canceled')}</Badge>
                                                     )}
                                                     {(!registration.status || (registration.status !== 'APPROVED' && registration.status !== 'REJECTED')) && (
-                                                        <div className="flex items-center gap-1 badge badge-sm bg-warning/10 text-warning border-warning">
-                                                            <Clock className="w-3 h-3" />
-                                                            <span>{t('common.statuses.pending')}</span>
-                                                        </div>
+                                                        <Badge tone="warning" size="sm">{t('common.statuses.pending')}</Badge>
                                                     )}
                                                 </div>
 
@@ -183,9 +175,9 @@ export const RegistrationList = memo(function RegistrationList({
                                                             </p>
                                                         )}
                                                         {registration.musician?.level && (
-                                                            <p className="text-xs text-base-content/50 badge badge-xs badge-ghost">
+                                                            <Badge tone="neutral" size="sm">
                                                                 {t(translationKey('schedule.levels', registration.musician.level))}
-                                                            </p>
+                                                            </Badge>
                                                         )}
                                                     </div>
                                                 )}

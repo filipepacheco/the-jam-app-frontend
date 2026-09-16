@@ -90,7 +90,7 @@ function Navbar() {
       </div>
 
       {/* Navbar End - Actions */}
-      <div className="navbar-end gap-1 sm:gap-2 md:gap-3 flex-wrap md:flex-nowrap justify-end">
+      <div className="navbar-end shrink-0 justify-end gap-1 sm:gap-2 md:gap-3">
         {isLoading ? (
           /* Skeleton placeholders while auth state loads. The canonical
              Skeleton (FeedbackStates.tsx) always renders full-width text
@@ -104,10 +104,14 @@ function Navbar() {
         ) : (
           <>
             {/* Feedback Button - Desktop only */}
-            <FeedbackButton className="hidden xl:flex" />
+            <div className="hidden xl:block">
+              <FeedbackButton />
+            </div>
 
             {/* Desktop User Menu */}
-            <DesktopUserMenu className="hidden xl:inline-flex" />
+            <div className="hidden xl:block">
+              <DesktopUserMenu />
+            </div>
 
             {/* Register Button - Viewer/Anonymous Only. Stays a real anchor
                 (not Action, which only renders a <button>) so the link
@@ -116,37 +120,40 @@ function Navbar() {
                 primary-button look is also outside NavigationLink's pill
                 style, which is tuned for the tab set above, not a CTA. */}
             {isViewer() && !isAuthenticated && (
-              <a href="/register" className="btn btn-primary whitespace-nowrap min-h-[44px]">
-                {t('nav.join')}
-              </a>
+              <div className="hidden sm:block">
+                <a href="/register" className="btn btn-primary min-h-[44px] whitespace-nowrap">
+                  {t('nav.join')}
+                </a>
+              </div>
             )}
           </>
         )}
 
         {/* Mobile Hamburger */}
-        <NavigationAction
-          ref={hamburgerRef}
-          variant="quiet"
-          className="xl:hidden"
-          onClick={() => setIsDrawerOpen(true)}
-          aria-label={t('nav.toggle_menu')}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="size-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            aria-hidden="true"
+        <div className="xl:hidden">
+          <NavigationAction
+            ref={hamburgerRef}
+            variant="quiet"
+            onClick={() => setIsDrawerOpen(true)}
+            aria-label={t('nav.toggle_menu')}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M4 6h16M4 12h8m-8 6h16"
-            />
-          </svg>
-        </NavigationAction>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="size-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </NavigationAction>
+        </div>
       </div>
 
       {/* Mobile Drawer */}

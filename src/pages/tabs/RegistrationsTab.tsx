@@ -1,6 +1,7 @@
 import type {JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useMemo} from "react";
+import {Badge} from "../../components";
 
 /**
  * Registrations Tab Component
@@ -28,17 +29,19 @@ export function RegistrationsTab({jam}: { jam: JamResponseDto }) {
                                             {registration.musician?.instrument}
                                         </p>
                                     </div>
-                                    <div
-                                        className="badge badge-outline badge-xs sm:badge-sm">{registration.status}</div>
+                                    <Badge
+                                        size="sm"
+                                        tone={registration.status === 'APPROVED' ? 'success' : registration.status === 'REJECTED' ? 'danger' : 'warning'}
+                                    >
+                                        {registration.status || 'PENDING'}
+                                    </Badge>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : (
-                <div className="alert">
-                    <p className="text-sm">{t('jam_management.registrations.no_registrations')}</p>
-                </div>
+                <p className="py-3 text-sm text-base-content/70">{t('jam_management.registrations.no_registrations')}</p>
             )}
         </div>
     )

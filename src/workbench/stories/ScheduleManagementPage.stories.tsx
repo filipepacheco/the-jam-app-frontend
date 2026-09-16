@@ -1,6 +1,6 @@
 import type {Meta, StoryObj} from '@storybook/react-vite'
 import {http, HttpResponse} from 'msw'
-import {expect, fn, within} from 'storybook/test'
+import {expect, fn, waitFor, within} from 'storybook/test'
 import {ScheduleTab} from '../../pages/tabs/ScheduleTab'
 import {jamFixtures, musicFixtures, scheduleFixtures} from '../jamMusicFixtures'
 
@@ -80,8 +80,19 @@ export const SmallScheduleAddPath: Story = {
     await expect(add).toBeVisible()
     await userEvent.click(add)
     const documentView = within(canvasElement.ownerDocument.body)
-    await expect(await documentView.findByRole('dialog', {name: /add performance entry/i})).toBeVisible()
-    await userEvent.click(documentView.getByRole('button', {name: /create new song/i}))
+    const addDialog = await documentView.findByRole('dialog', {name: /add performance entry/i})
+    await expect(addDialog).toBeVisible()
+    const musicSelect = within(addDialog).getByRole('button', {name: /^song \*?$/i})
+    await waitFor(() => expect(musicSelect).toBeEnabled())
+    await userEvent.click(musicSelect)
+    const musicList = await documentView.findByRole('listbox')
+    await expect(musicList).toBeVisible()
+    const dropdownLayer = musicList.parentElement
+    const listBounds = musicList.getBoundingClientRect()
+    const paintedOption = canvasElement.ownerDocument.elementFromPoint(listBounds.left + 8, listBounds.top + 8)
+    await expect(dropdownLayer).toContainElement(paintedOption as HTMLElement)
+    await userEvent.click(musicSelect)
+    await userEvent.click(within(addDialog).getByRole('button', {name: /create new song/i}))
     const createDialog = await documentView.findByRole('dialog', {name: /add new song/i})
     await expect(within(createDialog).getByRole('button', {name: /enter details manually/i})).toBeVisible()
     await userEvent.click(within(createDialog).getByRole('button', {name: /import from spotify/i}))

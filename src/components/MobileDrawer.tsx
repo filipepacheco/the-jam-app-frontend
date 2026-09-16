@@ -18,8 +18,17 @@ import { FeedbackModal } from './FeedbackModal'
 import { useState } from 'react'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
 import { Action, IconAction } from './Action'
-import { Field } from './Field'
 import { NavigationLink } from './Navigation'
+import { SearchableSelect } from './forms/SearchableSelect'
+import './MobileDrawer.css'
+
+const THEME_OPTIONS = THEMES.map((theme) => ({
+  id: theme,
+  label: theme
+    .split('-')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' '),
+}))
 
 interface MobileDrawerProps {
   isOpen: boolean
@@ -30,6 +39,10 @@ interface MobileDrawerProps {
 export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProps) {
   const { t } = useTranslation()
   const {currentLang, changeLanguage} = useAppLanguage()
+  const languageOptions = LANGUAGES.map((language) => ({
+    id: language.code,
+    label: t(language.nameKey),
+  }))
   const navigate = useNavigate()
   const { isAuthenticated, user, logout, isViewer, isLoading } = useAuth()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
@@ -53,7 +66,6 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
   }, [onClose, navigate])
 
   const [currentTheme, setTheme] = useTheme()
-
 
   // Body scroll lock
   useEffect(() => {
@@ -119,7 +131,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
 
       {/* Drawer panel */}
       <nav
-        className={`fixed top-0 right-0 h-dvh w-80 bg-base-100 shadow-xl flex flex-col transition-transform ${durationClass} ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed top-0 right-0 flex h-dvh w-[calc(100vw-1rem)] max-w-sm flex-col bg-base-100 shadow-xl transition-transform ${durationClass} ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-[max(1rem,env(safe-area-inset-top))] pb-3">
@@ -176,14 +188,14 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
           )}
 
           {/* Navigation */}
-          <ul className="menu gap-0.5 p-0">
+          <ul className="flex flex-col gap-1 px-2">
             {navItems.map((item) => (
               <li key={item.path}>
                 <NavigationLink
                   href={item.path}
                   onClick={(e) => { e.preventDefault(); handleNavClick(item.path) }}
                   icon={item.icon}
-                  className="py-3 text-base justify-start"
+                  className="mobile-drawer__nav-item text-base"
                 >
                   {item.label}
                 </NavigationLink>
@@ -197,7 +209,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
                   href="/profile"
                   onClick={(e) => { e.preventDefault(); handleNavClick('/profile') }}
                   icon={<UserCircle className="size-5" />}
-                  className="py-3 text-base justify-start"
+                  className="mobile-drawer__nav-item text-base"
                 >
                   {t('nav.my_profile')}
                 </NavigationLink>
@@ -208,7 +220,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
             <li>
               <Action
                 variant="quiet"
-                className="w-full justify-start gap-3 py-3 text-base"
+                className="mobile-drawer__nav-item text-base"
                 onClick={() => setFeedbackOpen(true)}
               >
                 <MessageSquareHeart className="size-5" />
@@ -221,29 +233,35 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
           <div className="divider my-2 px-2"></div>
 
           <div className="flex flex-col gap-3 px-2">
-            <Field id="mobile-drawer-language" label={t('common.select_language')}>
-              <Field.Select
-                onChange={(e) => changeLanguage(e.target.value)}
+            <div className="ds-field">
+              <label className="ds-field__label ds-type-ui" htmlFor="mobile-drawer-language">
+                <span className="ds-field__label-text">{t('common.select_language')}</span>
+              </label>
+              <SearchableSelect
+                id="mobile-drawer-language"
+                items={languageOptions}
                 value={currentLang}
-              >
-                {LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code}>{t(lang.nameKey)}</option>
-                ))}
-              </Field.Select>
-            </Field>
+                onChange={changeLanguage}
+                getItemLabel={(language) => language.label}
+                ariaLabel={t('common.select_language')}
+                searchable={false}
+              />
+            </div>
 
-            <Field id="mobile-drawer-theme" label={t('common.select_theme')}>
-              <Field.Select
-                onChange={(e) => setTheme(e.target.value)}
+            <div className="ds-field">
+              <label className="ds-field__label ds-type-ui" htmlFor="mobile-drawer-theme">
+                <span className="ds-field__label-text">{t('common.select_theme')}</span>
+              </label>
+              <SearchableSelect
+                id="mobile-drawer-theme"
+                items={THEME_OPTIONS}
                 value={currentTheme}
-              >
-                {THEMES.map((theme) => (
-                  <option key={theme} value={theme}>
-                    {theme.charAt(0).toUpperCase() + theme.slice(1)}
-                  </option>
-                ))}
-              </Field.Select>
-            </Field>
+                onChange={setTheme}
+                getItemLabel={(theme) => theme.label}
+                ariaLabel={t('common.select_theme')}
+                searchable={false}
+              />
+            </div>
           </div>
         </div>
 

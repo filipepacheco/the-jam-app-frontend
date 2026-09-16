@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type AnchorHTMLAttributes, type HTMLAttributes, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent, type ReactNode, type RefAttributes } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, type AnchorHTMLAttributes, type HTMLAttributes, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent, type ReactNode, type RefAttributes } from 'react'
 import { MoreHorizontal } from 'lucide-react'
 import { Action, IconAction, type ActionProps } from './Action'
 import './Navigation.css'
@@ -267,19 +267,27 @@ export interface DropdownMenuProps {
   label: string
   children: ReactNode
   className?: string
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   trigger?: ReactNode
 }
 
 /** A small popover for settings or other secondary content. */
-export function DropdownMenu({ children, className = '', label, trigger }: DropdownMenuProps) {
-  const [open, setOpen] = useState(false)
+export function DropdownMenu({ children, className = '', label, onOpenChange, open, trigger }: DropdownMenuProps) {
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
+  const isOpen = open ?? uncontrolledOpen
   const rootRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const menuId = useId()
 
+  const setOpen = useCallback((nextOpen: boolean) => {
+    if (open === undefined) setUncontrolledOpen(nextOpen)
+    onOpenChange?.(nextOpen)
+  }, [onOpenChange, open])
+
   useEffect(() => {
-    if (!open) return
+    if (!isOpen) return
     const dismiss = (event: PointerEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) setOpen(false)
     }
@@ -299,7 +307,7 @@ export function DropdownMenu({ children, className = '', label, trigger }: Dropd
       document.removeEventListener('pointerdown', dismiss)
       document.removeEventListener('keydown', escape)
     }
-  }, [open])
+  }, [isOpen, setOpen])
 
   return (
     <div ref={rootRef} className={`ds-dropdown ${className}`}>
@@ -308,14 +316,14 @@ export function DropdownMenu({ children, className = '', label, trigger }: Dropd
         type="button"
         className="ds-dropdown__trigger ds-control ds-focusable"
         aria-haspopup="dialog"
-        aria-expanded={open}
+        aria-expanded={isOpen}
         aria-controls={menuId}
         aria-label={label}
-        onClick={() => setOpen((current) => !current)}
+        onClick={() => setOpen(!isOpen)}
       >
         {trigger ?? label}
       </button>
-      {open && <div ref={contentRef} id={menuId} role="dialog" aria-label={label} className="ds-dropdown__content">{children}</div>}
+      {isOpen && <div ref={contentRef} id={menuId} role="dialog" aria-label={label} className="ds-dropdown__content">{children}</div>}
     </div>
   )
 }

@@ -1,0 +1,24 @@
+.mobile-drawer__nav-item.ds-action,
+.mobile-drawer__nav-item.ds-navigation__link {
+  display: grid;
+  inline-size: 100%;
+  min-block-size: var(--ds-control-touch);
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  align-items: center;
+  justify-content: stretch;
+  column-gap: var(--ds-space-compact);
+  padding-block: var(--ds-space-related);
+  text-align: start;
+}
+
+.mobile-drawer__nav-item > .ds-navigation__icon,
+.mobile-drawer__nav-item > svg {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  justify-self: center;
+}
+
+.mobile-drawer__nav-item > .ds-action__label,
+.mobile-drawer__nav-item > .ds-navigation__label {
+  justify-self: start;
+}
