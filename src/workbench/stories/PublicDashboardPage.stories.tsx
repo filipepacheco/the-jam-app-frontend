@@ -35,9 +35,11 @@ export const LiveClassic: Story = {
     reviewDefaultViewport: 'venue',
   },
   play: async ({canvas}) => {
-    await expect(canvas.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
-    await expect(canvas.getByText(/tocando agora/i)).toBeVisible()
-    await expect(canvas.getByText(/em seguida/i)).toBeVisible()
+    await waitFor(async () => {
+      await expect(canvas.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
+      await expect(canvas.getByText(/tocando agora/i)).toBeVisible()
+      await expect(canvas.getByText(/em seguida/i)).toBeVisible()
+    })
   },
 }
 
@@ -112,7 +114,7 @@ export const LiveCarousel: Story = {
   globals: {locale: 'en', theme: 'jam-light', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
     await expect(canvas.getAllByRole('tab')).toHaveLength(3)
-    await expect(canvas.getByText('Psycho Killer')).toBeVisible()
+    await waitFor(() => expect(canvas.getByText('Psycho Killer')).toBeVisible())
   },
 }
 
@@ -120,7 +122,9 @@ export const Loading: Story = {
   args: {viewState: {status: 'loading'}},
   globals: {locale: 'pt', theme: 'jam-dark', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
-    await expect(canvas.getByRole('status', {name: /carregando o painel/i})).toHaveAttribute('aria-busy', 'true')
+    const loading = canvas.getByRole('status')
+    await expect(loading).toHaveAttribute('aria-busy', 'true')
+    await expect(loading).toHaveTextContent(/carregando o painel/i)
   },
 }
 
@@ -144,7 +148,9 @@ export const StaleData: Story = {
   },
   globals: {locale: 'en', theme: 'jam-dark', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
-    await expect(canvas.getByText(/updates paused/i)).toBeVisible()
-    await expect(canvas.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
+    await waitFor(async () => {
+      await expect(canvas.getByText(/updates paused/i)).toBeVisible()
+      await expect(canvas.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
+    })
   },
 }

@@ -93,7 +93,7 @@ export const ReadyPlaybackAndQueueModes: Story = {
     await expect((await canvas.findAllByText('Psycho Killer')).length).toBeGreaterThan(0)
     await expect((await canvas.findAllByText(/Próxima|Next/)).length).toBeGreaterThan(0)
 
-    await userEvent.click(canvas.getByRole('tab', {name: /Ordem|Reorder/i}))
+    await userEvent.click(canvas.getByRole('tab', {name: /Ordem|Order/i}))
     const panel = within(canvas.getByRole('tabpanel'))
     await expect(await panel.findByText('Now Playing')).toBeVisible()
     await expect(panel.getByRole('heading', {name: 'Up Next'})).toBeVisible()
@@ -134,7 +134,7 @@ export const NoCurrentPerformance: Story = {
     const startActions = canvas.getAllByRole('button', {name: /Iniciar|Start Jam/i})
     await expect(startActions.some((action) => !action.hasAttribute('disabled'))).toBe(true)
 
-    await userEvent.click(canvas.getByRole('tab', {name: /Ordem|Reorder/i}))
+    await userEvent.click(canvas.getByRole('tab', {name: /Ordem|Order/i}))
     const panel = within(canvas.getByRole('tabpanel'))
     await expect(await panel.findByText('No song currently playing')).toBeVisible()
     await expect(panel.getByText('Psycho Killer')).toBeVisible()
@@ -157,7 +157,7 @@ export const SaveFailureRollsBack: Story = {
     msw: {handlers: liveHostHandlers('jam-live-host-failure', readyLiveState, reorderFailure)},
   },
   play: async ({canvas, userEvent}) => {
-    await userEvent.click(await canvas.findByRole('tab', {name: /Ordem|Reorder/i}))
+    await userEvent.click(await canvas.findByRole('tab', {name: /Ordem|Order/i}))
     const panel = within(canvas.getByRole('tabpanel'))
     await userEvent.click(await panel.findByRole('button', {name: /Reorder/i}))
 
@@ -193,7 +193,7 @@ export const RefreshFailureKeepsQueueContext: Story = {
     )},
   },
   play: async ({canvas, userEvent}) => {
-    await userEvent.click(await canvas.findByRole('tab', {name: /Ordem|Reorder/i}))
+    await userEvent.click(await canvas.findByRole('tab', {name: /Ordem|Order/i}))
     const panel = within(canvas.getByRole('tabpanel'))
     await userEvent.click(await panel.findByRole('button', {name: /Reorder/i}))
     const firstItem = panel.getAllByRole('listitem')[0]

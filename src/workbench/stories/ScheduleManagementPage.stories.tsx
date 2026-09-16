@@ -138,9 +138,13 @@ export const FilteredEmpty: Story = {
   },
   parameters: {a11y: {test: 'error'}},
   play: async ({canvas, userEvent}) => {
-    const search = canvas.getByRole('searchbox', {name: /search songs or musicians/i})
+    const search = canvas.getByRole('searchbox', {name: /search music or musicians/i})
     await userEvent.type(search, 'no matching performance')
     await expect(await canvas.findByText('No results found')).toBeVisible()
-    await expect(canvas.getByRole('button', {name: /clear filters/i})).toBeVisible()
+    const clearFilters = canvas
+      .getAllByRole('button', {name: /clear filters/i})
+      .find((candidate) => candidate.getClientRects().length > 0)
+    await expect(clearFilters).toBeDefined()
+    await expect(clearFilters!).toBeVisible()
   },
 }

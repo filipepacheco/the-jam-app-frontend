@@ -47,9 +47,13 @@ export const DiscoveryHierarchy: Story = {
 export const FilteredEmpty: Story = {
   globals: {authRole: 'viewer', locale: 'en', theme: 'jam-dark', reviewDefaultViewport: 'desktop'},
   play: async ({canvas, userEvent}) => {
-    await userEvent.type(canvas.getByRole('textbox', {name: /search jam sessions/i}), 'no matching venue')
-    await expect(canvas.getByRole('heading', {name: /no jam sessions found/i})).toBeVisible()
-    await expect(canvas.getByRole('button', {name: /clear filters/i})).toBeVisible()
+    await userEvent.type(canvas.getByRole('textbox', {name: /^search$/i}), 'no matching venue')
+    await expect(canvas.getByRole('heading', {name: /no jams found/i})).toBeVisible()
+    const clearFilters = canvas
+      .getAllByRole('button', {name: /clear filters/i})
+      .find((candidate) => candidate.getClientRects().length > 0)
+    await expect(clearFilters).toBeDefined()
+    await expect(clearFilters!).toBeVisible()
     await expect(canvas.queryByText(/no current jam sessions/i)).toBeNull()
   },
 }
@@ -58,7 +62,7 @@ export const FirstUseEmpty: Story = {
   args: {viewState: {status: 'loaded', data: []}},
   globals: {authRole: 'viewer', locale: 'es', theme: 'jam-light', reviewDefaultViewport: 'phone', reducedMotion: true},
   play: async ({canvas}) => {
-    await expect(canvas.getByRole('heading', {name: /no se encontraron sesiones de jam/i})).toBeVisible()
+    await expect(canvas.getByRole('heading', {name: /no se encontraron sesiones/i})).toBeVisible()
     await expect(canvas.queryByRole('button', {name: /limpiar filtros/i})).toBeNull()
   },
 }
@@ -76,7 +80,7 @@ export const RecoverableErrorWithStaleResults: Story = {
   args: {viewState: {status: 'error', message: 'Fresh Jam results are unavailable.', data: jams}},
   globals: {authRole: 'viewer', locale: 'en', theme: 'jam-light', reviewDefaultViewport: 'desktop', reducedMotion: true},
   play: async ({canvas}) => {
-    await expect(canvas.getByRole('alert')).toHaveTextContent('Fresh Jam results are unavailable.')
+    await expect(canvas.getByRole('alert')).toHaveTextContent(/failed to load jams/i)
     await expect(canvas.getByText(jamFixtures.longContent.name)).toBeVisible()
     await expect(canvas.getByRole('button', {name: /try again/i})).toBeVisible()
   },

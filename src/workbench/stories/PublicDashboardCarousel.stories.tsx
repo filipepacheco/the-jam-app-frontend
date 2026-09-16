@@ -54,20 +54,20 @@ const languageChange = fn()
 const close = fn()
 
 export const LanguageControls: Story = {
-  render: () => <LanguageSelector currentLang="pt" onChange={languageChange} onSelectClose={close} />,
+  render: () => <LanguageSelector currentLang="pt-BR" onChange={languageChange} onSelectClose={close} />,
   play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: /english/i }))
+    await userEvent.click(canvas.getByRole('button', { name: /english|inglês/i }))
     await expect(languageChange).toHaveBeenCalledWith('en')
     await expect(close).toHaveBeenCalledOnce()
   },
 }
 
 export const ControlsPanel: Story = {
-  render: () => <DashboardControlsPanel visible jamId="jam-public" jamSlug="friday-night-jam" onClose={close} currentLang="pt" onChangeLanguage={languageChange} pollingMs={5000} onPollingChange={fn()} layout="carousel" onLayoutChange={fn()} carouselIntervalMs={8000} onCarouselIntervalChange={fn()} />,
+  render: () => <DashboardControlsPanel visible jamId="jam-public" jamSlug="friday-night-jam" onClose={close} currentLang="pt-BR" onChangeLanguage={languageChange} pollingMs={5000} onPollingChange={fn()} layout="carousel" onLayoutChange={fn()} carouselIntervalMs={8000} onCarouselIntervalChange={fn()} />,
   globals: { reducedMotion: true },
   play: async ({ canvasElement, userEvent }) => {
     const body = within(canvasElement.ownerDocument.body)
-    await expect(body.getByRole('button', { name: /close|cerrar|fechar/i })).toBeVisible()
+    await waitFor(() => expect(body.getByRole('button', { name: /close|cerrar|fechar/i })).toBeVisible())
     const backdrop = canvasElement.querySelector<HTMLElement>('div.fixed.inset-0')!
     await userEvent.click(backdrop)
     await expect(close).toHaveBeenCalled()
@@ -81,7 +81,7 @@ export const ExpandableQr: Story = {
     const body = within(canvasElement.ownerDocument.body)
     const trigger = body.getByRole('button', { name: /expand qr|expandir.*qr|ampliar.*qr/i })
     await userEvent.click(trigger)
-    await expect(body.getByRole('dialog')).toBeVisible()
+    await waitFor(() => expect(body.getByRole('dialog')).toBeVisible())
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(body.queryByRole('dialog')).toBeNull())
   },

@@ -1,5 +1,5 @@
 import type {Meta, StoryObj} from '@storybook/react-vite'
-import {expect, fn} from 'storybook/test'
+import {expect, fn, within} from 'storybook/test'
 import {MusicPage} from '../../pages/MusicPage'
 import type {MusicLibraryMutationPort, MusicLibraryQueryPort} from '../../lib/music/musicLibraryController'
 import type {MusicResponseDto} from '../../types/api.types'
@@ -65,13 +65,15 @@ export const HostModeration: Story = {
     theme: 'jam-dark',
     reviewDefaultViewport: 'desktop',
   },
-  play: async ({canvas, userEvent}) => {
+  play: async ({canvas, canvasElement, userEvent}) => {
     const suggested = await canvas.findByRole('button', {name: /suggested songs/i})
     await userEvent.click(suggested)
-    await expect(await canvas.findByText("(I Can't Get No) Satisfaction")).toBeVisible()
-    await expect(canvas.getByRole('status', {name: /suggested/i})).toBeVisible()
-    await expect(canvas.getByRole('button', {name: /approve/i})).toBeVisible()
-    await expect(canvas.getByRole('button', {name: /reject/i})).toBeVisible()
+    const documentView = within(canvasElement.ownerDocument.body)
+    const reviewDialog = await documentView.findByRole('dialog')
+    await expect(within(reviewDialog).getByText("(I Can't Get No) Satisfaction")).toBeVisible()
+    await expect(within(reviewDialog).getByRole('status', {name: /suggested/i})).toBeVisible()
+    await expect(within(reviewDialog).getByRole('button', {name: /approve/i})).toBeVisible()
+    await expect(within(reviewDialog).getByRole('button', {name: /reject/i})).toBeVisible()
   },
 }
 

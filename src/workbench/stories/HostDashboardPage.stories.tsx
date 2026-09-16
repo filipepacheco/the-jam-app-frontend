@@ -32,8 +32,6 @@ const loadingPort: HostDashboardPort = {
 }
 
 const retryList = fn()
-  .mockRejectedValueOnce(new Error('The Jam list is temporarily unavailable.'))
-  .mockResolvedValue([])
 const retryPort: HostDashboardPort = {list: retryList, remove}
 
 const pendingRemove = fn(() => new Promise<void>(() => undefined))
@@ -149,6 +147,12 @@ export const InitialLoading: Story = {
 
 export const QueryFailureAndRetry: Story = {
   args: {port: retryPort},
+  beforeEach: () => {
+    retryList.mockReset()
+    retryList
+      .mockRejectedValueOnce(new Error('The Jam list is temporarily unavailable.'))
+      .mockResolvedValue([])
+  },
   globals: {
     authRole: 'host',
     locale: 'en',
