@@ -32,14 +32,14 @@ describe('i18n smoke', () => {
   });
 
   it.each([
-    ['pt-BR', ['Nenhuma música', '1 música', '12 músicas']],
-    ['en', ['No songs', '1 song', '12 songs']],
-    ['es', ['No hay canciones', '1 canción', '12 canciones']],
-  ] as const)('uses i18next zero, one, and many plural forms for %s', async (locale, expected) => {
+    ['pt-BR', ['Nenhuma música', '1 música', '12 músicas', '1000000 músicas']],
+    ['en', ['No songs', '1 song', '12 songs', '1000000 songs']],
+    ['es', ['No hay canciones', '1 canción', '12 canciones', '1000000 canciones']],
+  ] as const)('uses every i18next plural category required by %s', async (locale, expected) => {
     await waitForI18n()
     const t = i18n.getFixedT(locale)
 
-    expect([0, 1, 12].map((count) => t('jams.songs_count', { count }))).toEqual(expected)
+    expect([0, 1, 12, 1_000_000].map((count) => t('jams.songs_count', { count }))).toEqual(expected)
   });
 
   it('keeps pt as an input alias without advertising pt-PT or object returns', async () => {

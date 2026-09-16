@@ -21,7 +21,7 @@ export const schedule = {
   edit_music: message({"pt-BR": "Editar Música", "en": "Edit Music", "es": "Editar música"}),
   musicians_registered_count: message({"pt-BR": "{{active}} de {{total}} músicos inscritos", "en": "{{active}} of {{total}} musicians registered", "es": "{{active}} de {{total}} músicos inscritos"}),
   all_registrations_approved: message({"pt-BR": "Todos os músicos foram aprovados", "en": "All musicians approved", "es": "Todos los músicos fueron aprobados"}),
-  pending_approvals: plural({"pt-BR": {one: "{{count}} aprovação pendente", other: "{{count}} aprovações pendentes"}, "en": {one: "{{count}} pending approval", other: "{{count}} pending approvals"}, "es": {one: "{{count}} aprobación pendiente", other: "{{count}} aprobaciones pendientes"}}),
+  pending_approvals: plural({"pt-BR": {one: "{{count}} aprovação pendente", many: "{{count}} aprovações pendentes", other: "{{count}} aprovações pendentes"}, "en": {one: "{{count}} pending approval", other: "{{count}} pending approvals"}, "es": {one: "{{count}} aprobación pendiente", many: "{{count}} aprobaciones pendientes", other: "{{count}} aprobaciones pendientes"}}),
   any_instrument_welcome: message({"pt-BR": "Qualquer instrumento é bem-vindo nesta música!", "en": "Any instrument is welcome for this song!", "es": "¡Cualquier instrumento es bienvenido para esta canción!"}),
   already_registered: message({"pt-BR": "Você já se inscreveu com este instrumento", "en": "You already registered with this instrument", "es": "Ya te inscribiste con este instrumento"}),
   slots_available: message({"pt-BR": "vagas disponíveis", "en": "slots available", "es": "espacios disponibles"}),

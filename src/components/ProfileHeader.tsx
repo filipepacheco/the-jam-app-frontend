@@ -67,7 +67,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
 
         {/* Role Badge */}
         <div className={`badge badge-lg ${getRoleBadgeColor()} badge-outline text-white border-white mt-2`}>
-          {getRoleLabel(user.role)}
+          {getRoleLabel(user.role, t)}
         </div>
 
         {/* Member Since */}

@@ -101,14 +101,16 @@ export function validateCatalogue(tree: CatalogueTree): string[] {
           issues.push(`${path}: ${locale} plural is missing`)
           continue
         }
-        for (const required of ['one', 'other'] as const) {
+        const pluralCategories = new Intl.PluralRules(locale).resolvedOptions().pluralCategories
+        const requiredCategories = new Set<PluralForm>(['one', 'other', ...pluralCategories])
+        for (const required of requiredCategories) {
           if (typeof forms[required] !== 'string' || forms[required].trim() === '') {
             issues.push(`${path}: ${locale} plural form ${required} is missing or empty`)
           }
         }
         const localeCategories = new Set<string>([
           'zero',
-          ...new Intl.PluralRules(locale).resolvedOptions().pluralCategories,
+          ...pluralCategories,
         ])
         for (const form of Object.keys(forms) as PluralForm[]) {
           if (!localeCategories.has(form)) {

@@ -50,6 +50,19 @@ describe('key-first locale catalogue', () => {
     expect(issues).toContain('item_count: en plural form few is invalid for this locale')
   })
 
+  it('requires every plural category that a locale can select', () => {
+    const issues = validateCatalogue({
+      item_count: plural({
+        'pt-BR': {one: '{{count}} item', other: '{{count}} itens'},
+        en: {one: '{{count}} item', other: '{{count}} items'},
+        es: {one: '{{count}} elemento', other: '{{count}} elementos'},
+      }),
+    })
+
+    expect(issues).toContain('item_count: pt-BR plural form many is missing or empty')
+    expect(issues).toContain('item_count: es plural form many is missing or empty')
+  })
+
   it('preserves an unknown dynamic value instead of replacing it with generic copy', () => {
     const t = ((key: string) => `translated:${key}`) as unknown as TFunction
 

@@ -4,7 +4,7 @@ export const jams = {
   listen_on_spotify: message({"pt-BR": "Ouça no Spotify", "en": "Listen on Spotify", "es": "Escuchar en Spotify"}),
   live_dashboard: message({"pt-BR": "Ver painel ao vivo", "en": "View live dashboard", "es": "Ver panel en vivo"}),
   view_details: message({"pt-BR": "Ver jam", "en": "View jam", "es": "Ver jam"}),
-  musicians_count: plural({"pt-BR": {one: "{{count}} músico inscrito", other: "{{count}} músicos inscritos"}, "en": {one: "{{count}} musician registered", other: "{{count}} musicians registered"}, "es": {one: "{{count}} músico inscrito", other: "{{count}} músicos inscritos"}}),
+  musicians_count: plural({"pt-BR": {one: "{{count}} músico inscrito", many: "{{count}} músicos inscritos", other: "{{count}} músicos inscritos"}, "en": {one: "{{count}} musician registered", other: "{{count}} musicians registered"}, "es": {one: "{{count}} músico inscrito", many: "{{count}} músicos inscritos", other: "{{count}} músicos inscritos"}}),
   register_for_jam_title: message({"pt-BR": "Inscreva-se neste Jam", "en": "Register for This Jam", "es": "Registrarse para este Jam"}),
   join_this_jam: message({"pt-BR": "Participar deste Jam", "en": "Join This Jam", "es": "Unirse a este Jam"}),
   registering: message({"pt-BR": "Inscrevendo...", "en": "Registering...", "es": "Registrando..."}),
@@ -23,7 +23,7 @@ export const jams = {
   hosted_by: message({"pt-BR": "Organizado por", "en": "Hosted by", "es": "Anfitrionado por"}),
   specialties_needed: message({"pt-BR": "🎸 Especialidades necessárias", "en": "🎸 Specialties Needed", "es": "🎸 Especialidades Necesarias"}),
   no_songs_listed: message({"pt-BR": "Nenhuma música listada ainda", "en": "No songs listed yet", "es": "No hay canciones listadas aún"}),
-  songs_count: plural({"pt-BR": {zero: "Nenhuma música", one: "{{count}} música", other: "{{count}} músicas"}, "en": {zero: "No songs", one: "{{count}} song", other: "{{count}} songs"}, "es": {zero: "No hay canciones", one: "{{count}} canción", other: "{{count}} canciones"}}),
+  songs_count: plural({"pt-BR": {zero: "Nenhuma música", one: "{{count}} música", many: "{{count}} músicas", other: "{{count}} músicas"}, "en": {zero: "No songs", one: "{{count}} song", other: "{{count}} songs"}, "es": {zero: "No hay canciones", one: "{{count}} canción", many: "{{count}} canciones", other: "{{count}} canciones"}}),
   statuses: {
     live: message({"pt-BR": "Ao Vivo", "en": "Live Now", "es": "En Vivo"}),
     active: message({"pt-BR": "Programado", "en": "Active", "es": "Activo"}),
