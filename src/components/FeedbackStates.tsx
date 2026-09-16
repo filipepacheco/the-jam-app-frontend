@@ -1,4 +1,5 @@
 import { useId, type ReactNode } from 'react'
+import { CircleAlert, CircleCheck, Info, TriangleAlert, type LucideIcon } from 'lucide-react'
 import { Action } from './Action'
 import './FeedbackStates.css'
 
@@ -33,6 +34,13 @@ export interface StatusProps extends FeedbackActionProps {
   role?: 'status' | 'alert'
 }
 
+const FEEDBACK_ICONS: Record<FeedbackTone, LucideIcon> = {
+  info: Info,
+  success: CircleCheck,
+  warning: TriangleAlert,
+  error: CircleAlert,
+}
+
 /** Persistent, non-blocking feedback placed beside the affected content. */
 export function Status({
   action,
@@ -44,6 +52,7 @@ export function Status({
 }: StatusProps) {
   const titleId = useId()
   const descriptionId = useId()
+  const FeedbackIcon = FEEDBACK_ICONS[tone]
 
   return (
     <section
@@ -51,9 +60,10 @@ export function Status({
       role={role}
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}
+      data-feedback-presentation="inline"
       data-feedback-tone={tone}
     >
-      <span className="ds-feedback__marker" aria-hidden="true">{tone === 'success' ? '✓' : tone === 'error' ? '!' : tone === 'warning' ? '!' : 'i'}</span>
+      <FeedbackIcon className="ds-feedback__marker" aria-hidden="true" />
       <div className="ds-feedback__body">
         <strong id={titleId}>{title}</strong>
         {description && <p id={descriptionId}>{description}</p>}

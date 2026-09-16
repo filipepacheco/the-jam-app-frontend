@@ -40,6 +40,8 @@ describe('canonical feedback and state patterns', () => {
 
     expect(screen.getByRole('status')).toHaveAccessibleName('Connection paused')
     expect(screen.getByRole('status')).toHaveTextContent('Your changes are safe')
+    expect(screen.getByRole('status')).toHaveAttribute('data-feedback-presentation', 'inline')
+    expect(screen.getByRole('status').querySelector('.ds-feedback__marker')).toHaveAttribute('aria-hidden', 'true')
     await user.click(screen.getByRole('button', { name: 'Try again' }))
     expect(retry).toHaveBeenCalledOnce()
   })
@@ -65,6 +67,7 @@ describe('canonical feedback and state patterns', () => {
     )
 
     expect(screen.getByRole('alert')).toHaveTextContent('Your saved filters are still here')
+    expect(screen.getByRole('alert')).toHaveAttribute('data-feedback-presentation', 'inline')
     await user.click(screen.getByRole('button', { name: 'Try again' }))
     expect(retry).toHaveBeenCalledOnce()
   })

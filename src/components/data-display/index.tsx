@@ -22,7 +22,12 @@ export function Badge({ children, className = '', size = 'md', tone = 'neutral',
     className,
   ].filter(Boolean).join(' ')
 
-  return <span {...props} className={classes} data-display-component="badge" data-display-tone={tone}><span className="ds-badge__label">{children}</span></span>
+  return (
+    <span {...props} className={classes} data-display-component="badge" data-display-presentation="filled" data-display-tone={tone}>
+      {tone !== 'neutral' && <span className="ds-badge__marker" aria-hidden="true" />}
+      <span className="ds-badge__label">{children}</span>
+    </span>
+  )
 }
 
 export interface StatusIndicatorProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {

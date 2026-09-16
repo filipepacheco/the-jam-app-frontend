@@ -21,7 +21,7 @@ export function CarouselIndicator({ count, activeIndex, onSelect }: CarouselIndi
             aria-selected={i === activeIndex}
             onClick={() => onSelect(i)}
             className="ds-control ds-focusable ds-control--shared-display flex items-center justify-center rounded-full bg-transparent"
-            aria-label={t('publicDashboard.goToSlide', { number: i + 1, defaultValue: `Go to slide ${i + 1}` })}
+            aria-label={t('publicDashboard.goToSlide', { number: i + 1 })}
           >
             <span
               aria-hidden="true"

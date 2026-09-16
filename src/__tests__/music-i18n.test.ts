@@ -1,12 +1,11 @@
 import {describe, expect, it} from 'vitest';
-import en from '../locales/en.json';
-import es from '../locales/es.json';
-import pt from '../locales/pt.json';
+import {assembleResources} from '../locales/catalogue';
+import {catalogue} from '../locales/catalogue/catalogue';
 
-const locales = {en, es, pt};
+const locales = assembleResources(catalogue);
 
 describe('music translations', () => {
-  it.each(Object.entries(locales))('defines the music creation strings in %s', (_locale, translations) => {
+  it.each(Object.entries(locales))('defines the music creation strings in %s', (_locale, {translation: translations}) => {
     expect(translations.music_library.create_new).toBeTruthy();
     expect(translations.music_form.info_label).toBeTruthy();
     expect(translations.music_form.info_placeholder).toBeTruthy();

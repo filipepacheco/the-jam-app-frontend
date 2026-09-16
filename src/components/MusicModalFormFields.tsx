@@ -50,7 +50,7 @@ export function MusicModalFormFields({
           id="music-title"
           label={t('common.form_labels.title')}
           required
-          requiredLabel={t('common.required', 'required')}
+          requiredLabel={t('common.required')}
         >
           <Field.Input
             value={formData.title}
@@ -64,7 +64,7 @@ export function MusicModalFormFields({
           id="music-artist"
           label={t('common.form_labels.artist')}
           required
-          requiredLabel={t('common.required', 'required')}
+          requiredLabel={t('common.required')}
         >
           <Field.Input
             value={formData.artist}
@@ -77,7 +77,7 @@ export function MusicModalFormFields({
       {/* Optional Fields Section */}
       <div className="space-y-4">
         {/* Description */}
-        <Field id="music-description" label={t('common.description')} hint={t('music_form.description_hint')}>
+        <Field id="music-description" label={t('common.description')}>
           <Field.Textarea
             value={formData.description}
             onChange={(e) => onChange('description', e.target.value)}
@@ -87,7 +87,7 @@ export function MusicModalFormFields({
         </Field>
 
         {/* Link */}
-        <Field id="music-link" label={t('common.link')} hint={t('music_form.link_hint')}>
+        <Field id="music-link" label={t('common.link')}>
           <Field.Input
             value={formData.link}
             onChange={(e) => onChange('link', e.target.value)}
@@ -123,7 +123,7 @@ export function MusicModalFormFields({
           </Field>
 
           {/* Duration */}
-          <Field id="music-duration" label={t('music_form.duration_label')} hint={t('music_form.duration_hint')}>
+          <Field id="music-duration" label={t('music_form.duration_label')}>
             <Field.Input
               value={formData.duration}
               onChange={(e) => onChange('duration', e.target.value)}
@@ -135,8 +135,8 @@ export function MusicModalFormFields({
       </div>
 
       {/* Needed Instruments Section */}
-      <div className="border-t border-base-300 pt-4">
-        <h4 className="font-medium text-base mb-3 text-center">
+      <div className="pt-2">
+        <h4 className="mb-3 text-base font-medium">
           {t('music_form.musicians_needed')}
         </h4>
 

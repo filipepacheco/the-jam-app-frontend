@@ -85,7 +85,7 @@ function HomePage() {
       alternateName: 'The Jam App',
       url: siteUrl,
       description: t('seo.homepage.description_enhanced'),
-      inLanguage: currentLang === 'pt' ? 'pt-BR' : currentLang,
+      inLanguage: currentLang,
       potentialAction: {
         '@type': 'SearchAction',
         target: {

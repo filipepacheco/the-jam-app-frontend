@@ -108,6 +108,7 @@ vi.mock('../hooks', () => {
     isAuthenticated: true,
     isLoading: false,
     }),
+    useAppLanguage: () => ({currentLang: 'en', changeLanguage: vi.fn()}),
     usePageAlerts: () => alerts,
   }
 })

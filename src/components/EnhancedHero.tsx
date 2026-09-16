@@ -17,7 +17,7 @@ export function EnhancedHero() {
     : '/register'
 
   const ctaLabel = isAuthenticated
-    ? role === 'host' ? t('nav.dashboard', 'Dashboard') : t('nav.jams', 'Jams')
+    ? role === 'host' ? t('nav.dashboard') : t('nav.jams')
     : t('homepage.hero.cta_button')
 
   const handleNavigate = (path: string) => (event: MouseEvent<HTMLAnchorElement>) => {

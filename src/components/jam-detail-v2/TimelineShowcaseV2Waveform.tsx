@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {useReducedMotion} from '../../hooks'
 import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
+import {translationKey} from '../../lib/i18n/translationKeys'
 import {TimelineItemV2Waveform} from './TimelineItemV2Waveform'
 import {useState} from 'react'
 import {Flag, ClipboardList, CircleHelp} from 'lucide-react'
@@ -119,7 +120,7 @@ export function TimelineShowcaseV2Waveform({
                 aria-pressed={mineFilter}
                 className="min-h-9 gap-1 shrink-0 px-3 text-xs"
               >
-                {t('jams.my_registrations_short', 'Minhas')}
+                {t('jams.my_registrations_short')}
               </Action>
             )}
             {availableFilters.map(inst => (
@@ -129,10 +130,10 @@ export function TimelineShowcaseV2Waveform({
                 variant={instrumentFilter === inst ? 'primary' : 'quiet'}
                 aria-pressed={instrumentFilter === inst}
                 className="min-h-9 gap-1 shrink-0 px-3 text-xs"
-                aria-label={t(`schedule.instruments.${inst}`)}
+                aria-label={t(translationKey('schedule.instruments', inst))}
               >
                 <span aria-hidden="true">{getInstrumentEmoji(inst)}</span>
-                <span className="hidden sm:inline">{t(`schedule.instruments.${inst}`)}</span>
+                <span className="hidden sm:inline">{t(translationKey('schedule.instruments', inst))}</span>
               </Action>
             ))}
           </div>
@@ -230,8 +231,8 @@ export function TimelineShowcaseV2Waveform({
                 {index + 1}
               </span>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-base-content">{t(`jams.how_it_works.${step}`)}</p>
-                <p className="mt-0.5 text-xs leading-relaxed text-base-content/70">{t(`jams.how_it_works.${step}_desc`)}</p>
+                <p className="text-sm font-semibold text-base-content">{t(translationKey('jams.how_it_works', step))}</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-base-content/70">{t(translationKey('jams.how_it_works', `${step}_desc`))}</p>
               </div>
             </li>
           ))}

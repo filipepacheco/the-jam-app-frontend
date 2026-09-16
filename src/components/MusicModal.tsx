@@ -281,7 +281,7 @@ export function MusicModal({
         )}
 
         {mode !== 'edit' && entryMode === 'spotify' && !importSuccess && (
-          <div className="space-y-3 border-y border-base-300 py-4">
+          <div className="space-y-3">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
               <Field
                 id="music-spotify-url"

@@ -11,7 +11,7 @@ This document provides essential information for AI coding agents working on the
 - **Musician Registration**: Register for jams with instrument selection
 - **Live Public Dashboard**: Real-time display for venues showing current/next songs and performers
 - **DJ Control Panel**: Host interface for managing song queues and performance status
-- **Multi-language Support**: English, Spanish, and Portuguese (pt, pt-BR, pt-PT)
+- **Multi-language Support**: English, Spanish, and Brazilian Portuguese (`pt-BR`; legacy `pt` input aliases to it)
 - **Spotify Integration**: Import/export playlists via Spotify API
 - **Offline Support**: Queue actions when offline, auto-flush on reconnection
 
@@ -50,7 +50,7 @@ src/
 │   ├── supabase/         # Supabase client setup
 │   ├── schedule/         # Schedule helpers
 │   └── spotify/          # Spotify PKCE auth
-├── locales/              # i18n translation files (en.json, es.json, pt.json)
+├── locales/catalogue/    # Feature-split, key-first i18n catalogue modules
 ├── pages/                # Page components (route-level)
 │   ├── host/             # Host-specific pages
 │   └── tabs/             # Tab-based layouts and design variations
@@ -86,6 +86,7 @@ npm test                    # Run tests in watch mode
 npm run test:run           # Run tests once
 npm run test:coverage      # Run tests with coverage
 npm run test:i18n          # Run i18n smoke tests
+npm run verify:i18n        # Verify catalogue, consumers, plurals, aliases, and migration hashes
 ```
 
 ## Codex Model Selection
@@ -204,13 +205,17 @@ if (!result.success) {
 
 ### Supported Languages
 - English (en)
-- Spanish (es)  
-- Portuguese (pt, pt-BR, pt-PT)
+- Spanish (es)
+- Brazilian Portuguese (`pt-BR`)
+
+Legacy `pt` input aliases to `pt-BR`. `pt-PT` is not advertised or supported without a distinct catalogue. See `docs/adr/0003-key-first-locale-catalogue.md`.
 
 ### Adding New Text
-1. Add keys to ALL locale files simultaneously: `src/locales/{en,es,pt}.json`
+1. Add a `message()` or `plural()` leaf with complete `pt-BR`, `en`, and `es` values to the owning module in `src/locales/catalogue/`
 2. Use hierarchical keys: `section.subsection.key` (e.g., `modals.schedule.title`)
 3. Use `useTranslation()` hook
+4. Do not add static translated fallback copy at call sites; catalogue entries own user-facing translations
+5. Declare dynamic key families in `src/lib/i18n/translationKeys.ts`
 
 ### Usage
 ```typescript

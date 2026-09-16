@@ -27,6 +27,7 @@ export const StatusVariants: Story = {
     </div>
   ),
   globals: { theme: 'light' },
+  parameters: { a11y: { test: 'error' } },
 }
 
 export const Dismissible: Story = {
@@ -36,7 +37,9 @@ export const Dismissible: Story = {
     message: 'Todos já podem consultar a nova ordem das apresentações.',
     onDismiss: dismissAlert,
   },
+  parameters: { a11y: { test: 'error' } },
   play: async ({ canvas, userEvent }) => {
+    await expect(canvas.getByRole('status')).toHaveAttribute('data-alert-presentation', 'inline')
     await userEvent.click(canvas.getByRole('button', { name: /dispensar|dismiss/i }))
     await expect(dismissAlert).toHaveBeenCalledOnce()
   },
@@ -54,6 +57,7 @@ export const LongLocalizedError: Story = {
     theme: 'night',
     viewport: { value: 'phone', isRotated: false },
   },
+  parameters: { a11y: { test: 'error' } },
 }
 
 const dismissError = fn()
@@ -69,6 +73,7 @@ export const PageLevelSuccessAndError: Story = {
       className="grid max-w-3xl gap-3"
     />
   ),
+  parameters: { a11y: { test: 'error' } },
   play: async ({ canvas, userEvent }) => {
     const dismissButtons = canvas.getAllByRole('button', { name: /dispensar|dismiss/i })
     await userEvent.click(dismissButtons[0])
@@ -118,4 +123,12 @@ export const PersistentRecoveryStates: Story = {
     </div>
   ),
   globals: { theme: 'jam-light' },
+  parameters: { a11y: { test: 'error' } },
+  play: async ({ canvas }) => {
+    const feedbackItems = [...canvas.getAllByRole('status'), ...canvas.getAllByRole('alert')]
+    for (const feedback of feedbackItems) {
+      await expect(feedback).toHaveAttribute('data-feedback-presentation', 'inline')
+      await expect(feedback.querySelector('.ds-feedback__marker')).toHaveAttribute('aria-hidden', 'true')
+    }
+  },
 }

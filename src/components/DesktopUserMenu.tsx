@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, UserCircle, LogOut, Globe, Palette } from 'lucide-react'
-import { useAuth, useTheme } from '../hooks'
+import { useAppLanguage, useAuth, useTheme } from '../hooks'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
 import { Action } from './Action'
+import { DropdownMenu } from './Navigation'
 
 // The language and theme selects below stay native <select> elements
 // instead of Field + Field.Select. Field always renders a visible label
@@ -18,13 +19,13 @@ interface DesktopUserMenuProps {
 }
 
 export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
+  const {currentLang, changeLanguage} = useAppLanguage()
   const navigate = useNavigate()
   const { isAuthenticated, user, logout, isLoading } = useAuth()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [currentTheme, setTheme] = useTheme()
-
-  const currentLang = (i18n.language || i18n.resolvedLanguage || 'pt').split('-')[0]
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
@@ -37,17 +38,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
   }
 
   const closeDropdown = () => {
-    const el = document.activeElement as HTMLElement | null
-    el?.blur()
-  }
-
-  const changeLanguage = (lng: string) => {
-    void i18n.changeLanguage(lng)
-    try {
-      localStorage.setItem('i18nextLng', lng)
-    } catch {
-      // ignore
-    }
+    setMenuOpen(false)
   }
 
   if (isLoading) {
@@ -61,20 +52,19 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className={`dropdown dropdown-end ${className}`}>
-        <Action
-          variant="quiet"
-          tabIndex={0}
-          className="gap-1"
-          aria-label={t('nav.settings', { defaultValue: 'Settings' })}
-        >
+      <DropdownMenu
+        className={`[&>.ds-dropdown__trigger]:border-transparent [&>.ds-dropdown__trigger]:bg-transparent ${className}`}
+        label={t('nav.settings')}
+        open={menuOpen}
+        onOpenChange={setMenuOpen}
+        trigger={(
+          <>
           <Globe className="size-4" />
           <ChevronDown className="size-4" aria-hidden="true" />
-        </Action>
-        <div
-          tabIndex={0}
-          className="dropdown-content z-50 shadow-lg bg-base-100 rounded-box w-64 border border-base-300"
-        >
+          </>
+        )}
+      >
+        <div className="w-64">
           {/* Settings */}
           <div className="px-4 py-3 flex flex-col gap-2.5">
             <div className="flex items-center gap-2">
@@ -86,7 +76,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
                 aria-label={t('common.select_language')}
               >
                 {LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code}>{lang.label}</option>
+                  <option key={lang.code} value={lang.code}>{t(lang.nameKey)}</option>
                 ))}
               </select>
             </div>
@@ -119,7 +109,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
             </a>
           </div>
         </div>
-      </div>
+      </DropdownMenu>
     )
   }
 
@@ -127,23 +117,22 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
   const firstName = displayName.split(' ')[0]
 
   return (
-    <div className={`dropdown dropdown-end ${className}`}>
-      <Action
-        variant="quiet"
-        tabIndex={0}
-        className="gap-1"
-      >
-        <div className="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center">
-          <span className="text-xs font-bold leading-none">{firstName.charAt(0).toUpperCase()}</span>
-        </div>
-        <span className="max-w-[120px] truncate" title={displayName}>{firstName}</span>
-        <ChevronDown className="size-4" aria-hidden="true" />
-        <span className="sr-only">, {t('nav.user_menu')}</span>
-      </Action>
-      <div
-        tabIndex={0}
-        className="dropdown-content z-50 shadow-lg bg-base-100 rounded-box w-64 border border-base-300"
-      >
+    <DropdownMenu
+      className={`[&>.ds-dropdown__trigger]:border-transparent [&>.ds-dropdown__trigger]:bg-transparent ${className}`}
+      label={t('nav.user_menu')}
+      open={menuOpen}
+      onOpenChange={setMenuOpen}
+      trigger={(
+        <>
+          <div className="w-7 h-7 rounded-full bg-primary text-primary-content flex items-center justify-center">
+            <span className="text-xs font-bold leading-none">{firstName.charAt(0).toUpperCase()}</span>
+          </div>
+          <span className="max-w-[120px] truncate" title={displayName}>{firstName}</span>
+          <ChevronDown className="size-4" aria-hidden="true" />
+        </>
+      )}
+    >
+      <div className="w-64">
         {/* User header */}
         <div className="px-4 py-3 border-b border-base-300">
           <p className="text-sm font-semibold text-base-content truncate">{displayName}</p>
@@ -178,7 +167,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
               aria-label={t('common.select_language')}
             >
               {LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code}>{lang.label}</option>
+                <option key={lang.code} value={lang.code}>{t(lang.nameKey)}</option>
               ))}
             </select>
           </div>
@@ -225,6 +214,6 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
           )}
         </div>
       </div>
-    </div>
+    </DropdownMenu>
   )
 }

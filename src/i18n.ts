@@ -1,120 +1,68 @@
-import i18n from 'i18next';
-import {initReactI18next} from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import en from './locales/en.json';
-import es from './locales/es.json';
-import pt from './locales/pt.json';
+import i18n from 'i18next'
+import {initReactI18next} from 'react-i18next'
+import {assembleResources} from './locales/catalogue'
+import {catalogue} from './locales/catalogue/catalogue'
+import {
+  normalizeLocale,
+  APP_LOCALES,
+  LEGACY_LOCALE_ALIASES,
+  persistLocale,
+  resolveBrowserLocalePreference,
+  syncDocumentLocale,
+} from './lib/i18n/applicationLocale'
 
-// collect missing keys during QA/runtime
-const _missingI18nKeys: Array<{lng: string; ns: string; key: string}> = [];
+const missingI18nKeys: Array<{lng: string; ns: string; key: string}> = []
 
-// i18next expects missingKeyHandler to have the signature:
-// (lngs: readonly string[], ns: string, key: string, fallbackValue: string, updateMissing: boolean, options: Record<string, unknown>) => void
-function missingKeyHandler(
-  lngs: readonly string[],
-  ns: string,
-  key: string,
-  _fallbackValue?: string,
-  _updateMissing?: boolean,
-  _options?: Record<string, unknown>
-) {
+function missingKeyHandler(lngs: readonly string[], ns: string, key: string): void {
   try {
-    const lngStr = Array.isArray(lngs) ? (lngs as string[]).join(',') : String(lngs || '');
-    const nsStr = String(ns || '');
+    const lng = Array.isArray(lngs) ? lngs.join(',') : String(lngs || '')
+    const entry = {lng, ns: String(ns || ''), key}
+    missingI18nKeys.push(entry)
 
-    _missingI18nKeys.push({lng: lngStr, ns: nsStr, key});
-    // expose on window for quick inspection in the browser during QA
     if (typeof window !== 'undefined') {
-      // @ts-expect-error - attach to window for debugging only
-      window.__MISSING_I18N_KEYS__ = window.__MISSING_I18N_KEYS__ || [];
-      // @ts-expect-error - Custom window property for QA debugging
-      window.__MISSING_I18N_KEYS__.push({lng: lngStr, ns: nsStr, key});
-    }
-     
-    console.warn('[i18n] missing key', {lng: lngStr, ns: nsStr, key});
-  } catch (e) {
-    // swallow errors in handler
-     
-    console.warn('[i18n] missing key handler error', e);
-  }
-}
-
-// Determine if the user already selected a language and stored it in localStorage.
-// If so, initialize i18n with that language so the LanguageDetector doesn't override it on reload.
-let initialLang: string | undefined = undefined;
-try {
-  if (typeof localStorage !== 'undefined') {
-    const raw = localStorage.getItem('i18nextLng');
-    if (raw) {
-      const trimmed = raw.trim();
-      if (trimmed.startsWith('[')) {
-        try {
-          const arr = JSON.parse(trimmed);
-          if (Array.isArray(arr) && arr.length > 0) initialLang = String(arr[0]);
-        } catch (e) {
-          // ignore parse error and fall back to raw
-          initialLang = trimmed;
-        }
-      } else if ((trimmed.startsWith('"') && trimmed.endsWith('"')) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
-        initialLang = trimmed.slice(1, -1);
-      } else {
-        initialLang = trimmed;
+      const diagnosticsWindow = window as typeof window & {
+        __MISSING_I18N_KEYS__?: Array<{lng: string; ns: string; key: string}>
       }
-      // normalize to use hyphenated form where appropriate (e.g., pt-BR)
-      if (initialLang) initialLang = initialLang.replace('_', '-');
+      diagnosticsWindow.__MISSING_I18N_KEYS__ ??= []
+      diagnosticsWindow.__MISSING_I18N_KEYS__.push(entry)
     }
+
+    console.warn('[i18n] missing key', entry)
+  } catch (error) {
+    console.warn('[i18n] missing key handler error', error)
   }
-} catch (e) {
-  // ignore storage access errors
 }
 
-// Always use the language detector so querystring (?lng=en) works,
-// but default to Portuguese when no explicit choice exists.
-const i18nBuilder = i18n.use(LanguageDetector);
+const initialLocale = resolveBrowserLocalePreference()
 
-// pass the i18n instance to react-i18next.
-i18nBuilder.use(initReactI18next)
-  // init i18next
-  // for all options read: https://www.i18next.com/overview/configuration-options
+void i18n
+  .use(initReactI18next)
   .init({
+    lng: initialLocale,
     fallbackLng: {
-      'pt-BR': ['pt'],
-      'pt-PT': ['pt'],
-      default: ['pt'],
+      pt: ['pt-BR'],
+      default: ['pt-BR'],
     },
-    // Use persisted language if available; otherwise let detection run
-    // (localStorage > querystring). If nothing is found, default to Portuguese.
-    lng: initialLang || undefined,
+    supportedLngs: [...APP_LOCALES, ...LEGACY_LOCALE_ALIASES],
+    load: 'currentOnly',
     debug: import.meta.env.DEV,
-
     ns: ['translation'],
     defaultNS: 'translation',
-    keySeparator: '.', // ensure dot-separated keys are parsed as nested lookups
-    returnObjects: true,
+    keySeparator: '.',
+    returnObjects: false,
+    interpolation: {escapeValue: false},
+    react: {useSuspense: false},
+    resources: assembleResources(catalogue),
+    missingKeyHandler,
+  })
 
-    interpolation: {
-      escapeValue: false, // not needed for react as it escapes by default
-    },
-    react: {
-      useSuspense: false,
-    },
-    detection: {
-      // Portuguese is the default (via fallbackLng). Only override if user
-      // explicitly chose a language (localStorage) or via URL param (?lng=en).
-      // Navigator is intentionally excluded so crawlers and first-time visitors
-      // see Portuguese content (target audience is Brazilian).
-      order: ['localStorage', 'querystring'],
-      lookupQuerystring: 'lng',
-      caches: ['localStorage'],
-    },
-    resources: {
-      en: { translation: en },
-      es: { translation: es },
-      pt: { translation: pt },
-      // pt-BR and pt-PT fall back to pt via fallbackLng config above
-    },
-    // attach the missing key handler so QA can collect unresolved keys
-    missingKeyHandler: missingKeyHandler,
-  });
+syncDocumentLocale(initialLocale)
 
-export default i18n;
+i18n.on('languageChanged', (input) => {
+  const locale = normalizeLocale(input)
+  if (!locale) return
+  persistLocale(locale)
+  syncDocumentLocale(locale)
+})
+
+export default i18n

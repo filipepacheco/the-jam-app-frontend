@@ -8,6 +8,10 @@ vi.mock('react-i18next', () => ({
     useTranslation: () => ({t: (key: string) => key}),
 }))
 
+vi.mock('../hooks', () => ({
+    useAppLanguage: () => ({currentLang: 'en', changeLanguage: vi.fn()}),
+}))
+
 vi.mock('../components', () => ({
     SpotifyImportModal: () => null,
 }))

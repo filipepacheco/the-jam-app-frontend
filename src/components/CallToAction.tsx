@@ -23,7 +23,7 @@ function CallToAction() {
 
       <motion.div
         ref={ref}
-        className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8"
+        className="px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16"
         initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
         animate={isInView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
         transition={{ duration: 0.6 }}
@@ -32,10 +32,10 @@ function CallToAction() {
           <h2 id="cta-title" className="font-display text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 text-base-content text-wrap-balance tracking-tight">
             {t('homepage.call_to_action.title')}
           </h2>
-          <p className="text-base sm:text-lg lg:text-xl mb-8 sm:mb-10 text-base-content/80 leading-relaxed max-w-xl">
+          <p className="mb-6 max-w-xl text-base leading-relaxed text-base-content/80 sm:mb-8 sm:text-lg lg:text-xl">
             {t('homepage.call_to_action.description')}
           </p>
-          <div className="flex gap-4 justify-start flex-wrap">
+          <div className="flex flex-wrap justify-start gap-3 sm:gap-4">
             <NavigationLink
               href="/register"
               variant="primary"

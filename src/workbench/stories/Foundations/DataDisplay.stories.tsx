@@ -38,6 +38,15 @@ export const CanonicalPrimitives: Story = {
     </div>
   ),
   globals: { theme: 'jam-light', locale: 'en', viewport: { value: 'phone', isRotated: false } },
+  play: async ({ canvas }) => {
+    const statusBadges = ['4 songs', 'Approved', 'Needs musicians', 'Offline']
+      .map((label) => canvas.getByText(label).closest('[data-display-component="badge"]'))
+
+    for (const badge of statusBadges) {
+      await expect(badge).toHaveAttribute('data-display-presentation', 'filled')
+      await expect(badge?.querySelector('.ds-badge__marker')).toHaveAttribute('aria-hidden', 'true')
+    }
+  },
 }
 
 export const JamAndScheduleRows: Story = {

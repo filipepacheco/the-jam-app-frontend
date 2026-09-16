@@ -5,30 +5,22 @@
 
 import {useCallback, useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
+import {normalizeLocale, type AppLocale} from '../lib/i18n/applicationLocale'
 
 export function useAppLanguage() {
   const { i18n } = useTranslation()
 
   const currentLang = useMemo(() => {
-    if (i18n?.language) {
-      return i18n.language
-    }
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('i18nextLng')
-      if (stored) return stored
-    }
-    return 'en'
-  }, [i18n?.language])
+    return normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR'
+  }, [i18n.language, i18n.resolvedLanguage])
 
   const changeLanguage = useCallback(
-    (lang: string | undefined) => {
-      if (lang) {
-        i18n.changeLanguage(lang)
-      }
+    (input: string | undefined) => {
+      const locale = normalizeLocale(input)
+      if (locale) void i18n.changeLanguage(locale)
     },
     [i18n]
   )
 
-  return { currentLang, changeLanguage, i18n }
+  return { currentLang: currentLang as AppLocale, changeLanguage, i18n }
 }
-

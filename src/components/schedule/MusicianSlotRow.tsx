@@ -7,6 +7,7 @@ import type { RegistrationResponseDto } from '../../types/api.types'
 import { Check, X, Trash2 } from 'lucide-react'
 import { getInstrumentEmoji } from '../../lib/schedule/instrumentHelpers'
 import { useTranslation } from 'react-i18next'
+import { translationKey } from '../../lib/i18n/translationKeys'
 import { IconAction } from '../Action'
 
 interface MusicianSlotRowProps {
@@ -49,9 +50,9 @@ export function MusicianSlotRow({
       {/* Status dot - informational, inline with identity */}
       <span
         className={`flex-shrink-0 w-2 h-2 rounded-full ${statusDotColor[status] || 'bg-warning'}`}
-        title={t(`registration.statuses.${status.toLowerCase()}`)}
+        title={t(translationKey('registration.statuses', status.toLowerCase()))}
         role="img"
-        aria-label={t(`registration.statuses.${status.toLowerCase()}`)}
+        aria-label={t(translationKey('registration.statuses', status.toLowerCase()))}
       />
 
       {/* Musician name */}
@@ -75,7 +76,7 @@ export function MusicianSlotRow({
       )}
       {registration.musician?.level && (
         <span className="hidden lg:inline badge badge-xs badge-ghost">
-          {t(`schedule.levels.${registration.musician.level}`)}
+          {t(translationKey('schedule.levels', registration.musician.level))}
         </span>
       )}
 

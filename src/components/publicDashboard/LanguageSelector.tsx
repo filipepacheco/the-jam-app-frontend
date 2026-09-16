@@ -11,17 +11,18 @@
 
 import {SUPPORTED_LANGUAGES} from '../../config/languages.config'
 import {useTranslation} from 'react-i18next'
+import type {AppLocale} from '../../lib/i18n/applicationLocale'
 
 interface LanguageSelectorProps {
-  currentLang: string
-  onChange: (lang: string) => void
+  currentLang: AppLocale
+  onChange: (lang: AppLocale) => void
   onSelectClose?: () => void
 }
 
 export function LanguageSelector({ currentLang, onChange, onSelectClose }: LanguageSelectorProps) {
   const { t } = useTranslation()
 
-  const handleLanguageClick = (lang: string) => {
+  const handleLanguageClick = (lang: AppLocale) => {
     onChange(lang)
     onSelectClose?.()
   }
@@ -34,12 +35,11 @@ export function LanguageSelector({ currentLang, onChange, onSelectClose }: Langu
           type="button"
           onClick={() => handleLanguageClick(lang.code)}
           aria-label={t('publicDashboard.switchLanguage', {
-            language: lang.name,
-            defaultValue: `Switch to ${lang.name}`,
+            language: t(lang.nameKey),
           })}
-          aria-pressed={currentLang.startsWith(lang.code)}
+          aria-pressed={currentLang === lang.code}
           className={`ds-focusable px-3 py-1 rounded text-xs transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary ${
-            currentLang.startsWith(lang.code)
+            currentLang === lang.code
               ? 'bg-base-100 text-base-content font-semibold focus-visible:ring-offset-base-100'
               : 'bg-base-content/10 text-base-content hover:bg-base-content/20 focus-visible:ring-offset-base-300'
           }`}

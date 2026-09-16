@@ -7,6 +7,7 @@
 import React, {useState} from 'react'
 import {useAuth, useFormState} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
+import {translationKey} from '../lib/i18n/translationKeys'
 import {useTranslation} from 'react-i18next'
 import {Alert} from './Alert'
 import {Modal} from './Modal'
@@ -145,7 +146,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
             <option value="">{t('jams.profile_setup.instrument_choose')}</option>
             {INSTRUMENTS.map((inst) => (
               <option key={inst} value={inst}>
-                {t(`schedule.instruments.${inst}`)}
+                  {t(translationKey('schedule.instruments', inst))}
               </option>
             ))}
           </select>
@@ -165,7 +166,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
             <option value="">{t('jams.profile_setup.level_choose')}</option>
             {levels.map((lv) => (
               <option key={lv} value={lv}>
-                {t(`schedule.levels.${lv.toLowerCase()}`)}
+                  {t(translationKey('schedule.levels', lv.toLowerCase()))}
               </option>
             ))}
           </select>

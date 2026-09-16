@@ -75,7 +75,7 @@ function SongRow({
           <span className="font-semibold text-sm truncate">{song.music.title}</span>
           {isNext && (
             <Badge className="shrink-0" size="sm" tone="info">
-              {t('dj_control.now_playing.next_up', 'Next')}
+              {t('dj_control.now_playing.next_up')}
             </Badge>
           )}
           <span className="text-xs text-base-content/50 shrink-0">{formatDuration(song.music.duration || undefined)}</span>
@@ -91,7 +91,7 @@ function SongRow({
       {/* Musician count badge */}
       <div className="shrink-0 text-xs text-base-content/50 tabular-nums">
         {song.musicians?.length || 0}
-        <span className="hidden sm:inline"> {t('nav.musicians', 'musicians').toLowerCase()}</span>
+        <span className="hidden sm:inline"> {t('nav.musicians').toLowerCase()}</span>
       </div>
 
       {/* Actions */}
@@ -102,7 +102,7 @@ function SongRow({
             state={loading ? 'disabled' : 'idle'}
             variant="primary"
           >
-            <Action.Label>&#10003; {t('common.approve', 'Aprovar')}</Action.Label>
+            <Action.Label>&#10003; {t('common.approve')}</Action.Label>
           </Action>
         )}
         {onRemove && status !== 'current' && (
@@ -178,7 +178,7 @@ export function SongQueueTimeline({
             className="flex items-center gap-2 text-xs font-semibold text-success/70 uppercase tracking-wider mb-2 px-3 hover:text-success transition-colors"
           >
             <span className={`transition-transform duration-200 ${playedCollapsed ? '-rotate-90' : ''}`}>&#9660;</span>
-            {t('dj_control.timeline.played', 'Tocadas')} ({previousSongs.length})
+            {t('dj_control.timeline.played')} ({previousSongs.length})
           </button>
           {!playedCollapsed && (
             <div className="space-y-1">
@@ -213,7 +213,7 @@ export function SongQueueTimeline({
       {nextSongs.length > 0 && (
         <div>
           <h3 className="text-xs font-semibold text-base-content/50 uppercase tracking-wider mb-2 px-3">
-            {t('dj_control.timeline.upcoming', 'Proximas')} ({nextSongs.length})
+            {t('dj_control.timeline.upcoming')} ({nextSongs.length})
           </h3>
           <div className="space-y-1">
             {nextSongs.map((song, idx) => (

@@ -6,8 +6,11 @@ import { Avatar } from './Avatar'
 import { musicianService } from '../services'
 import type { MusicianProfileWithStats } from '../types/api.types'
 import { getInstrumentIcon } from '../lib/schedule/instrumentHelpers'
+import { translationKey } from '../lib/i18n/translationKeys'
 import { LoadingState, ErrorState } from './FeedbackStates'
 import { Badge } from './data-display'
+import {useAppLanguage} from '../hooks'
+import {formatDate} from '../lib/i18n/applicationLocale'
 
 interface MusicianProfileModalProps {
   musicianId: string
@@ -16,6 +19,7 @@ interface MusicianProfileModalProps {
 
 export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileModalProps) {
   const { t } = useTranslation()
+  const {currentLang} = useAppLanguage()
   const [profile, setProfile] = useState<MusicianProfileWithStats | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -52,7 +56,7 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
     >
       {loading && (
         <div className="py-8">
-          <LoadingState label={t('musician_profile.loading', 'Loading profile…')} />
+          <LoadingState label={t('musician_profile.loading')} />
         </div>
       )}
 
@@ -78,7 +82,7 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
               )}
               {profile.level && (
                 <div className="mt-1">
-                  <Badge tone="neutral" size="sm">{t(`schedule.levels.${profile.level}`)}</Badge>
+                  <Badge tone="neutral" size="sm">{t(translationKey('schedule.levels', profile.level))}</Badge>
                 </div>
               )}
             </div>
@@ -154,7 +158,7 @@ export function MusicianProfileModal({ musicianId, onClose }: MusicianProfileMod
           {profile.createdAt && (
             <p className="text-xs text-base-content/40 text-center pt-2">
               {t('musician_profile.member_since', {
-                date: new Date(profile.createdAt).toLocaleDateString()
+                date: formatDate(profile.createdAt, currentLang)
               })}
             </p>
           )}

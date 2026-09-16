@@ -26,13 +26,13 @@ export function CompactStats({ completedCount, totalCount, remainingDuration }: 
   return (
     <div className="flex justify-between items-center px-3 py-1.5 text-xs text-base-content/60">
       <span>
-        {t('dj_control.stats.played_count', '{{completed}}/{{total}} tocadas', {
+        {t('dj_control.stats.played_count', {
           completed: completedCount,
           total: totalCount,
         })}
       </span>
       <span>
-        {t('dj_control.stats.remaining_time', '{{time}} restante', {
+        {t('dj_control.stats.remaining_time', {
           time: formatDuration(remainingDuration),
         })}
       </span>

@@ -6,6 +6,10 @@
 import type {AuthUser} from '../types/auth.types'
 import {getRoleLabel} from '../lib/auth'
 import {useTranslation} from 'react-i18next'
+import {translateDynamicValue} from '../lib/i18n/translationKeys'
+import {useAppLanguage} from '../hooks'
+import {formatDate} from '../lib/i18n/applicationLocale'
+import {Badge} from './data-display'
 
 interface ProfileHeaderProps {
   user: AuthUser
@@ -13,6 +17,7 @@ interface ProfileHeaderProps {
 
 export function ProfileHeader({ user }: ProfileHeaderProps) {
   const { t } = useTranslation()
+  const {currentLang} = useAppLanguage()
   // Get role-based colors
   const getRoleBgColor = () => {
     switch (user.role) {
@@ -25,17 +30,6 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
     }
   }
 
-  const getRoleBadgeColor = () => {
-    switch (user.role) {
-      case 'host':
-        return 'badge-secondary'
-      case 'user':
-        return 'badge-primary'
-      default:
-        return 'badge-neutral'
-    }
-  }
-
   // Get initials from name
   const initials = (user.name || 'U')
     .split(' ')
@@ -45,7 +39,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
 
   // Format member since date
   const memberSince = user.supabaseUserId
-    ? new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+    ? formatDate(new Date(), currentLang, {year: 'numeric', month: 'long'})
     : 'Recently joined'
 
   return (
@@ -62,9 +56,9 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         <h1 className="card-title text-3xl font-bold">{user.name || 'Complete Your Profile'}</h1>
 
         {/* Role Badge */}
-        <div className={`badge badge-lg ${getRoleBadgeColor()} badge-outline text-white border-white mt-2`}>
-          {getRoleLabel(user.role)}
-        </div>
+        <Badge tone="neutral" size="lg" className="mt-2">
+          {getRoleLabel(user.role, t)}
+        </Badge>
 
         {/* Member Since */}
         <p className="text-sm opacity-90 mt-3">
@@ -74,7 +68,7 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
         {/* Additional Info Line */}
         {user.instrument && (
           <p className="text-sm opacity-90">
-            🎸 {t(`schedule.instruments.${user.instrument}`, user.instrument)}
+            🎸 {translateDynamicValue(t, 'schedule.instruments', user.instrument)}
             {user.level && ` • ${user.level}`}
           </p>
         )}
@@ -82,4 +76,3 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
     </div>
   )
 }
-

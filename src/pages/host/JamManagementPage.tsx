@@ -205,7 +205,7 @@ export function JamManagementPage() {
         icon: '🎛️'
     }, {
         id: 'live' as const,
-        label: t('jam_management.tabs.live_control_short', 'Ordem'),
+        label: t('jam_management.tabs.live_control_short'),
         icon: '🎙️'
     }]
 

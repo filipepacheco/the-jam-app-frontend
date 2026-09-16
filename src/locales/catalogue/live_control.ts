@@ -1,0 +1,29 @@
+import {message, plural, type CatalogueTree} from './index'
+
+export const live_control = {
+  now_playing: message({"pt-BR": "Tocando agora", "en": "Now Playing", "es": "Sonando Ahora"}),
+  up_next: message({"pt-BR": "Próximas (reordenável)", "en": "Up Next (Reorderable)", "es": "A Continuación (Reordenable)"}),
+  queue_title: message({"pt-BR": "Próximas", "en": "Up Next", "es": "A continuación"}),
+  song_playing_feedback: message({"pt-BR": "Música tocando", "en": "Song playing", "es": "Canción sonando"}),
+  song_paused_feedback: message({"pt-BR": "Música pausada", "en": "Song paused", "es": "Canción pausada"}),
+  skipped_feedback: message({"pt-BR": "Pulou para a próxima música", "en": "Skipped to next song", "es": "Saltado a la siguiente canción"}),
+  reordered_feedback: message({"pt-BR": "Fila reordenada", "en": "Queue reordered", "es": "Cola reordenada"}),
+  reorder_conflict: message({"pt-BR": "A fila ao vivo mudou. Recarregue e aplique a ordem novamente.", "en": "The Live Queue changed. Reload it and reapply your order.", "es": "La cola en vivo cambió. Recárgala y vuelve a aplicar el orden."}),
+  executing_action: message({"pt-BR": "Executando ação…", "en": "Executing action…", "es": "Ejecutando acción…"}),
+  saving_order: message({"pt-BR": "Salvando ordem…", "en": "Saving order…", "es": "Guardando orden…"}),
+  reorder_drag: message({"pt-BR": "Reordenar", "en": "Reorder", "es": "Reordenar"}),
+  reorder_cancel: message({"pt-BR": "Cancelar", "en": "Cancel", "es": "Cancelar"}),
+  reorder_save: message({"pt-BR": "Salvar ordem", "en": "Save order", "es": "Guardar orden"}),
+  reorder_next_hint: message({"pt-BR": "A primeira apresentação desta lista será a próxima.", "en": "The first Performance in this list will be Next.", "es": "La primera actuación de esta lista será la siguiente."}),
+  reorderable_item: message({"pt-BR": "Item reordenável", "en": "Reorderable item", "es": "Elemento reordenable"}),
+  reorder_hint_keyboard: message({"pt-BR": "Use as setas para reordenar as apresentações", "en": "Use the arrow keys to reorder performances", "es": "Usa las flechas para reordenar las presentaciones"}),
+  reorder_hint_mobile: message({"pt-BR": "Segure um item por um momento e arraste para reordenar", "en": "Hold an item for a moment, then drag to reorder", "es": "Mantene presionado un item y arrastra para reordenar"}),
+  start_to_begin: message({"pt-BR": "Inicie a primeira música para começar", "en": "Start the first song to begin", "es": "Inicia la primera canción para comenzar"}),
+  no_more_songs: message({"pt-BR": "Sem mais músicas agendadas", "en": "No more songs scheduled", "es": "No hay más canciones programadas"}),
+  drag_to_reorder: message({"pt-BR": "Arraste para reordenar", "en": "Drag to reorder", "es": "Arrastra para reordenar"}),
+  reorder_validation_error: message({"pt-BR": "Ordem de músicas inválida", "en": "Invalid song order", "es": "Orden de canciones inválido"}),
+  reorder_permission_error: message({"pt-BR": "Você não tem permissão para reordenar", "en": "You don't have permission to reorder", "es": "No tienes permiso para reordenar"}),
+  reorder_network_error: message({"pt-BR": "Conexão perdida, tente novamente", "en": "Connection lost, please retry", "es": "Conexión perdida, intenta nuevamente"}),
+  reorder_server_error: message({"pt-BR": "Algo deu errado, tente novamente", "en": "Something went wrong, please try again", "es": "Algo salió mal, intenta nuevamente"}),
+  no_song_playing: message({"pt-BR": "Nenhuma música tocando atualmente", "en": "No song currently playing", "es": "No hay canción sonando actualmente"})
+} as const satisfies CatalogueTree

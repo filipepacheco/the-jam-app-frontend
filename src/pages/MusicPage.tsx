@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth, useMusicLibraryController, usePageAlerts } from '../hooks'
 import type { MusicResponseDto, UpdateMusicDto } from '../types/api.types'
 import type { MusicLibraryMutationPort, MusicLibraryQueryPort } from '../lib/music/musicLibraryController'
+import { translationKey } from '../lib/i18n/translationKeys'
 import {
   Action,
   Alert,
@@ -77,13 +78,13 @@ export function MusicPage({ queryPort, mutationPort }: MusicPageProps = {}) {
     const outcome = await musicCommands.confirmPending()
     if (outcome.code === 'success' && confirmation) {
       const key = confirmation.kind === 'reject' ? 'reject_success' : 'delete_success'
-      setSuccess(t(`music_library.feedback.${key}`, {title: confirmation.title}))
+      setSuccess(t(translationKey('music_library.feedback', key), {title: confirmation.title}))
     } else if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
       const fallback = confirmation?.kind === 'reject' ? 'failed_to_reject' : 'failed_to_delete'
       const refreshMessage = outcome.code === 'failure' && outcome.refreshError
         ? ` · ${outcome.refreshError.message || t('music_library.errors.failed_to_load')}`
         : ''
-      setError(`${outcome.error.message || t(`music_library.errors.${fallback}`)}${refreshMessage}`)
+      setError(`${outcome.error.message || t(translationKey('music_library.errors', fallback))}${refreshMessage}`)
     }
   }, [musicCommands, pendingConfirmation, setError, setSuccess, t])
 
