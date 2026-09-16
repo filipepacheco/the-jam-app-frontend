@@ -37,6 +37,8 @@ export interface WorkbenchProgressInput {
     unhandled: number
   }
   accessibility: {
+    strictReports: number
+    missingReports: number
     newViolations: number
   }
   visual: {
@@ -85,6 +87,8 @@ export interface WorkbenchProgressReport {
     strict: number
     todo: number
     reviewedDebt: number
+    reports: number
+    missingEvidence: number
     newViolations: number
   }
   visual: {
@@ -122,6 +126,14 @@ const countBy = <T>(values: readonly T[], valueFor: (value: T) => string): Recor
     counts[key] = (counts[key] ?? 0) + 1
   }
   return Object.fromEntries(Object.entries(counts).sort(([left], [right]) => left.localeCompare(right)))
+}
+
+/** Makes runner-local absolute Storybook result paths comparable across hosts. */
+export const workbenchStoryKey = (filename: string): string => {
+  const normalized = filename.replaceAll('\\', '/')
+  const marker = 'src/workbench/stories/'
+  const markerIndex = normalized.lastIndexOf(marker)
+  return markerIndex >= 0 ? normalized.slice(markerIndex) : normalized
 }
 
 const initialAdoptionCounts = (): Record<CanonicalAdoptionStatus, Record<string, number>> => ({
@@ -178,6 +190,8 @@ export const createWorkbenchProgressReport = (input: WorkbenchProgressInput): Wo
       strict: input.stories.strictA11y,
       todo: input.stories.todoA11y,
       reviewedDebt: input.reviewedDebt,
+      reports: input.accessibility.strictReports,
+      missingEvidence: input.accessibility.missingReports,
       newViolations: input.accessibility.newViolations,
     },
     visual: {
@@ -236,7 +250,7 @@ export const renderWorkbenchProgressMarkdown = (report: WorkbenchProgressReport)
     '',
     '## Accessibility and visual baselines',
     '',
-    `Accessibility modes — strict: ${report.accessibility.strict}; todo: ${report.accessibility.todo}; reviewed debt: ${report.accessibility.reviewedDebt}; new violations: ${report.accessibility.newViolations}.`,
+    `Accessibility modes — strict: ${report.accessibility.strict}; reports: ${report.accessibility.reports}; missing evidence: ${report.accessibility.missingEvidence}; todo: ${report.accessibility.todo}; reviewed debt: ${report.accessibility.reviewedDebt}; new violations: ${report.accessibility.newViolations}.`,
     '',
     `Visual baselines: ${report.visual.baselines}; pass/change/missing/failure: ${report.visual.pass}/${report.visual.change}/${report.visual.missing}/${report.visual.failure}; themes: ${report.visual.themes.join(', ')}; viewports: ${report.visual.viewports.join(', ')}; max differing-pixel ratio: ${report.visual.threshold}.`,
     '',

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Check, MoreHorizontal, Trash2 } from 'lucide-react'
 import { expect, fn } from 'storybook/test'
-import { Action, IconAction } from '../../../components/Action'
+import { Action, ActionGroup, IconAction } from '../../../components/Action'
 
 const approve = fn()
 
@@ -15,14 +15,19 @@ type Story = StoryObj<typeof meta>
 
 export const SemanticVariants: Story = {
   render: () => (
-    <div className="flex flex-wrap gap-[var(--ds-space-cluster)]">
-      <Action variant="primary" onClick={approve}>
-        <Action.Icon><Check className="size-4" /></Action.Icon>
-        <Action.Label>Approve performance</Action.Label>
-      </Action>
-      <Action variant="secondary"><Action.Label>Save as draft</Action.Label></Action>
-      <Action variant="quiet"><Action.Label>Cancel changes</Action.Label></Action>
-      <Action variant="destructive"><Action.Label>Remove performance</Action.Label></Action>
+    <div className="max-w-4xl">
+      <ActionGroup
+        data-testid="action-group"
+        primary={(
+          <Action variant="primary" onClick={approve}>
+            <Action.Icon><Check className="size-4" /></Action.Icon>
+            <Action.Label>Approve performance</Action.Label>
+          </Action>
+        )}
+        secondary={<Action variant="quiet"><Action.Label>Save as draft</Action.Label></Action>}
+        overflow={<IconAction variant="quiet" label="More performance actions"><MoreHorizontal className="size-5" /></IconAction>}
+        danger={<Action variant="destructive"><Action.Label>Remove performance</Action.Label></Action>}
+      />
     </div>
   ),
   play: async ({ canvas, userEvent }) => {
@@ -32,6 +37,8 @@ export const SemanticVariants: Story = {
     await expect(approve).toHaveBeenCalledOnce()
     await userEvent.keyboard(' ')
     await expect(approve).toHaveBeenCalledTimes(2)
+    await expect(canvas.getByTestId('action-group')).toBeVisible()
+    await expect(canvas.getByRole('button', { name: 'Remove performance' })).toHaveAttribute('data-action-variant', 'destructive')
   },
 }
 
@@ -54,6 +61,30 @@ export const LoadingAndDisabled: Story = {
     await expect(canvas.getByRole('status')).toHaveTextContent('Saving setlist…')
     await userEvent.click(loading)
     await expect(disabled).toBeDisabled()
+  },
+}
+
+export const LocalizedPhoneHierarchy: Story = {
+  render: () => (
+    <ActionGroup
+      data-testid="localized-action-group"
+      primary={<Action variant="primary"><Action.Label>Aprobar esta presentación musical</Action.Label></Action>}
+      secondary={<Action variant="quiet"><Action.Label>Guardar los cambios como borrador</Action.Label></Action>}
+      overflow={<IconAction variant="quiet" label="Abrir más acciones de la presentación"><MoreHorizontal className="size-5" /></IconAction>}
+      danger={<Action variant="destructive"><Action.Label>Eliminar esta presentación</Action.Label></Action>}
+    />
+  ),
+  globals: {
+    locale: 'es',
+    theme: 'jam-dark',
+    reviewDefaultViewport: 'phone',
+    viewport: { value: 'phone', isRotated: false },
+  },
+  play: async ({ canvas }) => {
+    const group = canvas.getByTestId('localized-action-group')
+    await expect(group).toBeVisible()
+    await expect(group.querySelectorAll('[data-action-group-slot]')).toHaveLength(3)
+    for (const action of canvas.getAllByRole('button')) await expect(action).toBeVisible()
   },
 }
 

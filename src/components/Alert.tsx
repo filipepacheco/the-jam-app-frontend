@@ -1,5 +1,6 @@
 import { memo, useEffect, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { X } from 'lucide-react'
 
 type AlertType = 'error' | 'warning' | 'success' | 'info'
 
@@ -50,33 +51,39 @@ export const Alert = memo(function Alert({
 
   return (
     <div
-      className={`alert ${ALERT_CLASSES[type]} ${className}`}
+      className={`alert ${ALERT_CLASSES[type]} flex flex-col items-stretch gap-1.5 rounded-box border border-current/15 px-3 py-2.5 sm:px-4 sm:py-3 ${className}`}
       role={type === 'error' ? 'alert' : 'status'}
       aria-live={type === 'error' ? 'assertive' : 'polite'}
       aria-atomic="true"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="stroke-current shrink-0 h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          d={ALERT_ICONS[type]}
-        />
-      </svg>
-      <div className="flex-1">
-        {title && <h3 className="font-bold">{title}</h3>}
-        <div className="text-sm">{message}</div>
-        {action && <div className="mt-2 flex flex-wrap gap-2">{action}</div>}
+      <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="mt-0.5 size-4 shrink-0 stroke-current"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d={ALERT_ICONS[type]}
+          />
+        </svg>
+        <div className="min-w-0">
+          {title && <h3 className="font-bold">{title}</h3>}
+          <div className="text-sm leading-snug">{message}</div>
+        </div>
+        {onDismiss && (
+          <button className="btn btn-sm btn-ghost btn-circle ds-focusable -m-1" onClick={onDismiss} aria-label={t('common.dismiss')}>
+            <X className="size-4" aria-hidden="true" />
+          </button>
+        )}
       </div>
-      {onDismiss && (
-        <button className="btn btn-sm btn-ghost ds-control ds-focusable" onClick={onDismiss} aria-label={t('common.dismiss')}>
-          ✕
-        </button>
+      {action && (
+        <div className="flex min-w-0 flex-col gap-1 sm:flex-row sm:flex-wrap [&_.ds-action]:w-full sm:[&_.ds-action]:w-auto">
+          {action}
+        </div>
       )}
     </div>
   )

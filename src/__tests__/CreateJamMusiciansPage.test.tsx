@@ -1,11 +1,24 @@
 import {render, screen, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import {MemoryRouter} from 'react-router-dom'
-import {describe, expect, it, vi} from 'vitest'
+import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {CreateJamPage} from '../pages/host/CreateJamPage'
 import {MusiciansPage} from '../pages/host/MusiciansPage'
 import type {MusiciansPagePort} from '../pages/host/MusiciansPage'
 import type {ReactNode} from 'react'
+import * as jamService from '../services/jamService.ts'
+import {spotifyService} from '../services/spotifyService.ts'
+
+vi.mock('../services/jamService.ts', () => ({
+  create: vi.fn(),
+  update: vi.fn(),
+  findOne: vi.fn(),
+  deleteFn: vi.fn(),
+}))
+
+vi.mock('../services/spotifyService.ts', () => ({
+  spotifyService: {importPlaylist: vi.fn()},
+}))
 
 vi.mock('react-i18next', () => {
   const t = (key: string) => {
@@ -20,6 +33,9 @@ vi.mock('react-i18next', () => {
         'create_jam.form.slug_hint': 'url slug',
         'create_jam.form.date': 'Date',
         'create_jam.form.time': 'Time',
+        'create_jam.form.host_name': 'Host Name',
+        'create_jam.form.host_contact': 'Host Contact',
+        'create_jam.form.placeholder_contact': 'Email or phone',
         'create_jam.form.description': 'Description',
         'create_jam.form.placeholder_description': 'description',
         'create_jam.form.spotify_playlist_url': 'Spotify Playlist URL',
@@ -29,6 +45,12 @@ vi.mock('react-i18next', () => {
         'create_jam.actions.cancel': 'Cancel',
         'create_jam.actions.create': 'Create',
         'create_jam.actions.saving': 'Saving',
+        'create_jam.actions.retry_spotify_import': 'Retry Spotify import',
+        'create_jam.actions.retrying_spotify_import': 'Retrying import',
+        'create_jam.actions.continue_without_import': 'Continue without importing',
+        'create_jam.validation.date_required': 'Date is required',
+        'create_jam.validation.time_required': 'Time is required',
+        'create_jam.messages.spotify_import_pending': 'Jam created; Spotify import needs attention. Your jam is safe. Retry the song import.',
         'create_jam.info.create_hint': 'Create hint',
         'common.try_again': 'Try Again',
         'common.error': 'Error',
@@ -82,7 +104,7 @@ vi.mock('../hooks', () => {
   }
   return {
     useAuth: () => ({
-    user: {id: 'host-1', isHost: true},
+    user: {id: 'host-1', name: 'Ana Host', email: 'ana@example.test', isHost: true},
     isAuthenticated: true,
     isLoading: false,
     }),
@@ -118,6 +140,14 @@ function rejectedMusiciansPort(errorMessage: string): MusiciansPagePort {
 }
 
 describe('Track 8 page-level seams', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
   it('create mode blocks submit with required jam name and focuses the name field', async () => {
     render(
       <MemoryRouter>
@@ -133,6 +163,107 @@ describe('Track 8 page-level seams', () => {
       expect(jamNameInput).toHaveAttribute('aria-invalid', 'true')
       expect(document.activeElement).toBe(jamNameInput)
     })
+  })
+
+  it('requires date and time and exposes prefilled host details in create mode', async () => {
+    render(
+      <MemoryRouter>
+        <CreateJamPage />
+      </MemoryRouter>,
+    )
+
+    const user = userEvent.setup()
+    await user.type(screen.getByRole('textbox', {name: /Jam Name/}), 'Friday Night Jam')
+    await user.type(screen.getByRole('textbox', {name: /Location/}), 'Benjamin Social Club')
+    await user.click(screen.getByRole('button', {name: 'Create'}))
+
+    const dateInput = screen.getByLabelText(/Date/)
+    expect(dateInput).toHaveAttribute('aria-invalid', 'true')
+    expect(document.activeElement).toBe(dateInput)
+    expect(screen.getByLabelText(/Time/)).toHaveAttribute('aria-invalid', 'true')
+    expect(screen.getByRole('textbox', {name: /Host Name/})).toHaveValue('Ana Host')
+    expect(screen.getByRole('textbox', {name: /Host Contact/})).toHaveValue('ana@example.test')
+  })
+
+  it('creates the jam first and then imports its Spotify playlist into the new jam', async () => {
+    vi.mocked(jamService.create).mockResolvedValue({
+      data: {id: 'jam-new', name: 'Friday Night Jam'},
+      status: 201,
+    } as Awaited<ReturnType<typeof jamService.create>>)
+    vi.mocked(spotifyService.importPlaylist).mockResolvedValue({
+      success: true,
+      data: {
+        jam: {id: 'jam-new', name: 'Friday Night Jam'},
+        importedTracks: 4,
+        reusedTracks: 0,
+        skippedTracks: 0,
+        addedTracks: 4,
+        duplicateTracks: 0,
+        isExistingJam: true,
+      },
+    })
+
+    render(
+      <MemoryRouter>
+        <CreateJamPage />
+      </MemoryRouter>,
+    )
+
+    const user = userEvent.setup()
+    await user.type(screen.getByRole('textbox', {name: /Jam Name/}), 'Friday Night Jam')
+    await user.type(screen.getByRole('textbox', {name: /Location/}), 'Benjamin Social Club')
+    await user.type(screen.getByLabelText(/Date/), '2026-09-18')
+    await user.type(screen.getByLabelText(/Time/), '17:00')
+    await user.type(screen.getByRole('textbox', {name: /Spotify Playlist URL/}), 'https://open.spotify.com/playlist/abc')
+    await user.click(screen.getByRole('button', {name: 'Create'}))
+
+    await waitFor(() => expect(jamService.create).toHaveBeenCalledTimes(1))
+    expect(spotifyService.importPlaylist).toHaveBeenCalledWith({
+      playlistUrl: 'https://open.spotify.com/playlist/abc',
+      jamId: 'jam-new',
+    })
+  })
+
+  it('keeps a created jam safe and retries only the failed Spotify import', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    vi.mocked(jamService.create).mockResolvedValue({
+      data: {id: 'jam-new', name: 'Friday Night Jam'},
+      status: 201,
+    } as Awaited<ReturnType<typeof jamService.create>>)
+    vi.mocked(spotifyService.importPlaylist)
+      .mockRejectedValueOnce(new Error('Spotify unavailable'))
+      .mockResolvedValueOnce({
+        success: true,
+        data: {
+          jam: {id: 'jam-new', name: 'Friday Night Jam'},
+          importedTracks: 4,
+          reusedTracks: 0,
+          skippedTracks: 0,
+          addedTracks: 4,
+          duplicateTracks: 0,
+          isExistingJam: true,
+        },
+      })
+
+    render(
+      <MemoryRouter>
+        <CreateJamPage />
+      </MemoryRouter>,
+    )
+
+    const user = userEvent.setup()
+    await user.type(screen.getByRole('textbox', {name: /Jam Name/}), 'Friday Night Jam')
+    await user.type(screen.getByRole('textbox', {name: /Location/}), 'Benjamin Social Club')
+    await user.type(screen.getByLabelText(/Date/), '2026-09-18')
+    await user.type(screen.getByLabelText(/Time/), '17:00')
+    await user.type(screen.getByRole('textbox', {name: /Spotify Playlist URL/}), 'https://open.spotify.com/playlist/abc')
+    await user.click(screen.getByRole('button', {name: 'Create'}))
+
+    expect(await screen.findByText(/Jam created; Spotify import needs attention/)).toBeVisible()
+    await user.click(screen.getByRole('button', {name: 'Retry Spotify import'}))
+
+    await waitFor(() => expect(spotifyService.importPlaylist).toHaveBeenCalledTimes(2))
+    expect(jamService.create).toHaveBeenCalledTimes(1)
   })
 
   it('shows exact MusiciansPage list error and retries via port on Try Again', async () => {

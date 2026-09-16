@@ -57,7 +57,15 @@ export const PlaybackInteraction: Story = {
     />
   ),
   play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('button', { name: /pausar|pause/i }))
+    const previous = canvas.getByRole('button', { name: /anterior|previous/i })
+    const pauseButton = canvas.getByRole('button', { name: /pausar|pause/i })
+    const next = canvas.getByRole('button', { name: /próxima|next/i })
+    const previousRect = previous.getBoundingClientRect()
+    const nextRect = next.getBoundingClientRect()
+
+    await expect(Math.abs(previousRect.width - nextRect.width)).toBeLessThan(1)
+    await expect(previousRect.left).toBeGreaterThanOrEqual(previous.parentElement?.getBoundingClientRect().left ?? 0)
+    await userEvent.click(pauseButton)
     await expect(pause).toHaveBeenCalledOnce()
   },
 }

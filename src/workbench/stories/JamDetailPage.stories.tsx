@@ -67,15 +67,27 @@ export const LoadedParticipation: Story = {
   play: async ({canvas, canvasElement, userEvent}) => {
     const title = canvas.getByRole('heading', {level: 1, name: 'Friday Night Jam'})
     const schedule = canvas.getByRole('heading', {level: 2, name: /programação/i})
+    const description = canvas.getByText(/an open stage for musicians/i)
+    const jamDate = canvas.getByText(/18 de set/i)
     await expect(title).toBeVisible()
+    await expect(canvas.getByRole('button', {name: /compartilhar/i})).toBeVisible()
+    await expect(canvas.getByRole('link', {name: /ouça no spotify/i})).toBeVisible()
+    await expect(description.compareDocumentPosition(jamDate) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(title.compareDocumentPosition(schedule) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    await expect(canvas.getByText('Psycho Killer')).toBeVisible()
+    await expect(canvas.getAllByText('Psycho Killer')).toHaveLength(2)
 
     const documentView = within(canvasElement.ownerDocument.body)
-    const participate = await documentView.findByRole('button', {name: /participar/i})
+    await userEvent.click(canvas.getByRole('button', {name: /como as jams funcionam/i}))
+    const howItWorks = documentView.getByRole('dialog', {name: /como as jams funcionam/i})
+    await expect(howItWorks).toBeVisible()
+    await expect(within(howItWorks).getByText(/veja a programação/i)).toBeVisible()
+    await userEvent.click(within(howItWorks).getAllByRole('button', {name: /fechar/i})[1])
+    await expect(documentView.queryByRole('dialog', {name: /como as jams funcionam/i})).toBeNull()
+
+    const participate = await documentView.findByRole('button', {name: /^quero participar$/i})
     await expect(participate).toHaveAttribute('aria-expanded', 'false')
     await userEvent.click(participate)
-    await userEvent.click(documentView.getByRole('button', {name: /participar/i}))
+    await userEvent.click(documentView.getByRole('button', {name: /^quero participar$/i}))
     await expect(documentView.getByRole('dialog')).toBeVisible()
   },
 }
@@ -100,6 +112,7 @@ export const ReviewInstrumentChoice: Story = {
   },
   play: async ({canvas}) => {
     await expect(canvas.getByRole('button', {name: /guitarr/i})).toHaveAttribute('aria-pressed', 'true')
+    await expect(canvas.queryByText(/vagas restantes/i)).toBeNull()
   },
 }
 
@@ -150,7 +163,11 @@ export const LongContentAndLocation: Story = {
     await userEvent.click(canvas.getByRole('button', {name: /show more/i}))
     await expect(canvas.getByText(/arrive before soundcheck/i)).toBeVisible()
     await userEvent.click(canvas.getByRole('button', {name: /full address/i}))
-    await expect(canvas.getByText(/avenida da música 1234/i)).toBeVisible()
+    await expect(canvas.getAllByText(/avenida da música 1234/i)).toHaveLength(2)
+    await expect(canvas.queryByText(/^full address$/i)).toBeNull()
+    const copyAddress = canvas.getByRole('button', {name: /copy address/i})
+    await expect(copyAddress).toHaveAttribute('data-action-variant', 'quiet')
+    await expect(copyAddress).not.toHaveClass('w-full')
   },
 }
 

@@ -1,34 +1,36 @@
 {
   "schemaVersion": 1,
   "inventory": {
-    "discovered": 182,
+    "discovered": 184,
     "represented": 138,
-    "ignored": 31,
+    "ignored": 39,
     "lifecycle": {
-      "active": 167,
+      "active": 169,
       "legacy": 2,
       "uncertain": 13
     }
   },
   "stories": {
-    "files": 28,
-    "total": 151,
-    "playCoverage": 80,
-    "reachableCatalogueComponents": 112,
-    "visualCandidates": 151,
+    "files": 36,
+    "total": 202,
+    "playCoverage": 129,
+    "reachableCatalogueComponents": 122,
+    "visualCandidates": 202,
     "visualCells": 32
   },
   "interactions": {
-    "total": 80,
-    "pass": 80,
-    "fail": 0,
+    "total": 129,
+    "pass": 110,
+    "fail": 19,
     "unhandled": 0,
     "evidence": "workbench-json-results"
   },
   "accessibility": {
-    "strict": 52,
-    "todo": 99,
+    "strict": 116,
+    "todo": 86,
     "reviewedDebt": 4,
+    "reports": 97,
+    "missingEvidence": 19,
     "newViolations": 0
   },
   "visual": {
@@ -51,12 +53,12 @@
   "canonicalAdoption": {
     "adopted": {
       "empty-state": 1,
-      "action": 2,
+      "navigation": 7,
+      "action": 3,
       "feedback": 6,
       "data-display": 5,
       "field": 2,
-      "overlay": 6,
-      "navigation": 6
+      "overlay": 6
     },
     "documented-exception": {
       "dj-control": 1

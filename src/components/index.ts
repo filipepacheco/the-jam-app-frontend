@@ -24,8 +24,8 @@ export type {
   SkeletonProps,
   StatusProps,
 } from './FeedbackStates'
-export { Action, IconAction } from './Action'
-export type { ActionProps, ActionState, ActionVariant, IconActionProps } from './Action'
+export { Action, ActionGroup, IconAction } from './Action'
+export type { ActionGroupProps, ActionProps, ActionState, ActionVariant, IconActionProps } from './Action'
 export {
   Badge,
   CompactMetadata,

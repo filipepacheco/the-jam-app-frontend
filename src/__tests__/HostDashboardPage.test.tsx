@@ -31,6 +31,9 @@ vi.mock('../components', () => ({
             {state === 'loading' ? loadingLabel : children}
         </button>
     ),
+    ActionGroup: ({primary, secondary}: {primary: ReactNode; secondary?: ReactNode}) => (
+        <div>{primary}{secondary}</div>
+    ),
     OverflowMenu: ({items, label}: {
         items: Array<{id: string; label: string; disabled?: boolean; onSelect?: () => void}>
         label: string
@@ -83,6 +86,29 @@ describe('HostDashboardPage', () => {
         expect(await screen.findAllByRole('button', {
             name: 'jam_management.host_dashboard.create_jam_btn',
         })).toHaveLength(2)
+    })
+
+    it('shows the public page beside Manage only for active or live jams', async () => {
+        const jams = [
+            {...jamFixtures.active, id: 'active-jam', name: 'Active Jam', status: 'ACTIVE' as const},
+            {...jamFixtures.active, id: 'planned-jam', name: 'Planned Jam', status: 'INACTIVE' as const},
+            {...jamFixtures.active, id: 'past-jam', name: 'Past Jam', status: 'FINISHED' as const},
+        ]
+
+        render(
+            <MemoryRouter>
+                <HostDashboardPage port={{list: vi.fn().mockResolvedValue(jams), remove: vi.fn()}}/>
+            </MemoryRouter>,
+        )
+
+        const active = within((await screen.findByRole('heading', {level: 3, name: 'Active Jam'})).closest('article') as HTMLElement)
+        const planned = within(screen.getByRole('heading', {level: 3, name: 'Planned Jam'}).closest('article') as HTMLElement)
+        const past = within(screen.getByRole('heading', {level: 3, name: 'Past Jam'}).closest('article') as HTMLElement)
+
+        expect(active.getByRole('button', {name: 'jam_management.host_dashboard.view_public'})).toBeVisible()
+        expect(active.getByRole('button', {name: 'jam_management.host_dashboard.manage_btn'})).toBeVisible()
+        expect(planned.queryByRole('button', {name: 'jam_management.host_dashboard.view_public'})).toBeNull()
+        expect(past.queryByRole('button', {name: 'jam_management.host_dashboard.view_public'})).toBeNull()
     })
 
     it('keeps deletion failure feedback attached to the affected Jam', async () => {

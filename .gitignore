@@ -64,3 +64,6 @@ docs/*
 !docs/architecture-improvement-plan.md
 !docs/architecture-improvement-spec.md
 .vercel
+.env*
+.impeccable.md
+.impeccable-cache/

@@ -6,8 +6,9 @@ import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {InstrumentsSummary} from '../schedule/InstrumentsSummary'
 import {SpotifyPlayButton} from '../SpotifyPreview'
 import {FileText, Mic, ChevronDown} from 'lucide-react'
-import {Action} from '../Action'
-import React, {useCallback, useMemo} from "react"
+import {Action, IconAction} from '../Action'
+import {useCallback, useMemo} from 'react'
+import type {MouseEvent} from 'react'
 
 interface TimelineUser {
   id: string
@@ -43,18 +44,7 @@ export function TimelineItemV2Waveform({
       )
     : false
 
-  const handleCardClick = useCallback(() => {
-    onToggleExpanded?.()
-  }, [onToggleExpanded])
-
-  const handleCardKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault()
-      onToggleExpanded?.()
-    }
-  }, [onToggleExpanded])
-
-  const handleRegisterClick = useCallback((e: React.MouseEvent) => {
+  const handleRegisterClick = useCallback((e: MouseEvent) => {
     e.stopPropagation()
     onRegisterClick()
   }, [onRegisterClick])
@@ -106,16 +96,8 @@ export function TimelineItemV2Waveform({
   }, [isCompleted, isInProgress, isSuggested, isReadyToPlay, t])
 
   return (
-    /* Only completed Performances collapse. Other cards must not advertise an
-       expand action when every detail is already visible. */
     <div
-      role={isExpandable ? 'button' : undefined}
-      tabIndex={isExpandable ? 0 : undefined}
-      className={`card w-full ${finalBg} ${finalBorder} transition-shadow duration-300 outline-none text-left ${isExpandable ? 'cursor-pointer hover:shadow-lg focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2' : ''} ${isInProgress && !prefersReducedMotion ? 'animate-breathe-glow' : ''}`}
-      onClick={isExpandable ? handleCardClick : undefined}
-      onKeyDown={isExpandable ? handleCardKeyDown : undefined}
-      aria-expanded={isExpandable ? isExpanded : undefined}
-      aria-label={isExpandable ? `${schedule.music?.title} by ${schedule.music?.artist}. ${status.text}` : undefined}
+      className={`card w-full ${finalBg} ${finalBorder} transition-shadow duration-300 text-left ${isInProgress && !prefersReducedMotion ? 'animate-breathe-glow' : ''}`}
     >
       <div className="card-body p-3 overflow-hidden">
 
@@ -131,12 +113,25 @@ export function TimelineItemV2Waveform({
             <h3 className="ds-type-ui ds-wrap-user-content font-bold text-base-content mb-0.5">
               {schedule.music?.title}
             </h3>
-            <p className="ds-wrap-user-content flex items-center gap-1 text-sm text-base-content/70">
-              {schedule.music?.artist}
+            <div className="flex min-w-0 items-center gap-1.5">
+              <p className="ds-wrap-user-content min-w-0 text-sm text-base-content/70">
+                {schedule.music?.artist}
+              </p>
+              <span>
+                <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
+              </span>
               {isExpandable && (
-                <ChevronDown className={`size-3 text-base-content/60 shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} aria-hidden="true" />
+                <IconAction
+                  variant="quiet"
+                  className="shrink-0"
+                  label={`${schedule.music?.title}: ${isExpanded ? t('common.collapse') : t('common.expand')}`}
+                  aria-expanded={isExpanded}
+                  onClick={onToggleExpanded}
+                >
+                  <ChevronDown className={`size-4 text-base-content/60 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} aria-hidden="true" />
+                </IconAction>
               )}
-            </p>
+            </div>
           </div>
           {/* Status + meta - right column */}
           <div className="col-start-2 text-left sm:col-start-auto sm:text-right">
@@ -144,11 +139,6 @@ export function TimelineItemV2Waveform({
                 <span className={`${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse will-change-transform' : ''}`} aria-hidden="true">{status.icon}</span>
                 <span className="whitespace-nowrap"> {status.text}</span>
             </div>
-              <div className="flex items-center justify-end">
-            <span onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
-                <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
-            </span>
-              </div>
           </div>
         </div>
 

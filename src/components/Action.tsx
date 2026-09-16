@@ -20,6 +20,13 @@ export type IconActionProps = Omit<ActionButtonProps, 'children' | 'aria-label'>
   label: string
 }
 
+export interface ActionGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+  primary: ReactNode
+  secondary?: ReactNode
+  overflow?: ReactNode
+  danger?: ReactNode
+}
+
 function actionIcon({ className = '', ...props }: HTMLAttributes<HTMLSpanElement>) {
   return <span {...props} aria-hidden="true" className={`ds-action__icon ${className}`} />
 }
@@ -80,5 +87,37 @@ export function IconAction({ children, className = '', label, ref, ...props }: I
     <Action {...props} ref={ref} aria-label={label} className={`ds-action--icon-only ${className}`}>
       <Action.Icon>{children}</Action.Icon>
     </Action>
+  )
+}
+
+/**
+ * Preserves one dominant action while keeping supporting, overflow, and
+ * destructive choices in stable responsive groups and DOM order.
+ */
+export function ActionGroup({
+  className = '',
+  danger,
+  overflow,
+  primary,
+  secondary,
+  ...props
+}: ActionGroupProps) {
+  return (
+    <div {...props} className={`ds-action-group ${className}`}>
+      <div className="ds-action-group__primary" data-action-group-slot="primary">
+        {primary}
+      </div>
+      {(secondary !== null && secondary !== undefined) || (overflow !== null && overflow !== undefined) ? (
+        <div className="ds-action-group__supporting" data-action-group-slot="supporting">
+          {secondary}
+          {overflow}
+        </div>
+      ) : null}
+      {danger !== null && danger !== undefined ? (
+        <div className="ds-action-group__danger" data-action-group-slot="danger">
+          {danger}
+        </div>
+      ) : null}
+    </div>
   )
 }

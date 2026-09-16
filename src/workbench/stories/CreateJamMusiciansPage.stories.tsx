@@ -1,7 +1,7 @@
 import type {Meta, StoryObj} from '@storybook/react-vite'
 import {http, HttpResponse} from 'msw'
 import {Route, Routes} from 'react-router-dom'
-import {expect} from 'storybook/test'
+import {expect, waitFor} from 'storybook/test'
 import {CreateJamPage} from '../../pages/host/CreateJamPage'
 import {MusiciansPage, type MusiciansPagePort} from '../../pages/host/MusiciansPage'
 import {jamFixtures, musicianFixtures} from '../jamMusicFixtures'
@@ -36,13 +36,45 @@ export const CreateValidationAndFocus: Story = {
   render: () => <CreateJamPage />,
   globals: {authRole: 'host', locale: 'pt', theme: 'jam-light', route: '/host/create-jam', reviewDefaultViewport: 'phone', reducedMotion: true},
   play: async ({canvas, userEvent}) => {
-    await expect(canvas.getByRole('button', {name: /importar playlist/i})).toBeVisible()
     const submit = await canvas.findByRole('button', {name: /criar jam/i})
     await userEvent.click(submit)
     const name = canvas.getByRole('textbox', {name: /nome do jam/i})
     await expect(name).toHaveAttribute('aria-invalid', 'true')
     await expect(name).toHaveFocus()
+    await expect(canvas.getByLabelText(/data/i)).toHaveAttribute('aria-invalid', 'true')
+    await expect(canvas.getByLabelText(/horário/i)).toHaveAttribute('aria-invalid', 'true')
+    await expect(canvas.getByRole('textbox', {name: /nome do anfitrião/i})).toHaveValue('Ana Host')
+    await expect(canvas.getByRole('textbox', {name: /contato do anfitrião/i})).toHaveValue('host@example.test')
     await expect(canvas.getByRole('alert')).toBeVisible()
+  },
+}
+
+export const CreatedJamWithRecoverableSpotifyImport: Story = {
+  render: () => <CreateJamPage />,
+  globals: {authRole: 'host', locale: 'pt', theme: 'jam-light', route: '/host/create-jam', reviewDefaultViewport: 'desktop', reducedMotion: true},
+  parameters: {
+    a11y: {test: 'error'},
+    msw: {handlers: [
+      http.post('*/jams', () => HttpResponse.json({
+        success: true,
+        data: {...jamFixtures.active, id: 'jam-created', name: 'Jam do Spotify'},
+      }, {status: 201})),
+      http.post('*/spotify/import', () => HttpResponse.json({message: 'Spotify is temporarily unavailable'}, {status: 503})),
+    ]},
+  },
+  play: async ({canvas, userEvent}) => {
+    await userEvent.type(await canvas.findByRole('textbox', {name: /nome do jam/i}), 'Jam do Spotify')
+    await userEvent.type(canvas.getByRole('textbox', {name: /local/i}), 'Benjamin Social Club')
+    await userEvent.type(canvas.getByLabelText(/data/i), '2026-09-18')
+    await userEvent.type(canvas.getByLabelText(/horário/i), '17:00')
+    await userEvent.type(canvas.getByRole('textbox', {name: /url da playlist/i}), 'https://open.spotify.com/playlist/abc')
+    await userEvent.click(canvas.getByRole('button', {name: /criar jam/i}))
+
+    await expect(await canvas.findByText(/jam criado, mas não foi possível importar/i)).toBeVisible()
+    await expect(canvas.queryByText(/criado com sucesso/i)).toBeNull()
+    await expect(canvas.getByRole('button', {name: /^tentar novamente$/i})).toBeVisible()
+    await expect(canvas.getByRole('button', {name: /continuar sem importar/i})).toBeVisible()
+    await expect(canvas.getByRole('textbox', {name: /nome do jam/i})).toBeDisabled()
   },
 }
 
@@ -61,6 +93,7 @@ export const EditDeleteConfirmation: Story = {
   },
   play: async ({canvas, userEvent}) => {
     const remove = await canvas.findByRole('button', {name: /delete jam/i})
+    await waitFor(() => expect(remove).toBeEnabled())
     await userEvent.click(remove)
     await expect(canvas.getByRole('alertdialog', {name: /delete/i})).toBeVisible()
     await expect(canvas.getByRole('button', {name: /yes, delete/i})).toBeVisible()
@@ -72,7 +105,7 @@ export const MusicianDirectory: Story = {
   globals: {authRole: 'host', locale: 'en', theme: 'jam-light', reviewDefaultViewport: 'desktop'},
   play: async ({canvas}) => {
     await expect(await canvas.findByRole('heading', {level: 1, name: /musicians directory/i})).toBeVisible()
-    await expect(canvas.getByRole('button', {name: /edit ana host/i})).toBeVisible()
+    await expect(canvas.getAllByRole('button', {name: /edit ana host/i}).length).toBeGreaterThan(0)
     await expect(canvas.getByRole('spinbutton', {name: /page number/i})).toBeVisible()
     await expect(canvas.getByRole('button', {name: /last page/i})).toBeVisible()
   },

@@ -88,6 +88,28 @@ npm run test:coverage      # Run tests with coverage
 npm run test:i18n          # Run i18n smoke tests
 ```
 
+## Codex Model Selection
+
+Use **GPT-5.3-Codex-Spark** for fast, tightly scoped implementation work where the expected change is already clear. Good candidates include:
+
+- Small component, copy, localization, or styling changes
+- Mechanical TypeScript refactors
+- Adding a known test case
+- Producing quick implementation variants during an interactive coding session
+
+Prefer a stronger general-purpose coding model for ambiguous bug diagnosis, architecture decisions, authentication or offline-sync changes, security-sensitive work, large cross-cutting refactors, and final review before merging.
+
+When using Spark:
+
+1. Give it narrow file and behavior boundaries.
+2. Name the applicable repository rules, such as semantic DaisyUI colors or updating all locale files.
+3. Explicitly require the relevant tests, lint, and type/build checks; do not assume it will run them automatically.
+4. Escalate to a stronger model if the task expands across subsystems or requires substantial repository context.
+
+Example prompt:
+
+> Update `JamCard.tsx` to show the venue below the title. Follow existing DaisyUI semantic colors, update all affected i18n locales, run the relevant tests and TypeScript build, and do not modify unrelated files.
+
 ## Environment Configuration
 
 Copy `.env.example` to `.env` and configure:
@@ -283,5 +305,14 @@ Access via URL parameters during development:
 - **CLAUDE.md** (root and src/): Detailed architecture and implementation notes
 - **docs/**: Additional documentation including migration plans
 - **Component CLAUDE.md files**: Component-specific guidelines throughout src/
+
+## Storybook MCP
+
+The project exposes its private UI workbench to Codex through the `jam-app-storybook` MCP server at `http://localhost:6006/mcp` when Storybook is running.
+
+- Use the Storybook MCP to inspect component contracts and existing stories before changing shared UI.
+- Prefer the MCP's story lookup and test tools when investigating a component represented in the workbench.
+- Keep `npm run workbench` running on port 6006 while using these tools.
+- Treat `docs/design-system/contributor-workflow.md` and the workbench catalogue gates as authoritative project policy.
 
 Always refer to existing documentation before making assumptions about the codebase.

@@ -712,11 +712,20 @@ async function handleJamRoute(
 }
 
 function htmlHeaders(): Record<string, string> {
-  return {
+  const headers: Record<string, string> = {
     'Content-Type': 'text/html; charset=utf-8',
     'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
     Vary: 'User-Agent',
   };
+
+  // Preview and custom pre-production environments must never compete with
+  // the production site in search results. Vercel exposes custom targets such
+  // as "staging" through VERCEL_TARGET_ENV while VERCEL_ENV remains "preview".
+  if (process.env.VERCEL_ENV !== 'production') {
+    headers['X-Robots-Tag'] = 'noindex, nofollow';
+  }
+
+  return headers;
 }
 
 // --- Vercel matcher config ---

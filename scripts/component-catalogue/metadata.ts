@@ -48,6 +48,9 @@ export const metadataFor = (
       ...metadata,
       ...rule.metadata,
       readiness: {...metadata.readiness, ...(isRecord(rule.metadata.readiness) ? rule.metadata.readiness : {})},
+      ...(rule.metadata.canonicalAdoption
+        ? {canonicalAdoption: {...metadata.canonicalAdoption, ...rule.metadata.canonicalAdoption}}
+        : {}),
     }
   }
   return metadata
