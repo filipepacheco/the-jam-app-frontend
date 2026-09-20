@@ -21,11 +21,19 @@ export const DesktopHost: Story = {
     viewport: { value: 'desktop', isRotated: false },
   },
   play: async ({ canvas, userEvent }) => {
-    const navFrame = canvas.getByRole('navigation').firstElementChild
-    await expect(navFrame).toHaveClass('mx-auto', 'max-w-7xl')
+    const navFrame = canvas.getByRole('navigation', {name: /navegação principal|main navigation|navegación principal/i}).firstElementChild
+    await expect(navFrame).toHaveClass('mx-auto', 'max-w-7xl', 'grid')
+    await expect(navFrame).toHaveAttribute('style', expect.stringContaining('grid-template-columns'))
 
     const dashboardLink = canvas.getByRole('link', { name: /painel do host|host dashboard|panel del anfitrión/i })
     await expect(dashboardLink).toHaveClass('text-primary')
+
+    const brandLink = navFrame?.children[0]?.querySelector('a')
+    const firstNavigationLink = navFrame?.children[1]?.querySelector('a')
+    await expect(brandLink).not.toBeNull()
+    await expect(firstNavigationLink).not.toBeNull()
+    if (!brandLink || !firstNavigationLink) throw new Error('Desktop navigation regions did not render')
+    await expect(brandLink.getBoundingClientRect().right).toBeLessThan(firstNavigationLink.getBoundingClientRect().left)
 
     const jamsLink = canvas.getByRole('link', { name: /^jams$/i })
     await userEvent.click(jamsLink)

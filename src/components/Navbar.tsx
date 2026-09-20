@@ -55,13 +55,16 @@ function Navbar() {
 
   return (
     <nav aria-label={t('nav.main_navigation')} className="bg-base-100 shadow-lg">
-      <div className="navbar mx-auto w-full max-w-7xl px-2 py-2 sm:px-4 sm:py-3 lg:px-6 xl:px-8 gap-1 sm:gap-2 md:gap-3">
+      <div
+        className="mx-auto grid min-h-16 w-full max-w-7xl items-center gap-1 px-2 py-2 sm:gap-2 sm:px-4 sm:py-3 md:gap-3 lg:px-6 xl:px-8"
+        style={{display: 'grid', gridTemplateColumns: 'auto minmax(0, 1fr) auto'}}
+      >
       {/* Navbar Start - Logo. Stays a plain anchor: it is a brand mark, not
           a product action or a NavigationLink destination in the tab set
           above, and its enlarged logo-plus-wordmark styling does not match
           either Action or NavigationLink's control sizing. */}
-      <div className="navbar-start">
-        <a href="/" className="btn btn-ghost text-base sm:text-lg md:text-xl">
+      <div className="min-w-0 justify-self-start" style={{justifySelf: 'start'}}>
+        <a href="/" className="btn btn-ghost whitespace-nowrap px-2 text-base sm:text-lg md:text-xl">
           <img
             src="/web/icons8-concert-color-96.png"
             alt="App logo"
@@ -74,7 +77,7 @@ function Navbar() {
       </div>
 
       {/* Navbar Center - Desktop Menu */}
-      <div className="navbar-center hidden xl:flex">
+      <div className="hidden min-w-0 justify-self-center xl:flex" style={{justifySelf: 'center'}}>
         <ul className="flex items-center gap-1">
           <NavLink href="/" icon={<Home className="size-4" />} label={t('nav.home')} isActive={isActive('/')} onClick={handleNavClick('/')} />
           <NavLink href="/jams" icon={<Search className="size-4" />} label={t('nav.jams')} isActive={isActive('/jams')} onClick={handleNavClick('/jams')} />
@@ -91,7 +94,7 @@ function Navbar() {
       </div>
 
       {/* Navbar End - Actions */}
-      <div className="navbar-end shrink-0 justify-end gap-1 sm:gap-2 md:gap-3">
+      <div className="flex shrink-0 items-center justify-self-end gap-1 sm:gap-2 md:gap-3" style={{justifySelf: 'end'}}>
         {isLoading ? (
           /* Skeleton placeholders while auth state loads. The canonical
              Skeleton (FeedbackStates.tsx) always renders full-width text

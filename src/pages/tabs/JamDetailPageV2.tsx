@@ -17,6 +17,7 @@ import {
     Action,
     DropdownMenu,
     IconAction,
+    Modal,
     ScheduleEnrollmentModal,
     Status,
 } from '../../components'
@@ -34,7 +35,7 @@ import {
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
 import {formatJamDuration} from '../../lib/formatters'
-import {MapPin, Calendar, Share2, ArrowLeft, Music, Users, Clock3} from 'lucide-react'
+import {MapPin, Calendar, Share2, ArrowLeft, Music, Users, Clock3, CircleHelp} from 'lucide-react'
 
 export type JamDetailViewState =
     | {status: 'loaded'; jam: JamResponseDto}
@@ -88,6 +89,10 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
 
     // State for description truncation
     const [descriptionExpanded, setDescriptionExpanded] = useState(false)
+
+    // Jam-level participation help belongs with the summary facts rather than
+    // inside the performance schedule.
+    const [howItWorksOpen, setHowItWorksOpen] = useState(false)
 
     // Handle copy location to clipboard
     const handleCopyLocation = useCallback(async () => {
@@ -316,7 +321,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                             </IconAction>
                             <h1 className="ds-type-heading ds-wrap-user-content font-extrabold leading-tight sm:text-3xl md:text-4xl">{jam.name}</h1>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
+                        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
                             {jam.spotifyPlaylistUrl && (
                                 <a
                                     href={jam.spotifyPlaylistUrl}
@@ -331,6 +336,8 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                             <Action
                                 variant="secondary"
                                 onClick={participationCommands.beginShare}
+                                className="ml-auto"
+                                style={{marginInlineStart: 'auto'}}
                             >
                                 <Share2 className="size-4" aria-hidden="true" />
                                 {t('share.share_button')}
@@ -358,29 +365,54 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         </div>
                     )}
 
-                    {/* Jam facts stay together so date, place, size, and duration
-                        read as one identity block. */}
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 border-y border-base-300 py-2 text-sm text-base-content/70">
-                        {jam.date && (
-                            <span className="inline-flex min-h-11 items-center gap-1.5">
-                                <Calendar className="size-4" aria-hidden="true" />
-                                {formatDateTime(jam.date, normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    timeZone: 'UTC',
-                                })}
+                    {/* The primary facts form one compact scan line. Location
+                        owns the full row below so long venue names never push
+                        counts into an accidental third line. */}
+                    <div className="mt-3 border-y border-base-300 py-2 text-xs text-base-content/70 sm:text-sm">
+                        <div
+                            className="grid grid-cols-[minmax(0,1fr)_auto_auto_auto] items-center gap-x-2 sm:gap-x-4"
+                            style={{display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto auto auto'}}
+                        >
+                            {jam.date && (
+                                <span className="inline-flex min-h-11 min-w-0 items-center gap-1.5">
+                                    <Calendar className="size-4 shrink-0" aria-hidden="true" />
+                                    <span className="truncate">
+                                        {formatDateTime(jam.date, normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR', {
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            timeZone: 'UTC',
+                                        })}
+                                    </span>
+                                </span>
+                            )}
+                            <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
+                                <Music className="size-4 shrink-0" aria-hidden="true" />
+                                {jamFacts.performances} {t('jams.info.performances').toLowerCase()}
                             </span>
-                        )}
+                            {jamFacts.musicians > 0 && (
+                                <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
+                                    <Users className="size-4 shrink-0" aria-hidden="true" />
+                                    {jamFacts.musicians} {t('jams.info.musicians').toLowerCase()}
+                                </span>
+                            )}
+                            {jamFacts.duration > 0 && (
+                                <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
+                                    <Clock3 className="size-4 shrink-0" aria-hidden="true" />
+                                    {formatJamDuration(jamFacts.duration)}
+                                </span>
+                            )}
+                        </div>
+
                         {jam.location && (
                             <DropdownMenu
                                 label={t('jams.info.full_address')}
-                                className="[&_.ds-dropdown__trigger]:border-0 [&_.ds-dropdown__trigger]:bg-transparent [&_.ds-dropdown__trigger]:px-0"
+                                className="flex w-full [&>.ds-dropdown__trigger]:w-full [&>.ds-dropdown__trigger]:justify-start [&>.ds-dropdown__trigger]:border-0 [&>.ds-dropdown__trigger]:bg-transparent [&>.ds-dropdown__trigger]:px-0"
                                 trigger={
-                                    <span className="inline-flex items-center gap-1.5 text-base-content/70">
-                                        <MapPin className="size-4" aria-hidden="true" />
-                                        <span className="max-w-[16rem] truncate">{jam.location}</span>
+                                    <span className="inline-flex min-w-0 items-center gap-1.5 text-base-content/70">
+                                        <MapPin className="size-4 shrink-0" aria-hidden="true" />
+                                        <span className="truncate">{jam.location}</span>
                                     </span>
                                 }
                             >
@@ -392,23 +424,12 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                                 </div>
                             </DropdownMenu>
                         )}
-                        <span className="inline-flex min-h-11 items-center gap-1.5">
-                            <Music className="size-4" aria-hidden="true" />
-                            {jamFacts.performances} {t('jams.info.performances').toLowerCase()}
-                        </span>
-                        {jamFacts.musicians > 0 && (
-                            <span className="inline-flex min-h-11 items-center gap-1.5">
-                                <Users className="size-4" aria-hidden="true" />
-                                {jamFacts.musicians} {t('jams.info.musicians').toLowerCase()}
-                            </span>
-                        )}
-                        {jamFacts.duration > 0 && (
-                            <span className="inline-flex min-h-11 items-center gap-1.5">
-                                <Clock3 className="size-4" aria-hidden="true" />
-                                {formatJamDuration(jamFacts.duration)}
-                            </span>
-                        )}
                     </div>
+
+                    <Action variant="quiet" onClick={() => setHowItWorksOpen(true)} className="mt-2 px-0 text-sm">
+                        <CircleHelp className="size-4" aria-hidden="true" />
+                        {t('jams.how_it_works.title')}
+                    </Action>
 
                 </div>
             </div>
@@ -438,6 +459,35 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                     onNativeShare={participationCommands.shareNative}
                 />
             )}
+
+            <Modal
+                isOpen={howItWorksOpen}
+                onClose={() => setHowItWorksOpen(false)}
+                title={t('jams.how_it_works.title')}
+                headingLevel="h3"
+                size="sm"
+                portal
+                responsive
+                scrollable
+                className="max-h-[calc(100dvh-1rem)] sm:max-h-[85vh]"
+            >
+                <ol className="space-y-3">
+                    {(['view_schedule', 'register_songs', 'suggest_songs', 'collaborate', 'performance_time'] as const).map((step, index) => (
+                        <li key={step} className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5">
+                            <span className="flex size-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-content" aria-hidden="true">
+                                {index + 1}
+                            </span>
+                            <div className="min-w-0">
+                                <p className="text-sm font-semibold text-base-content">{t(translationKey('jams.how_it_works', step))}</p>
+                                <p className="mt-0.5 text-xs leading-relaxed text-base-content/70">{t(translationKey('jams.how_it_works', `${step}_desc`))}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ol>
+                <Action className="mt-4 w-full" onClick={() => setHowItWorksOpen(false)}>
+                    {t('common.close')}
+                </Action>
+            </Modal>
 
             {/* Main Content */}
             <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 pb-24">

@@ -6,10 +6,9 @@ import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
 import {translationKey} from '../../lib/i18n/translationKeys'
 import {TimelineItemV2Waveform} from './TimelineItemV2Waveform'
 import {useState} from 'react'
-import {Flag, ClipboardList, CircleHelp} from 'lucide-react'
+import {Flag, ClipboardList} from 'lucide-react'
 import {Action} from '../Action'
 import {CanonicalEmptyState} from '../FeedbackStates'
-import {Modal} from '../Modal'
 
 interface TimelineUser {
   id: string
@@ -36,7 +35,6 @@ export function TimelineShowcaseV2Waveform({
   const [expandedScheduleId, setExpandedScheduleId] = useState<string | null>(null)
   const [instrumentFilter, setInstrumentFilter] = useState<string | null>(null)
   const [mineFilter, setMineFilter] = useState(false)
-  const [howItWorksOpen, setHowItWorksOpen] = useState(false)
 
   // Helper to get dot style based on status
   const getDotStyle = (schedule: ScheduleResponseDto) => {
@@ -89,15 +87,7 @@ export function TimelineShowcaseV2Waveform({
 
   return (
     <div className="space-y-6">
-      {/* The Schedule heading owns participation help. Jam-level facts live
-          with the Jam identity above instead of competing with this task. */}
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-2xl sm:text-3xl font-extrabold scroll-mt-20">{t('jams.performance_schedule_title')}</h2>
-        <Action variant="quiet" onClick={() => setHowItWorksOpen(true)} className="px-3 text-sm">
-          <CircleHelp className="size-4" aria-hidden="true" />
-          {t('jams.how_it_works.title')}
-        </Action>
-      </div>
+      <h2 className="scroll-mt-20 text-2xl font-extrabold sm:text-3xl">{t('jams.performance_schedule_title')}</h2>
 
       {/* Instrument filter controls retain 44px targets. On a phone, the
           instrument names collapse visually while their accessible names stay. */}
@@ -213,34 +203,6 @@ export function TimelineShowcaseV2Waveform({
         </div>
       </div>
 
-      <Modal
-        isOpen={howItWorksOpen}
-        onClose={() => setHowItWorksOpen(false)}
-        title={t('jams.how_it_works.title')}
-        headingLevel="h3"
-        size="sm"
-        portal
-        responsive
-        scrollable
-        className="max-h-[calc(100dvh-1rem)] sm:max-h-[85vh]"
-      >
-        <ol className="space-y-3">
-          {(['view_schedule', 'register_songs', 'suggest_songs', 'collaborate', 'performance_time'] as const).map((step, index) => (
-            <li key={step} className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5">
-              <span className="flex size-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-content" aria-hidden="true">
-                {index + 1}
-              </span>
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-base-content">{t(translationKey('jams.how_it_works', step))}</p>
-                <p className="mt-0.5 text-xs leading-relaxed text-base-content/70">{t(translationKey('jams.how_it_works', `${step}_desc`))}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-        <Action className="mt-4 w-full" onClick={() => setHowItWorksOpen(false)}>
-          {t('common.close')}
-        </Action>
-      </Modal>
     </div>
   )
 }
