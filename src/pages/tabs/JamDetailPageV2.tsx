@@ -315,7 +315,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                                     href={jam.spotifyPlaylistUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="ds-action ds-control ds-focusable ds-action--quiet ds-action--idle ds-action--icon-only jam-detail-icon-action"
+                                    className="ds-action ds-control ds-focusable ds-action--spotify ds-action--idle ds-action--icon-only jam-detail-icon-action"
                                     aria-label={t('jams.listen_on_spotify')}
                                     title={t('jams.listen_on_spotify')}
                                 >

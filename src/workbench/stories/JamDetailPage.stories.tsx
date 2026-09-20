@@ -86,7 +86,7 @@ export const LoadedParticipation: Story = {
     await expect(share.getBoundingClientRect().width).toBe(44)
     const spotify = canvas.getByRole('link', {name: /ouça no spotify/i})
     await expect(spotify).toBeVisible()
-    await expect(spotify).toHaveClass('ds-action--icon-only')
+    await expect(spotify).toHaveClass('ds-action--icon-only', 'ds-action--spotify')
     await expect(spotify.getBoundingClientRect().width).toBe(44)
     await expect(jamDate.compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     const factCells = [jamDate.parentElement, performances, registrations, duration]
@@ -99,6 +99,17 @@ export const LoadedParticipation: Story = {
     await expect(canvas.queryByRole('button', {name: /como.*funciona/i})).toBeNull()
     await expect(title.compareDocumentPosition(schedule) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(canvas.getAllByText('Psycho Killer')).toHaveLength(2)
+
+    const longTitle = canvas.getByRole('heading', {level: 3, name: /a song title deliberately long/i})
+    const performanceCard = longTitle.closest<HTMLElement>('.card')
+    if (!performanceCard) throw new Error('Expected the long-content Performance card.')
+    const performance = within(performanceCard)
+    const artist = performance.getByText(/international collective of musicians/i)
+    const songDescription = performance.getByText(/play the extended arrangement/i)
+    const participant = performance.getByText(/^você$/i)
+    await expect(artist).toHaveClass('line-clamp-2')
+    await expect(performance.getByRole('link', {name: /open .* in spotify/i})).toBeVisible()
+    await expect(songDescription.compareDocumentPosition(participant) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 
     const documentView = within(canvasElement.ownerDocument.body)
     const participate = await documentView.findByRole('button', {name: /^quero participar$/i})

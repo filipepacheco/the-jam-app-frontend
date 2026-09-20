@@ -149,6 +149,7 @@ export const musicFixtures = {
     genre: 'Alternative / Experimental',
     duration: 487,
     description: 'Play the extended arrangement, repeat the bridge twice, leave eight bars for the guitar solo, and return quietly for the last chorus.',
+    link: 'https://open.spotify.com/track/7dSCxR4LqkmxoBrq9MzVSD',
     // info: 'Capo on the second fret. Watch the host for the final stop. This note intentionally exercises wrapping across several lines.',
     status: 'APPROVED',
     createdAt: '2026-09-06T12:00:00.000Z',

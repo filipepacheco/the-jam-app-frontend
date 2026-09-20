@@ -123,11 +123,11 @@ export function TimelineItemV2Waveform({
             <h3 className="ds-type-ui ds-wrap-user-content font-bold text-base-content mb-0.5">
               {schedule.music?.title}
             </h3>
-            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-              <p className="ds-wrap-user-content min-w-0 text-sm text-base-content/70">
+            <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto_auto] items-start gap-x-1.5">
+              <p className="ds-wrap-user-content line-clamp-2 min-w-0 text-sm text-base-content/70">
                 {schedule.music?.artist}
               </p>
-              <span>
+              <span className="shrink-0">
                 <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
               </span>
               {typeof schedule.music?.duration === 'number' && schedule.music.duration > 0 && (
@@ -159,6 +159,22 @@ export function TimelineItemV2Waveform({
             )}
           </div>
         </div>
+
+        {/* Additional song information stays with the identity block. */}
+        {schedule.music?.info && (
+          <div className="flex items-start gap-1.5 border-t border-base-content/10 pt-1">
+            <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
+            <p className="ds-wrap-user-content whitespace-pre-line text-sm text-base-content/50">{schedule.music.info}</p>
+          </div>
+        )}
+
+        {/* Song description appears before participant availability. */}
+        {schedule.music?.description && (
+          <div className="flex items-start gap-1.5 border-t border-base-content/10 pt-1">
+            <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
+            <p className="ds-wrap-user-content text-sm text-base-content/50">{schedule.music.description}</p>
+          </div>
+        )}
 
         {/* Participants and availability form one lineup instead of separate
             registration and vacancy cards. Completed items keep it tucked
@@ -224,22 +240,6 @@ export function TimelineItemV2Waveform({
             )}
           </div>
         </div>
-
-        {/* Description row - only shown when description exists */}
-        {schedule.music?.description && (
-          <div className="flex items-start gap-1.5 border-t border-base-content/10 pt-1">
-            <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
-            <p className="ds-wrap-user-content text-sm text-base-content/50">{schedule.music.description}</p>
-          </div>
-        )}
-
-        {/* Info row - only shown when info exists */}
-        {schedule.music?.info && (
-          <div className="flex items-start gap-1.5 border-t border-base-content/10 pt-1">
-            <FileText className="size-3 shrink-0 text-base-content/40 mt-0.5" />
-            <p className="ds-wrap-user-content whitespace-pre-line text-sm text-base-content/50">{schedule.music.info}</p>
-          </div>
-        )}
 
         {/* Register Button / Stage Call-to-Action - hide when jam is finished */}
         {!isCompleted && !jamFinished && (
