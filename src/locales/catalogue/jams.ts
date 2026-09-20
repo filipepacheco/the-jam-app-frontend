@@ -45,7 +45,6 @@ export const jams = {
     audience_desc: message({"pt-BR": "Uma tela ao vivo mostra o que tá tocando e o que vem a seguir. Compartilhe por link ou QR code, sem precisar baixar nada.", "en": "A live screen shows what's playing now and what's next. Share via link or QR code - no app download needed.", "es": "Una pantalla en vivo muestra qué suena ahora y qué viene después. Se comparte por link o código QR, sin descargar nada."})
   },
   how_it_works: {
-    action_label: message({"pt-BR": "Como Funciona", "en": "How It Works", "es": "Cómo Funciona"}),
     title: message({"pt-BR": "Como as Jams funcionam", "en": "How This Jam Works", "es": "Cómo funciona este Jam"}),
     view_schedule: message({"pt-BR": "Veja a programação", "en": "View Schedule", "es": "Ver Programación"}),
     view_schedule_desc: message({"pt-BR": "Confira todas as músicas e os músicos necessários para cada apresentação.", "en": "Check the performance schedule to see all songs and available musician roles needed for each performance.", "es": "Consulta el horario para ver todas las canciones y roles de músicos necesarios."}),

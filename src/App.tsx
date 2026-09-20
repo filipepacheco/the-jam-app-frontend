@@ -165,7 +165,7 @@ function HomePage() {
 function JamDetailRoute() {
   const {t} = useTranslation()
   const [howItWorksOpen, setHowItWorksOpen] = useState(false)
-  const actionLabel = t('jams.how_it_works.action_label')
+  const actionLabel = t('homepage.how_it_works.title')
 
   return (
     <>
