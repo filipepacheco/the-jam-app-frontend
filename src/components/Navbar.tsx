@@ -4,6 +4,7 @@
  */
 
 import { useAuth } from '../hooks'
+import { useTheme } from '../hooks/useTheme'
 import React, { useState, useRef, memo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FeedbackButton } from './FeedbackButton'
@@ -12,6 +13,8 @@ import { DesktopUserMenu } from './DesktopUserMenu'
 import { MobileDrawer } from './MobileDrawer'
 import { NavigationAction, NavigationLink } from './Navigation'
 import { Home, Search, Users, Music, LayoutDashboard } from 'lucide-react'
+import { THEME_METADATA } from '../design-system/foundations'
+import { BrandLogo } from './BrandLogo'
 
 const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: {
   href: string
@@ -43,6 +46,7 @@ function Navbar({contextualAction}: NavbarProps = {}) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { isAuthenticated, user, isViewer, isLoading } = useAuth()
+  const [theme] = useTheme()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
@@ -65,18 +69,15 @@ function Navbar({contextualAction}: NavbarProps = {}) {
       >
       {/* Navbar Start - Logo. Stays a plain anchor: it is a brand mark, not
           a product action or a NavigationLink destination in the tab set
-          above, and its enlarged logo-plus-wordmark styling does not match
+          above, and its fixed Brand Lockup styling does not match
           either Action or NavigationLink's control sizing. */}
       <div className="min-w-0 justify-self-start" style={{justifySelf: 'start'}}>
-        <a href="/" className="btn btn-ghost whitespace-nowrap px-2 text-base sm:text-lg md:text-xl">
-          <img
-            src="/web/icons8-concert-color-96.png"
-            alt="App logo"
-            width={32}
-            height={32}
-            className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10"
-          />
-          {t('common.app_name')}
+        <a
+          href="/"
+          aria-label="Jam App"
+          className="btn btn-ghost h-auto min-h-0 px-1 py-0 sm:px-2"
+        >
+          <BrandLogo surface={THEME_METADATA[theme].brandSurface} size="sm" />
         </a>
       </div>
 

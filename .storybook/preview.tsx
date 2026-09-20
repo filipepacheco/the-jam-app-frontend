@@ -165,6 +165,10 @@ const preview: Preview = {
       const authRole = String(globals.authRole || 'host') as WorkbenchAuthRole
       const storyI18n = i18n.cloneInstance({ lng: locale, initAsync: false })
 
+      // Storybook globals are an external input. Seed the same shared store
+      // production consumers read before rendering the story, rather than
+      // letting the first paint use a previous story's theme snapshot.
+      setSharedTheme(theme, { persist: false })
       document.documentElement.dataset.theme = theme
       installReducedMotionPreference(String(globals.reducedMotion) === 'true')
 

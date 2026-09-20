@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { expect } from 'storybook/test'
 import { BrandLogo, type BrandLogoSize, type BrandLogoSurface, type BrandLogoVariant } from '../../../components/BrandLogo'
+import { SELECTABLE_THEMES, THEME_METADATA } from '../../../design-system/foundations'
 
 const variants: readonly BrandLogoVariant[] = ['lockup', 'symbol']
 const surfaces: readonly BrandLogoSurface[] = ['light', 'dark']
@@ -87,6 +88,42 @@ export const ReservedSizes: Story = {
     await expect(logos[0]).toHaveAttribute('data-brand-logo-size', 'sm')
     await expect(logos[1]).toHaveAttribute('data-brand-logo-size', 'md')
     await expect(logos[2]).toHaveAttribute('data-brand-logo-size', 'lg')
+  },
+}
+
+/** Human fidelity-review surface: one explicit treatment per selectable theme. */
+export const SelectableThemeTreatments: Story = {
+  render: () => (
+    <div className="grid gap-4 p-6 sm:grid-cols-2 xl:grid-cols-3">
+      {SELECTABLE_THEMES.map((theme) => {
+        const surface = THEME_METADATA[theme].brandSurface
+        return (
+          <section
+            key={theme}
+            data-brand-theme={theme}
+            data-brand-surface={surface}
+            data-theme={theme}
+            className="grid gap-4 rounded-box bg-base-100 p-5 text-base-content shadow-sm"
+          >
+            <h2 className="text-sm font-semibold">{theme}</h2>
+            <BrandLogo surface={surface} size="sm" />
+          </section>
+        )
+      })}
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-brand-theme]')]
+    await expect(panels).toHaveLength(SELECTABLE_THEMES.length)
+
+    for (const theme of SELECTABLE_THEMES) {
+      const panel = canvasElement.querySelector<HTMLElement>(`[data-brand-theme="${theme}"]`)
+      if (!panel) throw new Error(`Missing ${theme} treatment panel.`)
+      const logo = panel.querySelector<HTMLElement>('[data-brand-logo]')
+      await expect(logo).not.toBeNull()
+      await expect(logo!).toHaveAttribute('data-brand-logo-surface', THEME_METADATA[theme].brandSurface)
+      await expect(logo!).toHaveAttribute('data-brand-logo-variant', 'lockup')
+    }
   },
 }
 

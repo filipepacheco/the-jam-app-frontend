@@ -85,6 +85,45 @@ export const DesktopGuestWithSpanishLabels: Story = {
   },
 }
 
+type BrandReviewContext = {
+  readonly theme: 'jam-light' | 'jam-dark'
+  readonly locale: 'pt' | 'en' | 'es'
+  readonly viewport: 'navbarNarrow' | 'phone' | 'navbarDesktopThreshold'
+}
+
+function brandReviewStory({ theme, locale, viewport }: BrandReviewContext): Story {
+  return {
+    globals: {
+      authRole: 'guest',
+      locale,
+      theme,
+      route: '/jams',
+      viewport: { value: viewport, isRotated: false },
+    },
+    play: async ({ canvas, userEvent }) => {
+      const homeLink = canvas.getByRole('link', { name: 'Jam App' })
+      await expect(canvas.getAllByRole('link', { name: 'Jam App' })).toHaveLength(1)
+      await expect(homeLink).toHaveAttribute('href', '/')
+
+      const logo = homeLink.querySelector<HTMLElement>('[data-brand-logo]')
+      await expect(logo).not.toBeNull()
+      await expect(logo!).toHaveAttribute('data-brand-logo-variant', 'lockup')
+      await expect(logo!).toHaveAttribute('data-brand-logo-surface', theme === 'jam-dark' ? 'dark' : 'light')
+
+      await userEvent.tab()
+      await expect(homeLink).toHaveFocus()
+    },
+  }
+}
+
+/** First human gate: compact full lockup remains clear at 320px (measured 72px gap). */
+export const BrandLockupLight320: Story = brandReviewStory({ theme: 'jam-light', locale: 'pt', viewport: 'navbarNarrow' })
+export const BrandLockupDark320: Story = brandReviewStory({ theme: 'jam-dark', locale: 'en', viewport: 'navbarNarrow' })
+export const BrandLockupLight390: Story = brandReviewStory({ theme: 'jam-light', locale: 'es', viewport: 'phone' })
+export const BrandLockupDark390: Story = brandReviewStory({ theme: 'jam-dark', locale: 'pt', viewport: 'phone' })
+export const BrandLockupLight1280: Story = brandReviewStory({ theme: 'jam-light', locale: 'en', viewport: 'navbarDesktopThreshold' })
+export const BrandLockupDark1280: Story = brandReviewStory({ theme: 'jam-dark', locale: 'es', viewport: 'navbarDesktopThreshold' })
+
 export const MobileHostKeyboardDismissal: Story = {
   globals: {
     authRole: 'host',

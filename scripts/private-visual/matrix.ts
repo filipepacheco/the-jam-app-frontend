@@ -58,7 +58,7 @@ export const VISUAL_MATRIX = Object.freeze([
   { key: 'navigation-long-tabs-light', storyId: 'navigation-canonical-navigation-and-menus--long-localized-tabs', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'phone', target: canvas, masks: [] },
   { key: 'navigation-permission-menu-dark', storyId: 'navigation-canonical-navigation-and-menus--permission-filtered-overflow', checkpoint: { kind: 'initial' }, theme: 'jam-dark', viewport: 'desktop', target: canvas, masks: [] },
 
-  { key: 'state-empty-recovery-light', storyId: 'states-empty-state--with-recovery-action', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'phone', target: canvas, masks: [] },
+  { key: 'navbar-brand-lockup-light', storyId: 'navigation-application-navigation--brand-lockup-light-390', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'phone', target: canvas, masks: [] },
   { key: 'state-loading-region-dark', storyId: 'states-loading--canonical-region-states', checkpoint: { kind: 'initial' }, theme: 'jam-dark', viewport: 'desktop', target: canvas, masks: [{ selector: '.loading', reason: 'CSS-mask spinner pixels are browser-rasterized while the stable live-region label and skeleton layout remain visible.' }] },
 
   { key: 'jam-registration-context-light', storyId: 'domain-jam-summary-and-actions--registration-context', checkpoint: { kind: 'initial' }, theme: 'jam-light', viewport: 'phone', target: canvas, masks: [] },
