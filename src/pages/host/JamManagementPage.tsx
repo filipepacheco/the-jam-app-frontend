@@ -127,6 +127,21 @@ export function JamManagementPage() {
         }
     }
 
+    const handleJamUpdate = async (updates: Partial<JamResponseDto>) => {
+        if (!jamId) return
+
+        clearError()
+        try {
+            const result = await jamService.update(jamId, updates)
+            setSuccess(t('create_jam.messages.update_success', {name: result.data.name}))
+            await refreshJam()
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.save_error')
+            setError(errorMessage)
+            throw err
+        }
+    }
+
     // Show skeleton while auth or jam data is loading
     if (authLoading || (jamLoading && !jam)) {
         return (
@@ -258,7 +273,7 @@ export function JamManagementPage() {
             {/* Tab Content */}
             <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8" role="tabpanel" id={`tabpanel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>
                 {activeTab === 'overview' && (
-                    <OverviewTab jam={jam} onStatusChange={handleStatusChange} loading={jamLoading}/>)}
+                    <OverviewTab jam={jam} onStatusChange={handleStatusChange} onJamUpdate={handleJamUpdate} loading={jamLoading}/>)}
                 {activeTab === 'registrations' && (<RegistrationsTab jam={jam}/>)}
                 {activeTab === 'schedule' && (<ScheduleTab jam={jam} onReload={() => refreshJam()}/>)}
                 {activeTab === 'dj-control' && (useLegacyDJ ? (

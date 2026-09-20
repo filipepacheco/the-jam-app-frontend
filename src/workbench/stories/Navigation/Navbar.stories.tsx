@@ -21,6 +21,9 @@ export const DesktopHost: Story = {
     viewport: { value: 'desktop', isRotated: false },
   },
   play: async ({ canvas, userEvent }) => {
+    const navFrame = canvas.getByRole('navigation').firstElementChild
+    await expect(navFrame).toHaveClass('mx-auto', 'max-w-7xl')
+
     const dashboardLink = canvas.getByRole('link', { name: /painel do host|host dashboard|panel del anfitrión/i })
     await expect(dashboardLink).toHaveClass('text-primary')
 
@@ -74,7 +77,7 @@ export const MobileHostKeyboardDismissal: Story = {
     const languageList = page.getByRole('listbox')
     await expect(languageList).toBeVisible()
     await expect(page.queryByRole('textbox')).not.toBeInTheDocument()
-    await userEvent.click(within(languageList).getByRole('option', { name: /english/i }))
+    await userEvent.click(within(languageList).getByRole('option', { name: /ingl[eê]s|english/i }))
     await expect(drawer).not.toHaveClass('pointer-events-none')
 
     const themePicker = page.getByRole('button', { name: /selecionar tema|select theme/i })

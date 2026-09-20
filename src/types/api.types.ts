@@ -148,6 +148,7 @@ export interface JamResponseDto {
   id: string
   name: string
   hostName: string
+  hostContact?: string
   hostMusicianId?: string | null
   description?: string
   date?: string
@@ -344,4 +345,3 @@ export interface PaginatedResponse<T> {
 // ============================================================================
 // UTILITY TYPES
 // ============================================================================
-

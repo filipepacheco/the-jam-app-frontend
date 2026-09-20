@@ -105,8 +105,7 @@ export function CreateJamPage() {
         spotifyPlaylistUrl: jam.spotifyPlaylistUrl || '',
         hostMusicianId: user?.id || '',
         hostName: jam.hostName || '',
-        // hostContact not in JamResponseDto - backend DTO needs updating
-        hostContact: (jam as unknown as Record<string, unknown>).hostContact as string || '',
+        hostContact: jam.hostContact || '',
         status: jam.status as FormData['status'],
       })
     } catch (err) {
