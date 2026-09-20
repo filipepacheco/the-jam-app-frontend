@@ -5,7 +5,7 @@ import { SELECTABLE_THEMES, THEME_METADATA } from '../../../design-system/founda
 
 const variants: readonly BrandLogoVariant[] = ['lockup', 'symbol']
 const surfaces: readonly BrandLogoSurface[] = ['light', 'dark']
-const sizes: readonly BrandLogoSize[] = ['sm', 'md', 'lg']
+const sizes: readonly BrandLogoSize[] = ['xs', 'sm', 'md', 'lg']
 
 const meta = {
   title: 'Foundations/Brand logo candidate',
@@ -84,10 +84,11 @@ export const ReservedSizes: Story = {
   ),
   play: async ({ canvasElement }) => {
     const logos = canvasElementQuery(canvasElement)
-    await expect(logos).toHaveLength(3)
-    await expect(logos[0]).toHaveAttribute('data-brand-logo-size', 'sm')
-    await expect(logos[1]).toHaveAttribute('data-brand-logo-size', 'md')
-    await expect(logos[2]).toHaveAttribute('data-brand-logo-size', 'lg')
+    await expect(logos).toHaveLength(4)
+    await expect(logos[0]).toHaveAttribute('data-brand-logo-size', 'xs')
+    await expect(logos[1]).toHaveAttribute('data-brand-logo-size', 'sm')
+    await expect(logos[2]).toHaveAttribute('data-brand-logo-size', 'md')
+    await expect(logos[3]).toHaveAttribute('data-brand-logo-size', 'lg')
   },
 }
 

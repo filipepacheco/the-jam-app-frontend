@@ -10,7 +10,7 @@ export type BrandLogoVariant = 'lockup' | 'symbol'
 export type BrandLogoSurface = 'light' | 'dark'
 
 /** Named dimensions keep the artwork's intrinsic ratio and reserve layout space. */
-export type BrandLogoSize = 'sm' | 'md' | 'lg'
+export type BrandLogoSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface BrandLogoProps {
   variant?: BrandLogoVariant
@@ -25,11 +25,13 @@ const DARK_PLUM = '#261733'
 
 const DIMENSIONS: Record<BrandLogoVariant, Record<BrandLogoSize, {width: number; height: number}>> = {
   lockup: {
+    xs: {width: 96, height: 40},
     sm: {width: 144, height: 60},
     md: {width: 192, height: 80},
     lg: {width: 286, height: 119},
   },
   symbol: {
+    xs: {width: 40, height: 42},
     sm: {width: 48, height: 50},
     md: {width: 64, height: 67},
     lg: {width: 96, height: 100},

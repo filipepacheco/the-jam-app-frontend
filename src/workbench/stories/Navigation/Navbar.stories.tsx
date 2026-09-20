@@ -109,6 +109,8 @@ function brandReviewStory({ theme, locale, viewport }: BrandReviewContext): Stor
       await expect(logo).not.toBeNull()
       await expect(logo!).toHaveAttribute('data-brand-logo-variant', 'lockup')
       await expect(logo!).toHaveAttribute('data-brand-logo-surface', theme === 'jam-dark' ? 'dark' : 'light')
+      await expect(logo!).toHaveAttribute('data-brand-logo-size', 'xs')
+      await expect(homeLink).toHaveClass('min-h-[44px]')
 
       await userEvent.tab()
       await expect(homeLink).toHaveFocus()
@@ -116,7 +118,7 @@ function brandReviewStory({ theme, locale, viewport }: BrandReviewContext): Stor
   }
 }
 
-/** First human gate: compact full lockup remains clear at 320px (measured 72px gap). */
+/** First human gate: compact full lockup remains clear at 320px (measured 120px gap). */
 export const BrandLockupLight320: Story = brandReviewStory({ theme: 'jam-light', locale: 'pt', viewport: 'navbarNarrow' })
 export const BrandLockupDark320: Story = brandReviewStory({ theme: 'jam-dark', locale: 'en', viewport: 'navbarNarrow' })
 export const BrandLockupLight390: Story = brandReviewStory({ theme: 'jam-light', locale: 'es', viewport: 'phone' })

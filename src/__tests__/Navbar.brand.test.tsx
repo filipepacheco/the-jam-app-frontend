@@ -37,6 +37,8 @@ describe('Navbar brand home link', () => {
     expect(homeLink).toHaveAttribute('href', '/')
     expect(homeLink.querySelector('[data-brand-logo]')).toHaveAttribute('data-brand-logo-variant', 'lockup')
     expect(homeLink.querySelector('[data-brand-logo]')).toHaveAttribute('data-brand-logo-surface', 'light')
+    expect(homeLink.querySelector('[data-brand-logo]')).toHaveAttribute('data-brand-logo-size', 'xs')
+    expect(homeLink).toHaveClass('min-h-[44px]')
   })
 
   it('passes the selected dark-surface treatment to the presentational artwork', () => {

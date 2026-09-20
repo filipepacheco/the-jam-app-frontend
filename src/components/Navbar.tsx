@@ -75,9 +75,9 @@ function Navbar({contextualAction}: NavbarProps = {}) {
         <a
           href="/"
           aria-label="Jam App"
-          className="btn btn-ghost h-auto min-h-0 px-1 py-0 sm:px-2"
+          className="btn btn-ghost h-auto min-h-[44px] px-1 py-0 sm:px-2"
         >
-          <BrandLogo surface={THEME_METADATA[theme].brandSurface} size="sm" />
+          <BrandLogo surface={THEME_METADATA[theme].brandSurface} size="xs" />
         </a>
       </div>
 
