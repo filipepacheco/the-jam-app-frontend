@@ -3,6 +3,10 @@
   inline-size: 100%;
 }
 
+.jam-detail-icon-action {
+  box-sizing: border-box;
+}
+
 .jam-detail-location > .ds-dropdown__trigger {
   inline-size: 100%;
   justify-content: flex-start;

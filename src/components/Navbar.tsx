@@ -35,7 +35,11 @@ const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: 
   )
 })
 
-function Navbar() {
+interface NavbarProps {
+  contextualAction?: React.ReactNode
+}
+
+function Navbar({contextualAction}: NavbarProps = {}) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { isAuthenticated, user, isViewer, isLoading } = useAuth()
@@ -95,6 +99,8 @@ function Navbar() {
 
       {/* Navbar End - Actions */}
       <div className="flex shrink-0 items-center justify-self-end gap-1 sm:gap-2 md:gap-3" style={{justifySelf: 'end'}}>
+        {contextualAction}
+
         {isLoading ? (
           /* Skeleton placeholders while auth state loads. The canonical
              Skeleton (FeedbackStates.tsx) always renders full-width text

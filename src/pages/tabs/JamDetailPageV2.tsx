@@ -17,7 +17,6 @@ import {
     Action,
     DropdownMenu,
     IconAction,
-    Modal,
     ScheduleEnrollmentModal,
     Status,
 } from '../../components'
@@ -35,7 +34,7 @@ import {
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
 import {formatJamDuration} from '../../lib/formatters'
-import {MapPin, Calendar, Share2, ArrowLeft, Music, Users, Clock3, CircleHelp} from 'lucide-react'
+import {MapPin, Calendar, Share2, Music, Users, Clock3} from 'lucide-react'
 import './JamDetailPageV2.css'
 
 export type JamDetailViewState =
@@ -92,10 +91,6 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
 
     // State for description truncation
     const [descriptionExpanded, setDescriptionExpanded] = useState(false)
-
-    // Jam-level participation help belongs with the summary facts rather than
-    // inside the performance schedule.
-    const [howItWorksOpen, setHowItWorksOpen] = useState(false)
 
     // Handle copy location to clipboard
     const handleCopyLocation = useCallback(async () => {
@@ -312,63 +307,31 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             <div className="bg-base-200 border-b border-base-300">
                 <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-4 sm:py-5`} data-jam-detail-container>
                     {/* Title and Jam-level actions share one aligned identity row. */}
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="flex items-center gap-2 min-w-0">
-                            <IconAction
-                                variant="quiet"
-                                onClick={() => goTo('/jams')}
-                                className="shrink-0"
-                                label={t('common.back')}
-                            >
-                                <ArrowLeft className="size-4" />
-                            </IconAction>
-                            <h1 className="ds-type-heading ds-wrap-user-content font-extrabold leading-tight sm:text-3xl md:text-4xl">{jam.name}</h1>
-                        </div>
-                        <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
+                    <div className="flex items-center gap-3">
+                        <h1 className="ds-type-heading ds-wrap-user-content min-w-0 flex-1 font-extrabold leading-tight sm:text-3xl md:text-4xl">{jam.name}</h1>
+                        <div className="ml-auto flex shrink-0 items-center gap-2">
                             {jam.spotifyPlaylistUrl && (
                                 <a
                                     href={jam.spotifyPlaylistUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="ds-action ds-control ds-focusable ds-action--quiet ds-action--idle"
-                                    style={{paddingInline: 0}}
+                                    className="ds-action ds-control ds-focusable ds-action--quiet ds-action--idle ds-action--icon-only jam-detail-icon-action"
+                                    aria-label={t('jams.listen_on_spotify')}
+                                    title={t('jams.listen_on_spotify')}
                                 >
                                     <SpotifyLogo />
-                                    {t('jams.listen_on_spotify')}
                                 </a>
                             )}
-                            <Action
+                            <IconAction
                                 variant="secondary"
                                 onClick={participationCommands.beginShare}
-                                className="ml-auto"
-                                style={{marginInlineStart: 'auto'}}
+                                label={t('share.share_button')}
+                                title={t('share.share_button')}
                             >
                                 <Share2 className="size-4" aria-hidden="true" />
-                                {t('share.share_button')}
-                            </Action>
+                            </IconAction>
                         </div>
                     </div>
-
-                    {/* Description is the first supporting information after identity. */}
-                    {jam.description && (
-                        <div className="mt-3">
-                            <p className={`max-w-3xl whitespace-pre-line text-sm text-pretty text-base-content/70 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
-                                {jam.description}
-                            </p>
-                            {jam.description.length > 100 && (
-                                <Action
-                                    variant="quiet"
-                                    onClick={() => setDescriptionExpanded(prev => !prev)}
-                                    className="mt-1 justify-start px-0 text-primary"
-                                    style={{paddingInline: 0}}
-                                >
-                                    <span className="text-xs">
-                                        {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
-                                    </span>
-                                </Action>
-                            )}
-                        </div>
-                    )}
 
                     {/* The primary facts form one compact scan line. Location
                         owns the full row below so long venue names never push
@@ -431,15 +394,27 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         )}
                     </div>
 
-                    <Action
-                        variant="quiet"
-                        onClick={() => setHowItWorksOpen(true)}
-                        className="mt-2 px-0 text-sm"
-                        style={{paddingInline: 0}}
-                    >
-                        <CircleHelp className="size-4" aria-hidden="true" />
-                        {t('jams.how_it_works.title')}
-                    </Action>
+                    {/* Description follows the event details so the schedule context
+                        is available before reading the longer supporting copy. */}
+                    {jam.description && (
+                        <div className="mt-3">
+                            <p className={`max-w-3xl whitespace-pre-line text-sm text-pretty text-base-content/70 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
+                                {jam.description}
+                            </p>
+                            {jam.description.length > 100 && (
+                                <Action
+                                    variant="quiet"
+                                    onClick={() => setDescriptionExpanded(prev => !prev)}
+                                    className="mt-1 justify-start px-0 text-primary"
+                                    style={{paddingInline: 0}}
+                                >
+                                    <span className="text-xs">
+                                        {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
+                                    </span>
+                                </Action>
+                            )}
+                        </div>
+                    )}
 
                 </div>
             </div>
@@ -469,35 +444,6 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                     onNativeShare={participationCommands.shareNative}
                 />
             )}
-
-            <Modal
-                isOpen={howItWorksOpen}
-                onClose={() => setHowItWorksOpen(false)}
-                title={t('jams.how_it_works.title')}
-                headingLevel="h3"
-                size="sm"
-                portal
-                responsive
-                scrollable
-                className="max-h-[calc(100dvh-1rem)] sm:max-h-[85vh]"
-            >
-                <ol className="space-y-3">
-                    {(['view_schedule', 'register_songs', 'suggest_songs', 'collaborate', 'performance_time'] as const).map((step, index) => (
-                        <li key={step} className="grid grid-cols-[1.5rem_minmax(0,1fr)] gap-2.5">
-                            <span className="flex size-6 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-content" aria-hidden="true">
-                                {index + 1}
-                            </span>
-                            <div className="min-w-0">
-                                <p className="text-sm font-semibold text-base-content">{t(translationKey('jams.how_it_works', step))}</p>
-                                <p className="mt-0.5 text-xs leading-relaxed text-base-content/70">{t(translationKey('jams.how_it_works', `${step}_desc`))}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ol>
-                <Action className="mt-4 w-full" onClick={() => setHowItWorksOpen(false)}>
-                    {t('common.close')}
-                </Action>
-            </Modal>
 
             {/* Main Content */}
             <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-6 pb-24 sm:py-8`} data-jam-detail-container>

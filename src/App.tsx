@@ -1,4 +1,4 @@
-import {lazy, Suspense, useEffect, useMemo} from 'react'
+import {lazy, Suspense, useEffect, useMemo, useState} from 'react'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
@@ -28,6 +28,9 @@ import {FullPageSpinner, OnboardingModal} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {useAuth} from './hooks'
 import {NotFoundPage} from './pages/NotFoundPage'
+import {CircleHelp} from 'lucide-react'
+import {NavigationAction} from './components/Navigation'
+import {JamHowItWorksModal} from './components/jam-detail-v2/JamHowItWorksModal'
 
 // Lazy-loaded pages - Priority 1 (Host-only)
 const HostDashboardPage = lazy(() => import('./pages/host/HostDashboardPage.tsx'))
@@ -159,6 +162,33 @@ function HomePage() {
   )
 }
 
+function JamDetailRoute() {
+  const {t} = useTranslation()
+  const [howItWorksOpen, setHowItWorksOpen] = useState(false)
+  const actionLabel = t('jams.how_it_works.action_label')
+
+  return (
+    <>
+      <Navbar
+        contextualAction={(
+          <NavigationAction
+            variant="quiet"
+            onClick={() => setHowItWorksOpen(true)}
+            aria-label={actionLabel}
+            title={actionLabel}
+            className="px-3"
+          >
+            <CircleHelp className="size-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{actionLabel}</span>
+          </NavigationAction>
+        )}
+      />
+      <JamDetailPage />
+      <JamHowItWorksModal isOpen={howItWorksOpen} onClose={() => setHowItWorksOpen(false)} />
+    </>
+  )
+}
+
 /**
  * App Content Component
  * Routes and page rendering
@@ -187,12 +217,7 @@ function AppContent() {
           <BrowseJamsPage />
         </>
       } />
-      <Route path="/jams/:jamId" element={
-        <>
-          <Navbar />
-          <JamDetailPage />
-        </>
-      } />
+      <Route path="/jams/:jamId" element={<JamDetailRoute />} />
       <Route path="/jams/:jamId/register" element={
         <>
           <Navbar />

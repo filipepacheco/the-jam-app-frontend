@@ -4,6 +4,35 @@ import { DesktopUserMenu } from '../../../components/DesktopUserMenu'
 import Navbar from '../../../components/Navbar'
 import { AuthContext } from '../../../contexts/AuthContext'
 import { createAuthFixture } from '../../fixtures'
+import {useState} from 'react'
+import {CircleHelp} from 'lucide-react'
+import {NavigationAction} from '../../../components/Navigation'
+import {JamHowItWorksModal} from '../../../components/jam-detail-v2/JamHowItWorksModal'
+
+function JamHelpNavigationHarness() {
+  const [isOpen, setIsOpen] = useState(false)
+  const label = 'Como Funciona'
+
+  return (
+    <>
+      <Navbar
+        contextualAction={(
+          <NavigationAction
+            variant="quiet"
+            onClick={() => setIsOpen(true)}
+            aria-label={label}
+            title={label}
+            className="px-3"
+          >
+            <CircleHelp className="size-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{label}</span>
+          </NavigationAction>
+        )}
+      />
+      <JamHowItWorksModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </>
+  )
+}
 
 const meta = {
   title: 'Navigation/Application navigation',
@@ -99,6 +128,30 @@ export const MobileHostKeyboardDismissal: Story = {
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(trigger).toHaveFocus())
     await expect(drawer).toHaveClass('pointer-events-none')
+  },
+}
+
+export const MobileJamContextualHelp: Story = {
+  render: () => <JamHelpNavigationHarness />,
+  globals: {
+    authRole: 'guest',
+    locale: 'pt',
+    route: '/jams/jam-friday',
+    viewport: { value: 'phone', isRotated: false },
+  },
+  play: async ({canvas, canvasElement, userEvent}) => {
+    const page = within(canvasElement.ownerDocument.body)
+    const help = canvas.getByRole('button', {name: 'Como Funciona'})
+    const hamburger = canvas.getByRole('button', {name: /alternar menu|toggle navigation menu/i})
+    await expect(help).toBeVisible()
+    await expect(help.compareDocumentPosition(hamburger) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    await expect(help.querySelector('span')).toHaveClass('hidden', 'sm:inline')
+
+    await userEvent.click(help)
+    const dialog = page.getByRole('dialog', {name: /como as jams funcionam/i})
+    await expect(dialog).toBeVisible()
+    await userEvent.click(within(dialog).getAllByRole('button', {name: /fechar/i})[1])
+    await expect(page.queryByRole('dialog', {name: /como as jams funcionam/i})).toBeNull()
   },
 }
 

@@ -74,7 +74,6 @@ export const LoadedParticipation: Story = {
     const duration = canvas.getByText(/^16m$/i)
     const share = canvas.getByRole('button', {name: /compartilhar/i})
     const location = canvas.getByRole('button', {name: /endereço completo/i})
-    const howItWorksTrigger = canvas.getByRole('button', {name: /como as jams funcionam/i})
     const detailContainers = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-jam-detail-container]'))
     await expect(title).toBeVisible()
     await expect(detailContainers.length).toBeGreaterThanOrEqual(2)
@@ -82,13 +81,14 @@ export const LoadedParticipation: Story = {
     const containerRightEdges = detailContainers.map((container) => container.getBoundingClientRect().right)
     await expect(Math.max(...containerLeftEdges) - Math.min(...containerLeftEdges)).toBeLessThan(2)
     await expect(Math.max(...containerRightEdges) - Math.min(...containerRightEdges)).toBeLessThan(2)
-    await expect(share).toHaveClass('ml-auto')
+    await expect(canvas.queryByRole('button', {name: /voltar|back/i})).toBeNull()
+    await expect(share).toHaveClass('ds-action--icon-only')
+    await expect(share.getBoundingClientRect().width).toBe(44)
     const spotify = canvas.getByRole('link', {name: /ouça no spotify/i})
     await expect(spotify).toBeVisible()
-    const alignedLeftEdges = [spotify, jamDate.parentElement, howItWorksTrigger, schedule]
-      .map((element) => element?.getBoundingClientRect().left ?? -1)
-    await expect(Math.max(...alignedLeftEdges) - Math.min(...alignedLeftEdges)).toBeLessThan(2)
-    await expect(description.compareDocumentPosition(jamDate) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    await expect(spotify).toHaveClass('ds-action--icon-only')
+    await expect(spotify.getBoundingClientRect().width).toBe(44)
+    await expect(jamDate.compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     const factCells = [jamDate.parentElement, performances, registrations, duration]
     const factTops = factCells.map((fact) => fact?.getBoundingClientRect().top ?? -1)
     await expect(Math.max(...factTops) - Math.min(...factTops)).toBeLessThan(2)
@@ -96,19 +96,11 @@ export const LoadedParticipation: Story = {
     const locationRowWidth = location.parentElement?.getBoundingClientRect().width ?? 0
     await expect(Math.abs(locationRowWidth - locationWidth)).toBeLessThan(2)
     await expect(location.parentElement).toHaveClass('jam-detail-location')
-    await expect(location.compareDocumentPosition(howItWorksTrigger) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
-    await expect(howItWorksTrigger.compareDocumentPosition(schedule) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    await expect(canvas.queryByRole('button', {name: /como.*funciona/i})).toBeNull()
     await expect(title.compareDocumentPosition(schedule) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(canvas.getAllByText('Psycho Killer')).toHaveLength(2)
 
     const documentView = within(canvasElement.ownerDocument.body)
-    await userEvent.click(howItWorksTrigger)
-    const howItWorks = documentView.getByRole('dialog', {name: /como as jams funcionam/i})
-    await expect(howItWorks).toBeVisible()
-    await expect(within(howItWorks).getByText(/veja a programação/i)).toBeVisible()
-    await userEvent.click(within(howItWorks).getAllByRole('button', {name: /fechar/i})[1])
-    await expect(documentView.queryByRole('dialog', {name: /como as jams funcionam/i})).toBeNull()
-
     const participate = await documentView.findByRole('button', {name: /^quero participar$/i})
     await expect(participate).toHaveAttribute('aria-expanded', 'false')
     await userEvent.click(participate)
@@ -233,12 +225,10 @@ export const NoPerformances: Story = {
     reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
-  play: async ({canvas, canvasElement, userEvent}) => {
+  play: async ({canvas, canvasElement}) => {
     await expect(canvas.getByRole('heading', {level: 1, name: 'Friday Night Jam'})).toBeVisible()
     await expect(canvas.getByRole('heading', {level: 2, name: /aún no hay programación/i})).toBeVisible()
     await expect(within(canvasElement.ownerDocument.body).queryByRole('button', {name: /participar/i})).toBeNull()
-    await userEvent.click(canvas.getByRole('button', {name: /volver/i}))
-    await expect(navigate).toHaveBeenCalledWith('/jams')
   },
 }
 
