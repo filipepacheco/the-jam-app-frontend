@@ -50,6 +50,8 @@ interface JamDetailPageV2Props {
     onRetry?: () => void | Promise<void>
 }
 
+const JAM_DETAIL_CONTAINER_CLASS = 'mx-auto w-full max-w-4xl px-4 sm:px-6'
+
 export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV2Props = {}) {
     const {t, i18n} = useTranslation()
     const {jamId} = useParams<{ jamId: string }>()
@@ -287,7 +289,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             {/* Success Alerts */}
             {participation.feedback === 'registration_success' && (
                 <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
-                    <div className="container mx-auto max-w-4xl px-4 py-3">
+                    <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-3`} data-jam-detail-container>
                         <Status tone="info" role="alert" title={t('jams.enroll_success')} />
                     </div>
                 </div>
@@ -295,7 +297,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
 
             {(participation.feedback === 'suggestion_success' || participation.feedback === 'new_music_success') && (
                 <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
-                    <div className="container mx-auto max-w-4xl px-4 py-3">
+                    <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-3`} data-jam-detail-container>
                         <Status
                             tone="success"
                             role="alert"
@@ -307,7 +309,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
 
             {/* Header - compact: title + meta on one line, details muted below */}
             <div className="bg-base-200 border-b border-base-300">
-                <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-4 sm:py-5">
+                <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-4 sm:py-5`} data-jam-detail-container>
                     {/* Title and Jam-level actions share one aligned identity row. */}
                     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex items-center gap-2 min-w-0">
@@ -328,6 +330,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="ds-action ds-control ds-focusable ds-action--quiet ds-action--idle"
+                                    style={{paddingInline: 0}}
                                 >
                                     <SpotifyLogo />
                                     {t('jams.listen_on_spotify')}
@@ -356,6 +359,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                                     variant="quiet"
                                     onClick={() => setDescriptionExpanded(prev => !prev)}
                                     className="mt-1 justify-start px-0 text-primary"
+                                    style={{paddingInline: 0}}
                                 >
                                     <span className="text-xs">
                                         {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
@@ -426,7 +430,12 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         )}
                     </div>
 
-                    <Action variant="quiet" onClick={() => setHowItWorksOpen(true)} className="mt-2 px-0 text-sm">
+                    <Action
+                        variant="quiet"
+                        onClick={() => setHowItWorksOpen(true)}
+                        className="mt-2 px-0 text-sm"
+                        style={{paddingInline: 0}}
+                    >
                         <CircleHelp className="size-4" aria-hidden="true" />
                         {t('jams.how_it_works.title')}
                     </Action>
@@ -437,7 +446,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             {/* Finished/Inactive banner */}
             {(jam.status === 'FINISHED' || jam.status === 'INACTIVE') && (
                 <div className="bg-base-300/50 border-b border-base-300">
-                    <div className="container mx-auto max-w-4xl px-4 py-2 text-center">
+                    <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-2 text-center`} data-jam-detail-container>
                         <p className="text-xs text-base-content/50 font-medium">
                             {t(translationKey('jams.banner', jam.status.toLowerCase()))}
                         </p>
@@ -490,7 +499,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             </Modal>
 
             {/* Main Content */}
-            <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 pb-24">
+            <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-6 pb-24 sm:py-8`} data-jam-detail-container>
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
                     {/* Timeline Column - full width, schedule is the hero */}

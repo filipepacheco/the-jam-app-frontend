@@ -27,7 +27,7 @@ export function EnhancedHero() {
   }
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-base-300 text-primary-content">
+    <section className="relative isolate min-h-screen overflow-hidden bg-base-300 text-primary-content">
       <div className="absolute inset-0 animate-gradient-shift" aria-hidden="true" />
       <div className="radial-glow" aria-hidden="true" />
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 flex flex-col lg:flex-row items-center gap-10 lg:gap-12 min-h-screen justify-center">
@@ -89,7 +89,7 @@ export function EnhancedHero() {
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-b from-transparent to-base-100 z-10" aria-hidden="true" />
+      <div className="hero-bottom-fade absolute inset-x-0 bottom-0 z-0 h-48 sm:h-64 lg:h-72" aria-hidden="true" />
     </section>
   )
 }

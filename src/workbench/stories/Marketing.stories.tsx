@@ -18,11 +18,12 @@ export const GuestHero: Story = {
     const heroHeading = canvas.getByRole('heading', { level: 1 })
     const dashboardHeading = canvas.getAllByRole('heading', { name: /Don't Stop Believin/i })[0]
     const hero = heroHeading.closest('section')
-    expect(hero?.querySelector('.animate-gradient-shift')).not.toBeNull()
-    expect(hero?.querySelector('.radial-glow')).not.toBeNull()
-    await waitFor(() => {
-      expect(heroHeading).toHaveStyle({ opacity: 1 })
-      expect(dashboardHeading.closest('[style]')).toHaveStyle({ opacity: 1 })
+    await expect(hero?.querySelector('.animate-gradient-shift')).not.toBeNull()
+    await expect(hero?.querySelector('.hero-bottom-fade')).not.toBeNull()
+    await expect(hero?.querySelector('.radial-glow')).not.toBeNull()
+    await waitFor(async () => {
+      await expect(heroHeading).toHaveStyle({ opacity: 1 })
+      await expect(dashboardHeading.closest('[style]')).toHaveStyle({ opacity: 1 })
     })
   },
 }
