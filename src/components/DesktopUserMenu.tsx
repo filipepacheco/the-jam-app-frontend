@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, UserCircle, LogOut, Globe, Palette } from 'lucide-react'
 import { useAppLanguage, useAuth, useTheme } from '../hooks'
+import { resolveThemeName } from '../design-system/foundations'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
 import { Action } from './Action'
 import { DropdownMenu } from './Navigation'
@@ -83,7 +84,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
             <div className="flex items-center gap-2">
               <Palette className="size-4 text-base-content/50 shrink-0" />
               <select
-                onChange={(e) => setTheme(e.target.value)}
+                onChange={(e) => setTheme(resolveThemeName(e.target.value))}
                 value={currentTheme}
                 className="select select-bordered select-sm flex-1"
                 aria-label={t('common.select_theme')}
@@ -174,7 +175,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
           <div className="flex items-center gap-2">
             <Palette className="size-4 text-base-content/50 shrink-0" />
             <select
-              onChange={(e) => setTheme(e.target.value)}
+              onChange={(e) => setTheme(resolveThemeName(e.target.value))}
               value={currentTheme}
               className="select select-bordered select-sm flex-1"
               aria-label={t('common.select_theme')}

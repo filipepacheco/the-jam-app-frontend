@@ -10,6 +10,64 @@ const DAISY_THEMES = [
 
 export const SELECTABLE_THEMES = [...REFERENCE_THEME_NAMES, ...DAISY_THEMES] as const
 
+export type ThemeName = (typeof SELECTABLE_THEMES)[number]
+export type BrandSurface = 'light' | 'dark'
+
+export interface ThemeMetadata {
+  readonly brandSurface: BrandSurface
+}
+
+/**
+ * Product-owned facts about every selectable DaisyUI presentation.
+ *
+ * Brand artwork must be told which surrounding surface it sits on; it must
+ * never infer that fact from a rendered ancestor or computed style.
+ */
+export const THEME_METADATA: Readonly<Record<ThemeName, ThemeMetadata>> = {
+  'jam-light': { brandSurface: 'light' },
+  'jam-dark': { brandSurface: 'dark' },
+  light: { brandSurface: 'light' },
+  dark: { brandSurface: 'dark' },
+  cupcake: { brandSurface: 'light' },
+  bumblebee: { brandSurface: 'light' },
+  emerald: { brandSurface: 'light' },
+  corporate: { brandSurface: 'light' },
+  synthwave: { brandSurface: 'dark' },
+  retro: { brandSurface: 'light' },
+  cyberpunk: { brandSurface: 'light' },
+  valentine: { brandSurface: 'light' },
+  halloween: { brandSurface: 'dark' },
+  garden: { brandSurface: 'light' },
+  forest: { brandSurface: 'dark' },
+  aqua: { brandSurface: 'light' },
+  lofi: { brandSurface: 'light' },
+  pastel: { brandSurface: 'light' },
+  fantasy: { brandSurface: 'light' },
+  wireframe: { brandSurface: 'light' },
+  black: { brandSurface: 'dark' },
+  luxury: { brandSurface: 'dark' },
+  dracula: { brandSurface: 'dark' },
+  cmyk: { brandSurface: 'light' },
+  autumn: { brandSurface: 'dark' },
+  business: { brandSurface: 'dark' },
+  acid: { brandSurface: 'light' },
+  lemonade: { brandSurface: 'light' },
+  night: { brandSurface: 'dark' },
+  coffee: { brandSurface: 'dark' },
+  winter: { brandSurface: 'light' },
+}
+
+export const DEFAULT_THEME: ThemeName = 'dark'
+
+export function isThemeName(value: unknown): value is ThemeName {
+  return typeof value === 'string' && value in THEME_METADATA
+}
+
+/** Resolves persisted or toolbar values to a selectable product theme. */
+export function resolveThemeName(value: unknown): ThemeName {
+  return isThemeName(value) ? value : DEFAULT_THEME
+}
+
 export const SEMANTIC_COLOR_ROLES = {
   surfaces: ['--ds-surface-canvas', '--ds-surface-raised', '--ds-surface-sunken', '--ds-surface-overlay'],
   content: ['--ds-content-primary', '--ds-content-secondary', '--ds-content-inverse', '--ds-content-link'],

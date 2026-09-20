@@ -3,7 +3,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
 import {useTranslation} from 'react-i18next'
-import {useAppLanguage} from './hooks'
+import {ThemeProvider, useAppLanguage} from './hooks'
 import {SWRConfig} from 'swr'
 import {SWR_POLLING_DEFAULTS} from './config/swrDefaults'
 import {apiClient} from './lib/api'
@@ -328,12 +328,14 @@ function App() {
           ...SWR_POLLING_DEFAULTS,
         }}
       >
-        <AuthProvider>
-          <JamProvider>
-            <AppContent />
-            <OnboardingWrapper />
-          </JamProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <JamProvider>
+              <AppContent />
+              <OnboardingWrapper />
+            </JamProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </SWRConfig>
       <SpeedInsights />
       <Analytics/>

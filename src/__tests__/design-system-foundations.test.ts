@@ -5,9 +5,11 @@ import {
   CONTROL_SIZES,
   REFERENCE_THEMES,
   SELECTABLE_THEMES,
+  THEME_METADATA,
   SEMANTIC_COLOR_ROLES,
   SPACING,
   contrastRatio,
+  resolveThemeName,
   type ReferenceThemeName,
 } from '../design-system/foundations'
 
@@ -41,6 +43,23 @@ describe('design-system foundations', () => {
     expect(SELECTABLE_THEMES).toContain('dark')
     expect(foundationCss).toContain('name: "jam-light"')
     expect(foundationCss).toContain('name: "jam-dark"')
+  })
+
+  it('gives every selectable theme an explicit surrounding-surface brand treatment', () => {
+    expect(Object.keys(THEME_METADATA)).toEqual([...SELECTABLE_THEMES])
+
+    for (const theme of SELECTABLE_THEMES) {
+      expect(THEME_METADATA[theme].brandSurface).toMatch(/^(light|dark)$/)
+    }
+
+    expect(THEME_METADATA['jam-light'].brandSurface).toBe('light')
+    expect(THEME_METADATA['jam-dark'].brandSurface).toBe('dark')
+  })
+
+  it('validates persisted theme names with the documented dark fallback', () => {
+    expect(resolveThemeName('jam-light')).toBe('jam-light')
+    expect(resolveThemeName('stale-theme')).toBe('dark')
+    expect(resolveThemeName(null)).toBe('dark')
   })
 
   it.each(Object.entries(REFERENCE_THEMES) as [ReferenceThemeName, (typeof REFERENCE_THEMES)[ReferenceThemeName]][])(
