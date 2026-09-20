@@ -12,33 +12,33 @@
   },
   "stories": {
     "files": 36,
-    "total": 203,
-    "playCoverage": 133,
+    "total": 204,
+    "playCoverage": 135,
     "reachableCatalogueComponents": 122,
-    "visualCandidates": 203,
+    "visualCandidates": 204,
     "visualCells": 32
   },
   "interactions": {
-    "total": 133,
-    "pass": 125,
-    "fail": 8,
+    "total": 135,
+    "pass": 121,
+    "fail": 14,
     "unhandled": 0,
     "evidence": "workbench-json-results"
   },
   "accessibility": {
-    "strict": 124,
-    "todo": 79,
+    "strict": 136,
+    "todo": 68,
     "reviewedDebt": 4,
-    "reports": 116,
-    "missingEvidence": 8,
+    "reports": 121,
+    "missingEvidence": 15,
     "newViolations": 0
   },
   "visual": {
     "baselines": 32,
-    "pass": 25,
-    "change": 7,
+    "pass": 6,
+    "change": 26,
     "missing": 0,
-    "failure": 7,
+    "failure": 26,
     "themes": [
       "jam-dark",
       "jam-light"
