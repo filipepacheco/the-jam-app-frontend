@@ -1,0 +1,15 @@
+{
+  "renderer": "Chromium 140.0.7339.186",
+  "sourceRegion": {
+    "x": 480,
+    "y": 397,
+    "width": 572,
+    "height": 238
+  },
+  "comparison": "Monochrome thresholded silhouette at source size; palette fills excluded.",
+  "sourceInkPixels": 45464,
+  "intersectionOverUnion": 0.9960682671821117,
+  "differentThresholdPixels": 179,
+  "totalPixels": 136136,
+  "approval": "Automated fidelity measurement only; does not replace human SVG approval."
+}

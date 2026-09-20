@@ -4,6 +4,8 @@
  */
 
 export { Alert } from './Alert'
+export { BrandLogo } from './BrandLogo'
+export type { BrandLogoProps, BrandLogoSize, BrandLogoSurface, BrandLogoVariant } from './BrandLogo'
 export { FullPageSpinner } from './FullPageSpinner'
 export { PageAlerts } from './PageAlerts'
 export { Modal } from './Modal'

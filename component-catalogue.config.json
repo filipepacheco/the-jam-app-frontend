@@ -41,7 +41,8 @@
     {"source": "src/workbench/stories/Foundations/TypographySpacingResponsive.stories.tsx", "reason": "Private Storybook composition demonstrating typography, spacing, sizing, and responsive foundations; not product UI itself."},
     {"source": "src/workbench/stories/Foundations/InteractionAccessibilityContent.stories.tsx", "reason": "Private Storybook composition demonstrating interaction, accessibility, motion, and multilingual content standards; not product UI itself."},
     {"source": "src/workbench/stories/Foundations/ActionControls.stories.tsx", "reason": "Private Storybook composition demonstrating the canonical action-control family; not product UI itself."},
-    {"source": "src/workbench/stories/Foundations/FieldControls.stories.tsx", "reason": "Private Storybook composition demonstrating the canonical field family; not product UI itself."}
+    {"source": "src/workbench/stories/Foundations/FieldControls.stories.tsx", "reason": "Private Storybook composition demonstrating the canonical field family; not product UI itself."},
+    {"source": "src/workbench/stories/Foundations/BrandLogo.stories.tsx", "reason": "Private Storybook composition for the candidate BrandLogo component; not product UI itself."}
   ],
   "output": {
     "json": "docs/design-system/component-catalogue.json",
