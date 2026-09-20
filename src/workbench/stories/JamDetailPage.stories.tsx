@@ -95,6 +95,7 @@ export const LoadedParticipation: Story = {
     const locationWidth = location.getBoundingClientRect().width
     const locationRowWidth = location.parentElement?.getBoundingClientRect().width ?? 0
     await expect(Math.abs(locationRowWidth - locationWidth)).toBeLessThan(2)
+    await expect(location.parentElement).toHaveClass('jam-detail-location')
     await expect(location.compareDocumentPosition(howItWorksTrigger) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(howItWorksTrigger.compareDocumentPosition(schedule) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(title.compareDocumentPosition(schedule) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()

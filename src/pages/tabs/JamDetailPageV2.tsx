@@ -36,6 +36,7 @@ import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from 
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
 import {formatJamDuration} from '../../lib/formatters'
 import {MapPin, Calendar, Share2, ArrowLeft, Music, Users, Clock3, CircleHelp} from 'lucide-react'
+import './JamDetailPageV2.css'
 
 export type JamDetailViewState =
     | {status: 'loaded'; jam: JamResponseDto}
@@ -412,7 +413,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         {jam.location && (
                             <DropdownMenu
                                 label={t('jams.info.full_address')}
-                                className="flex w-full [&>.ds-dropdown__trigger]:w-full [&>.ds-dropdown__trigger]:justify-start [&>.ds-dropdown__trigger]:border-0 [&>.ds-dropdown__trigger]:bg-transparent [&>.ds-dropdown__trigger]:px-0"
+                                className="jam-detail-location"
                                 trigger={
                                     <span className="inline-flex min-w-0 items-center gap-1.5 text-base-content/70">
                                         <MapPin className="size-4 shrink-0" aria-hidden="true" />
