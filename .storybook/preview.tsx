@@ -18,6 +18,7 @@ import { workbenchRequestHandlers } from '../src/workbench/mocks'
 import { installReducedMotionPreference } from '../src/workbench/reducedMotion'
 import { setSharedTheme, ThemeProvider, useTheme } from '../src/hooks'
 import { resolveThemeName } from '../src/design-system/foundations'
+import {ToastProvider} from '../src/components/Toast'
 import '../src/workbench/workbench.css'
 
 interface ReviewViewportSyncProps {
@@ -185,9 +186,11 @@ const preview: Preview = {
             <MemoryRouter initialEntries={[route]} key={route}>
               <I18nextProvider i18n={storyI18n}>
                 <AuthContext.Provider value={createAuthFixture(authRole)}>
-                  <div lang={locale} data-theme={theme} data-workbench-root className="min-h-screen bg-base-100 p-4 text-base-content">
-                    <Story />
-                  </div>
+                  <ToastProvider>
+                    <div lang={locale} data-theme={theme} data-workbench-root className="min-h-screen bg-base-100 p-4 text-base-content">
+                      <Story />
+                    </div>
+                  </ToastProvider>
                 </AuthContext.Provider>
               </I18nextProvider>
             </MemoryRouter>

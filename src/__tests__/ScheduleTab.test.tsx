@@ -5,6 +5,7 @@ import {describe, expect, it, vi} from 'vitest'
 import type {JamResponseDto} from '../types/api.types'
 import {ScheduleTab} from '../pages/tabs/ScheduleTab'
 import {musicService} from '../services'
+import {ToastProvider} from '../components/Toast'
 
 vi.mock('react-i18next', () => ({
     useTranslation: () => ({t: (key: string) => key}),
@@ -72,7 +73,9 @@ describe('ScheduleTab', () => {
 
             const {unmount} = render(
                 <MemoryRouter>
-                    <ScheduleTab jam={jamWithSchedules} onReload={vi.fn()}/>
+                    <ToastProvider>
+                        <ScheduleTab jam={jamWithSchedules} onReload={vi.fn()}/>
+                    </ToastProvider>
                 </MemoryRouter>,
             )
 
@@ -99,7 +102,9 @@ describe('ScheduleTab', () => {
 
         render(
             <MemoryRouter>
-                <ScheduleTab jam={jamWithSchedules} onReload={vi.fn()}/>
+                <ToastProvider>
+                    <ScheduleTab jam={jamWithSchedules} onReload={vi.fn()}/>
+                </ToastProvider>
             </MemoryRouter>,
         )
 
@@ -119,7 +124,9 @@ describe('ScheduleTab', () => {
 
         render(
             <MemoryRouter>
-                <ScheduleTab jam={jam} onReload={vi.fn()}/>
+                <ToastProvider>
+                    <ScheduleTab jam={jam} onReload={vi.fn()}/>
+                </ToastProvider>
             </MemoryRouter>,
         )
 

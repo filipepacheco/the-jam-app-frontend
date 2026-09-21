@@ -1,7 +1,7 @@
 import type {JamResponseDto, ScheduleResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect, useState} from "react";
-import {Action, Alert, ConfirmDialog, EmptyState, Field, IconAction, Modal, ModalFooter, MusicModal} from '../../components';
+import {Action, Alert, ConfirmDialog, EmptyState, Field, IconAction, Modal, ModalFooter, MusicModal, useToast} from '../../components';
 import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCollapsibleCard} from "../../components/schedule/ScheduleCollapsibleCard";
 import {MusicianProfileModal} from "../../components/MusicianProfileModal";
@@ -21,6 +21,7 @@ export function ScheduleTab({jam, onReload}: {
 }) {
     const {t} = useTranslation()
     const navigate = useNavigate()
+    const {showToast} = useToast()
     const [error, setError] = useState<string | null>(null)
     const [showAddModal, setShowAddModal] = useState(false)
     const [showCreateMusicModal, setShowCreateMusicModal] = useState(false)
@@ -28,7 +29,6 @@ export function ScheduleTab({jam, onReload}: {
     const [showHostRegistrationModal, setShowHostRegistrationModal] = useState(false)
     const [selectedScheduleForRegistration, setSelectedScheduleForRegistration] = useState<ScheduleResponseDto | null>(null)
     const [selectedMusicianId, setSelectedMusicianId] = useState<string | null>(null)
-    const [success, setSuccess] = useState<string | null>(null)
     const [rowFeedback, setRowFeedback] = useState<Record<string, {type: 'error' | 'success'; message: string}>>({})
     const {state: scheduleState, commands: scheduleCommands} = useHostScheduleController(jam, onReload)
     const {
@@ -83,7 +83,7 @@ export function ScheduleTab({jam, onReload}: {
         }
 
         if (outcome.code === 'success') {
-            if (!report('success', successMessage)) setSuccess(successMessage)
+            if (!report('success', successMessage)) showToast({message: successMessage})
             return true
         }
         if (outcome.code === 'partial_success' || outcome.code === 'bulk_failure') {
@@ -101,7 +101,7 @@ export function ScheduleTab({jam, onReload}: {
         }
         if (outcome.code === 'duplicate_pending' && !report('error', fallbackError)) setError(fallbackError)
         return false
-    }, [sortedSchedules, t])
+    }, [showToast, sortedSchedules, t])
 
     // Load the searchable music catalog when the add-entry modal opens.
     useEffect(() => {
@@ -308,7 +308,6 @@ export function ScheduleTab({jam, onReload}: {
         <div className="space-y-3">
             {/* Alerts */}
             <Alert type="error" message={error} onDismiss={() => setError(null)} />
-            <Alert type="success" message={success} onDismiss={() => setSuccess(null)} autoHide autoHideDelay={3000} />
 
             {sortedSchedules.length > 0 && sortedSchedules.length <= 3 && (
                 <div className="flex justify-end">
@@ -461,7 +460,7 @@ export function ScheduleTab({jam, onReload}: {
                             setSelectedScheduleForRegistration(null)
                         }
                         if (outcome.kind !== 'failure') {
-                            setSuccess(t('jam_management.schedule.musicians_registered'))
+                            showToast({message: t('jam_management.schedule.musicians_registered')})
                         }
                         if (outcome.kind !== 'failure' || outcome.refreshRequired) void onReload()
                     }}
@@ -562,7 +561,9 @@ export function ScheduleTab({jam, onReload}: {
                         setShowAddModal(true)
                     }}
                     setError={setError}
-                    setSuccess={setSuccess}
+                    setSuccess={(message) => {
+                        if (message) showToast({message})
+                    }}
                 />
             )}
 

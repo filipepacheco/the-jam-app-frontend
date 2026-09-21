@@ -24,7 +24,7 @@ import {SlugRedirect} from './pages/SlugRedirect'
 import {PublicDashboardPage} from './pages/PublicDashboardPage'
 import AuthCallbackPage from "./pages/tabs/AuthCallbackPage.tsx"
 import {AuthProvider, JamProvider} from './contexts'
-import {FullPageSpinner, OnboardingModal} from './components'
+import {FullPageSpinner, OnboardingModal, ToastProvider} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {useAuth} from './hooks'
 import {NotFoundPage} from './pages/NotFoundPage'
@@ -329,8 +329,10 @@ function App() {
         <ThemeProvider>
           <AuthProvider>
             <JamProvider>
-              <AppContent />
-              <OnboardingWrapper />
+              <ToastProvider>
+                <AppContent />
+                <OnboardingWrapper />
+              </ToastProvider>
             </JamProvider>
           </AuthProvider>
         </ThemeProvider>

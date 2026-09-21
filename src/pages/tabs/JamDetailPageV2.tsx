@@ -7,7 +7,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {SITE_URL} from '../../lib/api'
 import {useAuth, useJamParticipationController} from '../../hooks'
 import useSWR from 'swr'
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
@@ -18,7 +18,7 @@ import {
     DropdownMenu,
     IconAction,
     ScheduleEnrollmentModal,
-    Status,
+    useToast,
 } from '../../components'
 import {ShareModal} from '../../components/ShareModal'
 import {SpotifyLogo} from '../../components/SpotifyPreview'
@@ -54,6 +54,7 @@ const JAM_DETAIL_CONTAINER_CLASS = 'mx-auto w-full max-w-4xl px-4 sm:px-6'
 
 export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV2Props = {}) {
     const {t, i18n} = useTranslation()
+    const {showToast} = useToast()
     const {jamId} = useParams<{ jamId: string }>()
     const navigate = useNavigate()
     const {isAuthenticated, user} = useAuth()
@@ -82,6 +83,16 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
         user?.id ?? null,
         reloadJam,
     )
+
+    useEffect(() => {
+        if (!participation.feedback) return
+        const message = participation.feedback === 'registration_success'
+            ? t('jams.enroll_success')
+            : participation.feedback === 'new_music_success'
+                ? t('jams.song_created_success')
+                : t('jams.suggest_success')
+        showToast({message})
+    }, [participation.feedback, showToast, t])
 
     // State for suggested songs section collapse
     const [isSuggestedExpanded, setIsSuggestedExpanded] = useState(true)
@@ -282,27 +293,6 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 ogType="website"
                 jsonLd={jamJsonLd}
             />
-            {/* Success Alerts */}
-            {participation.feedback === 'registration_success' && (
-                <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
-                    <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-3`} data-jam-detail-container>
-                        <Status tone="info" role="alert" title={t('jams.enroll_success')} />
-                    </div>
-                </div>
-            )}
-
-            {(participation.feedback === 'suggestion_success' || participation.feedback === 'new_music_success') && (
-                <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
-                    <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-3`} data-jam-detail-container>
-                        <Status
-                            tone="success"
-                            role="alert"
-                            title={participation.feedback === 'new_music_success' ? t('jams.song_created_success') : t('jams.suggest_success')}
-                        />
-                    </div>
-                </div>
-            )}
-
             {/* Header - compact: title + meta on one line, details muted below */}
             <div className="bg-base-200 border-b border-base-300">
                 <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-4 sm:py-5`} data-jam-detail-container>

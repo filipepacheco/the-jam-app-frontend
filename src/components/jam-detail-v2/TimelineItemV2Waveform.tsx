@@ -140,16 +140,7 @@ export function TimelineItemV2Waveform({
           </div>
           {/* Status + meta - right column */}
           <div className="col-start-2 flex items-center justify-between gap-2 text-left sm:col-start-auto sm:justify-end sm:text-right">
-            {isReadyToPlay && status ? (
-              <span
-                className={`inline-flex text-xs font-semibold sm:text-sm ${status.color}`}
-                role="img"
-                aria-label={status.text}
-                title={status.hint}
-              >
-                <span aria-hidden="true">{status.icon}</span>
-              </span>
-            ) : status ? (
+            {status ? (
               <div className={`text-xs sm:text-sm font-semibold ${status.color}`} title={status.hint || undefined}>
                 <span className={`${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse will-change-transform' : ''}`} aria-hidden="true">{status.icon}</span>
                 <span className="whitespace-nowrap"> {status.text}</span>
@@ -219,11 +210,11 @@ export function TimelineItemV2Waveform({
               <p className="text-xs text-base-content/50">{t('common.no_registrations_yet')}</p>
             )}
 
-            {!isCompleted && !isInProgress && (
+            {!isCompleted && !isInProgress && (hasNoRequirements || availableOptions.length > 0) && (
               <div className="border-t border-base-content/10 pt-2">
                 {hasNoRequirements ? (
                   <p className="text-xs text-base-content/60">{t('schedule.any_instrument_welcome')}</p>
-                ) : availableOptions.length > 0 ? (
+                ) : (
                   <>
                     <p className="mb-1.5 text-xs text-base-content/50">{t('schedule.instruments_needed')}</p>
                     <div className="flex flex-wrap gap-1.5">
@@ -239,11 +230,6 @@ export function TimelineItemV2Waveform({
                       ))}
                     </div>
                   </>
-                ) : (
-                  <p className="inline-flex items-center gap-1 text-xs font-semibold text-success">
-                    <span aria-hidden="true">✓</span>
-                    {t('schedule.statuses.ready_to_play')}
-                  </p>
                 )}
               </div>
             )}
