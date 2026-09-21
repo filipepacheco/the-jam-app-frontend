@@ -1,7 +1,7 @@
 import { act, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
-import { ThemeProvider, useTheme } from '../hooks/useTheme'
+import { setSharedTheme, ThemeProvider, useTheme } from '../hooks/useTheme'
 
 function ThemeSelector() {
   const [theme, setTheme] = useTheme()
@@ -37,7 +37,7 @@ describe('useTheme', () => {
 
     expect(screen.getByRole('status', { name: 'selected theme' })).toHaveTextContent('jam-light')
     expect(document.documentElement).toHaveAttribute('data-theme', 'jam-light')
-    expect(window.localStorage.getItem('theme')).toBe('jam-light')
+    expect(window.localStorage.getItem('jam-app.theme')).toBe('jam-light')
   })
 
   it('lets a workbench theme global drive the same hook state without replacing a saved preference', () => {
@@ -58,10 +58,22 @@ describe('useTheme', () => {
     render(<ThemeSelector />)
 
     act(() => {
-      window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: 'retired-theme' }))
+      window.dispatchEvent(new StorageEvent('storage', { key: 'jam-app.theme', newValue: 'retired-theme' }))
     })
 
     expect(screen.getByRole('status', { name: 'selected theme' })).toHaveTextContent('dark')
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+  })
+
+  it('does not let writes to the legacy generic storage key override the selected theme', () => {
+    render(<ThemeSelector />)
+    act(() => setSharedTheme('jam-light'))
+
+    act(() => {
+      window.dispatchEvent(new StorageEvent('storage', { key: 'theme', newValue: 'jam-dark' }))
+    })
+
+    expect(screen.getByRole('status', { name: 'selected theme' })).toHaveTextContent('jam-light')
+    expect(document.documentElement).toHaveAttribute('data-theme', 'jam-light')
   })
 })

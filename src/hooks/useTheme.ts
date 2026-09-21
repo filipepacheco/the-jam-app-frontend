@@ -1,7 +1,8 @@
 import { type ReactNode, useEffect, useLayoutEffect, useSyncExternalStore } from 'react'
 import { DEFAULT_THEME, resolveThemeName, type ThemeName } from '../design-system/foundations'
 
-const THEME_KEY = 'theme'
+const THEME_KEY = 'jam-app.theme'
+const LEGACY_THEME_KEY = 'theme'
 
 type ThemeListener = () => void
 
@@ -11,7 +12,13 @@ let isListeningForStorage = false
 
 function readStoredTheme(): ThemeName {
   try {
-    return resolveThemeName(window.localStorage.getItem(THEME_KEY))
+    const storedTheme = window.localStorage.getItem(THEME_KEY)
+    if (storedTheme !== null) return resolveThemeName(storedTheme)
+
+    const legacyTheme = window.localStorage.getItem(LEGACY_THEME_KEY)
+    const resolvedTheme = resolveThemeName(legacyTheme)
+    if (legacyTheme !== null) window.localStorage.setItem(THEME_KEY, resolvedTheme)
+    return resolvedTheme
   } catch {
     return DEFAULT_THEME
   }
