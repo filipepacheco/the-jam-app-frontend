@@ -108,7 +108,7 @@ function HomePage() {
       operatingSystem: 'Any',
       browserRequirements: 'Requires JavaScript',
       inLanguage: ['pt-BR', 'en', 'es'],
-      image: `${siteUrl}/og-image.jpg`,
+      image: `${siteUrl}/brand/v1/social-1200x630.png`,
       offers: {
         '@type': 'Offer',
         price: '0',
@@ -134,9 +134,7 @@ function HomePage() {
       url: siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/web/icons8-concert-color-512.png`,
-        width: 512,
-        height: 512,
+        url: `${siteUrl}/brand/v1/logo.svg`,
       },
     },
   ], [t, siteUrl, currentLang])
@@ -147,7 +145,7 @@ function HomePage() {
         title={t('seo.homepage.title')}
         description={t('seo.homepage.description_enhanced')}
         keywords={t('seo.homepage.keywords')}
-        ogImage="/og-image.jpg"
+        ogImage="/brand/v1/social-1200x630.png"
         jsonLd={homeJsonLd}
       />
       <div className="min-h-screen">

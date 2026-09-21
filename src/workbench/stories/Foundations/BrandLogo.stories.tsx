@@ -8,8 +8,9 @@ const surfaces: readonly BrandLogoSurface[] = ['light', 'dark']
 const sizes: readonly BrandLogoSize[] = ['xs', 'sm', 'md', 'lg']
 
 const meta = {
-  title: 'Foundations/Brand logo candidate',
+  title: 'Foundations/Brand identity',
   component: BrandLogo,
+  args: { surface: 'light' },
   parameters: {
     a11y: { test: 'error' },
     layout: 'fullscreen',

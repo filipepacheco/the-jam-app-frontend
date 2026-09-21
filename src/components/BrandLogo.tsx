@@ -1,9 +1,9 @@
 import type { CSSProperties } from 'react'
-import brandMasterCandidate from '../../brand/together-warm/brand-master.trace.svg?raw'
-import symbolDarkCandidate from '../../brand/together-warm/symbol-dark.trace.svg?raw'
-import symbolLightCandidate from '../../brand/together-warm/symbol-light.trace.svg?raw'
+import brandMaster from '../../brand/jam-hybrid-v1/brand-master.svg?raw'
+import symbolDark from '../../brand/jam-hybrid-v1/symbol-dark.svg?raw'
+import symbolLight from '../../brand/jam-hybrid-v1/symbol-light.svg?raw'
 
-/** The two compositions that are allowed to consume the Together candidate. */
+/** The two compositions that are allowed to consume the Jam App hybrid identity. */
 export type BrandLogoVariant = 'lockup' | 'symbol'
 
 /** The surrounding surface determines the fixed, approved brand treatment. */
@@ -14,7 +14,7 @@ export type BrandLogoSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface BrandLogoProps {
   variant?: BrandLogoVariant
-  surface?: BrandLogoSurface
+  surface: BrandLogoSurface
   size?: BrandLogoSize
   className?: string
 }
@@ -53,14 +53,14 @@ function prepareArtwork(source: string): string {
 
 function getArtwork(variant: BrandLogoVariant, surface: BrandLogoSurface): string {
   if (variant === 'lockup') {
-    return prepareArtwork(surface === 'dark' ? withDarkLockupTreatment(brandMasterCandidate) : brandMasterCandidate)
+    return prepareArtwork(surface === 'dark' ? withDarkLockupTreatment(brandMaster) : brandMaster)
   }
 
-  return prepareArtwork(surface === 'dark' ? symbolDarkCandidate : symbolLightCandidate)
+  return prepareArtwork(surface === 'dark' ? symbolDark : symbolLight)
 }
 
 /**
- * Candidate-only Together/Warm artwork.
+ * Jam App hybrid identity: the Together symbol paired with the custom vector wordmark.
  *
  * This component intentionally owns no accessible name: interactive consumers
  * must provide the single product name on their link or button. The dimensions
@@ -69,7 +69,7 @@ function getArtwork(variant: BrandLogoVariant, surface: BrandLogoSurface): strin
 export function BrandLogo({
   className = '',
   size = 'md',
-  surface = 'light',
+  surface,
   variant = 'lockup',
 }: BrandLogoProps) {
   const dimensions = DIMENSIONS[variant][size]

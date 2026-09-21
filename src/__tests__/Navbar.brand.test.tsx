@@ -29,7 +29,7 @@ afterEach(() => {
 })
 
 describe('Navbar brand home link', () => {
-  it('exposes one presentational Together/Warm lockup through the native Jam App home link', () => {
+  it('exposes one presentational hybrid brand lockup through the native Jam App home link', () => {
     renderNavbar('jam-light')
 
     const homeLink = screen.getByRole('link', { name: 'Jam App' })

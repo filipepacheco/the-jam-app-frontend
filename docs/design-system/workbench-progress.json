@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "inventory": {
-    "discovered": 184,
-    "represented": 138,
-    "ignored": 39,
+    "discovered": 185,
+    "represented": 139,
+    "ignored": 40,
     "lifecycle": {
-      "active": 169,
+      "active": 170,
       "legacy": 2,
       "uncertain": 13
     }
@@ -14,7 +14,7 @@
     "files": 36,
     "total": 204,
     "playCoverage": 135,
-    "reachableCatalogueComponents": 122,
+    "reachableCatalogueComponents": 123,
     "visualCandidates": 204,
     "visualCells": 32
   },
@@ -69,7 +69,7 @@
     "not-applicable": {
       "unspecified": 6
     },
-    "notRecorded": 146,
+    "notRecorded": 147,
     "inlinePatternCandidates": {
       "action": 1,
       "badge": 1,

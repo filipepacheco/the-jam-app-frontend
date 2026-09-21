@@ -3604,7 +3604,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Navbar and its local NavLink are reviewed in Navigation/Application navigation across guest and host routes. The mobile composition also covers keyboard dismissal and focus restoration."
+          "Navbar resolves typed selected-theme metadata to the approved hybrid BrandLogo treatment. Navigation/Application navigation contains strict accessible-name, keyboard-focus, native-href, locale, measured 320px collision evidence, and human approval recorded on 2026-09-20."
         ]
       }
     },
@@ -3655,7 +3655,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Navbar and its local NavLink are reviewed in Navigation/Application navigation across guest and host routes. The mobile composition also covers keyboard dismissal and focus restoration."
+          "Navbar resolves typed selected-theme metadata to the approved hybrid BrandLogo treatment. Navigation/Application navigation contains strict accessible-name, keyboard-focus, native-href, locale, measured 320px collision evidence, and human approval recorded on 2026-09-20."
         ]
       }
     },
@@ -12363,7 +12363,71 @@
           "family": "action"
         }
       }
-    }
+    },
+    {
+      "id": "ui.0199",
+      "name": "BrandLogo",
+      "source": "src/components/BrandLogo.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "BrandLogo",
+          "module": "src/components/BrandLogo.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "BrandLogo",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/Navbar.tsx",
+        "src/workbench/stories/Foundations/BrandLogo.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Foundations/BrandLogo.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "lockup",
+          "symbol",
+          "light surface",
+          "dark surface",
+          "reserved dimensions",
+          "presentational artwork"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "The approved hybrid identity pairs the original #2 Together symbol with the custom #3 vector wordmark in the Warm palette. Foundations/Brand identity reviews both compositions and surface treatments; human fidelity approval was recorded on 2026-09-20."
+        ]
+      }
+     }
   ],
   "retiredComponents": [
     {
@@ -13065,7 +13129,7 @@
         {
           "id": "inline.ui.0136.action.00184941bb64",
           "source": "src/pages/AboutPage.tsx",
-          "line": 184,
+          "line": 182,
           "column": 15,
           "ownerComponentId": "ui.0136",
           "tag": "Link",
@@ -13078,7 +13142,7 @@
         {
           "id": "inline.ui.0136.action.8a7990fbd69f",
           "source": "src/pages/AboutPage.tsx",
-          "line": 160,
+          "line": 158,
           "column": 13,
           "ownerComponentId": "ui.0136",
           "tag": "a",
@@ -13092,7 +13156,7 @@
         {
           "id": "inline.ui.0136.action.96a334eb6eb0",
           "source": "src/pages/AboutPage.tsx",
-          "line": 181,
+          "line": 179,
           "column": 15,
           "ownerComponentId": "ui.0136",
           "tag": "Link",

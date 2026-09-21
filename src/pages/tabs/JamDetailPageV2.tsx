@@ -246,7 +246,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 ? { '@type': 'Place', name: jam.location }
                 : { '@type': 'VirtualLocation', url: canonicalUrl },
             url: canonicalUrl,
-            image: `${siteUrl}/og-image.jpg`,
+            image: `${siteUrl}/brand/v1/social-1200x630.png`,
             eventStatus: eventStatusMap[jam.status] || 'https://schema.org/EventScheduled',
             eventAttendanceMode: jam.location
                 ? 'https://schema.org/OfflineEventAttendanceMode'
