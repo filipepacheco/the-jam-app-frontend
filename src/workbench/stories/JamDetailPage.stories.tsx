@@ -140,6 +140,7 @@ export const ReviewInstrumentChoice: Story = {
   },
   play: async ({canvas}) => {
     await expect(canvas.getByRole('button', {name: /guitarr/i})).toHaveAttribute('aria-pressed', 'true')
+    await expect(canvas.queryByText(/necessári/i)).not.toBeInTheDocument()
     await expect(canvas.queryByText(/vagas restantes/i)).toBeNull()
   },
 }

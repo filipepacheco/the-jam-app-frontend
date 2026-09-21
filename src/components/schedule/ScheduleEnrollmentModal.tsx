@@ -122,13 +122,11 @@ export function ScheduleEnrollmentModal({
               const isFull = !isUnlimited && remaining <= 0
               const isAlreadyRegistered = registeredInstruments.has(option.key)
               const isUnavailable = isFull || isAlreadyRegistered
-              const detail = isAlreadyRegistered
+              const unavailableReason = isAlreadyRegistered
                 ? t('schedule.already_registered')
                 : isFull
                   ? t('schedule.full_parentheses')
-                  : isUnlimited
-                    ? t('schedule.any_instrument_welcome')
-                    : t('schedule.needed_count_parentheses', {count: remaining})
+                  : null
 
               return (
                 <Action
@@ -138,12 +136,16 @@ export function ScheduleEnrollmentModal({
                   state={isUnavailable || enrollLoading ? 'disabled' : 'idle'}
                   aria-pressed={selectedInstrument === option.key}
                   onClick={() => setSelectedInstrument(option.key)}
-                  className="min-w-0 justify-start px-2 text-left"
+                  className="min-h-12 min-w-0 justify-start px-3 py-2.5 text-left"
                 >
-                  <span className="flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-                    <span aria-hidden="true">{option.emoji}</span>
-                    <span className="font-semibold">{option.label}</span>
-                    <span className="text-[11px] opacity-75">{detail}</span>
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span aria-hidden="true" className="shrink-0">{option.emoji}</span>
+                    <span className="min-w-0 leading-tight">
+                      <span className="block font-semibold">{option.label}</span>
+                      {unavailableReason ? (
+                        <span className="mt-0.5 block text-xs opacity-75">{unavailableReason}</span>
+                      ) : null}
+                    </span>
                   </span>
                 </Action>
               )
