@@ -14129,7 +14129,7 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0044.card.0c32573fb5e9",
+          "id": "inline.ui.0044.card.d104ee6fa61d",
           "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
           "line": 109,
           "column": 5,
@@ -14138,6 +14138,8 @@
           "staticClassTokens": [
             "card",
             "duration-300",
+            "overflow-hidden",
+            "rounded-box",
             "text-left",
             "transition-shadow",
             "w-full"
@@ -14636,7 +14638,7 @@
         {
           "id": "inline.ui.0163.card.6aa26321762f",
           "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 420,
+          "line": 425,
           "column": 17,
           "ownerComponentId": "ui.0163",
           "tag": "EmptyState",

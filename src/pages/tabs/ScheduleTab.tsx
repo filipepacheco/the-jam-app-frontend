@@ -331,19 +331,24 @@ export function ScheduleTab({jam, onReload}: {
                 <div className="space-y-2">
                     <div className="flex items-end gap-2">
                         <div className="flex min-w-0 flex-1 items-end gap-2">
-                            <Search className="mb-3 size-4 shrink-0 text-base-content/60" aria-hidden="true" />
-                            <Field
-                                id="schedule-search"
-                                label={<span className="sr-only">{t('schedule.search_placeholder')}</span>}
-                                className="min-w-0 flex-1"
-                            >
-                                <Field.Input
-                                    type="search"
-                                    placeholder={t('schedule.search_placeholder')}
-                                    value={rawSearch}
-                                    onChange={(e) => scheduleCommands.setSearch(e.target.value)}
+                            <div className="relative min-w-0 flex-1">
+                                <Search
+                                    className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-base-content/60"
+                                    aria-hidden="true"
                                 />
-                            </Field>
+                                <Field
+                                    id="schedule-search"
+                                    label={<span className="sr-only">{t('schedule.search_placeholder')}</span>}
+                                    className="min-w-0 [&_.ds-field__control]:pl-10"
+                                >
+                                    <Field.Input
+                                        type="search"
+                                        placeholder={t('schedule.search_placeholder')}
+                                        value={rawSearch}
+                                        onChange={(e) => scheduleCommands.setSearch(e.target.value)}
+                                    />
+                                </Field>
+                            </div>
                             {rawSearch && (
                                 <IconAction
                                     variant="quiet"

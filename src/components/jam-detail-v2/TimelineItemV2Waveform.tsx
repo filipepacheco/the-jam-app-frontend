@@ -107,7 +107,7 @@ export function TimelineItemV2Waveform({
 
   return (
     <div
-      className={`card w-full ${finalBg} ${finalBorder} transition-shadow duration-300 text-left ${isInProgress && !prefersReducedMotion ? 'animate-breathe-glow' : ''}`}
+      className={`card w-full overflow-hidden rounded-box ${finalBg} ${finalBorder} transition-shadow duration-300 text-left ${isInProgress && !prefersReducedMotion ? 'animate-breathe-glow' : ''}`}
     >
       <div className="card-body p-3 overflow-hidden">
 
@@ -123,13 +123,13 @@ export function TimelineItemV2Waveform({
             <h3 className="ds-type-ui ds-wrap-user-content font-bold text-base-content mb-0.5">
               {schedule.music?.title}
             </h3>
-            <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto_auto] items-start gap-x-1.5">
-              <p className="ds-wrap-user-content line-clamp-2 min-w-0 text-sm text-base-content/70">
+            <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+              <p className="ds-wrap-user-content min-w-0 text-sm text-base-content/70">
                 {schedule.music?.artist}
+                <span className="ml-1.5 inline-flex align-middle">
+                  <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
+                </span>
               </p>
-              <span className="shrink-0">
-                <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
-              </span>
               {typeof schedule.music?.duration === 'number' && schedule.music.duration > 0 && (
                 <span className="inline-flex items-center gap-1 text-xs tabular-nums text-base-content/55">
                   <Clock3 className="size-3.5" aria-hidden="true" />
@@ -140,12 +140,21 @@ export function TimelineItemV2Waveform({
           </div>
           {/* Status + meta - right column */}
           <div className="col-start-2 flex items-center justify-between gap-2 text-left sm:col-start-auto sm:justify-end sm:text-right">
-            {status && (
+            {isReadyToPlay && status ? (
+              <span
+                className={`inline-flex text-xs font-semibold sm:text-sm ${status.color}`}
+                role="img"
+                aria-label={status.text}
+                title={status.hint}
+              >
+                <span aria-hidden="true">{status.icon}</span>
+              </span>
+            ) : status ? (
               <div className={`text-xs sm:text-sm font-semibold ${status.color}`} title={status.hint || undefined}>
                 <span className={`${isInProgress && userRegistered && !prefersReducedMotion ? 'animate-pulse will-change-transform' : ''}`} aria-hidden="true">{status.icon}</span>
                 <span className="whitespace-nowrap"> {status.text}</span>
               </div>
-            )}
+            ) : null}
             {isExpandable && (
               <IconAction
                 variant="quiet"

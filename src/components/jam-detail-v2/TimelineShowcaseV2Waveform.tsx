@@ -42,7 +42,7 @@ export function TimelineShowcaseV2Waveform({
     if (schedule.status === 'IN_PROGRESS') return `bg-primary border-primary/30 ${prefersReducedMotion ? '' : 'animate-pulse'}`
     if (schedule.status === 'SUGGESTED') return 'bg-info border-info/30'
     // Ready to play (band complete) gets a success dot
-    if (hasCoreBand(schedule)) return 'bg-success/70 border-success/30'
+    if (hasCoreBand(schedule)) return 'bg-success border-success'
     return 'bg-base-300 border-base-300/50'
   }
 
@@ -166,7 +166,7 @@ export function TimelineShowcaseV2Waveform({
               style={!prefersReducedMotion && idx < 8 ? { animationDelay: `${idx * 60}ms` } : undefined}
             >
               {/* Timeline Indicator Column */}
-              <div className="relative flex flex-col items-center shrink-0">
+              <div className="relative mt-2 flex shrink-0 flex-col items-center">
                 <div className={`w-3 h-3 lg:w-3.5 lg:h-3.5 rounded-full border-2 border-base-100 relative z-10 ${getDotStyle(schedule)}`} />
               </div>
 

@@ -186,6 +186,7 @@ export const ParticipantAndAvailabilityStates: Story = {
     await expect(canvas.getAllByText(/sem inscrições ainda/i).length).toBeGreaterThan(0)
     await expect(canvas.getByText(/qualquer instrumento é bem-vindo/i)).toBeVisible()
     await expect(canvas.getAllByText('8:07')).toHaveLength(4)
-    await expect(canvas.getAllByText(/banda completa/i)).toHaveLength(2)
+    await expect(canvas.getAllByText(/banda completa/i)).toHaveLength(1)
+    await expect(canvas.getByRole('img', {name: /banda completa/i})).toBeVisible()
   },
 }

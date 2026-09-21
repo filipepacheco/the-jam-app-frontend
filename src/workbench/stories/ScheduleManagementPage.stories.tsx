@@ -76,7 +76,7 @@ export const SmallScheduleAddPath: Story = {
   },
   parameters: {a11y: {test: 'error'}, msw: {handlers: [musicCatalogueHandler, spotifyTrackHandler]}},
   play: async ({canvas, canvasElement, userEvent}) => {
-    const add = canvas.getByRole('button', {name: /add new song/i})
+    const add = canvas.getByRole('button', {name: /add song/i})
     await expect(add).toBeVisible()
     await userEvent.click(add)
     const documentView = within(canvasElement.ownerDocument.body)
@@ -123,7 +123,7 @@ export const EmptySchedule: Story = {
   },
   play: async ({canvas}) => {
     await expect(canvas.getByRole('heading', {name: /no hay programación aún/i})).toBeVisible()
-    await expect(canvas.getByRole('button', {name: /agregar nueva canción/i})).toBeVisible()
+    await expect(canvas.getByRole('button', {name: /agregar canción/i})).toBeVisible()
   },
 }
 
