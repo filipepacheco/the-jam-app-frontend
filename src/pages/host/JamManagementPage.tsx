@@ -11,7 +11,7 @@ import {SWR_DEFAULTS} from '../../config/swrDefaults'
 import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import type {JamResponseDto} from '../../types/api.types.ts'
-import {Alert, Badge, NavigationTabs, PageAlerts} from '../../components'
+import {Alert, Badge, NavigationTabs, useToast} from '../../components'
 import {SpotifyExportModal} from '../../components'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
@@ -25,6 +25,7 @@ import {RegistrationsTab} from "../tabs/RegistrationsTab.tsx";
 import {OverviewTab} from "../tabs/OverviewTab.tsx";
 
 type TabType = 'overview' | 'registrations' | 'schedule' | 'dashboard' | 'analytics' | 'live' | 'dj-control'
+const JAM_MANAGEMENT_CONTAINER_CLASS = 'mx-auto w-full max-w-6xl px-4 sm:px-6'
 
 // SWR fetcher for jam data
 const jamFetcher = async (id: string): Promise<JamResponseDto> => {
@@ -39,12 +40,13 @@ export function JamManagementPage() {
     const {id: jamId} = useParams<{ id: string }>()
     const [searchParams] = useSearchParams()
     const {isAuthenticated, isLoading: authLoading} = useAuth()
+    const {showToast} = useToast()
 
     // Check for legacy DJ control flag in URL: ?useLegacyDJ=true
     const useLegacyDJ = searchParams.get('useLegacyDJ') === 'true'
 
     const [activeTab, setActiveTab] = useState<TabType>('overview')
-    const {error, setError, clearError, success, setSuccess, clearSuccess} = usePageAlerts()
+    const {error, setError, clearError} = usePageAlerts()
     const [spotifyAccessToken, setSpotifyAccessToken] = useState<string | null>(null)
     const [showExportModal, setShowExportModal] = useState(false)
 
@@ -118,12 +120,27 @@ export function JamManagementPage() {
 
         try {
             await jamService.update(jamId, {status: newStatus})
-            setSuccess(t('jam_management.overview.status_updated', {status: newStatus}))
+            showToast({message: t('jam_management.overview.status_updated', {status: newStatus})})
             await refreshJam()
         } catch (err) {
             const errorMessage = err instanceof Error ? err.message : t('errors.failed_to_execute_action')
             console.error('❌ Error updating jam status:', err)
             setError(errorMessage)
+        }
+    }
+
+    const handleJamUpdate = async (updates: Partial<JamResponseDto>) => {
+        if (!jamId) return
+
+        clearError()
+        try {
+            const result = await jamService.update(jamId, updates)
+            showToast({message: t('create_jam.messages.update_success', {name: result.data.name})})
+            await refreshJam()
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : t('create_jam.messages.save_error')
+            setError(errorMessage)
+            throw err
         }
     }
 
@@ -133,7 +150,7 @@ export function JamManagementPage() {
             <div className="min-h-screen bg-base-100 animate-pulse">
                 {/* Header skeleton */}
                 <div className="bg-base-200 border-b border-base-300">
-                    <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-3 sm:py-4">
+                    <div className={`${JAM_MANAGEMENT_CONTAINER_CLASS} py-3 sm:py-4`}>
                         {/* Breadcrumb skeleton */}
                         <div className="flex items-center gap-2 mb-2">
                             <div className="skeleton h-3 w-20" />
@@ -152,7 +169,7 @@ export function JamManagementPage() {
 
                 {/* Tab bar skeleton */}
                 <div className="border-b border-base-300 bg-base-200">
-                    <div className="container mx-auto max-w-6xl px-2 sm:px-4">
+                    <div className={JAM_MANAGEMENT_CONTAINER_CLASS}>
                         <div className="flex gap-2 py-2">
                             {Array.from({ length: 4 }).map((_, i) => (
                                 <div key={i} className="skeleton h-8 w-24 rounded" />
@@ -162,7 +179,7 @@ export function JamManagementPage() {
                 </div>
 
                 {/* Content area skeleton */}
-                <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8">
+                <div className={`${JAM_MANAGEMENT_CONTAINER_CLASS} py-4 sm:py-8`}>
                     <div className="card bg-base-200">
                         <div className="card-body space-y-4">
                             <div className="skeleton h-6 w-48" />
@@ -181,8 +198,8 @@ export function JamManagementPage() {
     }
 
     if (displayError && !jam) {
-        return (<div className="min-h-screen bg-base-100 px-2 sm:px-4 py-4 sm:py-8">
-                <div className="container mx-auto max-w-6xl">
+        return (<div className="min-h-screen bg-base-100 py-4 sm:py-8">
+                <div className={JAM_MANAGEMENT_CONTAINER_CLASS}>
                     <Alert type="error" message={displayError} title={t('jam_management.error_loading')}/>
                     <button onClick={() => navigate('/host/dashboard')} className="btn btn-primary mt-4">
                         {t('jam_management.back_to_dashboard')}
@@ -212,7 +229,7 @@ export function JamManagementPage() {
     return (<div className="min-h-screen bg-base-100">
             {/* Header */}
             <div className="bg-base-200 border-b border-base-300">
-                <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-3 sm:py-4">
+                <div className={`${JAM_MANAGEMENT_CONTAINER_CLASS} py-3 sm:py-4`}>
                     {/* Breadcrumb */}
                     <div className="text-xs sm:text-sm breadcrumbs mb-2">
                         <ul>
@@ -239,9 +256,10 @@ export function JamManagementPage() {
 
             {/* Tab Navigation */}
             <div className="border-b border-base-300 bg-base-200">
-                <div className="container mx-auto max-w-6xl px-2 sm:px-4">
+                <div className={JAM_MANAGEMENT_CONTAINER_CLASS}>
                     <NavigationTabs
                         aria-label={t('jam_management.manage_title')}
+                        className="jam-management-tabs"
                         items={tabs.map((tab) => ({
                             ...tab,
                             panelId: `tabpanel-${tab.id}`,
@@ -253,12 +271,16 @@ export function JamManagementPage() {
             </div>
 
             {/* Alerts */}
-            <PageAlerts error={displayError} success={success} onDismissError={clearError} onDismissSuccess={clearSuccess} className="container sticky top-0 z-50 mx-auto max-w-6xl px-2 sm:px-4 mt-3 sm:mt-4" />
+            {displayError && (
+                <div className={`${JAM_MANAGEMENT_CONTAINER_CLASS} mt-3 sm:mt-4`}>
+                    <Alert type="error" message={displayError} onDismiss={clearError} />
+                </div>
+            )}
 
             {/* Tab Content */}
-            <div className="container mx-auto max-w-6xl px-2 sm:px-4 py-4 sm:py-8" role="tabpanel" id={`tabpanel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>
+            <div className={`${JAM_MANAGEMENT_CONTAINER_CLASS} py-4 sm:py-8`} role="tabpanel" id={`tabpanel-${activeTab}`} aria-labelledby={`tab-${activeTab}`}>
                 {activeTab === 'overview' && (
-                    <OverviewTab jam={jam} onStatusChange={handleStatusChange} loading={jamLoading}/>)}
+                    <OverviewTab jam={jam} onStatusChange={handleStatusChange} onJamUpdate={handleJamUpdate} loading={jamLoading}/>)}
                 {activeTab === 'registrations' && (<RegistrationsTab jam={jam}/>)}
                 {activeTab === 'schedule' && (<ScheduleTab jam={jam} onReload={() => refreshJam()}/>)}
                 {activeTab === 'dj-control' && (useLegacyDJ ? (

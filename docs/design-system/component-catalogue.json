@@ -2391,8 +2391,8 @@
         "internal": [
           "src/components/Action.tsx",
           "src/components/SpotifyPreview.tsx",
-          "src/components/schedule/InstrumentsSummary.tsx",
           "src/hooks/index.ts",
+          "src/lib/formatters.ts",
           "src/lib/i18n/translationKeys.ts",
           "src/lib/schedule/instrumentHelpers.tsx",
           "src/types/api.types.ts",
@@ -3604,7 +3604,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Navbar and its local NavLink are reviewed in Navigation/Application navigation across guest and host routes. The mobile composition also covers keyboard dismissal and focus restoration."
+          "Navbar resolves typed selected-theme metadata to the approved hybrid BrandLogo treatment. Navigation/Application navigation contains strict accessible-name, keyboard-focus, native-href, locale, measured 320px collision evidence, and human approval recorded on 2026-09-20."
         ]
       }
     },
@@ -3655,7 +3655,7 @@
         ],
         "candidateFamily": null,
         "notes": [
-          "Navbar and its local NavLink are reviewed in Navigation/Application navigation across guest and host routes. The mobile composition also covers keyboard dismissal and focus restoration."
+          "Navbar resolves typed selected-theme metadata to the approved hybrid BrandLogo treatment. Navigation/Application navigation contains strict accessible-name, keyboard-focus, native-href, locale, measured 320px collision evidence, and human approval recorded on 2026-09-20."
         ]
       }
     },
@@ -5974,13 +5974,10 @@
         }
       ],
       "consumers": [
-        "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
         "src/components/schedule/HostMusicianRegistrationModal.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx"
       ],
       "workbenchStories": [
-        "src/workbench/stories/JamDetailPage.stories.tsx",
-        "src/workbench/stories/JamTimeline.stories.tsx",
         "src/workbench/stories/ScheduleManagementPage.stories.tsx",
         "src/workbench/stories/SchedulePrimitives.stories.tsx",
         "src/workbench/stories/ScreenRefinementLiveHostControl.stories.tsx"
@@ -9556,8 +9553,6 @@
         "internal": [
           "src/components/Action.tsx",
           "src/components/index.ts",
-          "src/hooks/index.ts",
-          "src/lib/i18n/applicationLocale.ts",
           "src/types/api.types.ts",
           "src/utils/jamUrl.ts"
         ],
@@ -10561,7 +10556,6 @@
         "src/components/music/MusicDataDisplay.tsx",
         "src/components/schedule/LiveJamControlPanel.tsx",
         "src/components/schedule/RegistrationList.tsx",
-        "src/components/schedule/ScheduleCollapsibleCard.tsx",
         "src/components/schedule/ScheduleStatusBadge.tsx",
         "src/pages/BrowseJamsPage.tsx",
         "src/pages/MusicPage.tsx",
@@ -12369,7 +12363,71 @@
           "family": "action"
         }
       }
-    }
+    },
+    {
+      "id": "ui.0199",
+      "name": "BrandLogo",
+      "source": "src/components/BrandLogo.tsx",
+      "declaration": "function",
+      "visibility": "exported",
+      "exports": [
+        {
+          "kind": "named",
+          "name": "BrandLogo",
+          "module": "src/components/BrandLogo.tsx"
+        },
+        {
+          "kind": "re-export",
+          "name": "BrandLogo",
+          "module": "src/components/index.ts"
+        }
+      ],
+      "consumers": [
+        "src/components/Navbar.tsx",
+        "src/workbench/stories/Foundations/BrandLogo.stories.tsx"
+      ],
+      "workbenchStories": [
+        "src/workbench/stories/Environment.stories.tsx",
+        "src/workbench/stories/Foundations/BrandLogo.stories.tsx",
+        "src/workbench/stories/Navigation/Navbar.stories.tsx",
+        "src/workbench/stories/PageCompositions.stories.tsx"
+      ],
+      "dependencies": {
+        "internal": [],
+        "external": [
+          "react"
+        ],
+        "contexts": []
+      },
+      "metadata": {
+        "category": "product-ui",
+        "layer": "primitive",
+        "lifecycle": "active",
+        "productArea": "shared",
+        "viewportContexts": [
+          "mobile",
+          "desktop"
+        ],
+        "readiness": {
+          "workbench": "ready",
+          "accessibility": "verified",
+          "internationalization": "not-applicable",
+          "theme": "verified"
+        },
+        "uiStates": [
+          "lockup",
+          "symbol",
+          "light surface",
+          "dark surface",
+          "reserved dimensions",
+          "presentational artwork"
+        ],
+        "candidateFamily": null,
+        "notes": [
+          "The approved hybrid identity pairs the original #2 Together symbol with the custom #3 vector wordmark in the Warm palette. Foundations/Brand identity reviews both compositions and surface treatments; human fidelity approval was recorded on 2026-09-20."
+        ]
+      }
+     }
   ],
   "retiredComponents": [
     {
@@ -12839,7 +12897,7 @@
         {
           "id": "inline.ui.0066.action.1ecbc3f500d5",
           "source": "src/components/Navbar.tsx",
-          "line": 124,
+          "line": 125,
           "column": 17,
           "ownerComponentId": "ui.0066",
           "tag": "a",
@@ -12854,7 +12912,7 @@
         {
           "id": "inline.ui.0066.action.68ea9d79c1a1",
           "source": "src/components/Navbar.tsx",
-          "line": 63,
+          "line": 64,
           "column": 9,
           "ownerComponentId": "ui.0066",
           "tag": "a",
@@ -13071,7 +13129,7 @@
         {
           "id": "inline.ui.0136.action.00184941bb64",
           "source": "src/pages/AboutPage.tsx",
-          "line": 184,
+          "line": 182,
           "column": 15,
           "ownerComponentId": "ui.0136",
           "tag": "Link",
@@ -13084,7 +13142,7 @@
         {
           "id": "inline.ui.0136.action.8a7990fbd69f",
           "source": "src/pages/AboutPage.tsx",
-          "line": 160,
+          "line": 158,
           "column": 13,
           "ownerComponentId": "ui.0136",
           "tag": "a",
@@ -13098,7 +13156,7 @@
         {
           "id": "inline.ui.0136.action.96a334eb6eb0",
           "source": "src/pages/AboutPage.tsx",
-          "line": 181,
+          "line": 179,
           "column": 15,
           "ownerComponentId": "ui.0136",
           "tag": "Link",
@@ -13284,7 +13342,7 @@
         {
           "id": "inline.ui.0144.action.929d73ee5132",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 220,
+          "line": 235,
           "column": 33,
           "ownerComponentId": "ui.0144",
           "tag": "button",
@@ -13297,7 +13355,7 @@
         {
           "id": "inline.ui.0144.action.f371bceec7a1",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 187,
+          "line": 202,
           "column": 21,
           "ownerComponentId": "ui.0144",
           "tag": "button",
@@ -13558,7 +13616,7 @@
         {
           "id": "inline.ui.0161.action.430827641e9d",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 112,
+          "line": 200,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "a",
@@ -13573,22 +13631,7 @@
         {
           "id": "inline.ui.0161.action.a2b1847bbf16",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 121,
-          "column": 21,
-          "ownerComponentId": "ui.0161",
-          "tag": "button",
-          "staticClassTokens": [
-            "btn",
-            "btn-ghost",
-            "btn-sm",
-            "gap-2"
-          ],
-          "dynamicClasses": false
-        },
-        {
-          "id": "inline.ui.0161.action.d5afae87e211",
-          "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 105,
+          "line": 209,
           "column": 21,
           "ownerComponentId": "ui.0161",
           "tag": "button",
@@ -13741,6 +13784,21 @@
             "border-0",
             "tabular-nums",
             "text-primary-content"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0044.badge.c44bda91f5bf",
+          "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
+          "line": 202,
+          "column": 25,
+          "ownerComponentId": "ui.0044",
+          "tag": "span",
+          "staticClassTokens": [
+            "badge",
+            "badge-sm",
+            "badge-warning",
+            "gap-1"
           ],
           "dynamicClasses": false
         },
@@ -14071,15 +14129,17 @@
           "dynamicClasses": false
         },
         {
-          "id": "inline.ui.0044.card.0c32573fb5e9",
+          "id": "inline.ui.0044.card.d104ee6fa61d",
           "source": "src/components/jam-detail-v2/TimelineItemV2Waveform.tsx",
-          "line": 100,
+          "line": 109,
           "column": 5,
           "ownerComponentId": "ui.0044",
           "tag": "div",
           "staticClassTokens": [
             "card",
             "duration-300",
+            "overflow-hidden",
+            "rounded-box",
             "text-left",
             "transition-shadow",
             "w-full"
@@ -14224,7 +14284,7 @@
         {
           "id": "inline.ui.0138.card.ca6213990919",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 330,
+          "line": 329,
           "column": 11,
           "ownerComponentId": "ui.0138",
           "tag": "div",
@@ -14238,7 +14298,7 @@
         {
           "id": "inline.ui.0138.card.ca6213990919",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 431,
+          "line": 430,
           "column": 9,
           "ownerComponentId": "ui.0138",
           "tag": "div",
@@ -14300,7 +14360,7 @@
         {
           "id": "inline.ui.0144.card.25817e902f0b",
           "source": "src/pages/host/JamManagementPage.tsx",
-          "line": 166,
+          "line": 181,
           "column": 21,
           "ownerComponentId": "ui.0144",
           "tag": "div",
@@ -14550,7 +14610,7 @@
         {
           "id": "inline.ui.0161.card.05967e332e13",
           "source": "src/pages/tabs/OverviewTab.tsx",
-          "line": 147,
+          "line": 236,
           "column": 17,
           "ownerComponentId": "ui.0161",
           "tag": "div",
@@ -14578,7 +14638,7 @@
         {
           "id": "inline.ui.0163.card.6aa26321762f",
           "source": "src/pages/tabs/ScheduleTab.tsx",
-          "line": 420,
+          "line": 425,
           "column": 17,
           "ownerComponentId": "ui.0163",
           "tag": "EmptyState",
@@ -14874,7 +14934,7 @@
         {
           "id": "inline.ui.0138.field.157ca45f3c9e",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 628,
+          "line": 627,
           "column": 21,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14888,7 +14948,7 @@
         {
           "id": "inline.ui.0138.field.255287ce8db9",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 647,
+          "line": 646,
           "column": 19,
           "ownerComponentId": "ui.0138",
           "tag": "select",
@@ -14902,7 +14962,7 @@
         {
           "id": "inline.ui.0138.field.abb142a94892",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 573,
+          "line": 572,
           "column": 17,
           "ownerComponentId": "ui.0138",
           "tag": "textarea",
@@ -14917,7 +14977,7 @@
         {
           "id": "inline.ui.0138.field.aee483a6970d",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 464,
+          "line": 463,
           "column": 17,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14931,7 +14991,7 @@
         {
           "id": "inline.ui.0138.field.b8d6190bb88b",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 439,
+          "line": 438,
           "column": 17,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14945,7 +15005,7 @@
         {
           "id": "inline.ui.0138.field.c89317d87b6f",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 493,
+          "line": 492,
           "column": 19,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14963,7 +15023,7 @@
         {
           "id": "inline.ui.0138.field.d375fb5ba4a9",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 548,
+          "line": 547,
           "column": 19,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14977,7 +15037,7 @@
         {
           "id": "inline.ui.0138.field.d75a6e63eca1",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 590,
+          "line": 589,
           "column": 17,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -14991,7 +15051,7 @@
         {
           "id": "inline.ui.0138.field.ec01c2029bc9",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 526,
+          "line": 525,
           "column": 19,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -15005,7 +15065,7 @@
         {
           "id": "inline.ui.0138.field.fbbb293c8683",
           "source": "src/pages/host/CreateJamPage.tsx",
-          "line": 614,
+          "line": 613,
           "column": 21,
           "ownerComponentId": "ui.0138",
           "tag": "input",
@@ -15190,6 +15250,138 @@
             "input-sm",
             "text-center",
             "w-14"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.6384654d6cb5",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 253,
+          "column": 37,
+          "ownerComponentId": "ui.0161",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.66ebba1893c6",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 280,
+          "column": 37,
+          "ownerComponentId": "ui.0161",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.74e281e3435f",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 276,
+          "column": 37,
+          "ownerComponentId": "ui.0161",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.9fd49cfdea60",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 271,
+          "column": 41,
+          "ownerComponentId": "ui.0161",
+          "tag": "input",
+          "staticClassTokens": [
+            "flex-1",
+            "font-mono",
+            "input",
+            "input-bordered",
+            "min-w-0",
+            "rounded-l-none",
+            "text-sm"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.aa963d311efb",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 261,
+          "column": 37,
+          "ownerComponentId": "ui.0161",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.c266fc30aa1d",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 257,
+          "column": 37,
+          "ownerComponentId": "ui.0161",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.da88f2877b4a",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 284,
+          "column": 37,
+          "ownerComponentId": "ui.0161",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.ebbc6aa7c076",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 249,
+          "column": 37,
+          "ownerComponentId": "ui.0161",
+          "tag": "input",
+          "staticClassTokens": [
+            "input",
+            "input-bordered",
+            "w-full"
+          ],
+          "dynamicClasses": false
+        },
+        {
+          "id": "inline.ui.0161.field.f8edae40af08",
+          "source": "src/pages/tabs/OverviewTab.tsx",
+          "line": 265,
+          "column": 37,
+          "ownerComponentId": "ui.0161",
+          "tag": "textarea",
+          "staticClassTokens": [
+            "min-h-24",
+            "resize-y",
+            "textarea",
+            "textarea-bordered",
+            "w-full"
           ],
           "dynamicClasses": false
         }

@@ -7,6 +7,7 @@ import type {
   RegistrationResponseDto,
   ScheduleResponseDto,
 } from '../../types/api.types'
+import {activeRegistrations} from '../../utils/musicianUtils'
 import type {
   HostScheduleSnapshot,
   HostScheduleOperationsPort,
@@ -47,7 +48,7 @@ function mapPerformance(
   return {
     ...schedule,
     music: mapMusic(schedule.music),
-    registrations: (schedule.registrations ?? []).map(mapRegistration),
+    registrations: activeRegistrations(schedule.registrations).map(mapRegistration),
     ...(schedule.registration ? {registration: mapRegistration(schedule.registration)} : {}),
     ...(jamMusic ? {jamMusic} : {}),
   }

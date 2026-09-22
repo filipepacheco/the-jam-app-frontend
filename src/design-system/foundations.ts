@@ -1,12 +1,29 @@
 export const SELECTABLE_THEMES = ['jam-light', 'jam-dark'] as const
 export type ThemeName = (typeof SELECTABLE_THEMES)[number]
+export type BrandSurface = 'light' | 'dark'
+
+export interface ThemeMetadata {
+  readonly brandSurface: BrandSurface
+}
+
+/**
+ * Product-owned facts about both selectable Jam App presentations.
+ *
+ * Brand artwork must be told which surrounding surface it sits on; it must
+ * never infer that fact from a rendered ancestor or computed style.
+ */
+export const THEME_METADATA: Readonly<Record<ThemeName, ThemeMetadata>> = {
+  'jam-light': { brandSurface: 'light' },
+  'jam-dark': { brandSurface: 'dark' },
+}
 
 export const DEFAULT_THEME: ThemeName = 'jam-dark'
 
 export function isThemeName(value: unknown): value is ThemeName {
-  return typeof value === 'string' && SELECTABLE_THEMES.some((theme) => theme === value)
+  return typeof value === 'string' && value in THEME_METADATA
 }
 
+/** Resolves persisted or toolbar values to a selectable product theme. */
 export function resolveThemeName(value: unknown): ThemeName {
   return isThemeName(value) ? value : DEFAULT_THEME
 }

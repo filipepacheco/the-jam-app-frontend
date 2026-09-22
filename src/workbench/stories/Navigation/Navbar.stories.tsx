@@ -4,6 +4,35 @@ import { DesktopUserMenu } from '../../../components/DesktopUserMenu'
 import Navbar from '../../../components/Navbar'
 import { AuthContext } from '../../../contexts/AuthContext'
 import { createAuthFixture } from '../../fixtures'
+import {useState} from 'react'
+import {CircleHelp} from 'lucide-react'
+import {NavigationAction} from '../../../components/Navigation'
+import {JamHowItWorksModal} from '../../../components/jam-detail-v2/JamHowItWorksModal'
+
+function JamHelpNavigationHarness() {
+  const [isOpen, setIsOpen] = useState(false)
+  const label = 'Como Funciona'
+
+  return (
+    <>
+      <Navbar
+        contextualAction={(
+          <NavigationAction
+            variant="quiet"
+            onClick={() => setIsOpen(true)}
+            aria-label={label}
+            title={label}
+            className="px-3"
+          >
+            <CircleHelp className="size-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{label}</span>
+          </NavigationAction>
+        )}
+      />
+      <JamHowItWorksModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+    </>
+  )
+}
 
 const meta = {
   title: 'Navigation/Application navigation',
@@ -21,8 +50,19 @@ export const DesktopHost: Story = {
     viewport: { value: 'desktop', isRotated: false },
   },
   play: async ({ canvas, userEvent }) => {
+    const navFrame = canvas.getByRole('navigation', {name: /navegação principal|main navigation|navegación principal/i}).firstElementChild
+    await expect(navFrame).toHaveClass('mx-auto', 'max-w-7xl', 'grid')
+    await expect(navFrame).toHaveAttribute('style', expect.stringContaining('grid-template-columns'))
+
     const dashboardLink = canvas.getByRole('link', { name: /painel do host|host dashboard|panel del anfitrión/i })
     await expect(dashboardLink).toHaveClass('text-primary')
+
+    const brandLink = navFrame?.children[0]?.querySelector('a')
+    const firstNavigationLink = navFrame?.children[1]?.querySelector('a')
+    await expect(brandLink).not.toBeNull()
+    await expect(firstNavigationLink).not.toBeNull()
+    if (!brandLink || !firstNavigationLink) throw new Error('Desktop navigation regions did not render')
+    await expect(brandLink.getBoundingClientRect().right).toBeLessThan(firstNavigationLink.getBoundingClientRect().left)
 
     const jamsLink = canvas.getByRole('link', { name: /^jams$/i })
     await userEvent.click(jamsLink)
@@ -44,6 +84,47 @@ export const DesktopGuestWithSpanishLabels: Story = {
     await expect(homeLink).toHaveClass('text-primary')
   },
 }
+
+type BrandReviewContext = {
+  readonly theme: 'jam-light' | 'jam-dark'
+  readonly locale: 'pt' | 'en' | 'es'
+  readonly viewport: 'navbarNarrow' | 'phone' | 'navbarDesktopThreshold'
+}
+
+function brandReviewStory({ theme, locale, viewport }: BrandReviewContext): Story {
+  return {
+    globals: {
+      authRole: 'guest',
+      locale,
+      theme,
+      route: '/jams',
+      viewport: { value: viewport, isRotated: false },
+    },
+    play: async ({ canvas, userEvent }) => {
+      const homeLink = canvas.getByRole('link', { name: 'Jam App' })
+      await expect(canvas.getAllByRole('link', { name: 'Jam App' })).toHaveLength(1)
+      await expect(homeLink).toHaveAttribute('href', '/')
+
+      const logo = homeLink.querySelector<HTMLElement>('[data-brand-logo]')
+      await expect(logo).not.toBeNull()
+      await expect(logo!).toHaveAttribute('data-brand-logo-variant', 'lockup')
+      await expect(logo!).toHaveAttribute('data-brand-logo-surface', theme === 'jam-dark' ? 'dark' : 'light')
+      await expect(logo!).toHaveAttribute('data-brand-logo-size', 'xs')
+      await expect(homeLink).toHaveClass('min-h-[44px]')
+
+      await userEvent.tab()
+      await expect(homeLink).toHaveFocus()
+    },
+  }
+}
+
+/** First human gate: compact full lockup remains clear at 320px (measured 120px gap). */
+export const BrandLockupLight320: Story = brandReviewStory({ theme: 'jam-light', locale: 'pt', viewport: 'navbarNarrow' })
+export const BrandLockupDark320: Story = brandReviewStory({ theme: 'jam-dark', locale: 'en', viewport: 'navbarNarrow' })
+export const BrandLockupLight390: Story = brandReviewStory({ theme: 'jam-light', locale: 'es', viewport: 'phone' })
+export const BrandLockupDark390: Story = brandReviewStory({ theme: 'jam-dark', locale: 'pt', viewport: 'phone' })
+export const BrandLockupLight1280: Story = brandReviewStory({ theme: 'jam-light', locale: 'en', viewport: 'navbarDesktopThreshold' })
+export const BrandLockupDark1280: Story = brandReviewStory({ theme: 'jam-dark', locale: 'es', viewport: 'navbarDesktopThreshold' })
 
 export const MobileHostKeyboardDismissal: Story = {
   globals: {
@@ -74,7 +155,7 @@ export const MobileHostKeyboardDismissal: Story = {
     const languageList = page.getByRole('listbox')
     await expect(languageList).toBeVisible()
     await expect(page.queryByRole('textbox')).not.toBeInTheDocument()
-    await userEvent.click(within(languageList).getByRole('option', { name: /english/i }))
+    await userEvent.click(within(languageList).getByRole('option', { name: /ingl[eê]s|english/i }))
     await expect(drawer).not.toHaveClass('pointer-events-none')
 
     const themePicker = page.getByRole('button', { name: /selecionar tema|select theme/i })
@@ -88,6 +169,30 @@ export const MobileHostKeyboardDismissal: Story = {
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(trigger).toHaveFocus())
     await expect(drawer).toHaveClass('pointer-events-none')
+  },
+}
+
+export const MobileJamContextualHelp: Story = {
+  render: () => <JamHelpNavigationHarness />,
+  globals: {
+    authRole: 'guest',
+    locale: 'pt',
+    route: '/jams/jam-friday',
+    viewport: { value: 'phone', isRotated: false },
+  },
+  play: async ({canvas, canvasElement, userEvent}) => {
+    const page = within(canvasElement.ownerDocument.body)
+    const help = canvas.getByRole('button', {name: 'Como Funciona'})
+    const hamburger = canvas.getByRole('button', {name: /alternar menu|toggle navigation menu/i})
+    await expect(help).toBeVisible()
+    await expect(help.compareDocumentPosition(hamburger) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    await expect(help.querySelector('span')).toHaveClass('hidden', 'sm:inline')
+
+    await userEvent.click(help)
+    const dialog = page.getByRole('dialog', {name: /como as jams funcionam/i})
+    await expect(dialog).toBeVisible()
+    await userEvent.click(within(dialog).getAllByRole('button', {name: /fechar/i})[1])
+    await expect(page.queryByRole('dialog', {name: /como as jams funcionam/i})).toBeNull()
   },
 }
 

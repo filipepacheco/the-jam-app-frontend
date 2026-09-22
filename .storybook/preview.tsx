@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react-vite'
-import {useEffect} from 'react'
+import {useEffect, useLayoutEffect} from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { MemoryRouter } from 'react-router-dom'
 import {useGlobals} from 'storybook/preview-api'
@@ -16,6 +16,9 @@ import {
 import { createAuthFixture, type WorkbenchAuthRole } from '../src/workbench/fixtures'
 import { workbenchRequestHandlers } from '../src/workbench/mocks'
 import { installReducedMotionPreference } from '../src/workbench/reducedMotion'
+import { setSharedTheme, ThemeProvider, useTheme } from '../src/hooks'
+import { resolveThemeName } from '../src/design-system/foundations'
+import {ToastProvider} from '../src/components/Toast'
 import '../src/workbench/workbench.css'
 
 interface ReviewViewportSyncProps {
@@ -31,6 +34,28 @@ function ReviewViewportSync({currentViewport, defaultViewport, reviewViewport, u
     if (targetViewport === currentViewport) return
     updateGlobals({viewport: {value: targetViewport, isRotated: false}})
   }, [currentViewport, defaultViewport, reviewViewport, updateGlobals])
+
+  return null
+}
+
+interface WorkbenchThemeSyncProps {
+  theme: ReturnType<typeof resolveThemeName>
+  reviewTheme: string
+  updateGlobals: (newGlobals: Record<string, unknown>) => unknown
+}
+
+function WorkbenchThemeSync({ theme, reviewTheme, updateGlobals }: WorkbenchThemeSyncProps) {
+  const [selectedTheme] = useTheme()
+
+  useLayoutEffect(() => {
+    setSharedTheme(theme, { persist: false })
+  }, [theme])
+
+  useEffect(() => {
+    if (reviewTheme === 'story' && selectedTheme !== theme) {
+      updateGlobals({ theme: selectedTheme })
+    }
+  }, [reviewTheme, selectedTheme, theme, updateGlobals])
 
   return null
 }
@@ -133,14 +158,18 @@ const preview: Preview = {
           ? globals.viewport.value
           : '',
       )
-      const theme = reviewTheme === 'jam-light' || reviewTheme === 'jam-dark'
+      const theme = resolveThemeName(reviewTheme === 'jam-light' || reviewTheme === 'jam-dark'
         ? reviewTheme
-        : storyTheme
+        : storyTheme)
       const locale = String(globals.locale || 'pt')
       const route = String(globals.route || '/')
       const authRole = String(globals.authRole || 'host') as WorkbenchAuthRole
       const storyI18n = i18n.cloneInstance({ lng: locale, initAsync: false })
 
+      // Storybook globals are an external input. Seed the same shared store
+      // production consumers read before rendering the story, rather than
+      // letting the first paint use a previous story's theme snapshot.
+      setSharedTheme(theme, { persist: false })
       document.documentElement.dataset.theme = theme
       installReducedMotionPreference(String(globals.reducedMotion) === 'true')
 
@@ -152,15 +181,20 @@ const preview: Preview = {
             reviewViewport={reviewViewport}
             updateGlobals={updateGlobals}
           />
-          <MemoryRouter initialEntries={[route]} key={route}>
-            <I18nextProvider i18n={storyI18n}>
-              <AuthContext.Provider value={createAuthFixture(authRole)}>
-                <div lang={locale} data-theme={theme} data-workbench-root className="min-h-screen bg-base-100 p-4 text-base-content">
-                  <Story />
-                </div>
-              </AuthContext.Provider>
-            </I18nextProvider>
-          </MemoryRouter>
+          <ThemeProvider persist={false}>
+            <WorkbenchThemeSync theme={theme} reviewTheme={reviewTheme} updateGlobals={updateGlobals} />
+            <MemoryRouter initialEntries={[route]} key={route}>
+              <I18nextProvider i18n={storyI18n}>
+                <AuthContext.Provider value={createAuthFixture(authRole)}>
+                  <ToastProvider>
+                    <div lang={locale} data-theme={theme} data-workbench-root className="min-h-screen bg-base-100 p-4 text-base-content">
+                      <Story />
+                    </div>
+                  </ToastProvider>
+                </AuthContext.Provider>
+              </I18nextProvider>
+            </MemoryRouter>
+          </ThemeProvider>
         </>
       )
     },

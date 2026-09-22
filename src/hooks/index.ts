@@ -14,7 +14,7 @@ export { useOfflineQueue, type OfflineQueueState } from './useOfflineQueue'
 
 // UI utility hooks
 export { useAppLanguage } from './useAppLanguage'
-export { useTheme } from './useTheme'
+export { setSharedTheme, ThemeProvider, useTheme } from './useTheme'
 export { useHostScheduleController } from './useHostScheduleController'
 export { useMusicLibraryController } from './useMusicLibraryController'
 export { useJamParticipationController } from './useJamParticipationController'

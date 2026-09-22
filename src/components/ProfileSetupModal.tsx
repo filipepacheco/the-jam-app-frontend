@@ -63,7 +63,7 @@ export function ProfileSetupModal({ isOpen, onClose }: ProfileSetupModalProps) {
         clearNewUserFlag()
         onClose()
       } else {
-        setError(result.error || t('profile.update_failed'))
+        setError(result.errorKey ? t(result.errorKey) : (result.error || t('profile.update_failed')))
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('errors.generic_error'))
