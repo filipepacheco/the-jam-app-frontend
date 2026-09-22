@@ -120,7 +120,7 @@ export function TimelineItemV2Waveform({
         {/* A song title is the primary decision input, so it wraps before the
             status moves beneath it at phone widths. */}
         <div className={isCompactCompleted
-          ? 'flex min-w-0 items-center gap-2'
+          ? 'grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2'
           : `grid grid-cols-[auto_minmax(0,1fr)] sm:grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-2 ${isCompleted && !isExpanded ? '' : 'mb-1'}`}
         >
           {position !== undefined ? (
@@ -130,7 +130,7 @@ export function TimelineItemV2Waveform({
           ) : <div />}
           <div className={isCompactCompleted ? 'flex min-w-0 flex-1 items-center gap-1.5' : 'min-w-0'}>
             <h3 className={isCompactCompleted
-              ? 'min-w-0 truncate text-sm font-bold text-base-content'
+              ? 'min-w-0 flex-1 truncate text-sm font-bold text-base-content'
               : 'ds-type-ui ds-wrap-user-content mb-0.5 font-bold text-base-content'}
             >
               {schedule.music?.title}
@@ -142,12 +142,10 @@ export function TimelineItemV2Waveform({
             >
               <p className={`ds-truncate-single min-w-0 flex-1 ${isCompactCompleted ? 'text-xs' : 'text-sm'} text-base-content/70`}>
                 {schedule.music?.artist}
-                <span className="ml-1.5 inline-flex align-middle">
-                  <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
-                </span>
               </p>
+              <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
               {typeof schedule.music?.duration === 'number' && schedule.music.duration > 0 && (
-                <span className="inline-flex items-center gap-1 text-xs tabular-nums text-base-content/55">
+                <span className="inline-flex shrink-0 items-center gap-1 text-xs tabular-nums text-base-content/55">
                   <Clock3 className="size-3.5" aria-hidden="true" />
                   {formatDuration(schedule.music.duration)}
                 </span>
