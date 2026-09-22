@@ -259,6 +259,7 @@ export function JamManagementPage() {
                 <div className={JAM_MANAGEMENT_CONTAINER_CLASS}>
                     <NavigationTabs
                         aria-label={t('jam_management.manage_title')}
+                        className="jam-management-tabs"
                         items={tabs.map((tab) => ({
                             ...tab,
                             panelId: `tabpanel-${tab.id}`,

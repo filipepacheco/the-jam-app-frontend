@@ -157,6 +157,8 @@ export interface JamResponseDto {
   slug?: string | null
   shortCode?: string | null
   spotifyPlaylistUrl?: string | null
+  /** Whether newly created performance registrations are approved automatically. */
+  autoApproveRegistrations?: boolean
   status: JamStatus
   createdAt: string
   updatedAt: string

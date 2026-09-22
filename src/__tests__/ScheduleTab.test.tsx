@@ -4,7 +4,7 @@ import {MemoryRouter} from 'react-router-dom'
 import {describe, expect, it, vi} from 'vitest'
 import type {JamResponseDto} from '../types/api.types'
 import {ScheduleTab} from '../pages/tabs/ScheduleTab'
-import {musicService} from '../services'
+import {musicService, scheduleService} from '../services'
 import {ToastProvider} from '../components/Toast'
 
 vi.mock('react-i18next', () => ({
@@ -117,6 +117,64 @@ describe('ScheduleTab', () => {
         await user.click(screen.getAllByRole('button', {name: 'common.actions'})[0])
         expect(screen.getByRole('menu')).toBeVisible()
         expect(screen.getByRole('menuitem', {name: 'schedule.actions.mark_completed'})).toBeVisible()
+    })
+
+    it('reports successful schedule mutations through the success toast', async () => {
+        const user = userEvent.setup()
+        const jamWithSchedules: JamResponseDto = {
+            ...jam,
+            schedules: [makeSchedule(0, 'IN_PROGRESS')],
+        }
+        vi.mocked(scheduleService.update).mockResolvedValue({success: true, data: null})
+
+        render(
+            <MemoryRouter>
+                <ToastProvider>
+                    <ScheduleTab
+                        jam={jamWithSchedules}
+                        onReload={vi.fn().mockResolvedValue(jamWithSchedules)}
+                    />
+                </ToastProvider>
+            </MemoryRouter>,
+        )
+
+        await user.click(screen.getByRole('button', {name: 'common.actions'}))
+        await user.click(screen.getByRole('menuitem', {name: 'schedule.actions.mark_completed'}))
+
+        const toast = await screen.findByRole('status')
+        expect(toast).toHaveTextContent('jam_management.schedule.status_updated')
+        expect(toast).toHaveAttribute('data-toast-tone', 'success')
+    })
+
+    it('uses the localized fallback instead of exposing an unknown mutation error', async () => {
+        const user = userEvent.setup()
+        const jamWithSchedules: JamResponseDto = {
+            ...jam,
+            schedules: [makeSchedule(0, 'IN_PROGRESS')],
+        }
+        vi.mocked(scheduleService.update).mockResolvedValue({
+            success: false,
+            data: null,
+            error: 'Unknown mutation error',
+        })
+
+        render(
+            <MemoryRouter>
+                <ToastProvider>
+                    <ScheduleTab
+                        jam={jamWithSchedules}
+                        onReload={vi.fn().mockResolvedValue(jamWithSchedules)}
+                    />
+                </ToastProvider>
+            </MemoryRouter>,
+        )
+
+        await user.click(screen.getByRole('button', {name: 'common.actions'}))
+        await user.click(screen.getByRole('menuitem', {name: 'schedule.actions.mark_completed'}))
+
+        const toast = await screen.findByRole('alert')
+        expect(toast).toHaveTextContent('errors.failed_to_execute_action')
+        expect(toast).toHaveAttribute('data-toast-tone', 'error')
     })
 
     it('loads searchable music options when the add-entry modal opens', async () => {

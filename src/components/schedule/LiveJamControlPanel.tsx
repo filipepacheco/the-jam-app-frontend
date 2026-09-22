@@ -1,5 +1,5 @@
 /** Host control interface for managing the active Jam's Live Queue. */
-import React, {useMemo} from 'react'
+import React, {useEffect, useMemo} from 'react'
 import {ArrowUpDown, Check, GripVertical, Loader2, X} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {useLiveQueueController} from '../../hooks/useLiveQueueController'
@@ -9,7 +9,7 @@ import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {CORE_BAND} from '../../utils/scheduleUtils'
 import {normalizeInstrument} from '../../utils/musicianUtils'
 import {Action} from '../Action'
-import {Alert} from '../Alert'
+import {useToast} from '../ToastContext'
 import {Badge, DataCard} from '../data-display'
 
 interface LiveJamControlPanelProps {
@@ -174,14 +174,28 @@ const QueueItem = React.memo(function QueueItem({
   )
 })
 
-function outcomeError(outcome: LiveQueueOutcome, conflictMessage: string): string | null {
+function genericErrorMessage(message: string | undefined, fallbackMessage: string): string {
+  return !message
+    || message === 'Unknown mutation error'
+    || message === 'Unknown reorder error'
+    || message === 'Unknown refresh error'
+    || message === 'Failed to reorder Live Queue'
+    || message === 'Failed to refresh Live Queue'
+    ? fallbackMessage
+    : message
+}
+
+function outcomeError(outcome: LiveQueueOutcome, conflictMessage: string, fallbackMessage: string): string | null {
   if (outcome.code === 'conflict') return conflictMessage
-  if (outcome.code === 'failure' || outcome.code === 'refresh_failure') return outcome.error.message
+  if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
+    return genericErrorMessage(outcome.error.message, fallbackMessage)
+  }
   return null
 }
 
 export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
   const {t} = useTranslation()
+  const {showToast} = useToast()
   const {state, commands, interactions, isLoading, error} = useLiveQueueController(jamId)
   const currentPerformance = state.server.currentPerformance
   const performances = state.draftPerformances
@@ -189,21 +203,33 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
   const isReordering = state.persistence.status !== 'idle'
   const activeInput = state.input.mode === 'idle' ? null : state.input
   const dragOverId = activeInput ? performances[activeInput.targetIndex]?.id ?? null : null
-  const outcomeMessage = state.latestOutcome?.code === 'success'
-    ? t('live_control.reordered_feedback')
-    : state.latestOutcome
-      ? outcomeError(
-          state.latestOutcome,
-          t('live_control.reorder_conflict'),
-        )
-      : null
-  const conflictMessage = state.conflict
-    ? t('live_control.reorder_conflict')
-    : null
-  const queueFeedback = error ?? conflictMessage ?? outcomeMessage
-  const queueFeedbackType = !error && !conflictMessage && state.latestOutcome?.code === 'success'
-    ? 'success' as const
-    : 'error' as const
+  useEffect(() => {
+    if (!state.latestOutcome) return
+    if (state.latestOutcome.code === 'success') {
+      showToast({message: t('live_control.reordered_feedback'), tone: 'success'})
+      return
+    }
+    const message = outcomeError(
+      state.latestOutcome,
+      t('live_control.reorder_conflict'),
+      t('errors.failed_to_execute_action'),
+    )
+    if (message) showToast({message, tone: 'error'})
+  }, [showToast, state.latestOutcome, t])
+
+  useEffect(() => {
+    if (!error) return
+    showToast({
+      message: genericErrorMessage(error, t('errors.failed_to_execute_action')),
+      tone: 'error',
+    })
+  }, [error, showToast, t])
+
+  useEffect(() => {
+    if (state.conflict) {
+      showToast({message: t('live_control.reorder_conflict'), tone: 'error'})
+    }
+  }, [showToast, state.conflict, t])
 
   if (isLoading && !currentPerformance && performances.length === 0) {
     return (
@@ -228,13 +254,6 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
       )}
 
       <DataCard as="section" className="p-6">
-        {queueFeedback && (
-          <Alert
-            type={queueFeedbackType}
-            message={queueFeedback}
-            className="mb-4"
-          />
-        )}
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-lg font-bold text-balance">
             {isReorderMode ? t('live_control.up_next') : t('live_control.queue_title')}
@@ -260,7 +279,13 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
                   <Action.Label>{t('live_control.reorder_save')}</Action.Label>
                 </Action>
               ) : (
-                <Action className="min-w-0" variant="primary" onClick={() => { void commands.saveReorder() }}>
+                <Action
+                  className="min-w-0"
+                  variant="primary"
+                  onClick={() => {
+                    void commands.saveReorder()
+                  }}
+                >
                   <Action.Icon><Check className="size-4" /></Action.Icon>
                   <Action.Label>{t('live_control.reorder_save')}</Action.Label>
                 </Action>

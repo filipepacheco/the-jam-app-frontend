@@ -27,14 +27,18 @@ export function EnhancedHero() {
   }
 
   return (
-    <section className="relative isolate min-h-screen overflow-hidden bg-base-300 text-primary-content">
+    <section
+      className="relative isolate min-h-screen overflow-hidden bg-base-300 text-base-content"
+      style={{ color: 'var(--ds-content-primary)' }}
+    >
       <div className="absolute inset-0 animate-gradient-shift" aria-hidden="true" />
       <div className="radial-glow" aria-hidden="true" />
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 flex flex-col lg:flex-row items-center gap-10 lg:gap-12 min-h-screen justify-center">
         {/* Text content */}
         <div className="lg:w-5/12 text-left">
           <motion.p
-            className="text-sm sm:text-base font-semibold mb-3 text-primary-content/80 ds-type-ui"
+            className="text-sm sm:text-base font-semibold mb-3 text-primary ds-type-ui"
+            style={{ color: 'var(--ds-content-link)' }}
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -43,7 +47,8 @@ export function EnhancedHero() {
           </motion.p>
 
           <motion.h1
-            className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-primary-content text-wrap-balance tracking-tight"
+            className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-wrap-balance tracking-tight"
+            style={{ color: 'var(--ds-content-primary)' }}
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -52,7 +57,8 @@ export function EnhancedHero() {
           </motion.h1>
 
           <motion.p
-            className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed text-primary-content/80 whitespace-pre-line ds-type-body"
+            className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed whitespace-pre-line ds-type-body"
+            style={{ color: 'var(--ds-content-secondary)' }}
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}

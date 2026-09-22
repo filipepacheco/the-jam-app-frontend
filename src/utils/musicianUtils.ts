@@ -5,6 +5,19 @@
 
 import type {RegistrationResponseDto} from '../types/api.types'
 
+/** Registrations in these states no longer occupy a performance slot. */
+const INACTIVE_REGISTRATION_STATUSES = new Set(['REJECTED', 'WITHDRAWN', 'CANCELED', 'CANCELLED'])
+
+export function isActiveRegistration(registration: RegistrationResponseDto): boolean {
+  return !INACTIVE_REGISTRATION_STATUSES.has(registration.status?.toUpperCase() ?? '')
+}
+
+export function activeRegistrations(
+  registrations: RegistrationResponseDto[] | undefined,
+): RegistrationResponseDto[] {
+  return (registrations ?? []).filter(isActiveRegistration)
+}
+
 /**
  * Minimal musician interface for grouping
  * Any type with an instrument property can be grouped
@@ -44,7 +57,7 @@ export function normalizeInstrument(instrument?: string): string {
   if (['guitar', 'guitars', 'guitarra', 'guitarras'].includes(lower)) return 'guitars'
   if (['bass', 'baixo', 'baixos', 'bajo'].includes(lower)) return 'bass'
   if (['vocals', 'vocal', 'vozes', 'voz', 'voces'].includes(lower)) return 'vocals'
-  if (['keys', 'keyboard', 'teclado', 'teclados'].includes(lower)) return 'keys'
+  if (['keys', 'keyboard', 'keyboards', 'piano', 'pianos', 'teclado', 'teclados'].includes(lower)) return 'keys'
   return lower
 }
 
@@ -59,7 +72,7 @@ export function groupRegistrationsByInstrument(
   const grouped = new Map<string, RegistrationResponseDto[]>()
   if (!registrations) return grouped
 
-  registrations.forEach((reg) => {
+  registrations.filter(isActiveRegistration).forEach((reg) => {
     const instrument = normalizeInstrument(reg.instrument ?? reg.musician?.instrument ?? undefined)
     if (instrument) {
       if (!grouped.has(instrument)) {

@@ -11,6 +11,12 @@ import {useNavigate} from "react-router-dom";
 import {useHostScheduleController} from '../../hooks'
 import type {HostScheduleOutcome, Music, Performance, PerformanceStatus} from '../../lib/schedule/hostScheduleController'
 
+function mutationErrorMessage(message: string | undefined, fallback: string): string {
+    return !message || message === 'Unknown mutation error' || message === 'Unknown refresh error'
+        ? fallback
+        : message
+}
+
 /**
  * Schedule Tab Component - Full management with nested registrations
  * Similar to jam detail page view but with additional management controls
@@ -29,7 +35,6 @@ export function ScheduleTab({jam, onReload}: {
     const [showHostRegistrationModal, setShowHostRegistrationModal] = useState(false)
     const [selectedScheduleForRegistration, setSelectedScheduleForRegistration] = useState<ScheduleResponseDto | null>(null)
     const [selectedMusicianId, setSelectedMusicianId] = useState<string | null>(null)
-    const [rowFeedback, setRowFeedback] = useState<Record<string, {type: 'error' | 'success'; message: string}>>({})
     const {state: scheduleState, commands: scheduleCommands} = useHostScheduleController(jam, onReload)
     const {
         performances: sortedSchedules,
@@ -66,42 +71,28 @@ export function ScheduleTab({jam, onReload}: {
         successMessage: string,
         fallbackError: string,
     ) => {
-        const affectedIds = 'affectedIds' in outcome
-            ? outcome.affectedIds
-            : 'entityId' in outcome
-                ? [outcome.entityId]
-                : []
-        const affectedPerformanceId = sortedSchedules.find((performance) => affectedIds.some((id) => (
-            id === performance.id
-            || id === performance.jamMusic?.id
-            || performance.registrations.some((registration) => registration.id === id)
-        )))?.id
-        const report = (type: 'error' | 'success', message: string) => {
-            if (!affectedPerformanceId) return false
-            setRowFeedback((current) => ({...current, [affectedPerformanceId]: {type, message}}))
-            return true
-        }
-
         if (outcome.code === 'success') {
-            if (!report('success', successMessage)) showToast({message: successMessage})
+            showToast({message: successMessage, tone: 'success'})
             return true
         }
         if (outcome.code === 'partial_success' || outcome.code === 'bulk_failure') {
-            const failureDetails = outcome.failed.map(({error: failure}) => failure.message).join(', ') || fallbackError
+            const failureDetails = outcome.failed
+                .map(({error: failure}) => mutationErrorMessage(failure.message, fallbackError))
+                .join(', ') || fallbackError
             const failureMessage = outcome.code === 'partial_success'
                 ? `${t('schedule.batch.partial_error', {success: outcome.succeededIds.length, failed: outcome.failed.length})}: ${failureDetails}`
                 : failureDetails
-            if (!report('error', failureMessage)) setError(failureMessage)
+            showToast({message: failureMessage, tone: 'error'})
             return false
         }
         if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
-            const message = outcome.error.message || fallbackError
-            if (!report('error', message)) setError(message)
+            const message = mutationErrorMessage(outcome.error.message, fallbackError)
+            showToast({message, tone: 'error'})
             return false
         }
-        if (outcome.code === 'duplicate_pending' && !report('error', fallbackError)) setError(fallbackError)
+        if (outcome.code === 'duplicate_pending') showToast({message: fallbackError, tone: 'error'})
         return false
-    }, [showToast, sortedSchedules, t])
+    }, [showToast, t])
 
     // Load the searchable music catalog when the add-entry modal opens.
     useEffect(() => {
@@ -244,19 +235,7 @@ export function ScheduleTab({jam, onReload}: {
         priority: 'current' | 'queue' | 'secondary',
     ) => {
         const jm = schedule.jamMusic
-        const feedback = rowFeedback[schedule.id]
         return <div key={schedule.id} className="space-y-2">
-            {feedback && (
-                <Alert
-                    type={feedback.type}
-                    message={feedback.message}
-                    onDismiss={() => setRowFeedback((current) => {
-                        const next = {...current}
-                        delete next[schedule.id]
-                        return next
-                    })}
-                />
-            )}
             <ScheduleCollapsibleCard
                 schedule={schedule}
                 loading={isCardLoading(schedule)}
@@ -460,7 +439,7 @@ export function ScheduleTab({jam, onReload}: {
                             setSelectedScheduleForRegistration(null)
                         }
                         if (outcome.kind !== 'failure') {
-                            showToast({message: t('jam_management.schedule.musicians_registered')})
+                            showToast({message: t('jam_management.schedule.musicians_registered'), tone: 'success'})
                         }
                         if (outcome.kind !== 'failure' || outcome.refreshRequired) void onReload()
                     }}
@@ -562,7 +541,7 @@ export function ScheduleTab({jam, onReload}: {
                     }}
                     setError={setError}
                     setSuccess={(message) => {
-                        if (message) showToast({message})
+                        if (message) showToast({message, tone: 'success'})
                     }}
                 />
             )}

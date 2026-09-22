@@ -81,7 +81,12 @@ export function ProfilePage() {
         otherInstruments: formData.otherInstruments,
       }
 
-      await updateProfile(updates)
+      const result = await updateProfile(updates)
+
+      if (!result.success) {
+        setError(result.errorKey ? t(result.errorKey) : (result.error || t('profile.update_failed')))
+        return
+      }
 
       setSuccess(t('profile.update_success'))
       setIsEditMode(false)

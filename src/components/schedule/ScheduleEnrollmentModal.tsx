@@ -9,7 +9,7 @@ import {useFormState} from '../../hooks'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
-import {normalizeInstrument} from '../../utils/musicianUtils'
+import {activeRegistrations, normalizeInstrument} from '../../utils/musicianUtils'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
 import {Alert} from '../Alert'
 import {Action} from '../Action'
@@ -43,7 +43,7 @@ export function ScheduleEnrollmentModal({
         return instrumentKeyMap[key] || key
     }), [schedule, t])
     const registeredInstruments = useMemo(() => new Set(
-      (schedule.registrations ?? [])
+      activeRegistrations(schedule.registrations)
         .filter((registration) => registration.musicianId === musicianId || registration.musician?.id === musicianId)
         .map((registration) => normalizeInstrument(registration.instrument ?? '')),
     ), [musicianId, schedule.registrations])
