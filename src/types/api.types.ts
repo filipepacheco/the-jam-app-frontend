@@ -169,6 +169,8 @@ export interface JamResponseDto {
   playbackState?: PlaybackState
   currentScheduleId?: string
   _count?: JamCountDto
+  /** Distinct musicians with a pending or approved registration in this jam. */
+  registeredMusicianCount?: number
   schedules?: ScheduleResponseDto[]
   jamMusics?: JamMusicResponseDto[]
 }

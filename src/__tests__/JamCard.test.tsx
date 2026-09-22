@@ -7,14 +7,14 @@ import {jamFixtures} from '../workbench/jamMusicFixtures'
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
     i18n: {language: 'en'},
-    t: (key: string, fallback?: string) => ({
+    t: (key: string, fallback?: string | {count: number}) => ({
       'jams.date_tba': 'Date TBA',
       'jams.live_dashboard': 'Live dashboard',
       'jams.listen_on_spotify': 'Listen on Spotify',
       'jams.view_details': 'View jam',
       'jams.songs_count': '4 songs',
-      'jams.musicians_count': '12 musicians registered',
-    }[key] ?? fallback ?? key),
+      'jams.musicians_count': `${typeof fallback === 'object' ? fallback.count : 0} musicians registered`,
+    }[key] ?? (typeof fallback === 'string' ? fallback : key)),
   }),
 }))
 
@@ -33,7 +33,7 @@ describe('JamCard', () => {
     expect(screen.getByText(jam.location)).toHaveAttribute('title', jam.location)
     expect(screen.getByText(jam.location)).toHaveClass('truncate')
     expect(screen.getByText('4 songs')).toBeVisible()
-    expect(screen.getByText('12 musicians registered')).toBeVisible()
+    expect(screen.getByText('2 musicians registered')).toBeVisible()
     expect(screen.getByRole('link', {name: 'View jam'})).toHaveAttribute('href', '/jams/friday-night-jam')
     expect(screen.getByRole('link', {name: 'View jam'})).toHaveAttribute('data-navigation-variant', 'primary')
     expect(screen.getByRole('link', {name: 'Live dashboard'})).toHaveAttribute('href', '/jams/friday-night-jam/dashboard')
@@ -45,5 +45,16 @@ describe('JamCard', () => {
     render(<MemoryRouter><JamCard jam={{...jamFixtures.active, date: undefined}} /></MemoryRouter>)
 
     expect(screen.getByText('Date TBA')).toBeVisible()
+  })
+
+  it('shows distinct registered musicians rather than the registration row count', () => {
+    render(
+      <MemoryRouter>
+        <JamCard jam={{...jamFixtures.active, registeredMusicianCount: 2, _count: {...jamFixtures.active._count, registrations: 5}}} />
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByText('2 musicians registered')).toBeVisible()
+    expect(screen.queryByText('5 musicians registered')).not.toBeInTheDocument()
   })
 })

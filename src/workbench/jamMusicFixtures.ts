@@ -200,6 +200,7 @@ export const jamFixtures = {
     createdAt: '2026-09-01T12:00:00.000Z',
     updatedAt: '2026-09-11T12:00:00.000Z',
     _count: { jamMusics: 4, registrations: 12, schedules: 4 },
+    registeredMusicianCount: 2,
     schedules: scheduleFixtures,
   },
   longContent: {

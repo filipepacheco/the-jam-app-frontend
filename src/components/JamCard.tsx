@@ -30,7 +30,7 @@ export const JamCard = memo(function JamCard({ jam }: JamCardProps) {
   const {currentLang} = useAppLanguage()
   const navigate = useNavigate()
   const songCount = jam._count?.schedules ?? jam.schedules?.length ?? 0
-  const musicianCount = jam._count?.registrations ?? 0
+  const musicianCount = jam.registeredMusicianCount ?? 0
   const formattedDate = jam.date && !Number.isNaN(new Date(jam.date).getTime())
     ? formatDateTime(jam.date, currentLang)
     : null
