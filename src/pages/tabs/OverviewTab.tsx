@@ -1,4 +1,4 @@
-import type {JamResponseDto} from "../../types/api.types.ts";
+import type {JamManagementMode, JamResponseDto} from "../../types/api.types.ts";
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useId, useMemo, useState} from "react";
@@ -19,6 +19,7 @@ interface JamEditorData {
     hostName: string
     hostContact: string
     autoApproveRegistrations: boolean
+    managementMode: JamManagementMode
 }
 
 function editorDataFromJam(jam: JamResponseDto): JamEditorData {
@@ -40,6 +41,7 @@ function editorDataFromJam(jam: JamResponseDto): JamEditorData {
         hostName: jam.hostName ?? '',
         hostContact: jam.hostContact ?? '',
         autoApproveRegistrations: jam.autoApproveRegistrations ?? true,
+        managementMode: jam.managementMode ?? 'OWNER_ONLY',
     }
 }
 
@@ -144,6 +146,15 @@ export function OverviewTab({
         setFormError(null)
     }
 
+    const handleSharedHostManagementChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setFormData((current) => ({
+            ...current,
+            managementMode: event.target.checked ? 'SHARED_HOSTS' : 'OWNER_ONLY',
+        }))
+        setDirty(true)
+        setFormError(null)
+    }
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
         const missingField = !formData.name.trim()
@@ -171,7 +182,7 @@ export function OverviewTab({
         setSaving(true)
         setFormError(null)
         try {
-            await onJamUpdate({
+            const updates: Partial<JamResponseDto> = {
                 name: formData.name.trim(),
                 description: formData.description.trim() || undefined,
                 date: new Date(`${formData.date}T${formData.time}`).toISOString(),
@@ -181,7 +192,11 @@ export function OverviewTab({
                 hostName: formData.hostName.trim(),
                 hostContact: formData.hostContact.trim() || undefined,
                 autoApproveRegistrations: formData.autoApproveRegistrations,
-            })
+            }
+            if (formData.managementMode !== (jam.managementMode ?? 'OWNER_ONLY')) {
+                updates.managementMode = formData.managementMode
+            }
+            await onJamUpdate(updates)
             setDirty(false)
         } catch {
             setFormError(t('create_jam.messages.save_error'))
@@ -296,7 +311,7 @@ export function OverviewTab({
                                     <input id={`${formId}-hostContact`} name="hostContact" value={formData.hostContact} onChange={handleInputChange} className="input input-bordered w-full" disabled={saving} />
                                 </fieldset>
                                 <fieldset className="fieldset sm:col-span-2">
-                                    <label className="label min-h-11 cursor-pointer justify-start gap-3" htmlFor={`${formId}-autoApproveRegistrations`}>
+                                    <label className="label min-h-11 w-full min-w-0 cursor-pointer items-start justify-start gap-3" htmlFor={`${formId}-autoApproveRegistrations`}>
                                         <input
                                             id={`${formId}-autoApproveRegistrations`}
                                             type="checkbox"
@@ -305,13 +320,34 @@ export function OverviewTab({
                                             onChange={handleAutoApproveChange}
                                             aria-labelledby={`${formId}-autoApproveRegistrations-label`}
                                             aria-describedby={`${formId}-autoApproveRegistrations-hint`}
-                                            className="toggle toggle-primary"
+                                            className="toggle toggle-primary shrink-0"
                                             disabled={saving}
                                         />
-                                        <span className="min-w-0">
+                                        <span className="min-w-0 flex-1 whitespace-normal">
                                             <span id={`${formId}-autoApproveRegistrations-label`} className="block font-medium">{t('create_jam.form.auto_approve_registrations')}</span>
                                             <span id={`${formId}-autoApproveRegistrations-hint`} className="block text-sm font-normal text-base-content/60">
                                                 {t('create_jam.form.auto_approve_registrations_hint')}
+                                            </span>
+                                        </span>
+                                    </label>
+                                </fieldset>
+                                <fieldset className="fieldset sm:col-span-2">
+                                    <label className="label min-h-11 w-full min-w-0 cursor-pointer items-start justify-start gap-3" htmlFor={`${formId}-sharedHostManagement`}>
+                                        <input
+                                            id={`${formId}-sharedHostManagement`}
+                                            type="checkbox"
+                                            name="sharedHostManagement"
+                                            checked={formData.managementMode === 'SHARED_HOSTS'}
+                                            onChange={handleSharedHostManagementChange}
+                                            aria-labelledby={`${formId}-sharedHostManagement-label`}
+                                            aria-describedby={`${formId}-sharedHostManagement-hint`}
+                                            className="toggle toggle-primary shrink-0"
+                                            disabled={saving}
+                                        />
+                                        <span className="min-w-0 flex-1 whitespace-normal">
+                                            <span id={`${formId}-sharedHostManagement-label`} className="block font-medium">{t('create_jam.form.shared_host_management')}</span>
+                                            <span id={`${formId}-sharedHostManagement-hint`} className="block text-sm font-normal text-base-content/60">
+                                                {t('create_jam.form.shared_host_management_hint')}
                                             </span>
                                         </span>
                                     </label>

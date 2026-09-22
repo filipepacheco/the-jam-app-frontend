@@ -25,6 +25,7 @@ const jam: JamResponseDto = {
     date: '2026-09-24T18:00:00.000Z',
     location: 'Jam House',
     autoApproveRegistrations: true,
+    managementMode: 'OWNER_ONLY',
     createdAt: '2026-09-24T18:00:00.000Z',
     updatedAt: '2026-09-24T18:00:00.000Z',
 }
@@ -75,4 +76,37 @@ describe('OverviewTab', () => {
             autoApproveRegistrations: false,
         })))
     })
+
+    it('keeps toggle copy inside the mobile form width', () => {
+        render(
+            <MemoryRouter>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={vi.fn()} loading={false}/>
+            </MemoryRouter>,
+        )
+
+        const toggle = screen.getByRole('checkbox', {name: 'create_jam.form.auto_approve_registrations'})
+        expect(toggle.closest('label')).toHaveClass('w-full', 'min-w-0')
+        expect(toggle.nextElementSibling).toHaveClass('flex-1', 'min-w-0', 'whitespace-normal')
+    })
+
+    it('lets the owner share Jam controls with other hosts', async () => {
+        const onJamUpdate = vi.fn().mockResolvedValue(undefined)
+        render(
+            <MemoryRouter>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={onJamUpdate} loading={false}/>
+            </MemoryRouter>,
+        )
+
+        const user = userEvent.setup()
+        const toggle = screen.getByRole('checkbox', {name: 'create_jam.form.shared_host_management'})
+        expect(toggle).not.toBeChecked()
+
+        await user.click(toggle)
+        await user.click(screen.getByRole('button', {name: 'create_jam.actions.update'}))
+
+        await waitFor(() => expect(onJamUpdate).toHaveBeenCalledWith(expect.objectContaining({
+            managementMode: 'SHARED_HOSTS',
+        })))
+    })
+
 })

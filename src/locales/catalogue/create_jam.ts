@@ -26,6 +26,8 @@ export const create_jam = {
     host_contact: message({"pt-BR": "Contato do Anfitrião", "en": "Host Contact", "es": "Contacto del Anfitrión"}),
     auto_approve_registrations: message({"pt-BR": "Aprovar inscrições automaticamente", "en": "Automatically approve registrations", "es": "Aprobar inscripciones automáticamente"}),
     auto_approve_registrations_hint: message({"pt-BR": "Novas inscrições serão aprovadas sem intervenção do anfitrião.", "en": "New registrations will be approved without host intervention.", "es": "Las nuevas inscripciones se aprobarán sin intervención del anfitrión."}),
+    shared_host_management: message({"pt-BR": "Permitir controle por outros anfitriões", "en": "Allow control by other hosts", "es": "Permitir el control por otros anfitriones"}),
+    shared_host_management_hint: message({"pt-BR": "Outros anfitriões poderão controlar a reprodução, reorganizar a escala e aprovar inscrições.", "en": "Other hosts can control playback, reorder the schedule, and approve registrations.", "es": "Otros anfitriones podrán controlar la reproducción, reordenar la programación y aprobar inscripciones."}),
     status: message({"pt-BR": "Status", "en": "Status", "es": "Estado"}),
     placeholder_name: message({"pt-BR": "ex., Noite de Jazz 2025", "en": "e.g., Jazz Night 2025", "es": "ej., Noche de Jazz 2025"}),
     placeholder_description: message({"pt-BR": "Breve descrição da sua sessão de jam...", "en": "Brief description of your jam session...", "es": "Breve descripción de tu sesión de jam..."}),
