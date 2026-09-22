@@ -1,0 +1,4 @@
+.schedule-toolbar__search .ds-field__control {
+  font-size: var(--ds-text-secondary);
+  line-height: var(--ds-leading-ui);
+}

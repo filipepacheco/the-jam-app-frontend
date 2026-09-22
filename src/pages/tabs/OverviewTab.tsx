@@ -255,7 +255,7 @@ export function OverviewTab({
                         <form onSubmit={(event) => { void handleSubmit(event) }} noValidate className="space-y-3">
                             {formError && <p role="alert" className="text-sm text-error">{formError}</p>}
 
-                            <div className="grid gap-3 sm:grid-cols-2">
+                            <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 [&>fieldset]:min-w-0">
                                 <fieldset className="fieldset sm:col-span-2">
                                     <label className="fieldset-legend" htmlFor={`${formId}-name`}>{t('create_jam.form.jam_name')}</label>
                                     <input id={`${formId}-name`} name="name" value={formData.name} onChange={handleInputChange} className="input input-bordered w-full" disabled={saving} required />

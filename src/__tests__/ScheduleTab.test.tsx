@@ -109,6 +109,9 @@ describe('ScheduleTab', () => {
         )
 
         expect(screen.getByRole('button', {name: 'jam_management.schedule.add_new_song'})).toBeVisible()
+        const searchInput = screen.getByRole('searchbox', {name: 'schedule.search_placeholder'})
+        expect(searchInput.closest('.schedule-toolbar__search')).not.toBeNull()
+        expect(document.querySelector('.lucide-search')).not.toBeInTheDocument()
         const current = screen.getByRole('button', {name: 'Song 1 - Artist 1'}).closest('article')
         expect(current).not.toBeNull()
         expect(current).toHaveAttribute('data-performance-priority', 'current')

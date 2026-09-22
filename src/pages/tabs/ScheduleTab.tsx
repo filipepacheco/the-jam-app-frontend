@@ -1,4 +1,5 @@
 import type {JamResponseDto, ScheduleResponseDto} from "../../types/api.types.ts";
+import "./ScheduleTab.css";
 import {useTranslation} from "react-i18next";
 import {useCallback, useEffect, useState} from "react";
 import {Action, Alert, ConfirmDialog, EmptyState, Field, IconAction, Modal, ModalFooter, MusicModal, useToast} from '../../components';
@@ -6,7 +7,7 @@ import {HostMusicianRegistrationModal} from "../../components/schedule";
 import {ScheduleCollapsibleCard} from "../../components/schedule/ScheduleCollapsibleCard";
 import {MusicianProfileModal} from "../../components/MusicianProfileModal";
 import {SearchableSelect} from "../../components/forms/SearchableSelect.tsx";
-import {Search, X, ListMusic} from "lucide-react";
+import {X, ListMusic} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useHostScheduleController} from '../../hooks'
 import type {HostScheduleOutcome, Music, Performance, PerformanceStatus} from '../../lib/schedule/hostScheduleController'
@@ -299,7 +300,7 @@ export function ScheduleTab({jam, onReload}: {
                             : {state: 'idle' as const})}
                     >
                         <Action.Icon><ListMusic className="size-4" /></Action.Icon>
-                        <Action.Label>{t('jam_management.schedule.add_new_song')}</Action.Label>
+                        <Action.Label className="text-sm">{t('jam_management.schedule.add_new_song')}</Action.Label>
                     </Action>
                 </div>
             )}
@@ -309,15 +310,11 @@ export function ScheduleTab({jam, onReload}: {
                 <div className="space-y-2">
                     <div className="flex items-end gap-2">
                         <div className="flex min-w-0 flex-1 items-end gap-2">
-                            <div className="relative min-w-0 flex-1">
-                                <Search
-                                    className="pointer-events-none absolute left-3 top-1/2 z-10 size-4 -translate-y-1/2 text-base-content/60"
-                                    aria-hidden="true"
-                                />
+                            <div className="min-w-0 flex-1">
                                 <Field
                                     id="schedule-search"
                                     label={<span className="sr-only">{t('schedule.search_placeholder')}</span>}
-                                    className="min-w-0 [&_.ds-field__control]:pl-10"
+                                    className="schedule-toolbar__search min-w-0"
                                 >
                                     <Field.Input
                                         type="search"
@@ -345,7 +342,7 @@ export function ScheduleTab({jam, onReload}: {
                                 : {state: 'idle' as const})}
                         >
                             <Action.Icon><ListMusic className="size-4" /></Action.Icon>
-                            <Action.Label>{t('jam_management.schedule.add_new_song')}</Action.Label>
+                            <Action.Label className="text-sm">{t('jam_management.schedule.add_new_song')}</Action.Label>
                         </Action>
                     </div>
                     <div className="flex flex-wrap gap-2" role="group" aria-label={t('jam_management.schedule.title')}>
@@ -354,21 +351,21 @@ export function ScheduleTab({jam, onReload}: {
                             aria-pressed={statusFilter === 'all'}
                             onClick={() => scheduleCommands.setFilter('all')}
                         >
-                            <Action.Label>{t('common.all')} ({totalCount})</Action.Label>
+                            <Action.Label className="text-sm">{t('common.all')} ({totalCount})</Action.Label>
                         </Action>
                         <Action
                             variant={statusFilter === 'needs_musicians' ? 'primary' : 'quiet'}
                             aria-pressed={statusFilter === 'needs_musicians'}
                             onClick={() => scheduleCommands.setFilter('needs_musicians')}
                         >
-                            <Action.Label>{t('schedule.needs_musicians_short')} ({needsCount})</Action.Label>
+                            <Action.Label className="text-sm">{t('schedule.needs_musicians_short')} ({needsCount})</Action.Label>
                         </Action>
                         <Action
                             variant={statusFilter === 'complete' ? 'primary' : 'quiet'}
                             aria-pressed={statusFilter === 'complete'}
                             onClick={() => scheduleCommands.setFilter('complete')}
                         >
-                            <Action.Label>{t('schedule.band_complete_short')} ({completeCount})</Action.Label>
+                            <Action.Label className="text-sm">{t('schedule.band_complete_short')} ({completeCount})</Action.Label>
                         </Action>
                     </div>
                 </div>

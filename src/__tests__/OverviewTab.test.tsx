@@ -48,7 +48,9 @@ describe('OverviewTab', () => {
             </MemoryRouter>,
         )
 
-        expect(screen.getByRole('textbox', {name: 'create_jam.form.jam_name'})).toHaveValue('Test jam')
+        const jamNameInput = screen.getByRole('textbox', {name: 'create_jam.form.jam_name'})
+        expect(jamNameInput).toHaveValue('Test jam')
+        expect(jamNameInput.closest('fieldset')?.parentElement).toHaveClass('min-w-0', 'grid-cols-1')
         expect(screen.getByRole('button', {name: 'create_jam.actions.update'})).toBeDisabled()
         expect(screen.getByRole('button', {name: 'spotify.import_button'}).closest('.dropdown')).toBeNull()
         expect(screen.queryByRole('button', {name: 'spotify.export_button'})).not.toBeInTheDocument()
