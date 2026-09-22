@@ -49,7 +49,7 @@ export const ApprovedDenseRegistrationList: Story = {
       neededVocals={1}
     />
   ),
-  globals: { theme: 'synthwave', locale: 'es', viewport: { value: 'desktop', isRotated: false } },
+  globals: { theme: 'jam-dark', locale: 'es', viewport: { value: 'desktop', isRotated: false } },
 }
 
 export const EmptyRegistrationList: Story = {

@@ -78,7 +78,7 @@ export const JamAndScheduleRows: Story = {
       </DataCard>
     </div>
   ),
-  globals: { theme: 'night', locale: 'pt', viewport: { value: 'desktop', isRotated: false } },
+  globals: { theme: 'jam-dark', locale: 'pt', viewport: { value: 'desktop', isRotated: false } },
 }
 
 export const MusicHero: Story = {

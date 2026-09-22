@@ -43,7 +43,7 @@ export const LongLocalizedContent: Story = {
   },
   globals: {
     locale: 'es',
-    theme: 'coffee',
+    theme: 'jam-dark',
     viewport: { value: 'phone', isRotated: false },
   },
 }

@@ -46,7 +46,7 @@ export const RegistrationContext: Story = {
   render: () => <JamContextDisplay jam={jamFixtures.active} />,
   globals: {
     locale: 'en',
-    theme: 'corporate',
+    theme: 'jam-light',
     viewport: { value: 'desktop', isRotated: false },
   },
   parameters: {
@@ -103,7 +103,7 @@ export const FloatingActionsByPermission: Story = {
   globals: {
     authRole: 'user',
     locale: 'pt',
-    theme: 'dark',
+    theme: 'jam-dark',
     viewport: { value: 'phone', isRotated: false },
   },
   play: async ({ canvasElement, userEvent }) => {

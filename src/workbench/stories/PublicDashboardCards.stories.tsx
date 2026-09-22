@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>
 
 export const CurrentAndNext: Story = {
   render: () => <div><CurrentSongCard song={dashboardSongs.current} /><NextSongCard song={dashboardSongs.next} /></div>,
-  globals: { theme: 'night', locale: 'pt', viewport: { value: 'desktop', isRotated: false } },
+  globals: { theme: 'jam-dark', locale: 'pt', viewport: { value: 'desktop', isRotated: false } },
 }
 
 export const StartingSoon: Story = {
@@ -28,7 +28,7 @@ export const EmptyStartingSoon: Story = { render: () => <StartingSoonCard song={
 
 export const InstrumentAndWaveform: Story = {
   render: () => <div className="space-y-8"><InstrumentGroup instrument="guitars" musicians={dashboardSongs.current.musicians} size="lg" /><WaveformVisualizer barCount={20} /></div>,
-  globals: { reducedMotion: true, theme: 'synthwave' },
+  globals: { reducedMotion: true, theme: 'jam-dark' },
 }
 
 const toggleNav = fn()

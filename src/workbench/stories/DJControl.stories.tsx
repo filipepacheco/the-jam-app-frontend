@@ -20,12 +20,12 @@ export const Idle: Story = {
 
 export const Ready: Story = {
   render: () => <NowPlayingBar currentSong={null} nextSong={djSongs.next} playbackState="STOPPED" />,
-  globals: { locale: 'en', theme: 'cupcake' },
+  globals: { locale: 'en', theme: 'jam-light' },
 }
 
 export const PlayingLongContent: Story = {
   render: () => <NowPlayingBar currentSong={djSongs.current} nextSong={djSongs.next} playbackState="PLAYING" />,
-  globals: { locale: 'es', theme: 'synthwave', viewport: { value: 'phone', isRotated: false } },
+  globals: { locale: 'es', theme: 'jam-dark', viewport: { value: 'phone', isRotated: false } },
 }
 
 export const Paused: Story = {

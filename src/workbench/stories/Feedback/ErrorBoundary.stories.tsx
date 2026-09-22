@@ -32,7 +32,7 @@ export const CustomFallback: Story = {
       </div>
     ),
   },
-  globals: { theme: 'night' },
+  globals: { theme: 'jam-dark' },
   play: async ({ canvas }) => {
     await expect(canvas.getByRole('alert')).toHaveTextContent('Não foi possível')
   },

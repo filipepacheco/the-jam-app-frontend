@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>
 
 export const LiveCarousel: Story = {
   render: () => <CarouselDashboard jamStatus="LIVE" currentSong={dashboardSongs.current} nextSongs={[dashboardSongs.next]} jamId="jam-public" slug="friday-night-jam" intervalMs={60_000} />,
-  globals: { theme: 'dark', locale: 'en', reducedMotion: true },
+  globals: { theme: 'jam-dark', locale: 'en', reducedMotion: true },
   play: async ({ canvas, userEvent }) => {
     const tabs = canvas.getAllByRole('tab')
     await expect(tabs).toHaveLength(3)
@@ -43,7 +43,7 @@ export const FinishedCarousel: Story = {
 
 export const PanelMatrix: Story = {
   render: () => <div className="space-y-20"><NowPlayingPanel song={dashboardSongs.current} /><UpNextPanel song={dashboardSongs.next} /><StartingSoonPanel song={dashboardSongs.next} /><FinishedPanel /><QRCodePanel jamId="jam-public" slug="friday-night-jam" /></div>,
-  globals: { locale: 'es', theme: 'synthwave', viewport: { value: 'desktop', isRotated: false } },
+  globals: { locale: 'es', theme: 'jam-dark', viewport: { value: 'desktop', isRotated: false } },
   parameters: {
     a11y: { test: 'error' },
     designSystem: { interaction: { status: 'not-applicable', rationale: 'Static venue panel matrix for hierarchy and localization review.' } },
