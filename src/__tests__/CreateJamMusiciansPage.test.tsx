@@ -244,7 +244,7 @@ describe('Track 8 page-level seams', () => {
     await user.type(screen.getByRole('textbox', {name: /Location/}), 'Benjamin Social Club')
     await user.type(screen.getByLabelText(/Date/), '2026-09-18')
     await user.type(screen.getByLabelText(/Time/), '17:00')
-    await user.click(screen.getByRole('checkbox', {name: /Automatically approve registrations/}))
+    expect(screen.getByRole('checkbox', {name: /Automatically approve registrations/})).toBeChecked()
     await user.click(screen.getByRole('button', {name: 'Create'}))
 
     await waitFor(() => expect(jamService.create).toHaveBeenCalledWith(expect.objectContaining({

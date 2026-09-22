@@ -58,7 +58,7 @@ export function CreateJamPage() {
     hostMusicianId: user?.id || '',
     hostName: '',
     hostContact: '',
-    autoApproveRegistrations: false,
+    autoApproveRegistrations: true,
     status: 'ACTIVE',
   })
 
@@ -108,7 +108,7 @@ export function CreateJamPage() {
         hostMusicianId: user?.id || '',
         hostName: jam.hostName || '',
         hostContact: jam.hostContact || '',
-        autoApproveRegistrations: jam.autoApproveRegistrations ?? false,
+        autoApproveRegistrations: jam.autoApproveRegistrations ?? true,
         status: jam.status as FormData['status'],
       })
     } catch (err) {

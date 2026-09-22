@@ -18,6 +18,7 @@ interface JamEditorData {
     spotifyPlaylistUrl: string
     hostName: string
     hostContact: string
+    autoApproveRegistrations: boolean
 }
 
 function editorDataFromJam(jam: JamResponseDto): JamEditorData {
@@ -38,6 +39,7 @@ function editorDataFromJam(jam: JamResponseDto): JamEditorData {
         spotifyPlaylistUrl: jam.spotifyPlaylistUrl ?? '',
         hostName: jam.hostName ?? '',
         hostContact: jam.hostContact ?? '',
+        autoApproveRegistrations: jam.autoApproveRegistrations ?? true,
     }
 }
 
@@ -133,6 +135,15 @@ export function OverviewTab({
         setFormError(null)
     }
 
+    const handleAutoApproveChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setFormData((current) => ({
+            ...current,
+            autoApproveRegistrations: event.target.checked,
+        }))
+        setDirty(true)
+        setFormError(null)
+    }
+
     const handleSubmit = async (event: FormEvent) => {
         event.preventDefault()
         const missingField = !formData.name.trim()
@@ -169,6 +180,7 @@ export function OverviewTab({
                 spotifyPlaylistUrl: formData.spotifyPlaylistUrl.trim() || null,
                 hostName: formData.hostName.trim(),
                 hostContact: formData.hostContact.trim() || undefined,
+                autoApproveRegistrations: formData.autoApproveRegistrations,
             })
             setDirty(false)
         } catch {
@@ -282,6 +294,27 @@ export function OverviewTab({
                                 <fieldset className="fieldset">
                                     <label className="fieldset-legend" htmlFor={`${formId}-hostContact`}>{t('create_jam.form.host_contact')}</label>
                                     <input id={`${formId}-hostContact`} name="hostContact" value={formData.hostContact} onChange={handleInputChange} className="input input-bordered w-full" disabled={saving} />
+                                </fieldset>
+                                <fieldset className="fieldset sm:col-span-2">
+                                    <label className="label min-h-11 cursor-pointer justify-start gap-3" htmlFor={`${formId}-autoApproveRegistrations`}>
+                                        <input
+                                            id={`${formId}-autoApproveRegistrations`}
+                                            type="checkbox"
+                                            name="autoApproveRegistrations"
+                                            checked={formData.autoApproveRegistrations}
+                                            onChange={handleAutoApproveChange}
+                                            aria-labelledby={`${formId}-autoApproveRegistrations-label`}
+                                            aria-describedby={`${formId}-autoApproveRegistrations-hint`}
+                                            className="toggle toggle-primary"
+                                            disabled={saving}
+                                        />
+                                        <span className="min-w-0">
+                                            <span id={`${formId}-autoApproveRegistrations-label`} className="block font-medium">{t('create_jam.form.auto_approve_registrations')}</span>
+                                            <span id={`${formId}-autoApproveRegistrations-hint`} className="block text-sm font-normal text-base-content/60">
+                                                {t('create_jam.form.auto_approve_registrations_hint')}
+                                            </span>
+                                        </span>
+                                    </label>
                                 </fieldset>
                             </div>
 
