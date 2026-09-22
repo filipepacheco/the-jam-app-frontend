@@ -109,7 +109,7 @@ export const ReferencePresentations: Story = {
         <p className="text-sm font-semibold uppercase tracking-wider" style={{ color: 'var(--ds-content-secondary)' }}>Jam App reference themes</p>
         <h1 className="ds-type-display">Music-native color, from daylight to stage lights</h1>
         <p className="ds-type-body mt-2" style={{ color: 'var(--ds-content-secondary)' }}>
-          These are the approved purple and violet reference presentations. Product UI should consume semantic roles so the same hierarchy survives every selectable DaisyUI theme.
+          These are the approved brand presentations. Product UI should consume semantic roles so the same hierarchy survives both Jam App themes.
         </p>
       </div>
       <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-2">

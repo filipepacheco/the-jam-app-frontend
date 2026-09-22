@@ -73,7 +73,7 @@ export const FormInteraction: Story = {
 }
 
 export const ThemeLocaleAndMotion: Story = {
-  globals: { theme: 'synthwave', locale: 'es', reducedMotion: true },
+  globals: { theme: 'jam-dark', locale: 'es', reducedMotion: true },
   parameters: {
     a11y: { test: 'error' },
     designSystem: {
@@ -86,7 +86,7 @@ export const ThemeLocaleAndMotion: Story = {
   render: () => <NextSongCard song={nextSong} />,
   play: async ({ canvasElement }) => {
     await expect(window.matchMedia('(prefers-reduced-motion: reduce)').matches).toBe(true)
-    await expect(canvasElement.ownerDocument.documentElement.dataset.theme).toBe('synthwave')
+    await expect(canvasElement.ownerDocument.documentElement.dataset.theme).toBe('jam-dark')
     await expect(canvasElement.ownerDocument.documentElement.lang).toBe('es')
   },
 }

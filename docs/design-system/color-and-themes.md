@@ -2,7 +2,7 @@
 
 Jam App uses DaisyUI as its palette adapter and a small semantic layer for product decisions. Components describe the job a color performs—surface, content, border, action, focus, or status—so user-selected themes can change the palette without changing meaning.
 
-`jam-light` and `jam-dark` are the approved reference presentations. Their purple and violet emphasis is intentionally music-native: energetic enough for a live venue while keeping content and controls legible. `jam-dark` is the application default; both references remain available in the theme picker and private workbench.
+`jam-light` and `jam-dark` are the only product themes. Both use the documented brand palette consistently: violet for primary actions, coral for secondary actions, amber for accents and warnings, and dark plum for grounding surfaces and contrasting content. `jam-dark` uses the approved light violet on its dark-plum canvas. It is the application default; both themes remain available in the theme picker and private workbench.
 
 ## Semantic roles
 
@@ -32,7 +32,7 @@ Status color must be paired with text or iconography. “Ready” remains succes
 
 ## Selectable-theme contract
 
-The selectable set is `jam-light`, `jam-dark`, and DaisyUI's `light`, `dark`, `cupcake`, `bumblebee`, `emerald`, `corporate`, `synthwave`, `retro`, `cyberpunk`, `valentine`, `halloween`, `garden`, `forest`, `aqua`, `lofi`, `pastel`, `fantasy`, `wireframe`, `black`, `luxury`, `dracula`, `cmyk`, `autumn`, `business`, `acid`, `lemonade`, `night`, `coffee`, and `winter` themes.
+The selectable set is exactly `jam-light` and `jam-dark`. DaisyUI's built-in themes are disabled so persisted values and component defaults cannot introduce a third visual presentation.
 
 Every selectable theme must:
 
@@ -42,7 +42,7 @@ Every selectable theme must:
 - meet contrast requirements in the reference presentations: 4.5:1 for normal text and action labels, and 3:1 for focus indicators and meaningful UI boundaries;
 - avoid using color as the only way to communicate state.
 
-When adding a theme, add it to `SELECTABLE_THEMES` in `src/design-system/foundations.ts`. The workbench toolbar and the selectable-theme smoke gallery both consume that source, so the new theme is included automatically.
+Do not add another selectable theme without revisiting this two-theme product contract. The workbench toolbar and the selectable-theme smoke gallery both consume `SELECTABLE_THEMES` from `src/design-system/foundations.ts`.
 
 ## Workbench review
 

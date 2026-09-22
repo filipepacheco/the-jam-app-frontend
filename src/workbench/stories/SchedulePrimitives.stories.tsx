@@ -38,7 +38,7 @@ export const EmptyAndFilledSlots: Story = {
       />
     </div>
   ),
-  globals: { locale: 'pt', theme: 'cupcake', viewport: { value: 'phone', isRotated: false } },
+  globals: { locale: 'pt', theme: 'jam-light', viewport: { value: 'phone', isRotated: false } },
 }
 
 export const SongAndStatusMatrix: Story = {
@@ -57,7 +57,7 @@ export const SongAndStatusMatrix: Story = {
       </div>
     </div>
   ),
-  globals: { locale: 'es', theme: 'night', viewport: { value: 'desktop', isRotated: false } },
+  globals: { locale: 'es', theme: 'jam-dark', viewport: { value: 'desktop', isRotated: false } },
 }
 
 const approve = fn()

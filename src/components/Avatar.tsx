@@ -35,8 +35,15 @@ export function Avatar({ name, imageUrl, size = 'md', className = '' }: AvatarPr
    * @param name - Full name string
    * @returns daisyUI semantic background color class
    */
-  const getColorClass = (name: string): string => {
-    const colors = ['bg-primary', 'bg-secondary', 'bg-accent', 'bg-info', 'bg-success', 'bg-warning/70']
+  const getColorClasses = (name: string): string => {
+    const colors = [
+      'bg-primary text-primary-content',
+      'bg-secondary text-secondary-content',
+      'bg-accent text-accent-content',
+      'bg-info text-info-content',
+      'bg-success text-success-content',
+      'bg-warning text-warning-content',
+    ]
     const hash = name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
     return colors[hash % colors.length]
   }
@@ -50,11 +57,11 @@ export function Avatar({ name, imageUrl, size = 'md', className = '' }: AvatarPr
   }
 
   const initials = getInitials(name)
-  const colorClass = getColorClass(name)
+  const colorClasses = getColorClasses(name)
 
   return (
     <div className={`avatar ${className}`}>
-      <div className={`${sizeClasses[size]} rounded-full ${colorClass} text-base-content flex items-center justify-center font-bold shrink-0`}>
+      <div className={`${sizeClasses[size]} rounded-full ${colorClasses} flex items-center justify-center font-bold shrink-0`}>
         {imageUrl ? (
           <img src={imageUrl} alt={name} className="rounded-full object-cover" />
         ) : (

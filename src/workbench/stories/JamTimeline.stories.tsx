@@ -26,7 +26,7 @@ export const CompleteSchedule: Story = {
   },
   globals: {
     locale: 'pt',
-    theme: 'light',
+    theme: 'jam-light',
     viewport: { value: 'desktop', isRotated: false },
   },
   play: async ({ canvas, userEvent }) => {
@@ -46,14 +46,14 @@ export const EmptySchedule: Story = {
   args: { schedules: [], user: null, onRegisterClick: fn(), jamStatus: 'ACTIVE' },
   globals: {
     locale: 'es',
-    theme: 'corporate',
+    theme: 'jam-light',
     viewport: { value: 'phone', isRotated: false },
   },
 }
 
 export const ViewerWithoutActions: Story = {
   args: { schedules: scheduleFixtures, user: null, onRegisterClick: fn(), jamStatus: 'FINISHED' },
-  globals: { authRole: 'viewer', locale: 'en', theme: 'dark' },
+  globals: { authRole: 'viewer', locale: 'en', theme: 'jam-dark' },
 }
 
 const toggleCompletedItem = fn()
@@ -90,7 +90,7 @@ export const InProgressPermissionState: Story = {
       />
     </div>
   ),
-  globals: { authRole: 'user', locale: 'pt', theme: 'synthwave' },
+  globals: { authRole: 'user', locale: 'pt', theme: 'jam-dark' },
 }
 
 const registrationFor = (

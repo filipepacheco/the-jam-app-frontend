@@ -19,16 +19,27 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
   const { t } = useTranslation()
   const {currentLang} = useAppLanguage()
   // Get role-based colors
-  const getRoleBgColor = () => {
+  const getRoleColorClasses = () => {
     switch (user.role) {
       case 'host':
-        return 'from-primary to-primary/80'
+        return {
+          surface: 'from-primary to-primary/80 text-primary-content',
+          avatar: 'bg-primary-content text-primary',
+        }
       case 'user':
-        return 'from-secondary to-secondary/80'
+        return {
+          surface: 'from-secondary to-secondary/80 text-secondary-content',
+          avatar: 'bg-secondary-content text-secondary',
+        }
       default:
-        return 'from-neutral to-neutral/80'
+        return {
+          surface: 'from-neutral to-neutral/80 text-neutral-content',
+          avatar: 'bg-neutral-content text-neutral',
+        }
     }
   }
+
+  const roleColorClasses = getRoleColorClasses()
 
   // Get initials from name
   const initials = (user.name || 'U')
@@ -43,11 +54,11 @@ export function ProfileHeader({ user }: ProfileHeaderProps) {
     : 'Recently joined'
 
   return (
-    <div className={`card bg-gradient-to-r ${getRoleBgColor()} text-primary-content shadow-xl`}>
+    <div className={`card bg-gradient-to-r ${roleColorClasses.surface} shadow-xl`}>
       <div className="card-body items-center text-center">
         {/* Avatar Circle */}
         <div className="avatar placeholder mb-4">
-          <div className="bg-white text-primary rounded-full w-24 flex items-center justify-center">
+          <div className={`${roleColorClasses.avatar} flex w-24 items-center justify-center rounded-full`}>
             <span className="text-4xl font-bold">{initials}</span>
           </div>
         </div>

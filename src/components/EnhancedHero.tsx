@@ -28,8 +28,7 @@ export function EnhancedHero() {
 
   return (
     <section
-      className="relative isolate min-h-screen overflow-hidden bg-base-300 text-base-content"
-      style={{ color: 'var(--ds-content-primary)' }}
+      className="relative isolate min-h-screen overflow-hidden bg-neutral text-neutral-content"
     >
       <div className="absolute inset-0 animate-gradient-shift" aria-hidden="true" />
       <div className="radial-glow" aria-hidden="true" />
@@ -37,8 +36,7 @@ export function EnhancedHero() {
         {/* Text content */}
         <div className="lg:w-5/12 text-left">
           <motion.p
-            className="text-sm sm:text-base font-semibold mb-3 text-primary ds-type-ui"
-            style={{ color: 'var(--ds-content-link)' }}
+            className="mb-3 text-sm font-semibold text-accent sm:text-base ds-type-ui"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
@@ -47,8 +45,7 @@ export function EnhancedHero() {
           </motion.p>
 
           <motion.h1
-            className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-wrap-balance tracking-tight"
-            style={{ color: 'var(--ds-content-primary)' }}
+            className="mb-4 font-display text-4xl font-bold tracking-tight text-neutral-content text-wrap-balance sm:mb-6 sm:text-5xl lg:text-6xl"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -57,8 +54,7 @@ export function EnhancedHero() {
           </motion.h1>
 
           <motion.p
-            className="text-base sm:text-lg lg:text-xl mb-6 sm:mb-8 leading-relaxed whitespace-pre-line ds-type-body"
-            style={{ color: 'var(--ds-content-secondary)' }}
+            className="mb-6 whitespace-pre-line text-base leading-relaxed text-neutral-content/75 sm:mb-8 sm:text-lg lg:text-xl ds-type-body"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}

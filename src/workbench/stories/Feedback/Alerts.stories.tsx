@@ -49,7 +49,7 @@ export const StatusVariants: Story = {
       <Alert type="error" title="Não foi possível salvar" message="Confira sua conexão e tente novamente." />
     </div>
   ),
-  globals: { theme: 'light' },
+  globals: { theme: 'jam-light' },
   parameters: { a11y: { test: 'error' } },
 }
 
@@ -77,7 +77,7 @@ export const LongLocalizedError: Story = {
   },
   globals: {
     locale: 'es',
-    theme: 'night',
+    theme: 'jam-dark',
     viewport: { value: 'phone', isRotated: false },
   },
   parameters: { a11y: { test: 'error' } },
@@ -110,7 +110,7 @@ export const OfflineNotification: Story = {
   render: () => <OfflineBanner visible message="📵 Sem conexão — exibindo a última programação salva" />,
   globals: {
     reducedMotion: true,
-    theme: 'synthwave',
+    theme: 'jam-dark',
     viewport: { value: 'venue', isRotated: false },
   },
   play: async ({ canvas }) => {

@@ -45,7 +45,7 @@ export const SuggestedForHost: Story = {
     onApprove: approveMusic,
     onReject: rejectMusic,
   },
-  globals: { locale: 'es', theme: 'bumblebee' },
+  globals: { locale: 'es', theme: 'jam-light' },
   play: async ({ canvas, userEvent }) => {
     await userEvent.click(canvas.getByRole('button', { name: /aprobar/i }))
     await expect(approveMusic).toHaveBeenCalledWith(musicFixtures.suggested)
@@ -57,7 +57,7 @@ export const LongContentForViewer: Story = {
   globals: {
     authRole: 'viewer',
     locale: 'en',
-    theme: 'night',
+    theme: 'jam-dark',
     viewport: { value: 'phone', isRotated: false },
   },
 }

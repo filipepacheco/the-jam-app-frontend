@@ -30,7 +30,7 @@ Jam App connects participant registration, host scheduling, live operational con
 - Hosts use it before and during live events, including loading, refresh, stale-data, offline or reconnect, destructive, rollback, and conflict states.
 - Audiences consume the Public Dashboard passively on large displays, where distance legibility and persistent current-state communication take priority over control density.
 - Portuguese is the reference language. English and Spanish are supported, including expansion from long labels, names, and song titles.
-- The product supports selectable themes, including `jam-light` and `jam-dark`, and must communicate state equivalently when reduced motion is requested.
+- The product supports exactly two selectable themes, `jam-light` and `jam-dark`, and must communicate state equivalently when reduced motion is requested.
 
 ## Capabilities and Constraints
 

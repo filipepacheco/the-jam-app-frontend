@@ -10,13 +10,21 @@ let currentTheme: ThemeName | undefined
 const subscribers = new Set<ThemeListener>()
 let isListeningForStorage = false
 
+function resolveStoredTheme(value: unknown): ThemeName {
+  return value === 'light' ? 'jam-light' : resolveThemeName(value)
+}
+
 function readStoredTheme(): ThemeName {
   try {
     const storedTheme = window.localStorage.getItem(THEME_KEY)
-    if (storedTheme !== null) return resolveThemeName(storedTheme)
+    if (storedTheme !== null) {
+      const resolvedTheme = resolveStoredTheme(storedTheme)
+      if (storedTheme !== resolvedTheme) window.localStorage.setItem(THEME_KEY, resolvedTheme)
+      return resolvedTheme
+    }
 
     const legacyTheme = window.localStorage.getItem(LEGACY_THEME_KEY)
-    const resolvedTheme = resolveThemeName(legacyTheme)
+    const resolvedTheme = resolveStoredTheme(legacyTheme)
     if (legacyTheme !== null) window.localStorage.setItem(THEME_KEY, resolvedTheme)
     return resolvedTheme
   } catch {
@@ -41,7 +49,7 @@ function notifyThemeSubscribers(): void {
 
 function onStorage(event: StorageEvent): void {
   if (event.key === THEME_KEY && event.newValue !== null) {
-    setSharedTheme(resolveThemeName(event.newValue), { persist: false })
+    setSharedTheme(resolveStoredTheme(event.newValue), { persist: false })
   }
 }
 

@@ -26,7 +26,7 @@ export const FullPageLongLocalizedLabel: Story = {
   render: () => <FullPageSpinner label="Estamos cargando todas las presentaciones y los músicos inscritos…" />,
   globals: {
     locale: 'es',
-    theme: 'night',
+    theme: 'jam-dark',
     viewport: { value: 'phone', isRotated: false },
   },
   parameters: { layout: 'fullscreen' },
@@ -49,7 +49,7 @@ export const JamCardGrid: Story = {
       <JamCardSkeleton />
     </div>
   ),
-  globals: { theme: 'cupcake', viewport: { value: 'desktop', isRotated: false } },
+  globals: { theme: 'jam-light', viewport: { value: 'desktop', isRotated: false } },
 }
 
 export const JamDetailPhone: Story = {
@@ -64,7 +64,7 @@ export const JamDetailPhone: Story = {
 export const JamDetailDesktopTheme: Story = {
   render: () => <JamDetailLoadingSkeleton />,
   globals: {
-    theme: 'synthwave',
+    theme: 'jam-dark',
     viewport: { value: 'desktop', isRotated: false },
   },
   parameters: { layout: 'fullscreen' },

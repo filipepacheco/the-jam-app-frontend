@@ -1,15 +1,4 @@
-export const REFERENCE_THEME_NAMES = ['jam-light', 'jam-dark'] as const
-
-const DAISY_THEMES = [
-  'light', 'dark', 'cupcake', 'bumblebee', 'emerald', 'corporate',
-  'synthwave', 'retro', 'cyberpunk', 'valentine', 'halloween', 'garden',
-  'forest', 'aqua', 'lofi', 'pastel', 'fantasy', 'wireframe', 'black',
-  'luxury', 'dracula', 'cmyk', 'autumn', 'business', 'acid', 'lemonade',
-  'night', 'coffee', 'winter',
-] as const
-
-export const SELECTABLE_THEMES = [...REFERENCE_THEME_NAMES, ...DAISY_THEMES] as const
-
+export const SELECTABLE_THEMES = ['jam-light', 'jam-dark'] as const
 export type ThemeName = (typeof SELECTABLE_THEMES)[number]
 export type BrandSurface = 'light' | 'dark'
 
@@ -18,7 +7,7 @@ export interface ThemeMetadata {
 }
 
 /**
- * Product-owned facts about every selectable DaisyUI presentation.
+ * Product-owned facts about both selectable Jam App presentations.
  *
  * Brand artwork must be told which surrounding surface it sits on; it must
  * never infer that fact from a rendered ancestor or computed style.
@@ -26,38 +15,9 @@ export interface ThemeMetadata {
 export const THEME_METADATA: Readonly<Record<ThemeName, ThemeMetadata>> = {
   'jam-light': { brandSurface: 'light' },
   'jam-dark': { brandSurface: 'dark' },
-  light: { brandSurface: 'light' },
-  dark: { brandSurface: 'dark' },
-  cupcake: { brandSurface: 'light' },
-  bumblebee: { brandSurface: 'light' },
-  emerald: { brandSurface: 'light' },
-  corporate: { brandSurface: 'light' },
-  synthwave: { brandSurface: 'dark' },
-  retro: { brandSurface: 'light' },
-  cyberpunk: { brandSurface: 'light' },
-  valentine: { brandSurface: 'light' },
-  halloween: { brandSurface: 'dark' },
-  garden: { brandSurface: 'light' },
-  forest: { brandSurface: 'dark' },
-  aqua: { brandSurface: 'light' },
-  lofi: { brandSurface: 'light' },
-  pastel: { brandSurface: 'light' },
-  fantasy: { brandSurface: 'light' },
-  wireframe: { brandSurface: 'light' },
-  black: { brandSurface: 'dark' },
-  luxury: { brandSurface: 'dark' },
-  dracula: { brandSurface: 'dark' },
-  cmyk: { brandSurface: 'light' },
-  autumn: { brandSurface: 'dark' },
-  business: { brandSurface: 'dark' },
-  acid: { brandSurface: 'light' },
-  lemonade: { brandSurface: 'light' },
-  night: { brandSurface: 'dark' },
-  coffee: { brandSurface: 'dark' },
-  winter: { brandSurface: 'light' },
 }
 
-export const DEFAULT_THEME: ThemeName = 'dark'
+export const DEFAULT_THEME: ThemeName = 'jam-dark'
 
 export function isThemeName(value: unknown): value is ThemeName {
   return typeof value === 'string' && value in THEME_METADATA
@@ -107,7 +67,7 @@ export const CONTROL_SIZES = {
 
 type Oklch = Readonly<{ lightness: number; chroma: number; hue: number }>
 
-export type ReferenceThemeName = (typeof REFERENCE_THEME_NAMES)[number]
+export type ReferenceThemeName = ThemeName
 
 export const REFERENCE_THEMES: Record<ReferenceThemeName, Readonly<{
   base: Oklch
@@ -116,6 +76,8 @@ export const REFERENCE_THEMES: Record<ReferenceThemeName, Readonly<{
   primaryContent: Oklch
   secondary: Oklch
   secondaryContent: Oklch
+  accent: Oklch
+  accentContent: Oklch
   info: Oklch
   infoContent: Oklch
   success: Oklch
@@ -127,38 +89,42 @@ export const REFERENCE_THEMES: Record<ReferenceThemeName, Readonly<{
   focus: Oklch
 }>> = {
   'jam-light': {
-    base: { lightness: 0.98, chroma: 0.012, hue: 300 },
-    baseContent: { lightness: 0.24, chroma: 0.035, hue: 300 },
-    primary: { lightness: 0.43, chroma: 0.2, hue: 300 },
-    primaryContent: { lightness: 0.98, chroma: 0.01, hue: 300 },
-    secondary: { lightness: 0.54, chroma: 0.14, hue: 330 },
-    secondaryContent: { lightness: 0.98, chroma: 0.01, hue: 330 },
+    base: { lightness: 0.98, chroma: 0.007, hue: 312.3 },
+    baseContent: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
+    primary: { lightness: 0.497, chroma: 0.21, hue: 295.7 },
+    primaryContent: { lightness: 0.98, chroma: 0.007, hue: 312.3 },
+    secondary: { lightness: 0.68, chroma: 0.173, hue: 22.4 },
+    secondaryContent: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
+    accent: { lightness: 0.762, chroma: 0.15, hue: 73.5 },
+    accentContent: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
     info: { lightness: 0.48, chroma: 0.13, hue: 250 },
     infoContent: { lightness: 0.98, chroma: 0.01, hue: 250 },
     success: { lightness: 0.43, chroma: 0.12, hue: 155 },
     successContent: { lightness: 0.98, chroma: 0.01, hue: 155 },
-    warning: { lightness: 0.72, chroma: 0.14, hue: 75 },
-    warningContent: { lightness: 0.24, chroma: 0.045, hue: 75 },
+    warning: { lightness: 0.762, chroma: 0.15, hue: 73.5 },
+    warningContent: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
     error: { lightness: 0.45, chroma: 0.18, hue: 25 },
     errorContent: { lightness: 0.98, chroma: 0.01, hue: 25 },
-    focus: { lightness: 0.43, chroma: 0.2, hue: 300 },
+    focus: { lightness: 0.497, chroma: 0.21, hue: 295.7 },
   },
   'jam-dark': {
-    base: { lightness: 0.17, chroma: 0.025, hue: 300 },
-    baseContent: { lightness: 0.92, chroma: 0.015, hue: 300 },
-    primary: { lightness: 0.76, chroma: 0.15, hue: 300 },
-    primaryContent: { lightness: 0.2, chroma: 0.04, hue: 300 },
-    secondary: { lightness: 0.72, chroma: 0.13, hue: 330 },
-    secondaryContent: { lightness: 0.19, chroma: 0.04, hue: 330 },
+    base: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
+    baseContent: { lightness: 0.95, chroma: 0.012, hue: 312 },
+    primary: { lightness: 0.696, chroma: 0.156, hue: 301.6 },
+    primaryContent: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
+    secondary: { lightness: 0.68, chroma: 0.173, hue: 22.4 },
+    secondaryContent: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
+    accent: { lightness: 0.762, chroma: 0.15, hue: 73.5 },
+    accentContent: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
     info: { lightness: 0.74, chroma: 0.11, hue: 250 },
     infoContent: { lightness: 0.19, chroma: 0.035, hue: 250 },
     success: { lightness: 0.72, chroma: 0.12, hue: 155 },
     successContent: { lightness: 0.18, chroma: 0.03, hue: 155 },
-    warning: { lightness: 0.79, chroma: 0.13, hue: 75 },
-    warningContent: { lightness: 0.22, chroma: 0.04, hue: 75 },
+    warning: { lightness: 0.762, chroma: 0.15, hue: 73.5 },
+    warningContent: { lightness: 0.239, chroma: 0.055, hue: 307.4 },
     error: { lightness: 0.74, chroma: 0.14, hue: 25 },
     errorContent: { lightness: 0.2, chroma: 0.035, hue: 25 },
-    focus: { lightness: 0.76, chroma: 0.15, hue: 300 },
+    focus: { lightness: 0.696, chroma: 0.156, hue: 301.6 },
   },
 }
 

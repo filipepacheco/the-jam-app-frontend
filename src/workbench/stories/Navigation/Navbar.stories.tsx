@@ -75,7 +75,7 @@ export const DesktopGuestWithSpanishLabels: Story = {
     authRole: 'guest',
     locale: 'es',
     route: '/jams',
-    theme: 'cupcake',
+    theme: 'jam-light',
     viewport: { value: 'desktop', isRotated: false },
   },
   play: async ({ canvas, userEvent }) => {
@@ -205,7 +205,7 @@ export const DesktopUserSettings: Story = {
   globals: {
     authRole: 'host',
     locale: 'pt',
-    theme: 'light',
+    theme: 'jam-light',
     viewport: { value: 'desktop', isRotated: false },
   },
   play: async ({ canvas, canvasElement, userEvent }) => {
@@ -216,9 +216,9 @@ export const DesktopUserSettings: Story = {
     const languageSelect = canvas.getByRole('combobox', { name: /idioma|language/i })
     const themeSelect = canvas.getByRole('combobox', { name: /tema|theme/i })
     await userEvent.selectOptions(languageSelect, 'en')
-    await userEvent.selectOptions(themeSelect, 'synthwave')
+    await userEvent.selectOptions(themeSelect, 'jam-dark')
     await waitFor(async () => {
-      await expect(canvasElement.ownerDocument.documentElement.dataset.theme).toBe('synthwave')
+      await expect(canvasElement.ownerDocument.documentElement.dataset.theme).toBe('jam-dark')
       await expect(userMenu).toHaveAttribute('aria-expanded', 'true')
       await expect(settingsDialog).toBeVisible()
     })
