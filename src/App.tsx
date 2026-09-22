@@ -1,9 +1,9 @@
-import {lazy, Suspense, useEffect, useMemo} from 'react'
+import {lazy, Suspense, useEffect, useMemo, useState} from 'react'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
 import {Analytics} from "@vercel/analytics/react"
 import {useTranslation} from 'react-i18next'
-import {useAppLanguage} from './hooks'
+import {ThemeProvider, useAppLanguage} from './hooks'
 import {SWRConfig} from 'swr'
 import {SWR_POLLING_DEFAULTS} from './config/swrDefaults'
 import {apiClient} from './lib/api'
@@ -24,10 +24,13 @@ import {SlugRedirect} from './pages/SlugRedirect'
 import {PublicDashboardPage} from './pages/PublicDashboardPage'
 import AuthCallbackPage from "./pages/tabs/AuthCallbackPage.tsx"
 import {AuthProvider, JamProvider} from './contexts'
-import {FullPageSpinner, OnboardingModal} from './components'
+import {FullPageSpinner, OnboardingModal, ToastProvider} from './components'
 import {ErrorBoundary} from './components/ErrorBoundary'
 import {useAuth} from './hooks'
 import {NotFoundPage} from './pages/NotFoundPage'
+import {CircleHelp} from 'lucide-react'
+import {NavigationAction} from './components/Navigation'
+import {JamHowItWorksModal} from './components/jam-detail-v2/JamHowItWorksModal'
 
 // Lazy-loaded pages - Priority 1 (Host-only)
 const HostDashboardPage = lazy(() => import('./pages/host/HostDashboardPage.tsx'))
@@ -105,7 +108,7 @@ function HomePage() {
       operatingSystem: 'Any',
       browserRequirements: 'Requires JavaScript',
       inLanguage: ['pt-BR', 'en', 'es'],
-      image: `${siteUrl}/og-image.jpg`,
+      image: `${siteUrl}/brand/v1/social-1200x630.png`,
       offers: {
         '@type': 'Offer',
         price: '0',
@@ -131,9 +134,7 @@ function HomePage() {
       url: siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/web/icons8-concert-color-512.png`,
-        width: 512,
-        height: 512,
+        url: `${siteUrl}/brand/v1/logo.svg`,
       },
     },
   ], [t, siteUrl, currentLang])
@@ -144,7 +145,7 @@ function HomePage() {
         title={t('seo.homepage.title')}
         description={t('seo.homepage.description_enhanced')}
         keywords={t('seo.homepage.keywords')}
-        ogImage="/og-image.jpg"
+        ogImage="/brand/v1/social-1200x630.png"
         jsonLd={homeJsonLd}
       />
       <div className="min-h-screen">
@@ -155,6 +156,33 @@ function HomePage() {
         <CallToAction />
         <Footer />
       </div>
+    </>
+  )
+}
+
+function JamDetailRoute() {
+  const {t} = useTranslation()
+  const [howItWorksOpen, setHowItWorksOpen] = useState(false)
+  const actionLabel = t('homepage.how_it_works.title')
+
+  return (
+    <>
+      <Navbar
+        contextualAction={(
+          <NavigationAction
+            variant="quiet"
+            onClick={() => setHowItWorksOpen(true)}
+            aria-label={actionLabel}
+            title={actionLabel}
+            className="px-3"
+          >
+            <CircleHelp className="size-4" aria-hidden="true" />
+            <span className="hidden sm:inline">{actionLabel}</span>
+          </NavigationAction>
+        )}
+      />
+      <JamDetailPage />
+      <JamHowItWorksModal isOpen={howItWorksOpen} onClose={() => setHowItWorksOpen(false)} />
     </>
   )
 }
@@ -187,12 +215,7 @@ function AppContent() {
           <BrowseJamsPage />
         </>
       } />
-      <Route path="/jams/:jamId" element={
-        <>
-          <Navbar />
-          <JamDetailPage />
-        </>
-      } />
+      <Route path="/jams/:jamId" element={<JamDetailRoute />} />
       <Route path="/jams/:jamId/register" element={
         <>
           <Navbar />
@@ -303,12 +326,16 @@ function App() {
           ...SWR_POLLING_DEFAULTS,
         }}
       >
-        <AuthProvider>
-          <JamProvider>
-            <AppContent />
-            <OnboardingWrapper />
-          </JamProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <JamProvider>
+              <ToastProvider>
+                <AppContent />
+                <OnboardingWrapper />
+              </ToastProvider>
+            </JamProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </SWRConfig>
       <SpeedInsights />
       <Analytics/>

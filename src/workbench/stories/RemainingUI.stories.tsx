@@ -15,7 +15,7 @@ export const AvatarMatrix: Story = {
 
 export const HostProfileLongContent: Story = {
   render: () => <ProfileHeader user={{ id: 'host-profile', name: 'Ana María del Benjamin Social Club', email: 'ana@example.test', role: 'host', isHost: true, instrument: 'guitars', level: 'PROFESSIONAL', supabaseUserId: 'fixture' }} />,
-  globals: { locale: 'es', theme: 'night', viewport: { value: 'phone', isRotated: false } },
+  globals: { locale: 'es', theme: 'jam-dark', viewport: { value: 'phone', isRotated: false } },
 }
 
 export const SpotifyActions: Story = {

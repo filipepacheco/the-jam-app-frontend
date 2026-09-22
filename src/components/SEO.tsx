@@ -25,7 +25,7 @@ export function SEO({
   title,
   description,
   keywords,
-  ogImage = '/og-image.jpg',
+  ogImage = '/brand/v1/social-1200x630.png',
   ogType = 'website',
   noindex = false,
   canonical,

@@ -5,9 +5,11 @@ import {
   CONTROL_SIZES,
   REFERENCE_THEMES,
   SELECTABLE_THEMES,
+  THEME_METADATA,
   SEMANTIC_COLOR_ROLES,
   SPACING,
   contrastRatio,
+  resolveThemeName,
   type ReferenceThemeName,
 } from '../design-system/foundations'
 
@@ -34,13 +36,30 @@ describe('design-system foundations', () => {
     }
   })
 
-  it('keeps both Jam reference presentations and every selectable theme available', () => {
-    expect(SELECTABLE_THEMES.slice(0, 2)).toEqual(['jam-light', 'jam-dark'])
+  it('exposes only the Jam light and dark themes', () => {
+    expect(SELECTABLE_THEMES).toEqual(['jam-light', 'jam-dark'])
     expect(new Set(SELECTABLE_THEMES).size).toBe(SELECTABLE_THEMES.length)
-    expect(SELECTABLE_THEMES).toContain('light')
-    expect(SELECTABLE_THEMES).toContain('dark')
+    expect(foundationCss).toContain('themes: false')
     expect(foundationCss).toContain('name: "jam-light"')
     expect(foundationCss).toContain('name: "jam-dark"')
+  })
+
+  it('gives every selectable theme an explicit surrounding-surface brand treatment', () => {
+    expect(Object.keys(THEME_METADATA)).toEqual([...SELECTABLE_THEMES])
+
+    for (const theme of SELECTABLE_THEMES) {
+      expect(THEME_METADATA[theme].brandSurface).toMatch(/^(light|dark)$/)
+    }
+
+    expect(THEME_METADATA['jam-light'].brandSurface).toBe('light')
+    expect(THEME_METADATA['jam-dark'].brandSurface).toBe('dark')
+  })
+
+  it('validates persisted theme names with the documented dark fallback', () => {
+    expect(resolveThemeName('jam-light')).toBe('jam-light')
+    expect(resolveThemeName('dark')).toBe('jam-dark')
+    expect(resolveThemeName('stale-theme')).toBe('jam-dark')
+    expect(resolveThemeName(null)).toBe('jam-dark')
   })
 
   it.each(Object.entries(REFERENCE_THEMES) as [ReferenceThemeName, (typeof REFERENCE_THEMES)[ReferenceThemeName]][])(
@@ -49,6 +68,7 @@ describe('design-system foundations', () => {
       expect(contrastRatio(theme.baseContent, theme.base)).toBeGreaterThanOrEqual(4.5)
       expect(contrastRatio(theme.primaryContent, theme.primary)).toBeGreaterThanOrEqual(4.5)
       expect(contrastRatio(theme.secondaryContent, theme.secondary)).toBeGreaterThanOrEqual(4.5)
+      expect(contrastRatio(theme.accentContent, theme.accent)).toBeGreaterThanOrEqual(4.5)
       expect(contrastRatio(theme.infoContent, theme.info)).toBeGreaterThanOrEqual(4.5)
       expect(contrastRatio(theme.successContent, theme.success)).toBeGreaterThanOrEqual(4.5)
       expect(contrastRatio(theme.warningContent, theme.warning)).toBeGreaterThanOrEqual(4.5)

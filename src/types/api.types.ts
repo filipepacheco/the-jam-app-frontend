@@ -132,6 +132,8 @@ export interface JamMusicResponseDto {
  */
 export type PlaybackState = 'PLAYING' | 'PAUSED' | 'STOPPED'
 
+export type JamManagementMode = 'OWNER_ONLY' | 'SHARED_HOSTS'
+
 /**
  * Count summary for jam-related entities
  */
@@ -148,6 +150,7 @@ export interface JamResponseDto {
   id: string
   name: string
   hostName: string
+  hostContact?: string
   hostMusicianId?: string | null
   description?: string
   date?: string
@@ -156,6 +159,10 @@ export interface JamResponseDto {
   slug?: string | null
   shortCode?: string | null
   spotifyPlaylistUrl?: string | null
+  /** Whether newly created performance registrations are approved automatically. */
+  autoApproveRegistrations?: boolean
+  /** Whether Jam operations are restricted to the owner or shared with other hosts. */
+  managementMode?: JamManagementMode
   status: JamStatus
   createdAt: string
   updatedAt: string
@@ -344,4 +351,3 @@ export interface PaginatedResponse<T> {
 // ============================================================================
 // UTILITY TYPES
 // ============================================================================
-

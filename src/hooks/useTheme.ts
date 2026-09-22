@@ -1,45 +1,123 @@
-import { useEffect, useState, useCallback } from 'react'
+import { type ReactNode, useEffect, useLayoutEffect, useSyncExternalStore } from 'react'
+import { DEFAULT_THEME, resolveThemeName, type ThemeName } from '../design-system/foundations'
 
-const THEME_KEY = 'theme'
-const DEFAULT_THEME = 'dark'
+const THEME_KEY = 'jam-app.theme'
+const LEGACY_THEME_KEY = 'theme'
 
-const readStoredTheme = (): string => {
+type ThemeListener = () => void
+
+let currentTheme: ThemeName | undefined
+const subscribers = new Set<ThemeListener>()
+let isListeningForStorage = false
+
+function resolveStoredTheme(value: unknown): ThemeName {
+  return value === 'light' ? 'jam-light' : resolveThemeName(value)
+}
+
+function readStoredTheme(): ThemeName {
   try {
-    return localStorage.getItem(THEME_KEY) || DEFAULT_THEME
+    const storedTheme = window.localStorage.getItem(THEME_KEY)
+    if (storedTheme !== null) {
+      const resolvedTheme = resolveStoredTheme(storedTheme)
+      if (storedTheme !== resolvedTheme) window.localStorage.setItem(THEME_KEY, resolvedTheme)
+      return resolvedTheme
+    }
+
+    const legacyTheme = window.localStorage.getItem(LEGACY_THEME_KEY)
+    const resolvedTheme = resolveStoredTheme(legacyTheme)
+    if (legacyTheme !== null) window.localStorage.setItem(THEME_KEY, resolvedTheme)
+    return resolvedTheme
   } catch {
     return DEFAULT_THEME
   }
 }
 
-const subscribers = new Set<(theme: string) => void>()
+function getThemeSnapshot(): ThemeName {
+  currentTheme ??= readStoredTheme()
+  return currentTheme
+}
 
-export function useTheme(): [string, (theme: string) => void] {
-  const [theme, setThemeState] = useState<string>(readStoredTheme)
+function applyTheme(theme: ThemeName): void {
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.theme = theme
+  }
+}
+
+function notifyThemeSubscribers(): void {
+  subscribers.forEach((subscriber) => subscriber())
+}
+
+function onStorage(event: StorageEvent): void {
+  if (event.key === THEME_KEY && event.newValue !== null) {
+    setSharedTheme(resolveStoredTheme(event.newValue), { persist: false })
+  }
+}
+
+function subscribeToTheme(listener: ThemeListener): () => void {
+  subscribers.add(listener)
+
+  if (!isListeningForStorage && typeof window !== 'undefined') {
+    window.addEventListener('storage', onStorage)
+    isListeningForStorage = true
+  }
+
+  return () => {
+    subscribers.delete(listener)
+    if (subscribers.size === 0 && isListeningForStorage && typeof window !== 'undefined') {
+      window.removeEventListener('storage', onStorage)
+      isListeningForStorage = false
+    }
+  }
+}
+
+interface SetSharedThemeOptions {
+  readonly persist?: boolean
+}
+
+/**
+ * The application and workbench both change the product theme through this
+ * same typed state seam. Workbench controls intentionally opt out of storage
+ * persistence so review globals never modify a developer's saved preference.
+ */
+export function setSharedTheme(theme: ThemeName, { persist = true }: SetSharedThemeOptions = {}): void {
+  const changed = currentTheme !== theme
+  currentTheme = theme
+  applyTheme(theme)
+
+  if (persist) {
+    try {
+      window.localStorage.setItem(THEME_KEY, theme)
+    } catch {
+      // Ignore quota and privacy-mode failures while keeping this tab usable.
+    }
+  }
+
+  if (changed) notifyThemeSubscribers()
+}
+
+export function useTheme(): readonly [ThemeName, (theme: ThemeName) => void] {
+  const theme = useSyncExternalStore(subscribeToTheme, getThemeSnapshot, () => DEFAULT_THEME)
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
+    applyTheme(theme)
   }, [theme])
 
-  useEffect(() => {
-    subscribers.add(setThemeState)
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === THEME_KEY && e.newValue) setThemeState(e.newValue)
-    }
-    window.addEventListener('storage', onStorage)
-    return () => {
-      subscribers.delete(setThemeState)
-      window.removeEventListener('storage', onStorage)
-    }
-  }, [])
+  return [theme, setSharedTheme]
+}
 
-  const setTheme = useCallback((next: string) => {
-    try {
-      localStorage.setItem(THEME_KEY, next)
-    } catch {
-      // ignore quota / privacy-mode failures
-    }
-    subscribers.forEach((fn) => fn(next))
-  }, [])
+interface ThemeProviderProps {
+  readonly children: ReactNode
+  readonly theme?: ThemeName
+  readonly persist?: boolean
+}
 
-  return [theme, setTheme]
+/** Keeps a product root or Storybook preview synchronized with shared theme state. */
+export function ThemeProvider({ children, theme, persist = true }: ThemeProviderProps) {
+  const [current] = useTheme()
+
+  useLayoutEffect(() => {
+    setSharedTheme(theme ?? current, { persist })
+  }, [current, persist, theme])
+
+  return children
 }

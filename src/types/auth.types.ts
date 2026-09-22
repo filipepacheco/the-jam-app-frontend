@@ -4,6 +4,7 @@
  */
 
 import type {OAuthProvider} from '../lib/supabase'
+import type {TranslationKey} from '../locales/catalogue/catalogue'
 
 /**
  * User roles in the application
@@ -14,6 +15,19 @@ export type UserRole = 'viewer' | 'user' | 'host'
  * Musician skill levels
  */
 export type SkillLevel = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED' | 'PROFESSIONAL'
+
+/**
+ * A context-level auth result. Translation keys keep presentation copy out of
+ * AuthContext so the active application locale is applied by the UI.
+ */
+export interface AuthActionResult {
+  success: boolean
+  error?: string
+  errorKey?: TranslationKey
+  message?: string
+  messageKey?: TranslationKey
+  isNewUser?: boolean
+}
 
 /**
  * Authenticated user object
@@ -56,11 +70,11 @@ export interface AuthContextType {
   isLoggingOut: boolean
 
   // Supabase Auth Methods
-  loginWithEmail: (email: string, password: string) => Promise<{ success: boolean; error?: string; isNewUser?: boolean }>
-  signUpWithEmail: (email: string, password: string, name?: string) => Promise<{ success: boolean; error?: string; message?: string; isNewUser?: boolean }>
-  loginWithOAuth: (provider: OAuthProvider) => Promise<{ success: boolean; error?: string }>
+  loginWithEmail: (email: string, password: string) => Promise<AuthActionResult>
+  signUpWithEmail: (email: string, password: string, name?: string) => Promise<AuthActionResult>
+  loginWithOAuth: (provider: OAuthProvider) => Promise<AuthActionResult>
   logout: () => Promise<{ success: boolean; error?: string }>
-  resetPassword: (email: string) => Promise<{ success: boolean; error?: string }>
+  resetPassword: (email: string) => Promise<AuthActionResult>
 
   // Legacy login method (for backward compatibility)
   login: (user: AuthUser, token?: string) => void
@@ -68,8 +82,8 @@ export interface AuthContextType {
   // Profile management
   setRole: (role: UserRole) => void
   updateUser: (fields: Partial<AuthUser>) => void
-  updateProfile: (updates: UpdateProfileDto) => Promise<{ success: boolean; error?: string }>
-  completeOnboarding: (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }) => Promise<{ success: boolean; error?: string }>
+  updateProfile: (updates: UpdateProfileDto) => Promise<AuthActionResult>
+  completeOnboarding: (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }) => Promise<AuthActionResult>
   clearNewUserFlag: () => void
 
   // Helper methods

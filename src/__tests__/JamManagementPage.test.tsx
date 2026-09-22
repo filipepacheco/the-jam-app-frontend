@@ -48,6 +48,7 @@ vi.mock('../components', async (importOriginal) => {
         Alert: () => null,
         PageAlerts: () => null,
         SpotifyExportModal: () => null,
+        useToast: () => ({showToast: vi.fn(), dismissToast: vi.fn()}),
     }
 })
 
@@ -89,6 +90,7 @@ describe('JamManagementPage', () => {
 
         expect(screen.getByText('overview tab')).toBeInTheDocument()
         expect(screen.queryByText('DJ control tab')).not.toBeInTheDocument()
+        expect(screen.getByRole('tabpanel')).toHaveClass('px-4', 'sm:px-6')
     })
 
     it('lets the host move between management tabs with the keyboard', async () => {

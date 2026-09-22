@@ -102,6 +102,7 @@ export const PerformanceEnrollment: Story = {
     await expect(canvas.getByText(longMusic.title)).toHaveClass('ds-wrap-user-content')
     await expect(canvas.getByText(new RegExp(longMusic.artist, 'i'))).toHaveClass('ds-wrap-user-content')
     await expect(canvas.getByRole('button', {name: /guitars/i})).toHaveAttribute('aria-pressed', 'true')
+    await expect(canvas.queryByText(/needed/i)).not.toBeInTheDocument()
     await userEvent.click(canvas.getByRole('button', { name: /enroll now/i }))
     await expect(enroll).toHaveBeenCalledWith('guitars')
   },

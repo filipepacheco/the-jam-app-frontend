@@ -13,20 +13,24 @@ type Story = StoryObj<typeof meta>
 
 export const GuestHero: Story = {
   render: () => <><EnhancedHero /><HeroDashboardMockup /></>,
-  globals: { authRole: 'guest', locale: 'pt', theme: 'cupcake', viewport: { value: 'phone', isRotated: false }, reducedMotion: true },
+  globals: { authRole: 'guest', locale: 'pt', theme: 'jam-light', viewport: { value: 'phone', isRotated: false }, reducedMotion: true },
   play: async ({ canvas }) => {
     const heroHeading = canvas.getByRole('heading', { level: 1 })
     const dashboardHeading = canvas.getAllByRole('heading', { name: /Don't Stop Believin/i })[0]
-    await waitFor(() => {
-      expect(heroHeading).toHaveStyle({ opacity: 1 })
-      expect(dashboardHeading.closest('[style]')).toHaveStyle({ opacity: 1 })
+    const hero = heroHeading.closest('section')
+    await expect(hero?.querySelector('.animate-gradient-shift')).not.toBeNull()
+    await expect(hero?.querySelector('.hero-bottom-fade')).not.toBeNull()
+    await expect(hero?.querySelector('.radial-glow')).not.toBeNull()
+    await waitFor(async () => {
+      await expect(heroHeading).toHaveStyle({ opacity: 1 })
+      await expect(dashboardHeading.closest('[style]')).toHaveStyle({ opacity: 1 })
     })
   },
 }
 
 export const HostHeroLongLocalization: Story = {
   render: () => <EnhancedHero />,
-  globals: { authRole: 'host', locale: 'es', theme: 'synthwave', viewport: { value: 'desktop', isRotated: false }, reducedMotion: true },
+  globals: { authRole: 'host', locale: 'es', theme: 'jam-dark', viewport: { value: 'desktop', isRotated: false }, reducedMotion: true },
   play: async ({ canvas }) => {
     const heroHeading = canvas.getByRole('heading', { level: 1 })
     await waitFor(() => expect(heroHeading).toHaveStyle({ opacity: 1 }))
@@ -35,7 +39,7 @@ export const HostHeroLongLocalization: Story = {
 
 export const ProcessAndTestimonials: Story = {
   render: () => <><HowItWorks /><Testimonials /></>,
-  globals: { locale: 'en', theme: 'cupcake' },
+  globals: { locale: 'en', theme: 'jam-light' },
   play: async ({ canvas }) => {
     await expect(canvas.getAllByRole('heading')[0]).toHaveAccessibleName(/.+/)
   },
@@ -43,7 +47,7 @@ export const ProcessAndTestimonials: Story = {
 
 export const ConversionAndFooter: Story = {
   render: () => <><CallToAction /><Footer /></>,
-  globals: { locale: 'es', theme: 'dark', reducedMotion: true },
+  globals: { locale: 'es', theme: 'jam-dark', reducedMotion: true },
   play: async ({ canvas }) => {
     await expect(canvas.getAllByRole('heading')[0]).toHaveAccessibleName(/.+/)
   },

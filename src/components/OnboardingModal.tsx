@@ -72,9 +72,9 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       return
     }
 
-    // Phone is required (minimum 14 chars for Brazilian format)
-    if (!phone || phone.replace(/\D/g, '').length < 10) {
-      setError(t('jams.onboarding.phone_required'))
+    // A provided phone number must be complete, but contact information is optional.
+    if (phone && phone.replace(/\D/g, '').length < 10) {
+      setError(t('jams.onboarding.phone_invalid'))
       return
     }
 
@@ -98,13 +98,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       if (result.success) {
         onClose()
       } else {
-        // Check for duplicate phone error
-        const errorMsg = result.error || ''
-        if (errorMsg.toLowerCase().includes('telefone') && errorMsg.toLowerCase().includes('already exists')) {
-          setError(t('jams.onboarding.phone_duplicate'))
-        } else {
-          setError(result.error || t('profile.update_failed'))
-        }
+        setError(result.errorKey ? t(result.errorKey) : (result.error || t('profile.update_failed')))
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('errors.generic_error'))
@@ -115,7 +109,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   if (!isOpen) return null
 
-  const canSubmit = !isLoading && name.trim() && phone.replace(/\D/g, '').length >= 10 && instrument && level
+  const canSubmit = !isLoading &&
+    name.trim() &&
+    (!phone || phone.replace(/\D/g, '').length >= 10) &&
+    instrument &&
+    level
 
   return (
     // Modal.tsx stays the wrapper here (not OverlayModal): it is shared by
@@ -162,8 +160,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           />
         </Field>
 
-        {/* Phone Field - Required */}
-        <Field id="onboarding-phone" label={t('jams.onboarding.phone_label')} required requiredLabel={t('common.required')} disabled={isLoading}>
+        {/* Phone Field - Optional */}
+        <Field id="onboarding-phone" label={t('jams.onboarding.phone_optional_label')} disabled={isLoading}>
           <Field.Input
             type="tel"
             placeholder="(XX) XXXXX-XXXX"

@@ -38,6 +38,7 @@ export const schedule = {
   enroll_btn: message({"pt-BR": "🎵 Inscrever-se", "en": "🎵 Enroll", "es": "🎵 Inscribirse"}),
   add_musician_btn: message({"pt-BR": "Adicionar músico", "en": "Add Musician", "es": "Agregar Músico"}),
   musicians_registered: message({"pt-BR": "Músicos registrados", "en": "Musicians Registered", "es": "Músicos Registrados"}),
+  performance_lineup: message({"pt-BR": "Participantes e vagas", "en": "Participants and open slots", "es": "Participantes y plazas"}),
   add_musician: message({"pt-BR": "+ Adicionar músico", "en": "+ Add Musician", "es": "+ Agregar Músico"}),
   performance_completed: message({"pt-BR": "✓ Apresentação concluída", "en": "✓ Performance completed", "es": "✓ Actuación completada"}),
   performance_in_progress: message({"pt-BR": "🎵 Apresentação em andamento", "en": "🎵 Performance in progress", "es": "🎵 Actuación en curso"}),

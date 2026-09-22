@@ -48,6 +48,18 @@
   background: color-mix(in oklch, var(--ds-action-secondary) 88%, var(--ds-surface-canvas));
 }
 
+/* External Spotify links keep the canonical action geometry while using the
+   service's fixed brand treatment rather than a selectable-theme color. */
+.ds-action--spotify {
+  border-color: #1db954;
+  background: #1db954;
+  color: #191414;
+}
+
+.ds-action--spotify:hover {
+  background: color-mix(in oklch, #1db954 88%, var(--ds-surface-canvas));
+}
+
 .ds-action--quiet {
   border-color: transparent;
   background: transparent;

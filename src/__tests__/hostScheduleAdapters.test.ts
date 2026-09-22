@@ -23,7 +23,7 @@ vi.mock('../services', () => ({
   },
 }))
 
-import {createHostScheduleOperationsAdapter} from '../lib/schedule/hostScheduleAdapters'
+import {createHostScheduleOperationsAdapter, mapJamToHostScheduleSnapshot} from '../lib/schedule/hostScheduleAdapters'
 
 const jam: JamResponseDto = {
   id: 'jam-1',
@@ -55,5 +55,22 @@ describe('Host Schedule production operations adapter', () => {
       ok: true,
       snapshot: {jamId: 'jam-1', performances: []},
     })
+  })
+
+  it('omits withdrawn registrations from the schedule snapshot', () => {
+    const snapshot = mapJamToHostScheduleSnapshot({
+      ...jam,
+      schedules: [{
+        id: 'schedule-1', jamId: 'jam-1', musicId: 'music-1', order: 1, status: 'SCHEDULED',
+        createdAt: '2026-09-24T18:00:00.000Z',
+        music: {id: 'music-1', title: 'Song', artist: 'Artist', createdAt: '2026-09-24T18:00:00.000Z'},
+        registrations: [
+          {id: 'active', musicianId: 'musician-1', jamId: 'jam-1', instrument: 'guitars', status: 'APPROVED'},
+          {id: 'withdrawn', musicianId: 'musician-2', jamId: 'jam-1', instrument: 'vocals', status: 'WITHDRAWN'},
+        ],
+      }],
+    })
+
+    expect(snapshot.performances[0].registrations.map(({id}) => id)).toEqual(['active'])
   })
 })

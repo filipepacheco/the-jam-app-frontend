@@ -81,6 +81,18 @@
   opacity: 0.58;
 }
 
+/* Host management keeps the full tab labels visible on narrow consoles while
+ * preserving the shared navigation hit-area contract. */
+.jam-management-tabs .ds-tabs__list {
+  gap: var(--ds-space-related);
+}
+
+.jam-management-tabs .ds-tab {
+  gap: var(--ds-space-related);
+  padding-inline: var(--ds-space-compact);
+  font-size: var(--ds-text-secondary);
+}
+
 .ds-menu,
 .ds-dropdown {
   position: relative;

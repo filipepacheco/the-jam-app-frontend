@@ -43,6 +43,20 @@ export const auth = {
     check_spam: message({"pt-BR": "Se não encontrar o email, verifique sua pasta de spam.", "en": "If you don't see the email, check your spam folder.", "es": "Si no ves el correo, revisa tu carpeta de spam."}),
     back_to_login: message({"pt-BR": "Voltar ao Login", "en": "Back to Login", "es": "Volver al Login"})
   },
+  sign_up_errors: {
+    email_already_registered: message({"pt-BR": "Este email já está cadastrado. Entre na sua conta ou redefina sua senha.", "en": "This email is already registered. Sign in or reset your password.", "es": "Este correo ya está registrado. Inicia sesión o restablece tu contraseña."}),
+    unexpected_response: message({"pt-BR": "Não foi possível criar sua conta. Tente novamente.", "en": "We couldn't create your account. Please try again.", "es": "No pudimos crear tu cuenta. Inténtalo de nuevo."})
+  },
+  errors: {
+    configuration: message({"pt-BR": "A autenticação não está configurada. Tente novamente mais tarde.", "en": "Authentication is not configured. Please try again later.", "es": "La autenticación no está configurada. Inténtalo de nuevo más tarde."}),
+    profile_load_failed: message({"pt-BR": "Não foi possível carregar seu perfil. Tente entrar novamente.", "en": "We couldn't load your profile. Please sign in again.", "es": "No pudimos cargar tu perfil. Inicia sesión nuevamente."}),
+    session_missing: message({"pt-BR": "Não foi possível iniciar sua sessão. Tente novamente.", "en": "We couldn't start your session. Please try again.", "es": "No pudimos iniciar tu sesión. Inténtalo de nuevo."}),
+    login_failed: message({"pt-BR": "Não foi possível entrar. Tente novamente.", "en": "We couldn't sign you in. Please try again.", "es": "No pudimos iniciar sesión. Inténtalo de nuevo."}),
+    oauth_failed: message({"pt-BR": "Não foi possível entrar com esta conta. Tente novamente.", "en": "We couldn't sign you in with that account. Please try again.", "es": "No pudimos iniciar sesión con esa cuenta. Inténtalo de nuevo."}),
+    password_reset_failed: message({"pt-BR": "Não foi possível enviar o email de redefinição. Tente novamente.", "en": "We couldn't send the password reset email. Please try again.", "es": "No pudimos enviar el correo de restablecimiento. Inténtalo de nuevo."}),
+    not_authenticated: message({"pt-BR": "Sua sessão expirou. Entre novamente para continuar.", "en": "Your session has expired. Please sign in again to continue.", "es": "Tu sesión expiró. Inicia sesión nuevamente para continuar."}),
+    profile_update_failed: message({"pt-BR": "Não foi possível atualizar seu perfil. Tente novamente.", "en": "We couldn't update your profile. Please try again.", "es": "No pudimos actualizar tu perfil. Inténtalo de nuevo."})
+  },
   error: {
     title: message({"pt-BR": "Falha na Autenticação", "en": "Authentication Failed", "es": "Autenticación Fallida"}),
     timeout: message({"pt-BR": "A autenticação está demorando muito. Por favor, tente novamente.", "en": "Authentication is taking too long. Please try again.", "es": "La autenticación está tardando demasiado. Por favor, inténtalo de nuevo."})

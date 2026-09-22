@@ -35,6 +35,8 @@ vi.mock('react-i18next', () => {
         'create_jam.form.time': 'Time',
         'create_jam.form.host_name': 'Host Name',
         'create_jam.form.host_contact': 'Host Contact',
+        'create_jam.form.auto_approve_registrations': 'Automatically approve registrations',
+        'create_jam.form.auto_approve_registrations_hint': 'New registrations are approved automatically.',
         'create_jam.form.placeholder_contact': 'Email or phone',
         'create_jam.form.description': 'Description',
         'create_jam.form.placeholder_description': 'description',
@@ -223,6 +225,31 @@ describe('Track 8 page-level seams', () => {
       playlistUrl: 'https://open.spotify.com/playlist/abc',
       jamId: 'jam-new',
     })
+  })
+
+  it('sends the selected automatic-approval setting when it creates a jam', async () => {
+    vi.mocked(jamService.create).mockResolvedValue({
+      data: {id: 'jam-new', name: 'Friday Night Jam'},
+      status: 201,
+    } as Awaited<ReturnType<typeof jamService.create>>)
+
+    render(
+      <MemoryRouter>
+        <CreateJamPage />
+      </MemoryRouter>,
+    )
+
+    const user = userEvent.setup()
+    await user.type(screen.getByRole('textbox', {name: /Jam Name/}), 'Friday Night Jam')
+    await user.type(screen.getByRole('textbox', {name: /Location/}), 'Benjamin Social Club')
+    await user.type(screen.getByLabelText(/Date/), '2026-09-18')
+    await user.type(screen.getByLabelText(/Time/), '17:00')
+    expect(screen.getByRole('checkbox', {name: /Automatically approve registrations/})).toBeChecked()
+    await user.click(screen.getByRole('button', {name: 'Create'}))
+
+    await waitFor(() => expect(jamService.create).toHaveBeenCalledWith(expect.objectContaining({
+      autoApproveRegistrations: true,
+    })))
   })
 
   it('keeps a created jam safe and retries only the failed Spotify import', async () => {

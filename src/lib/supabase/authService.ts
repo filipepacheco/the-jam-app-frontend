@@ -21,6 +21,26 @@ export interface SupabaseAuthResult {
 }
 
 /**
+ * Supabase intentionally returns a user without identities for an existing
+ * email when email confirmation is enabled. That response has no error and
+ * no session, so callers must distinguish it from a new unconfirmed signup.
+ */
+export function isExistingEmailSignUpResult(result: Pick<SupabaseAuthResult, 'user' | 'session' | 'error'>): boolean {
+  return result.error === null &&
+    result.session === null &&
+    result.user?.identities !== undefined &&
+    result.user.identities.length === 0
+}
+
+/**
+ * This covers providers/configurations that disclose the duplicate directly
+ * instead of returning the identity-less response above.
+ */
+export function isExistingEmailSignUpError(error: Pick<AuthError, 'message'> | null): boolean {
+  return Boolean(error?.message.toLowerCase().includes('already registered'))
+}
+
+/**
  * Sign up with email and password
  * @param email - User email
  * @param password - User password
@@ -231,4 +251,3 @@ export async function exchangeCodeForSession(code: string): Promise<SupabaseAuth
     error,
   }
 }
-

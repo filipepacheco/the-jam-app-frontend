@@ -4,6 +4,8 @@ import { Alert } from '../../../components/Alert'
 import { PageAlerts } from '../../../components/PageAlerts'
 import { ErrorState, Status, SuccessState } from '../../../components/FeedbackStates'
 import OfflineBanner from '../../../components/publicDashboard/OfflineBanner'
+import {Action} from '../../../components/Action'
+import {useToast} from '../../../components/ToastContext'
 
 const meta = {
   title: 'Feedback/Alerts and notifications',
@@ -17,6 +19,27 @@ type Story = StoryObj<typeof meta>
 
 const dismissAlert = fn()
 
+function ToastDemo() {
+  const {showToast} = useToast()
+  return (
+    <Action onClick={() => showToast({message: 'Inscrição realizada com sucesso!'})}>
+      Confirmar inscrição
+    </Action>
+  )
+}
+
+export const TransientSuccessToast: Story = {
+  render: () => <ToastDemo />,
+  globals: {theme: 'jam-light', viewport: {value: 'phone', isRotated: false}},
+  parameters: {a11y: {test: 'error'}},
+  play: async ({canvas, userEvent}) => {
+    await userEvent.click(canvas.getByRole('button', {name: 'Confirmar inscrição'}))
+    const toast = await canvas.findByRole('status')
+    await expect(toast).toHaveTextContent('Inscrição realizada com sucesso!')
+    await expect(toast).toHaveAttribute('data-toast-tone', 'success')
+  },
+}
+
 export const StatusVariants: Story = {
   render: () => (
     <div className="grid max-w-3xl gap-4">
@@ -26,7 +49,7 @@ export const StatusVariants: Story = {
       <Alert type="error" title="Não foi possível salvar" message="Confira sua conexão e tente novamente." />
     </div>
   ),
-  globals: { theme: 'light' },
+  globals: { theme: 'jam-light' },
   parameters: { a11y: { test: 'error' } },
 }
 
@@ -54,7 +77,7 @@ export const LongLocalizedError: Story = {
   },
   globals: {
     locale: 'es',
-    theme: 'night',
+    theme: 'jam-dark',
     viewport: { value: 'phone', isRotated: false },
   },
   parameters: { a11y: { test: 'error' } },
@@ -87,7 +110,7 @@ export const OfflineNotification: Story = {
   render: () => <OfflineBanner visible message="📵 Sem conexão — exibindo a última programação salva" />,
   globals: {
     reducedMotion: true,
-    theme: 'synthwave',
+    theme: 'jam-dark',
     viewport: { value: 'venue', isRotated: false },
   },
   play: async ({ canvas }) => {

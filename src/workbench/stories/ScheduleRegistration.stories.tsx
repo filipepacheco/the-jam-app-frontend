@@ -7,7 +7,7 @@ import { scheduleWorkbenchFixtures } from '../scheduleFixtures'
 
 const meta = {
   title: 'Domain/Schedule/Registration and cards',
-  parameters: { a11y: { test: 'todo' } },
+  parameters: { a11y: { test: 'error' } },
 } satisfies Meta
 
 export default meta
@@ -49,7 +49,7 @@ export const ApprovedDenseRegistrationList: Story = {
       neededVocals={1}
     />
   ),
-  globals: { theme: 'synthwave', locale: 'es', viewport: { value: 'desktop', isRotated: false } },
+  globals: { theme: 'jam-dark', locale: 'es', viewport: { value: 'desktop', isRotated: false } },
 }
 
 export const EmptyRegistrationList: Story = {
@@ -75,6 +75,9 @@ export const HostCardExpanded: Story = {
     </div>
   ),
   globals: { locale: 'pt', theme: 'jam-dark', viewport: { value: 'desktop', isRotated: false } },
+  play: async ({canvas}) => {
+    await expect(canvas.queryByText(/\d+ pendentes/i)).toBeNull()
+  },
 }
 
 export const KeyboardExpansion: Story = {

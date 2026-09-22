@@ -1,4 +1,5 @@
-import {render, screen} from '@testing-library/react'
+import {render, screen, waitFor} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import {MemoryRouter} from 'react-router-dom'
 import {describe, expect, it, vi} from 'vitest'
 import type {JamResponseDto} from '../types/api.types'
@@ -21,6 +22,10 @@ const jam: JamResponseDto = {
     name: 'Test jam',
     hostName: 'Host',
     status: 'ACTIVE',
+    date: '2026-09-24T18:00:00.000Z',
+    location: 'Jam House',
+    autoApproveRegistrations: true,
+    managementMode: 'OWNER_ONLY',
     createdAt: '2026-09-24T18:00:00.000Z',
     updatedAt: '2026-09-24T18:00:00.000Z',
 }
@@ -29,7 +34,7 @@ describe('OverviewTab', () => {
     it('uses a clear primary Jam lifecycle action', () => {
         render(
             <MemoryRouter>
-                <OverviewTab jam={jam} onStatusChange={vi.fn()} loading={false}/>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={vi.fn()} loading={false}/>
             </MemoryRouter>,
         )
 
@@ -37,18 +42,71 @@ describe('OverviewTab', () => {
             .toHaveAttribute('data-action-variant', 'primary')
     })
 
-    it('presents only Spotify import like the other secondary actions', () => {
+    it('keeps Jam editing in the overview instead of linking to another page', () => {
         render(
             <MemoryRouter>
-                <OverviewTab jam={jam} onStatusChange={vi.fn()} loading={false}/>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={vi.fn()} loading={false}/>
             </MemoryRouter>,
         )
 
-        const editAction = screen.getByRole('button', {name: 'jam_management.overview.edit_jam'})
-        const importAction = screen.getByRole('button', {name: 'spotify.import_button'})
-
-        expect(importAction.className).toBe(editAction.className)
-        expect(importAction.closest('.dropdown')).toBeNull()
+        const jamNameInput = screen.getByRole('textbox', {name: 'create_jam.form.jam_name'})
+        expect(jamNameInput).toHaveValue('Test jam')
+        expect(jamNameInput.closest('fieldset')?.parentElement).toHaveClass('min-w-0', 'grid-cols-1')
+        expect(screen.getByRole('button', {name: 'create_jam.actions.update'})).toBeDisabled()
+        expect(screen.getByRole('button', {name: 'spotify.import_button'}).closest('.dropdown')).toBeNull()
         expect(screen.queryByRole('button', {name: 'spotify.export_button'})).not.toBeInTheDocument()
     })
+
+    it('lets the host disable automatic registration approval with the Jam settings', async () => {
+        const onJamUpdate = vi.fn().mockResolvedValue(undefined)
+        render(
+            <MemoryRouter>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={onJamUpdate} loading={false}/>
+            </MemoryRouter>,
+        )
+
+        const user = userEvent.setup()
+        const toggle = screen.getByRole('checkbox', {name: 'create_jam.form.auto_approve_registrations'})
+        expect(toggle).toBeChecked()
+
+        await user.click(toggle)
+        await user.click(screen.getByRole('button', {name: 'create_jam.actions.update'}))
+
+        await waitFor(() => expect(onJamUpdate).toHaveBeenCalledWith(expect.objectContaining({
+            autoApproveRegistrations: false,
+        })))
+    })
+
+    it('keeps toggle copy inside the mobile form width', () => {
+        render(
+            <MemoryRouter>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={vi.fn()} loading={false}/>
+            </MemoryRouter>,
+        )
+
+        const toggle = screen.getByRole('checkbox', {name: 'create_jam.form.auto_approve_registrations'})
+        expect(toggle.closest('label')).toHaveClass('w-full', 'min-w-0')
+        expect(toggle.nextElementSibling).toHaveClass('flex-1', 'min-w-0', 'whitespace-normal')
+    })
+
+    it('lets the owner share Jam controls with other hosts', async () => {
+        const onJamUpdate = vi.fn().mockResolvedValue(undefined)
+        render(
+            <MemoryRouter>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={onJamUpdate} loading={false}/>
+            </MemoryRouter>,
+        )
+
+        const user = userEvent.setup()
+        const toggle = screen.getByRole('checkbox', {name: 'create_jam.form.shared_host_management'})
+        expect(toggle).not.toBeChecked()
+
+        await user.click(toggle)
+        await user.click(screen.getByRole('button', {name: 'create_jam.actions.update'}))
+
+        await waitFor(() => expect(onJamUpdate).toHaveBeenCalledWith(expect.objectContaining({
+            managementMode: 'SHARED_HOSTS',
+        })))
+    })
+
 })

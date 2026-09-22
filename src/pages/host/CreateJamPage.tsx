@@ -23,6 +23,7 @@ interface FormData {
   hostMusicianId: string
   hostName: string
   hostContact: string
+  autoApproveRegistrations: boolean
   status: 'ACTIVE' | 'INACTIVE' | 'LIVE' | 'FINISHED'
 }
 
@@ -57,6 +58,7 @@ export function CreateJamPage() {
     hostMusicianId: user?.id || '',
     hostName: '',
     hostContact: '',
+    autoApproveRegistrations: true,
     status: 'ACTIVE',
   })
 
@@ -105,8 +107,8 @@ export function CreateJamPage() {
         spotifyPlaylistUrl: jam.spotifyPlaylistUrl || '',
         hostMusicianId: user?.id || '',
         hostName: jam.hostName || '',
-        // hostContact not in JamResponseDto - backend DTO needs updating
-        hostContact: (jam as unknown as Record<string, unknown>).hostContact as string || '',
+        hostContact: jam.hostContact || '',
+        autoApproveRegistrations: jam.autoApproveRegistrations ?? true,
         status: jam.status as FormData['status'],
       })
     } catch (err) {
@@ -256,6 +258,7 @@ export function CreateJamPage() {
         hostMusicianId: formData.hostMusicianId,
         hostName,
         hostContact,
+        autoApproveRegistrations: formData.autoApproveRegistrations,
         status: mode === 'create' ? 'ACTIVE' as const : formData.status,
       }
 
@@ -637,6 +640,27 @@ export function CreateJamPage() {
                     />
                   </fieldset>
               </div>
+
+              <fieldset className="fieldset">
+                <label className="label cursor-pointer justify-start gap-3" htmlFor={`${formId}-autoApproveRegistrations`}>
+                  <input
+                    id={`${formId}-autoApproveRegistrations`}
+                    type="checkbox"
+                    name="autoApproveRegistrations"
+                    checked={formData.autoApproveRegistrations}
+                    onChange={(event) => setFormData((previous) => ({
+                      ...previous,
+                      autoApproveRegistrations: event.target.checked,
+                    }))}
+                    className="checkbox checkbox-primary"
+                    disabled={formLocked}
+                  />
+                  <span className="label-text font-medium">{t('create_jam.form.auto_approve_registrations')}</span>
+                </label>
+                <p className="fieldset-label text-base-content/60">
+                  {t('create_jam.form.auto_approve_registrations_hint')}
+                </p>
+              </fieldset>
 
               {/* Status - edit mode only */}
               {mode === 'edit' && (
