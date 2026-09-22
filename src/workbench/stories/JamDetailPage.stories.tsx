@@ -69,21 +69,49 @@ export const LoadedParticipation: Story = {
     const schedule = canvas.getByRole('heading', {level: 2, name: /programação/i})
     const description = canvas.getByText(/an open stage for musicians/i)
     const jamDate = canvas.getByText(/18 de set/i)
+    const performances = canvas.getByText(/3 apresentações/i)
+    const registrations = canvas.getByText(/2 inscritos/i)
+    const duration = canvas.getByText(/^16m$/i)
+    const share = canvas.getByRole('button', {name: /compartilhar/i})
+    const location = canvas.getByRole('button', {name: /endereço completo/i})
+    const detailContainers = Array.from(canvasElement.querySelectorAll<HTMLElement>('[data-jam-detail-container]'))
     await expect(title).toBeVisible()
-    await expect(canvas.getByRole('button', {name: /compartilhar/i})).toBeVisible()
-    await expect(canvas.getByRole('link', {name: /ouça no spotify/i})).toBeVisible()
-    await expect(description.compareDocumentPosition(jamDate) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    await expect(detailContainers.length).toBeGreaterThanOrEqual(2)
+    const containerLeftEdges = detailContainers.map((container) => container.getBoundingClientRect().left)
+    const containerRightEdges = detailContainers.map((container) => container.getBoundingClientRect().right)
+    await expect(Math.max(...containerLeftEdges) - Math.min(...containerLeftEdges)).toBeLessThan(2)
+    await expect(Math.max(...containerRightEdges) - Math.min(...containerRightEdges)).toBeLessThan(2)
+    await expect(canvas.queryByRole('button', {name: /voltar|back/i})).toBeNull()
+    await expect(share).toHaveClass('ds-action--icon-only')
+    await expect(share.getBoundingClientRect().width).toBe(44)
+    const spotify = canvas.getByRole('link', {name: /ouça no spotify/i})
+    await expect(spotify).toBeVisible()
+    await expect(spotify).toHaveClass('ds-action--icon-only', 'ds-action--spotify')
+    await expect(spotify.getBoundingClientRect().width).toBe(44)
+    await expect(jamDate.compareDocumentPosition(description) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    const factCells = [jamDate.parentElement, performances, registrations, duration]
+    const factTops = factCells.map((fact) => fact?.getBoundingClientRect().top ?? -1)
+    await expect(Math.max(...factTops) - Math.min(...factTops)).toBeLessThan(2)
+    const locationWidth = location.getBoundingClientRect().width
+    const locationRowWidth = location.parentElement?.getBoundingClientRect().width ?? 0
+    await expect(Math.abs(locationRowWidth - locationWidth)).toBeLessThan(2)
+    await expect(location.parentElement).toHaveClass('jam-detail-location')
+    await expect(canvas.queryByRole('button', {name: /como.*funciona/i})).toBeNull()
     await expect(title.compareDocumentPosition(schedule) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
     await expect(canvas.getAllByText('Psycho Killer')).toHaveLength(2)
 
-    const documentView = within(canvasElement.ownerDocument.body)
-    await userEvent.click(canvas.getByRole('button', {name: /como as jams funcionam/i}))
-    const howItWorks = documentView.getByRole('dialog', {name: /como as jams funcionam/i})
-    await expect(howItWorks).toBeVisible()
-    await expect(within(howItWorks).getByText(/veja a programação/i)).toBeVisible()
-    await userEvent.click(within(howItWorks).getAllByRole('button', {name: /fechar/i})[1])
-    await expect(documentView.queryByRole('dialog', {name: /como as jams funcionam/i})).toBeNull()
+    const longTitle = canvas.getByRole('heading', {level: 3, name: /a song title deliberately long/i})
+    const performanceCard = longTitle.closest<HTMLElement>('.card')
+    if (!performanceCard) throw new Error('Expected the long-content Performance card.')
+    const performance = within(performanceCard)
+    const artist = performance.getByText(/international collective of musicians/i)
+    const songDescription = performance.getByText(/play the extended arrangement/i)
+    const participant = performance.getByText(/^você$/i)
+    await expect(artist).toHaveClass('line-clamp-2')
+    await expect(performance.getByRole('link', {name: /open .* in spotify/i})).toBeVisible()
+    await expect(songDescription.compareDocumentPosition(participant) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
 
+    const documentView = within(canvasElement.ownerDocument.body)
     const participate = await documentView.findByRole('button', {name: /^quero participar$/i})
     await expect(participate).toHaveAttribute('aria-expanded', 'false')
     await userEvent.click(participate)
@@ -112,6 +140,7 @@ export const ReviewInstrumentChoice: Story = {
   },
   play: async ({canvas}) => {
     await expect(canvas.getByRole('button', {name: /guitarr/i})).toHaveAttribute('aria-pressed', 'true')
+    await expect(canvas.queryByText(/necessári/i)).not.toBeInTheDocument()
     await expect(canvas.queryByText(/vagas restantes/i)).toBeNull()
   },
 }
@@ -208,12 +237,10 @@ export const NoPerformances: Story = {
     reviewDefaultViewport: 'phone',
     reducedMotion: true,
   },
-  play: async ({canvas, canvasElement, userEvent}) => {
+  play: async ({canvas, canvasElement}) => {
     await expect(canvas.getByRole('heading', {level: 1, name: 'Friday Night Jam'})).toBeVisible()
     await expect(canvas.getByRole('heading', {level: 2, name: /aún no hay programación/i})).toBeVisible()
     await expect(within(canvasElement.ownerDocument.body).queryByRole('button', {name: /participar/i})).toBeNull()
-    await userEvent.click(canvas.getByRole('button', {name: /volver/i}))
-    await expect(navigate).toHaveBeenCalledWith('/jams')
   },
 }
 

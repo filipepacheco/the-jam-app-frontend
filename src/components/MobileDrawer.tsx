@@ -14,6 +14,7 @@ import {
   LogOut,
 } from 'lucide-react'
 import { useAppLanguage, useAuth, useTheme } from '../hooks'
+import { resolveThemeName } from '../design-system/foundations'
 import { FeedbackModal } from './FeedbackModal'
 import { useState } from 'react'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
@@ -256,7 +257,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
                 id="mobile-drawer-theme"
                 items={THEME_OPTIONS}
                 value={currentTheme}
-                onChange={setTheme}
+                onChange={(theme) => setTheme(resolveThemeName(theme))}
                 getItemLabel={(theme) => theme.label}
                 ariaLabel={t('common.select_theme')}
                 searchable={false}

@@ -4,7 +4,10 @@
  */
 
 import type { RegistrationResponseDto, ScheduleResponseDto } from '../types/api.types'
-import { normalizeInstrument as normalizeInstrumentBase } from './musicianUtils'
+import {
+  activeRegistrations,
+  normalizeInstrument as normalizeInstrumentBase,
+} from './musicianUtils'
 
 export const KNOWN_INSTRUMENTS = new Set(['drums', 'guitars', 'bass', 'vocals', 'keys'])
 
@@ -20,16 +23,15 @@ function normalizeInstrument(instrument?: string): string | null {
 }
 
 /**
- * Count non-rejected registrations grouped by canonical instrument.
- * Returns counts per instrument and total active (non-rejected) count.
+ * Count registrations that still occupy a performance slot, grouped by
+ * canonical instrument. Rejected and withdrawn registrations are excluded.
  */
 export function countActiveRegistrationsByInstrument(
   registrations: RegistrationResponseDto[] | undefined
 ): { counts: Record<string, number>; activeCount: number } {
   const counts: Record<string, number> = {}
   let activeCount = 0
-  for (const reg of registrations || []) {
-    if (reg.status === 'REJECTED') continue
+  for (const reg of activeRegistrations(registrations)) {
     activeCount++
     const raw = normalizeInstrumentBase(reg.instrument)
     const inst = raw && KNOWN_INSTRUMENTS.has(raw) ? raw : null
@@ -40,7 +42,7 @@ export function countActiveRegistrationsByInstrument(
 
 /**
  * Check if a schedule has the core band instruments covered (drums, guitar, bass, vocals).
- * Excludes rejected registrations.
+ * Excludes rejected and withdrawn registrations.
  */
 export function hasCoreBand(schedule: ScheduleResponseDto): boolean {
   if (!schedule.registrations || schedule.registrations.length === 0) return false
@@ -70,28 +72,35 @@ export function getInstrumentOptions(
 
   const options: InstrumentOption[] = []
   const instrumentMap = [
-    { key: 'drums', emoji: '🥁', field: 'neededDrums' as const },
-    { key: 'guitars', emoji: '🎸', field: 'neededGuitars' as const },
-    { key: 'vocals', emoji: '🎤', field: 'neededVocals' as const },
-    { key: 'bass', emoji: '🎸', field: 'neededBass' as const },
-    { key: 'keys', emoji: '🎹', field: 'neededKeys' as const },
+    { key: 'drums', emoji: '🥁', field: 'neededDrums' as const, minimumSlots: 0 },
+    { key: 'guitars', emoji: '🎸', field: 'neededGuitars' as const, minimumSlots: 3 },
+    { key: 'vocals', emoji: '🎤', field: 'neededVocals' as const, minimumSlots: 3 },
+    { key: 'bass', emoji: '🎸', field: 'neededBass' as const, minimumSlots: 0 },
+    { key: 'keys', emoji: '🎹', field: 'neededKeys' as const, minimumSlots: 1 },
   ]
 
-  // Check if any instrument requirements are defined
+  // Include default joinable instruments when determining whether this song
+  // has a finite capacity. This replaces the old unlimited fallback for songs
+  // without declared requirements.
   const hasAnyRequirements = instrumentMap.some(
-    ({ field }) => (schedule.music![field] || 0) > 0
+    ({ field, minimumSlots }) => Math.max(schedule.music![field] || 0, minimumSlots) > 0
   )
 
-  instrumentMap.forEach(({ key, emoji, field }) => {
+  instrumentMap.forEach(({ key, emoji, field, minimumSlots }) => {
     const label = getLabel(key)
-    const needed = schedule.music![field] || 0
+    const declaredNeeded = schedule.music![field] || 0
+    // Guitarists, vocalists, and one keyboard/piano player can join even
+    // when the song did not declare those instruments. A song can still
+    // explicitly request more than the default capacity.
+    const needed = Math.max(declaredNeeded, minimumSlots)
 
     // Show instrument if it has requirements, OR if no requirements are defined at all
     // (e.g., for suggested songs where user hasn't specified needed instruments)
     if (needed > 0 || !hasAnyRequirements) {
       // Count registrations for THIS schedule by matching normalized instrument
       const registered =
-        schedule.registrations?.filter((reg) => normalizeInstrument(reg.instrument) === key).length || 0
+        activeRegistrations(schedule.registrations)
+          .filter((reg) => normalizeInstrument(reg.instrument) === key).length
       options.push({
         key,
         label,

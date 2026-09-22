@@ -61,7 +61,7 @@ const STATIC_ROUTES = new Set([
   'robots.txt',
   'sitemap.xml',
   'llms.txt',
-  'og-image.jpg',
+  'brand',
   'jams',
 ]);
 
@@ -386,9 +386,7 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
         'Plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem e o publico acompanha em tempo real.',
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/web/icons8-concert-color-512.png`,
-        width: 512,
-        height: 512,
+        url: `${siteUrl}/brand/v1/logo.svg`,
       },
       contactPoint: {
         '@type': 'ContactPoint',
@@ -439,9 +437,7 @@ function aboutStructuredData(siteUrl: string): Record<string, unknown>[] {
         description: PT.aboutDescription,
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/web/icons8-concert-color-512.png`,
-          width: 512,
-          height: 512,
+          url: `${siteUrl}/brand/v1/logo.svg`,
         },
         contactPoint: {
           '@type': 'ContactPoint',
@@ -556,7 +552,7 @@ export default function middleware(request: Request) {
   if (!route) return next();
 
   const siteUrl = process.env.SITE_URL || url.origin;
-  const ogImage = `${siteUrl}/og-image.jpg`;
+  const ogImage = `${siteUrl}/brand/v1/social-1200x630.png`;
   // Search engines follow meta-refresh - skip the redirect to prevent infinite loops
   const noRedirect = searchEngineRequest;
 

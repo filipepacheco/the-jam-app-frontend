@@ -48,7 +48,7 @@ export const jam_management = {
   },
   schedule: {
     title: message({"pt-BR": "Músicos Escalados", "en": "Song Setlist", "es": "Lista de Canciones"}),
-    add_new_song: message({"pt-BR": "+ Adicionar nova música", "en": "+ Add New Song", "es": "+ Agregar Nueva Canción"}),
+    add_new_song: message({"pt-BR": "Adicionar Música", "en": "Add Song", "es": "Agregar canción"}),
     suggested_songs: message({"pt-BR": "Músicas sugeridas (pendentes de aprovação)", "en": "Suggested Songs (Pending Approval)", "es": "Canciones Sugeridas (Pendientes de Aprobación)"}),
     add_entry_modal: message({"pt-BR": "Adicionar entrada de apresentação", "en": "Add Performance Entry", "es": "Agregar Entrada de Actuación"}),
     song_label: message({"pt-BR": "Música *", "en": "Song *", "es": "Canción *"}),

@@ -1,0 +1,100 @@
+{
+  "version": "v1",
+  "generator": "scripts/generate-brand-assets.mjs",
+  "inputs": {
+    "togetherSymbolReference": {
+      "path": "brand/together-warm/references/original-concepts.png",
+      "sha256": "48397daf36db3e3a9a9ccf579cd60fead24b86d1b6fe28d9820f1d7aa9e57e9b"
+    },
+    "inTheGrooveWordmarkReference": {
+      "path": "brand/jam-hybrid-v1/references/in-the-groove-wordmark-source.png",
+      "sha256": "ad6a3c6010891cab21c5a65e7c2a8a1bc0c582c14ba1dcef515acf53c5e17af1",
+      "crop": {
+        "x0": 150,
+        "y0": 80,
+        "x1": 600,
+        "y1": 300
+      }
+    }
+  },
+  "trace": {
+    "connectedComponents": [
+      {
+        "x0": 180,
+        "x1": 270,
+        "y0": 151,
+        "y1": 273,
+        "pixels": 6402
+      },
+      {
+        "x0": 226,
+        "x1": 273,
+        "y0": 100,
+        "y1": 145,
+        "pixels": 1762
+      },
+      {
+        "x0": 275,
+        "x1": 378,
+        "y0": 152,
+        "y1": 245,
+        "pixels": 7052
+      },
+      {
+        "x0": 386,
+        "x1": 564,
+        "y0": 152,
+        "y1": 245,
+        "pixels": 11061
+      },
+      {
+        "x0": 493,
+        "x1": 513,
+        "y0": 253,
+        "y1": 272,
+        "pixels": 298
+      },
+      {
+        "x0": 519,
+        "x1": 539,
+        "y0": 253,
+        "y1": 280,
+        "pixels": 350
+      },
+      {
+        "x0": 544,
+        "x1": 565,
+        "y0": 253,
+        "y1": 280,
+        "pixels": 348
+      }
+    ],
+    "threshold": "rgb channel sum < 650",
+    "simplificationTolerance": 0.18
+  },
+  "palette": {
+    "violet": "#7138C9",
+    "violetLight": "#AF83ED",
+    "coral": "#F06465",
+    "amber": "#EAA12B",
+    "plum": "#261733"
+  },
+  "outputs": {
+    "brand-master.svg": "76f45da5c5a2d40e0b9950448d24e358e688195d09dfd031a8d6b5c0412a3f6a",
+    "symbol-light.svg": "86ae36da3ab30c63c3e6bd17388b30c1ce9df32ea6e51b492840c250fc48b83a",
+    "symbol-dark.svg": "be53e60095afe1f6a6f4f985e466f929bd09e41364bc29de2b0d96a23e9cdb30",
+    "wordmark.trace.svg": "524f125bbbf2af2f9a2387732b114a3a171e1a8c91c629d9985d1238f71b7657",
+    "public/brand/v1/logo.svg": "76f45da5c5a2d40e0b9950448d24e358e688195d09dfd031a8d6b5c0412a3f6a",
+    "public/brand/v1/symbol.svg": "86ae36da3ab30c63c3e6bd17388b30c1ce9df32ea6e51b492840c250fc48b83a",
+    "public/brand/v1/favicon.svg": "86ae36da3ab30c63c3e6bd17388b30c1ce9df32ea6e51b492840c250fc48b83a",
+    "public/brand/v1/favicon-16.png": "7ba0391268bfbc0b61d53de2267c678a8574382689a6733d1591a9dfbe678816",
+    "public/brand/v1/favicon-32.png": "49fc847bdf3def1088e6dfd6e122884c4d282e7b841549e232cd38fb50862fb2",
+    "public/brand/v1/favicon-96.png": "dd3137b623f6bd4aa9b656c76be56e09b6bc69647bf9b969462a9017893a36eb",
+    "public/brand/v1/apple-touch-icon.png": "9e77cb32956e1ed09b7ee77e74b70f4090addd3593147f2f3a1af9f1e08a24fa",
+    "public/brand/v1/icon-192.png": "204db4cb0706157c2b7764938255596bdc941a7ef22e99687d3ca33c59b07395",
+    "public/brand/v1/icon-512.png": "6befd27b56fa5af610df46a0d1a0abf6331953b89a5f51a781c2a2e479cf6fe2",
+    "public/brand/v1/icon-maskable-512.png": "ed1a8e6d5612142697a79fe01a03d0a73dea9b36fbad976d9a73cc35406e3c1b",
+    "public/brand/v1/social-1200x630.png": "1a2349bf47062091738ccd5245468bd5de84820243ca061eb314b1a6ea422b34",
+    "public/favicon.ico": "c8f02c5dedf3d4ce78b9d085de347c1045d7ddb723e3779eee68fcbc92b022a6"
+  }
+}

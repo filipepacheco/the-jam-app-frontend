@@ -29,7 +29,7 @@ describe('OverviewTab', () => {
     it('uses a clear primary Jam lifecycle action', () => {
         render(
             <MemoryRouter>
-                <OverviewTab jam={jam} onStatusChange={vi.fn()} loading={false}/>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={vi.fn()} loading={false}/>
             </MemoryRouter>,
         )
 
@@ -37,18 +37,16 @@ describe('OverviewTab', () => {
             .toHaveAttribute('data-action-variant', 'primary')
     })
 
-    it('presents only Spotify import like the other secondary actions', () => {
+    it('keeps Jam editing in the overview instead of linking to another page', () => {
         render(
             <MemoryRouter>
-                <OverviewTab jam={jam} onStatusChange={vi.fn()} loading={false}/>
+                <OverviewTab jam={jam} onStatusChange={vi.fn()} onJamUpdate={vi.fn()} loading={false}/>
             </MemoryRouter>,
         )
 
-        const editAction = screen.getByRole('button', {name: 'jam_management.overview.edit_jam'})
-        const importAction = screen.getByRole('button', {name: 'spotify.import_button'})
-
-        expect(importAction.className).toBe(editAction.className)
-        expect(importAction.closest('.dropdown')).toBeNull()
+        expect(screen.getByRole('textbox', {name: 'create_jam.form.jam_name'})).toHaveValue('Test jam')
+        expect(screen.getByRole('button', {name: 'create_jam.actions.update'})).toBeDisabled()
+        expect(screen.getByRole('button', {name: 'spotify.import_button'}).closest('.dropdown')).toBeNull()
         expect(screen.queryByRole('button', {name: 'spotify.export_button'})).not.toBeInTheDocument()
     })
 })

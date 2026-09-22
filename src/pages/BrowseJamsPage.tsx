@@ -14,7 +14,6 @@ import {JamCard} from '../components'
 import {JamCardSkeleton} from '../components'
 import {SEO} from '../components/SEO'
 import type {JamResponseDto, JamStatus} from '../types/api.types'
-import type {TranslationKey} from '../locales/catalogue/catalogue'
 
 type DateSortOption = 'newest' | 'oldest' | 'upcoming'
 
@@ -155,7 +154,7 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
       {/* Hero Section */}
       <div className="border-b border-base-300 bg-base-200 text-base-content">
         <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
-          <div className="space-y-1 border-l-4 border-primary pl-3 sm:pl-4">
+          <div className="space-y-1">
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">
               {t('jams.browse.title')}
             </h1>
@@ -206,17 +205,7 @@ export function BrowseJamsPage({viewState, onRetry}: BrowseJamsPageProps = {}) {
             </Field>
           </div>
 
-          {/* Result count and status filters form one stable control row. The
-              count stays visible while the tablist scrolls on narrow screens. */}
           <div className="flex items-center gap-2">
-            <Badge tone="info" size="md" className="shrink-0">
-              {(() => {
-                const count = visibleCount
-                const key: TranslationKey = count === 1 ? 'jams.browse.results.one' : 'jams.browse.results.other'
-                return t(key, { count })
-              })()}
-            </Badge>
-
             {/* NavigationTabs keeps the tablist and tab roles and adds
                 arrow-key roving focus. */}
             <NavigationTabs

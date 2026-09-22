@@ -7,7 +7,7 @@ import {useNavigate, useParams} from 'react-router-dom'
 import {SITE_URL} from '../../lib/api'
 import {useAuth, useJamParticipationController} from '../../hooks'
 import useSWR from 'swr'
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
@@ -18,7 +18,7 @@ import {
     DropdownMenu,
     IconAction,
     ScheduleEnrollmentModal,
-    Status,
+    useToast,
 } from '../../components'
 import {ShareModal} from '../../components/ShareModal'
 import {SpotifyLogo} from '../../components/SpotifyPreview'
@@ -34,7 +34,8 @@ import {
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
 import {formatJamDuration} from '../../lib/formatters'
-import {MapPin, Calendar, Share2, ArrowLeft, Music, Users, Clock3} from 'lucide-react'
+import {MapPin, Calendar, Share2, Music, Users, Clock3} from 'lucide-react'
+import './JamDetailPageV2.css'
 
 export type JamDetailViewState =
     | {status: 'loaded'; jam: JamResponseDto}
@@ -49,8 +50,11 @@ interface JamDetailPageV2Props {
     onRetry?: () => void | Promise<void>
 }
 
+const JAM_DETAIL_CONTAINER_CLASS = 'mx-auto w-full max-w-4xl px-4 sm:px-6'
+
 export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV2Props = {}) {
     const {t, i18n} = useTranslation()
+    const {showToast} = useToast()
     const {jamId} = useParams<{ jamId: string }>()
     const navigate = useNavigate()
     const {isAuthenticated, user} = useAuth()
@@ -79,6 +83,16 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
         user?.id ?? null,
         reloadJam,
     )
+
+    useEffect(() => {
+        if (!participation.feedback) return
+        const message = participation.feedback === 'registration_success'
+            ? t('jams.enroll_success')
+            : participation.feedback === 'new_music_success'
+                ? t('jams.song_created_success')
+                : t('jams.suggest_success')
+        showToast({message})
+    }, [participation.feedback, showToast, t])
 
     // State for suggested songs section collapse
     const [isSuggestedExpanded, setIsSuggestedExpanded] = useState(true)
@@ -243,7 +257,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 ? { '@type': 'Place', name: jam.location }
                 : { '@type': 'VirtualLocation', url: canonicalUrl },
             url: canonicalUrl,
-            image: `${siteUrl}/og-image.jpg`,
+            image: `${siteUrl}/brand/v1/social-1200x630.png`,
             eventStatus: eventStatusMap[jam.status] || 'https://schema.org/EventScheduled',
             eventAttendanceMode: jam.location
                 ? 'https://schema.org/OfflineEventAttendanceMode'
@@ -279,108 +293,84 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 ogType="website"
                 jsonLd={jamJsonLd}
             />
-            {/* Success Alerts */}
-            {participation.feedback === 'registration_success' && (
-                <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
-                    <div className="container mx-auto max-w-4xl px-4 py-3">
-                        <Status tone="info" role="alert" title={t('jams.enroll_success')} />
-                    </div>
-                </div>
-            )}
-
-            {(participation.feedback === 'suggestion_success' || participation.feedback === 'new_music_success') && (
-                <div className="sticky top-0 z-50 animate-in fade-in duration-300 motion-reduce:animate-none">
-                    <div className="container mx-auto max-w-4xl px-4 py-3">
-                        <Status
-                            tone="success"
-                            role="alert"
-                            title={participation.feedback === 'new_music_success' ? t('jams.song_created_success') : t('jams.suggest_success')}
-                        />
-                    </div>
-                </div>
-            )}
-
             {/* Header - compact: title + meta on one line, details muted below */}
             <div className="bg-base-200 border-b border-base-300">
-                <div className="container mx-auto max-w-4xl px-2 sm:px-4 py-4 sm:py-5">
+                <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-4 sm:py-5`} data-jam-detail-container>
                     {/* Title and Jam-level actions share one aligned identity row. */}
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="flex items-center gap-2 min-w-0">
-                            <IconAction
-                                variant="quiet"
-                                onClick={() => goTo('/jams')}
-                                className="shrink-0"
-                                label={t('common.back')}
-                            >
-                                <ArrowLeft className="size-4" />
-                            </IconAction>
-                            <h1 className="ds-type-heading ds-wrap-user-content font-extrabold leading-tight sm:text-3xl md:text-4xl">{jam.name}</h1>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
+                    <div className="flex items-center gap-3">
+                        <h1 className="ds-type-heading ds-wrap-user-content min-w-0 flex-1 font-extrabold leading-tight sm:text-3xl md:text-4xl">{jam.name}</h1>
+                        <div className="ml-auto flex shrink-0 items-center gap-2">
                             {jam.spotifyPlaylistUrl && (
                                 <a
                                     href={jam.spotifyPlaylistUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="ds-action ds-control ds-focusable ds-action--quiet ds-action--idle"
+                                    className="ds-action ds-control ds-focusable ds-action--spotify ds-action--idle ds-action--icon-only jam-detail-icon-action"
+                                    aria-label={t('jams.listen_on_spotify')}
+                                    title={t('jams.listen_on_spotify')}
                                 >
                                     <SpotifyLogo />
-                                    {t('jams.listen_on_spotify')}
                                 </a>
                             )}
-                            <Action
+                            <IconAction
                                 variant="secondary"
                                 onClick={participationCommands.beginShare}
+                                label={t('share.share_button')}
+                                title={t('share.share_button')}
                             >
                                 <Share2 className="size-4" aria-hidden="true" />
-                                {t('share.share_button')}
-                            </Action>
+                            </IconAction>
                         </div>
                     </div>
 
-                    {/* Description is the first supporting information after identity. */}
-                    {jam.description && (
-                        <div className="mt-3">
-                            <p className={`max-w-3xl whitespace-pre-line text-sm text-pretty text-base-content/70 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
-                                {jam.description}
-                            </p>
-                            {jam.description.length > 100 && (
-                                <Action
-                                    variant="quiet"
-                                    onClick={() => setDescriptionExpanded(prev => !prev)}
-                                    className="mt-1 justify-start px-0 text-primary"
-                                >
-                                    <span className="text-xs">
-                                        {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
+                    {/* The primary facts form one compact scan line. Location
+                        owns the full row below so long venue names never push
+                        counts into an accidental third line. */}
+                    <div className="mt-3 border-y border-base-300 py-2 text-xs text-base-content/70 sm:text-sm">
+                        <div
+                            className="grid grid-cols-[minmax(0,1fr)_auto_auto_auto] items-center gap-x-2 sm:gap-x-4"
+                            style={{display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto auto auto'}}
+                        >
+                            {jam.date && (
+                                <span className="inline-flex min-h-11 min-w-0 items-center gap-1.5">
+                                    <Calendar className="size-4 shrink-0" aria-hidden="true" />
+                                    <span className="truncate">
+                                        {formatDateTime(jam.date, normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR', {
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            timeZone: 'UTC',
+                                        })}
                                     </span>
-                                </Action>
+                                </span>
+                            )}
+                            <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
+                                <Music className="size-4 shrink-0" aria-hidden="true" />
+                                {jamFacts.performances} {t('jams.info.performances').toLowerCase()}
+                            </span>
+                            {jamFacts.musicians > 0 && (
+                                <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
+                                    <Users className="size-4 shrink-0" aria-hidden="true" />
+                                    {jamFacts.musicians} {t('jams.info.musicians').toLowerCase()}
+                                </span>
+                            )}
+                            {jamFacts.duration > 0 && (
+                                <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
+                                    <Clock3 className="size-4 shrink-0" aria-hidden="true" />
+                                    {formatJamDuration(jamFacts.duration)}
+                                </span>
                             )}
                         </div>
-                    )}
 
-                    {/* Jam facts stay together so date, place, size, and duration
-                        read as one identity block. */}
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 border-y border-base-300 py-2 text-sm text-base-content/70">
-                        {jam.date && (
-                            <span className="inline-flex min-h-11 items-center gap-1.5">
-                                <Calendar className="size-4" aria-hidden="true" />
-                                {formatDateTime(jam.date, normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit',
-                                    timeZone: 'UTC',
-                                })}
-                            </span>
-                        )}
                         {jam.location && (
                             <DropdownMenu
                                 label={t('jams.info.full_address')}
-                                className="[&_.ds-dropdown__trigger]:border-0 [&_.ds-dropdown__trigger]:bg-transparent [&_.ds-dropdown__trigger]:px-0"
+                                className="jam-detail-location"
                                 trigger={
-                                    <span className="inline-flex items-center gap-1.5 text-base-content/70">
-                                        <MapPin className="size-4" aria-hidden="true" />
-                                        <span className="max-w-[16rem] truncate">{jam.location}</span>
+                                    <span className="inline-flex min-w-0 items-center gap-1.5 text-base-content/70">
+                                        <MapPin className="size-4 shrink-0" aria-hidden="true" />
+                                        <span className="truncate">{jam.location}</span>
                                     </span>
                                 }
                             >
@@ -392,23 +382,29 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                                 </div>
                             </DropdownMenu>
                         )}
-                        <span className="inline-flex min-h-11 items-center gap-1.5">
-                            <Music className="size-4" aria-hidden="true" />
-                            {jamFacts.performances} {t('jams.info.performances').toLowerCase()}
-                        </span>
-                        {jamFacts.musicians > 0 && (
-                            <span className="inline-flex min-h-11 items-center gap-1.5">
-                                <Users className="size-4" aria-hidden="true" />
-                                {jamFacts.musicians} {t('jams.info.musicians').toLowerCase()}
-                            </span>
-                        )}
-                        {jamFacts.duration > 0 && (
-                            <span className="inline-flex min-h-11 items-center gap-1.5">
-                                <Clock3 className="size-4" aria-hidden="true" />
-                                {formatJamDuration(jamFacts.duration)}
-                            </span>
-                        )}
                     </div>
+
+                    {/* Description follows the event details so the schedule context
+                        is available before reading the longer supporting copy. */}
+                    {jam.description && (
+                        <div className="mt-3">
+                            <p className={`max-w-3xl whitespace-pre-line text-sm text-pretty text-base-content/70 ${!descriptionExpanded ? 'line-clamp-3' : ''}`}>
+                                {jam.description}
+                            </p>
+                            {jam.description.length > 100 && (
+                                <Action
+                                    variant="quiet"
+                                    onClick={() => setDescriptionExpanded(prev => !prev)}
+                                    className="mt-1 justify-start px-0 text-primary"
+                                    style={{paddingInline: 0}}
+                                >
+                                    <span className="text-xs">
+                                        {descriptionExpanded ? t('common.show_less') : t('common.show_more')}
+                                    </span>
+                                </Action>
+                            )}
+                        </div>
+                    )}
 
                 </div>
             </div>
@@ -416,7 +412,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             {/* Finished/Inactive banner */}
             {(jam.status === 'FINISHED' || jam.status === 'INACTIVE') && (
                 <div className="bg-base-300/50 border-b border-base-300">
-                    <div className="container mx-auto max-w-4xl px-4 py-2 text-center">
+                    <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-2 text-center`} data-jam-detail-container>
                         <p className="text-xs text-base-content/50 font-medium">
                             {t(translationKey('jams.banner', jam.status.toLowerCase()))}
                         </p>
@@ -440,7 +436,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             )}
 
             {/* Main Content */}
-            <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 pb-24">
+            <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-6 pb-24 sm:py-8`} data-jam-detail-container>
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
                     {/* Timeline Column - full width, schedule is the hero */}

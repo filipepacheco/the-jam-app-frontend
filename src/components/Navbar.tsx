@@ -4,6 +4,7 @@
  */
 
 import { useAuth } from '../hooks'
+import { useTheme } from '../hooks/useTheme'
 import React, { useState, useRef, memo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FeedbackButton } from './FeedbackButton'
@@ -12,6 +13,8 @@ import { DesktopUserMenu } from './DesktopUserMenu'
 import { MobileDrawer } from './MobileDrawer'
 import { NavigationAction, NavigationLink } from './Navigation'
 import { Home, Search, Users, Music, LayoutDashboard } from 'lucide-react'
+import { THEME_METADATA } from '../design-system/foundations'
+import { BrandLogo } from './BrandLogo'
 
 const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: {
   href: string
@@ -35,10 +38,15 @@ const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: 
   )
 })
 
-function Navbar() {
+interface NavbarProps {
+  contextualAction?: React.ReactNode
+}
+
+function Navbar({contextualAction}: NavbarProps = {}) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { isAuthenticated, user, isViewer, isLoading } = useAuth()
+  const [theme] = useTheme()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
   const hamburgerRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
@@ -54,26 +62,27 @@ function Navbar() {
   }
 
   return (
-    <nav aria-label={t('nav.main_navigation')} className="navbar bg-base-100 shadow-lg px-2 sm:px-4 py-2 sm:py-3 gap-1 sm:gap-2 md:gap-3">
+    <nav aria-label={t('nav.main_navigation')} className="bg-base-100 shadow-lg">
+      <div
+        className="mx-auto grid min-h-16 w-full max-w-7xl items-center gap-1 px-2 py-2 sm:gap-2 sm:px-4 sm:py-3 md:gap-3 lg:px-6 xl:px-8"
+        style={{display: 'grid', gridTemplateColumns: 'auto minmax(0, 1fr) auto'}}
+      >
       {/* Navbar Start - Logo. Stays a plain anchor: it is a brand mark, not
           a product action or a NavigationLink destination in the tab set
-          above, and its enlarged logo-plus-wordmark styling does not match
+          above, and its fixed Brand Lockup styling does not match
           either Action or NavigationLink's control sizing. */}
-      <div className="navbar-start">
-        <a href="/" className="btn btn-ghost text-base sm:text-lg md:text-xl">
-          <img
-            src="/web/icons8-concert-color-96.png"
-            alt="App logo"
-            width={32}
-            height={32}
-            className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10"
-          />
-          {t('common.app_name')}
+      <div className="min-w-0 justify-self-start" style={{justifySelf: 'start'}}>
+        <a
+          href="/"
+          aria-label="Jam App"
+          className="btn btn-ghost h-auto min-h-[44px] px-1 py-0 sm:px-2"
+        >
+          <BrandLogo surface={THEME_METADATA[theme].brandSurface} size="xs" />
         </a>
       </div>
 
       {/* Navbar Center - Desktop Menu */}
-      <div className="navbar-center hidden xl:flex">
+      <div className="hidden min-w-0 justify-self-center xl:flex" style={{justifySelf: 'center'}}>
         <ul className="flex items-center gap-1">
           <NavLink href="/" icon={<Home className="size-4" />} label={t('nav.home')} isActive={isActive('/')} onClick={handleNavClick('/')} />
           <NavLink href="/jams" icon={<Search className="size-4" />} label={t('nav.jams')} isActive={isActive('/jams')} onClick={handleNavClick('/jams')} />
@@ -90,7 +99,9 @@ function Navbar() {
       </div>
 
       {/* Navbar End - Actions */}
-      <div className="navbar-end shrink-0 justify-end gap-1 sm:gap-2 md:gap-3">
+      <div className="flex shrink-0 items-center justify-self-end gap-1 sm:gap-2 md:gap-3" style={{justifySelf: 'end'}}>
+        {contextualAction}
+
         {isLoading ? (
           /* Skeleton placeholders while auth state loads. The canonical
              Skeleton (FeedbackStates.tsx) always renders full-width text
@@ -154,6 +165,8 @@ function Navbar() {
             </svg>
           </NavigationAction>
         </div>
+      </div>
+
       </div>
 
       {/* Mobile Drawer */}

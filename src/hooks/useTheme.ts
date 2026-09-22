@@ -31,9 +31,9 @@ const subscribers = new Set<(theme: ThemeName) => void>()
 export function useTheme(): [ThemeName, (theme: string) => void] {
   const [theme, setThemeState] = useState<ThemeName>(readStoredTheme)
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme)
-  }, [theme])
+function notifyThemeSubscribers(): void {
+  subscribers.forEach((subscriber) => subscriber())
+}
 
   useEffect(() => {
     subscribers.add(setThemeState)
@@ -41,21 +41,31 @@ export function useTheme(): [ThemeName, (theme: string) => void] {
       if (e.key === THEME_KEY && e.newValue) setThemeState(resolveStoredTheme(e.newValue))
     }
     window.addEventListener('storage', onStorage)
-    return () => {
-      subscribers.delete(setThemeState)
+    isListeningForStorage = true
+  }
+
+  return () => {
+    subscribers.delete(listener)
+    if (subscribers.size === 0 && isListeningForStorage && typeof window !== 'undefined') {
       window.removeEventListener('storage', onStorage)
+      isListeningForStorage = false
     }
-  }, [])
+  }
+}
+
+interface SetSharedThemeOptions {
+  readonly persist?: boolean
+}
 
   const setTheme = useCallback((next: string) => {
     const resolvedTheme = resolveStoredTheme(next)
     try {
       localStorage.setItem(THEME_KEY, resolvedTheme)
     } catch {
-      // ignore quota / privacy-mode failures
+      // Ignore quota and privacy-mode failures while keeping this tab usable.
     }
     subscribers.forEach((fn) => fn(resolvedTheme))
   }, [])
 
-  return [theme, setTheme]
+  return children
 }

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Together / Warm — source recovery and vector fidelity review</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f5f3ef; color: #261733; font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 1300px; margin: auto; padding: 32px; }
+  h1 { font-size: 26px; margin: 0 0 8px; } h2 { font-size: 18px; margin: 0 0 16px; }
+  p { max-width: 90ch; } .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  section { background: white; padding: 20px; border: 1px solid #ddd7e2; border-radius: 8px; }
+  svg, img { display: block; max-width: 100%; }
+  .full { grid-column: 1 / -1; } .preview { width: 100%; height: 260px; }
+  .dark { background: #261733; display: grid; place-items: center; height: 260px; }
+  .dark img { width: 205px; height: 214px; }
+  small { display: block; margin-top: 12px; color: #55435e; }
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } main { padding: 16px; } }
+</style>
+<main>
+  <h1>Original Together + Warm palette</h1>
+  <p>Recovered approved raster references and a new vector trace candidate. Raster originals remain the authority. The trace preserves the original row 02 contours and lockup spacing, with flat palette B fills; finished SVG approval is still required.</p>
+  <div class="grid">
+    <section><h2>Original #02 geometry — authoritative</h2>
+      <svg class="preview" viewBox="480 397 572 238"><image href="references/original-concepts.png" width="1536" height="1024"/></svg>
+      <small>Exact original pixels, cropped only by this viewport. Not a 2A–2D exploration.</small>
+    </section>
+    <section><h2>Vector trace candidate — light lockup</h2>
+      <img class="preview" src="brand-master.trace.svg" alt="Reconstructed vector of original Together with violet, coral, amber and dark plum fills">
+      <small>Actual path geometry; outlined wordmark; no image embedding or font dependency.</small>
+    </section>
+    <section><h2>Selected dark treatment — authoritative</h2>
+      <svg class="preview" viewBox="1215 710 275 255"><image href="references/approved-b-warm.png" width="1536" height="1024"/></svg>
+      <small>Exact lower-right sample from the B Warm sheet. The session did not include a full dark-surface wordmark proof.</small>
+    </section>
+    <section><h2>Vector trace candidate — dark symbol</h2>
+      <div class="dark"><img src="symbol-dark.trace.svg" alt="Vector candidate using the selected light violet, coral and amber on dark plum"></div>
+      <small>Uses original geometry, not any small shape drift in the generated color preview.</small>
+    </section>
+    <section class="full"><h2>Approved B Warm sheet — authoritative color reference</h2>
+      <img src="references/approved-b-warm.png" alt="Original selected B Warm presentation showing the light lockup and dark app-icon treatment">
+    </section>
+  </div>
+</main>
+</html>

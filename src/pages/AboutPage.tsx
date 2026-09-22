@@ -25,9 +25,7 @@ export function AboutPage() {
         description: t('about.seo_description'),
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/web/icons8-concert-color-512.png`,
-          width: 512,
-          height: 512,
+          url: `${siteUrl}/brand/v1/logo.svg`,
         },
         contactPoint: {
           '@type': 'ContactPoint',

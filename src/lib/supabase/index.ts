@@ -7,6 +7,8 @@ export { supabase, isSupabaseConfigured, getSupabaseUrl } from './config'
 
 export {
   signUpWithEmail,
+  isExistingEmailSignUpResult,
+  isExistingEmailSignUpError,
   signInWithEmail,
   signInWithOAuth,
   signOut,
@@ -20,4 +22,3 @@ export {
   type OAuthProvider,
   type SupabaseAuthResult,
 } from './authService'
-

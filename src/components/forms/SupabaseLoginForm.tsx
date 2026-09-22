@@ -12,6 +12,7 @@ import OAuthButton from "./OAuthButton.tsx";
 import {useTranslation} from 'react-i18next'
 import {Alert} from '../Alert'
 import {Action, Field} from '../index'
+import type {AuthActionResult} from '../../types/auth.types'
 
 interface SupabaseLoginFormProps {
   onSuccess?: () => void
@@ -49,7 +50,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
     setIsLoading(true)
 
     try {
-      let result: { success: boolean; error?: string; message?: string }
+      let result: AuthActionResult
 
       if (isSignUp) {
         result = await signUpWithEmail(email, password, name || undefined)
@@ -58,9 +59,10 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
       }
 
       if (result.success) {
-        if (result.message) {
+        if (result.message || result.messageKey) {
           // Success with info message (e.g., email confirmation required)
-          setMessage(result.message)
+          const confirmationMessage = result.messageKey ? t(result.messageKey) : result.message
+          if (confirmationMessage) setMessage(confirmationMessage)
         } else if (result.error) {
           // Backend sync error during otherwise successful auth
           setError(result.error)
@@ -71,7 +73,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
         }
       } else {
         // Failed authentication
-        setError(result.error || t('auth.auth_failed'))
+        setError(result.errorKey ? t(result.errorKey) : (result.error || t('auth.auth_failed')))
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : t('auth.auth_failed'))
@@ -90,8 +92,8 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
       sessionStorage.setItem('auth_redirect', redirectPath)
 
       const result = await loginWithOAuth(provider)
-      if (!result.success && result.error) {
-        setError(result.error)
+      if (!result.success) {
+        setError(result.errorKey ? t(result.errorKey) : (result.error || t('auth.oauth_failed')))
         setIsLoading(false)
       }
       // If successful, user will be redirected to OAuth provider
@@ -219,6 +221,3 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
       </div>
   )
 }
-
-
-

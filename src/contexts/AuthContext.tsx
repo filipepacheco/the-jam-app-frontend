@@ -4,10 +4,12 @@
  */
 
 import {createContext, type ReactNode, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import type {AuthContextType, AuthUser, SkillLevel, UpdateProfileDto, UserRole} from '../types/auth.types'
+import type {AuthActionResult, AuthContextType, AuthUser, SkillLevel, UpdateProfileDto, UserRole} from '../types/auth.types'
 import type {OAuthProvider} from '../lib/supabase'
 import {
   getCurrentSession,
+  isExistingEmailSignUpError,
+  isExistingEmailSignUpResult,
   isSupabaseConfigured,
   onAuthStateChange,
   resetPassword as supabaseResetPassword,
@@ -32,6 +34,13 @@ function deriveRole(profile: { role?: UserRole; isHost?: boolean }): UserRole {
  * Create the Authentication Context
  */
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+function unexpectedAuthError(error: unknown, errorKey: AuthActionResult['errorKey']): AuthActionResult {
+  if (error instanceof Error && error.message) {
+    return {success: false, error: error.message}
+  }
+  return {success: false, errorKey}
+}
 
 /**
  * AuthProvider component
@@ -85,9 +94,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * Helper function to set up auth state after successful login/signup
    * Derives role from profile data with fallback logic
    */
-  const handleAuthSuccess = useCallback(async (profile: AuthUser | null): Promise<{ success: boolean; error?: string; isNewUser?: boolean }> => {
+  const handleAuthSuccess = useCallback(async (profile: AuthUser | null): Promise<AuthActionResult> => {
     if (!profile) {
-      return { success: false, error: 'Failed to load profile' }
+      return {success: false, errorKey: 'auth.errors.profile_load_failed'}
     }
 
     setUser(profile)
@@ -170,9 +179,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Login with email and password (Supabase)
    */
-  const loginWithEmail = useCallback(async (email: string, password: string): Promise<{ success: boolean; error?: string; isNewUser?: boolean }> => {
+  const loginWithEmail = useCallback(async (email: string, password: string): Promise<AuthActionResult> => {
     if (!isSupabaseConfigured()) {
-      return { success: false, error: 'Supabase is not configured' }
+      return {success: false, errorKey: 'auth.errors.configuration'}
     }
 
     try {
@@ -188,26 +197,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return handleAuthSuccess(profile)
       }
 
-      return { success: false, error: 'No session returned' }
+      return {success: false, errorKey: 'auth.errors.session_missing'}
     } catch (err) {
       console.error('Login error:', err)
-      const errorMessage = err instanceof Error ? err.message : 'Login failed'
-      return { success: false, error: errorMessage }
+      return unexpectedAuthError(err, 'auth.errors.login_failed')
     }
   }, [loadUserProfile, handleAuthSuccess])
 
   /**
    * Sign up with email and password (Supabase)
    */
-  const signUpWithEmailFn = useCallback(async (email: string, password: string, name?: string): Promise<{ success: boolean; error?: string; message?: string; isNewUser?: boolean }> => {
+  const signUpWithEmailFn = useCallback(async (email: string, password: string, name?: string): Promise<AuthActionResult> => {
     if (!isSupabaseConfigured()) {
-      return { success: false, error: 'Supabase is not configured' }
+      return {success: false, errorKey: 'auth.errors.configuration'}
     }
 
     try {
       const result = await supabaseSignUp(email, password, { name })
 
       if (result.error) {
+        if (isExistingEmailSignUpError(result.error)) {
+          return { success: false, errorKey: 'auth.sign_up_errors.email_already_registered' }
+        }
         return { success: false, error: result.error.message }
       }
 
@@ -218,21 +229,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return handleAuthSuccess(profile)
       }
 
-      // Email confirmation required
-      return { success: true, message: 'Please check your email to confirm your account' }
+      if (isExistingEmailSignUpResult(result)) {
+        return { success: false, errorKey: 'auth.sign_up_errors.email_already_registered' }
+      }
+
+      if (result.user) {
+        return { success: true, messageKey: 'auth.email_verification.description' }
+      }
+
+      return { success: false, errorKey: 'auth.sign_up_errors.unexpected_response' }
     } catch (err) {
       console.error('Sign up error:', err)
-      const errorMessage = err instanceof Error ? err.message : 'Sign up failed'
-      return { success: false, error: errorMessage }
+      return unexpectedAuthError(err, 'auth.sign_up_errors.unexpected_response')
     }
   }, [loadUserProfile, handleAuthSuccess])
 
   /**
    * Login with OAuth provider (Google, GitHub, etc.)
    */
-  const loginWithOAuth = useCallback(async (provider: OAuthProvider): Promise<{ success: boolean; error?: string }> => {
+  const loginWithOAuth = useCallback(async (provider: OAuthProvider): Promise<AuthActionResult> => {
     if (!isSupabaseConfigured()) {
-      return { success: false, error: 'Supabase is not configured' }
+      return {success: false, errorKey: 'auth.errors.configuration'}
     }
 
     try {
@@ -247,7 +264,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: true }
     } catch (err) {
       console.error('OAuth error:', err)
-      return { success: false, error: 'OAuth login failed' }
+      return unexpectedAuthError(err, 'auth.errors.oauth_failed')
     }
   }, [])
 
@@ -283,9 +300,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Reset password
    */
-  const resetPasswordFn = useCallback(async (email: string): Promise<{ success: boolean; error?: string }> => {
+  const resetPasswordFn = useCallback(async (email: string): Promise<AuthActionResult> => {
     if (!isSupabaseConfigured()) {
-      return { success: false, error: 'Supabase is not configured' }
+      return {success: false, errorKey: 'auth.errors.configuration'}
     }
 
     try {
@@ -298,7 +315,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { success: true }
     } catch (err) {
       console.error('Password reset error:', err)
-      return { success: false, error: 'Password reset failed' }
+      return unexpectedAuthError(err, 'auth.errors.password_reset_failed')
     }
   }, [])
 
@@ -347,9 +364,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Complete onboarding - update instrument, skill level, and contact info
    */
-  const completeOnboarding = useCallback(async (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }): Promise<{ success: boolean; error?: string }> => {
+  const completeOnboarding = useCallback(async (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }): Promise<AuthActionResult> => {
     if (!user) {
-      return { success: false, error: 'Not authenticated' }
+      return {success: false, errorKey: 'auth.errors.not_authenticated'}
     }
 
     try {
@@ -368,14 +385,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setIsNewUser(false)
       }
 
-      return { success: response.success, error: response.error }
+      return response.success
+        ? {success: true}
+        : response.error
+          ? {success: false, error: response.error}
+          : {success: false, errorKey: 'auth.errors.profile_update_failed'}
     } catch (err) {
       console.error('Onboarding error:', err)
-      // Extract error message from ApiError or Error
-      const errorMessage = (err && typeof err === 'object' && 'message' in err)
-        ? (err as { message: string }).message
-        : 'Failed to update profile'
-      return { success: false, error: errorMessage }
+      return unexpectedAuthError(err, 'auth.errors.profile_update_failed')
     }
   }, [user])
 
@@ -389,9 +406,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Update user profile via backend
    */
-  const updateProfile = useCallback(async (updates: UpdateProfileDto): Promise<{ success: boolean; error?: string }> => {
+  const updateProfile = useCallback(async (updates: UpdateProfileDto): Promise<AuthActionResult> => {
     if (!user) {
-      return { success: false, error: 'Not authenticated' }
+      return {success: false, errorKey: 'auth.errors.not_authenticated'}
     }
 
     try {
@@ -405,10 +422,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setRoleState(deriveRole(updatedUser))
       }
 
-      return response
+      return response.success
+        ? {success: true}
+        : response.error
+          ? {success: false, error: response.error}
+          : {success: false, errorKey: 'auth.errors.profile_update_failed'}
     } catch (err) {
       console.error('Profile update error:', err)
-      return { success: false, error: 'Failed to update profile' }
+      return unexpectedAuthError(err, 'auth.errors.profile_update_failed')
     }
   }, [user])
 

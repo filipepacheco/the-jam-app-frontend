@@ -1,6 +1,7 @@
 import {act, fireEvent, render, screen} from '@testing-library/react'
 import {afterEach, describe, expect, it, vi} from 'vitest'
 import type {LiveStateResponseDto} from '../types/jamControl.types'
+import {ToastProvider} from '../components/Toast'
 import {LiveJamControlPanel} from '../components/schedule/LiveJamControlPanel'
 import {jamControlService} from '../services'
 
@@ -36,8 +37,16 @@ afterEach(() => {
 })
 
 describe('LiveJamControlPanel', () => {
+  function renderPanel() {
+    return render(
+      <ToastProvider>
+        <LiveJamControlPanel jamId="jam-1" />
+      </ToastProvider>,
+    )
+  }
+
   it('identifies the first upcoming Performance as Next', () => {
-    render(<LiveJamControlPanel jamId="jam-1" />)
+    renderPanel()
 
     expect(screen.getByText('dj_control.now_playing.next_up')).toBeVisible()
     expect(screen.getByText('Music a').closest('[role="listitem"]')).toHaveTextContent(
@@ -49,7 +58,7 @@ describe('LiveJamControlPanel', () => {
   })
 
   it('routes mouse reordering through the Live Queue interface', () => {
-    render(<LiveJamControlPanel jamId="jam-1" />)
+    renderPanel()
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
     const items = screen.getAllByRole('listitem')
 
@@ -67,7 +76,7 @@ describe('LiveJamControlPanel', () => {
   it('routes touch reordering through the Live Queue interface', () => {
     vi.stubGlobal('requestAnimationFrame', vi.fn(() => 42))
     vi.stubGlobal('cancelAnimationFrame', vi.fn())
-    render(<LiveJamControlPanel jamId="jam-1" />)
+    renderPanel()
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
     const items = screen.getAllByRole('listitem')
     const list = screen.getByRole('list')
@@ -98,7 +107,7 @@ describe('LiveJamControlPanel', () => {
 
   it('routes keyboard reordering through the Live Queue interface', () => {
     vi.useFakeTimers()
-    render(<LiveJamControlPanel jamId="jam-1" />)
+    renderPanel()
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
     const before = screen.getAllByRole('listitem')
 
@@ -117,7 +126,7 @@ describe('LiveJamControlPanel', () => {
     const cancelFrame = vi.fn()
     vi.stubGlobal('requestAnimationFrame', requestFrame)
     vi.stubGlobal('cancelAnimationFrame', cancelFrame)
-    const {unmount} = render(<LiveJamControlPanel jamId="jam-1" />)
+    const {unmount} = renderPanel()
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
     const items = screen.getAllByRole('listitem')
     const list = screen.getByRole('list')
@@ -140,7 +149,7 @@ describe('LiveJamControlPanel', () => {
   it('cancels debounced persistence on unmount', () => {
     vi.useFakeTimers()
     const reorder = vi.spyOn(jamControlService, 'reorderQueue').mockResolvedValue({success: true})
-    const {unmount} = render(<LiveJamControlPanel jamId="jam-1" />)
+    const {unmount} = renderPanel()
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
     fireEvent.keyDown(screen.getAllByRole('listitem')[1], {key: 'ArrowUp'})
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_save'}))
@@ -154,7 +163,7 @@ describe('LiveJamControlPanel', () => {
   it('keeps reorder actions visible and safely disabled while saving', () => {
     vi.useFakeTimers()
     vi.spyOn(jamControlService, 'reorderQueue').mockImplementation(() => new Promise(() => {}))
-    render(<LiveJamControlPanel jamId="jam-1" />)
+    renderPanel()
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
     fireEvent.keyDown(screen.getAllByRole('listitem')[1], {key: 'ArrowUp'})
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_save'}))
@@ -172,7 +181,7 @@ describe('LiveJamControlPanel', () => {
       success: false,
       error: {message: 'The original order was restored.'},
     })
-    render(<LiveJamControlPanel jamId="jam-1" />)
+    renderPanel()
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
     fireEvent.keyDown(screen.getAllByRole('listitem')[1], {key: 'ArrowUp'})
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_save'}))
@@ -183,6 +192,38 @@ describe('LiveJamControlPanel', () => {
     expect(screen.getAllByRole('listitem')[0]).toHaveTextContent('Music a')
   })
 
+  it('reports a successful reorder through the global success toast', async () => {
+    vi.useFakeTimers()
+    vi.spyOn(jamControlService, 'reorderQueue').mockResolvedValue({success: true})
+    vi.spyOn(jamControlService, 'getLiveState').mockResolvedValue({data: state, status: 200})
+    renderPanel()
+    fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
+    fireEvent.keyDown(screen.getAllByRole('listitem')[1], {key: 'ArrowUp'})
+    fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_save'}))
+
+    await act(async () => { await vi.advanceTimersByTimeAsync(300) })
+
+    expect(screen.getByRole('status')).toHaveTextContent('live_control.reordered_feedback')
+    expect(screen.getByRole('status')).toHaveAttribute('data-toast-tone', 'success')
+  })
+
+  it('localizes generic reorder failures in the global error toast', async () => {
+    vi.useFakeTimers()
+    vi.spyOn(jamControlService, 'reorderQueue').mockResolvedValue({
+      success: false,
+      error: {message: 'Unknown reorder error'},
+    })
+    renderPanel()
+    fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
+    fireEvent.keyDown(screen.getAllByRole('listitem')[1], {key: 'ArrowUp'})
+    fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_save'}))
+
+    await act(async () => { await vi.advanceTimersByTimeAsync(300) })
+
+    expect(screen.getByRole('alert')).toHaveTextContent('errors.failed_to_execute_action')
+    expect(screen.getByRole('alert')).toHaveAttribute('data-toast-tone', 'error')
+  })
+
   it('aborts in-flight persistence on unmount', () => {
     vi.useFakeTimers()
     let signal: AbortSignal | undefined
@@ -190,7 +231,7 @@ describe('LiveJamControlPanel', () => {
       signal = nextSignal
       return new Promise(() => {})
     })
-    const {unmount} = render(<LiveJamControlPanel jamId="jam-1" />)
+    const {unmount} = renderPanel()
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_drag'}))
     fireEvent.keyDown(screen.getAllByRole('listitem')[1], {key: 'ArrowUp'})
     fireEvent.click(screen.getByRole('button', {name: 'live_control.reorder_save'}))
