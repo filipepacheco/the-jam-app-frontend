@@ -29,7 +29,7 @@ const completedSchedule: ScheduleResponseDto = {
 }
 
 describe('TimelineItemV2Waveform', () => {
-  it('keeps completed metadata and controls outside long title and artist truncation', () => {
+  it('keeps completed status visible while hiding playback metadata', () => {
     render(
       <TimelineItemV2Waveform
         schedule={completedSchedule}
@@ -42,8 +42,23 @@ describe('TimelineItemV2Waveform', () => {
 
     expect(screen.getByText(longTitle)).toHaveClass('min-w-0', 'flex-1', 'truncate')
     expect(screen.getByText(longArtist)).toHaveClass('ds-truncate-single', 'min-w-0', 'flex-1')
-    expect(screen.getByRole('link', {name: `Open ${longTitle} in Spotify`})).toHaveClass('shrink-0')
-    expect(screen.getByText('4:34')).toHaveClass('shrink-0')
+    expect(screen.queryByRole('link', {name: `Open ${longTitle} in Spotify`})).not.toBeInTheDocument()
+    expect(screen.queryByText('4:34')).not.toBeInTheDocument()
     expect(screen.getByText('schedule.statuses.completed').parentElement?.parentElement).toHaveClass('shrink-0')
+  })
+
+  it('keeps Spotify and duration available before a performance is completed', () => {
+    render(
+      <TimelineItemV2Waveform
+        schedule={{...completedSchedule, status: 'SCHEDULED'}}
+        user={null}
+        position={1}
+        onRegisterClick={vi.fn()}
+        onToggleExpanded={vi.fn()}
+      />
+    )
+
+    expect(screen.getByRole('link', {name: `Open ${longTitle} in Spotify`})).toBeInTheDocument()
+    expect(screen.getByText('4:34')).toBeInTheDocument()
   })
 })

@@ -143,8 +143,10 @@ export function TimelineItemV2Waveform({
               <p className={`ds-truncate-single min-w-0 flex-1 ${isCompactCompleted ? 'text-xs' : 'text-sm'} text-base-content/70`}>
                 {schedule.music?.artist}
               </p>
-              <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
-              {typeof schedule.music?.duration === 'number' && schedule.music.duration > 0 && (
+              {!isCompleted && (
+                <SpotifyPlayButton link={schedule.music?.link} title={schedule.music?.title} />
+              )}
+              {!isCompleted && typeof schedule.music?.duration === 'number' && schedule.music.duration > 0 && (
                 <span className="inline-flex shrink-0 items-center gap-1 text-xs tabular-nums text-base-content/55">
                   <Clock3 className="size-3.5" aria-hidden="true" />
                   {formatDuration(schedule.music.duration)}
