@@ -112,10 +112,13 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
 
   return createPortal(
     <div
+      data-prerender-omit
       className={`fixed inset-0 z-50 ${isOpen ? '' : 'pointer-events-none'}`}
       role="dialog"
       aria-modal="true"
       aria-label={t('nav.mobile_menu')}
+      aria-hidden={!isOpen}
+      inert={!isOpen}
     >
       {/* Backdrop */}
       <div

@@ -108,6 +108,11 @@ async function prerenderRoute(
     // Extra delay for async rendering to settle
     await new Promise(r => setTimeout(r, 1000))
 
+    // createRoot replaces #root, but cannot remove portals serialized beside it.
+    // Omit transient UI so the client mounts only one drawer/overlay instance.
+    await page.evaluate(() => {
+      document.querySelectorAll('[data-prerender-omit]').forEach((element) => element.remove())
+    })
     let html = await page.content()
 
     // Add noindex to auth pages
