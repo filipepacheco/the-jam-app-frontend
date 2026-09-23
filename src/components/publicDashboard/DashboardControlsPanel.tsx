@@ -1,5 +1,5 @@
 import {useEffect} from 'react'
-import {motion} from 'framer-motion'
+import {AnimatePresence, motion} from 'framer-motion'
 import {useReducedMotion} from '../../hooks'
 import {LanguageSelector} from './LanguageSelector'
 import {useTranslation} from 'react-i18next'
@@ -30,8 +30,10 @@ interface DashboardControlsPanelProps {
 // distance-legible screen behind it.
 export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange, layout, onLayoutChange, carouselIntervalMs, onCarouselIntervalChange }: DashboardControlsPanelProps) {
   const { t } = useTranslation()
-  const { transition, prefersReducedMotion } = useReducedMotion()
-  const panelTransition = {opacity: 0, y: -20}
+  const { prefersReducedMotion } = useReducedMotion()
+  // Design-system timings: enter settles, exit is shorter and never blocks.
+  const enter = {duration: prefersReducedMotion ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] as const}
+  const exit = {duration: prefersReducedMotion ? 0 : 0.16, ease: [0.5, 0, 0.75, 0] as const}
 
   useEffect(() => {
     if (!visible) return
@@ -42,8 +44,6 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
     return () => document.removeEventListener('keydown', closeOnEscape)
   }, [onClose, visible])
 
-  if (!visible) return null
-
   const handleBackdropClick = () => {
     onClose()
   }
@@ -52,24 +52,28 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
   const layoutLabel = t('publicDashboard.layoutLabel')
 
   return (
-    <>
+    <AnimatePresence>
       {/* Backdrop */}
+      {visible && (
       <motion.div
+        key="controls-backdrop"
         initial={prefersReducedMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: {...enter, duration: prefersReducedMotion ? 0 : 0.22} }}
+        exit={{ opacity: 0, transition: exit }}
         className="fixed inset-0 z-30"
         style={{ background: 'var(--ds-surface-overlay)' }}
         onClick={handleBackdropClick}
         aria-hidden="true"
       />
+      )}
 
+      {visible && (
       <motion.div
+        key="controls-panel"
         id="public-dashboard-controls-panel"
-        initial={prefersReducedMotion ? false : panelTransition}
-        animate={{ opacity: 1, y: 0 }}
-        exit={prefersReducedMotion ? undefined : panelTransition}
-        transition={transition}
+        initial={prefersReducedMotion ? false : {opacity: 0, y: -16}}
+        animate={{ opacity: 1, y: 0, transition: enter }}
+        exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -8, transition: exit }}
         className="fixed top-16 left-0 right-0 z-40 max-h-[calc(100vh-4rem)] overflow-y-auto bg-base-200 border-b border-base-300 p-4"
         role="region"
         aria-label={t('publicDashboard.dashboardControls')}
@@ -159,6 +163,7 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
           </IconAction>
         </div>
       </motion.div>
-    </>
+      )}
+    </AnimatePresence>
   )
 }

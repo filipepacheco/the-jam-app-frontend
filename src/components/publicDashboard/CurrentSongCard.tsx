@@ -24,9 +24,6 @@ export function CurrentSongCard({song, playbackState = 'PLAYING'}: CurrentSongCa
         <div className="venue-stage-fx" aria-hidden="true">
           <span className="venue-stage-halo" />
           <span className="venue-stage-sweep" />
-          <span className="venue-stage-ring" />
-          <span className="venue-stage-ring" />
-          {Array.from({length: 12}, (_, index) => <span key={index} className="venue-stage-spark" />)}
         </div>
       )}
       <span className="venue-change-wash" aria-hidden="true" />
@@ -36,13 +33,17 @@ export function CurrentSongCard({song, playbackState = 'PLAYING'}: CurrentSongCa
           ? t(playbackState === 'PAUSED' ? 'schedule.statuses.paused' : 'publicDashboard.nowPlaying')
           : t('publicDashboard.startingSoon')}
       </p>
-      <div data-venue-song>
-        <h2 className="venue-current-title ds-wrap-user-content">
-          {song?.title ?? t('publicDashboard.waitingForPerformance')}
-        </h2>
-        <p className="venue-artist ds-wrap-user-content">
-          {song?.artist ?? t('publicDashboard.waitingForPerformanceHelp')}
-        </p>
+      {/* Each line is its own mask; the ghost holds the outgoing song during a roll. */}
+      <div className="venue-song-stage">
+        <div data-venue-song>
+          <h2 className="venue-current-title venue-roll ds-wrap-user-content">
+            <span className="venue-roll-line">{song?.title ?? t('publicDashboard.waitingForPerformance')}</span>
+          </h2>
+          <p className="venue-artist venue-roll ds-wrap-user-content">
+            <span className="venue-roll-line">{song?.artist ?? t('publicDashboard.waitingForPerformanceHelp')}</span>
+          </p>
+        </div>
+        <div className="venue-song-ghost" data-venue-ghost aria-hidden="true" />
       </div>
       {song && (
         <div className="venue-lineup" data-venue-lineup>

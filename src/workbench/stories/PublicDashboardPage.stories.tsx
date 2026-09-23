@@ -3,6 +3,7 @@ import {useState} from 'react'
 import {expect, fn, waitFor} from 'storybook/test'
 import {PublicDashboardPage} from '../../pages/PublicDashboardPage'
 import {dashboardSongs, venueDashboard as liveDashboard} from '../publicDashboardFixtures'
+import {waitForMotionToSettle} from '../reducedMotion'
 
 const retry = fn(async () => undefined)
 
@@ -30,6 +31,7 @@ export const LiveClassic: Story = {
       await expect(canvas.getByText('Camila')).toBeVisible()
       await expect(canvas.getByRole('img', {name: /código qr/i})).toBeVisible()
     })
+    await waitForMotionToSettle()
   },
 }
 
@@ -81,6 +83,7 @@ export const MusicianChangeTransition: Story = {
     await waitFor(async () => {
       await expect(canvas.getByText('Bianca')).toBeVisible()
     })
+    await waitForMotionToSettle()
   },
 }
 

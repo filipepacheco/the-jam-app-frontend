@@ -14,7 +14,6 @@
   border-radius: 1rem;
   background: var(--color-base-100);
   isolation: isolate;
-  perspective: 900px;
 }
 
 .venue-current, .venue-next, .venue-instrument { position: relative; }
@@ -27,40 +26,46 @@
   background: color-mix(in oklch, var(--color-primary) 24%, transparent);
 }
 .venue-next > .venue-change-wash { background: color-mix(in oklch, var(--color-secondary) 16%, transparent); }
+/* On stage the change reads as a spotlight landing on the title, not a tint. */
+.venue-current > .venue-change-wash {
+  background: radial-gradient(ellipse 75% 65% at 20% 35%, color-mix(in oklch, var(--color-primary) 34%, transparent), transparent 72%);
+}
 .venue-musician-wash { inset: -0.5rem; border-radius: 0.5rem; }
 
-/* A live-show layer, confined to the stage. Text and QR never pulse or flicker. */
+/* Song lines roll through their own masks. Clipping applies only while a cue
+   runs; the padding keeps descenders and accents inside the mask. */
+.venue-song-stage { position: relative; }
+.venue-song-ghost { position: absolute; inset: 0 0 auto; pointer-events: none; }
+.venue-roll { padding-inline: 0.1em; padding-bottom: 0.2em; margin-inline: -0.1em; margin-bottom: -0.2em; }
+.venue-current-title.venue-roll, .venue-next-title.venue-roll { padding-top: 0.08em; margin-top: -0.08em; }
+.venue-roll-line { display: block; }
+[data-venue-cue] .venue-roll { overflow: hidden; }
+
+/* A live-show layer, confined to the stage. Two stage lights drift on slow,
+   unrelated cycles, so the loop never reads as a pulse. Text and QR never move. */
 .venue-stage-fx { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; z-index: -1; }
 .venue-stage-halo {
   position: absolute;
-  inset: -20%;
-  background: radial-gradient(ellipse at 25% 60%, color-mix(in oklch, var(--color-primary) 35%, transparent), transparent 65%);
-  animation: venue-stage-breathe 2.4s ease-in-out infinite;
+  inset: -25%;
+  background: radial-gradient(ellipse 55% 50% at 30% 58%, color-mix(in oklch, var(--color-primary) 34%, transparent), transparent 70%);
+  animation: venue-light-in 1.6s cubic-bezier(0.16, 1, 0.3, 1) both, venue-stage-drift 11s ease-in-out infinite alternate;
+}
+.venue-stage-halo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 40% 45% at 72% 30%, color-mix(in oklch, var(--color-secondary) 22%, transparent), transparent 70%);
+  animation: venue-stage-drift 14s ease-in-out -7s infinite alternate-reverse;
 }
 .venue-stage-sweep {
   position: absolute;
   top: -40%;
   left: 0;
-  width: 40%;
+  width: 32%;
   height: 180%;
   opacity: 0;
-  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--color-primary) 50%, transparent), color-mix(in oklch, var(--color-accent) 30%, transparent), transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--color-primary) 26%, transparent) 30%, color-mix(in oklch, var(--color-accent) 30%, transparent) 50%, color-mix(in oklch, var(--color-primary) 26%, transparent) 70%, transparent);
 }
-.venue-stage-ring {
-  position: absolute;
-  left: 48%;
-  top: 46%;
-  width: 48%;
-  aspect-ratio: 1;
-  border: 3px solid var(--color-primary);
-  border-radius: 50%;
-  opacity: 0;
-}
-.venue-stage-ring + .venue-stage-ring { border-color: var(--color-secondary); }
-.venue-stage-spark { position: absolute; left: 48%; top: 46%; width: 0.5rem; height: 1.25rem; border-radius: 2px; background: var(--color-primary); opacity: 0; }
-.venue-stage-spark:nth-child(3n) { background: var(--color-accent); }
-.venue-stage-spark:nth-child(3n + 1) { background: var(--color-secondary); }
-[data-venue-song], [data-venue-instrument] { transform-origin: left center; }
 .venue-live-beat { display: inline-flex; align-items: center; gap: 4px; height: 1.25em; color: var(--color-primary); }
 .venue-live-beat i { display: block; width: 5px; height: 100%; border-radius: 2px; background: currentColor; animation: venue-beat 900ms ease-in-out infinite alternate; }
 .venue-live-beat i:nth-child(2n) { animation-duration: 650ms; animation-delay: -300ms; }
@@ -72,17 +77,21 @@
   60% { transform: scaleY(1); opacity: 1; }
   100% { transform: scaleY(0.5); opacity: 0.8; }
 }
-@keyframes venue-stage-breathe {
-  0%, 100% { opacity: 0.3; transform: scale(0.94); }
-  50% { opacity: 0.9; transform: scale(1.06); }
+@keyframes venue-light-in {
+  from { opacity: 0; }
+}
+@keyframes venue-stage-drift {
+  from { transform: translate3d(-6%, 4%, 0) scale(1); }
+  to { transform: translate3d(7%, -3%, 0) scale(1.08); }
 }
 [data-venue-motion='paused'] .venue-stage-halo,
+[data-venue-motion='paused'] .venue-stage-halo::after,
 [data-venue-motion='paused'] .venue-live-beat i { animation: none; }
 [data-venue-motion='paused'] .venue-stage-halo { opacity: 0; }
 [data-venue-motion='paused'] .venue-live-beat i { transform: scaleY(0.5); }
 
 @media (prefers-reduced-motion: reduce) {
-  .venue-stage-halo, .venue-live-beat i { animation: none; }
+  .venue-stage-halo, .venue-stage-halo::after, .venue-live-beat i { animation: none; }
   .venue-stage-halo { opacity: 0; }
 }
 

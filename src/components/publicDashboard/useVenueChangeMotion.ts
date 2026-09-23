@@ -1,39 +1,67 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {spring} from 'framer-motion'
 import {useReducedMotion} from '../../hooks/useReducedMotion'
-import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
+import {groupMusiciansByInstrument, normalizeInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
 
+type Lineup = Map<string, Map<string, string>>
+
 function describeSong(song: DashboardSongDto | null) {
-  return {
-    song: JSON.stringify([song?.id, song?.title, song?.artist]),
-    instruments: new Map(Object.entries(groupMusiciansByInstrument(song?.musicians)).map(([instrument, musicians]) => [
-      instrument,
-      JSON.stringify(musicians.map(({id, name}) => [id, name]).sort(([a], [b]) => a.localeCompare(b))),
-    ])),
-  }
+  const lineup: Lineup = new Map(Object.entries(groupMusiciansByInstrument(song?.musicians)).map(([instrument, musicians]) => [
+    normalizeInstrument(instrument),
+    new Map(musicians.map(({id, name}) => [id, name ?? ''])),
+  ]))
+  return {song: JSON.stringify([song?.id, song?.title, song?.artist]), lineup}
 }
 
-// Show cues deliberately outlast ordinary controls: viewers watch from across
-// a venue. Sample a real spring once, then let the compositor play the frames.
-const SHOW = {title: 1000, burst: 1300, next: 720, musician: 650, stagger: 50}
-const entranceSpring = spring({keyframes: [0, 1], stiffness: 170, damping: 18, mass: 1})
-const springProgress = Array.from({length: 61}, (_, index) =>
-  index === 60 ? 1 : entranceSpring.next(index * SHOW.title / 60).value,
-)
-
-function entranceFrames(distance: number, scale: number, tilt = 0): Keyframe[] {
-  return springProgress.map(progress => ({
-    opacity: Math.min(1, 0.2 + progress),
-    transform: `translate3d(0, ${(1 - progress) * distance}px, 0) scale(${scale + (1 - scale) * progress}) rotateX(${(1 - progress) * tilt}deg)`,
-  }))
+function sameMembers(a?: Map<string, string>, b?: Map<string, string>) {
+  if (!a || !b) return a === b
+  return a.size === b.size && [...a].every(([id, name]) => b.get(id) === name)
 }
 
-/** Compare audience-visible values, so a fresh polling object isn't a new event. */
+// Show cues deliberately outlast ordinary controls: viewers read them from
+// across a venue. The outgoing song leaves quickly; the new one lands slowly.
+// The next card follows the stage a beat later, so the eye reads stage first.
+const PROFILE = {
+  stage: {lead: 0, exit: 260, enter: 950, overlap: 30, line: 90, lineup: 300},
+  next: {lead: 160, exit: 220, enter: 750, overlap: 30, line: 70, lineup: 240},
+}
+const SHOW = {rise: 700, fade: 500, stagger: 70, light: 1400}
+const EASE = {
+  enter: 'cubic-bezier(0.16, 1, 0.3, 1)', // expo-out: arrives fast, settles long
+  exit: 'cubic-bezier(0.5, 0, 0.75, 0)', // quart-in: leaves without lingering
+  travel: 'cubic-bezier(0.65, 0, 0.35, 1)', // a light crossing the stage
+}
+
+// Names land with a little life: a real spring (about 5% overshoot) sampled
+// once into CSS linear(), so the compositor plays it. Older engines settle on expo-out.
+const LIFT_EASE = (() => {
+  if (typeof CSS === 'undefined' || !CSS.supports?.('transition-timing-function', 'linear(0, 1)')) return EASE.enter
+  const generator = spring({keyframes: [0, 1], stiffness: 240, damping: 21, mass: 1})
+  const stops = Array.from({length: 40}, (_, index) => generator.next(index * SHOW.rise / 40).value.toFixed(3))
+  return `linear(${[...stops, 1].join(', ')})`
+})()
+
+// 130%, not 100%: the mask's descender padding would otherwise show glyph tops.
+const LINE_IN: Keyframe[] = [{transform: 'translate3d(0, 130%, 0)'}, {transform: 'none'}]
+const LINE_OUT: Keyframe[] = [{transform: 'none', opacity: 1}, {transform: 'translate3d(0, -130%, 0)', opacity: 0}]
+const FLASH: Keyframe[] = [
+  {opacity: 0, easing: 'cubic-bezier(0.33, 1, 0.68, 1)'},
+  {opacity: 1, offset: 0.22, easing: 'cubic-bezier(0.33, 0, 0.67, 1)'},
+  {opacity: 0},
+]
+
+/**
+ * Announces audience-visible changes: the outgoing song rolls up out of its
+ * line masks while the new one rises in, then the lineup lands name by name.
+ * Compares visible values, so a fresh polling object isn't a new event.
+ */
 export function useVenueChangeMotion(song: DashboardSongDto | null) {
   const ref = useRef<HTMLElement>(null)
   const previous = useRef<ReturnType<typeof describeSong> | null>(null)
+  const snapshot = useRef<HTMLElement | null>(null)
   const animations = useRef<Animation[]>([])
+  const cue = useRef(0)
   const {prefersReducedMotion} = useReducedMotion()
   const [pageVisible, setPageVisible] = useState(() => typeof document === 'undefined' || !document.hidden)
   const motionEnabled = !prefersReducedMotion && pageVisible
@@ -44,80 +72,132 @@ export function useVenueChangeMotion(song: DashboardSongDto | null) {
     return () => document.removeEventListener('visibilitychange', onVisibilityChange)
   }, [])
 
-  useEffect(() => {
+  // Layout effect: the cue must own the first frame of the new content, or the
+  // new title flashes in place before it rolls in.
+  useLayoutEffect(() => {
+    const root = ref.current
+    const outgoing = snapshot.current
     const next = describeSong(song)
     const last = previous.current
     previous.current = next
-    if (!motionEnabled) {
+
+    const stop = () => {
+      cue.current += 1
       animations.current.forEach(animation => animation.cancel())
+      animations.current = []
+      root?.querySelector('[data-venue-ghost]')?.replaceChildren()
+      if (root) delete root.dataset.venueCue
+    }
+    if (!motionEnabled) {
+      stop()
       return
     }
-    const root = ref.current
-    if (!last || !root || document.hidden || typeof root.animate !== 'function') return
+    if (!root || document.hidden || typeof root.animate !== 'function') return
 
-    const songChanged = last.song !== next.song
-    const changedInstruments = new Set([...last.instruments.keys(), ...next.instruments.keys()].filter(
-      instrument => last.instruments.get(instrument) !== next.instruments.get(instrument),
-    ))
-    if (!songChanged && changedInstruments.size === 0) return
+    const songChanged = !last || last.song !== next.song
+    const changedInstruments = [...new Set([...(last?.lineup.keys() ?? []), ...next.lineup.keys()])]
+      .filter(instrument => !sameMembers(last?.lineup.get(instrument), next.lineup.get(instrument)))
+    if (!songChanged && changedInstruments.length === 0) return
 
     // A newer event replaces the previous cue; nothing queues behind live data.
-    animations.current.forEach(animation => animation.cancel())
-    animations.current = []
-    const style = getComputedStyle(root)
-    const easing = style.getPropertyValue('--ds-ease-out').trim()
-    const animate = (element: Element | null, frames: Keyframe[], duration: number, delay = 0, curve = easing) => {
-      if (element) animations.current.push(element.animate(frames, {duration, easing: curve, delay, fill: 'backwards'}))
-    }
-    const highlight: Keyframe[] = [{opacity: 0}, {opacity: 1, offset: 0.15}, {opacity: 0}]
+    stop()
+    const id = cue.current
     const isStage = root.classList.contains('venue-current')
+    const {lead, exit, enter, overlap, line, lineup} = isStage ? PROFILE.stage : PROFILE.next
+    const animate = (element: Element | null, frames: Keyframe[], timing: KeyframeAnimationOptions) => {
+      if (element) animations.current.push(element.animate(frames, {easing: EASE.enter, fill: 'backwards', ...timing}))
+    }
+    // Lift and fade separately: the spring may overshoot, but opacity and blur must not.
+    const land = (element: Element, delay: number, distance = 20) => {
+      animate(element, [{transform: `translate3d(0, ${distance}px, 0)`}, {transform: 'none'}], {duration: SHOW.rise, delay, easing: LIFT_EASE})
+      animate(element, [{opacity: 0, filter: 'blur(6px)'}, {opacity: 1, filter: 'none'}], {duration: SHOW.fade, delay})
+    }
 
     if (songChanged) {
-      animate(root.querySelector('[data-venue-song]'), entranceFrames(isStage ? 72 : 38, isStage ? 0.86 : 0.94, isStage ? 12 : 0), isStage ? SHOW.title : SHOW.next, 0, 'linear')
-      animate(root.querySelector('.venue-change-wash'), highlight, isStage ? SHOW.burst : SHOW.next)
-      root.querySelectorAll('[data-venue-instrument]').forEach((group, index) => {
-        animate(group, entranceFrames(32, 0.92), SHOW.musician, 180 + Math.min(index, 6) * SHOW.stagger, 'linear')
+      const intro = !last
+      const ghost = root.querySelector('[data-venue-ghost]')
+      let enterAt = lead
+      if (intro) {
+        // First paint of the display: the card rises before its lines roll in.
+        animate(root, [{opacity: 0, transform: 'translate3d(0, 24px, 0)'}, {opacity: 1, transform: 'none'}], {duration: SHOW.rise, delay: lead})
+        enterAt += 160
+      } else if (outgoing && ghost) {
+        outgoing.removeAttribute('data-venue-song')
+        ghost.replaceChildren(outgoing)
+        const lines = outgoing.querySelectorAll('.venue-roll-line')
+        lines.forEach((element, index) => {
+          animate(element, LINE_OUT, {duration: exit, delay: lead + index * 40, easing: EASE.exit, fill: 'forwards'})
+        })
+        // The new song waits until the old lines have cleared: two titles
+        // sharing a mask read as one jumbled word from across the room.
+        enterAt += exit + (lines.length - 1) * 40 - overlap
+      }
+      root.querySelectorAll('[data-venue-song] .venue-roll-line').forEach((element, index) => {
+        animate(element, LINE_IN, {duration: enter, delay: enterAt + index * line})
+      })
+      root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
+        land(element, enterAt + lineup + Math.min(index, 6) * SHOW.stagger)
       })
 
-      if (isStage && song) {
-        animate(root.querySelector('.venue-stage-sweep'), [
-          {opacity: 0, transform: 'translateX(-150%) rotate(-18deg)'},
-          {opacity: 0.85, offset: 0.25},
-          {opacity: 0, transform: 'translateX(450%) rotate(-18deg)'},
-        ], SHOW.burst)
-        root.querySelectorAll('.venue-stage-ring').forEach((ring, index) => {
-          animate(ring, [
-            {opacity: 0.8, transform: 'translate(-50%, -50%) scale(0.25)'},
-            {opacity: 0, transform: 'translate(-50%, -50%) scale(2)'},
-          ], SHOW.burst, index * 160)
-        })
-        const {width, height} = root.getBoundingClientRect()
-        root.querySelectorAll('.venue-stage-spark').forEach((spark, index) => {
-          const angle = (index / 12) * Math.PI * 2
-          const x = Math.cos(angle) * width * 0.48
-          const y = Math.sin(angle) * height * 0.55
-          animate(spark, [
-            {opacity: 0, transform: 'translate(0, 0) scale(0.5) rotate(0deg)'},
-            {opacity: 1, offset: 0.1},
-            {opacity: 0, transform: `translate(${x}px, ${y}px) scale(1) rotate(${index % 2 ? 240 : -240}deg)`},
-          ], SHOW.burst, index % 3 * 35)
-        })
+      if (!intro) {
+        animate(root.querySelector('.venue-change-wash'), FLASH, {duration: SHOW.light, delay: lead, easing: 'linear'})
+        if (isStage && song) {
+          animate(root.querySelector('.venue-stage-sweep'), [
+            {opacity: 0, transform: 'translate3d(-160%, 0, 0) rotate(-16deg)'},
+            {opacity: 1, offset: 0.4},
+            {opacity: 0, transform: 'translate3d(420%, 0, 0) rotate(-16deg)'},
+          ], {duration: SHOW.light, delay: lead + 80, easing: EASE.travel})
+        }
       }
     } else {
-      let visibleChanges = 0
+      // Same song, edited lineup: only the arriving names move.
+      let marked = 0
       root.querySelectorAll<HTMLElement>('[data-venue-instrument]').forEach(group => {
-        if (!changedInstruments.has(group.dataset.venueInstrument ?? '')) return
-        visibleChanges += 1
-        animate(group, entranceFrames(36, 0.9), SHOW.musician, 0, 'linear')
-        animate(group.querySelector('.venue-musician-wash'), highlight, SHOW.burst)
+        const instrument = group.dataset.venueInstrument ?? ''
+        if (!changedInstruments.includes(instrument)) return
+        marked += 1
+        animate(group.querySelector('.venue-musician-wash'), FLASH, {duration: SHOW.light, easing: 'linear'})
+        const before = last?.lineup.get(instrument)
+        const after = next.lineup.get(instrument)
+        if (!before) {
+          land(group, 0)
+          return
+        }
+        let arrivals = 0
+        group.querySelectorAll<HTMLElement>('[data-venue-musician]').forEach(name => {
+          const musician = name.dataset.venueMusician ?? ''
+          if (before.get(musician) !== after?.get(musician)) land(name, arrivals++ * SHOW.stagger, 12)
+        })
       })
-      // If an entire instrument group disappeared, mark the remaining lineup.
-      if (visibleChanges < changedInstruments.size) {
-        animate(root.querySelector('[data-venue-lineup]'), entranceFrames(18, 0.98), SHOW.musician, 0, 'linear')
+      // A whole instrument group left: settle the remaining lineup instead.
+      if (marked < changedInstruments.length) {
+        animate(root.querySelector('[data-venue-lineup]'), [{opacity: 0.5}, {opacity: 1}], {duration: SHOW.fade})
       }
     }
+
+    if (animations.current.length === 0) return
+    // Line masks clip only while a cue runs, so resting text never loses a descender.
+    root.dataset.venueCue = ''
+    void Promise.allSettled(animations.current.map(animation => animation.finished)).then(() => {
+      if (cue.current !== id) return
+      root.querySelector('[data-venue-ghost]')?.replaceChildren()
+      delete root.dataset.venueCue
+      animations.current = []
+    })
   }, [song, motionEnabled])
 
-  useEffect(() => () => animations.current.forEach(animation => animation.cancel()), [])
+  // Keep a copy of the resting song lines for the next roll. This runs after
+  // every commit, so a language switch never leaves a stale outgoing copy.
+  useLayoutEffect(() => {
+    const lines = ref.current?.querySelector('[data-venue-song]')
+    snapshot.current = lines ? lines.cloneNode(true) as HTMLElement : null
+  })
+
+  useEffect(() => () => {
+    cue.current += 1
+    animations.current.forEach(animation => animation.cancel())
+    animations.current = []
+    previous.current = null
+  }, [])
   return {ref, motionEnabled}
 }

@@ -17,15 +17,24 @@ export function NextSongCard({song}: NextSongCardProps) {
   return (
     <section ref={cardRef} className="venue-next" data-venue-motion={motionEnabled ? 'running' : 'paused'} aria-label={t('publicDashboard.upNextLabel')}>
       <span className="venue-change-wash" aria-hidden="true" />
-      <div data-venue-song>
+      <div>
         <p className="venue-label text-secondary">
           <span className="venue-next-symbol" aria-hidden="true">⏭️</span>
           {t('publicDashboard.upNextLabel')}
         </p>
-        <h3 className="venue-next-title ds-wrap-user-content">
-          {song?.title ?? t('publicDashboard.nextToBeAnnounced')}
-        </h3>
-        {song && <p className="venue-support ds-wrap-user-content">{song.artist}</p>}
+        <div className="venue-song-stage">
+          <div data-venue-song>
+            <h3 className="venue-next-title venue-roll ds-wrap-user-content">
+              <span className="venue-roll-line">{song?.title ?? t('publicDashboard.nextToBeAnnounced')}</span>
+            </h3>
+            {song && (
+              <p className="venue-support venue-roll ds-wrap-user-content">
+                <span className="venue-roll-line">{song.artist}</span>
+              </p>
+            )}
+          </div>
+          <div className="venue-song-ghost" data-venue-ghost aria-hidden="true" />
+        </div>
       </div>
       <div data-venue-lineup>
         <p className="venue-label">{t(song ? 'publicDashboard.getReady' : 'publicDashboard.yourTurnNext')}</p>

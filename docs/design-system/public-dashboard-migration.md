@@ -263,18 +263,26 @@ the three private art-direction proposals. The current-song card loses its
 lavender top cap and decorative status dot. Its content and placement remain.
 
 The user then requested live-show energy beyond the initial conservative cues.
-Live songs have animated level bars and a breathing stage-light wash. A song
-change triggers a one-second spring entrance, a 1.3-second spotlight/ring/particle
-burst confined to the current-song card, and staggered musician entrances.
+A later motion pass replaced the ring and particle burst with the cues below.
+
+- Ambient: live songs show animated level bars. Two soft stage lights drift on slow cycles of 11 and 14 seconds. They do not pulse.
+- Song change: each title and artist line has its own mask. The old lines roll up and out in about 260 ms. Then the new lines rise in over 950 ms. The new song waits for the old lines to clear, so two titles never share a mask.
+- Stage light: a spotlight bloom and one light sweep cross the current-song card with the new title.
+- Lineup: the instrument groups land one after another. Each group rises with a small spring and fades in from a light blur.
+- Next card: it uses the same roll, 160 ms after the stage, so the audience reads the stage first.
+- Lineup edit: only the new or renamed musician moves, and a highlight marks the group.
+- First paint: the cards rise once, then their lines roll in.
+
 These audience announcements intentionally exceed routine control durations.
-Upcoming songs and individual lineup edits use smaller spring entrances.
-Springs are sampled once from the existing Motion library and played through
-WAAPI; ambient effects use compositor transform/opacity animations. No audio or
-microphone is involved. Visible-value comparisons prevent unchanged polling
-responses from replaying bursts. First render has ambient motion only; hidden
-documents and reduced-motion mode stop the effects. Rapid updates cancel the
-previous cue, and QR content never moves. Classic mode uses these local cues
-in place of routine full-screen confetti.
+Hidden copies of the old lines (`aria-hidden`) give the exit animation. The copies stay only while the cue runs.
+The masks clip only while a cue runs, so text at rest never loses a descender.
+A spring is sampled once from the existing Motion library into a CSS `linear()` easing. Browsers without `linear()` use an expo-out curve.
+All cues use WAAPI or CSS on `transform`, `opacity` and `filter` only. No audio or microphone is involved.
+Visible-value comparisons stop unchanged polling responses from replaying cues.
+Hidden documents and reduced-motion mode stop all cues and ambient motion.
+Rapid updates cancel the previous cue, and QR content never moves.
+Classic mode uses these local cues in place of routine full-screen confetti.
+The controls panel and the offline banner now also animate out, and exits are shorter than entrances.
 
 The `Live Changes` preview provides manual song, musician, next-song and unchanged
 refresh controls. TypeScript passed; broad workbench tests were not rerun, following

@@ -81,12 +81,13 @@ export function CarouselDashboard({
     <div className="relative pt-20 pb-8 px-4 md:px-8 z-10 flex flex-col min-h-[calc(100vh-5rem)] ds-shared-display">
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait" initial={false}>
+          {/* The outgoing slide clears quickly (mode="wait" holds the next one
+              back), then the new slide rises and settles. */}
           <motion.div
             key={activePanel.key}
-            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={prefersReducedMotion ? undefined : { opacity: 0, scale: 0.96 }}
-            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.4 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 24, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1, transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }}
+            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -12, transition: { duration: 0.2, ease: [0.5, 0, 0.75, 0] } }}
             className="w-full max-w-6xl mx-auto"
           >
             {activePanel.content}

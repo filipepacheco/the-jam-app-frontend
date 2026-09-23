@@ -29,7 +29,7 @@ export const InstrumentGroup = memo(function InstrumentGroup({instrument, musici
         {' '}{labels[normalizeInstrument(instrument)] ?? (instrument || t('common.unknown'))}
       </p>
       {musicians.map((musician) => (
-        <p key={musician.id} className="venue-musician-name ds-wrap-user-content">
+        <p key={musician.id} className="venue-musician-name ds-wrap-user-content" data-venue-musician={musician.id}>
           {musician.name || t('common.unknown')}
         </p>
       ))}

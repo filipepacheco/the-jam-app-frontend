@@ -49,6 +49,15 @@ export function installReducedMotionPreference(nextValue: boolean): void {
   simulatedQuery?.onchange?.call(simulatedQuery, event)
 }
 
+/**
+ * Resolves when one-shot cues finish, so an accessibility scan reads settled
+ * colors instead of text mid-fade. Ambient loops never finish and are ignored.
+ */
+export async function waitForMotionToSettle(): Promise<void> {
+  const cues = document.getAnimations().filter(animation => animation.effect?.getComputedTiming().endTime !== Infinity)
+  await Promise.allSettled(cues.map(animation => animation.finished))
+}
+
 export function resetReducedMotionPreference(): void {
   if (nativeMatchMedia) window.matchMedia = nativeMatchMedia
   nativeMatchMedia = undefined

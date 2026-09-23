@@ -25,10 +25,10 @@ export function CarouselIndicator({ count, activeIndex, onSelect }: CarouselIndi
           >
             <span
               aria-hidden="true"
-              className={`rounded-full transition-all duration-300 ${
+              className={`size-4 rounded-full transition-[scale,background-color] duration-300 ease-out ${
                 i === activeIndex
-                  ? 'w-4 h-4 bg-primary'
-                  : 'w-3 h-3 bg-base-content/30 hover:bg-base-content/50'
+                  ? 'bg-primary'
+                  : 'scale-75 bg-base-content/30 hover:bg-base-content/50'
               }`}
             />
           </button>
