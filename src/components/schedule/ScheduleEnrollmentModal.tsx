@@ -122,7 +122,6 @@ export function ScheduleEnrollmentModal({
         onClose={onClose}
         title={t('schedule.enroll_title')}
         size="sm"
-        responsive
         scrollable
         footer={
           <ModalFooter
