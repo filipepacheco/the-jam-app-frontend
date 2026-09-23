@@ -1,9 +1,12 @@
 import {message, plural, type CatalogueTree} from './index'
 
 export const live_control = {
+  paused: message({"pt-BR": "Pausada", "en": "Paused", "es": "En pausa"}),
+  playing_locked: message({"pt-BR": "Tocando · posição fixa", "en": "Playing · fixed position", "es": "Sonando · posición fija"}),
+  paused_hint: message({"pt-BR": "Retome a música pausada ou salve uma nova ordem para tocar a primeira não concluída.", "en": "Resume the paused song, or save a new order to play the first unfinished song.", "es": "Reanuda la canción en pausa o guarda un nuevo orden para reproducir la primera sin completar."}),
   now_playing: message({"pt-BR": "Tocando agora", "en": "Now Playing", "es": "Sonando Ahora"}),
-  up_next: message({"pt-BR": "Próximas (reordenável)", "en": "Up Next (Reorderable)", "es": "A Continuación (Reordenable)"}),
-  queue_title: message({"pt-BR": "Próximas", "en": "Up Next", "es": "A continuación"}),
+  up_next: message({"pt-BR": "Ordem das músicas", "en": "Song order", "es": "Orden de las canciones"}),
+  queue_title: message({"pt-BR": "Ordem das músicas", "en": "Song order", "es": "Orden de las canciones"}),
   song_playing_feedback: message({"pt-BR": "Música tocando", "en": "Song playing", "es": "Canción sonando"}),
   song_paused_feedback: message({"pt-BR": "Música pausada", "en": "Song paused", "es": "Canción pausada"}),
   skipped_feedback: message({"pt-BR": "Pulou para a próxima música", "en": "Skipped to next song", "es": "Saltado a la siguiente canción"}),
@@ -14,7 +17,7 @@ export const live_control = {
   reorder_drag: message({"pt-BR": "Reordenar", "en": "Reorder", "es": "Reordenar"}),
   reorder_cancel: message({"pt-BR": "Cancelar", "en": "Cancel", "es": "Cancelar"}),
   reorder_save: message({"pt-BR": "Salvar ordem", "en": "Save order", "es": "Guardar orden"}),
-  reorder_next_hint: message({"pt-BR": "A primeira apresentação desta lista será a próxima.", "en": "The first Performance in this list will be Next.", "es": "La primera actuación de esta lista será la siguiente."}),
+  reorder_next_hint: message({"pt-BR": "A primeira apresentação não concluída será a próxima. Apenas a música tocando mantém sua posição fixa.", "en": "The first unfinished Performance will be Next. Only the playing song has a fixed position.", "es": "La primera actuación sin completar será la siguiente. Solo la canción que está sonando mantiene su posición fija."}),
   reorderable_item: message({"pt-BR": "Item reordenável", "en": "Reorderable item", "es": "Elemento reordenable"}),
   reorder_hint_keyboard: message({"pt-BR": "Use as setas para reordenar as apresentações", "en": "Use the arrow keys to reorder performances", "es": "Usa las flechas para reordenar las presentaciones"}),
   reorder_hint_mobile: message({"pt-BR": "Segure um item por um momento e arraste para reordenar", "en": "Hold an item for a moment, then drag to reorder", "es": "Mantene presionado un item y arrastra para reordenar"}),

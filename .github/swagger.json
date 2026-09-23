@@ -1142,10 +1142,16 @@
         },
         "responses": {
           "201": {
-            "description": "Registration created successfully"
+            "description": "Registration created or withdrawn registration restored successfully"
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Only authorized jam hosts can register other musicians"
+          },
+          "409": {
+            "description": "Musician already applied for this instrument on this scheduled song"
           }
         },
         "security": [
@@ -1153,7 +1159,7 @@
             "bearer": []
           }
         ],
-        "summary": "Create a new registration",
+        "summary": "Create or restore a registration for yourself, or for another musician as an authorized jam host",
         "tags": [
           "Registrations"
         ]
@@ -1974,10 +1980,9 @@
             "description": "When the song started playing"
           },
           "pausedAt": {
-            "format": "date-time",
             "type": "string",
-            "nullable": true,
-            "description": "When the song was paused (if paused)"
+            "format": "date-time",
+            "nullable": true
           },
           "completedAt": {
             "format": "date-time",
@@ -2069,6 +2074,21 @@
           "timestamp": {
             "type": "number",
             "description": "Timestamp of response"
+          },
+          "queueRevision": {
+            "type": "string",
+            "description": "Opaque revision checked under the Jam lock when saving order."
+          },
+          "resumeFromQueue": {
+            "type": "boolean",
+            "description": "Play selects the first unfinished Performance after a paused reorder."
+          },
+          "allSongs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LiveStateSongDto"
+            },
+            "description": "Complete saved Schedule in position order, independent of playback groups."
           }
         },
         "required": [
@@ -2239,21 +2259,22 @@
       "ReorderSchedulesDto": {
         "type": "object",
         "properties": {
-          "scheduleIds": {
-            "description": "Array of schedule IDs in the desired order",
-            "example": [
-              "123e4567-e89b-12d3-a456-426614174000",
-              "123e4567-e89b-12d3-a456-426614174001",
-              "123e4567-e89b-12d3-a456-426614174002"
-            ],
+          "expectedRevision": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "queueRevision from live/state; stale saves return 409."
+          },
+          "updates": {
             "type": "array",
+            "minItems": 1,
             "items": {
-              "type": "string"
-            }
+              "$ref": "#/components/schemas/ScheduleOrderUpdateDto"
+            },
+            "description": "Exact saved positions; omitted entries keep their positions. Include every displaced entry. Only the actively playing Performance is fixed."
           }
         },
         "required": [
-          "scheduleIds"
+          "updates"
         ]
       },
       "UpdateJamDto": {
@@ -2395,13 +2416,13 @@
       "CreateRegistrationDto": {
         "type": "object",
         "properties": {
-          "musicianId": {
-            "type": "string",
-            "description": "Musician ID"
-          },
           "scheduleId": {
             "type": "string",
             "description": "Schedule ID"
+          },
+          "musicianId": {
+            "type": "string",
+            "description": "Defaults to the authenticated musician. Authorized jam hosts may register another musician."
           },
           "instrument": {
             "type": "string",
@@ -2409,8 +2430,8 @@
           }
         },
         "required": [
-          "musicianId",
-          "scheduleId"
+          "scheduleId",
+          "instrument"
         ]
       },
       "UpdateRegistrationDto": {
@@ -2467,6 +2488,25 @@
       "UpdateScheduleDto": {
         "type": "object",
         "properties": {}
+      },
+      "ScheduleOrderUpdateDto": {
+        "type": "object",
+        "properties": {
+          "scheduleId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647,
+            "description": "Absolute saved position"
+          }
+        },
+        "required": [
+          "scheduleId",
+          "order"
+        ]
       }
     }
   }

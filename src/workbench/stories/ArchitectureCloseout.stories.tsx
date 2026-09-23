@@ -30,12 +30,12 @@ export const LiveQueueKeyboardReorder: Story = {
   render: () => <LiveJamControlPanel jamId="jam-live-control" />,
   globals: { locale: 'en', viewport: { value: 'desktop', isRotated: false } },
   play: async ({ canvas, userEvent }) => {
-    await canvas.findByText('Psycho Killer')
+    await canvas.findByRole('listitem', {name: /^3\. Psycho Killer/})
     await userEvent.click(canvas.getByRole('button', { name: /arrastar|reorder/i }))
     const items = canvas.getAllByRole('listitem')
-    items[0].focus()
+    items[2].focus()
     await userEvent.keyboard('{ArrowDown}')
-    await expect(canvas.getAllByRole('listitem')[1]).toHaveAccessibleName(/Psycho Killer/i)
+    await expect(canvas.getAllByRole('listitem')[3]).toHaveAccessibleName(/Psycho Killer/i)
   },
 }
 
