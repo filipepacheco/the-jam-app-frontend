@@ -226,14 +226,9 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
             <div className="venue-programme">
               {/* Now Playing stays visible while the Jam waits for a current
                   Performance. The next Performance remains a separate region. */}
-              {jamStatus === 'FINISHED' ? (
-                <div className="venue-current">
-                    <h2 className="venue-current-title ds-wrap-user-content">{t('publicDashboard.jamFinished')}</h2>
-                    <p className="venue-artist">{t('publicDashboard.thankYou')}</p>
-                </div>
-              ) : (
-                <CurrentSongCard song={currentSong} playbackState={playbackState} />
-              )}
+              {/* The finale stays on the stage card, so the last song rolls
+                  out and the closing message rolls in. */}
+              <CurrentSongCard song={currentSong} playbackState={playbackState} finished={jamStatus === 'FINISHED'} />
 
               {jamStatus !== 'FINISHED' && (
                 <NextSongCard song={nextSongToShow ?? null} />

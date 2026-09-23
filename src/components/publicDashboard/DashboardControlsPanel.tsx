@@ -6,6 +6,7 @@ import {useTranslation} from 'react-i18next'
 import {Action, IconAction} from '../Action'
 import {Field} from '../Field'
 import {NavigationLink} from '../Navigation'
+import {DURATION, EASE_OUT} from './venueMotion'
 import type {DashboardLayout} from '../../hooks'
 import type {AppLocale} from '../../lib/i18n/applicationLocale'
 
@@ -32,8 +33,10 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
   const { t } = useTranslation()
   const { prefersReducedMotion } = useReducedMotion()
   // Design-system timings: enter settles, exit is shorter and never blocks.
-  const enter = {duration: prefersReducedMotion ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] as const}
-  const exit = {duration: prefersReducedMotion ? 0 : 0.16, ease: [0.5, 0, 0.75, 0] as const}
+  // Reduced motion keeps the fade and drops the travel.
+  const enter = {duration: prefersReducedMotion ? DURATION.fade : DURATION.enter, ease: EASE_OUT}
+  const exit = {duration: DURATION.exit, ease: EASE_OUT}
+  const [panelIn, panelOut] = prefersReducedMotion ? ['none', 'none'] : ['translateY(-16px)', 'translateY(-8px)']
 
   useEffect(() => {
     if (!visible) return
@@ -57,8 +60,8 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
       {visible && (
       <motion.div
         key="controls-backdrop"
-        initial={prefersReducedMotion ? false : { opacity: 0 }}
-        animate={{ opacity: 1, transition: {...enter, duration: prefersReducedMotion ? 0 : 0.22} }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: {...enter, duration: DURATION.fade} }}
         exit={{ opacity: 0, transition: exit }}
         className="fixed inset-0 z-30"
         style={{ background: 'var(--ds-surface-overlay)' }}
@@ -71,9 +74,9 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
       <motion.div
         key="controls-panel"
         id="public-dashboard-controls-panel"
-        initial={prefersReducedMotion ? false : {opacity: 0, y: -16}}
-        animate={{ opacity: 1, y: 0, transition: enter }}
-        exit={{ opacity: 0, y: prefersReducedMotion ? 0 : -8, transition: exit }}
+        initial={{opacity: 0, transform: panelIn}}
+        animate={{ opacity: 1, transform: 'translateY(0px)', transition: enter }}
+        exit={{ opacity: 0, transform: panelOut, transition: exit }}
         className="fixed top-16 left-0 right-0 z-40 max-h-[calc(100vh-4rem)] overflow-y-auto bg-base-200 border-b border-base-300 p-4"
         role="region"
         aria-label={t('publicDashboard.dashboardControls')}

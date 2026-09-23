@@ -5,6 +5,11 @@
 }
 
 .venue-programme { display: grid; gap: 1.5rem; min-width: 0; }
+.venue-current, .venue-next {
+  /* Mirrors EASE_OUT in venueMotion.ts. */
+  --venue-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
 .venue-current {
   display: flex;
   flex-direction: column;
@@ -43,12 +48,12 @@
 
 /* A live-show layer, confined to the stage. Two stage lights drift on slow,
    unrelated cycles, so the loop never reads as a pulse. Text and QR never move. */
-.venue-stage-fx { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; z-index: -1; }
+.venue-stage-fx { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; z-index: -1; transition: opacity 600ms ease; }
 .venue-stage-halo {
   position: absolute;
   inset: -25%;
   background: radial-gradient(ellipse 55% 50% at 30% 58%, color-mix(in oklch, var(--color-primary) 34%, transparent), transparent 70%);
-  animation: venue-light-in 1.6s cubic-bezier(0.16, 1, 0.3, 1) both, venue-stage-drift 11s ease-in-out infinite alternate;
+  animation: venue-light-in 1.6s var(--venue-ease-out) both, venue-stage-drift 11s ease-in-out infinite alternate;
 }
 .venue-stage-halo::after {
   content: '';
@@ -66,7 +71,14 @@
   opacity: 0;
   background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--color-primary) 26%, transparent) 30%, color-mix(in oklch, var(--color-accent) 30%, transparent) 50%, color-mix(in oklch, var(--color-primary) 26%, transparent) 70%, transparent);
 }
-.venue-live-beat { display: inline-flex; align-items: center; gap: 4px; height: 1.25em; color: var(--color-primary); }
+.venue-live-beat { display: inline-flex; align-items: center; gap: 4px; height: 1.25em; color: var(--color-primary); transition: scale 300ms var(--venue-ease-out), opacity 300ms ease; }
+/* Paused or stopped: transitions, not unmounts, so a quick pause and resume
+   retargets smoothly. The lights fade and the meter freezes into a flat line. */
+.venue-current[data-playback='still'] .venue-stage-fx { opacity: 0; }
+.venue-current[data-playback='still'] .venue-live-beat { scale: 1 0.2; opacity: 0.5; }
+.venue-current[data-playback='still'] .venue-stage-halo,
+.venue-current[data-playback='still'] .venue-stage-halo::after,
+.venue-current[data-playback='still'] .venue-live-beat i { animation-play-state: paused; }
 .venue-live-beat i { display: block; width: 5px; height: 100%; border-radius: 2px; background: currentColor; animation: venue-beat 900ms ease-in-out infinite alternate; }
 .venue-live-beat i:nth-child(2n) { animation-duration: 650ms; animation-delay: -300ms; }
 .venue-live-beat i:nth-child(3n) { animation-duration: 1100ms; animation-delay: -550ms; }

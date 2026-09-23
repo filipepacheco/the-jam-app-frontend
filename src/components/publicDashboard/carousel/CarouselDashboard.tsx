@@ -7,6 +7,7 @@ import { QRCodePanel } from './QRCodePanel'
 import { StartingSoonPanel } from './StartingSoonPanel'
 import { FinishedPanel } from './FinishedPanel'
 import { CarouselIndicator } from './CarouselIndicator'
+import { DURATION, EASE_OUT } from '../venueMotion'
 import type { DashboardSongDto, JamStatus, PlaybackState } from '../../../types/api.types'
 import type { ReactNode } from 'react'
 
@@ -82,12 +83,18 @@ export function CarouselDashboard({
       <div className="flex-1 flex items-center justify-center">
         <AnimatePresence mode="wait" initial={false}>
           {/* The outgoing slide clears quickly (mode="wait" holds the next one
-              back), then the new slide rises and settles. */}
+              back), then the new slide rises and settles. Full transform
+              strings stay on the compositor while the new panel mounts;
+              reduced motion keeps a short crossfade. */}
           <motion.div
             key={activePanel.key}
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1, transition: prefersReducedMotion ? { duration: 0 } : { duration: 0.6, ease: [0.16, 1, 0.3, 1] } }}
-            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -12, transition: { duration: 0.2, ease: [0.5, 0, 0.75, 0] } }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, transform: 'translateY(24px) scale(0.98)' }}
+            animate={prefersReducedMotion
+              ? { opacity: 1, transition: { duration: DURATION.fade, ease: 'easeOut' } }
+              : { opacity: 1, transform: 'translateY(0px) scale(1)', transition: { duration: 0.6, ease: EASE_OUT } }}
+            exit={prefersReducedMotion
+              ? { opacity: 0, transition: { duration: DURATION.exit, ease: 'easeOut' } }
+              : { opacity: 0, transform: 'translateY(-12px) scale(1)', transition: { duration: 0.2, ease: EASE_OUT } }}
             className="w-full max-w-6xl mx-auto"
           >
             {activePanel.content}

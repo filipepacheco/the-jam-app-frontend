@@ -3,15 +3,16 @@ import {spring} from 'framer-motion'
 import {useReducedMotion} from '../../hooks/useReducedMotion'
 import {groupMusiciansByInstrument, normalizeInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
+import {EASE_IN_OUT, EASE_OUT, cssEase} from './venueMotion'
 
 type Lineup = Map<string, Map<string, string>>
 
-function describeSong(song: DashboardSongDto | null) {
+function describeSong(song: DashboardSongDto | null, variant = '') {
   const lineup: Lineup = new Map(Object.entries(groupMusiciansByInstrument(song?.musicians)).map(([instrument, musicians]) => [
     normalizeInstrument(instrument),
     new Map(musicians.map(({id, name}) => [id, name ?? ''])),
   ]))
-  return {song: JSON.stringify([song?.id, song?.title, song?.artist]), lineup}
+  return {song: JSON.stringify([variant, song?.id, song?.title, song?.artist]), lineup}
 }
 
 function sameMembers(a?: Map<string, string>, b?: Map<string, string>) {
@@ -20,23 +21,21 @@ function sameMembers(a?: Map<string, string>, b?: Map<string, string>) {
 }
 
 // Show cues deliberately outlast ordinary controls: viewers read them from
-// across a venue. The outgoing song leaves quickly; the new one lands slowly.
+// across a venue. The outgoing song clears fast; the new one lands slowly.
 // The next card follows the stage a beat later, so the eye reads stage first.
 const PROFILE = {
-  stage: {lead: 0, exit: 260, enter: 950, overlap: 30, line: 90, lineup: 300},
-  next: {lead: 160, exit: 220, enter: 750, overlap: 30, line: 70, lineup: 240},
+  stage: {lead: 0, exit: 260, enter: 950, overlap: 110, line: 90, lineup: 300},
+  next: {lead: 160, exit: 220, enter: 750, overlap: 90, line: 70, lineup: 240},
 }
+// Reduced motion keeps the change legible with opacity alone: fewer and gentler, not zero.
+const GENTLE = {exit: 120, enter: 200}
 const SHOW = {rise: 700, fade: 500, stagger: 70, light: 1400}
-const EASE = {
-  enter: 'cubic-bezier(0.16, 1, 0.3, 1)', // expo-out: arrives fast, settles long
-  exit: 'cubic-bezier(0.5, 0, 0.75, 0)', // quart-in: leaves without lingering
-  travel: 'cubic-bezier(0.65, 0, 0.35, 1)', // a light crossing the stage
-}
+const EASE = {out: cssEase(EASE_OUT), travel: cssEase(EASE_IN_OUT)}
 
 // Names land with a little life: a real spring (about 5% overshoot) sampled
-// once into CSS linear(), so the compositor plays it. Older engines settle on expo-out.
+// once into CSS linear(), so the compositor plays it. Older engines settle on EASE.out.
 const LIFT_EASE = (() => {
-  if (typeof CSS === 'undefined' || !CSS.supports?.('transition-timing-function', 'linear(0, 1)')) return EASE.enter
+  if (typeof CSS === 'undefined' || !CSS.supports?.('transition-timing-function', 'linear(0, 1)')) return EASE.out
   const generator = spring({keyframes: [0, 1], stiffness: 240, damping: 21, mass: 1})
   const stops = Array.from({length: 40}, (_, index) => generator.next(index * SHOW.rise / 40).value.toFixed(3))
   return `linear(${[...stops, 1].join(', ')})`
@@ -45,18 +44,21 @@ const LIFT_EASE = (() => {
 // 130%, not 100%: the mask's descender padding would otherwise show glyph tops.
 const LINE_IN: Keyframe[] = [{transform: 'translate3d(0, 130%, 0)'}, {transform: 'none'}]
 const LINE_OUT: Keyframe[] = [{transform: 'none', opacity: 1}, {transform: 'translate3d(0, -130%, 0)', opacity: 0}]
+const FADE_IN: Keyframe[] = [{opacity: 0}, {opacity: 1}]
+const FADE_OUT: Keyframe[] = [{opacity: 1}, {opacity: 0}]
 const FLASH: Keyframe[] = [
-  {opacity: 0, easing: 'cubic-bezier(0.33, 1, 0.68, 1)'},
-  {opacity: 1, offset: 0.22, easing: 'cubic-bezier(0.33, 0, 0.67, 1)'},
+  {opacity: 0, easing: EASE.out},
+  {opacity: 1, offset: 0.22, easing: 'ease'},
   {opacity: 0},
 ]
 
 /**
  * Announces audience-visible changes: the outgoing song rolls up out of its
- * line masks while the new one rises in, then the lineup lands name by name.
+ * line masks, then the new one rises in and the lineup lands name by name.
  * Compares visible values, so a fresh polling object isn't a new event.
+ * `variant` marks a different stage message for the same song, such as the finale.
  */
-export function useVenueChangeMotion(song: DashboardSongDto | null) {
+export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: string) {
   const ref = useRef<HTMLElement>(null)
   const previous = useRef<ReturnType<typeof describeSong> | null>(null)
   const snapshot = useRef<HTMLElement | null>(null)
@@ -77,7 +79,7 @@ export function useVenueChangeMotion(song: DashboardSongDto | null) {
   useLayoutEffect(() => {
     const root = ref.current
     const outgoing = snapshot.current
-    const next = describeSong(song)
+    const next = describeSong(song, variant)
     const last = previous.current
     previous.current = next
 
@@ -88,7 +90,7 @@ export function useVenueChangeMotion(song: DashboardSongDto | null) {
       root?.querySelector('[data-venue-ghost]')?.replaceChildren()
       if (root) delete root.dataset.venueCue
     }
-    if (!motionEnabled) {
+    if (!pageVisible) {
       stop()
       return
     }
@@ -98,17 +100,26 @@ export function useVenueChangeMotion(song: DashboardSongDto | null) {
     const changedInstruments = [...new Set([...(last?.lineup.keys() ?? []), ...next.lineup.keys()])]
       .filter(instrument => !sameMembers(last?.lineup.get(instrument), next.lineup.get(instrument)))
     if (!songChanged && changedInstruments.length === 0) return
+    const gentle = prefersReducedMotion
+    // The first paint is a flourish, so reduced motion simply shows the display.
+    if (gentle && !last) return
 
     // A newer event replaces the previous cue; nothing queues behind live data.
     stop()
     const id = cue.current
     const isStage = root.classList.contains('venue-current')
-    const {lead, exit, enter, overlap, line, lineup} = isStage ? PROFILE.stage : PROFILE.next
+    const profile = isStage ? PROFILE.stage : PROFILE.next
+    const {lead, line, lineup} = profile
+    const exit = gentle ? GENTLE.exit : profile.exit
     const animate = (element: Element | null, frames: Keyframe[], timing: KeyframeAnimationOptions) => {
-      if (element) animations.current.push(element.animate(frames, {easing: EASE.enter, fill: 'backwards', ...timing}))
+      if (element) animations.current.push(element.animate(frames, {easing: EASE.out, fill: 'backwards', ...timing}))
     }
     // Lift and fade separately: the spring may overshoot, but opacity and blur must not.
     const land = (element: Element, delay: number, distance = 20) => {
+      if (gentle) {
+        animate(element, FADE_IN, {duration: GENTLE.enter, delay, easing: 'ease'})
+        return
+      }
       animate(element, [{transform: `translate3d(0, ${distance}px, 0)`}, {transform: 'none'}], {duration: SHOW.rise, delay, easing: LIFT_EASE})
       animate(element, [{opacity: 0, filter: 'blur(6px)'}, {opacity: 1, filter: 'none'}], {duration: SHOW.fade, delay})
     }
@@ -126,22 +137,23 @@ export function useVenueChangeMotion(song: DashboardSongDto | null) {
         ghost.replaceChildren(outgoing)
         const lines = outgoing.querySelectorAll('.venue-roll-line')
         lines.forEach((element, index) => {
-          animate(element, LINE_OUT, {duration: exit, delay: lead + index * 40, easing: EASE.exit, fill: 'forwards'})
+          animate(element, gentle ? FADE_OUT : LINE_OUT, {duration: exit, delay: lead + (gentle ? 0 : index * 40), fill: 'forwards'})
         })
-        // The new song waits until the old lines have cleared: two titles
-        // sharing a mask read as one jumbled word from across the room.
-        enterAt += exit + (lines.length - 1) * 40 - overlap
+        // Strong ease-out clears most of the travel early, so the new song can
+        // start before the exit ends without two titles sharing a mask.
+        enterAt += gentle ? exit : exit + (lines.length - 1) * 40 - profile.overlap
       }
       root.querySelectorAll('[data-venue-song] .venue-roll-line').forEach((element, index) => {
-        animate(element, LINE_IN, {duration: enter, delay: enterAt + index * line})
+        if (gentle) animate(element, FADE_IN, {duration: GENTLE.enter, delay: enterAt, easing: 'ease'})
+        else animate(element, LINE_IN, {duration: profile.enter, delay: enterAt + index * line})
       })
       root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
-        land(element, enterAt + lineup + Math.min(index, 6) * SHOW.stagger)
+        land(element, gentle ? enterAt : enterAt + lineup + Math.min(index, 6) * SHOW.stagger)
       })
 
       if (!intro) {
         animate(root.querySelector('.venue-change-wash'), FLASH, {duration: SHOW.light, delay: lead, easing: 'linear'})
-        if (isStage && song) {
+        if (isStage && song && !gentle) {
           animate(root.querySelector('.venue-stage-sweep'), [
             {opacity: 0, transform: 'translate3d(-160%, 0, 0) rotate(-16deg)'},
             {opacity: 1, offset: 0.4},
@@ -184,7 +196,7 @@ export function useVenueChangeMotion(song: DashboardSongDto | null) {
       delete root.dataset.venueCue
       animations.current = []
     })
-  }, [song, motionEnabled])
+  }, [song, variant, prefersReducedMotion, pageVisible])
 
   // Keep a copy of the resting song lines for the next roll. This runs after
   // every commit, so a language switch never leaves a stale outgoing copy.

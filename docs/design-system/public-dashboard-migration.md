@@ -266,20 +266,25 @@ The user then requested live-show energy beyond the initial conservative cues.
 A later motion pass replaced the ring and particle burst with the cues below.
 
 - Ambient: live songs show animated level bars. Two soft stage lights drift on slow cycles of 11 and 14 seconds. They do not pulse.
-- Song change: each title and artist line has its own mask. The old lines roll up and out in about 260 ms. Then the new lines rise in over 950 ms. The new song waits for the old lines to clear, so two titles never share a mask.
+- Song change: each title and artist line has its own mask. A strong ease-out clears the old lines in about 150 ms. The new lines start at 190 ms and rise in over 950 ms, so two titles never share a mask.
 - Stage light: a spotlight bloom and one light sweep cross the current-song card with the new title.
 - Lineup: the instrument groups land one after another. Each group rises with a small spring and fades in from a light blur.
 - Next card: it uses the same roll, 160 ms after the stage, so the audience reads the stage first.
 - Lineup edit: only the new or renamed musician moves, and a highlight marks the group.
 - First paint: the cards rise once, then their lines roll in.
+- Pause: the stage lights fade out over 600 ms and the level meter settles into a flat line. Resume reverses the change. Both use CSS transitions, so a quick pause and resume do not jump.
+- Finale: when the Jam finishes, the last song rolls out and the closing message rolls in on the same stage card.
 
 These audience announcements intentionally exceed routine control durations.
 Hidden copies of the old lines (`aria-hidden`) give the exit animation. The copies stay only while the cue runs.
 The masks clip only while a cue runs, so text at rest never loses a descender.
 A spring is sampled once from the existing Motion library into a CSS `linear()` easing. Browsers without `linear()` use an expo-out curve.
 All cues use WAAPI or CSS on `transform`, `opacity` and `filter` only. No audio or microphone is involved.
+All curves come from `venueMotion.ts`. Entrances and exits use the strong ease-out `cubic-bezier(0.23, 1, 0.32, 1)`, and no element uses ease-in.
+The banner, the controls panel and the carousel give Motion full `transform` strings, so the compositor runs them.
 Visible-value comparisons stop unchanged polling responses from replaying cues.
-Hidden documents and reduced-motion mode stop all cues and ambient motion.
+Reduced-motion mode stops all movement and ambient motion. Song and lineup changes then use a short opacity fade: 120 ms out and 200 ms in. The banner, the controls panel and the carousel also fade without movement.
+Hidden documents stop all cues.
 Rapid updates cancel the previous cue, and QR content never moves.
 Classic mode uses these local cues in place of routine full-screen confetti.
 The controls panel and the offline banner now also animate out, and exits are shorter than entrances.

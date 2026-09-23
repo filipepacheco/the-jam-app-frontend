@@ -20,6 +20,7 @@ const psychoKiller: DashboardSongDto = {
 const valerie: DashboardSongDto = {...psychoKiller, id: 'song-2', title: 'Valerie', artist: 'Amy Winehouse'}
 
 let targets: Element[] = []
+let frames: Keyframe[][] = []
 const originalAnimate = Element.prototype.animate
 
 function stubMotionPreference(reduce: boolean) {
@@ -33,9 +34,11 @@ function stubMotionPreference(reduce: boolean) {
 
 beforeEach(() => {
   targets = []
+  frames = []
   stubMotionPreference(false)
-  Element.prototype.animate = vi.fn(function (this: Element) {
+  Element.prototype.animate = vi.fn(function (this: Element, keyframes: Keyframe[]) {
     targets.push(this)
+    frames.push(keyframes)
     return {cancel: vi.fn(), finished: Promise.resolve()} as unknown as Animation
   })
 })
@@ -84,12 +87,34 @@ describe('useVenueChangeMotion', () => {
     expect(container.querySelector('.venue-current')).not.toHaveAttribute('data-venue-cue')
   })
 
-  it('keeps every change still when reduced motion is preferred', () => {
+  it('swaps songs with an opacity-only crossfade when reduced motion is preferred', () => {
     stubMotionPreference(true)
     const {container, rerender} = render(<CurrentSongCard song={psychoKiller} />)
-    rerender(<CurrentSongCard song={valerie} />)
-
     expect(targets).toHaveLength(0)
+
+    rerender(<CurrentSongCard song={valerie} />)
+    expect(targets.length).toBeGreaterThan(0)
+    expect(frames.flat().some(frame => 'transform' in frame || 'filter' in frame)).toBe(false)
     expect(container.querySelector('.venue-current')).toHaveAttribute('data-venue-motion', 'paused')
+  })
+
+  it('rolls the last song out and the finale in when the Jam finishes', () => {
+    const {container, rerender} = render(<CurrentSongCard song={psychoKiller} />)
+    targets = []
+    rerender(<CurrentSongCard song={psychoKiller} finished />)
+
+    const rolled = targets.filter(target => target.classList.contains('venue-roll-line')).map(target => target.textContent)
+    expect(rolled).toEqual(['Psycho Killer', 'Talking Heads', 'publicDashboard.jamFinished', 'publicDashboard.thankYou'])
+    expect(container.querySelector('[data-venue-lineup]')).not.toBeInTheDocument()
+  })
+
+  it('keeps the stage lights and meter mounted but still while a song is paused', () => {
+    const {container} = render(<CurrentSongCard song={psychoKiller} playbackState="PAUSED" />)
+    const stage = container.querySelector('.venue-current')!
+
+    expect(stage).toHaveAttribute('data-playback', 'still')
+    expect(stage.querySelector('.venue-stage-fx')).toBeInTheDocument()
+    expect(stage.querySelector('.venue-live-beat')).toBeInTheDocument()
+    expect(stage).toHaveTextContent('schedule.statuses.paused')
   })
 })
