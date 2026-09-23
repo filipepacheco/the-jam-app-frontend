@@ -11,6 +11,7 @@ import {X, ListMusic} from "lucide-react";
 import {useNavigate} from "react-router-dom";
 import {useHostScheduleController} from '../../hooks'
 import type {HostScheduleOutcome, Music, Performance, PerformanceStatus} from '../../lib/schedule/hostScheduleController'
+import {getDisplayScheduleStatus} from '../../lib/schedule/statusHelpers'
 
 function mutationErrorMessage(message: string | undefined, fallback: string): string {
     return !message || message === 'Unknown mutation error' || message === 'Unknown refresh error'
@@ -53,7 +54,8 @@ export function ScheduleTab({jam, onReload}: {
     const musicCatalog = musicCatalogue.items
     const loadingMusicCatalog = musicCatalogue.status === 'loading'
     const loadingSongsFailedMessage = t('jams.loading_songs_failed')
-    const activePerformances = filteredNonSuggested.filter(({status}) => status === 'IN_PROGRESS')
+    const activePerformances = filteredNonSuggested.filter((schedule) => getDisplayScheduleStatus(schedule) === 'IN_PROGRESS')
+    const pausedPerformances = filteredNonSuggested.filter((schedule) => getDisplayScheduleStatus(schedule) === 'PAUSED')
     const upcomingPerformances = filteredNonSuggested.filter(({status}) => status === 'SCHEDULED')
     const completedPerformances = filteredNonSuggested.filter(({status}) => status === 'COMPLETED' || status === 'CANCELED')
 
@@ -242,7 +244,7 @@ export function ScheduleTab({jam, onReload}: {
                 loading={isCardLoading(schedule)}
                 isSuggested={isSuggested}
                 priority={priority}
-                defaultExpanded={schedule.status === 'IN_PROGRESS'}
+                defaultExpanded={getDisplayScheduleStatus(schedule) === 'IN_PROGRESS'}
                 notes={jm?.notes}
                 jamMusicId={jm?.id}
                 onStatusChange={handleStatusChange}
@@ -375,6 +377,7 @@ export function ScheduleTab({jam, onReload}: {
             {sortedSchedules.length > 0 ? (
                 <div className="space-y-3">
                     {renderGroup('schedule-active', t('schedule.now_playing'), activePerformances, false, 'current')}
+                    {renderGroup('schedule-paused', t('schedule.statuses.paused'), pausedPerformances, false, 'current')}
                     {renderGroup('schedule-upcoming', t('schedule.statuses.scheduled'), upcomingPerformances)}
                     {renderGroup('schedule-suggested', t('jam_management.schedule.suggested_songs'), filteredSuggested, true, 'secondary')}
                     {renderGroup('schedule-completed', t('schedule.statuses.completed'), completedPerformances, false, 'secondary')}

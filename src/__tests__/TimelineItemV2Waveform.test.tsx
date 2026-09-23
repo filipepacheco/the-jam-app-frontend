@@ -61,4 +61,19 @@ describe('TimelineItemV2Waveform', () => {
     expect(screen.getByRole('link', {name: `Open ${longTitle} in Spotify`})).toBeInTheDocument()
     expect(screen.getByText('4:34')).toBeInTheDocument()
   })
+
+  it('shows a paused current song without the playing animation or label', () => {
+    const {container} = render(
+      <TimelineItemV2Waveform
+        schedule={{...completedSchedule, status: 'IN_PROGRESS', pausedAt: '2026-09-24T18:01:00.000Z'}}
+        user={null}
+        position={1}
+        onRegisterClick={vi.fn()}
+      />
+    )
+
+    expect(screen.getByText('schedule.statuses.paused')).toBeVisible()
+    expect(screen.queryByText('schedule.statuses.in_progress')).not.toBeInTheDocument()
+    expect(container.querySelector('.animate-breathe-glow')).toBeNull()
+  })
 })

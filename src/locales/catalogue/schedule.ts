@@ -61,6 +61,7 @@ export const schedule = {
   statuses: {
     scheduled: message({"pt-BR": "Agendada", "en": "Scheduled", "es": "Programada"}),
     in_progress: message({"pt-BR": "Em andamento", "en": "In Progress", "es": "En Curso"}),
+    paused: message({"pt-BR": "Pausada", "en": "Paused", "es": "Pausada"}),
     completed: message({"pt-BR": "Concluída", "en": "Completed", "es": "Completada"}),
     canceled: message({"pt-BR": "Cancelada", "en": "Canceled", "es": "Cancelada"}),
     awaiting_registrations: message({"pt-BR": "Vagas abertas", "en": "Awaiting Registrations", "es": "Esperando Inscripciones"}),

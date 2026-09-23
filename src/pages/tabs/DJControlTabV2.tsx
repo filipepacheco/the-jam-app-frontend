@@ -16,7 +16,7 @@ import { formatError } from '../../lib/api'
 
 interface DJControlTabV2Props {
   jamId: string
-  onReload?: () => void
+  onReload?: () => void | Promise<unknown>
 }
 
 export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
@@ -31,18 +31,26 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
       autoRefreshInterval: 5000,
     })
 
-  const handleRefresh = async () => {
-    await refresh()
-    onReload?.()
+  const handleRefresh = async (refreshLiveState: boolean) => {
+    // Playback commands already revalidate live state in useJamControl.
+    if (refreshLiveState) await refresh()
+    await onReload?.()
   }
 
-  const executeAction = async (action: () => Promise<unknown>, successMsg: string) => {
+  const executeAction = async (action: () => Promise<unknown>, successMsg: string, refreshLiveState = false) => {
     setActionLoading(true)
     setActionError(null)
+    setSuccess(null)
     try {
-      await action()
+      const result = await action()
+      if (result && typeof result === 'object' && 'success' in result && result.success === false) {
+        const message = 'error' in result && typeof result.error === 'string'
+          ? result.error
+          : t('dj_control.errors.action_failed')
+        throw new Error(message)
+      }
+      await handleRefresh(refreshLiveState)
       setSuccess(successMsg)
-      await handleRefresh()
     } catch (err) {
       setActionError(formatError(err))
     } finally {
@@ -51,12 +59,12 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
   }
 
   const handleApproveSong = async (scheduleId: string) => {
-    await executeAction(() => scheduleService.update(scheduleId, { status: 'SCHEDULED' }), t('dj_control.song_approved'))
+    await executeAction(() => scheduleService.update(scheduleId, { status: 'SCHEDULED' }), t('dj_control.song_approved'), true)
   }
 
   const handleRemoveSong = async (scheduleId: string) => {
     if (!confirm(t('dj_control.confirm_remove'))) return
-    await executeAction(() => scheduleService.remove(scheduleId), t('dj_control.song_removed'))
+    await executeAction(() => scheduleService.remove(scheduleId), t('dj_control.song_removed'), true)
   }
 
   // Derived stats
@@ -140,12 +148,12 @@ export function DJControlTabV2({ jamId, onReload }: DJControlTabV2Props) {
         hasCurrentSong={!!liveState.currentSong}
         hasNextSong={liveState.nextSongs.length > 0}
         isLoading={isLoading}
-        onStart={start}
-        onStop={stop}
-        onNext={next}
-        onPrevious={previous}
-        onPause={pause}
-        onResume={resume}
+        onStart={() => executeAction(start, t('live_control.song_playing_feedback'))}
+        onStop={() => executeAction(stop, t('dj_control.now_playing.stopped'))}
+        onNext={() => executeAction(next, t('live_control.skipped_feedback'))}
+        onPrevious={() => executeAction(previous, t('dj_control.actions.previous'))}
+        onPause={() => executeAction(pause, t('live_control.song_paused_feedback'))}
+        onResume={() => executeAction(resume, t('live_control.song_playing_feedback'))}
       />
       <CompactStats
         completedCount={liveState.previousSongs.length}

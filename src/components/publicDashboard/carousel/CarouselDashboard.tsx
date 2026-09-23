@@ -7,11 +7,12 @@ import { QRCodePanel } from './QRCodePanel'
 import { StartingSoonPanel } from './StartingSoonPanel'
 import { FinishedPanel } from './FinishedPanel'
 import { CarouselIndicator } from './CarouselIndicator'
-import type { DashboardSongDto, JamStatus } from '../../../types/api.types'
+import type { DashboardSongDto, JamStatus, PlaybackState } from '../../../types/api.types'
 import type { ReactNode } from 'react'
 
 interface CarouselDashboardProps {
   jamStatus: JamStatus | null
+  playbackState?: PlaybackState
   currentSong: DashboardSongDto | null
   nextSongs: DashboardSongDto[]
   jamId?: string
@@ -26,6 +27,7 @@ interface Panel {
 
 export function CarouselDashboard({
   jamStatus,
+  playbackState = 'PLAYING',
   currentSong,
   nextSongs,
   jamId,
@@ -49,7 +51,7 @@ export function CarouselDashboard({
 
     // Playing: now playing + optional up next + QR
     const result: Panel[] = [
-      { key: `now-${currentSong.id}`, content: <NowPlayingPanel song={currentSong} /> },
+      { key: `now-${currentSong.id}`, content: <NowPlayingPanel song={currentSong} playbackState={playbackState} /> },
     ]
 
     if (nextSongs[0]) {
@@ -62,7 +64,7 @@ export function CarouselDashboard({
     result.push({ key: 'qr', content: <QRCodePanel jamId={jamId} slug={slug} /> })
 
     return result
-  }, [jamStatus, currentSong, nextSongs, jamId, slug])
+  }, [jamStatus, playbackState, currentSong, nextSongs, jamId, slug])
 
   const isFinished = jamStatus === 'FINISHED'
 

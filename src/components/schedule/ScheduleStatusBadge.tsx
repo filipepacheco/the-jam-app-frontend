@@ -18,7 +18,7 @@ export function ScheduleStatusBadge({ status, isSuggested = false }: ScheduleSta
   const label = getStatusLabel(status, isSuggested, t)
   const tone: DataDisplayTone = isSuggested
     ? 'info'
-    : status === 'IN_PROGRESS'
+    : status === 'IN_PROGRESS' || status === 'PAUSED'
       ? 'warning'
       : status === 'APPROVED' || status === 'COMPLETED'
         ? 'success'

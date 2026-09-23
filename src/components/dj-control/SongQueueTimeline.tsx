@@ -35,7 +35,7 @@ function SongRow({
 }: {
   song: LiveStateSongDto
   position?: number
-  status: 'previous' | 'current' | 'upcoming' | 'suggested'
+  status: 'previous' | 'current' | 'paused' | 'upcoming' | 'suggested'
   onRemove?: (id: string) => void
   onApprove?: (id: string) => void
   loading?: boolean
@@ -50,6 +50,7 @@ function SongRow({
   const statusStyles = {
     previous: 'opacity-50',
     current: 'bg-primary/10 border border-primary/40 ring-1 ring-primary/20',
+    paused: 'bg-warning/10 border border-warning/40 ring-1 ring-warning/20',
     upcoming: isNext ? 'bg-secondary/10 border border-secondary/40 ring-1 ring-secondary/20' : '',
     suggested: 'bg-warning/5 border border-warning/20',
   }
@@ -58,7 +59,9 @@ function SongRow({
     <div className={`flex items-center gap-3 px-3 py-2.5 rounded-lg ${statusStyles[status]}`}>
       {/* Position or status indicator */}
       <div className="shrink-0 w-7 text-center">
-        {status === 'current' ? (
+        {status === 'paused' ? (
+          <span className="text-warning font-bold text-sm" aria-label={t('schedule.statuses.paused')}>Ⅱ</span>
+        ) : status === 'current' ? (
           <span className="text-primary font-bold text-sm">&#9654;</span>
         ) : status === 'previous' ? (
           <span className="text-success text-sm">&#10003;</span>
@@ -105,7 +108,7 @@ function SongRow({
             <Action.Label>&#10003; {t('common.approve')}</Action.Label>
           </Action>
         )}
-        {onRemove && status !== 'current' && (
+        {onRemove && status !== 'current' && status !== 'paused' && (
           <IconAction
             onClick={() => onRemove(song.id)}
             state={loading ? 'disabled' : 'idle'}
@@ -199,11 +202,11 @@ export function SongQueueTimeline({
       {currentSong && (
         <div>
           <h3 className="text-xs font-semibold text-primary uppercase tracking-wider mb-2 px-3">
-            {t('dj_control.timeline.now_playing')}
+            {t(liveState?.playbackState === 'PAUSED' ? 'schedule.statuses.paused' : 'dj_control.timeline.now_playing')}
           </h3>
           <SongRow
             song={currentSong}
-            status="current"
+            status={liveState?.playbackState === 'PAUSED' ? 'paused' : 'current'}
             loading={loading}
           />
         </div>

@@ -25,13 +25,7 @@ import {getOfflineQueueManager} from '../services'
 import type {User as SupabaseUser} from '@supabase/supabase-js'
 import {getRedirectPath} from '../utils/navigationUtils'
 import {onboardingKey, shouldShowOnboarding} from '../lib/auth/onboarding'
-
-function withKnownName(profile: AuthUser, identity: SupabaseUser): AuthUser {
-  const knownName = identity.user_metadata?.full_name || identity.user_metadata?.name
-  return profile.name || typeof knownName !== 'string' || !knownName.trim()
-    ? profile
-    : {...profile, name: knownName.trim()}
-}
+import {resolveProfileName} from '../lib/auth/profileName'
 
 /**
  * Derive user role from profile data.
@@ -110,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return {success: false, errorKey: 'auth.errors.profile_load_failed'}
     }
 
-    const currentProfile = withKnownName(profile, identity)
+    const currentProfile = {...profile, name: resolveProfileName(profile, identity)}
     setUser(currentProfile)
     
     setRoleState(deriveRole(currentProfile))
@@ -122,70 +116,103 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true, isNewUser: shouldShowOnboarding(profile, identity) }
   }, [])
 
-  const applyProfile = async (identity: SupabaseUser) => {
-    const profile = await loadUserProfile()
-    if (profile) {
-      const currentProfile = withKnownName(profile, identity)
-      setUser(currentProfile)
-      setRoleState(deriveRole(profile))
-      setIsNewUser(shouldShowOnboarding(profile, identity))
-      localStorage.setItem('auth_user', JSON.stringify(currentProfile))
-      authenticatedUserIdRef.current = identity.id
-    }
-  }
-
   /**
    * Initialize auth state from Supabase session on mount
    */
   useEffect(() => {
+    let active = true
+    let unsubscribe: (() => void) | undefined
+    let profileGeneration = 0
+    let latestSessionId: string | null = null
+    let inFlightProfile: {id: string; promise: Promise<boolean>} | null = null
+
+    const clearAuthenticatedState = () => {
+      profileGeneration += 1
+      latestSessionId = null
+      inFlightProfile = null
+      clearTokenCache()
+      setUser(null)
+      setRoleState('viewer')
+      setIsNewUser(false)
+      setIsLoading(false)
+      localStorage.removeItem('auth_user')
+      authenticatedUserIdRef.current = null
+    }
+
+    const applyProfile = (identity: SupabaseUser): Promise<boolean> => {
+      if (authenticatedUserIdRef.current === identity.id) return Promise.resolve(true)
+      if (inFlightProfile?.id === identity.id) return inFlightProfile.promise
+      const generation = ++profileGeneration
+      const promise = loadUserProfile().then((profile) => {
+        if (!active || generation !== profileGeneration || latestSessionId !== identity.id) return false
+        if (!profile) {
+          clearAuthenticatedState()
+          return false
+        }
+        const currentProfile = {...profile, name: resolveProfileName(profile, identity)}
+        setUser(currentProfile)
+        setRoleState(deriveRole(currentProfile))
+        setIsNewUser(shouldShowOnboarding(profile, identity))
+        localStorage.setItem('auth_user', JSON.stringify(currentProfile))
+        authenticatedUserIdRef.current = identity.id
+        return true
+      }).finally(() => {
+        if (inFlightProfile?.promise === promise) inFlightProfile = null
+      })
+      inFlightProfile = {id: identity.id, promise}
+      return promise
+    }
+
     const initializeAuth = async () => {
       setIsLoading(true)
 
       try {
         const session = await getCurrentSession()
+        if (!active) return
+        latestSessionId = session?.user?.id ?? null
+        if (session?.user) clearTokenCache()
 
-        if (session?.user) {
+        // Register as soon as SDK initialization completes. Auth events can
+        // invalidate an in-flight backend profile request.
+        if (isSupabaseConfigured()) {
+          const subscription = onAuthStateChange((event, nextSession) => {
+            if (!active) return
+            if (event === 'SIGNED_OUT' || (event === 'INITIAL_SESSION' && !nextSession)) {
+              clearAuthenticatedState()
+            } else if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && nextSession) {
+              if (latestSessionId !== nextSession.user.id) {
+                clearAuthenticatedState()
+                setIsLoading(true)
+              }
+              latestSessionId = nextSession.user.id
+              if (authenticatedUserIdRef.current !== nextSession.user.id) {
+                const sessionId = nextSession.user.id
+                void applyProfile(nextSession.user).finally(() => {
+                  if (active && latestSessionId === sessionId) setIsLoading(false)
+                })
+              }
+            }
+          })
+          unsubscribe = subscription.unsubscribe
+        }
+
+        if (session?.user && latestSessionId === session.user.id) {
           await applyProfile(session.user)
-        } else {
-          // No valid session - clear any stale localStorage data
-          setUser(null)
-          setRoleState('viewer')
-    
-          localStorage.removeItem('auth_user')
-          authenticatedUserIdRef.current = null
+        } else if (!session?.user && latestSessionId === null) {
+          clearAuthenticatedState()
         }
       } catch (err) {
         console.error('Auth initialization error:', err)
+        if (active) clearAuthenticatedState()
       } finally {
-        setIsLoading(false)
+        if (active && !inFlightProfile) setIsLoading(false)
       }
     }
 
-    initializeAuth()
-
-    // Subscribe to auth state changes
-    if (isSupabaseConfigured()) {
-      const { unsubscribe } = onAuthStateChange(async (event, session) => {
-        if (event === 'SIGNED_IN' && session) {
-          // Supabase v2 fires SIGNED_IN on every token refresh (tab focus).
-          // Skip redundant /auth/me calls when we already have this user loaded.
-          if (authenticatedUserIdRef.current === session.user.id) {
-            return
-          }
-          await applyProfile(session.user)
-        } else if (event === 'SIGNED_OUT') {
-          setUser(null)
-          setRoleState('viewer')
-    
-          setIsNewUser(false)
-          localStorage.removeItem('auth_user')
-          authenticatedUserIdRef.current = null
-        } else if (event === 'TOKEN_REFRESHED') {
-          // No action needed - Supabase handles refresh internally
-        }
-      })
-
-      return () => unsubscribe()
+    void initializeAuth()
+    return () => {
+      active = false
+      unsubscribe?.()
     }
   }, [loadUserProfile])
 

@@ -8,6 +8,7 @@ interface StatusDotProps {
 const COLOR_MAP: Record<string, string> = {
   SCHEDULED: 'bg-primary',
   IN_PROGRESS: 'bg-warning motion-safe:animate-pulse',
+  PAUSED: 'bg-warning',
   COMPLETED: 'bg-success',
   CANCELED: 'bg-base-content/20',
   SUGGESTED: 'bg-info',

@@ -19,10 +19,11 @@ import {InstrumentGroup} from './InstrumentGroup'
 import {WaveformVisualizer} from './WaveformVisualizer'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import {formatDuration} from '../../lib/formatters'
-import type {DashboardSongDto} from '../../types/api.types'
+import type {DashboardSongDto, PlaybackState} from '../../types/api.types'
 
 interface CurrentSongCardProps {
   song: DashboardSongDto | null
+  playbackState?: PlaybackState
 }
 
 // Animation configurations for optimal performance
@@ -42,7 +43,7 @@ const CARD_PULSE_TRANSITION = {
   ease: 'easeInOut',
 } as const
 
-export function CurrentSongCard({ song }: CurrentSongCardProps) {
+export function CurrentSongCard({ song, playbackState = 'PLAYING' }: CurrentSongCardProps) {
   const { t } = useTranslation()
   const { transition, prefersReducedMotion } = useReducedMotion()
 
@@ -62,16 +63,16 @@ export function CurrentSongCard({ song }: CurrentSongCardProps) {
     >
       <motion.div
         className="bg-primary/15 border-2 border-primary/40 rounded-2xl p-8 md:p-12"
-        animate={prefersReducedMotion ? {} : CARD_PULSE_ANIMATION}
+        animate={prefersReducedMotion || playbackState !== 'PLAYING' ? {} : CARD_PULSE_ANIMATION}
         transition={pulseTransition}
       >
         <p className="text-primary text-sm md:text-lg font-semibold mb-4">
-          {t('publicDashboard.nowPlaying')}
+          {t(playbackState === 'PAUSED' ? 'schedule.statuses.paused' : 'publicDashboard.nowPlaying')}
         </p>
         {song ? (
           <>
             <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 ds-wrap-user-content">{song.title}</h2>
-            <WaveformVisualizer className="my-4" />
+            {playbackState === 'PLAYING' && <WaveformVisualizer className="my-4" />}
             <p className="md:text-3xl text-base-content/80 mb-2 ds-wrap-user-content">
               {t('publicDashboard.by')} {song.artist}
             </p>

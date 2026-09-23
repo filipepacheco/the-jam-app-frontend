@@ -12,6 +12,7 @@ import type { ScheduleResponseDto } from '../../types/api.types'
 import { useTranslation } from 'react-i18next'
 import { Action } from '../Action'
 import { ScheduleStatusBadge } from './ScheduleStatusBadge'
+import {getDisplayScheduleStatus} from '../../lib/schedule/statusHelpers'
 import { InstrumentBadges } from './InstrumentBadges'
 import { NotesEditor } from './NotesEditor'
 import { ScheduleOverflowMenu } from './ScheduleOverflowMenu'
@@ -50,9 +51,10 @@ export function ScheduleCompactCard({
 }: ScheduleCompactCardProps) {
   const { t } = useTranslation()
   const music = schedule.music
+  const displayStatus = getDisplayScheduleStatus(schedule)
 
   // Card border style based on status
-  const borderClass = schedule.status === 'IN_PROGRESS'
+  const borderClass = displayStatus === 'IN_PROGRESS'
     ? 'bg-warning/10'
     : isSuggested
       ? 'bg-info/10'
@@ -85,7 +87,7 @@ export function ScheduleCompactCard({
 
           {/* Status badge */}
           <div className="flex-shrink-0">
-            <ScheduleStatusBadge status={schedule.status} isSuggested={isSuggested} />
+            <ScheduleStatusBadge status={displayStatus} isSuggested={isSuggested} />
           </div>
 
           {/* Actions: suggested gets inline approve/reject, others get overflow menu */}

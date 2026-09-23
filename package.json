@@ -33,7 +33,7 @@
     "visual:progress:check": "tsx scripts/private-visual/cli.ts --progress --check"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.87.0",
+    "@supabase/supabase-js": "2.117.0",
     "@tailwindcss/vite": "^4.1.17",
     "@vercel/analytics": "^1.6.1",
     "@vercel/functions": "^2.2.13",

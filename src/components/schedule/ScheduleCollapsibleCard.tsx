@@ -17,6 +17,7 @@ import { ScheduleOverflowMenu } from './ScheduleOverflowMenu'
 import { MusicianSlotList } from './MusicianSlotList'
 import { SlotFillIndicator } from './SlotFillIndicator'
 import { StatusDot } from './StatusDot'
+import {getDisplayScheduleStatus} from '../../lib/schedule/statusHelpers'
 import { countActiveRegistrationsByInstrument, CORE_BAND } from '../../utils/scheduleUtils'
 
 interface ScheduleCollapsibleCardProps {
@@ -61,13 +62,14 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
   const { t } = useTranslation()
   const prefersReducedMotion = useReducedMotion()
   const music = schedule.music
+  const displayStatus = getDisplayScheduleStatus(schedule)
   const pendingCount = schedule.registrations?.filter(r => r.status === 'PENDING').length || 0
   const [isExpanded, setIsExpanded] = useState(defaultExpanded)
 
   // Auto-expand IN_PROGRESS cards
   useEffect(() => {
-    if (schedule.status === 'IN_PROGRESS') setIsExpanded(true)
-  }, [schedule.status])
+    if (displayStatus === 'IN_PROGRESS') setIsExpanded(true)
+  }, [displayStatus])
 
   const toggleExpand = useCallback(() => {
     setIsExpanded(prev => !prev)
@@ -127,7 +129,7 @@ export const ScheduleCollapsibleCard = memo(function ScheduleCollapsibleCard({
 
           <SlotFillIndicator registrations={schedule.registrations} music={music} />
 
-          <StatusDot status={schedule.status} />
+          <StatusDot status={displayStatus} />
 
           {!isSuggested && (
             <ChevronDown

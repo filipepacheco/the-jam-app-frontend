@@ -10,6 +10,7 @@ import {useState} from 'react'
 import {Flag, ClipboardList} from 'lucide-react'
 import {Action} from '../Action'
 import {CanonicalEmptyState} from '../FeedbackStates'
+import {getDisplayScheduleStatus} from '../../lib/schedule/statusHelpers'
 
 interface TimelineUser {
   id: string
@@ -39,6 +40,7 @@ export function TimelineShowcaseV2Waveform({
 
   // Helper to get dot style based on status
   const getDotStyle = (schedule: ScheduleResponseDto) => {
+    if (getDisplayScheduleStatus(schedule) === 'PAUSED') return 'bg-warning border-warning/30'
     if (schedule.status === 'COMPLETED') return 'bg-success border-success/30'
     if (schedule.status === 'IN_PROGRESS') return `bg-primary border-primary/30 ${prefersReducedMotion ? '' : 'animate-pulse'}`
     if (schedule.status === 'SUGGESTED') return 'bg-info border-info/30'

@@ -57,7 +57,7 @@ export function NowPlayingBar({ currentSong, playbackState, nextSong }: NowPlayi
       <div className="flex items-center justify-between mb-0.5">
         <div className="flex items-center gap-1.5 text-xs font-medium text-base-content/70">
           <Music className="size-3" aria-hidden="true" />
-          {t('dj_control.timeline.now_playing')}
+          {t(playbackState === 'PAUSED' ? 'schedule.statuses.paused' : 'dj_control.timeline.now_playing')}
         </div>
         <StatusIndicator status={config.status} label={t(config.label)} />
       </div>

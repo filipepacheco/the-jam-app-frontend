@@ -11,12 +11,14 @@ import { Badge, type DataDisplayTone } from '../data-display'
 import { CanonicalEmptyState } from '../FeedbackStates'
 import { formatJamDuration } from '../../lib/formatters'
 import {isActiveRegistration} from '../../utils/musicianUtils'
+import {getDisplayScheduleStatus} from '../../lib/schedule/statusHelpers'
 
-function scheduleStatusTone(status: ScheduleResponseDto['status']): DataDisplayTone {
+function scheduleStatusTone(status: ScheduleResponseDto['status'] | 'PAUSED'): DataDisplayTone {
   switch (status) {
     case 'COMPLETED':
       return 'success'
     case 'IN_PROGRESS':
+    case 'PAUSED':
       return 'warning'
     case 'SUGGESTED':
       return 'info'
@@ -72,6 +74,7 @@ export function PerformanceSelectionModal({
       <div className="space-y-2 max-h-[60vh] overflow-y-auto mb-4">
         {performances.map((schedule) => {
           const alreadyRegistered = isAlreadyRegistered(schedule)
+          const displayStatus = getDisplayScheduleStatus(schedule)
 
           return (
             /* Documented exception: this selectable performance card stays a
@@ -117,11 +120,12 @@ export function PerformanceSelectionModal({
                   </div>
                 </div>
                 {!alreadyRegistered && (
-                  <Badge tone={scheduleStatusTone(schedule.status)} size="sm" className="flex-shrink-0">
-                    {schedule.status === 'COMPLETED' && t('schedule.statuses.completed')}
-                    {schedule.status === 'IN_PROGRESS' && t('schedule.statuses.in_progress')}
-                    {schedule.status === 'SUGGESTED' && t('common.statuses.suggested')}
-                    {schedule.status === 'SCHEDULED' && t('schedule.statuses.scheduled')}
+                  <Badge tone={scheduleStatusTone(displayStatus)} size="sm" className="flex-shrink-0">
+                    {displayStatus === 'COMPLETED' && t('schedule.statuses.completed')}
+                    {displayStatus === 'IN_PROGRESS' && t('schedule.statuses.in_progress')}
+                    {displayStatus === 'PAUSED' && t('schedule.statuses.paused')}
+                    {displayStatus === 'SUGGESTED' && t('common.statuses.suggested')}
+                    {displayStatus === 'SCHEDULED' && t('schedule.statuses.scheduled')}
                   </Badge>
                 )}
               </div>

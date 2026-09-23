@@ -109,6 +109,8 @@ export interface ScheduleResponseDto {
   musicId: string
   order: number
   status: ScheduleStatus
+  /** Set while the current song is paused; its queue status remains IN_PROGRESS. */
+  pausedAt?: string | null
   createdAt: string
   registrationId?: string
   music: MusicResponseDto
@@ -302,6 +304,7 @@ export interface LiveDashboardResponseDto {
   slug: string | null
   shortCode: string | null
   jamStatus: JamStatus
+  playbackState: PlaybackState
   currentSong: DashboardSongDto | null
   nextSongs: DashboardSongDto[]
 }

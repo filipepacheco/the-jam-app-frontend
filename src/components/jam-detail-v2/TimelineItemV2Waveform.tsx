@@ -11,6 +11,7 @@ import {Action, IconAction} from '../Action'
 import {useCallback, useMemo} from 'react'
 import type {MouseEvent} from 'react'
 import {formatDuration} from '../../lib/formatters'
+import {getDisplayScheduleStatus} from '../../lib/schedule/statusHelpers'
 
 interface TimelineUser {
   id: string
@@ -57,10 +58,12 @@ export function TimelineItemV2Waveform({
   }, [onRegisterClick])
 
   // Memoize status-based styling
-  const { bgClasses, borderClasses, isCompleted, isInProgress, isSuggested } = useMemo(() => {
-    const completed = schedule.status === 'COMPLETED'
-    const inProgress = schedule.status === 'IN_PROGRESS'
-    const suggested = schedule.status === 'SUGGESTED'
+  const { bgClasses, borderClasses, isCompleted, isInProgress, isPaused, isSuggested } = useMemo(() => {
+    const displayStatus = getDisplayScheduleStatus(schedule)
+    const completed = displayStatus === 'COMPLETED'
+    const inProgress = displayStatus === 'IN_PROGRESS'
+    const paused = displayStatus === 'PAUSED'
+    const suggested = displayStatus === 'SUGGESTED'
 
     let bg = 'bg-base-100'
     let border = 'border border-base-300'
@@ -71,16 +74,19 @@ export function TimelineItemV2Waveform({
     } else if (inProgress) {
       bg = 'bg-primary/10'
       border = 'border-2 border-primary shadow-lg shadow-primary/20'
+    } else if (paused) {
+      bg = 'bg-warning/10'
+      border = 'border border-warning/30'
     } else if (suggested) {
       bg = 'bg-info/5'
       border = 'border border-info/20'
     }
 
-    return { bgClasses: bg, borderClasses: border, isCompleted: completed, isInProgress: inProgress, isSuggested: suggested }
-  }, [schedule.status])
+    return { bgClasses: bg, borderClasses: border, isCompleted: completed, isInProgress: inProgress, isPaused: paused, isSuggested: suggested }
+  }, [schedule])
 
   // Check if schedule is ready to play (all musician slots filled)
-  const isReadyToPlay = !isCompleted && !isInProgress && !isSuggested && hasCoreBand(schedule)
+  const isReadyToPlay = !isCompleted && !isInProgress && !isPaused && !isSuggested && hasCoreBand(schedule)
   const isExpandable = isCompleted
 
   // Override card styling for ready-to-play songs
@@ -109,11 +115,12 @@ export function TimelineItemV2Waveform({
   // Memoize status object
   const status = useMemo(() => {
     if (isCompleted) return { icon: '✓', text: t('schedule.statuses.completed'), color: 'text-success', hint: '' }
+    if (isPaused) return { icon: 'Ⅱ', text: t('schedule.statuses.paused'), color: 'text-warning', hint: '' }
     if (isInProgress) return { icon: '▶', text: t('schedule.statuses.in_progress'), color: 'text-primary', hint: '' }
     if (isSuggested) return { icon: '✨', text: t('common.statuses.suggested'), color: 'text-info', hint: '' }
     if (isReadyToPlay) return { icon: '✓', text: t('schedule.statuses.ready_to_play'), color: 'text-success', hint: t('schedule.statuses.ready_to_play_hint') }
     return null
-  }, [isCompleted, isInProgress, isSuggested, isReadyToPlay, t])
+  }, [isCompleted, isPaused, isInProgress, isSuggested, isReadyToPlay, t])
 
   return (
     <div

@@ -4,6 +4,12 @@
  */
 
 import type { TFunction } from 'i18next'
+import type {ScheduleStatus} from '../../types/api.types'
+
+/** Pause is a playback state, not a persisted queue status. */
+export function getDisplayScheduleStatus(schedule: {status: ScheduleStatus; pausedAt?: string | null}): ScheduleStatus | 'PAUSED' {
+  return schedule.status === 'IN_PROGRESS' && schedule.pausedAt ? 'PAUSED' : schedule.status
+}
 
 /**
  * Get the internationalized label for a given schedule status
@@ -20,6 +26,8 @@ export function getStatusLabel(status: string | undefined, isSuggested: boolean,
       return t('schedule.statuses.scheduled')
     case 'IN_PROGRESS':
       return t('schedule.statuses.in_progress')
+    case 'PAUSED':
+      return t('schedule.statuses.paused')
     case 'APPROVED':
       return t('common.statuses.approved')
     case 'COMPLETED':

@@ -11,6 +11,7 @@ const liveDashboard: LiveDashboardResponseDto = {
   slug: 'friday-night-jam',
   shortCode: 'FNJ26',
   jamStatus: 'LIVE',
+  playbackState: 'PLAYING',
   currentSong: {
     id: 'song-current',
     title: 'Psycho Killer',
@@ -88,5 +89,13 @@ describe('PublicDashboardPage', () => {
 
     expect(screen.getByText('Updates paused')).toBeInTheDocument()
     expect(screen.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeInTheDocument()
+  })
+
+  it('labels a paused current song without losing the song from the public dashboard', () => {
+    render(<PublicDashboardPage viewState={{status: 'loaded', data: {...liveDashboard, playbackState: 'PAUSED'}}} />)
+
+    expect(screen.getByText('schedule.statuses.paused')).toBeVisible()
+    expect(screen.queryByText('publicDashboard.nowPlaying')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
   })
 })

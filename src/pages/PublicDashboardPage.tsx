@@ -78,6 +78,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
   // Extract fields from response
   const jamName = dashboardData?.jamName ?? null
   const jamStatus = dashboardData?.jamStatus ?? null
+  const playbackState = dashboardData?.playbackState ?? 'STOPPED'
   const currentSong = dashboardData?.currentSong ?? null
   const nextSongs = dashboardData?.nextSongs ?? []
 
@@ -211,6 +212,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
       {layout === 'carousel' ? (
         <CarouselDashboard
           jamStatus={jamStatus}
+          playbackState={playbackState}
           currentSong={currentSong}
           nextSongs={nextSongs}
           jamId={jamId}
@@ -232,7 +234,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                   </div>
                 </div>
               ) : (
-                <CurrentSongCard song={currentSong} />
+                <CurrentSongCard song={currentSong} playbackState={playbackState} />
               )}
 
               {/* Next Song Section - only if there's a different song to show */}

@@ -12,6 +12,7 @@ const liveDashboard: LiveDashboardResponseDto = {
   slug: 'friday-night-jam',
   shortCode: 'FNJ26',
   jamStatus: 'LIVE',
+  playbackState: 'PLAYING',
   currentSong: dashboardSongs.current,
   nextSongs: [dashboardSongs.next],
 }

@@ -122,6 +122,39 @@ describe('ScheduleTab', () => {
         expect(screen.getByRole('menuitem', {name: 'schedule.actions.mark_completed'})).toBeVisible()
     })
 
+    it('does not count a paused song as now playing', () => {
+        const jamWithPausedSong: JamResponseDto = {
+            ...jam,
+            playbackState: 'PAUSED',
+            schedules: [{...makeSchedule(0, 'IN_PROGRESS'), pausedAt: '2026-09-24T18:01:00.000Z'}],
+        }
+
+        const {rerender} = render(
+            <MemoryRouter>
+                <ToastProvider>
+                    <ScheduleTab jam={jamWithPausedSong} onReload={vi.fn()}/>
+                </ToastProvider>
+            </MemoryRouter>,
+        )
+
+        expect(screen.queryByRole('heading', {name: 'schedule.now_playing (1)'})).not.toBeInTheDocument()
+        expect(screen.getByRole('heading', {name: 'schedule.statuses.paused (1)'})).toBeVisible()
+
+        rerender(
+            <MemoryRouter>
+                <ToastProvider>
+                    <ScheduleTab
+                        jam={{...jamWithPausedSong, playbackState: 'PLAYING', schedules: [{...makeSchedule(0, 'IN_PROGRESS'), pausedAt: null}]}}
+                        onReload={vi.fn()}
+                    />
+                </ToastProvider>
+            </MemoryRouter>,
+        )
+
+        expect(screen.getByRole('heading', {name: 'schedule.now_playing (1)'})).toBeVisible()
+        expect(screen.queryByRole('heading', {name: 'schedule.statuses.paused (1)'})).not.toBeInTheDocument()
+    })
+
     it('reports successful schedule mutations through the success toast', async () => {
         const user = userEvent.setup()
         const jamWithSchedules: JamResponseDto = {

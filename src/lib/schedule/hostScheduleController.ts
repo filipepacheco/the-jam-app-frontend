@@ -58,6 +58,7 @@ export interface Performance {
   musicId: string
   order: number
   status: PerformanceStatus
+  pausedAt?: string | null
   createdAt: string
   registrationId?: string
   music: Music
