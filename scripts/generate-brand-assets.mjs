@@ -169,6 +169,9 @@ const socialSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="
 
 const browser = await chromium.launch({ headless: true })
 try {
+  // Email clients commonly block SVG. Keep the approved lockup on its light
+  // matte so it also stays legible when an inbox forces dark mode.
+  write(`${outputDirectory}/logo-email-light.png`, await pngFromSvg(browser, masterSvg, 420, 180, '#FAF7FD'))
   const transparentFaviconSizes = [16, 32, 96]
   const pngs = new Map()
   for (const size of transparentFaviconSizes) {
@@ -200,6 +203,7 @@ try {
 const outputs = [
   'brand-master.svg', 'symbol-light.svg', 'symbol-dark.svg', 'wordmark.trace.svg',
   '../public/brand/v1/logo.svg', '../public/brand/v1/symbol.svg', '../public/brand/v1/favicon.svg',
+  '../public/brand/v1/logo-email-light.png',
   '../public/brand/v1/favicon-16.png', '../public/brand/v1/favicon-32.png', '../public/brand/v1/favicon-96.png', '../public/brand/v1/apple-touch-icon.png',
   '../public/brand/v1/icon-192.png', '../public/brand/v1/icon-512.png', '../public/brand/v1/icon-maskable-512.png',
   '../public/brand/v1/social-1200x630.png', '../public/brand/v1/social-hybrid-1200x630.png', '../public/favicon.ico',

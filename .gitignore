@@ -18,7 +18,8 @@ dist-ssr
 *.local
 
 .env
-supabase
+/supabase/*
+!/supabase/templates/
 
 # Environment variables
 .env

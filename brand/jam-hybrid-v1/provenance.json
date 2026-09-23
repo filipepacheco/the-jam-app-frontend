@@ -87,6 +87,7 @@
     "public/brand/v1/logo.svg": "76f45da5c5a2d40e0b9950448d24e358e688195d09dfd031a8d6b5c0412a3f6a",
     "public/brand/v1/symbol.svg": "86ae36da3ab30c63c3e6bd17388b30c1ce9df32ea6e51b492840c250fc48b83a",
     "public/brand/v1/favicon.svg": "86ae36da3ab30c63c3e6bd17388b30c1ce9df32ea6e51b492840c250fc48b83a",
+    "public/brand/v1/logo-email-light.png": "78168679228a544e70e3140778518870a96e064ace5cbdc0aa62c1bb5cb951d5",
     "public/brand/v1/favicon-16.png": "7ba0391268bfbc0b61d53de2267c678a8574382689a6733d1591a9dfbe678816",
     "public/brand/v1/favicon-32.png": "49fc847bdf3def1088e6dfd6e122884c4d282e7b841549e232cd38fb50862fb2",
     "public/brand/v1/favicon-96.png": "dd3137b623f6bd4aa9b656c76be56e09b6bc69647bf9b969462a9017893a36eb",
@@ -95,7 +96,7 @@
     "public/brand/v1/icon-512.png": "6befd27b56fa5af610df46a0d1a0abf6331953b89a5f51a781c2a2e479cf6fe2",
     "public/brand/v1/icon-maskable-512.png": "ed1a8e6d5612142697a79fe01a03d0a73dea9b36fbad976d9a73cc35406e3c1b",
     "public/brand/v1/social-1200x630.png": "1a2349bf47062091738ccd5245468bd5de84820243ca061eb314b1a6ea422b34",
-    "public/favicon.ico": "c8f02c5dedf3d4ce78b9d085de347c1045d7ddb723e3779eee68fcbc92b022a6",
-    "public/brand/v1/social-hybrid-1200x630.png": "1a2349bf47062091738ccd5245468bd5de84820243ca061eb314b1a6ea422b34"
+    "public/brand/v1/social-hybrid-1200x630.png": "1a2349bf47062091738ccd5245468bd5de84820243ca061eb314b1a6ea422b34",
+    "public/favicon.ico": "c8f02c5dedf3d4ce78b9d085de347c1045d7ddb723e3779eee68fcbc92b022a6"
   }
 }
