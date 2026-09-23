@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   X,
@@ -22,14 +22,7 @@ import { Action, IconAction } from './Action'
 import { NavigationLink } from './Navigation'
 import { SearchableSelect } from './forms/SearchableSelect'
 import './MobileDrawer.css'
-
-const THEME_OPTIONS = THEMES.map((theme) => ({
-  id: theme,
-  label: theme
-    .split('-')
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' '),
-}))
+import {authPath} from '../utils/navigationUtils'
 
 interface MobileDrawerProps {
   isOpen: boolean
@@ -45,6 +38,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
     label: t(language.nameKey),
   }))
   const navigate = useNavigate()
+  const location = useLocation()
   const { isAuthenticated, user, logout, isViewer, isLoading } = useAuth()
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const hasBeenOpened = useRef(false)
@@ -181,7 +175,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
               <Action
                 variant="primary"
                 className="w-full"
-                onClick={() => handleNavClick('/register')}
+                onClick={() => handleNavClick(authPath('/register', location))}
               >
                 <Action.Label>{t('nav.login_register')}</Action.Label>
               </Action>
@@ -255,7 +249,7 @@ export function MobileDrawer({ isOpen, onClose, hamburgerRef }: MobileDrawerProp
               </label>
               <SearchableSelect
                 id="mobile-drawer-theme"
-                items={THEME_OPTIONS}
+                items={THEMES.map((theme) => ({ id: theme, label: t(theme === 'jam-light' ? 'common.theme_light' : 'common.theme_dark') }))}
                 value={currentTheme}
                 onChange={(theme) => setTheme(resolveThemeName(theme))}
                 getItemLabel={(theme) => theme.label}

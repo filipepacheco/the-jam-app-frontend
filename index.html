@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="jam-light">
   <head>
     <script>try{
-      const s=localStorage.getItem('jam-app.theme')||localStorage.getItem('theme');const t=s==='jam-light'||s==='light'?'jam-light':'jam-dark';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+      const s=localStorage.getItem('jam-app.theme')||localStorage.getItem('theme');const t=s==='jam-dark'||s==='dark'?'jam-dark':'jam-light';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
     <meta charset="UTF-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport" />
     <meta name="google-site-verification" content="TI9Eit9N1OZq86OFo5kLqnIlhsg8ULI5X_aIoqr4pbo" />
 
     <title>Organize sua Jam Session ao Vivo | Jam App</title>
@@ -31,30 +31,32 @@
 
     <!-- Loading shell styles - removed by React on hydration -->
     <style>
-      .app-shell{min-height:100vh;background:#1d232a;color:#a6adbb;font-family:system-ui,-apple-system,sans-serif}
-      .shell-nav{height:64px;background:#191e24;box-shadow:0 1px 3px rgba(0,0,0,.3);display:flex;align-items:center;padding:0 16px;gap:12px}
-      .shell-logo{width:36px;height:36px;border-radius:8px;background:#2a323c}
-      .shell-logo-text{width:80px;height:20px;border-radius:4px;background:#2a323c}
+      :root{--shell-canvas:#fcf9ff;--shell-surface:#f1eaf7;--shell-placeholder:#e5dbed;--shell-content:#261733}
+      [data-theme="jam-dark"]{--shell-canvas:#261733;--shell-surface:#30213d;--shell-placeholder:#40304d;--shell-content:#f4eefa}
+      .app-shell{min-height:100vh;background:var(--shell-canvas);color:var(--shell-content);font-family:system-ui,-apple-system,sans-serif}
+      .shell-nav{height:64px;background:var(--shell-surface);box-shadow:0 1px 3px rgba(0,0,0,.3);display:flex;align-items:center;padding:0 16px;gap:12px}
+      .shell-logo{width:36px;height:36px;border-radius:8px;background:var(--shell-placeholder)}
+      .shell-logo-text{width:80px;height:20px;border-radius:4px;background:var(--shell-placeholder)}
       .shell-nav-end{margin-left:auto;display:flex;gap:8px;align-items:center}
-      .shell-avatar{width:32px;height:32px;border-radius:50%;background:#2a323c}
-      .shell-btn{width:72px;height:32px;border-radius:8px;background:#2a323c}
+      .shell-avatar{width:32px;height:32px;border-radius:50%;background:var(--shell-placeholder)}
+      .shell-btn{width:72px;height:32px;border-radius:8px;background:var(--shell-placeholder)}
       .shell-content{max-width:640px;margin:0 auto;padding:48px 20px;text-align:center}
-      .shell-eyebrow{height:12px;width:200px;border-radius:4px;background:#2a323c;margin:0 auto 16px}
-      .shell-heading{height:36px;width:85%;border-radius:6px;background:#2a323c;margin:0 auto 10px}
-      .shell-heading2{height:36px;width:70%;border-radius:6px;background:#2a323c;margin:0 auto 20px}
-      .shell-desc{height:14px;width:90%;border-radius:4px;background:#2a323c;margin:0 auto 8px}
-      .shell-desc2{height:14px;width:75%;border-radius:4px;background:#2a323c;margin:0 auto 8px}
-      .shell-desc3{height:14px;width:60%;border-radius:4px;background:#2a323c;margin:0 auto 24px}
+      .shell-eyebrow{height:12px;width:200px;border-radius:4px;background:var(--shell-placeholder);margin:0 auto 16px}
+      .shell-heading{height:36px;width:85%;border-radius:6px;background:var(--shell-placeholder);margin:0 auto 10px}
+      .shell-heading2{height:36px;width:70%;border-radius:6px;background:var(--shell-placeholder);margin:0 auto 20px}
+      .shell-desc{height:14px;width:90%;border-radius:4px;background:var(--shell-placeholder);margin:0 auto 8px}
+      .shell-desc2{height:14px;width:75%;border-radius:4px;background:var(--shell-placeholder);margin:0 auto 8px}
+      .shell-desc3{height:14px;width:60%;border-radius:4px;background:var(--shell-placeholder);margin:0 auto 24px}
       .shell-btns{display:flex;gap:12px;justify-content:center;margin-bottom:48px}
-      .shell-btn-cta{height:44px;width:120px;border-radius:10px;background:#2a323c}
-      .shell-btn-sec{height:44px;width:140px;border-radius:10px;background:#2a323c}
-      .shell-live{max-width:400px;margin:0 auto;border-radius:20px;background:#191e24;padding:24px;display:flex;flex-direction:column;gap:10px;align-items:center}
+      .shell-btn-cta{height:44px;width:120px;border-radius:10px;background:var(--shell-placeholder)}
+      .shell-btn-sec{height:44px;width:140px;border-radius:10px;background:var(--shell-placeholder)}
+      .shell-live{max-width:400px;margin:0 auto;border-radius:20px;background:var(--shell-surface);padding:24px;display:flex;flex-direction:column;gap:10px;align-items:center}
       .shell-live-badge{height:20px;width:72px;border-radius:10px;background:#7c3aed}
-      .shell-live-label{height:12px;width:100px;border-radius:4px;background:#2a323c}
-      .shell-live-title{height:24px;width:200px;border-radius:6px;background:#2a323c}
-      .shell-live-artist{height:14px;width:120px;border-radius:4px;background:#2a323c}
+      .shell-live-label{height:12px;width:100px;border-radius:4px;background:var(--shell-placeholder)}
+      .shell-live-title{height:24px;width:200px;border-radius:6px;background:var(--shell-placeholder)}
+      .shell-live-artist{height:14px;width:120px;border-radius:4px;background:var(--shell-placeholder)}
       .shell-live-chips{display:flex;gap:8px;margin-top:8px}
-      .shell-chip{height:28px;width:64px;border-radius:14px;background:#2a323c}
+      .shell-chip{height:28px;width:64px;border-radius:14px;background:var(--shell-placeholder)}
       .shell-pulse{animation:shell-pulse 1.5s ease-in-out infinite}
       @keyframes shell-pulse{0%,100%{opacity:1}50%{opacity:.5}}
     </style>

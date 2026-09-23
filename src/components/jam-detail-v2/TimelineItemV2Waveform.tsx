@@ -46,6 +46,10 @@ export function TimelineItemV2Waveform({
           && (reg.musicianId === user.id || reg.musician?.id === user.id)
       )
     : false
+  const userWithdrawn = user?.id
+    ? schedule.registrations?.some((reg) => reg.status?.toUpperCase() === 'WITHDRAWN'
+      && (reg.musicianId === user.id || reg.musician?.id === user.id))
+    : false
 
   const handleRegisterClick = useCallback((e: MouseEvent) => {
     e.stopPropagation()
@@ -276,11 +280,11 @@ export function TimelineItemV2Waveform({
                   variant={userRegistered ? 'quiet' : 'secondary'}
                   className="w-full"
                 >
-                  {userRegistered ? t('schedule.register_another') : t('jams.register')}
+                  {userRegistered ? t('schedule.manage_registration') : userWithdrawn ? t('schedule.rejoin') : t('jams.register')}
                 </Action>
-              ) : userRegistered ? (
+              ) : userRegistered || userWithdrawn ? (
                 <Action onClick={handleRegisterClick} variant="quiet" className="w-full">
-                  {t('schedule.register_another')}
+                  {userRegistered ? t('schedule.manage_registration') : t('schedule.rejoin')}
                 </Action>
               ) : null
             ) : (
@@ -290,7 +294,7 @@ export function TimelineItemV2Waveform({
                 className="w-full"
               >
                 {!userRegistered && <span className="text-base" aria-hidden="true">+</span>}
-                {userRegistered ? t('schedule.register_another') : t('jams.register')}
+                {userRegistered ? t('schedule.manage_registration') : userWithdrawn ? t('schedule.rejoin') : t('jams.register')}
               </Action>
             )}
           </>

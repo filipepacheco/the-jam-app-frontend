@@ -5,6 +5,7 @@
 
 import {isSupabaseConfigured, supabase} from './config'
 import type {AuthError, Provider, Session, User} from '@supabase/supabase-js'
+import {getRedirectPath} from '../../utils/navigationUtils'
 
 /**
  * Supported OAuth providers
@@ -59,12 +60,14 @@ export async function signUpWithEmail(
     }
   }
 
+  const callbackUrl = new URL('/auth/callback', window.location.origin)
+  callbackUrl.searchParams.set('redirect', getRedirectPath())
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: metadata,
-      emailRedirectTo: `${window.location.origin}/auth/callback`,
+      emailRedirectTo: callbackUrl.toString(),
     },
   })
 
@@ -207,6 +210,14 @@ export async function updatePassword(newPassword: string): Promise<{ error: Auth
     password: newPassword,
   })
 
+  return { error }
+}
+
+/** Persist the optional welcome step on the account across devices. */
+export async function markOnboardingComplete(): Promise<{ error: AuthError | null }> {
+  const { error } = await supabase.auth.updateUser({
+    data: { jamOnboardingComplete: true },
+  })
   return { error }
 }
 

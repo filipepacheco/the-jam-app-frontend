@@ -7,6 +7,7 @@ import {ExternalLink, Play, Square, RotateCcw, Download} from "lucide-react";
 import {SpotifyImportModal} from "../../components";
 import {Action, type ActionVariant} from "../../components/Action";
 import {getJamDashboardPath} from "../../utils/jamUrl";
+import {jamDateTimeToForm, jamFormToDateTime} from '../../lib/jamDateTime'
 
 interface JamEditorData {
     name: string
@@ -23,18 +24,13 @@ interface JamEditorData {
 }
 
 function editorDataFromJam(jam: JamResponseDto): JamEditorData {
-    const parsedDate = jam.date ? new Date(jam.date) : null
-    const date = parsedDate && !Number.isNaN(parsedDate.getTime()) ? parsedDate : null
+    const {date, time} = jamDateTimeToForm(jam.date)
 
     return {
         name: jam.name ?? '',
         description: jam.description ?? '',
-        date: date
-            ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-            : '',
-        time: date
-            ? `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
-            : '',
+        date,
+        time,
         location: jam.location ?? '',
         slug: jam.slug ?? '',
         spotifyPlaylistUrl: jam.spotifyPlaylistUrl ?? '',
@@ -185,7 +181,7 @@ export function OverviewTab({
             const updates: Partial<JamResponseDto> = {
                 name: formData.name.trim(),
                 description: formData.description.trim() || undefined,
-                date: new Date(`${formData.date}T${formData.time}`).toISOString(),
+                date: jamFormToDateTime(formData.date, formData.time),
                 location: formData.location.trim(),
                 slug: formData.slug.trim() || null,
                 spotifyPlaylistUrl: formData.spotifyPlaylistUrl.trim() || null,

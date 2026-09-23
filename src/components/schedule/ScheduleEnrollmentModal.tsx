@@ -10,6 +10,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {getInstrumentOptions} from '../../utils/scheduleUtils'
 import {activeRegistrations, normalizeInstrument} from '../../utils/musicianUtils'
+import {translationKey} from '../../lib/i18n/translationKeys'
 import {ScheduleDetailsCard} from './ScheduleDetailsCard'
 import {Alert} from '../Alert'
 import {Action} from '../Action'
@@ -23,10 +24,11 @@ interface ScheduleEnrollmentModalProps {
   preferredInstrument?: string | null
   onClose: () => void
   onSubmit: (instrument: string) => Promise<JamParticipationOutcome>
+  onWithdraw?: (registrationId: string) => Promise<JamParticipationOutcome>
 }
 
 export function ScheduleEnrollmentModal({
-                                            schedule, isOpen, musicianId, preferredInstrument, onClose, onSubmit,
+                                            schedule, isOpen, musicianId, preferredInstrument, onClose, onSubmit, onWithdraw,
                                         }: ScheduleEnrollmentModalProps) {
     const { t } = useTranslation()
     const [selectedInstrument, setSelectedInstrument] = useState('')
@@ -47,6 +49,15 @@ export function ScheduleEnrollmentModal({
         .filter((registration) => registration.musicianId === musicianId || registration.musician?.id === musicianId)
         .map((registration) => normalizeInstrument(registration.instrument ?? '')),
     ), [musicianId, schedule.registrations])
+    const ownRegistrations = useMemo(() => activeRegistrations(schedule.registrations).filter(
+      (registration) => registration.musicianId === musicianId || registration.musician?.id === musicianId,
+    ), [musicianId, schedule.registrations])
+    const withdrawnInstruments = useMemo(() => new Set(
+      (schedule.registrations ?? [])
+        .filter((registration) => registration.status?.toUpperCase() === 'WITHDRAWN'
+          && (registration.musicianId === musicianId || registration.musician?.id === musicianId))
+        .map((registration) => normalizeInstrument(registration.instrument)),
+    ), [musicianId, schedule.registrations])
 
     useEffect(() => {
       if (!isOpen) return
@@ -57,11 +68,11 @@ export function ScheduleEnrollmentModal({
       const preferredOption = instrumentOptions.find(({key, needed, registered}) =>
         key === normalizedPreference
         && !registeredInstruments.has(key)
-        && (needed === -1 || registered < needed)
+        && (needed === -1 || registered < needed || withdrawnInstruments.has(key))
       )
 
       setSelectedInstrument(preferredOption?.key ?? '')
-    }, [instrumentOptions, isOpen, preferredInstrument, registeredInstruments, schedule.id])
+    }, [instrumentOptions, isOpen, preferredInstrument, registeredInstruments, withdrawnInstruments, schedule.id])
 
   const handleEnroll = async () => {
     if (!selectedInstrument) {
@@ -85,6 +96,24 @@ export function ScheduleEnrollmentModal({
     }
   }
 
+  const handleWithdraw = async (registrationId: string) => {
+    if (!onWithdraw) return
+    setEnrollLoading(true)
+    setError(null)
+    try {
+      const outcome = await onWithdraw(registrationId)
+      if (outcome.code === 'failure' || outcome.code === 'refresh_failure') {
+        setError(outcome.error.message || t('registration.withdraw_failed'))
+      } else if (outcome.code !== 'success') {
+        setError(t('registration.withdraw_failed'))
+      }
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : t('registration.withdraw_failed'))
+    } finally {
+      setEnrollLoading(false)
+    }
+  }
+
     if (!isOpen) return null
 
     return (
@@ -95,7 +124,6 @@ export function ScheduleEnrollmentModal({
         size="sm"
         responsive
         scrollable
-        className="max-h-[calc(100dvh-1rem)] sm:max-h-[85vh]"
         footer={
           <ModalFooter
             onCancel={onClose}
@@ -108,6 +136,29 @@ export function ScheduleEnrollmentModal({
       >
         <ScheduleDetailsCard schedule={schedule} />
         <Alert type="error" message={error} />
+        {onWithdraw && ownRegistrations.length > 0 && (
+          <section className="mb-4 min-w-0" aria-label={t('registration.your_registrations')}>
+            <p className="mb-2 text-sm font-semibold text-base-content">{t('registration.your_registrations')}</p>
+            <div className="space-y-2">
+              {ownRegistrations.map((registration) => (
+                <div key={registration.id} className="flex min-w-0 flex-wrap items-center justify-between gap-2 rounded-lg bg-base-200 p-2">
+                  <span className="min-w-0 ds-wrap-user-content text-sm text-base-content">
+                    {t(translationKey('schedule.instruments', normalizeInstrument(registration.instrument)))}
+                  </span>
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-error min-h-11 h-auto max-w-full whitespace-normal text-center"
+                    disabled={enrollLoading}
+                    onClick={() => void handleWithdraw(registration.id)}
+                    aria-label={t('registration.withdraw_instrument', {instrument: registration.instrument})}
+                  >
+                    {t('registration.withdraw')}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Instrument choice is a visible set of options, not a dropdown whose
             contents the Musician must inspect one item at a time. */}
@@ -115,16 +166,19 @@ export function ScheduleEnrollmentModal({
           <legend className="mb-2 text-sm font-semibold text-base-content">
             {t('schedule.select_your_instrument')}
           </legend>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-2">
             {instrumentOptions.map((option) => {
               const isUnlimited = option.needed === -1
               const remaining = isUnlimited ? Infinity : option.needed - option.registered
               const isFull = !isUnlimited && remaining <= 0
               const isAlreadyRegistered = registeredInstruments.has(option.key)
-              const isUnavailable = isFull || isAlreadyRegistered
+              const isRestorable = withdrawnInstruments.has(option.key)
+              const isUnavailable = (isFull && !isRestorable) || isAlreadyRegistered
               const unavailableReason = isAlreadyRegistered
                 ? t('schedule.already_registered')
-                : isFull
+                : isRestorable
+                  ? t('schedule.rejoin')
+                  : isFull
                   ? t('schedule.full_parentheses')
                   : null
 
@@ -136,11 +190,11 @@ export function ScheduleEnrollmentModal({
                   state={isUnavailable || enrollLoading ? 'disabled' : 'idle'}
                   aria-pressed={selectedInstrument === option.key}
                   onClick={() => setSelectedInstrument(option.key)}
-                  className="min-h-12 min-w-0 justify-start px-3 py-2.5 text-left"
+                  className="min-h-12 min-w-0 h-auto justify-start whitespace-normal px-3 py-2.5 text-left"
                 >
                   <span className="flex min-w-0 items-center gap-2">
                     <span aria-hidden="true" className="shrink-0">{option.emoji}</span>
-                    <span className="min-w-0 leading-tight">
+                    <span className="min-w-0 ds-wrap-user-content leading-tight">
                       <span className="block font-semibold">{option.label}</span>
                       {unavailableReason ? (
                         <span className="mt-0.5 block text-xs opacity-75">{unavailableReason}</span>

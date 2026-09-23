@@ -1,6 +1,8 @@
 .ds-dropdown.jam-detail-location {
   display: flex;
-  inline-size: 100%;
+  flex: 1 1 0;
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
 
 .jam-detail-icon-action {
@@ -13,4 +15,8 @@
   border: 0;
   background: transparent;
   padding-inline: 0;
+}
+
+.jam-detail-location > .ds-dropdown__trigger > span {
+  min-inline-size: 0;
 }

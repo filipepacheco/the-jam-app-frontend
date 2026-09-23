@@ -2,7 +2,7 @@
 
 Jam App uses DaisyUI as its palette adapter and a small semantic layer for product decisions. Components describe the job a color performs—surface, content, border, action, focus, or status—so user-selected themes can change the palette without changing meaning.
 
-`jam-light` and `jam-dark` are the only product themes. Both use the documented brand palette consistently: violet for primary actions, coral for secondary actions, amber for accents and warnings, and dark plum for grounding surfaces and contrasting content. `jam-dark` uses the approved light violet on its dark-plum canvas. It is the application default; both themes remain available in the theme picker and private workbench.
+`jam-light` and `jam-dark` are the only product themes. Both use the documented brand palette consistently: violet for primary actions, coral for secondary actions, amber for accents and warnings, and dark plum for grounding surfaces and contrasting content. `jam-dark` uses the approved light violet on its dark-plum canvas. `jam-light` is the application default; both themes remain available in the theme picker and private workbench.
 
 ## Semantic roles
 

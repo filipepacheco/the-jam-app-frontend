@@ -15,6 +15,7 @@ import { NavigationAction, NavigationLink } from './Navigation'
 import { Home, Search, Users, Music, LayoutDashboard } from 'lucide-react'
 import { THEME_METADATA } from '../design-system/foundations'
 import { BrandLogo } from './BrandLogo'
+import {authPath} from '../utils/navigationUtils'
 
 const NavLink = memo(function NavLink({ href, icon, label, isActive, onClick }: {
   href: string
@@ -132,7 +133,7 @@ function Navbar({contextualAction}: NavbarProps = {}) {
                 style, which is tuned for the tab set above, not a CTA. */}
             {isViewer() && !isAuthenticated && (
               <div className="hidden sm:block">
-                <a href="/register" className="btn btn-primary min-h-[44px] whitespace-nowrap">
+                <a href={authPath('/register', location)} className="btn btn-primary min-h-[44px] whitespace-nowrap">
                   {t('nav.join')}
                 </a>
               </div>

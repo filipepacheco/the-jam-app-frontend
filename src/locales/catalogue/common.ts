@@ -41,6 +41,8 @@ export const common = {
   none: message({"pt-BR": "Nenhum", "en": "None", "es": "Ninguno"}),
   by: message({"pt-BR": "por", "en": "by", "es": "por"}),
   select_theme: message({"pt-BR": "Selecionar Tema", "en": "Select Theme", "es": "Seleccionar tema"}),
+  theme_light: message({"pt-BR": "Claro", "en": "Light", "es": "Claro"}),
+  theme_dark: message({"pt-BR": "Escuro", "en": "Dark", "es": "Oscuro"}),
   select_language: message({"pt-BR": "Selecionar idioma", "en": "Select Language", "es": "Seleccionar idioma"}),
   language_names: {
     english: message({"pt-BR": "Inglês", "en": "English", "es": "Inglés"}),

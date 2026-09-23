@@ -1,8 +1,8 @@
 import {message, plural, type CatalogueTree} from './index'
 
 export const dj_control = {
-  title: message({"pt-BR": "Controle DJ", "en": "DJ Control", "es": "Control DJ"}),
-  title_with_emoji: message({"pt-BR": "🎛️ Controle Musical", "en": "🎛️ DJ Control", "es": "🎛️ Control DJ"}),
+  title: message({"pt-BR": "Controle", "en": "Control", "es": "Control"}),
+  title_with_emoji: message({"pt-BR": "🎛️ Controle", "en": "🎛️ Control", "es": "🎛️ Control"}),
   actions: {
     title_with_emoji: message({"pt-BR": "⚡ Ações", "en": "⚡ Actions", "es": "⚡ Acciones"}),
     status: message({"pt-BR": "Status", "en": "Status", "es": "Estado"}),

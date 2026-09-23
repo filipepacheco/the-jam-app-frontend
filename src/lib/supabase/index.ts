@@ -17,6 +17,7 @@ export {
   getAccessToken,
   resetPassword,
   updatePassword,
+  markOnboardingComplete,
   onAuthStateChange,
   exchangeCodeForSession,
   type OAuthProvider,

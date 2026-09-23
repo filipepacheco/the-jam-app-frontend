@@ -3,10 +3,10 @@
  * Supabase auth with email/password and social OAuth login
  */
 
-import {useEffect, useState} from 'react'
+import {useEffect, useRef} from 'react'
 import {useAuth} from '../hooks'
 import {useNavigate} from 'react-router-dom'
-import {ProfileSetupModal, SupabaseLoginForm} from '../components'
+import {SupabaseLoginForm} from '../components'
 import {NavigationLink} from '../components/Navigation'
 import {SEO} from '../components/SEO'
 import {useTranslation} from 'react-i18next'
@@ -15,22 +15,16 @@ import {getRedirectPath} from '../utils/navigationUtils'
 export function LoginPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { isAuthenticated, isLoading, user, isNewUser } = useAuth()
-  const [showProfileSetup, setShowProfileSetup] = useState(false)
+  const { isAuthenticated, isLoading } = useAuth()
+  const destination = useRef(getRedirectPath())
 
 
   // If user is already authenticated, redirect to appropriate location
   useEffect(() => {
-    if (isAuthenticated) {
-      // Check if new user without name - show profile setup modal
-      if (isNewUser && user?.name === null) {
-        setShowProfileSetup(true)
-        return // Don't redirect yet, let user complete profile
-      }
-      // For existing users or users with complete profile, redirect
-      navigate(getRedirectPath(), { replace: true })
+    if (!isLoading && isAuthenticated) {
+      void navigate(destination.current, { replace: true })
     }
-  }, [isAuthenticated, isNewUser, user?.name, navigate])
+  }, [isAuthenticated, isLoading, navigate])
 
 
   if (isLoading) {
@@ -90,14 +84,8 @@ export function LoginPage() {
   }
 
   // If authenticated and not showing profile setup modal, redirect or return null
-  if (isAuthenticated && !showProfileSetup) {
+  if (isAuthenticated) {
     return null
-  }
-
-  const handleProfileSetupClose = () => {
-    setShowProfileSetup(false)
-    // Redirect after profile setup is complete
-    navigate(getRedirectPath(), { replace: true })
   }
 
   return (
@@ -126,13 +114,6 @@ export function LoginPage() {
         </div>
       </div>
 
-      {/* Profile Setup Modal - Show for new users with null name */}
-      <ProfileSetupModal
-        isOpen={showProfileSetup}
-        onClose={handleProfileSetupClose}
-      />
     </div>
   )
 }
-
-

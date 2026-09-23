@@ -29,6 +29,7 @@ import {
 import { GENRES } from '../lib/musicConstants'
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { MusicDataCard, MusicStatusIndicator } from '../components/music/MusicDataDisplay'
+import {authPath} from '../utils/navigationUtils'
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100] as const
 type SortBy = 'title' | 'artist' | 'date'
@@ -228,7 +229,7 @@ export function MusicPage({ queryPort, mutationPort }: MusicPageProps = {}) {
               ) : (
                 <Action
                   variant="secondary"
-                  onClick={() => navigate('/login?redirect=/music')}
+                  onClick={() => void navigate(authPath('/login', window.location))}
                   className="flex-1 sm:flex-none"
                 >
                   {t('music_library.suggest_song')}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, UserCircle, LogOut, Globe, Palette } from 'lucide-react'
 import { useAppLanguage, useAuth, useTheme } from '../hooks'
@@ -7,6 +7,7 @@ import { resolveThemeName } from '../design-system/foundations'
 import { LANGUAGES, THEMES } from '../lib/uiConstants'
 import { Action } from './Action'
 import { DropdownMenu } from './Navigation'
+import {authPath} from '../utils/navigationUtils'
 
 // The language and theme selects below stay native <select> elements
 // instead of Field + Field.Select. Field always renders a visible label
@@ -23,6 +24,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
   const { t } = useTranslation()
   const {currentLang, changeLanguage} = useAppLanguage()
   const navigate = useNavigate()
+  const location = useLocation()
   const { isAuthenticated, user, logout, isLoading } = useAuth()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -91,7 +93,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
               >
                 {THEMES.map((theme) => (
                   <option key={theme} value={theme}>
-                    {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                    {t(theme === 'jam-light' ? 'common.theme_light' : 'common.theme_dark')}
                   </option>
                 ))}
               </select>
@@ -103,7 +105,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
               working, matching its previous behavior. */}
           <div className="border-t border-base-300 p-2">
             <a
-              href="/login"
+              href={authPath('/login', location)}
               className="ds-menu__item"
             >
               {t('nav.login')}
@@ -182,7 +184,7 @@ export function DesktopUserMenu({ className = '' }: DesktopUserMenuProps) {
             >
               {THEMES.map((theme) => (
                 <option key={theme} value={theme}>
-                  {theme.charAt(0).toUpperCase() + theme.slice(1)}
+                  {t(theme === 'jam-light' ? 'common.theme_light' : 'common.theme_dark')}
                 </option>
               ))}
             </select>

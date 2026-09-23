@@ -179,7 +179,9 @@ try {
   for (const [name, size, padding, maskable] of [['apple-touch-icon.png', 180, 18, false], ['icon-192.png', 192, 20, false], ['icon-512.png', 512, 52, false], ['icon-maskable-512.png', 512, 74, true]]) {
     write(`${outputDirectory}/${name}`, await pngFromSvg(browser, iconSvg(size, padding, maskable), size, size, warm.plum))
   }
-  write(`${outputDirectory}/social-1200x630.png`, await pngFromSvg(browser, socialSvg, 1200, 630, warm.plum))
+  const socialPng = await pngFromSvg(browser, socialSvg, 1200, 630, warm.plum)
+  write(`${outputDirectory}/social-1200x630.png`, socialPng)
+  write(`${outputDirectory}/social-hybrid-1200x630.png`, socialPng)
   const icoImages = [16, 32].map(size => ({ size, data: pngs.get(size) }))
   const header = Buffer.alloc(6 + icoImages.length * 16)
   header.writeUInt16LE(0, 0); header.writeUInt16LE(1, 2); header.writeUInt16LE(icoImages.length, 4)
@@ -200,7 +202,7 @@ const outputs = [
   '../public/brand/v1/logo.svg', '../public/brand/v1/symbol.svg', '../public/brand/v1/favicon.svg',
   '../public/brand/v1/favicon-16.png', '../public/brand/v1/favicon-32.png', '../public/brand/v1/favicon-96.png', '../public/brand/v1/apple-touch-icon.png',
   '../public/brand/v1/icon-192.png', '../public/brand/v1/icon-512.png', '../public/brand/v1/icon-maskable-512.png',
-  '../public/brand/v1/social-1200x630.png', '../public/favicon.ico',
+  '../public/brand/v1/social-1200x630.png', '../public/brand/v1/social-hybrid-1200x630.png', '../public/favicon.ico',
 ]
 const digest = path => sha256(readFileSync(path.startsWith('../') ? `${root}${path.slice(2)}` : `${sourceDirectory}/${path}`))
 const provenance = {

@@ -106,7 +106,7 @@ describe('JamManagementPage', () => {
 
         const djTab = await screen.findByRole('tab', {name: /dj_control\.title/})
         djTab.focus()
-        await user.keyboard('{ArrowLeft}')
+        await user.keyboard('{ArrowRight}{ArrowRight}')
 
         expect(screen.getByRole('tab', {name: /jam_management\.tabs\.schedule/})).toHaveAttribute('aria-selected', 'true')
         expect(screen.getByText('schedule tab')).toBeInTheDocument()

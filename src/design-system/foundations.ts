@@ -17,7 +17,7 @@ export const THEME_METADATA: Readonly<Record<ThemeName, ThemeMetadata>> = {
   'jam-dark': { brandSurface: 'dark' },
 }
 
-export const DEFAULT_THEME: ThemeName = 'jam-dark'
+export const DEFAULT_THEME: ThemeName = 'jam-light'
 
 export function isThemeName(value: unknown): value is ThemeName {
   return typeof value === 'string' && value in THEME_METADATA

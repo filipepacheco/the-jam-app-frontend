@@ -11,7 +11,9 @@ const subscribers = new Set<ThemeListener>()
 let isListeningForStorage = false
 
 function resolveStoredTheme(value: unknown): ThemeName {
-  return value === 'light' ? 'jam-light' : resolveThemeName(value)
+  if (value === 'light') return 'jam-light'
+  if (value === 'dark') return 'jam-dark'
+  return resolveThemeName(value)
 }
 
 function readStoredTheme(): ThemeName {

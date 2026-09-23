@@ -11,6 +11,8 @@ import {useAuth, usePageAlerts} from '../../hooks'
 import * as jamService from '../../services/jamService.ts'
 import {spotifyService} from '../../services/spotifyService.ts'
 import {Action, Alert, ConfirmDialog, PageAlerts} from '../../components'
+import {jamDateTimeToForm, jamFormToDateTime} from '../../lib/jamDateTime'
+import {authPath} from '../../utils/navigationUtils'
 
 interface FormData {
   name: string
@@ -90,12 +92,7 @@ export function CreateJamPage() {
       const result = await jamService.findOne(id)
       const jam = result.data
 
-      // Parse date and time from UTC to local
-      const dateObj = jam.date ? new Date(jam.date) : null
-      const dateString = dateObj ? dateObj.toISOString().split('T')[0] : ''
-      const timeString = dateObj
-        ? `${String(dateObj.getHours()).padStart(2, '0')}:${String(dateObj.getMinutes()).padStart(2, '0')}`
-        : ''
+      const {date: dateString, time: timeString} = jamDateTimeToForm(jam.date)
 
       setFormData({
         name: jam.name || '',
@@ -241,7 +238,7 @@ export function CreateJamPage() {
       // Combine date and time as local time, then convert to UTC ISO string
       let dateTimeString: string | undefined
       if (formData.date && formData.time) {
-        dateTimeString = new Date(`${formData.date}T${formData.time}`).toISOString()
+        dateTimeString = jamFormToDateTime(formData.date, formData.time)
       }
 
       // In create mode, autofill host info from auth profile
@@ -372,7 +369,7 @@ export function CreateJamPage() {
   }
 
   if (!isAuthenticated) {
-    void navigate('/login')
+    void navigate(authPath('/login', window.location))
     return null
   }
 

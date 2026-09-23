@@ -1,20 +1,22 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks'
 import { useTranslation } from 'react-i18next'
 import { type MouseEvent } from 'react'
 import { HeroDashboardMockup } from './hero/HeroDashboardMockup'
 import { NavigationLink } from './Navigation'
+import {authPath} from '../utils/navigationUtils'
 
 export function EnhancedHero() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
   const prefersReducedMotion = useReducedMotion()
   const { isAuthenticated, role } = useAuth()
 
   const ctaTo = isAuthenticated
     ? role === 'host' ? '/host/dashboard' : '/jams'
-    : '/register'
+    : authPath('/register', location)
 
   const ctaLabel = isAuthenticated
     ? role === 'host' ? t('nav.dashboard') : t('nav.jams')

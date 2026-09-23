@@ -11,8 +11,10 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {SEO} from '../../components/SEO'
 import {getJamPath} from '../../utils/jamUrl'
+import {authPath} from '../../utils/navigationUtils'
 import {translationKey} from '../../lib/i18n/translationKeys'
 import {formatDateTime, normalizeLocale} from '../../lib/i18n/applicationLocale'
+import {musicianService} from '../../services/musicianService'
 import {
     Action,
     DropdownMenu,
@@ -33,8 +35,9 @@ import {
 } from '../../components/jam-detail-v2/'
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
+import {activeRegistrations} from '../../utils/musicianUtils'
 import {formatJamDuration} from '../../lib/formatters'
-import {MapPin, Calendar, Share2, Music, Users, Clock3} from 'lucide-react'
+import {MapPin, Calendar, Share2, Music, Users, Clock3, ChevronDown} from 'lucide-react'
 import './JamDetailPageV2.css'
 
 export type JamDetailViewState =
@@ -63,6 +66,12 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
         jamId && !viewState ? `/jams/${jamId}` : null
     )
     const jam = viewState?.status === 'loaded' ? viewState.jam : routeJam
+    const {data: hostProfileResponse} = useSWR(
+        jam?.hostMusicianId && (!jam.hostName || !jam.hostContact) ? `/musicos/${jam.hostMusicianId}` : null,
+        () => musicianService.findOne(jam!.hostMusicianId!),
+    )
+    const hostName = jam?.hostName || hostProfileResponse?.data?.name || ''
+    const hostContact = jam?.hostContact || hostProfileResponse?.data?.contact || hostProfileResponse?.data?.email || hostProfileResponse?.data?.phone || ''
     const jamError = viewState?.status === 'error' ? new Error(viewState.message) : routeError
     const isLoading = viewState?.status === 'loading' || (!viewState && routeLoading)
     const goTo = useCallback((path: string) => {
@@ -86,7 +95,9 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
 
     useEffect(() => {
         if (!participation.feedback) return
-        const message = participation.feedback === 'registration_success'
+        const message = participation.feedback === 'withdrawal_success'
+            ? t('registration.withdraw_success')
+            : participation.feedback === 'registration_success'
             ? t('jams.enroll_success')
             : participation.feedback === 'new_music_success'
                 ? t('jams.song_created_success')
@@ -138,11 +149,9 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
         if (!jam?.schedules || !user?.id) return []
         const registrations: Array<{ schedule: ScheduleResponseDto; registration: RegistrationResponseDto }> = []
         for (const schedule of jam.schedules) {
-            if (schedule.registrations) {
-                for (const reg of schedule.registrations) {
-                    if (reg.musician?.id === user.id) {
-                        registrations.push({ schedule, registration: reg })
-                    }
+            for (const reg of activeRegistrations(schedule.registrations)) {
+                if ((reg.musician?.id ?? reg.musicianId) === user.id) {
+                    registrations.push({ schedule, registration: reg })
                 }
             }
         }
@@ -150,18 +159,20 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
     }, [jam?.schedules, user?.id])
 
     const jamFacts = useMemo(() => {
-        const musicians = new Set(
+        const musiciansFromSchedules = new Set(
             nonSuggestedSchedules
                 .flatMap(({registrations}) => registrations ?? [])
+                .filter(({status}) => status === 'PENDING' || status === 'APPROVED')
                 .map(({musicianId, musician}) => musician?.id ?? musicianId)
                 .filter(Boolean),
         ).size
+        const musicians = jam?.registeredMusicianCount ?? musiciansFromSchedules
         const duration = nonSuggestedSchedules.reduce(
             (total, schedule) => total + (schedule.music?.duration ?? 0),
             0,
         )
         return {musicians, duration, performances: nonSuggestedSchedules.length}
-    }, [nonSuggestedSchedules])
+    }, [jam?.registeredMusicianCount, nonSuggestedSchedules])
 
     const eligibleSchedules = useMemo(() => {
         const eligibleIds = new Set(participation.eligiblePerformances.map(({id}) => id))
@@ -172,19 +183,19 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
     // Handle enrollment click
     const handleEnrollClick = useCallback((schedule: ScheduleResponseDto) => {
         const outcome = participationCommands.beginRegistration(schedule.id)
-        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+        if (outcome.code === 'auth_required') goTo(authPath('/login', window.location))
     }, [goTo, participationCommands])
 
     // Handle FAB register click
     const handleFABRegisterClick = useCallback(() => {
         const outcome = participationCommands.beginRegistration()
-        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+        if (outcome.code === 'auth_required') goTo(authPath('/login', window.location))
     }, [goTo, participationCommands])
 
     // Handle suggest click
     const handleSuggestClick = useCallback(() => {
         const outcome = participationCommands.beginSuggestion()
-        if (outcome.code === 'auth_required') goTo(`/login?redirect=${outcome.redirect}`)
+        if (outcome.code === 'auth_required') goTo(authPath('/login', window.location))
     }, [goTo, participationCommands])
 
     // Handle create new song click (from SuggestSongModal)
@@ -323,64 +334,56 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                         </div>
                     </div>
 
-                    {/* The primary facts form one compact scan line. Location
-                        owns the full row below so long venue names never push
-                        counts into an accidental third line. */}
-                    <div className="mt-3 border-y border-base-300 py-2 text-xs text-base-content/70 sm:text-sm">
-                        <div
-                            className="grid grid-cols-[minmax(0,1fr)_auto_auto_auto] items-center gap-x-2 sm:gap-x-4"
-                            style={{display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) auto auto auto'}}
-                        >
+                    <div className="mt-3 space-y-1 border-y border-base-300 py-2 text-sm text-base-content/70">
+                        <div className="flex min-w-0 items-center gap-x-2 sm:gap-x-4">
                             {jam.date && (
-                                <span className="inline-flex min-h-11 min-w-0 items-center gap-1.5">
+                                <span className="inline-flex min-h-11 min-w-0 flex-[0_1_auto] items-center gap-1.5 tabular-nums">
                                     <Calendar className="size-4 shrink-0" aria-hidden="true" />
-                                    <span className="truncate">
-                                        {formatDateTime(jam.date, normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR', {
-                                            month: 'short',
-                                            day: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            timeZone: 'UTC',
-                                        })}
+                                    <span className="min-w-0 leading-tight">
+                                        {formatDateTime(jam.date, normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR')}
                                     </span>
                                 </span>
                             )}
+                            {jam.location && (
+                                <DropdownMenu
+                                    label={t('jams.info.full_address')}
+                                    className="jam-detail-location"
+                                    trigger={
+                                        <span className="inline-flex min-w-0 items-center gap-1.5 text-base-content/70">
+                                            <MapPin className="size-4 shrink-0" aria-hidden="true" />
+                                            <span className="truncate">{jam.location}</span>
+                                            <ChevronDown className="size-4 shrink-0" aria-hidden="true" />
+                                        </span>
+                                    }
+                                >
+                                    <div className="w-64 max-w-[calc(100vw-2rem)] space-y-1 p-2">
+                                        <p className="ds-wrap-user-content text-sm leading-relaxed text-base-content/80">{jam.location}</p>
+                                        <Action variant="quiet" onClick={() => void handleCopyLocation()} className="min-h-11 justify-start px-0 text-sm text-primary underline underline-offset-4">
+                                            {locationCopied ? t('common.copied') : t('common.copy_address')}
+                                        </Action>
+                                    </div>
+                                </DropdownMenu>
+                            )}
+                        </div>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
                             <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
                                 <Music className="size-4 shrink-0" aria-hidden="true" />
                                 {jamFacts.performances} {t('jams.info.performances').toLowerCase()}
                             </span>
-                            {jamFacts.musicians > 0 && (
-                                <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
-                                    <Users className="size-4 shrink-0" aria-hidden="true" />
-                                    {jamFacts.musicians} {t('jams.info.musicians').toLowerCase()}
-                                </span>
-                            )}
-                            {jamFacts.duration > 0 && (
-                                <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
-                                    <Clock3 className="size-4 shrink-0" aria-hidden="true" />
-                                    {formatJamDuration(jamFacts.duration)}
-                                </span>
-                            )}
+                            <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
+                                <Users className="size-4 shrink-0" aria-hidden="true" />
+                                {jamFacts.musicians} {t('jams.info.musicians').toLowerCase()}
+                            </span>
+                            <span className="inline-flex min-h-11 items-center gap-1 whitespace-nowrap">
+                                <Clock3 className="size-4 shrink-0" aria-hidden="true" />
+                                {formatJamDuration(jamFacts.duration)}
+                            </span>
                         </div>
-
-                        {jam.location && (
-                            <DropdownMenu
-                                label={t('jams.info.full_address')}
-                                className="jam-detail-location"
-                                trigger={
-                                    <span className="inline-flex min-w-0 items-center gap-1.5 text-base-content/70">
-                                        <MapPin className="size-4 shrink-0" aria-hidden="true" />
-                                        <span className="truncate">{jam.location}</span>
-                                    </span>
-                                }
-                            >
-                                <div className="w-64 space-y-1 p-2">
-                                    <p className="ds-wrap-user-content text-sm leading-relaxed text-base-content/80">{jam.location}</p>
-                                    <Action variant="quiet" onClick={() => void handleCopyLocation()} className="min-h-11 justify-start px-0 text-sm text-primary underline underline-offset-4">
-                                        {locationCopied ? t('common.copied') : t('common.copy_address')}
-                                    </Action>
-                                </div>
-                            </DropdownMenu>
+                        {(hostName || hostContact) && (
+                            <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-base-content/80">
+                                {hostName && <span className="ds-wrap-user-content">{t('jams.hosted_by')} {hostName}</span>}
+                                {hostContact && <span className="ds-wrap-user-content">{t('jams.info.host_contact')}: {hostContact}</span>}
+                            </div>
                         )}
                     </div>
 
@@ -513,7 +516,8 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 musicianId={user?.id}
                 preferredInstrument={user?.instrument}
                 onClose={participationCommands.closeOverlay}
-                    onSubmit={participationCommands.register}
+                onSubmit={participationCommands.register}
+                onWithdraw={participationCommands.withdrawRegistration}
                 />
             )}
 

@@ -201,6 +201,8 @@ async function main() {
     console.log(`\nPrerendering complete! ${ROUTES.length} routes processed.`)
   } finally {
     await browser.close()
+    // Keep-alive sockets from prerendered pages must not keep the build alive.
+    server.closeAllConnections()
     server.close()
   }
 }

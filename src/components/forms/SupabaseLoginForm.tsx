@@ -13,6 +13,7 @@ import {useTranslation} from 'react-i18next'
 import {Alert} from '../Alert'
 import {Action, Field} from '../index'
 import type {AuthActionResult} from '../../types/auth.types'
+import {getRedirectPath} from '../../utils/navigationUtils'
 
 interface SupabaseLoginFormProps {
   onSuccess?: () => void
@@ -29,22 +30,9 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
   const [name, setName] = useState('')
   const { error, setError, success: message, setSuccess: setMessage, isLoading, setIsLoading } = useFormState({ navigateOnSuccess: false })
 
-  // Get redirect path from URL params (validated to prevent open redirects)
-  const getRedirectPath = () => {
-    const params = new URLSearchParams(window.location.search)
-    const redirectParam = params.get('redirect')
-    if (redirectParam && redirectParam.startsWith('/') && !redirectParam.startsWith('//')) {
-      return redirectParam
-    }
-    const jamId = params.get('jamId')
-    if (jamId) {
-      return `/jams/${jamId}/register`
-    }
-    return '/'
-  }
-
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault()
+    const destination = getRedirectPath()
     setError(null)
     setMessage(null)
     setIsLoading(true)
@@ -69,7 +57,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
         } else {
           // Fully successful login/signup
           onSuccess?.()
-          navigate(getRedirectPath())
+          void navigate(destination, {replace: true})
         }
       } else {
         // Failed authentication
@@ -93,6 +81,7 @@ export function SupabaseLoginForm({ onSuccess }: SupabaseLoginFormProps) {
 
       const result = await loginWithOAuth(provider)
       if (!result.success) {
+        sessionStorage.removeItem('auth_redirect')
         setError(result.errorKey ? t(result.errorKey) : (result.error || t('auth.oauth_failed')))
         setIsLoading(false)
       }

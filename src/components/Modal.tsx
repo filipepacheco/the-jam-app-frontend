@@ -26,9 +26,9 @@ interface ModalProps {
 }
 
 const SIZE_CLASSES = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
+  sm: 'sm:max-w-sm',
+  md: 'sm:max-w-md',
+  lg: 'sm:max-w-lg',
 } as const
 
 export function Modal({
@@ -80,7 +80,7 @@ export function Modal({
 
   const responsiveClass = responsive ? 'modal-bottom sm:modal-middle' : ''
   const scrollableClass = scrollable
-    ? 'max-h-[90vh] flex flex-col p-0'
+    ? 'max-h-[calc(100dvh-1rem)] min-h-0 flex flex-col overflow-hidden p-0 sm:max-h-[85dvh]'
     : ''
 
   const content = (
@@ -93,20 +93,20 @@ export function Modal({
     >
       <div
         ref={modalRef}
-        className={`modal-box ${SIZE_CLASSES[size]} w-full ${scrollableClass} ${className}`}
+        className={`modal-box w-[calc(100%-1rem)] min-w-0 max-w-[calc(100vw-1rem)] sm:w-full ${SIZE_CLASSES[size]} ${scrollableClass} ${className}`}
       >
         {scrollable ? (
           <>
             {/* Fixed Header */}
-            <div className="px-4 sm:px-6 py-4 border-b border-base-300 flex items-center justify-between shrink-0">
-              <Heading id={titleId} className="font-bold text-lg sm:text-xl">
+            <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-base-300 flex min-w-0 items-center justify-between gap-2 shrink-0">
+              <Heading id={titleId} className="min-w-0 ds-wrap-user-content font-bold text-lg sm:text-xl">
                 {title}
               </Heading>
               {!closeDisabled && (
                 <button
                   type="button"
                   onClick={onClose}
-                  className="btn btn-ghost btn-sm btn-circle"
+                  className="btn btn-ghost btn-circle min-h-11 min-w-11 shrink-0"
                   aria-label={t('common.close')}
                 >
                   <X className="size-5" />
@@ -114,12 +114,12 @@ export function Modal({
               )}
             </div>
             {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
+            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6">
               {children}
             </div>
             {/* Fixed Footer */}
             {footer && (
-              <div className="px-4 sm:px-6 py-4 border-t border-base-300 flex justify-end gap-3 shrink-0 bg-base-100">
+              <div className="flex min-w-0 flex-wrap justify-end gap-2 border-t border-base-300 bg-base-100 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:gap-3 sm:px-6 sm:py-4">
                 {footer}
               </div>
             )}

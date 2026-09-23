@@ -3,6 +3,7 @@ import {useTranslation} from 'react-i18next'
 import {useReducedMotion} from '../../hooks'
 import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
 import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
+import {isActiveRegistration} from '../../utils/musicianUtils'
 import {translationKey} from '../../lib/i18n/translationKeys'
 import {TimelineItemV2Waveform} from './TimelineItemV2Waveform'
 import {useState} from 'react'
@@ -62,7 +63,7 @@ export function TimelineShowcaseV2Waveform({
   const scheduleMatchesMine = (schedule: ScheduleResponseDto): boolean => {
     if (!user?.id) return false
     return (schedule.registrations || []).some(
-      r => r.musician?.id === user.id || r.musicianId === user.id
+      r => isActiveRegistration(r) && (r.musician?.id === user.id || r.musicianId === user.id)
     )
   }
 

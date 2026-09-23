@@ -1,16 +1,18 @@
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { NavigationLink } from './Navigation'
+import {authPath} from '../utils/navigationUtils'
 
 function Footer() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const routes = [
     { path: '/jams', label: t('nav.jams') },
     { path: '/host/dashboard', label: t('nav.for_hosts') },
     { path: '/about', label: t('nav.about') },
-    { path: '/register', label: t('auth.sign_up') },
+    { path: authPath('/register', location), label: t('auth.sign_up') },
   ]
 
   return (

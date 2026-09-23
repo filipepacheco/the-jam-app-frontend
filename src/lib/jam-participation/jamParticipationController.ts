@@ -1,10 +1,11 @@
 import type {CreateMusicDto} from '../../types/api.types'
 import type {Performance} from '../schedule/hostScheduleController'
+import {isActiveRegistration, normalizeInstrument} from '../../utils/musicianUtils'
 
 export type ParticipationOverlay = 'none' | 'performance_picker' | 'enrollment' | 'suggestion' | 'new_music' | 'share'
 export type ParticipationIntent = 'registration' | 'suggestion'
-export type ParticipationMutation = 'registration' | 'suggestion' | 'create_and_suggest'
-export type ParticipationFeedback = 'registration_success' | 'suggestion_success' | 'new_music_success'
+export type ParticipationMutation = 'registration' | 'withdrawal' | 'suggestion' | 'create_and_suggest'
+export type ParticipationFeedback = 'registration_success' | 'withdrawal_success' | 'suggestion_success' | 'new_music_success'
 export interface ParticipationError {message: string; reason?: 'unknown'}
 
 export interface JamParticipationContext {
@@ -21,6 +22,7 @@ export type ParticipationCreateResult = {ok: true; musicId: string} | {ok: false
 
 export interface JamParticipationOperationsPort {
   register(input: {musicianId: string; performanceId: string; instrument: string}): Promise<ParticipationMutationResult>
+  withdrawRegistration(registrationId: string): Promise<ParticipationMutationResult>
   suggest(input: {jamId: string; musicId: string}): Promise<ParticipationMutationResult>
   createMusic(data: CreateMusicDto): Promise<ParticipationCreateResult>
   refresh(): Promise<ParticipationRefreshResult>
@@ -42,7 +44,7 @@ export type JamParticipationOutcome =
   | {code: 'ready'; intent: 'suggestion'}
   | {code: 'choose_performance'; eligibleIds: string[]}
   | {code: 'auth_required'; intent: ParticipationIntent; redirect: string}
-  | {code: 'unavailable'; intent: ParticipationIntent | 'share'}
+  | {code: 'unavailable'; intent: ParticipationIntent | 'share' | 'withdrawal'}
   | {code: 'success'; operation: ParticipationMutation; entityId: string}
   | {code: 'success'; operation: 'refresh'}
   | {code: 'failure'; operation: ParticipationMutation; phase: 'mutation' | 'create'; failure: 'resolved' | 'thrown'; error: ParticipationError; refreshError?: ParticipationError}
@@ -77,6 +79,7 @@ export interface JamParticipationController {
     beginShare(): void
     closeOverlay(): void
     register(instrument: string): Promise<JamParticipationOutcome>
+    withdrawRegistration(registrationId: string): Promise<JamParticipationOutcome>
     suggestMusic(musicId: string): Promise<JamParticipationOutcome>
     createAndSuggestMusic(data: CreateMusicDto): Promise<JamParticipationOutcome>
     refresh(): Promise<JamParticipationOutcome>
@@ -172,14 +175,14 @@ export function createJamParticipationController(
     return latestOutcome
   }
 
-  const unavailable = (intent: ParticipationIntent | 'share'): JamParticipationOutcome => {
+  const unavailable = (intent: ParticipationIntent | 'share' | 'withdrawal'): JamParticipationOutcome => {
     latestOutcome = {code: 'unavailable', intent}
     project()
     return latestOutcome
   }
 
   const runMutation = async ({operation, entityId, mutate, successFeedback}: {
-    operation: 'registration' | 'suggestion'
+    operation: 'registration' | 'withdrawal' | 'suggestion'
     entityId: string
     mutate: () => Promise<ParticipationMutationResult>
     successFeedback: ParticipationFeedback
@@ -271,9 +274,24 @@ export function createJamParticipationController(
     register(instrument) {
       if (!selectedPerformanceId || !context.musicianId) return Promise.resolve(unavailable('registration'))
       const performanceId = selectedPerformanceId
+      const existing = context.performances.find(({id}) => id === performanceId)?.registrations.find((registration) =>
+        registration.musicianId === context.musicianId
+        && normalizeInstrument(registration.instrument) === normalizeInstrument(instrument)
+      )
+      if (existing && isActiveRegistration(existing)) return Promise.resolve(unavailable('registration'))
       return runMutation({
         operation: 'registration', entityId: performanceId, successFeedback: 'registration_success',
         mutate: () => operations!.register({musicianId: context.musicianId!, performanceId, instrument}),
+      })
+    },
+    withdrawRegistration(registrationId) {
+      const registration = context.performances.flatMap(({registrations}) => registrations).find(({id}) => id === registrationId)
+      if (!context.musicianId || !registration || registration.musicianId !== context.musicianId || !isActiveRegistration(registration)) {
+        return Promise.resolve(unavailable('withdrawal'))
+      }
+      return runMutation({
+        operation: 'withdrawal', entityId: registrationId, successFeedback: 'withdrawal_success',
+        mutate: () => operations!.withdrawRegistration(registrationId),
       })
     },
     suggestMusic(musicId) {

@@ -8,6 +8,7 @@ import type {JamResponseDto, JamStatus, ScheduleResponseDto} from '../types/api.
 import {useTranslation} from 'react-i18next'
 import {Badge} from './data-display'
 import {getJamStatusLabel, getJamStatusTone} from '../lib/statusUtils'
+import {formatDateTime, normalizeLocale} from '../lib/i18n/applicationLocale'
 
 interface JamContextDisplayProps {
   jam: JamResponseDto | {
@@ -22,14 +23,17 @@ interface JamContextDisplayProps {
 }
 
 export function JamContextDisplay({ jam }: JamContextDisplayProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const formattedDate = jam.date && !Number.isNaN(new Date(jam.date).getTime())
+    ? formatDateTime(jam.date, normalizeLocale(i18n.resolvedLanguage ?? i18n.language) ?? 'pt-BR')
+    : t('jams.date_tba')
   return (
     <div className="card bg-base-200 mb-6">
       <div className="card-body">
         {/* Jam Name and Date */}
         <div className="mb-4">
           <h2 className="ds-type-heading ds-wrap-user-content font-bold">{jam.name}</h2>
-          <p className="text-base-content/70 mt-2">{jam.date || t('jams.date_tba')}</p>
+          <p className="text-base-content/70 mt-2">{formattedDate}</p>
         </div>
 
         {/* QR Code */}
@@ -89,4 +93,3 @@ export function JamContextDisplay({ jam }: JamContextDisplayProps) {
     </div>
   )
 }
-

@@ -5,7 +5,7 @@
 
 @plugin "daisyui/theme" {
   name: "jam-light";
-  default: false;
+  default: true;
   prefersdark: false;
   color-scheme: light;
 
@@ -41,7 +41,7 @@
 
 @plugin "daisyui/theme" {
   name: "jam-dark";
-  default: true;
+  default: false;
   prefersdark: false;
   color-scheme: dark;
 

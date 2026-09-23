@@ -55,11 +55,11 @@ describe('design-system foundations', () => {
     expect(THEME_METADATA['jam-dark'].brandSurface).toBe('dark')
   })
 
-  it('validates persisted theme names with the documented dark fallback', () => {
+  it('validates product theme names with the light fallback', () => {
     expect(resolveThemeName('jam-light')).toBe('jam-light')
-    expect(resolveThemeName('dark')).toBe('jam-dark')
-    expect(resolveThemeName('stale-theme')).toBe('jam-dark')
-    expect(resolveThemeName(null)).toBe('jam-dark')
+    expect(resolveThemeName('jam-dark')).toBe('jam-dark')
+    expect(resolveThemeName('stale-theme')).toBe('jam-light')
+    expect(resolveThemeName(null)).toBe('jam-light')
   })
 
   it.each(Object.entries(REFERENCE_THEMES) as [ReferenceThemeName, (typeof REFERENCE_THEMES)[ReferenceThemeName]][])(

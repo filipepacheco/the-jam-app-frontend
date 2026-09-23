@@ -25,8 +25,8 @@ describe('useTheme', () => {
 
     render(<ThemeSelector />)
 
-    expect(screen.getByRole('status', { name: 'selected theme' })).toHaveTextContent('jam-dark')
-    expect(document.documentElement).toHaveAttribute('data-theme', 'jam-dark')
+    expect(screen.getByRole('status', { name: 'selected theme' })).toHaveTextContent('jam-light')
+    expect(document.documentElement).toHaveAttribute('data-theme', 'jam-light')
   })
 
   it('updates the persisted product theme through its public selector seam', async () => {
@@ -61,8 +61,8 @@ describe('useTheme', () => {
       window.dispatchEvent(new StorageEvent('storage', { key: 'jam-app.theme', newValue: 'retired-theme' }))
     })
 
-    expect(screen.getByRole('status', { name: 'selected theme' })).toHaveTextContent('jam-dark')
-    expect(document.documentElement).toHaveAttribute('data-theme', 'jam-dark')
+    expect(screen.getByRole('status', { name: 'selected theme' })).toHaveTextContent('jam-light')
+    expect(document.documentElement).toHaveAttribute('data-theme', 'jam-light')
   })
 
   it('does not let writes to the legacy generic storage key override the selected theme', () => {

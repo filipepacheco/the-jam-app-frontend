@@ -14,6 +14,7 @@ import type { FeedbackListItemDto, FeedbackListResponseDto } from '../../types/f
 import { Alert } from '../../components'
 import { translationKey } from '../../lib/i18n/translationKeys'
 import { formatDateTime } from '../../lib/i18n/applicationLocale'
+import {authPath} from '../../utils/navigationUtils'
 
 export function FeedbackPage() {
   const { t } = useTranslation()
@@ -108,7 +109,7 @@ export function FeedbackPage() {
   }
 
   if (!isAuthenticated) {
-    navigate('/login')
+    void navigate(authPath('/login', window.location), {replace: true})
     return null
   }
 

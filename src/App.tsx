@@ -298,13 +298,10 @@ function AppContent() {
  * Shows onboarding modal for new users after OAuth login
  */
 function OnboardingWrapper() {
-  const { isNewUser, clearNewUserFlag } = useAuth()
+  const { isNewUser } = useAuth()
 
   return (
-    <OnboardingModal
-      isOpen={isNewUser}
-      onClose={clearNewUserFlag}
-    />
+    <OnboardingModal isOpen={isNewUser} />
   )
 }
 

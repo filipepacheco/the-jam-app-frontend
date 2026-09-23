@@ -1,13 +1,15 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { useRef, type MouseEvent } from 'react'
 import { Zap, Search } from 'lucide-react'
 import { NavigationLink } from './Navigation'
+import {authPath} from '../utils/navigationUtils'
 
 function CallToAction() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
   const prefersReducedMotion = useReducedMotion()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.3 })
@@ -37,9 +39,9 @@ function CallToAction() {
           </p>
           <div className="flex flex-wrap justify-start gap-3 sm:gap-4">
             <NavigationLink
-              href="/register"
+              href={authPath('/register', location)}
               variant="primary"
-              onClick={handleNavigate('/register')}
+              onClick={handleNavigate(authPath('/register', location))}
               icon={<Zap className="size-5" />}
             >
               {t('homepage.call_to_action.cta_button')}

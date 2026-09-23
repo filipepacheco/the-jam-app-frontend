@@ -23,7 +23,12 @@ export function mapJamToParticipationContext({
     participationOpen: jam.status !== 'FINISHED' && jam.status !== 'INACTIVE',
     isAuthenticated,
     musicianId,
-    performances: mapJamToHostScheduleSnapshot(jam).performances,
+    // Host scheduling hides inactive registrations from the lineup. Participation
+    // must retain them so a withdrawn musician can restore the existing row.
+    performances: mapJamToHostScheduleSnapshot(jam).performances.map((performance) => ({
+      ...performance,
+      registrations: jam.schedules?.find(({id}) => id === performance.id)?.registrations ?? [],
+    })),
   }
 }
 
@@ -43,6 +48,9 @@ export function createJamParticipationOperationsAdapter({
   return {
     async register({musicianId, performanceId, instrument}) {
       return mutationResult(await registrationService.create({musicianId, scheduleId: performanceId, instrument}))
+    },
+    async withdrawRegistration(registrationId) {
+      return mutationResult(await registrationService.remove(registrationId))
     },
     async suggest({jamId, musicId}) {
       return mutationResult(await scheduleService.create({jamId, musicId, order: 0, status: 'SUGGESTED'}))

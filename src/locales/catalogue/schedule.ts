@@ -35,6 +35,8 @@ export const schedule = {
   enrolling: message({"pt-BR": "Inscrevendo...", "en": "Enrolling...", "es": "Inscribiendo..."}),
   already_enrolled: message({"pt-BR": "✓ Já inscrito", "en": "✓ Already Enrolled", "es": "✓ Ya Inscrito"}),
   register_another: message({"pt-BR": "Quero participar novamente", "en": "Add Instrument", "es": "Agregar Instrumento"}),
+  manage_registration: message({"pt-BR": "Gerenciar minha inscrição", "en": "Manage my registration", "es": "Gestionar mi inscripción"}),
+  rejoin: message({"pt-BR": "Inscrever-se novamente", "en": "Rejoin performance", "es": "Volver a inscribirse"}),
   enroll_btn: message({"pt-BR": "🎵 Inscrever-se", "en": "🎵 Enroll", "es": "🎵 Inscribirse"}),
   add_musician_btn: message({"pt-BR": "Adicionar músico", "en": "Add Musician", "es": "Agregar Músico"}),
   musicians_registered: message({"pt-BR": "Músicos registrados", "en": "Musicians Registered", "es": "Músicos Registrados"}),

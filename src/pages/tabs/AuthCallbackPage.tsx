@@ -3,10 +3,11 @@
  * Handles OAuth redirect from Supabase after social login
  */
 
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '../../hooks'
 import {useTranslation} from 'react-i18next'
+import {safeRedirectPath} from '../../utils/navigationUtils'
 
 /**
  * Check if error is about unverified email
@@ -21,7 +22,13 @@ const isEmailVerificationError = (error: string): boolean => {
 export function AuthCallbackPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { isAuthenticated, isLoading, isNewUser } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
+  const returnPath = useRef(
+    safeRedirectPath(sessionStorage.getItem('auth_redirect'))
+      || safeRedirectPath(new URLSearchParams(window.location.search).get('redirect'))
+      || '/',
+  )
+  const retryPath = `/login?redirect=${encodeURIComponent(returnPath.current)}`
   const [error, setError] = useState<string | null>(null)
   const [timedOut, setTimedOut] = useState(false)
   const [needsEmailVerification, setNeedsEmailVerification] = useState(false)
@@ -29,13 +36,13 @@ export function AuthCallbackPage() {
   useEffect(() => {
     // Get redirect path from session storage (set before OAuth redirect)
     const getRedirectPath = () => {
-      // If new user, redirect to login page to show ProfileSetupModal
       const storedRedirect = sessionStorage.getItem('auth_redirect')
       if (storedRedirect) {
         sessionStorage.removeItem('auth_redirect')
-        return storedRedirect
+        const destination = safeRedirectPath(storedRedirect)
+        if (destination) return destination
       }
-      return '/'
+      return safeRedirectPath(new URLSearchParams(window.location.search).get('redirect')) || '/'
     }
 
     // Check for error in URL (Supabase puts errors in hash)
@@ -61,7 +68,7 @@ export function AuthCallbackPage() {
       // Small delay to allow state to settle
       const timer = setTimeout(() => {
         const redirectPath = getRedirectPath()
-        navigate(redirectPath, { replace: true })
+        void navigate(redirectPath, { replace: true })
       }, 500)
 
       return () => clearTimeout(timer)
@@ -75,7 +82,7 @@ export function AuthCallbackPage() {
     }, 10000)
 
     return () => clearTimeout(timeoutId)
-  }, [isAuthenticated, isLoading, isNewUser, navigate, error])
+  }, [isAuthenticated, isLoading, navigate, error])
 
   // Show email verification message (not an error)
   if (needsEmailVerification) {
@@ -94,7 +101,7 @@ export function AuthCallbackPage() {
               {t('auth.email_verification.check_spam')}
             </p>
             <div className="card-actions justify-center mt-6">
-              <a href="/login" className="btn btn-primary">
+              <a href={retryPath} className="btn btn-primary">
                 {t('auth.email_verification.back_to_login')}
               </a>
             </div>
@@ -120,7 +127,7 @@ export function AuthCallbackPage() {
                 : error}
             </p>
             <div className="card-actions justify-center mt-6">
-              <a href="/login" className="btn btn-primary">
+              <a href={retryPath} className="btn btn-primary">
                 {t('auth.try_again')}
               </a>
               <a href="/" className="btn btn-ghost">
@@ -138,11 +145,10 @@ export function AuthCallbackPage() {
     <div className="min-h-screen flex items-center justify-center bg-base-100">
       <div className="text-center">
         <div className="loading loading-spinner loading-lg text-primary"></div>
-        <p className="mt-4 text-base-content/70">Completing sign in...</p>
+        <p className="mt-4 text-base-content/70">{t('auth.completing_sign_in')}</p>
       </div>
     </div>
   )
 }
 
 export default AuthCallbackPage
-

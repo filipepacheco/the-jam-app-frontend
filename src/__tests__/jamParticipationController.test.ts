@@ -30,6 +30,7 @@ function context(overrides: Partial<JamParticipationContext> = {}): JamParticipa
 function operations(): JamParticipationOperationsPort {
   return {
     register: vi.fn().mockResolvedValue({ok: true}),
+    withdrawRegistration: vi.fn().mockResolvedValue({ok: true}),
     suggest: vi.fn().mockResolvedValue({ok: true}),
     createMusic: vi.fn().mockResolvedValue({ok: true, musicId: 'new-music'}),
     refresh: vi.fn().mockResolvedValue({ok: true, context: context()}),
@@ -136,6 +137,44 @@ describe('Jam participation controller eligibility and overlays', () => {
     expect(adapter.register).toHaveBeenCalledWith({
       musicianId: 'musician-1', performanceId: 'eligible', instrument: 'bass',
     })
+  })
+
+  it('allows re-enrollment after withdrawal through the create contract', async () => {
+    const adapter = operations()
+    const withdrawn = performance('eligible')
+    withdrawn.registrations = [{id: 'old-registration', musicianId: 'musician-1', jamId: 'jam-1', instrument: 'Guitar', status: 'WITHDRAWN'}]
+    const controller = createJamParticipationController(context({performances: [withdrawn]}), {operations: adapter})
+    controller.commands.beginRegistration('eligible')
+
+    await expect(controller.commands.register('guitars')).resolves.toMatchObject({code: 'success', operation: 'registration'})
+    expect(adapter.register).toHaveBeenCalledWith({musicianId: 'musician-1', performanceId: 'eligible', instrument: 'guitars'})
+  })
+
+  it('surfaces a failed restoration without reporting success', async () => {
+    const adapter = operations()
+    vi.mocked(adapter.register).mockResolvedValue({ok: false, error: {message: 'Could not restore'}})
+    const withdrawn = performance('eligible')
+    withdrawn.registrations = [{id: 'old-registration', musicianId: 'musician-1', jamId: 'jam-1', instrument: 'bass', status: 'WITHDRAWN'}]
+    const controller = createJamParticipationController(context({performances: [withdrawn]}), {operations: adapter})
+    controller.commands.beginRegistration('eligible')
+
+    await expect(controller.commands.register('bass')).resolves.toMatchObject({code: 'failure', error: {message: 'Could not restore'}})
+    expect(adapter.register).toHaveBeenCalledOnce()
+    expect(controller.getSnapshot().feedback).toBeNull()
+  })
+
+  it('allows a musician to withdraw only their own active registration', async () => {
+    const adapter = operations()
+    const enrolled = performance('eligible')
+    enrolled.registrations = [
+      {id: 'mine', musicianId: 'musician-1', jamId: 'jam-1', instrument: 'bass', status: 'PENDING'},
+      {id: 'other', musicianId: 'musician-2', jamId: 'jam-1', instrument: 'vocals', status: 'PENDING'},
+    ]
+    const controller = createJamParticipationController(context({performances: [enrolled]}), {operations: adapter})
+    await expect(controller.commands.withdrawRegistration('other')).resolves.toMatchObject({code: 'unavailable'})
+    expect(adapter.withdrawRegistration).not.toHaveBeenCalled()
+    await expect(controller.commands.withdrawRegistration('mine')).resolves.toMatchObject({code: 'success', operation: 'withdrawal'})
+    expect(adapter.withdrawRegistration).toHaveBeenCalledWith('mine')
   })
 
   it('does not refresh or show success after a resolved suggestion failure', async () => {

@@ -6,9 +6,14 @@ import {isExistingEmailSignUpError, isExistingEmailSignUpResult} from '../lib/su
 import i18n from '../i18n'
 import {OnboardingModal} from '../components/OnboardingModal'
 import {SupabaseLoginForm} from '../components/forms/SupabaseLoginForm'
+import {shouldShowOnboarding} from '../lib/auth/onboarding'
+import type {User} from '@supabase/supabase-js'
+import type {AuthUser} from '../types/auth.types'
 
 const authMocks = vi.hoisted(() => ({
-  completeOnboarding: vi.fn(),
+  updateProfile: vi.fn(),
+  clearNewUserFlag: vi.fn(),
+  profile: {id: 'person-1', name: null as string | null, phone: ''},
   loginWithEmail: vi.fn(),
   signUpWithEmail: vi.fn(),
   loginWithOAuth: vi.fn(),
@@ -17,8 +22,9 @@ const authMocks = vi.hoisted(() => ({
 vi.mock('../hooks', async (importOriginal) => ({
   ...await importOriginal<typeof import('../hooks')>(),
   useAuth: () => ({
-    user: {name: null, phone: ''},
-    completeOnboarding: authMocks.completeOnboarding,
+    user: authMocks.profile,
+    updateProfile: authMocks.updateProfile,
+    clearNewUserFlag: authMocks.clearNewUserFlag,
     loginWithEmail: authMocks.loginWithEmail,
     signUpWithEmail: authMocks.signUpWithEmail,
     loginWithOAuth: authMocks.loginWithOAuth,
@@ -48,9 +54,27 @@ describe('isExistingEmailSignUpResult', () => {
   })
 })
 
+describe('welcome completion across sign ins', () => {
+  const profile = {isNewUser: true} as AuthUser
+  const identity = (complete: boolean) => ({id: 'supabase-person-1', user_metadata: {jamOnboardingComplete: complete}} as User)
+
+  it('does not reopen the welcome step when Supabase account metadata records completion', () => {
+    expect(shouldShowOnboarding(profile, identity(true))).toBe(false)
+    expect(shouldShowOnboarding(profile, identity(false))).toBe(true)
+  })
+
+  it('uses the local marker after a successful account update', () => {
+    localStorage.setItem('jam_onboarding_complete:supabase-person-1', 'true')
+    expect(shouldShowOnboarding(profile, identity(false))).toBe(false)
+    localStorage.removeItem('jam_onboarding_complete:supabase-person-1')
+  })
+})
+
 describe('OnboardingModal contact details', () => {
   beforeEach(async () => {
-    authMocks.completeOnboarding.mockReset().mockResolvedValue({success: true})
+    authMocks.profile.name = null
+    authMocks.updateProfile.mockReset().mockResolvedValue({success: true})
+    authMocks.clearNewUserFlag.mockReset().mockResolvedValue({success: true})
     authMocks.loginWithEmail.mockReset()
     authMocks.signUpWithEmail.mockReset()
     authMocks.loginWithOAuth.mockReset()
@@ -59,32 +83,31 @@ describe('OnboardingModal contact details', () => {
 
   it('submits a completed profile without a phone number', async () => {
     const user = userEvent.setup()
-    const onClose = vi.fn()
-
     render(
       <MemoryRouter>
-        <OnboardingModal isOpen onClose={onClose} />
+        <OnboardingModal isOpen />
       </MemoryRouter>,
     )
 
     expect(screen.getByLabelText('Phone (optional)')).not.toBeRequired()
 
     await user.type(screen.getByRole('textbox', {name: /Your Name/}), 'Alex Musician')
-    await user.selectOptions(screen.getByRole('combobox', {name: /What's your main instrument/}), 'guitars')
-    await user.selectOptions(screen.getByRole('combobox', {name: /What's your experience level/}), 'BEGINNER')
+    await user.selectOptions(screen.getByRole('combobox', {name: /Main instrument \(optional\)/}), 'guitars')
+    await user.selectOptions(screen.getByRole('combobox', {name: /Experience level \(optional\)/}), 'BEGINNER')
     await user.click(screen.getByRole('button', {name: 'Get Started'}))
 
     await waitFor(() => {
-      expect(authMocks.completeOnboarding).toHaveBeenCalledWith('guitars', 'BEGINNER', {
+      expect(authMocks.updateProfile).toHaveBeenCalledWith({
         name: 'Alex Musician',
-        phone: '',
+        instrument: 'guitars',
+        level: 'BEGINNER',
       })
     })
-    expect(onClose).toHaveBeenCalledOnce()
+    expect(authMocks.clearNewUserFlag).toHaveBeenCalledOnce()
   })
 
   it('renders a localized context error key when profile completion fails', async () => {
-    authMocks.completeOnboarding.mockResolvedValueOnce({
+    authMocks.updateProfile.mockResolvedValueOnce({
       success: false,
       errorKey: 'auth.errors.profile_update_failed',
     })
@@ -92,18 +115,42 @@ describe('OnboardingModal contact details', () => {
 
     render(
       <MemoryRouter>
-        <OnboardingModal isOpen onClose={vi.fn()} />
+        <OnboardingModal isOpen />
       </MemoryRouter>,
     )
 
     await user.type(screen.getByRole('textbox', {name: /Your Name/}), 'Alex Musician')
-    await user.selectOptions(screen.getByRole('combobox', {name: /What's your main instrument/}), 'guitars')
-    await user.selectOptions(screen.getByRole('combobox', {name: /What's your experience level/}), 'BEGINNER')
+    await user.selectOptions(screen.getByRole('combobox', {name: /Main instrument \(optional\)/}), 'guitars')
+    await user.selectOptions(screen.getByRole('combobox', {name: /Experience level \(optional\)/}), 'BEGINNER')
     await user.click(screen.getByRole('button', {name: 'Get Started'}))
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
       "We couldn't update your profile. Please try again.",
     )
+  })
+
+  it('prefills a known name and accepts optional instrument and experience', async () => {
+    authMocks.profile.name = 'filipe'
+    const user = userEvent.setup()
+    render(<MemoryRouter><OnboardingModal isOpen /></MemoryRouter>)
+
+    expect(screen.getByRole('textbox', {name: /Your Name/})).toHaveValue('filipe')
+    expect(screen.getByRole('combobox', {name: /main instrument/i})).not.toBeRequired()
+    expect(screen.getByRole('combobox', {name: /experience level/i})).not.toBeRequired()
+    await user.click(screen.getByRole('button', {name: 'Get Started'}))
+
+    await waitFor(() => expect(authMocks.updateProfile).toHaveBeenCalledWith({name: 'filipe'}))
+    expect(authMocks.clearNewUserFlag).toHaveBeenCalledOnce()
+  })
+
+  it('persists a skipped welcome step without changing the profile', async () => {
+    const user = userEvent.setup()
+    render(<MemoryRouter><OnboardingModal isOpen /></MemoryRouter>)
+
+    await user.click(screen.getByRole('button', {name: 'Skip for now'}))
+
+    await waitFor(() => expect(authMocks.clearNewUserFlag).toHaveBeenCalledOnce())
+    expect(authMocks.updateProfile).not.toHaveBeenCalled()
   })
 })
 
@@ -153,5 +200,18 @@ describe('SupabaseLoginForm signup errors', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(
       "We couldn't sign you in with that account. Please try again.",
     )
+  })
+
+  it('keeps the full return URL through the OAuth round trip', async () => {
+    window.history.replaceState({}, '', '/login?redirect=%2Fjams%2Fsunday%3Ftab%3Dsongs%23signup')
+    authMocks.loginWithOAuth.mockResolvedValueOnce({success: true})
+    const user = userEvent.setup()
+
+    render(<MemoryRouter><SupabaseLoginForm /></MemoryRouter>)
+    await user.click(screen.getByRole('button', {name: /Continue with Google/i}))
+
+    await waitFor(() => expect(sessionStorage.getItem('auth_redirect')).toBe('/jams/sunday?tab=songs#signup'))
+    sessionStorage.removeItem('auth_redirect')
+    window.history.replaceState({}, '', '/')
   })
 })

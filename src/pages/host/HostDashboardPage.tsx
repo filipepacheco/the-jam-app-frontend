@@ -23,6 +23,7 @@ import {getJamStatusBadgeClass, getJamStatusLabel} from '../../lib/statusUtils'
 import {getJamPath} from '../../utils/jamUrl'
 import {AlertCircle, CalendarClock, CheckCircle2, ExternalLink, MapPin, Music2, Trash2, Users} from 'lucide-react'
 import {formatDateTime} from '../../lib/i18n/applicationLocale'
+import {authPath} from '../../utils/navigationUtils'
 import {useAppLanguage} from '../../hooks'
 
 interface JamCategory {
@@ -175,7 +176,7 @@ export function HostDashboardPage({
 
     // Redirect unauthenticated users
     if (!isAuthenticated) {
-        navigate('/login')
+        void navigate(authPath('/login', window.location), {replace: true})
         return null
     }
 

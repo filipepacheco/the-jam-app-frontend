@@ -1,13 +1,15 @@
 import {useTranslation} from 'react-i18next'
-import {Link} from 'react-router-dom'
+import {Link, useLocation} from 'react-router-dom'
 import {Music, Users, Monitor, Globe, Mail, Shield} from 'lucide-react'
 import {SEO} from '../components/SEO'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import {SITE_URL} from '../lib/api'
+import {authPath} from '../utils/navigationUtils'
 
 export function AboutPage() {
   const {t} = useTranslation()
+  const location = useLocation()
   const siteUrl = SITE_URL
 
   const aboutJsonLd = [
@@ -179,7 +181,7 @@ export function AboutPage() {
               <Link to="/jams" className="btn btn-primary">
                 {t('about.cta_explore')}
               </Link>
-              <Link to="/register" className="btn btn-outline">
+              <Link to={authPath('/register', location)} className="btn btn-outline">
                 {t('about.cta_register')}
               </Link>
             </div>

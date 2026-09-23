@@ -15,6 +15,7 @@ import {Alert, Badge, NavigationTabs, useToast} from '../../components'
 import {SpotifyExportModal} from '../../components'
 import {LiveJamControlPanel} from '../../components/schedule'
 import {useTranslation} from 'react-i18next'
+import {authPath} from '../../utils/navigationUtils'
 import {getJamStatusLabel, getJamStatusTone} from '../../lib/statusUtils'
 import {DJControlTab} from "../tabs/DJControlTab.tsx";
 import {DJControlTabV2} from "../tabs/DJControlTabV2.tsx";
@@ -45,7 +46,7 @@ export function JamManagementPage() {
     // Check for legacy DJ control flag in URL: ?useLegacyDJ=true
     const useLegacyDJ = searchParams.get('useLegacyDJ') === 'true'
 
-    const [activeTab, setActiveTab] = useState<TabType>('overview')
+    const [activeTab, setActiveTab] = useState<TabType>('dj-control')
     const {error, setError, clearError} = usePageAlerts()
     const [spotifyAccessToken, setSpotifyAccessToken] = useState<string | null>(null)
     const [showExportModal, setShowExportModal] = useState(false)
@@ -102,10 +103,10 @@ export function JamManagementPage() {
         }
 
         if (!isAuthenticated) {
-            navigate('/login')
+            navigate(authPath('/login', location), {replace: true})
             return
         }
-    }, [jamId, isAuthenticated, authLoading, navigate])
+    }, [jamId, isAuthenticated, authLoading, navigate, location])
 
     const handleStatusChange = async (newStatus: 'ACTIVE' | 'INACTIVE' | 'LIVE' | 'FINISHED') => {
         if (!jamId || !jam) return
@@ -212,19 +213,12 @@ export function JamManagementPage() {
         return null
     }
 
-    const tabs: { id: TabType; label: string; icon: string }[] = [{
-        id: 'overview',
-        label: t('jam_management.tabs.overview'),
-        icon: '📊'
-    }, {id: 'schedule', label: t('jam_management.tabs.schedule'), icon: '📋'}, {
-        id: 'dj-control' as const,
-        label: t('dj_control.title'),
-        icon: '🎛️'
-    }, {
-        id: 'live' as const,
-        label: t('jam_management.tabs.live_control_short'),
-        icon: '🎙️'
-    }]
+    const tabs: { id: TabType; label: string; icon: string }[] = [
+        {id: 'dj-control', label: t('dj_control.title'), icon: '🎛️'},
+        {id: 'live', label: t('jam_management.tabs.live_control_short'), icon: '🎙️'},
+        {id: 'schedule', label: t('jam_management.tabs.schedule'), icon: '📋'},
+        {id: 'overview', label: t('jam_management.tabs.overview'), icon: '📊'},
+    ]
 
     return (<div className="min-h-screen bg-base-100">
             {/* Header */}

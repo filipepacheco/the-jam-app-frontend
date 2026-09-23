@@ -552,7 +552,7 @@ export default function middleware(request: Request) {
   if (!route) return next();
 
   const siteUrl = process.env.SITE_URL || url.origin;
-  const ogImage = `${siteUrl}/brand/v1/social-1200x630.png`;
+  const ogImage = `${siteUrl}/brand/v1/social-hybrid-1200x630.png`;
   // Search engines follow meta-refresh - skip the redirect to prevent infinite loops
   const noRedirect = searchEngineRequest;
 

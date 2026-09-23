@@ -84,7 +84,7 @@ export interface AuthContextType {
   updateUser: (fields: Partial<AuthUser>) => void
   updateProfile: (updates: UpdateProfileDto) => Promise<AuthActionResult>
   completeOnboarding: (instrument: string, level: SkillLevel, profileData?: { name?: string; phone?: string; contact?: string }) => Promise<AuthActionResult>
-  clearNewUserFlag: () => void
+  clearNewUserFlag: () => Promise<AuthActionResult>
 
   // Helper methods
   isUser: () => boolean

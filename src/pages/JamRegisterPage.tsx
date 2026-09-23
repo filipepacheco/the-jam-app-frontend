@@ -10,6 +10,7 @@ import {useAuth} from '../hooks'
 import type {JamDetails} from '../services'
 import * as jamService from '../services/jamService'
 import {Action, Alert, JamContextDisplay, JamRegistrationForm} from '../components'
+import {authPath} from '../utils/navigationUtils'
 
 export function JamRegisterPage() {
   const { jamId } = useParams<{ jamId: string }>()
@@ -24,7 +25,7 @@ export function JamRegisterPage() {
   // Redirect if not authenticated
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate(`/login?redirect=/jams/${jamId}/register`)
+      void navigate(authPath('/login', window.location), {replace: true})
     }
   }, [isAuthenticated, jamId, navigate])
 
@@ -176,6 +177,4 @@ export function JamRegisterPage() {
     </div>
   )
 }
-
-
 

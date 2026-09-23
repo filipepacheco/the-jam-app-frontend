@@ -10,6 +10,7 @@ import {
   getCurrentSession,
   isExistingEmailSignUpError,
   isExistingEmailSignUpResult,
+  markOnboardingComplete,
   isSupabaseConfigured,
   onAuthStateChange,
   resetPassword as supabaseResetPassword,
@@ -21,6 +22,16 @@ import {
 import {clearTokenCache} from '../lib/auth'
 import {apiClient} from '../lib/api'
 import {getOfflineQueueManager} from '../services'
+import type {User as SupabaseUser} from '@supabase/supabase-js'
+import {getRedirectPath} from '../utils/navigationUtils'
+import {onboardingKey, shouldShowOnboarding} from '../lib/auth/onboarding'
+
+function withKnownName(profile: AuthUser, identity: SupabaseUser): AuthUser {
+  const knownName = identity.user_metadata?.full_name || identity.user_metadata?.name
+  return profile.name || typeof knownName !== 'string' || !knownName.trim()
+    ? profile
+    : {...profile, name: knownName.trim()}
+}
 
 /**
  * Derive user role from profile data.
@@ -94,30 +105,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
    * Helper function to set up auth state after successful login/signup
    * Derives role from profile data with fallback logic
    */
-  const handleAuthSuccess = useCallback(async (profile: AuthUser | null): Promise<AuthActionResult> => {
+  const handleAuthSuccess = useCallback(async (profile: AuthUser | null, identity: SupabaseUser): Promise<AuthActionResult> => {
     if (!profile) {
       return {success: false, errorKey: 'auth.errors.profile_load_failed'}
     }
 
-    setUser(profile)
+    const currentProfile = withKnownName(profile, identity)
+    setUser(currentProfile)
     
-    setRoleState(deriveRole(profile))
+    setRoleState(deriveRole(currentProfile))
     
 
-    setIsNewUser(profile.isNewUser || false)
-    localStorage.setItem('auth_user', JSON.stringify(profile))
+    setIsNewUser(shouldShowOnboarding(profile, identity))
+    localStorage.setItem('auth_user', JSON.stringify(currentProfile))
 
-    return { success: true, isNewUser: profile.isNewUser }
+    return { success: true, isNewUser: shouldShowOnboarding(profile, identity) }
   }, [])
 
-  const applyProfile = async (userId: string) => {
+  const applyProfile = async (identity: SupabaseUser) => {
     const profile = await loadUserProfile()
     if (profile) {
-      setUser(profile)
+      const currentProfile = withKnownName(profile, identity)
+      setUser(currentProfile)
       setRoleState(deriveRole(profile))
-      setIsNewUser(profile.isNewUser || false)
-      localStorage.setItem('auth_user', JSON.stringify(profile))
-      authenticatedUserIdRef.current = userId
+      setIsNewUser(shouldShowOnboarding(profile, identity))
+      localStorage.setItem('auth_user', JSON.stringify(currentProfile))
+      authenticatedUserIdRef.current = identity.id
     }
   }
 
@@ -132,7 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const session = await getCurrentSession()
 
         if (session?.user) {
-          await applyProfile(session.user.id)
+          await applyProfile(session.user)
         } else {
           // No valid session - clear any stale localStorage data
           setUser(null)
@@ -159,7 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (authenticatedUserIdRef.current === session.user.id) {
             return
           }
-          await applyProfile(session.user.id)
+          await applyProfile(session.user)
         } else if (event === 'SIGNED_OUT') {
           setUser(null)
           setRoleState('viewer')
@@ -194,7 +207,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (result.session) {
         authenticatedUserIdRef.current = result.session.user.id
         const profile = await loadUserProfile()
-        return handleAuthSuccess(profile)
+        return handleAuthSuccess(profile, result.session.user)
       }
 
       return {success: false, errorKey: 'auth.errors.session_missing'}
@@ -226,7 +239,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (result.session) {
         authenticatedUserIdRef.current = result.session.user.id
         const profile = await loadUserProfile()
-        return handleAuthSuccess(profile)
+        return handleAuthSuccess(profile, result.session.user)
       }
 
       if (isExistingEmailSignUpResult(result)) {
@@ -253,7 +266,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const redirectUrl = `${window.location.origin}/auth/callback`
+      const callbackUrl = new URL('/auth/callback', window.location.origin)
+      callbackUrl.searchParams.set('redirect', getRedirectPath())
+      const redirectUrl = callbackUrl.toString()
       const result = await supabaseOAuth(provider, redirectUrl)
 
       if (result.error) {
@@ -382,6 +397,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Update local user state
         localStorage.setItem('auth_user', JSON.stringify(response.data))
         setUser(response.data)
+        const {error} = await markOnboardingComplete()
+        if (error) return {success: false, error: error.message}
+        const session = await getCurrentSession()
+        if (session?.user.id) localStorage.setItem(onboardingKey(session.user.id), 'true')
         setIsNewUser(false)
       }
 
@@ -399,9 +418,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   /**
    * Clear new user flag (after onboarding is dismissed)
    */
-  const clearNewUserFlag = useCallback(() => {
-    setIsNewUser(false)
-  }, [])
+  const clearNewUserFlag = useCallback(async (): Promise<AuthActionResult> => {
+    if (!user) return {success: false, errorKey: 'auth.errors.not_authenticated'}
+    try {
+      const {error} = await markOnboardingComplete()
+      if (error) return {success: false, error: error.message}
+      const session = await getCurrentSession()
+      if (session?.user.id) localStorage.setItem(onboardingKey(session.user.id), 'true')
+      setIsNewUser(false)
+      return {success: true}
+    } catch (error) {
+      return unexpectedAuthError(error, 'auth.errors.profile_update_failed')
+    }
+  }, [user])
 
   /**
    * Update user profile via backend

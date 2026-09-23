@@ -1,45 +1,40 @@
 /**
  * Onboarding Modal Component
- * Shows after first social login to collect instrument & genre preferences
+ * Welcomes new users and offers optional musician profile fields.
  */
 
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useAuth, useFormState} from '../hooks'
 import {INSTRUMENTS} from '../lib/instruments'
 import {translationKey} from '../lib/i18n/translationKeys'
 import {useTranslation} from 'react-i18next'
-import type {MusicianLevel} from '../types/api.types'
+import type {SkillLevel, UpdateProfileDto} from '../types/auth.types'
 import {Alert} from './Alert'
 import {Modal} from './Modal'
 import {Action} from './Action'
 import {Field} from './Field'
 
-interface OnboardingModalProps {
-  isOpen: boolean
-  onClose: () => void
-}
+interface OnboardingModalProps { isOpen: boolean }
 
-const SKILL_LEVELS = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'PROFESSIONAL']
+const SKILL_LEVELS: SkillLevel[] = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'PROFESSIONAL']
 
-/**
- * Check if a name looks like an email prefix (not a real name)
- */
-const isEmailPrefix = (name: string): boolean => {
-  if (!name) return false
-  // Email prefixes often contain: underscore, dots, numbers, or are all lowercase
-  return name.includes('_') || name.includes('@') || /^\d+$/.test(name) || /^[a-z0-9.]+$/.test(name)
-}
-
-export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
+export function OnboardingModal({ isOpen }: OnboardingModalProps) {
   const { t } = useTranslation()
-  const { user, completeOnboarding } = useAuth()
-  // Don't prefill if name looks like an email prefix
-  const initialName = user?.name && !isEmailPrefix(user.name) ? user.name : ''
+  const { user, updateProfile, clearNewUserFlag } = useAuth()
+  const initialName = user?.name || ''
   const [name, setName] = useState(initialName)
   const [phone, setPhone] = useState(user?.phone || '')
-  const [instrument, setInstrument] = useState('')
-  const [level, setLevel] = useState('')
+  const [instrument, setInstrument] = useState(user?.instrument || '')
+  const [level, setLevel] = useState<SkillLevel | ''>(user?.level || '')
   const { error, setError, isLoading, setIsLoading } = useFormState({ navigateOnSuccess: false })
+
+  useEffect(() => {
+    if (!isOpen) return
+    setName(user?.name || '')
+    setPhone(user?.phone || '')
+    setInstrument(user?.instrument || '')
+    setLevel(user?.level || '')
+  }, [isOpen, user?.id, user?.name, user?.phone, user?.instrument, user?.level])
 
   /**
    * Format phone number with Brazilian mask: (XX) XXXXX-XXXX
@@ -78,25 +73,20 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       return
     }
 
-    // Instrument and skill level are required
-    if (!instrument) {
-      setError(t('jams.onboarding.instrument_required'))
-      return
-    }
-
-    if (!level) {
-      setError(t('jams.onboarding.level_required'))
-      return
-    }
-
     setIsLoading(true)
 
     try {
-      // Update profile with instrument, level, and optional name/phone
-      const result = await completeOnboarding(instrument, level as MusicianLevel, { name: name.trim(), phone })
+      const updates: UpdateProfileDto = {name: name.trim()}
+      if (phone) updates.phone = phone
+      if (instrument) updates.instrument = instrument
+      if (level) updates.level = level
+      const result = await updateProfile(updates)
 
       if (result.success) {
-        onClose()
+        const completion = await clearNewUserFlag()
+        if (!completion.success) {
+          setError(completion.errorKey ? t(completion.errorKey) : (completion.error || t('profile.update_failed')))
+        }
       } else {
         setError(result.errorKey ? t(result.errorKey) : (result.error || t('profile.update_failed')))
       }
@@ -107,13 +97,26 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
   }
 
+  const handleSkip = async () => {
+    setError(null)
+    setIsLoading(true)
+    try {
+      const completion = await clearNewUserFlag()
+      if (!completion.success) {
+        setError(completion.errorKey ? t(completion.errorKey) : (completion.error || t('profile.update_failed')))
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : t('errors.generic_error'))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   if (!isOpen) return null
 
   const canSubmit = !isLoading &&
     name.trim() &&
-    (!phone || phone.replace(/\D/g, '').length >= 10) &&
-    instrument &&
-    level
+    (!phone || phone.replace(/\D/g, '').length >= 10)
 
   return (
     // Modal.tsx stays the wrapper here (not OverlayModal): it is shared by
@@ -123,33 +126,38 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     // schedule-registration-migration.md for the same precedent.
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => undefined}
       title={t('jams.onboarding.welcome_title')}
       closeDisabled={true}
       footer={
-        isLoading ? (
-          <Action variant="primary" state="loading" loadingLabel={t('common.saving')}>
-            <Action.Label>{t('jams.onboarding.get_started')}</Action.Label>
+        <div className="flex w-full flex-wrap justify-end gap-2 pb-[env(safe-area-inset-bottom)]">
+          <Action variant="quiet" state={isLoading ? 'disabled' : 'idle'} onClick={() => void handleSkip()}>
+            <Action.Label>{t('jams.onboarding.skip')}</Action.Label>
           </Action>
-        ) : (
-          <Action
-            variant="primary"
-            state={canSubmit ? 'idle' : 'disabled'}
-            onClick={() => {
-              const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
-              void handleSubmit(syntheticEvent)
-            }}
-          >
-            <Action.Label>{t('jams.onboarding.get_started')}</Action.Label>
-          </Action>
-        )
+          {isLoading ? (
+            <Action variant="primary" state="loading" loadingLabel={t('common.saving')}>
+              <Action.Label>{t('jams.onboarding.get_started')}</Action.Label>
+            </Action>
+          ) : (
+            <Action
+              variant="primary"
+              state={canSubmit ? 'idle' : 'disabled'}
+              onClick={() => {
+                const syntheticEvent = { preventDefault: () => {} } as React.FormEvent
+                void handleSubmit(syntheticEvent)
+              }}
+            >
+              <Action.Label>{t('jams.onboarding.get_started')}</Action.Label>
+            </Action>
+          )}
+        </div>
       }
     >
       <p className="text-base-content/70 mb-6">
         {t('jams.onboarding.welcome_desc')}
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={(event) => void handleSubmit(event)} className="space-y-4">
         {/* Name Field - Required */}
         <Field id="onboarding-name" label={t('jams.onboarding.name_label')} required requiredLabel={t('common.required')} disabled={isLoading}>
           <Field.Input
@@ -172,7 +180,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         </Field>
 
         {/* Instrument Selection */}
-        <Field id="onboarding-instrument" label={t('jams.onboarding.instrument_q')} required requiredLabel={t('common.required')} disabled={isLoading}>
+        <Field id="onboarding-instrument" label={t('jams.onboarding.instrument_q')} disabled={isLoading}>
           <Field.Select
             value={instrument}
             onChange={(e) => setInstrument(e.target.value)}
@@ -187,10 +195,10 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         </Field>
 
         {/* Skill Level Selection */}
-        <Field id="onboarding-level" label={t('jams.onboarding.level_q')} required requiredLabel={t('common.required')} disabled={isLoading}>
+        <Field id="onboarding-level" label={t('jams.onboarding.level_q')} disabled={isLoading}>
           <Field.Select
             value={level}
-            onChange={(e) => setLevel(e.target.value)}
+            onChange={(e) => setLevel(e.target.value as SkillLevel | '')}
           >
             <option value="">{t('jams.onboarding.level_choose')}</option>
             {SKILL_LEVELS.map((lv) => (

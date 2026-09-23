@@ -27,4 +27,15 @@ describe('Vercel middleware environment headers', () => {
     expect(response).toBeInstanceOf(Response)
     expect((response as Response).headers.has('X-Robots-Tag')).toBe(false)
   })
+
+  it('serves WhatsApp the versioned approved brand image without client rendering', async () => {
+    vi.stubEnv('SITE_URL', 'https://stage.jamapp.com.br')
+    const response = middleware(new Request('https://stage.jamapp.com.br/', {
+      headers: {'user-agent': 'WhatsApp/2.26'},
+    }))
+    expect(response).toBeInstanceOf(Response)
+    const html = await (response as Response).text()
+    expect(html).toContain('property="og:image" content="https://stage.jamapp.com.br/brand/v1/social-hybrid-1200x630.png"')
+    expect(html).toContain('name="twitter:image" content="https://stage.jamapp.com.br/brand/v1/social-hybrid-1200x630.png"')
+  })
 })

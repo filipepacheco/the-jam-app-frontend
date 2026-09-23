@@ -10,6 +10,7 @@ import { Action } from '../Action'
 import { Badge, type DataDisplayTone } from '../data-display'
 import { CanonicalEmptyState } from '../FeedbackStates'
 import { formatJamDuration } from '../../lib/formatters'
+import {isActiveRegistration} from '../../utils/musicianUtils'
 
 function scheduleStatusTone(status: ScheduleResponseDto['status']): DataDisplayTone {
   switch (status) {
@@ -47,7 +48,7 @@ export function PerformanceSelectionModal({
   const isAlreadyRegistered = (schedule: ScheduleResponseDto) => {
     if (!userId) return false
     return schedule.registrations?.some(
-      (reg: RegistrationResponseDto) => reg.musician?.id === userId
+      (reg: RegistrationResponseDto) => isActiveRegistration(reg) && (reg.musician?.id === userId || reg.musicianId === userId)
     )
   }
 
@@ -84,11 +85,10 @@ export function PerformanceSelectionModal({
               }}
               className={`w-full text-left p-4 rounded-lg transition-colors focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                 alreadyRegistered
-                  ? 'bg-success/10 border-2 border-success/30 cursor-default'
+                  ? 'bg-success/10 border-2 border-success/30 hover:bg-success/15'
                   : 'bg-base-200 hover:bg-base-300'
               }`}
               type="button"
-              disabled={alreadyRegistered}
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
