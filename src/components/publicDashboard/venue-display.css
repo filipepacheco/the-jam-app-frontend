@@ -1,0 +1,176 @@
+.venue-board {
+  display: grid;
+  gap: clamp(1rem, 2vw, 2.5rem);
+  padding: 1rem clamp(1rem, 2.5vw, 3rem) 2rem;
+}
+
+.venue-programme { display: grid; gap: 1.5rem; min-width: 0; }
+.venue-current {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: clamp(1.25rem, 1.7vw, 2rem);
+  border-radius: 1rem;
+  background: var(--color-base-100);
+  isolation: isolate;
+  perspective: 900px;
+}
+
+.venue-current, .venue-next, .venue-instrument { position: relative; }
+.venue-change-wash, .venue-musician-wash {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: color-mix(in oklch, var(--color-primary) 24%, transparent);
+}
+.venue-next > .venue-change-wash { background: color-mix(in oklch, var(--color-secondary) 16%, transparent); }
+.venue-musician-wash { inset: -0.5rem; border-radius: 0.5rem; }
+
+/* A live-show layer, confined to the stage. Text and QR never pulse or flicker. */
+.venue-stage-fx { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; z-index: -1; }
+.venue-stage-halo {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse at 25% 60%, color-mix(in oklch, var(--color-primary) 35%, transparent), transparent 65%);
+  animation: venue-stage-breathe 2.4s ease-in-out infinite;
+}
+.venue-stage-sweep {
+  position: absolute;
+  top: -40%;
+  left: 0;
+  width: 40%;
+  height: 180%;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--color-primary) 50%, transparent), color-mix(in oklch, var(--color-accent) 30%, transparent), transparent);
+}
+.venue-stage-ring {
+  position: absolute;
+  left: 48%;
+  top: 46%;
+  width: 48%;
+  aspect-ratio: 1;
+  border: 3px solid var(--color-primary);
+  border-radius: 50%;
+  opacity: 0;
+}
+.venue-stage-ring + .venue-stage-ring { border-color: var(--color-secondary); }
+.venue-stage-spark { position: absolute; left: 48%; top: 46%; width: 0.5rem; height: 1.25rem; border-radius: 2px; background: var(--color-primary); opacity: 0; }
+.venue-stage-spark:nth-child(3n) { background: var(--color-accent); }
+.venue-stage-spark:nth-child(3n + 1) { background: var(--color-secondary); }
+[data-venue-song], [data-venue-instrument] { transform-origin: left center; }
+.venue-live-beat { display: inline-flex; align-items: center; gap: 4px; height: 1.25em; color: var(--color-primary); }
+.venue-live-beat i { display: block; width: 5px; height: 100%; border-radius: 2px; background: currentColor; animation: venue-beat 900ms ease-in-out infinite alternate; }
+.venue-live-beat i:nth-child(2n) { animation-duration: 650ms; animation-delay: -300ms; }
+.venue-live-beat i:nth-child(3n) { animation-duration: 1100ms; animation-delay: -550ms; }
+.venue-live-beat i:nth-child(4n) { animation-delay: -800ms; }
+
+@keyframes venue-beat {
+  0% { transform: scaleY(0.25); opacity: 0.6; }
+  60% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(0.5); opacity: 0.8; }
+}
+@keyframes venue-stage-breathe {
+  0%, 100% { opacity: 0.3; transform: scale(0.94); }
+  50% { opacity: 0.9; transform: scale(1.06); }
+}
+[data-venue-motion='paused'] .venue-stage-halo,
+[data-venue-motion='paused'] .venue-live-beat i { animation: none; }
+[data-venue-motion='paused'] .venue-stage-halo { opacity: 0; }
+[data-venue-motion='paused'] .venue-live-beat i { transform: scaleY(0.5); }
+
+@media (prefers-reduced-motion: reduce) {
+  .venue-stage-halo, .venue-live-beat i { animation: none; }
+  .venue-stage-halo { opacity: 0; }
+}
+
+.venue-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: clamp(1.125rem, 1.5vw, 1.75rem);
+  line-height: 1.3;
+  font-weight: 750;
+}
+
+.venue-current-title {
+  font-size: clamp(2.5rem, 4.2vw, 5rem);
+  line-height: 1.05;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.venue-artist {
+  margin-top: 0.75rem;
+  font-size: clamp(1.375rem, 2vw, 2.5rem);
+  line-height: 1.3;
+  color: var(--ds-content-secondary);
+}
+
+.venue-lineup { margin-top: clamp(1.25rem, 2vh, 2rem); }
+.venue-musicians { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.5rem; }
+.venue-instrument { min-width: 0; }
+.venue-instrument-label {
+  margin-bottom: 0.25rem;
+  font-size: clamp(1rem, 1.2vw, 1.5rem);
+  line-height: 1.35;
+  color: var(--ds-content-secondary);
+}
+.venue-musician-name { font-size: clamp(1.25rem, 1.7vw, 2rem); line-height: 1.2; font-weight: 800; }
+.venue-instrument--lg .venue-musician-name { font-size: clamp(1.5rem, 1.85vw, 2.25rem); }
+.venue-instrument--sm .venue-musician-name { font-size: 1.125rem; }
+.venue-next {
+  display: grid;
+  gap: 1.5rem;
+  min-width: 0;
+  padding: clamp(1.25rem, 1.7vw, 2rem);
+  border-radius: 1rem;
+  background: var(--color-base-200);
+}
+.venue-next-title { font-size: clamp(1.75rem, 2.2vw, 2.75rem); line-height: 1.1; font-weight: 850; }
+.venue-support { margin-top: 0.5rem; font-size: clamp(1.125rem, 1.4vw, 1.75rem); line-height: 1.4; color: var(--ds-content-secondary); }
+
+.venue-invitation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  min-width: 0;
+  padding: clamp(1.25rem, 1.7vw, 2rem);
+  border: 2px solid var(--color-primary);
+  border-radius: 1rem;
+  text-align: center;
+}
+.venue-invitation-title { font-size: clamp(1.75rem, 2.2vw, 2.75rem); line-height: 1.1; font-weight: 900; text-wrap: balance; }
+.venue-qr { width: min(100%, 27svh, 20rem); height: auto; border-radius: var(--radius-field); }
+.venue-join-link { max-width: 100%; font-size: clamp(1.125rem, 1.5vw, 1.875rem); line-height: 1.3; }
+.venue-steps { text-align: left; display: grid; gap: 0.75rem; }
+.venue-steps li { display: flex; align-items: baseline; gap: 0.75rem; font-size: clamp(1.125rem, 1.35vw, 1.625rem); }
+.venue-step-number { flex-shrink: 0; font-weight: 850; color: var(--color-primary); }
+
+@media (min-width: 64rem) and (orientation: landscape) {
+  .venue-board { grid-template-columns: minmax(0, 1fr) minmax(18rem, 26%); min-height: calc(100svh - 6rem); }
+  .venue-programme { grid-template-rows: minmax(min-content, 1fr) auto; }
+  .venue-musicians { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .venue-next { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; }
+  .venue-musicians--next { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 30rem) {
+  .venue-musicians { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 90rem) and (orientation: landscape) {
+  .venue-current .venue-musicians { grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+}
+
+@media (max-height: 50rem) and (min-width: 64rem) and (orientation: landscape) {
+  .venue-invitation { gap: 1rem; }
+  .venue-invitation .venue-support { font-size: 1.125rem; }
+  .venue-steps li { font-size: 1rem; }
+}

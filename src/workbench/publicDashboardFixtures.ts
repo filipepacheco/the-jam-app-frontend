@@ -1,4 +1,4 @@
-import type { DashboardSongDto } from '../types/api.types'
+import type { DashboardSongDto, LiveDashboardResponseDto } from '../types/api.types'
 
 export const dashboardSongs = {
   current: {
@@ -20,6 +20,28 @@ export const dashboardSongs = {
     musicians: [{ id: 'dashboard-next-bass', name: 'Benjamin', instrument: 'bass' }],
   },
 } satisfies Record<string, DashboardSongDto>
+
+export const venueDashboard: LiveDashboardResponseDto = {
+  jamId: 'jam-public',
+  jamName: 'Friday Night Jam at Benjamin Social Club',
+  qrCode: null,
+  slug: 'friday-night-jam',
+  shortCode: 'FNJ26',
+  jamStatus: 'LIVE',
+  playbackState: 'PLAYING',
+  currentSong: dashboardSongs.current,
+  nextSongs: [{
+    ...dashboardSongs.next,
+    title: 'Valerie',
+    artist: 'Amy Winehouse',
+    musicians: [
+      {id: 'next-vocal', name: 'Camila', instrument: 'vocals'},
+      {id: 'next-guitar', name: 'Rafael', instrument: 'guitars'},
+      {id: 'next-bass', name: 'Benjamin', instrument: 'bass'},
+      {id: 'next-drums', name: 'Luiza', instrument: 'drums'},
+    ],
+  }],
+}
 
 export const publicDashboardCoverage = [
   'ui.0074', 'ui.0075', 'ui.0076', 'ui.0077', 'ui.0078', 'ui.0079', 'ui.0080',

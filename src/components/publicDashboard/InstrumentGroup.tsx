@@ -1,14 +1,9 @@
-/**
- * Instrument Group Component
- * Displays a group of musicians grouped by instrument with emoji and stacked names
- */
-
-import {memo, useMemo} from 'react'
-import {motion} from 'framer-motion'
+import {memo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useReducedMotion} from '../../hooks'
 import {getInstrumentEmoji} from '../../utils/instrumentEmojis'
+import {normalizeInstrument} from '../../utils/musicianUtils'
 import type {DashboardMusicianDto} from '../../types/api.types'
+import './venue-display.css'
 
 interface InstrumentGroupProps {
   instrument: string
@@ -16,59 +11,28 @@ interface InstrumentGroupProps {
   size?: 'sm' | 'md' | 'lg'
 }
 
-// Animation configuration for musician cards
-const MUSICIAN_INITIAL = { opacity: 0, x: -10, scale: 0.9 } as const
-const MUSICIAN_ANIMATE = { opacity: 1, x: 0, scale: 1 } as const
-
-// Spring animation configuration for smooth bouncy entry
-const MUSICIAN_SPRING_TRANSITION = {
-  type: 'spring',
-  stiffness: 300,
-  damping: 20,
-} as const
-
-export const InstrumentGroup = memo(function InstrumentGroup({ instrument, musicians, size = 'md' }: InstrumentGroupProps) {
-  const { t } = useTranslation()
-  const { transition, prefersReducedMotion } = useReducedMotion()
-
-  const sizeClasses = {
-    sm: { container: 'p-2', emoji: 'text-lg', text: 'text-xs', spacing: 'mb-2' },
-    md: { container: 'p-3', emoji: 'text-2xl', text: 'text-xs', spacing: 'mb-2' },
-    lg: { container: 'p-4', emoji: 'text-3xl', text: 'text-sm', spacing: 'mb-3' },
+export const InstrumentGroup = memo(function InstrumentGroup({instrument, musicians, size = 'md'}: InstrumentGroupProps) {
+  const {t} = useTranslation()
+  const labels: Record<string, string> = {
+    vocals: t('schedule.instruments.vocals'),
+    guitars: t('schedule.instruments.guitars'),
+    bass: t('schedule.instruments.bass'),
+    drums: t('schedule.instruments.drums'),
+    keys: t('schedule.instruments.keys'),
   }
 
-  const classes = sizeClasses[size]
-
-  // Calculate deterministic stagger delay based on musician ID
-  const transitionConfig = useMemo(() => {
-    if (prefersReducedMotion) {
-      return transition
-    }
-
-    const delay =
-      musicians.length > 0 ? (musicians[0].id?.charCodeAt(0) ?? 0) % 5 * 0.1 : 0
-    return { ...MUSICIAN_SPRING_TRANSITION, delay }
-  }, [prefersReducedMotion, musicians, transition])
-
   return (
-    <motion.div
-      key={instrument}
-      initial={MUSICIAN_INITIAL}
-      animate={MUSICIAN_ANIMATE}
-      transition={transitionConfig}
-      className={`bg-base-300/50 rounded-lg ${classes.container} text-center`}
-    >
-      <p className={`${classes.spacing} ${classes.emoji}`} aria-hidden="true">
-        {getInstrumentEmoji(instrument)}
+    <div className={`venue-instrument venue-instrument--${size}`} data-venue-instrument={normalizeInstrument(instrument)}>
+      <span className="venue-musician-wash" aria-hidden="true" />
+      <p className="venue-instrument-label ds-wrap-user-content">
+        <span aria-hidden="true">{getInstrumentEmoji(instrument)}</span>
+        {' '}{labels[normalizeInstrument(instrument)] ?? (instrument || t('common.unknown'))}
       </p>
-      <div className="space-y-1">
-        {musicians &&
-          musicians.map((musician) => (
-            <p key={musician.id} className={`font-semibold text-base-content ${classes.text} ds-wrap-user-content`} title={musician.name || t('common.unknown')}>
-              {musician.name || t('common.unknown')}
-            </p>
-          ))}
-      </div>
-    </motion.div>
+      {musicians.map((musician) => (
+        <p key={musician.id} className="venue-musician-name ds-wrap-user-content">
+          {musician.name || t('common.unknown')}
+        </p>
+      ))}
+    </div>
   )
 })

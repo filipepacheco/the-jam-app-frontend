@@ -1,4 +1,4 @@
-import {useEffect, useMemo} from 'react'
+import {useEffect} from 'react'
 import {motion} from 'framer-motion'
 import {useReducedMotion} from '../../hooks'
 import {LanguageSelector} from './LanguageSelector'
@@ -30,12 +30,8 @@ interface DashboardControlsPanelProps {
 // distance-legible screen behind it.
 export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange, layout, onLayoutChange, carouselIntervalMs, onCarouselIntervalChange }: DashboardControlsPanelProps) {
   const { t } = useTranslation()
-  const { transition } = useReducedMotion()
-
-  const panelTransition = useMemo(() => ({
-    opacity: transition.duration === 0 ? 0.1 : 0,
-    y: -20
-  }), [transition])
+  const { transition, prefersReducedMotion } = useReducedMotion()
+  const panelTransition = {opacity: 0, y: -20}
 
   useEffect(() => {
     if (!visible) return
@@ -59,7 +55,7 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
     <>
       {/* Backdrop */}
       <motion.div
-        initial={{ opacity: 0 }}
+        initial={prefersReducedMotion ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-30"
@@ -70,9 +66,9 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
 
       <motion.div
         id="public-dashboard-controls-panel"
-        initial={panelTransition}
+        initial={prefersReducedMotion ? false : panelTransition}
         animate={{ opacity: 1, y: 0 }}
-        exit={panelTransition}
+        exit={prefersReducedMotion ? undefined : panelTransition}
         transition={transition}
         className="fixed top-16 left-0 right-0 z-40 max-h-[calc(100vh-4rem)] overflow-y-auto bg-base-200 border-b border-base-300 p-4"
         role="region"
@@ -101,7 +97,7 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
                     aria-pressed={layout === 'classic'}
                     onClick={() => onLayoutChange('classic')}
                   >
-                    <Action.Label>{t('publicDashboard.layoutClassic')}</Action.Label>
+                    <Action.Label>{t('publicDashboard.layoutStage')}</Action.Label>
                   </Action>
                   <Action
                     variant={layout === 'carousel' ? 'primary' : 'secondary'}

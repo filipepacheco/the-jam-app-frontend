@@ -19,12 +19,13 @@ import {
 
 // Lazy load heavy components to reduce main bundle size
 const ConfettiWrapper = lazy(() => import('../components/publicDashboard/ConfettiWrapper'))
-const QRCodeCorner = lazy(() => import('../components/publicDashboard/QRCodeCorner'))
+const QRCodePanel = lazy(() => import('../components/publicDashboard/carousel/QRCodePanel').then(module => ({default: module.QRCodePanel})))
 import {useAppLanguage} from '../hooks'
 import {useConfettiOnSongChange} from '../hooks'
 import {useFullscreen} from '../hooks'
 import {useOfflineQueue} from '../hooks'
 import {useDashboardLayout} from '../hooks'
+import {useReducedMotion} from '../hooks/useReducedMotion'
 import {Action, Alert} from '../components'
 import {useTranslation} from 'react-i18next'
 import type {LiveDashboardResponseDto} from '../types/api.types'
@@ -47,6 +48,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
   const { jamId } = useParams<{ jamId: string }>()
   const { currentLang, changeLanguage } = useAppLanguage()
   const { isOfflineMode } = useOfflineQueue()
+  const {prefersReducedMotion} = useReducedMotion()
 
   // Layout toggle
   const dashboardLayout = useDashboardLayout()
@@ -87,7 +89,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
 
   // Custom hooks for UI behaviors
   const { confettiVisible, confettiDimensions, containerRef } = useConfettiOnSongChange(
-    currentSong?.id
+    layout === 'carousel' && !prefersReducedMotion ? currentSong?.id : null
   )
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef)
 
@@ -171,7 +173,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
     >
       {/* Confetti */}
       <Suspense fallback={null}>
-        <ConfettiWrapper show={confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
+        <ConfettiWrapper show={layout === 'carousel' && !prefersReducedMotion && confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
       </Suspense>
 
       {/* Offline Indicator */}
@@ -215,42 +217,39 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
           playbackState={playbackState}
           currentSong={currentSong}
           nextSongs={nextSongs}
-          jamId={jamId}
+          jamId={dashboardData?.jamId ?? jamId}
           slug={dashboardData?.slug}
           intervalMs={carouselIntervalMs}
         />
       ) : (
-        <>
-          <div className="relative pt-20 pb-8 px-4 md:px-8 z-10">
-            <div className="max-w-6xl mx-auto">
+        <main className="venue-board">
+            <div className="venue-programme">
               {/* Now Playing stays visible while the Jam waits for a current
                   Performance. The next Performance remains a separate region. */}
               {jamStatus === 'FINISHED' ? (
-                <div className="mb-12 text-center">
-                  <div className="bg-base-200/80 border border-base-300 rounded-2xl p-8 md:p-12">
-                    <p className="text-5xl md:text-7xl mb-6" aria-hidden="true">👏</p>
-                    <h2 className="text-4xl md:text-6xl font-black mb-4 ds-wrap-user-content">{t('publicDashboard.jamFinished')}</h2>
-                    <p className="text-lg md:text-2xl text-base-content/70">{t('publicDashboard.thankYou')}</p>
-                  </div>
+                <div className="venue-current">
+                    <h2 className="venue-current-title ds-wrap-user-content">{t('publicDashboard.jamFinished')}</h2>
+                    <p className="venue-artist">{t('publicDashboard.thankYou')}</p>
                 </div>
               ) : (
                 <CurrentSongCard song={currentSong} playbackState={playbackState} />
               )}
 
-              {/* Next Song Section - only if there's a different song to show */}
-              {nextSongToShow && (
-                <NextSongCard song={nextSongToShow} />
+              {jamStatus !== 'FINISHED' && (
+                <NextSongCard song={nextSongToShow ?? null} />
               )}
 
             </div>
-          </div>
-
-          {/* QR Code Corners */}
-          <Suspense fallback={null}>
-            <QRCodeCorner jamId={jamId} shortCode={dashboardData?.shortCode} position="top-left" />
-            <QRCodeCorner jamId={jamId} shortCode={dashboardData?.shortCode} position="top-right" />
-          </Suspense>
-        </>
+            <Suspense fallback={null}>
+              <QRCodePanel
+                variant="invitation"
+                jamId={dashboardData?.jamId ?? jamId}
+                slug={dashboardData?.slug}
+                shortCode={dashboardData?.shortCode}
+                finished={jamStatus === 'FINISHED'}
+              />
+            </Suspense>
+        </main>
       )}
      </div>
    )

@@ -80,7 +80,7 @@ export function CarouselDashboard({
   return (
     <div className="relative pt-20 pb-8 px-4 md:px-8 z-10 flex flex-col min-h-[calc(100vh-5rem)] ds-shared-display">
       <div className="flex-1 flex items-center justify-center">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={activePanel.key}
             initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.96 }}

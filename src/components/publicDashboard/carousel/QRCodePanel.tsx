@@ -1,18 +1,55 @@
 import { QRCodeSVG } from 'qrcode.react'
 import { useTranslation } from 'react-i18next'
-import { getJamShareUrl } from '../../../utils/jamUrl'
+import { getJamShareUrl, getJamShortUrl } from '../../../utils/jamUrl'
+import {NavigationLink} from '../../Navigation'
+import '../venue-display.css'
 
 interface QRCodePanelProps {
   jamId?: string
   slug?: string | null
+  shortCode?: string | null
+  variant?: 'slide' | 'invitation'
+  finished?: boolean
 }
 
-export function QRCodePanel({ jamId, slug }: QRCodePanelProps) {
+export function QRCodePanel({ jamId, slug, shortCode, variant = 'slide', finished = false }: QRCodePanelProps) {
   const { t } = useTranslation()
 
-  const url = getJamShareUrl({ id: jamId || '', slug })
+  const jam = {id: jamId || '', slug, shortCode}
+  const url = slug ? getJamShareUrl(jam) : getJamShortUrl(jam)
   // Display-friendly URL: strip protocol, show domain/slug
   const displayUrl = url.replace(/^https?:\/\//, '').replace(/^www\./, '')
+
+  if (variant === 'invitation') {
+    return (
+      <aside className="venue-invitation" aria-label={t('publicDashboard.joinTheJam')}>
+        <div>
+          <h2 className="venue-invitation-title">{t(finished ? 'publicDashboard.viewThisJam' : 'publicDashboard.takeTheStage')}</h2>
+          <p className="venue-support">{t(finished ? 'publicDashboard.viewThisJamHelp' : 'publicDashboard.joinInvitation')}</p>
+        </div>
+        <QRCodeSVG
+          value={url}
+          size={320}
+          marginSize={4}
+          fgColor="#000000"
+          bgColor="#ffffff"
+          className="venue-qr"
+          role="img"
+          aria-label={t('publicDashboard.qrCodeAlt')}
+        />
+        {!finished && (
+          <ol className="venue-steps" role="list">
+            <li><span className="venue-step-number" aria-hidden="true">1</span>{t('publicDashboard.scanPhone')}</li>
+            <li><span className="venue-step-number" aria-hidden="true">2</span>{t('publicDashboard.chooseMusic')}</li>
+            <li><span className="venue-step-number" aria-hidden="true">3</span>{t('publicDashboard.registerToPlay')}</li>
+          </ol>
+        )}
+        <NavigationLink href={url} className="venue-join-link ds-wrap-user-content ds-control--shared-display">
+          {displayUrl}
+        </NavigationLink>
+      </aside>
+    )
+  }
 
   return (
     <div className="flex flex-col items-center justify-center text-center px-6 py-8">

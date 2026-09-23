@@ -1,57 +1,42 @@
-/**
- * Next Song Card Component
- * Displays next song to be played with musicians grouped by instrument
- *
- * Display-specific wrapper, documented in
- * docs/design-system/public-dashboard-migration.md: `DataCard` was
- * evaluated and not applied here for the same reason as `CurrentSongCard`
- * (fixed background/padding tokens would change this card's contrast and
- * distance-legible type scale).
- */
-
-import {motion} from 'framer-motion'
 import {useTranslation} from 'react-i18next'
-import {useReducedMotion} from '../../hooks'
 import {InstrumentGroup} from './InstrumentGroup'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
+import {useVenueChangeMotion} from './useVenueChangeMotion'
+import './venue-display.css'
 
 interface NextSongCardProps {
-  song: DashboardSongDto
+  song: DashboardSongDto | null
 }
 
-export function NextSongCard({ song }: NextSongCardProps) {
-  const { t } = useTranslation()
-  const { transition, prefersReducedMotion } = useReducedMotion()
+// This domain wrapper keeps the next lineup visible alongside the stage.
+export function NextSongCard({song}: NextSongCardProps) {
+  const {t} = useTranslation()
+  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(song)
 
   return (
-    <motion.div
-      key={`next-${song.id}`}
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ ...transition, delay: transition.duration === 0 ? 0 : 0.1 }}
-      className="mb-8"
-    >
-      <div className="bg-base-100/70 border border-base-300 rounded-xl p-6 md:p-8">
-        <p className="text-secondary text-sm md:text-base font-semibold mb-3">
-          {t('publicDashboard.upNext')}
+    <section ref={cardRef} className="venue-next" data-venue-motion={motionEnabled ? 'running' : 'paused'} aria-label={t('publicDashboard.upNextLabel')}>
+      <span className="venue-change-wash" aria-hidden="true" />
+      <div data-venue-song>
+        <p className="venue-label text-secondary">
+          <span className="venue-next-symbol" aria-hidden="true">⏭️</span>
+          {t('publicDashboard.upNextLabel')}
         </p>
-        <h3 className="text-3xl md:text-5xl font-bold text-base-content mb-2 ds-wrap-user-content">{song.title}</h3>
-        <p className="text-lg md:text-2xl text-base-content/80 mb-4 ds-wrap-user-content">{song.artist}</p>
-
-        {song.musicians && song.musicians.length > 0 && (
-          <div className="mt-6">
-            <p className="text-base md:text-lg font-semibold text-base-content mb-4">
-              {t('publicDashboard.musiciansToBeCalled')}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {Object.entries(groupMusiciansByInstrument(song.musicians)).map(([instrument, musicians]) => (
-                <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="md" />
-              ))}
-            </div>
-          </div>
-        )}
+        <h3 className="venue-next-title ds-wrap-user-content">
+          {song?.title ?? t('publicDashboard.nextToBeAnnounced')}
+        </h3>
+        {song && <p className="venue-support ds-wrap-user-content">{song.artist}</p>}
       </div>
-    </motion.div>
+      <div data-venue-lineup>
+        <p className="venue-label">{t(song ? 'publicDashboard.getReady' : 'publicDashboard.yourTurnNext')}</p>
+        {song && song.musicians.length > 0 ? (
+          <div className="venue-musicians venue-musicians--next">
+            {Object.entries(groupMusiciansByInstrument(song.musicians)).map(([instrument, musicians]) => (
+              <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="md" />
+            ))}
+          </div>
+        ) : <p className="venue-support">{t(song ? 'publicDashboard.lineupPending' : 'publicDashboard.chooseNextSong')}</p>}
+      </div>
+    </section>
   )
 }

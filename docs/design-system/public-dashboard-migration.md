@@ -186,3 +186,96 @@ compact language selector remain the documented display-specific exceptions.
 Marketing CTAs use `NavigationLink`'s `primary` and `secondary` destination
 variants, which preserve native anchor semantics while providing the intended
 emphasis.
+
+## Venue display redesign (September 2026)
+
+The audience brief is a landscape TV/projector that announces the current
+Performance and Musicians, prepares the next lineup, and invites people to
+register for upcoming Music. The default `classic` preference now means the
+persistent stage-and-next layout; explicit saved carousel preferences remain
+supported. The carousel remains an optional sequential display.
+
+The page reuses `CurrentSongCard`, `NextSongCard`, `InstrumentGroup`, `Header`,
+and `QRCodePanel`. The current Performance occupies the dominant left region;
+the next Performance and its lineup sit below it. `QRCodePanel`'s invitation
+variant stays in a dedicated right column, with a quiet zone, a readable link,
+and localized scan/choose/register instructions. It uses the canonical
+`NavigationLink`; header controls still use `IconAction`. The previous two
+corner QR overlays are no longer used by the page, but `QRCodeCorner` remains
+in its existing workbench story and is not deleted without the separate
+zero-consumer/approval gate.
+
+`DataCard` was reconsidered: its ordinary content scale and padding do not own
+the distance-readable Performance hierarchy. These existing domain wrappers
+therefore retain their display-specific CSS, shared in `venue-display.css`.
+Revisit this exception if a canonical shared-display primitive gains this
+contract. `InstrumentGroup` shows written localized instrument names and large
+musician names rather than depending on an emoji alone. Song titles and names
+wrap; the page reflows on phones and permits vertical growth for unusually
+large lineups instead of clipping performers. Routine 16:9 content is intended
+to show all three regions together.
+
+Waiting keeps the upcoming Performance separate from the stage. An empty next
+queue explains how to participate. Finished Jams hide stale next entries and
+replace the signup invitation with a link to the Jam. The dashboard DTO has no
+instrument capacity/availability data, so it does not invent vacant slots.
+Polling, stale-data retention, fullscreen, and the existing registration routes
+remain in place. Ambient card pulsing and the classic waveform were removed;
+stage text updates immediately without an entrance that hides time-critical content.
+
+Review evidence: Public Dashboard transitions / Live Classic, Long Lineups,
+Phone, Empty Queue, Starting Soon, Finished, Stale Data, Musician Change
+Transition, and Live Carousel; Cards and display / Current And Next and Header
+Controls. Human approval is pending; automated evidence does not approve the
+new visual references.
+
+### Verification and review status
+
+- Browser review covered a normal lineup at 1920×1080 and 1280×720, a crowded
+  lineup with long content at 1920×1080, and Spanish phone layout at 390×844.
+- The complete unit run passed 333 tests using two workers. After the shared
+  reduced-motion correction, the affected dashboard/hook tests passed (15
+  tests, including two new first-render preference cases).
+- Focused Storybook MCP interaction/a11y checks pass for live, long-content,
+  phone, starting, empty, finished, musician changes, carousel, header,
+  controls, legacy QR, and stale-data states. The full suite's last run was
+  212/216; its controls-panel first-frame failure was then fixed and checked
+  through MCP. Three failures are outside this surface: Create Jam/Musicians
+  delete/error heading order and Jam Detail's expected title class.
+- Locale verification, workbench TypeScript, catalogue baseline, progressive
+  governance, scoped lint (no errors), deterministic private build, production
+  compilation/isolation, and visual privacy passed. Full lint encounters six
+  parsing errors in existing nested `.claude/worktrees` copies.
+- `npm run build` could not own the occupied prerender port 45678. A temporary
+  copy using port 45679 rendered all five routes; local Chrome cleanup hung
+  after completion and was interrupted. The temporary file was removed.
+- Host-native visual comparison found 7 passing and 25 changed cells, with no
+  missing/unexpected references. This includes intentional dashboard changes
+  and differences outside the dashboard. Per the visual-regression policy,
+  macOS results are diagnostic; final references require the canonical Linux
+  renderer and human review. Existing PNG references and checked-in progress
+  counts were preserved, so visual comparison/progress are not green.
+
+### Selected appearance and live change cues
+
+The user retained the original stage/next/invitation appearance after comparing
+the three private art-direction proposals. The current-song card loses its
+lavender top cap and decorative status dot. Its content and placement remain.
+
+The user then requested live-show energy beyond the initial conservative cues.
+Live songs have animated level bars and a breathing stage-light wash. A song
+change triggers a one-second spring entrance, a 1.3-second spotlight/ring/particle
+burst confined to the current-song card, and staggered musician entrances.
+These audience announcements intentionally exceed routine control durations.
+Upcoming songs and individual lineup edits use smaller spring entrances.
+Springs are sampled once from the existing Motion library and played through
+WAAPI; ambient effects use compositor transform/opacity animations. No audio or
+microphone is involved. Visible-value comparisons prevent unchanged polling
+responses from replaying bursts. First render has ambient motion only; hidden
+documents and reduced-motion mode stop the effects. Rapid updates cancel the
+previous cue, and QR content never moves. Classic mode uses these local cues
+in place of routine full-screen confetti.
+
+The `Live Changes` preview provides manual song, musician, next-song and unchanged
+refresh controls. TypeScript passed; broad workbench tests were not rerun, following
+the user's explicit request to prioritize direct visual review.
