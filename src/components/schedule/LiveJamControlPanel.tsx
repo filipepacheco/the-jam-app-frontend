@@ -4,7 +4,7 @@ import {ArrowUpDown, Check, GripVertical, Loader2, X} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {useLiveQueueController} from '../../hooks/useLiveQueueController'
 import {formatDuration} from '../../lib/formatters'
-import type {LiveQueueOutcome, LiveQueuePerformance} from '../../lib/live-queue/liveQueueController'
+import {isPerformanceLocked, type LiveQueueOutcome, type LiveQueuePerformance} from '../../lib/live-queue/liveQueueController'
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {CORE_BAND} from '../../utils/scheduleUtils'
 import {normalizeInstrument} from '../../utils/musicianUtils'
@@ -85,6 +85,8 @@ const readinessStyles = {
 interface QueueItemProps {
   performance: LiveQueuePerformance
   isNext: boolean
+  isPaused: boolean
+  isLocked: boolean
   isReorderMode: boolean
   isReordering: boolean
   isDragging: boolean
@@ -100,6 +102,8 @@ interface QueueItemProps {
 const QueueItem = React.memo(function QueueItem({
   performance,
   isNext,
+  isPaused,
+  isLocked,
   isReorderMode,
   isReordering,
   isDragging,
@@ -119,7 +123,7 @@ const QueueItem = React.memo(function QueueItem({
   const readiness = useMemo(() => getPerformanceReadiness(performance), [performance])
   const baseStyle = isReordering
     ? 'bg-primary/5 border-primary/30 cursor-wait'
-    : isReorderMode
+    : isReorderMode && !isLocked
       ? readinessStyles[readiness] + ' cursor-move hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2'
       : isNext
         ? 'bg-secondary/10 border-secondary/40 ring-1 ring-secondary/20'
@@ -132,26 +136,27 @@ const QueueItem = React.memo(function QueueItem({
     isDragging ? 'opacity-50 border-primary border-dashed z-10 relative' : 'opacity-100',
   ].join(' ')
   const label = performance.order + '. ' + (performance.music.title || t('schedule.song_tba'))
-    + (isReorderMode ? ' - ' + t('live_control.drag_to_reorder') : '')
+    + (isLocked ? ' - ' + t('live_control.playing_locked') : '')
+    + (isReorderMode && !isLocked ? ' - ' + t('live_control.drag_to_reorder') : '')
 
   return (
     <div
       ref={(element) => onRefChange(performance.id, element)}
-      draggable={isReorderMode && !isReordering}
+      draggable={isReorderMode && !isReordering && !isLocked}
       onDragStart={() => onDragStart(performance.id)}
       onDragOver={(event) => onDragOver(event, performance.id)}
       onDragEnd={onDragEnd}
       onDrop={(event) => onDrop(event, performance.id)}
       onKeyDown={(event) => onKeyDown(event, performance.id)}
-      data-performance-id={performance.id}
+      data-performance-id={isLocked ? undefined : performance.id}
       className={className}
       role="listitem"
-      tabIndex={isReorderMode ? 0 : -1}
+      tabIndex={isReorderMode && !isLocked ? 0 : -1}
       aria-label={label}
-      aria-roledescription={isReorderMode ? t('live_control.reorderable_item') : undefined}
+      aria-roledescription={isReorderMode && !isLocked ? t('live_control.reorderable_item') : undefined}
       aria-busy={isReordering}
     >
-      {isReorderMode && (
+      {isReorderMode && !isLocked && (
         <div className={'shrink-0 transition-colors ' + (isReordering ? 'text-primary/50' : 'text-base-content/40')} aria-hidden="true">
           {isReordering ? <Loader2 className="size-4 animate-spin" /> : <GripVertical className="size-4" />}
         </div>
@@ -162,6 +167,15 @@ const QueueItem = React.memo(function QueueItem({
       <div className={'min-w-0 flex-1 ' + (isReordering ? 'text-base-content/70' : 'text-base-content')}>
         <div className="flex min-w-0 items-center gap-2">
           <p className="min-w-0 truncate text-sm font-semibold">{performance.music.title || t('schedule.song_tba')}</p>
+          {(isPaused || isLocked || performance.status === 'COMPLETED' || performance.status === 'CANCELED' || performance.status === 'SUGGESTED') && (
+            <Badge className="shrink-0" size="sm">
+              {isPaused ? t('live_control.paused')
+                : isLocked ? t('live_control.playing_locked')
+                  : performance.status === 'COMPLETED' ? t('schedule.statuses.completed')
+                    : performance.status === 'CANCELED' ? t('schedule.statuses.canceled')
+                      : t('dj_control.stats.suggested_with_icon')}
+            </Badge>
+          )}
           {isNext && (
             <Badge className="shrink-0" size="sm" tone="info">
               {t('dj_control.now_playing.next_up')}
@@ -201,6 +215,9 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
   const performances = state.draftPerformances
   const isReorderMode = state.session.status === 'editing'
   const isReordering = state.persistence.status !== 'idle'
+  const nextPerformance = state.server.playbackState === 'PAUSED' && !state.server.resumeFromQueue && !isReorderMode
+    ? currentPerformance ?? performances.find(({status}) => status === 'SCHEDULED' || status === 'IN_PROGRESS')
+    : performances.find(({id, status}) => !isPerformanceLocked(state.server, id) && (status === 'SCHEDULED' || status === 'IN_PROGRESS'))
   const activeInput = state.input.mode === 'idle' ? null : state.input
   const dragOverId = activeInput ? performances[activeInput.targetIndex]?.id ?? null : null
   useEffect(() => {
@@ -244,12 +261,12 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
 
   return (
     <div className="space-y-6">
-      {currentPerformance ? (
+      {currentPerformance && state.server.playbackState === 'PLAYING' ? (
         <NowPlayingCard currentPerformance={currentPerformance} />
       ) : (
         <DataCard className="p-6 text-center">
-          <p className="text-base-content/60">{t('live_control.no_song_playing')}</p>
-          <p className="text-sm text-base-content/50 mt-1">{t('live_control.start_to_begin')}</p>
+          <p className="text-base-content/60">{state.server.playbackState === 'PAUSED' ? t('live_control.paused') : t('live_control.no_song_playing')}</p>
+          <p className="text-sm text-base-content/50 mt-1">{state.server.playbackState === 'PAUSED' ? t('live_control.paused_hint') : t('live_control.start_to_begin')}</p>
         </DataCard>
       )}
 
@@ -316,11 +333,13 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
             role="list"
             aria-label={t('live_control.up_next')}
           >
-            {performances.map((performance, index) => (
+            {performances.map((performance) => (
               <QueueItem
                 key={performance.id}
                 performance={performance}
-                isNext={index === 0}
+                isNext={performance.id === nextPerformance?.id}
+                isPaused={state.server.playbackState !== 'PLAYING' && performance.status === 'IN_PROGRESS'}
+                isLocked={isPerformanceLocked(state.server, performance.id)}
                 isReorderMode={isReorderMode}
                 isReordering={isReordering}
                 isDragging={activeInput?.performanceId === performance.id}

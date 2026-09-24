@@ -4,6 +4,7 @@ export interface LiveQueuePerformance {
   status: 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELED' | 'SUGGESTED'
   startedAt?: string | null
   completedAt?: string | null
+  pausedAt?: string | null
   music: {
     title: string
     artist: string
@@ -19,6 +20,9 @@ export interface LiveQueuePerformance {
 
 export interface LiveQueueSnapshot {
   jamId: string
+  queueRevision?: string
+  resumeFromQueue?: boolean
+  allPerformances?: readonly LiveQueuePerformance[]
   currentPerformance: LiveQueuePerformance | null
   upcomingPerformances: readonly LiveQueuePerformance[]
   previousPerformances: readonly LiveQueuePerformance[]
@@ -29,6 +33,7 @@ export interface LiveQueueSnapshot {
 
 export interface LiveQueueFailure {
   message: string
+  status?: number
 }
 
 export type LiveQueueMutationResult = {ok: true} | {ok: false; error: LiveQueueFailure}
@@ -40,6 +45,7 @@ export interface LiveQueueOperationsPort {
   reorder(input: {
     jamId: string
     performances: readonly LiveQueuePerformance[]
+    expectedRevision?: string
   }, signal?: AbortSignal): Promise<LiveQueueMutationResult>
   refresh(jamId: string, signal?: AbortSignal): Promise<LiveQueueRefreshResult>
 }
@@ -114,13 +120,33 @@ function normalizeSnapshot(snapshot: LiveQueueSnapshot): LiveQueueSnapshot {
   }
 }
 
-/**
- * Fingerprints detect a changed poll before persistence, but they are not an
- * atomic compare-and-swap. A server revision token is still required to close
- * the race between this client-side check and the reorder request.
- */
+/** The order editor owns the whole Schedule, independently of playback groups. */
+export function orderedPerformances(snapshot: LiveQueueSnapshot): LiveQueuePerformance[] {
+  const performances = snapshot.allPerformances ?? [
+    ...snapshot.previousPerformances,
+    ...(snapshot.currentPerformance ? [snapshot.currentPerformance] : []),
+    ...snapshot.upcomingPerformances,
+    ...snapshot.suggestedPerformances,
+  ]
+  return [...new Map(performances.map((performance) => [performance.id, performance])).values()]
+    .sort((left, right) => left.order - right.order)
+}
+
+export function isPerformanceLocked(snapshot: LiveQueueSnapshot, id: string): boolean {
+  return snapshot.playbackState === 'PLAYING' && snapshot.currentPerformance?.id === id
+}
+
 export function fingerprintQueue(performances: readonly LiveQueuePerformance[]): string {
-  return JSON.stringify(performances.map(({id}) => id))
+  return JSON.stringify(performances.map(({id, order, status}) => [id, order, status]))
+}
+
+function fingerprintSnapshot(snapshot: LiveQueueSnapshot): string {
+  return JSON.stringify([
+    snapshot.queueRevision,
+    snapshot.playbackState,
+    snapshot.currentPerformance?.id,
+    fingerprintQueue(orderedPerformances(snapshot)),
+  ])
 }
 
 const browserTimer: LiveQueueTimerPort = {
@@ -140,7 +166,7 @@ export function createLiveQueueController({
   timer?: LiveQueueTimerPort
 }): LiveQueueController {
   let server = normalizeSnapshot(initialSnapshot)
-  let draftPerformances = [...server.upcomingPerformances]
+  let draftPerformances = orderedPerformances(server)
   let session: LiveQueueState['session'] = {status: 'idle'}
   let conflict: LiveQueueState['conflict'] = null
   let latestOutcome: LiveQueueOutcome | null = null
@@ -172,24 +198,33 @@ export function createLiveQueueController({
     if (session.status !== 'editing' || persistenceStatus !== 'idle') return
     const sourceIndex = draftPerformances.findIndex(({id}) => id === performanceId)
     if (sourceIndex < 0 || targetIndex < 0 || targetIndex >= draftPerformances.length) return
+    if (isPerformanceLocked(server, performanceId)) return
+    if (isPerformanceLocked(server, draftPerformances[targetIndex].id)) {
+      targetIndex += Math.sign(targetIndex - sourceIndex)
+      if (targetIndex < 0 || targetIndex >= draftPerformances.length) return
+    }
+    // Reorder the movable entries across their existing slots. The active
+    // Performance stays at its saved position even when a move crosses it.
+    const positions = draftPerformances.filter(({id}) => !isPerformanceLocked(server, id))
+      .map(({order}) => order).sort((left, right) => left - right)
     const reordered = [...draftPerformances]
     const [moved] = reordered.splice(sourceIndex, 1)
     reordered.splice(targetIndex, 0, moved)
-    const baseOrder = Math.min(...reordered.map(({order}) => order))
-    draftPerformances = reordered.map((performance, index) => ({
-      ...performance,
-      order: baseOrder + index,
-    }))
+    let positionIndex = 0
+    draftPerformances = reordered.map((performance) => isPerformanceLocked(server, performance.id)
+      ? performance
+      : {...performance, order: positions[positionIndex++]})
+      .sort((left, right) => left.order - right.order)
   }
 
   const commands: LiveQueueController['commands'] = {
     replaceServerSnapshot(snapshot) {
       server = normalizeSnapshot(snapshot)
       if (session.status === 'idle') {
-        draftPerformances = [...server.upcomingPerformances]
+        draftPerformances = orderedPerformances(server)
         conflict = null
       } else {
-        const latestFingerprint = fingerprintQueue(server.upcomingPerformances)
+        const latestFingerprint = fingerprintSnapshot(server)
         conflict = latestFingerprint === session.startingFingerprint
           ? null
           : {
@@ -206,9 +241,9 @@ export function createLiveQueueController({
       session = {
         status: 'editing',
         startingSnapshot,
-        startingFingerprint: fingerprintQueue(startingSnapshot.upcomingPerformances),
+        startingFingerprint: fingerprintSnapshot(startingSnapshot),
       }
-      draftPerformances = [...startingSnapshot.upcomingPerformances]
+      draftPerformances = orderedPerformances(startingSnapshot)
       conflict = null
       input = {mode: 'idle'}
       project()
@@ -220,7 +255,7 @@ export function createLiveQueueController({
     beginMove({mode, performanceId}) {
       if (session.status !== 'editing' || persistenceStatus !== 'idle') return
       const sourceIndex = draftPerformances.findIndex(({id}) => id === performanceId)
-      if (sourceIndex < 0) return
+      if (sourceIndex < 0 || isPerformanceLocked(server, performanceId)) return
       input = {mode, performanceId, targetIndex: sourceIndex}
       project()
     },
@@ -240,7 +275,8 @@ export function createLiveQueueController({
       project()
     },
     cancelReorder() {
-      draftPerformances = [...server.upcomingPerformances]
+      if (persistenceStatus !== 'idle') return {code: 'duplicate_pending', operation: 'save_reorder'}
+      draftPerformances = orderedPerformances(server)
       session = {status: 'idle'}
       conflict = null
       input = {mode: 'idle'}
@@ -257,7 +293,7 @@ export function createLiveQueueController({
         project()
         return Promise.resolve(latestOutcome)
       }
-      const latestFingerprint = fingerprintQueue(server.upcomingPerformances)
+      const latestFingerprint = fingerprintSnapshot(server)
       if (latestFingerprint !== session.startingFingerprint) {
         conflict = {
           status: 'detected',
@@ -281,8 +317,8 @@ export function createLiveQueueController({
       return new Promise<LiveQueueOutcome>((resolve) => {
         const cancel = timer.schedule(300, () => {
           void (async () => {
-            const latestFingerprint = fingerprintQueue(server.upcomingPerformances)
-            const startingFingerprint = fingerprintQueue(startingSnapshot.upcomingPerformances)
+            const latestFingerprint = fingerprintSnapshot(server)
+            const startingFingerprint = fingerprintSnapshot(startingSnapshot)
             if (latestFingerprint !== startingFingerprint) {
               persistenceStatus = 'idle'
               conflict = {status: 'detected', startingFingerprint, latestFingerprint}
@@ -304,12 +340,11 @@ export function createLiveQueueController({
             let mutation: LiveQueueMutationResult
             try {
               mutation = operations
-                ? await operations.reorder({jamId: server.jamId, performances: draftPerformances}, abort.signal)
+                ? await operations.reorder({jamId: server.jamId, performances: draftPerformances, expectedRevision: startingSnapshot.queueRevision}, abort.signal)
                 : {ok: false, error: {message: 'Live Queue operations adapter is required'}}
             } catch (cause) {
               if (disposed || abort.signal.aborted) return
-              server = startingSnapshot
-              draftPerformances = [...startingSnapshot.upcomingPerformances]
+              draftPerformances = orderedPerformances(server)
               session = {status: 'idle'}
               conflict = null
               persistenceStatus = 'idle'
@@ -329,17 +364,13 @@ export function createLiveQueueController({
             if (disposed || abort.signal.aborted) return
 
             if (!mutation.ok) {
-              server = startingSnapshot
-              draftPerformances = [...startingSnapshot.upcomingPerformances]
+              draftPerformances = orderedPerformances(server)
               session = {status: 'idle'}
               conflict = null
               persistenceStatus = 'idle'
-              latestOutcome = {
-                code: 'failure',
-                operation: 'save_reorder',
-                failure: 'resolved',
-                error: mutation.error,
-              }
+              latestOutcome = mutation.error.status === 409
+                ? {code: 'conflict', operation: 'save_reorder', startingFingerprint: fingerprintSnapshot(startingSnapshot), latestFingerprint: fingerprintSnapshot(server)}
+                : {code: 'failure', operation: 'save_reorder', failure: 'resolved', error: mutation.error}
               project()
               activeSaveAbort = null
               pendingSave = null
@@ -375,7 +406,7 @@ export function createLiveQueueController({
             }
 
             server = normalizeSnapshot(refreshed.snapshot)
-            draftPerformances = [...server.upcomingPerformances]
+            draftPerformances = orderedPerformances(server)
             session = {status: 'idle'}
             conflict = null
             persistenceStatus = 'idle'

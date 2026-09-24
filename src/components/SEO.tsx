@@ -1,3 +1,4 @@
+import {BRAND_METADATA} from '../config/brandMetadata'
 /**
  * SEO Component
  *
@@ -25,7 +26,7 @@ export function SEO({
   title,
   description,
   keywords,
-  ogImage = '/brand/v1/social-hybrid-1200x630.png',
+  ogImage = BRAND_METADATA.socialImage,
   ogType = 'website',
   noindex = false,
   canonical,
