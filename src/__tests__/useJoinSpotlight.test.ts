@@ -30,29 +30,58 @@ afterEach(() => vi.useRealTimers())
 describe('useJoinSpotlight', () => {
   it('does not announce the lineup that is already there on first load', () => {
     const {result} = renderSpotlight({current: stage, queue: [next, later]})
-    expect(result.current.moment).toBeNull()
+    expect(result.current.next).toBeNull()
+    expect(result.current.queue).toBeNull()
     expect(result.current.awaiting.size).toBe(0)
   })
 
-  it('announces a sign-up on any queued song and hides its slot until it lands', () => {
+  it('announces an up-next sign-up in its card and hides its slot until it lands', () => {
+    const {result, rerender} = renderSpotlight({current: stage, queue: [next, later]})
+    rerender({current: stage, queue: [withMusician(next, musician('bianca', 'keys')), later]})
+
+    expect(result.current.next?.joins.map(join => [join.musician.name, join.title])).toEqual([['Bianca', 'Title next']])
+    expect(result.current.queue).toBeNull()
+    expect([...result.current.awaiting]).toEqual(['next:bianca'])
+
+    act(() => result.current.finish(result.current.next!.id))
+    expect(result.current.next).toBeNull()
+    expect(result.current.awaiting.size).toBe(0)
+  })
+
+  it('announces a later sign-up under the QR code, with nothing waiting to fly', () => {
     const {result, rerender} = renderSpotlight({current: stage, queue: [next, later]})
     rerender({current: stage, queue: [next, withMusician(later, musician('bianca', 'keys'))]})
 
-    expect(result.current.moment?.joins.map(join => [join.musician.name, join.title])).toEqual([['Bianca', 'Title later']])
-    expect([...result.current.awaiting]).toEqual(['later:bianca'])
-
-    act(() => result.current.finish(result.current.moment!.id))
-    expect(result.current.moment).toBeNull()
+    expect(result.current.queue?.joins.map(join => join.musician.name)).toEqual(['Bianca'])
+    expect(result.current.queue?.lane).toBe('queue')
+    expect(result.current.next).toBeNull()
     expect(result.current.awaiting.size).toBe(0)
+  })
+
+  it('changes the lineup on stage quietly', () => {
+    const {result, rerender} = renderSpotlight({current: stage, queue: [next]})
+    rerender({current: withMusician(stage, musician('ana')), queue: [next]})
+    expect(result.current.next).toBeNull()
+    expect(result.current.queue).toBeNull()
   })
 
   it('merges one poll of sign-ups into one moment, with the overflow as a count', () => {
     const {result, rerender} = renderSpotlight({current: stage, queue: [next]})
-    rerender({current: withMusician(stage, musician('ana'), musician('bia')), queue: [withMusician(next, musician('caio'), musician('dani'), musician('eva'))]})
+    rerender({current: stage, queue: [withMusician(next, musician('ana'), musician('bia'), musician('caio'), musician('dani'), musician('eva'))]})
 
-    expect(result.current.moment?.joins.map(join => join.musician.id)).toEqual(['ana', 'bia', 'caio'])
-    expect(result.current.moment?.extra).toBe(2)
+    expect(result.current.next?.joins.map(join => join.musician.id)).toEqual(['ana', 'bia', 'caio'])
+    expect(result.current.next?.extra).toBe(2)
     expect(result.current.awaiting.has('next:dani')).toBe(false)
+  })
+
+  it('drops an up-next announcement once its song takes the stage', () => {
+    const {result, rerender} = renderSpotlight({current: stage, queue: [next, later], paused: true})
+    const joined = withMusician(next, musician('bianca'))
+    rerender({current: stage, queue: [joined, later], paused: true})
+    expect(result.current.next).not.toBeNull()
+    rerender({current: joined, queue: [later], paused: true})
+    expect(result.current.next).toBeNull()
+    expect(result.current.awaiting.size).toBe(0)
   })
 
   it('does not announce a queue that moves on, a repeated poll, a move or a leave', () => {
@@ -61,27 +90,29 @@ describe('useJoinSpotlight', () => {
     rerender({current: next, queue: [later, song('slid-into-view', musician('zoe'))]})
     rerender({current: next, queue: [withMusician(later, musician('camila'))]})
     rerender({current: song('next'), queue: [later]})
-    expect(result.current.moment).toBeNull()
+    expect(result.current.next).toBeNull()
+    expect(result.current.queue).toBeNull()
   })
 
   it('announces nothing while hidden or in another layout', () => {
     const {result, rerender} = renderSpotlight({current: stage, queue: [next], enabled: false})
     rerender({current: stage, queue: [withMusician(next, musician('bianca'))], enabled: false})
-    expect(result.current.moment).toBeNull()
+    expect(result.current.next).toBeNull()
   })
 
   it('keeps the slots visible when names will not fly', () => {
     const {result, rerender} = renderSpotlight({current: stage, queue: [next], flight: false})
     rerender({current: stage, queue: [withMusician(next, musician('bianca'))], flight: false})
-    expect(result.current.moment).not.toBeNull()
+    expect(result.current.next).not.toBeNull()
     expect(result.current.awaiting.size).toBe(0)
   })
 
   it('always ends a moment, so no name stays hidden', () => {
-    const {result, rerender} = renderSpotlight({current: stage, queue: [next]})
-    rerender({current: stage, queue: [withMusician(next, musician('bianca'))]})
+    const {result, rerender} = renderSpotlight({current: stage, queue: [next, later]})
+    rerender({current: stage, queue: [withMusician(next, musician('bianca')), withMusician(later, musician('caio'))]})
     act(() => vi.advanceTimersByTime(MOMENT_TIMEOUT_MS))
-    expect(result.current.moment).toBeNull()
+    expect(result.current.next).toBeNull()
+    expect(result.current.queue).toBeNull()
     expect(result.current.awaiting.size).toBe(0)
   })
 
@@ -89,6 +120,6 @@ describe('useJoinSpotlight', () => {
     const {result, rerender} = renderSpotlight({current: stage, queue: [next], paused: true})
     rerender({current: stage, queue: [withMusician(next, musician('bianca'))], paused: true})
     act(() => vi.advanceTimersByTime(MOMENT_TIMEOUT_MS))
-    expect(result.current.moment).not.toBeNull()
+    expect(result.current.next).not.toBeNull()
   })
 })

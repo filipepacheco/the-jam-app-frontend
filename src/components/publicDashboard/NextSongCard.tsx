@@ -1,3 +1,4 @@
+import type {ReactNode} from 'react'
 import {useTranslation} from 'react-i18next'
 import {InstrumentGroup} from './InstrumentGroup'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
@@ -12,12 +13,14 @@ interface NextSongCardProps {
   awaiting?: ReadonlySet<string>
   /** The flight taking the shown song to the stage; the new one waits for lift-off. */
   boarding?: number | null
+  /** The join spotlight for this song plays inside the card. */
+  children?: ReactNode
 }
 
 // This domain wrapper keeps the next lineup visible alongside the stage.
-export function NextSongCard({song, awaiting, boarding = null}: NextSongCardProps) {
+export function NextSongCard({song, awaiting, boarding = null, children}: NextSongCardProps) {
   const {t} = useTranslation()
-  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(song, undefined, boarding)
+  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(song, {boarding})
 
   return (
     <section ref={cardRef} className="venue-next" data-venue-song-id={song?.id} data-venue-motion={motionEnabled ? 'running' : 'paused'} aria-label={t('publicDashboard.upNextLabel')}>
@@ -51,6 +54,7 @@ export function NextSongCard({song, awaiting, boarding = null}: NextSongCardProp
           </div>
         ) : <p className="venue-support">{t(song ? 'publicDashboard.lineupPending' : 'publicDashboard.chooseNextSong')}</p>}
       </div>
+      {children}
     </section>
   )
 }

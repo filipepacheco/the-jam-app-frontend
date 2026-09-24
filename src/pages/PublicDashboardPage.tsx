@@ -20,6 +20,8 @@ import {useStageHandover} from '../components/publicDashboard/useStageHandover'
 import {useJoinSpotlight} from '../components/publicDashboard/useJoinSpotlight'
 import {JoinSpotlight} from '../components/publicDashboard/JoinSpotlight'
 import {StageFlight} from '../components/publicDashboard/StageFlight'
+import {VenueProgramme} from '../components/publicDashboard/VenueProgramme'
+import {ShowConfetti} from '../components/publicDashboard/ShowConfetti'
 import {useAudienceReactions} from '../components/publicDashboard/useAudienceReactions'
 import type {ReactionFeed} from '../lib/realtime/jamReactions'
 import {usePageVisible} from '../components/publicDashboard/useVenueChangeMotion'
@@ -205,6 +207,9 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride, reactio
         <ConfettiWrapper show={layout === 'carousel' && !prefersReducedMotion && confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
       </Suspense>
 
+      {/* The whole display celebrates while the room applauds. */}
+      <ShowConfetti applause={layout !== 'carousel' && !prefersReducedMotion && pageVisible ? show.applause?.id ?? null : null} container={containerRef} />
+
       {/* Offline Indicator */}
       <OfflineBanner
         visible={isOfflineMode || Boolean(error)}
@@ -252,7 +257,8 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride, reactio
         />
       ) : (
         <main className="venue-board">
-            <div className="venue-programme">
+            {/* The cards resize smoothly when a song change makes them taller or shorter. */}
+            <VenueProgramme still={prefersReducedMotion || !pageVisible}>
               {/* Now Playing stays visible while the Jam waits for a current
                   Performance. The next Performance remains a separate region. */}
               {/* The finale stays on the stage card, so the last song rolls
@@ -260,15 +266,15 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride, reactio
               <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} awaiting={spotlight.awaiting} boarding={show.boarding?.id} reactions={reactions} />
 
               {!show.finished && (
-                <NextSongCard song={show.next} awaiting={spotlight.awaiting} boarding={show.boarding?.id} />
+                <NextSongCard song={show.next} awaiting={spotlight.awaiting} boarding={show.boarding?.id}>
+                  <JoinSpotlight moment={spotlight.next} paused={stageBusy} gentle={prefersReducedMotion} onDone={spotlight.finish} />
+                </NextSongCard>
               )}
 
               {/* After the cards: it measures the up-next card before they change. */}
               <StageFlight boarding={show.boarding} onLand={show.land} />
 
-              <JoinSpotlight moment={spotlight.moment} paused={stageBusy} gentle={prefersReducedMotion} onDone={spotlight.finish} />
-
-            </div>
+            </VenueProgramme>
             <Suspense fallback={null}>
               <QRCodePanel
                 variant="invitation"
@@ -276,7 +282,9 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride, reactio
                 slug={dashboardData?.slug}
                 shortCode={dashboardData?.shortCode}
                 finished={show.finished}
-              />
+              >
+                <JoinSpotlight moment={spotlight.queue} paused={stageBusy} gentle={prefersReducedMotion} onDone={spotlight.finish} />
+              </QRCodePanel>
             </Suspense>
         </main>
       )}

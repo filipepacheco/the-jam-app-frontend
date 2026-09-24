@@ -2,8 +2,8 @@ import {useCallback, useEffect, useRef, useState} from 'react'
 import type {DashboardSongDto, PlaybackState} from '../../types/api.types'
 import {TEMPO} from './venueMotion'
 
-/** How long the stage thanks the band before the next song takes it. */
-export const APPLAUSE_MS = 3000 * TEMPO
+/** How long the stage thanks the band before the next song takes it: a real round of applause. */
+export const APPLAUSE_MS = 10_000
 /** Safety net for the up-next flight: its text never stays hidden longer. */
 export const BOARDING_MS = 2400 * TEMPO
 

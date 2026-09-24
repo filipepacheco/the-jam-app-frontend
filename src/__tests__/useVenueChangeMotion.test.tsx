@@ -124,7 +124,7 @@ describe('useVenueChangeMotion', () => {
     expect(container.querySelector('[data-venue-lineup]')).not.toBeInTheDocument()
   })
 
-  it('applauds the band that just played under a strobe, keeping its lineup in place', () => {
+  it('applauds the band that just played under a strobe, with its lineup out of the way', () => {
     const {container, rerender} = render(<CurrentSongCard song={psychoKiller} />)
     targets = []
     timings = []
@@ -158,6 +158,17 @@ describe('useVenueChangeMotion', () => {
     expect(container.querySelector('.venue-current')).toHaveAttribute('data-venue-song-id', 'song-1')
     expect(targets).not.toContain(name)
     expect(targets.some(target => target.classList.contains('venue-musician-wash'))).toBe(false)
+  })
+
+  it('changes the stage light color only once the new song has fully arrived', async () => {
+    const {container, rerender} = render(<CurrentSongCard song={psychoKiller} />)
+    const stage = container.querySelector<HTMLElement>('.venue-current')!
+    const before = stage.style.getPropertyValue('--venue-scene-shift')
+    rerender(<CurrentSongCard song={{...valerie, id: 'song-9'}} />)
+    expect(stage.style.getPropertyValue('--venue-scene-shift')).toBe(before)
+
+    await act(async () => {})
+    expect(stage.style.getPropertyValue('--venue-scene-shift')).not.toBe(before)
   })
 
   it('keeps the stage lights and meter mounted but still while a song is paused', () => {
@@ -196,8 +207,9 @@ describe('useVenueChangeMotion', () => {
         ['word', 'Valerie'], ['artist', 'Amy Winehouse'], ['name', 'Yuri'], ['name', 'Marina'],
       ])
       expect(stage).toHaveAttribute('data-venue-boarding')
-      // Nothing rises on the stage, and the up-next card lets the old song go.
+      // Nothing rises or lands on the stage, and the up-next card lets the old song go.
       expect(targets.filter(target => stage.contains(target) && target.classList.contains('venue-word-inner'))).toHaveLength(0)
+      expect(targets.filter(target => stage.contains(target) && target.hasAttribute('data-venue-instrument'))).toHaveLength(0)
       expect(container.querySelector('.venue-next [data-venue-ghost]')).toBeEmptyDOMElement()
 
       await act(async () => {})
@@ -208,6 +220,7 @@ describe('useVenueChangeMotion', () => {
       expect(container.querySelector('.venue-flight-clone')).not.toBeInTheDocument()
       expect(stage).not.toHaveAttribute('data-venue-boarding')
       expect(targets.some(target => target.classList.contains('venue-change-wash'))).toBe(true)
+      expect(targets.filter(target => target.classList.contains('venue-instrument-label')).length).toBeGreaterThan(0)
     })
 
     it('cancels the flight when the display goes away', () => {

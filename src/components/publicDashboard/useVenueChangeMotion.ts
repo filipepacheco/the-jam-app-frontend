@@ -82,9 +82,14 @@ export function usePageVisible() {
  * finale or the applause, which keeps the band's lineup in place.
  * `boarding` marks the song change that the up-next flight carries: the stage
  * waits for the flight to land its text, and the up-next card lets it leave.
+ * `onSettle` runs once a change has fully played (or at once, with no cue).
  */
-export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: string, boarding?: number | null) {
+export function useVenueChangeMotion(song: DashboardSongDto | null, {variant, boarding, onSettle}: {variant?: string; boarding?: number | null; onSettle?: () => void} = {}) {
   const ref = useRef<HTMLElement>(null)
+  const settled = useRef(onSettle)
+  useLayoutEffect(() => {
+    settled.current = onSettle
+  })
   const previous = useRef<ReturnType<typeof describeSong> | null>(null)
   const boarded = useRef<number | null>(null)
   const snapshot = useRef<HTMLElement | null>(null)
@@ -102,6 +107,7 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
     const next = describeSong(song, variant)
     const last = previous.current
     previous.current = next
+    const settle = () => settled.current?.()
 
     const stop = () => {
       cue.current += 1
@@ -112,9 +118,13 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
     }
     if (!pageVisible) {
       stop()
+      settle()
       return
     }
-    if (!root || document.hidden || typeof root.animate !== 'function') return
+    if (!root || document.hidden || typeof root.animate !== 'function') {
+      settle()
+      return
+    }
 
     const songChanged = !last || last.song !== next.song
     const changedInstruments = [...new Set([...(last?.lineup.keys() ?? []), ...next.lineup.keys()])]
@@ -122,7 +132,10 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
     if (!songChanged && changedInstruments.length === 0) return
     const gentle = prefersReducedMotion
     // The first paint is a flourish, so reduced motion simply shows the display.
-    if (gentle && !last) return
+    if (gentle && !last) {
+      settle()
+      return
+    }
 
     // A newer event replaces the previous cue; nothing queues behind live data.
     stop()
@@ -188,13 +201,9 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
         words.forEach((part, order) => animate(part, LINE_IN, {duration: profile.enter, delay: enterAt + index * line + Math.min(order, 8) * word}))
         wordsAt = Math.min(words.length - 1, 8) * word
       })
-      // The applauded band is already on stage; only a new lineup lands.
-      if (arrival) {
-        // Fade only: a rise would move the slots the names are flying to.
-        root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
-          animate(element, FADE_IN, {duration: SHOW.fade, delay: enterAt + Math.min(index, 6) * SHOW.stagger})
-        })
-      } else if (!applause) {
+      // The applauded band's lineup fades out (CSS); only a new lineup lands. An
+      // arriving lineup waits hidden with the text and shows when the flight lands.
+      if (!arrival && !applause) {
         root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
           land(element, gentle ? enterAt : enterAt + wordsAt + lineup + Math.min(index, 6) * SHOW.stagger)
         })
@@ -240,7 +249,10 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
       }
     }
 
-    if (animations.current.length === 0) return
+    if (animations.current.length === 0) {
+      settle()
+      return
+    }
     // Line masks clip only while a cue runs, so resting text never loses a descender.
     root.dataset.venueCue = ''
     void Promise.allSettled(animations.current.map(animation => animation.finished)).then(() => {
@@ -248,6 +260,7 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
       root.querySelector('[data-venue-ghost]')?.replaceChildren()
       delete root.dataset.venueCue
       animations.current = []
+      settle()
     })
   }, [song, variant, boarding, prefersReducedMotion, pageVisible])
 
