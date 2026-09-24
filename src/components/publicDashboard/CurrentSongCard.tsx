@@ -7,6 +7,7 @@ import {useVenueChangeMotion} from './useVenueChangeMotion'
 import {splitWords} from './venueWords'
 import {APPLAUSE_SHIFT, sceneShift, useStageLights} from './venueScene'
 import {ReactionLayer} from './ReactionLayer'
+import {ReactionShoutouts} from './ReactionShoutouts'
 import {useClapCount} from './useAudienceReactions'
 import type {ReactionFeed} from '../../lib/realtime/jamReactions'
 import './venue-display.css'
@@ -22,7 +23,7 @@ interface CurrentSongCardProps {
   awaiting?: ReadonlySet<string>
   /** The up-next flight carrying this song here; its text waits until it lands. */
   boarding?: number | null
-  /** The room's reactions: they float up behind the stage text. */
+  /** The room's reactions: they float up behind the stage text, and named ones show in a corner. */
   reactions?: ReactionFeed | null
 }
 
@@ -74,6 +75,7 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
         </div>
       )}
       <ReactionLayer feed={reactions} gentle={!motionEnabled} />
+      <ReactionShoutouts feed={reactions} gentle={!motionEnabled} />
       <span className="venue-change-wash" aria-hidden="true" />
       {!finished && (
         <p className="venue-label">

@@ -20,16 +20,22 @@ interface ReactionBarProps {
   jamId: string
   /** Send to the venue display. Review stories keep this off: taps stay local. */
   live?: boolean
+  /** The account name the big screen shows with each reaction; none for a guest. */
+  name?: string | null
+  /** Not signed in: the bar says how to get a name on the big screen. */
+  guest?: boolean
 }
 
 /**
  * While the Jam is live, the audience taps reactions that float up on the
- * venue display. Anonymous: a tap sends only its kind, never who tapped.
+ * venue display. A signed-in tap carries the account name, which the big
+ * screen shows ("Lipe amou isso!"); a guest tap carries only its kind.
  */
-export function ReactionBar({jamId, live = true}: ReactionBarProps) {
+export function ReactionBar({jamId, live = true, name = null, guest = false}: ReactionBarProps) {
   const {t} = useTranslation()
   const {prefersReducedMotion} = useReducedMotion()
-  const send = useReactionSender(jamId, live)
+  const send = useReactionSender(jamId, live, name)
+  const hint = name ? t('jams.reactions.named') : guest ? t('jams.reactions.anonymous') : null
 
   const react = (kind: ReactionKind, button: HTMLButtonElement) => {
     send(kind)
@@ -59,7 +65,10 @@ export function ReactionBar({jamId, live = true}: ReactionBarProps) {
       className="fixed inset-x-0 bottom-0 z-[9990] border-t border-base-300 bg-base-100/95 px-4 pt-2 backdrop-blur pb-[calc(0.75rem+env(safe-area-inset-bottom))]"
     >
       <div className="mx-auto flex max-w-4xl flex-col items-center gap-1.5 sm:flex-row sm:justify-between">
-        <p className="text-sm font-semibold text-base-content/70" aria-hidden="true">{t('jams.reactions.title')}</p>
+        <div className="text-center sm:text-start">
+          <p className="text-sm font-semibold text-base-content/70" aria-hidden="true">{t('jams.reactions.title')}</p>
+          {hint && <p className="text-xs text-base-content/60">{hint}</p>}
+        </div>
         <div className="flex gap-3">
           {REACTIONS.map(kind => (
             <button

@@ -218,6 +218,41 @@
   .venue-claps { animation: venue-clap-pop 240ms var(--venue-ease-out); }
 }
 @keyframes venue-clap-pop { from { scale: 1.2; } }
+/* Named reactions stack in the stage's bottom corner, over the text on a
+   plate that keeps them legible. Only a few show, and each leaves on its own. */
+.venue-shoutouts {
+  position: absolute;
+  right: clamp(1rem, 1.5vw, 1.75rem);
+  bottom: clamp(1rem, 1.5vw, 1.75rem);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  max-width: min(60%, 34rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.venue-shoutout {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  font-size: clamp(1.125rem, 1.4vw, 1.625rem);
+  line-height: 1.25;
+  font-weight: 650;
+  background: color-mix(in oklch, var(--color-base-100) 86%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--venue-scene) 35%, transparent), 0 0.75rem 2rem -1rem color-mix(in oklch, var(--venue-scene) 60%, transparent);
+  backdrop-filter: blur(8px);
+}
+.venue-shoutout-name { font-weight: 850; color: var(--venue-scene); }
+.venue-shoutout-emoji { flex-shrink: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .venue-shoutout-emoji { animation: venue-clap-pop 240ms var(--venue-ease-out); }
+}
 
 /* Up-next flight: the stage text waits hidden (keeping its layout) while
    clones fly from the up-next card; the landing swaps them in one commit. */
