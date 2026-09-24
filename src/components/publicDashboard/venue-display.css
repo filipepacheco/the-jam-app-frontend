@@ -5,6 +5,12 @@
 }
 
 .venue-programme { position: relative; display: grid; gap: 1.5rem; min-width: 0; }
+/* A song change eases the cards to their new heights (VenueProgramme). While
+   the rows move, a card clips what does not fit yet; a card that left fades
+   out in its old place. */
+.venue-programme[data-venue-resizing] > section { overflow: clip; }
+/* Outranks the cards' own position: relative. */
+.venue-programme > .venue-leaving { position: absolute; margin: 0; pointer-events: none; }
 .venue-current, .venue-next, .venue-invitation {
   /* Mirrors EASE_OUT in venueMotion.ts. */
   --venue-ease-out: cubic-bezier(0.23, 1, 0.32, 1);

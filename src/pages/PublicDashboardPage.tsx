@@ -20,6 +20,7 @@ import {useStageHandover} from '../components/publicDashboard/useStageHandover'
 import {useJoinSpotlight} from '../components/publicDashboard/useJoinSpotlight'
 import {JoinSpotlight} from '../components/publicDashboard/JoinSpotlight'
 import {StageFlight} from '../components/publicDashboard/StageFlight'
+import {VenueProgramme} from '../components/publicDashboard/VenueProgramme'
 import {ShowConfetti} from '../components/publicDashboard/ShowConfetti'
 import {usePageVisible} from '../components/publicDashboard/useVenueChangeMotion'
 
@@ -246,7 +247,8 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
         />
       ) : (
         <main className="venue-board">
-            <div className="venue-programme">
+            {/* The cards resize smoothly when a song change makes them taller or shorter. */}
+            <VenueProgramme still={prefersReducedMotion || !pageVisible}>
               {/* Now Playing stays visible while the Jam waits for a current
                   Performance. The next Performance remains a separate region. */}
               {/* The finale stays on the stage card, so the last song rolls
@@ -262,7 +264,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
               {/* After the cards: it measures the up-next card before they change. */}
               <StageFlight boarding={show.boarding} onLand={show.land} />
 
-            </div>
+            </VenueProgramme>
             <Suspense fallback={null}>
               <QRCodePanel
                 variant="invitation"
