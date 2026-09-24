@@ -207,8 +207,9 @@ describe('useVenueChangeMotion', () => {
         ['word', 'Valerie'], ['artist', 'Amy Winehouse'], ['name', 'Yuri'], ['name', 'Marina'],
       ])
       expect(stage).toHaveAttribute('data-venue-boarding')
-      // Nothing rises on the stage, and the up-next card lets the old song go.
+      // Nothing rises or lands on the stage, and the up-next card lets the old song go.
       expect(targets.filter(target => stage.contains(target) && target.classList.contains('venue-word-inner'))).toHaveLength(0)
+      expect(targets.filter(target => stage.contains(target) && target.hasAttribute('data-venue-instrument'))).toHaveLength(0)
       expect(container.querySelector('.venue-next [data-venue-ghost]')).toBeEmptyDOMElement()
 
       await act(async () => {})
@@ -219,6 +220,7 @@ describe('useVenueChangeMotion', () => {
       expect(container.querySelector('.venue-flight-clone')).not.toBeInTheDocument()
       expect(stage).not.toHaveAttribute('data-venue-boarding')
       expect(targets.some(target => target.classList.contains('venue-change-wash'))).toBe(true)
+      expect(targets.filter(target => target.classList.contains('venue-instrument-label')).length).toBeGreaterThan(0)
     })
 
     it('cancels the flight when the display goes away', () => {
