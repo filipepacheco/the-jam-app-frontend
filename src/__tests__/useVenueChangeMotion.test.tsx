@@ -140,6 +140,19 @@ describe('useVenueChangeMotion', () => {
     expect(targets.some(target => target.hasAttribute('data-venue-instrument'))).toBe(true)
   })
 
+  it('leaves a spotlighted sign-up hidden in its slot for the spotlight to fly in', () => {
+    const {container, rerender} = render(<CurrentSongCard song={psychoKiller} />)
+    targets = []
+    const joined = {...psychoKiller, musicians: [...psychoKiller.musicians, {id: 'bia', name: 'Bia', instrument: 'vocals'}]}
+    rerender(<CurrentSongCard song={joined} awaiting={new Set(['song-1:bia'])} />)
+
+    const name = container.querySelector('[data-venue-musician="bia"]')
+    expect(name).toHaveAttribute('data-venue-awaiting')
+    expect(container.querySelector('.venue-current')).toHaveAttribute('data-venue-song-id', 'song-1')
+    expect(targets).not.toContain(name)
+    expect(targets.some(target => target.classList.contains('venue-musician-wash'))).toBe(false)
+  })
+
   it('keeps the stage lights and meter mounted but still while a song is paused', () => {
     const {container} = render(<CurrentSongCard song={psychoKiller} playbackState="PAUSED" />)
     const stage = container.querySelector('.venue-current')!

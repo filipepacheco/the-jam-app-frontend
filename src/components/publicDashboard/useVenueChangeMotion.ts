@@ -30,7 +30,7 @@ const PROFILE = {
   stage: paced({lead: 0, exit: 260, leave: 40, enter: 950, overlap: 110, line: 90, word: 80, lineup: 300}),
   next: paced({lead: 160, exit: 220, leave: 40, enter: 750, overlap: 90, line: 70, word: 60, lineup: 240}),
 }
-const SHOW = paced({rise: 700, fade: 500, stagger: 70, light: 1400, intro: 160})
+export const SHOW = paced({rise: 700, fade: 500, stagger: 70, light: 1400, intro: 160})
 // Reduced motion keeps the change legible with opacity alone: fewer and gentler, not zero.
 const GENTLE = {exit: 120, enter: 200}
 const EASE = {out: cssEase(EASE_OUT), travel: cssEase(EASE_IN_OUT)}
@@ -39,7 +39,7 @@ const EASE = {out: cssEase(EASE_OUT), travel: cssEase(EASE_IN_OUT)}
 // sampled once into CSS linear(), so the compositor plays it. Stiffness and
 // damping scale with TEMPO, which stretches the spring in time without
 // changing its bounce. Older engines settle on EASE.out.
-const LIFT_EASE = (() => {
+export const LIFT_EASE = (() => {
   if (typeof CSS === 'undefined' || !CSS.supports?.('transition-timing-function', 'linear(0, 1)')) return EASE.out
   const generator = spring({keyframes: [0, 1], stiffness: 240 / TEMPO ** 2, damping: 17 / TEMPO, mass: 1})
   const stops = Array.from({length: 40}, (_, index) => generator.next(index * SHOW.rise / 40).value.toFixed(3))
@@ -51,11 +51,22 @@ const LINE_IN: Keyframe[] = [{transform: 'translate3d(0, 130%, 0)'}, {transform:
 const LINE_OUT: Keyframe[] = [{transform: 'none', opacity: 1}, {transform: 'translate3d(0, -130%, 0)', opacity: 0}]
 const FADE_IN: Keyframe[] = [{opacity: 0}, {opacity: 1}]
 const FADE_OUT: Keyframe[] = [{opacity: 1}, {opacity: 0}]
-const FLASH: Keyframe[] = [
+export const FLASH: Keyframe[] = [
   {opacity: 0, easing: EASE.out},
   {opacity: 1, offset: 0.22, easing: 'ease'},
   {opacity: 0},
 ]
+
+/** Nobody watches a hidden tab: show cues stop until it is visible again. */
+export function usePageVisible() {
+  const [pageVisible, setPageVisible] = useState(() => typeof document === 'undefined' || !document.hidden)
+  useEffect(() => {
+    const onVisibilityChange = () => setPageVisible(!document.hidden)
+    document.addEventListener('visibilitychange', onVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', onVisibilityChange)
+  }, [])
+  return pageVisible
+}
 
 /**
  * Announces audience-visible changes: the outgoing song rolls up out of its
@@ -71,14 +82,8 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
   const animations = useRef<Animation[]>([])
   const cue = useRef(0)
   const {prefersReducedMotion} = useReducedMotion()
-  const [pageVisible, setPageVisible] = useState(() => typeof document === 'undefined' || !document.hidden)
+  const pageVisible = usePageVisible()
   const motionEnabled = !prefersReducedMotion && pageVisible
-
-  useEffect(() => {
-    const onVisibilityChange = () => setPageVisible(!document.hidden)
-    document.addEventListener('visibilitychange', onVisibilityChange)
-    return () => document.removeEventListener('visibilitychange', onVisibilityChange)
-  }, [])
 
   // Layout effect: the cue must own the first frame of the new content, or the
   // new title flashes in place before it rolls in.
@@ -192,7 +197,10 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
         const instrument = group.dataset.venueInstrument ?? ''
         if (!changedInstruments.includes(instrument)) return
         marked += 1
-        animate(group.querySelector('.venue-musician-wash'), FLASH, {duration: SHOW.light, easing: 'linear'})
+        // A spotlighted sign-up flashes its group when it lands, not now.
+        if (!group.querySelector('[data-venue-awaiting]')) {
+          animate(group.querySelector('.venue-musician-wash'), FLASH, {duration: SHOW.light, easing: 'linear'})
+        }
         const before = last?.lineup.get(instrument)
         const after = next.lineup.get(instrument)
         if (!before) {
@@ -202,7 +210,8 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
         let arrivals = 0
         group.querySelectorAll<HTMLElement>('[data-venue-musician]').forEach(name => {
           const musician = name.dataset.venueMusician ?? ''
-          if (before.get(musician) !== after?.get(musician)) land(name, arrivals++ * SHOW.stagger, 12)
+          // A spotlighted sign-up flies in from the announcement instead.
+          if (before.get(musician) !== after?.get(musician) && !name.hasAttribute('data-venue-awaiting')) land(name, arrivals++ * SHOW.stagger, 12)
         })
       })
       // A whole instrument group left: settle the remaining lineup instead.

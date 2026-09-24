@@ -1,4 +1,4 @@
-import {message, type CatalogueTree} from './index'
+import {message, plural, type CatalogueTree} from './index'
 
 export const publicDashboard = {
   onStage: message({"pt-BR": "No palco", "en": "On stage", "es": "En el escenario"}),
@@ -55,6 +55,10 @@ export const publicDashboard = {
   applauseLabel: message({"pt-BR": "Palmas!", "en": "Applause!", "es": "¡Aplausos!"}),
   applauseFor: message({"pt-BR": "Palmas para {{names}}!", "en": "Give it up for {{names}}!", "es": "¡Aplausos para {{names}}!"}),
   andMore: message({"pt-BR": "mais {{count}}", "en": "{{count}} more", "es": "{{count}} más"}),
+  joinLabel: message({"pt-BR": "Nova inscrição", "en": "New sign-up", "es": "Nueva inscripción"}),
+  joinHeadline: plural({"pt-BR": {one: "{{names}} entrou na jam!", many: "{{names}} entraram na jam!", other: "{{names}} entraram na jam!"}, "en": {one: "{{names}} joined the jam!", other: "{{names}} joined the jam!"}, "es": {one: "¡{{names}} se unió a la jam!", many: "¡{{names}} se unieron a la jam!", other: "¡{{names}} se unieron a la jam!"}}),
+  joinDetail: message({"pt-BR": "{{instrument}} em {{title}}", "en": "{{instrument}} on {{title}}", "es": "{{instrument}} en {{title}}"}),
+  joinSongs: message({"pt-BR": "Em {{titles}}", "en": "On {{titles}}", "es": "En {{titles}}"}),
   layoutStage: message({"pt-BR": "Palco e próximas músicas", "en": "Stage and up next", "es": "Escenario y próxima canción"}),
   layoutClassic: message({"pt-BR": "Clássico", "en": "Classic", "es": "Clásico"}),
   layoutCarousel: message({"pt-BR": "Carrossel", "en": "Carousel", "es": "Carrusel"}),

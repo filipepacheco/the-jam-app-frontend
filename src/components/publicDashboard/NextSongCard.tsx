@@ -8,15 +8,17 @@ import './venue-display.css'
 
 interface NextSongCardProps {
   song: DashboardSongDto | null
+  /** Sign-ups the join spotlight will fly into this lineup. */
+  awaiting?: ReadonlySet<string>
 }
 
 // This domain wrapper keeps the next lineup visible alongside the stage.
-export function NextSongCard({song}: NextSongCardProps) {
+export function NextSongCard({song, awaiting}: NextSongCardProps) {
   const {t} = useTranslation()
   const {ref: cardRef, motionEnabled} = useVenueChangeMotion(song)
 
   return (
-    <section ref={cardRef} className="venue-next" data-venue-motion={motionEnabled ? 'running' : 'paused'} aria-label={t('publicDashboard.upNextLabel')}>
+    <section ref={cardRef} className="venue-next" data-venue-song-id={song?.id} data-venue-motion={motionEnabled ? 'running' : 'paused'} aria-label={t('publicDashboard.upNextLabel')}>
       <span className="venue-change-wash" aria-hidden="true" />
       <div>
         <p className="venue-label text-secondary">
@@ -42,7 +44,7 @@ export function NextSongCard({song}: NextSongCardProps) {
         {song && song.musicians.length > 0 ? (
           <div className="venue-musicians venue-musicians--next">
             {Object.entries(groupMusiciansByInstrument(song.musicians)).map(([instrument, musicians]) => (
-              <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="md" />
+              <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="md" songId={song.id} awaiting={awaiting} />
             ))}
           </div>
         ) : <p className="venue-support">{t(song ? 'publicDashboard.lineupPending' : 'publicDashboard.chooseNextSong')}</p>}

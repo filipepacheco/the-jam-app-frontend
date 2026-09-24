@@ -4,7 +4,7 @@
   padding: 1rem clamp(1rem, 2.5vw, 3rem) 2rem;
 }
 
-.venue-programme { display: grid; gap: 1.5rem; min-width: 0; }
+.venue-programme { position: relative; display: grid; gap: 1.5rem; min-width: 0; }
 .venue-current, .venue-next, .venue-invitation {
   /* Mirrors EASE_OUT in venueMotion.ts. */
   --venue-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -159,6 +159,48 @@
   .venue-invitation::before, .venue-invitation::after { animation: none; }
   .venue-invitation::before { opacity: 0; }
 }
+
+/* Join spotlight: a new sign-up holds the programme column, then its name
+   flies to the lineup slot, which waits hidden (keeping its space) until then.
+   The invitation column and its QR code stay clear. */
+[data-venue-awaiting] { visibility: hidden; }
+.venue-join {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 3vw, 3rem);
+  pointer-events: none;
+}
+.venue-join-scrim {
+  position: absolute;
+  inset: -0.5rem;
+  border-radius: 1.25rem;
+  background: radial-gradient(ellipse 70% 60% at 50% 50%, color-mix(in oklch, var(--color-base-300) 72%, transparent), color-mix(in oklch, var(--color-base-300) 90%, transparent));
+}
+.venue-join-card {
+  position: relative;
+  isolation: isolate;
+  max-width: min(100%, 52rem);
+  padding: clamp(1.5rem, 3vw, 3rem);
+  text-align: center;
+}
+.venue-join-surface {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 2px solid var(--color-primary);
+  border-radius: 1.25rem;
+  background: var(--color-base-100);
+  box-shadow: 0 1.5rem 4rem -1rem color-mix(in oklch, var(--color-primary) 50%, transparent), inset 0 0 2.5rem color-mix(in oklch, var(--color-primary) 24%, transparent);
+}
+.venue-join-label { justify-content: center; color: var(--color-primary); }
+.venue-join-headline { font-size: clamp(2.5rem, 4.6vw, 5.5rem); line-height: 1.05; font-weight: 900; letter-spacing: -0.035em; text-wrap: balance; }
+/* The name keeps the lineup's weight and spacing, so a pure scale lands it on
+   the slot's text box (origin top left) and the real name takes over in place. */
+.venue-join-name { display: inline-block; transform-origin: 0 0; font-weight: 800; letter-spacing: normal; color: var(--color-primary); }
+.venue-join-detail { margin-top: 1rem; }
 
 .venue-label {
   display: flex;

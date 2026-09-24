@@ -17,6 +17,9 @@ import {
     CarouselDashboard
 } from '../components/publicDashboard'
 import {useStageHandover} from '../components/publicDashboard/useStageHandover'
+import {useJoinSpotlight} from '../components/publicDashboard/useJoinSpotlight'
+import {JoinSpotlight} from '../components/publicDashboard/JoinSpotlight'
+import {usePageVisible} from '../components/publicDashboard/useVenueChangeMotion'
 
 // Lazy load heavy components to reduce main bundle size
 const ConfettiWrapper = lazy(() => import('../components/publicDashboard/ConfettiWrapper'))
@@ -101,6 +104,13 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
     playbackState,
     finished: jamStatus === 'FINISHED',
   }, layout !== 'carousel')
+  // New sign-ups get the spotlight, then fly into their lineup slot.
+  const pageVisible = usePageVisible()
+  const spotlight = useJoinSpotlight(currentSong, nextSongs, {
+    enabled: layout !== 'carousel' && jamStatus !== 'FINISHED' && pageVisible,
+    flight: !prefersReducedMotion && pageVisible,
+    paused: Boolean(show.applause),
+  })
 
   // Build ticker text for carousel header
   const tickerText = (() => {
@@ -235,11 +245,13 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                   Performance. The next Performance remains a separate region. */}
               {/* The finale stays on the stage card, so the last song rolls
                   out and the closing message rolls in. */}
-              <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} />
+              <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} awaiting={spotlight.awaiting} />
 
               {!show.finished && (
-                <NextSongCard song={show.next} />
+                <NextSongCard song={show.next} awaiting={spotlight.awaiting} />
               )}
+
+              <JoinSpotlight moment={spotlight.moment} paused={Boolean(show.applause)} gentle={prefersReducedMotion} onDone={spotlight.finish} />
 
             </div>
             <Suspense fallback={null}>

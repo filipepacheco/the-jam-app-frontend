@@ -17,6 +17,8 @@ interface CurrentSongCardProps {
   finished?: boolean
   /** The band that just finished: the stage applauds it before the next song. */
   applause?: DashboardSongDto | null
+  /** Sign-ups the join spotlight will fly into this lineup. */
+  awaiting?: ReadonlySet<string>
 }
 
 /** "Yuri, Alexandra and Marina"; a big band ends in "and 3 more". */
@@ -48,7 +50,7 @@ function StageConfetti({stage}: {stage: RefObject<HTMLElement | null>}) {
 }
 
 // Distance-readable domain wrapper; see public-dashboard-migration.md.
-export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', finished = false, applause = null}: CurrentSongCardProps) {
+export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', finished = false, applause = null, awaiting}: CurrentSongCardProps) {
   const {t, i18n} = useTranslation()
   const song = finished || applause ? null : liveSong
   // The applauded band stays in the lineup while the title thanks it.
@@ -67,7 +69,7 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
     : finished ? t('publicDashboard.thankYou') : song?.artist ?? t('publicDashboard.waitingForPerformanceHelp')
 
   return (
-    <section ref={cardRef} className="venue-current" data-live={Boolean(song)} data-playback={applause ? 'applause' : sounding ? 'sounding' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} style={{'--venue-scene-shift': shift} as CSSProperties} aria-label={t('publicDashboard.onStage')}>
+    <section ref={cardRef} className="venue-current" data-venue-song-id={lineupSong?.id} data-live={Boolean(song)} data-playback={applause ? 'applause' : sounding ? 'sounding' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} style={{'--venue-scene-shift': shift} as CSSProperties} aria-label={t('publicDashboard.onStage')}>
       {lineupSong && (
         <div className="venue-stage-fx" aria-hidden="true">
           <span className="venue-stage-beam" />
@@ -106,7 +108,7 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
           {lineupSong.musicians.length > 0 ? (
             <div className="venue-musicians">
               {Object.entries(groupMusiciansByInstrument(lineupSong.musicians)).map(([instrument, musicians]) => (
-                <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="lg" />
+                <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="lg" songId={lineupSong.id} awaiting={awaiting} />
               ))}
             </div>
           ) : <p className="venue-support">{t('publicDashboard.lineupPending')}</p>}

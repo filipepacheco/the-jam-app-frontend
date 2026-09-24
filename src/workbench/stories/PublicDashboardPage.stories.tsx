@@ -114,8 +114,18 @@ function advanceQueue(data: LiveDashboardResponseDto): LiveDashboardResponseDto 
   return {...data, jamStatus: 'LIVE', playbackState: 'PLAYING', currentSong: upNext, nextSongs: queue}
 }
 
+const reviewJoiners = ['Diego', 'Fernanda', 'Gabriel', 'Íris', 'Kaio', 'Lara']
+
+/** Someone signs up for a queued song, as the join spotlight sees it. */
+function signUp(data: LiveDashboardResponseDto, index: number, instrument: string): LiveDashboardResponseDto {
+  if (!data.nextSongs[index]) return data
+  const taken = data.nextSongs.flatMap(({musicians}) => musicians).filter(({id}) => id.startsWith('review-join-')).length
+  const musician = {id: `review-join-${taken}`, name: reviewJoiners[taken % reviewJoiners.length], instrument}
+  return {...data, nextSongs: data.nextSongs.map((song, position) => position === index ? {...song, musicians: [...song.musicians, musician]} : song)}
+}
+
 function LiveChangesReview() {
-  const [data, setData] = useState(liveDashboard)
+  const [data, setData] = useState<LiveDashboardResponseDto>({...liveDashboard, nextSongs: [...liveDashboard.nextSongs, reviewSetlist[2]]})
   const buttonClass = 'ds-control ds-focusable rounded-field bg-base-100 border border-base-content/20 px-3 text-sm font-semibold'
 
   return (
@@ -141,6 +151,8 @@ function LiveChangesReview() {
         }))}>Trocar próxima</button>
         <button type="button" className={buttonClass} onClick={() => setData(current => structuredClone(current))}>Atualizar sem mudanças</button>
         <button type="button" className={buttonClass} onClick={() => setData(advanceQueue)}>Avançar fila</button>
+        <button type="button" className={buttonClass} onClick={() => setData(current => signUp(current, 0, 'guitars'))}>Nova inscrição</button>
+        <button type="button" className={buttonClass} onClick={() => setData(current => signUp(current, 1, 'keys'))}>Inscrição futura</button>
         <button type="button" className={buttonClass} onClick={() => setData(current => ({
           ...current,
           jamStatus: current.jamStatus === 'FINISHED' ? 'LIVE' : 'FINISHED',
