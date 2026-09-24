@@ -2,6 +2,7 @@ import type {Meta, StoryObj} from '@storybook/react-vite'
 import {useState} from 'react'
 import {expect, fn, waitFor} from 'storybook/test'
 import {PublicDashboardPage} from '../../pages/PublicDashboardPage'
+import {createReactionFeed} from '../../lib/realtime/jamReactions'
 import {dashboardSongs, venueDashboard as liveDashboard} from '../publicDashboardFixtures'
 import type {DashboardSongDto, LiveDashboardResponseDto} from '../../types/api.types'
 import {waitForMotionToSettle} from '../reducedMotion'
@@ -126,6 +127,7 @@ function signUp(data: LiveDashboardResponseDto, index: number, instrument: strin
 
 function LiveChangesReview() {
   const [data, setData] = useState<LiveDashboardResponseDto>({...liveDashboard, nextSongs: [...liveDashboard.nextSongs, reviewSetlist[2]]})
+  const [reactions] = useState(createReactionFeed)
   const buttonClass = 'ds-control ds-focusable rounded-field bg-base-100 border border-base-content/20 px-3 text-sm font-semibold'
 
   return (
@@ -157,8 +159,14 @@ function LiveChangesReview() {
           ...current,
           jamStatus: current.jamStatus === 'FINISHED' ? 'LIVE' : 'FINISHED',
         }))}>Encerrar jam</button>
+        <button type="button" className={buttonClass} onClick={() => {
+          reactions.emit({kind: 'clap', count: 10})
+          reactions.emit({kind: 'fire', count: 4})
+          reactions.emit({kind: 'heart', count: 5})
+          reactions.emit({kind: 'rock', count: 3})
+        }}>Reações da plateia</button>
       </div>
-      <PublicDashboardPage viewState={{status: 'loaded', data}} layoutOverride="classic" />
+      <PublicDashboardPage viewState={{status: 'loaded', data}} layoutOverride="classic" reactionFeed={reactions} />
     </>
   )
 }

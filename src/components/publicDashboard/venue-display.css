@@ -202,6 +202,16 @@
 .venue-join-name { display: inline-block; transform-origin: 0 0; font-weight: 800; letter-spacing: normal; color: var(--color-primary); }
 .venue-join-detail { margin-top: 1rem; }
 
+/* Audience reactions rise behind the stage text, clipped to the card. The
+   clap count pops as the room claps during the applause. */
+.venue-reactions { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; z-index: -1; }
+.venue-reaction { position: absolute; bottom: -0.5em; line-height: 1; }
+.venue-claps { margin-inline-start: auto; font-variant-numeric: tabular-nums; color: var(--venue-scene); }
+@media (prefers-reduced-motion: no-preference) {
+  .venue-claps { animation: venue-clap-pop 240ms var(--venue-ease-out); }
+}
+@keyframes venue-clap-pop { from { scale: 1.2; } }
+
 /* Up-next flight: the stage text waits hidden (keeping its layout) while
    clones fly from the up-next card; the landing swaps them in one commit. */
 [data-venue-boarding] [data-venue-song], [data-venue-boarding] .venue-musician-name { visibility: hidden; }

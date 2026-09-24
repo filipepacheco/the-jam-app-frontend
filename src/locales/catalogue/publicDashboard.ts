@@ -54,6 +54,7 @@ export const publicDashboard = {
   thankYou: message({"pt-BR": "Obrigado por tocar com a gente!", "en": "Thanks for jamming with us!", "es": "Gracias por tocar con nosotros!"}),
   applauseLabel: message({"pt-BR": "Palmas!", "en": "Applause!", "es": "¡Aplausos!"}),
   applauseFor: message({"pt-BR": "Palmas para {{names}}!", "en": "Give it up for {{names}}!", "es": "¡Aplausos para {{names}}!"}),
+  applauseClaps: plural({"pt-BR": {one: "{{count}} palma", many: "{{count}} palmas", other: "{{count}} palmas"}, "en": {one: "{{count}} clap", other: "{{count}} claps"}, "es": {one: "{{count}} aplauso", many: "{{count}} aplausos", other: "{{count}} aplausos"}}),
   andMore: message({"pt-BR": "mais {{count}}", "en": "{{count}} more", "es": "{{count}} más"}),
   joinLabel: message({"pt-BR": "Nova inscrição", "en": "New sign-up", "es": "Nueva inscripción"}),
   joinHeadline: plural({"pt-BR": {one: "{{names}} entrou na jam!", many: "{{names}} entraram na jam!", other: "{{names}} entraram na jam!"}, "en": {one: "{{names}} joined the jam!", other: "{{names}} joined the jam!"}, "es": {one: "¡{{names}} se unió a la jam!", many: "¡{{names}} se unieron a la jam!", other: "¡{{names}} se unieron a la jam!"}}),

@@ -20,6 +20,8 @@ import {useStageHandover} from '../components/publicDashboard/useStageHandover'
 import {useJoinSpotlight} from '../components/publicDashboard/useJoinSpotlight'
 import {JoinSpotlight} from '../components/publicDashboard/JoinSpotlight'
 import {StageFlight} from '../components/publicDashboard/StageFlight'
+import {useAudienceReactions} from '../components/publicDashboard/useAudienceReactions'
+import type {ReactionFeed} from '../lib/realtime/jamReactions'
 import {usePageVisible} from '../components/publicDashboard/useVenueChangeMotion'
 
 // Lazy load heavy components to reduce main bundle size
@@ -46,9 +48,11 @@ interface PublicDashboardPageProps {
   viewState?: PublicDashboardViewState
   onRetry?: () => void | Promise<void>
   layoutOverride?: DashboardLayout
+  /** Review stories feed reactions here instead of the live channel. */
+  reactionFeed?: ReactionFeed
 }
 
-export function PublicDashboardPage({viewState, onRetry, layoutOverride}: PublicDashboardPageProps = {}) {
+export function PublicDashboardPage({viewState, onRetry, layoutOverride, reactionFeed}: PublicDashboardPageProps = {}) {
   const { t } = useTranslation()
   const { jamId } = useParams<{ jamId: string }>()
   const { currentLang, changeLanguage } = useAppLanguage()
@@ -113,6 +117,12 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
     flight: !prefersReducedMotion && pageVisible,
     paused: stageBusy,
   })
+  // The room's reactions float up on the stage while the classic board is on screen.
+  const liveReactions = useAudienceReactions(
+    dashboardData?.jamId ?? jamId,
+    !viewState && !reactionFeed && layout !== 'carousel' && pageVisible && jamStatus !== 'FINISHED',
+  )
+  const reactions = reactionFeed ?? liveReactions
 
   // Build ticker text for carousel header
   const tickerText = (() => {
@@ -247,7 +257,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                   Performance. The next Performance remains a separate region. */}
               {/* The finale stays on the stage card, so the last song rolls
                   out and the closing message rolls in. */}
-              <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} awaiting={spotlight.awaiting} boarding={show.boarding?.id} />
+              <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} awaiting={spotlight.awaiting} boarding={show.boarding?.id} reactions={reactions} />
 
               {!show.finished && (
                 <NextSongCard song={show.next} awaiting={spotlight.awaiting} boarding={show.boarding?.id} />

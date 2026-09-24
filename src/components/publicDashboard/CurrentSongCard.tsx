@@ -6,6 +6,9 @@ import type {DashboardSongDto, PlaybackState} from '../../types/api.types'
 import {useVenueChangeMotion} from './useVenueChangeMotion'
 import {splitWords} from './venueWords'
 import {APPLAUSE_SHIFT, sceneShift, useSceneShift} from './venueScene'
+import {ReactionLayer} from './ReactionLayer'
+import {useClapCount} from './useAudienceReactions'
+import type {ReactionFeed} from '../../lib/realtime/jamReactions'
 import './venue-display.css'
 
 const ConfettiWrapper = lazy(() => import('./ConfettiWrapper'))
@@ -21,6 +24,8 @@ interface CurrentSongCardProps {
   awaiting?: ReadonlySet<string>
   /** The up-next flight carrying this song here; its text waits until it lands. */
   boarding?: number | null
+  /** The room's reactions: they float up behind the stage text. */
+  reactions?: ReactionFeed | null
 }
 
 /** "Yuri, Alexandra and Marina"; a big band ends in "and 3 more". */
@@ -52,7 +57,7 @@ function StageConfetti({stage}: {stage: RefObject<HTMLElement | null>}) {
 }
 
 // Distance-readable domain wrapper; see public-dashboard-migration.md.
-export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', finished = false, applause = null, awaiting, boarding = null}: CurrentSongCardProps) {
+export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', finished = false, applause = null, awaiting, boarding = null, reactions = null}: CurrentSongCardProps) {
   const {t, i18n} = useTranslation()
   const song = finished || applause ? null : liveSong
   // The applauded band stays in the lineup while the title thanks it.
@@ -62,6 +67,7 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
   // its title and lineup; the lights fade and the meter settles flat.
   const sounding = Boolean(song) && playbackState === 'PLAYING'
   const shift = useSceneShift(applause ? APPLAUSE_SHIFT : sceneShift(song?.id ?? null))
+  const claps = useClapCount(reactions, applause?.id ?? null)
 
   const title = applause
     ? t('publicDashboard.applauseFor', {names: performerNames(applause, i18n?.resolvedLanguage, count => t('publicDashboard.andMore', {count}))})
@@ -81,12 +87,16 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
           {applause && motionEnabled && <StageConfetti key={applause.id} stage={cardRef} />}
         </div>
       )}
+      <ReactionLayer feed={reactions} gentle={!motionEnabled} />
       <span className="venue-change-wash" aria-hidden="true" />
       {!finished && (
         <p className="venue-label">
           {lineupSong && <span className="venue-live-beat" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>}
           {applause
-            ? t('publicDashboard.applauseLabel')
+            ? <>
+                {t('publicDashboard.applauseLabel')}
+                {claps > 0 && <span key={claps} className="venue-claps"><span aria-hidden="true">👏</span> {t('publicDashboard.applauseClaps', {count: claps})}</span>}
+              </>
             : song
               ? t(playbackState === 'PAUSED' ? 'schedule.statuses.paused' : 'publicDashboard.nowPlaying')
               : t('publicDashboard.startingSoon')}

@@ -10,6 +10,8 @@ interface DualActionFABProps {
   onRegisterClick: () => void
   onSuggestClick: () => void
   primaryAction?: 'register' | 'suggest'
+  /** Extra room at the bottom, for a bar fixed below the button. */
+  offset?: number
 }
 
 /**
@@ -22,6 +24,7 @@ export function DualActionFAB({
   onRegisterClick,
   onSuggestClick,
   primaryAction = 'register',
+  offset = 0,
 }: DualActionFABProps) {
   const { t } = useTranslation()
   const prefersReducedMotion = useReducedMotion()
@@ -74,7 +77,7 @@ export function DualActionFAB({
       <div
         style={{
           position: 'fixed',
-          bottom: 24,
+          bottom: 24 + offset,
           right: 24,
           zIndex: 9999,
           display: 'flex',
