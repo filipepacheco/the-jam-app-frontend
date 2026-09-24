@@ -81,7 +81,6 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
           <span key={waits} className="venue-stage-waiting">
             <span className="venue-stage-wash" />
             <span className="venue-stage-heart" />
-            <span className="venue-stage-ring" />
           </span>
           <span className="venue-stage-beam" />
           <span className="venue-stage-beam" />

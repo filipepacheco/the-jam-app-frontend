@@ -138,13 +138,13 @@
 /* Waiting for a song: the rig is dark, its beams drawn up into the truss and
    its halo closed. A color wash drifts over the stage and a heartbeat glows
    behind the title: lub-dub, 1.1s a beat, taking a new stage color every four
-   beats. The ring and the meter beat and change color with it. When a song
-   starts, the heartbeat freezes and fades while the beams drop and the halo
-   opens. With reduced motion, the wash and the glow stay, still. */
+   beats. The meter beats and changes color with it. When a song starts, the
+   heartbeat freezes and fades while the beams drop and the halo opens. With
+   reduced motion, the wash and the glow stay, still. */
 .venue-current[data-playback='waiting'] .venue-stage-beam { scale: 1 0; }
 .venue-current[data-playback='waiting'] .venue-stage-halo { scale: 0; }
-/* One hue clock drives the heartbeat's color, so the glow, the ring and the
-   meter always match. It steps through four of the song colors (SCENE_SHIFTS):
+/* One hue clock drives the heartbeat's color, so the glow and the meter
+   always match. It steps through four of the song colors (SCENE_SHIFTS):
    purple, pink, orange and blue. */
 @property --venue-heart-hue { syntax: '<number>'; inherits: true; initial-value: 0; }
 .venue-current { --venue-heart: var(--color-primary); }
@@ -161,13 +161,17 @@
     radial-gradient(ellipse 50% 45% at 30% 75%, color-mix(in oklch, var(--venue-scene-3) 22%, transparent), transparent 70%),
     linear-gradient(160deg, color-mix(in oklch, var(--venue-scene) 8%, transparent), color-mix(in oklch, var(--venue-scene) 20%, transparent));
 }
-.venue-stage-heart, .venue-stage-ring { position: absolute; top: 50%; left: 32%; aspect-ratio: 1.5; translate: -50% -50%; border-radius: 50%; }
 .venue-stage-heart {
+  position: absolute;
+  top: 50%;
+  left: 32%;
   width: min(64%, 52rem);
+  aspect-ratio: 1.5;
+  translate: -50% -50%;
+  border-radius: 50%;
   opacity: 0.7;
   background: radial-gradient(closest-side, color-mix(in oklch, var(--venue-heart) 42%, transparent), color-mix(in oklch, var(--venue-heart) 18%, transparent) 60%, transparent);
 }
-.venue-stage-ring { width: min(40%, 32rem); border: 2px solid var(--venue-heart); opacity: 0; }
 .venue-current[data-playback='waiting'] .venue-live-beat { color: var(--venue-heart); }
 /* The meter peaks in the middle while it beats, like a pulse on a monitor. */
 .venue-current[data-playback='waiting'] .venue-live-beat i:is(:nth-child(1), :nth-child(7)) { scale: 1 0.55; }
@@ -185,9 +189,8 @@
   .venue-current[data-venue-motion='running'] { animation: venue-heart-hue 17.6s linear infinite paused; }
   .venue-current[data-venue-motion='running'] .venue-stage-wash { animation: venue-stage-drift 16s ease-in-out infinite alternate paused; }
   .venue-current[data-venue-motion='running'] .venue-stage-heart { animation: venue-heartbeat 1.1s ease-in-out infinite paused; }
-  .venue-current[data-venue-motion='running'] .venue-stage-ring { animation: venue-heart-ring 1.1s ease-out infinite paused; }
   .venue-current[data-venue-motion='running'][data-playback='waiting'],
-  .venue-current[data-venue-motion='running'][data-playback='waiting'] :is(.venue-stage-wash, .venue-stage-heart, .venue-stage-ring) { animation-play-state: running; }
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] :is(.venue-stage-wash, .venue-stage-heart) { animation-play-state: running; }
   .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i { animation: venue-heartbeat-bar 1.1s ease-in-out infinite; }
 }
 
@@ -209,11 +212,6 @@
   24% { transform: scaleY(0.35); }
   36% { transform: scaleY(0.75); }
   62%, 100% { transform: scaleY(0.2); }
-}
-@keyframes venue-heart-ring {
-  0% { scale: 0.7; opacity: 0; }
-  8% { opacity: 0.8; }
-  60%, 100% { scale: 1.9; opacity: 0; }
 }
 /* Four beats on each color, then one beat to move to the next. */
 @keyframes venue-heart-hue {
