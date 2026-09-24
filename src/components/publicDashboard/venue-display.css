@@ -135,15 +135,34 @@
    keeps its space, so nothing jumps, and shows again with the next song. */
 .venue-current [data-venue-lineup] { transition: opacity 400ms var(--venue-ease-out), visibility 0s linear 0s; }
 .venue-current[data-playback='applause'] [data-venue-lineup] { opacity: 0; visibility: hidden; transition: opacity 400ms var(--venue-ease-out), visibility 0s linear 400ms; }
+/* Waiting for a song: the rig idles dimmed, its beams drawn in, and the meter
+   runs a soundcheck, one bar after another. When a song starts, the lights come
+   up from here instead of switching on. */
+.venue-current[data-playback='waiting'] .venue-stage-fx { opacity: 0.45; }
+.venue-current[data-playback='waiting'] .venue-stage-beam { scale: 0.75 0.9; }
 .venue-live-beat i { display: block; width: 5px; height: 100%; border-radius: 2px; background: currentColor; animation: venue-beat 900ms ease-in-out infinite alternate; }
 .venue-live-beat i:nth-child(2n) { animation-duration: 650ms; animation-delay: -300ms; }
 .venue-live-beat i:nth-child(3n) { animation-duration: 1100ms; animation-delay: -550ms; }
 .venue-live-beat i:nth-child(4n) { animation-delay: -800ms; }
 
+@media (prefers-reduced-motion: no-preference) {
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i { animation: venue-soundcheck 2.8s ease-in-out infinite; }
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i:nth-child(2) { animation-delay: 120ms; }
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i:nth-child(3) { animation-delay: 240ms; }
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i:nth-child(4) { animation-delay: 360ms; }
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i:nth-child(5) { animation-delay: 480ms; }
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i:nth-child(6) { animation-delay: 600ms; }
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i:nth-child(7) { animation-delay: 720ms; }
+}
+
 @keyframes venue-beat {
   0% { transform: scaleY(0.25); opacity: 0.6; }
   60% { transform: scaleY(1); opacity: 1; }
   100% { transform: scaleY(0.5); opacity: 0.8; }
+}
+@keyframes venue-soundcheck {
+  0%, 40%, 100% { transform: scaleY(0.2); opacity: 0.5; }
+  20% { transform: scaleY(0.8); opacity: 1; }
 }
 @keyframes venue-light-in {
   from { opacity: 0; }
