@@ -1,3 +1,4 @@
+import {BRAND_METADATA} from '../config/brandMetadata'
 import {useTranslation} from 'react-i18next'
 import {Link, useLocation} from 'react-router-dom'
 import {Music, Users, Monitor, Globe, Mail, Shield} from 'lucide-react'
@@ -27,7 +28,7 @@ export function AboutPage() {
         description: t('about.seo_description'),
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/brand/v1/logo.svg`,
+          url: `${siteUrl}${BRAND_METADATA.logo}`,
         },
         contactPoint: {
           '@type': 'ContactPoint',

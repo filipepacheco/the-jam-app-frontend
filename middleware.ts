@@ -1,3 +1,4 @@
+import {BRAND_METADATA} from './src/config/brandMetadata'
 import { next } from '@vercel/functions';
 
 // --- Social media crawler detection ---
@@ -304,6 +305,9 @@ function buildOgHtml(opts: {
   <meta name="description" content="${esc(description)}" />
   <link rel="canonical" href="${esc(url)}" />
 
+  <link rel="icon" href="${BRAND_METADATA.favicon}" type="image/png" sizes="96x96" />
+  <link rel="apple-touch-icon" href="${BRAND_METADATA.appleTouchIcon}" />
+
   <!-- Open Graph -->
   <meta property="og:type" content="${esc(type)}" />
   <meta property="og:title" content="${esc(title)}" />
@@ -386,7 +390,7 @@ function homeStructuredData(siteUrl: string, ogImage: string): Record<string, un
         'Plataforma gratuita para organizar jam sessions ao vivo. Hosts gerenciam eventos, musicos se inscrevem e o publico acompanha em tempo real.',
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/brand/v1/logo.svg`,
+        url: `${siteUrl}${BRAND_METADATA.logo}`,
       },
       contactPoint: {
         '@type': 'ContactPoint',
@@ -437,7 +441,7 @@ function aboutStructuredData(siteUrl: string): Record<string, unknown>[] {
         description: PT.aboutDescription,
         logo: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/brand/v1/logo.svg`,
+          url: `${siteUrl}${BRAND_METADATA.logo}`,
         },
         contactPoint: {
           '@type': 'ContactPoint',
@@ -552,7 +556,7 @@ export default function middleware(request: Request) {
   if (!route) return next();
 
   const siteUrl = process.env.SITE_URL || url.origin;
-  const ogImage = `${siteUrl}/brand/v1/social-hybrid-1200x630.png`;
+  const ogImage = `${siteUrl}${BRAND_METADATA.socialImage}`;
   // Search engines follow meta-refresh - skip the redirect to prevent infinite loops
   const noRedirect = searchEngineRequest;
 
