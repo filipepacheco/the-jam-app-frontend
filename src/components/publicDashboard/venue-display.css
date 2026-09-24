@@ -160,47 +160,44 @@
   .venue-invitation::before { opacity: 0; }
 }
 
-/* Join spotlight: a new sign-up holds the programme column, then its name
-   flies to the lineup slot, which waits hidden (keeping its space) until then.
-   The invitation column and its QR code stay clear. */
+/* Join spotlight: an up-next sign-up takes over the up-next card, then its
+   name flies to the lineup slot, which waits hidden (keeping its space) until
+   then. A later sign-up rises over the steps under the QR code, which never
+   moves. */
 [data-venue-awaiting] { visibility: hidden; }
 .venue-join {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 3;
   display: grid;
   place-items: center;
-  padding: clamp(1rem, 3vw, 3rem);
+  padding: clamp(1rem, 1.7vw, 2rem);
+  border-radius: inherit;
   pointer-events: none;
-}
-.venue-join-scrim {
-  position: absolute;
-  inset: -0.5rem;
-  border-radius: 1.25rem;
-  background: radial-gradient(ellipse 70% 60% at 50% 50%, color-mix(in oklch, var(--color-base-300) 72%, transparent), color-mix(in oklch, var(--color-base-300) 90%, transparent));
-}
-.venue-join-card {
-  position: relative;
-  isolation: isolate;
-  max-width: min(100%, 52rem);
-  padding: clamp(1.5rem, 3vw, 3rem);
-  text-align: center;
 }
 .venue-join-surface {
   position: absolute;
   inset: 0;
   z-index: -1;
   border: 2px solid var(--color-primary);
-  border-radius: 1.25rem;
-  background: var(--color-base-100);
-  box-shadow: 0 1.5rem 4rem -1rem color-mix(in oklch, var(--color-primary) 50%, transparent), inset 0 0 2.5rem color-mix(in oklch, var(--color-primary) 24%, transparent);
+  border-radius: inherit;
+  background: var(--color-base-200);
+  box-shadow: 0 1rem 3rem -1rem color-mix(in oklch, var(--color-primary) 50%, transparent), inset 0 0 2.5rem color-mix(in oklch, var(--color-primary) 24%, transparent);
 }
+.venue-join-card { position: relative; max-width: 100%; text-align: center; }
 .venue-join-label { justify-content: center; color: var(--color-primary); }
-.venue-join-headline { font-size: clamp(2.5rem, 4.6vw, 5.5rem); line-height: 1.05; font-weight: 900; letter-spacing: -0.035em; text-wrap: balance; }
+.venue-join-headline { font-size: clamp(2rem, 3vw, 3.5rem); line-height: 1.05; font-weight: 900; letter-spacing: -0.035em; text-wrap: balance; }
 /* The name keeps the lineup's weight and spacing, so a pure scale lands it on
    the slot's text box (origin top left) and the real name takes over in place. */
 .venue-join-name { display: inline-block; transform-origin: 0 0; font-weight: 800; letter-spacing: normal; color: var(--color-primary); }
-.venue-join-detail { margin-top: 1rem; }
+.venue-join-detail { margin-top: 0.75rem; }
+.venue-join--queue { inset: -0.5rem -0.75rem; padding: 0.75rem; border-radius: 1rem; }
+.venue-join--queue .venue-join-surface { background: var(--color-base-100); }
+.venue-join--queue .venue-join-label { margin-bottom: 0.5rem; }
+.venue-join--queue .venue-join-headline { font-size: clamp(1.5rem, 1.9vw, 2.25rem); }
+.venue-join--queue .venue-join-detail { margin-top: 0.5rem; font-size: clamp(1rem, 1.2vw, 1.375rem); }
+/* The steps and the link hold the space the announcement rises into. */
+.venue-invitation-foot { position: relative; display: grid; justify-items: center; gap: 1.5rem; }
 
 /* Up-next flight: the stage text waits hidden (keeping its layout) while
    clones fly from the up-next card; the landing swaps them in one commit. */

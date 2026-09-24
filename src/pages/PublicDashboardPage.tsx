@@ -20,6 +20,7 @@ import {useStageHandover} from '../components/publicDashboard/useStageHandover'
 import {useJoinSpotlight} from '../components/publicDashboard/useJoinSpotlight'
 import {JoinSpotlight} from '../components/publicDashboard/JoinSpotlight'
 import {StageFlight} from '../components/publicDashboard/StageFlight'
+import {ShowConfetti} from '../components/publicDashboard/ShowConfetti'
 import {usePageVisible} from '../components/publicDashboard/useVenueChangeMotion'
 
 // Lazy load heavy components to reduce main bundle size
@@ -195,6 +196,9 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
         <ConfettiWrapper show={layout === 'carousel' && !prefersReducedMotion && confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
       </Suspense>
 
+      {/* The whole display celebrates while the room applauds. */}
+      <ShowConfetti applause={layout !== 'carousel' && !prefersReducedMotion && pageVisible ? show.applause?.id ?? null : null} container={containerRef} />
+
       {/* Offline Indicator */}
       <OfflineBanner
         visible={isOfflineMode || Boolean(error)}
@@ -250,13 +254,13 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
               <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} awaiting={spotlight.awaiting} boarding={show.boarding?.id} />
 
               {!show.finished && (
-                <NextSongCard song={show.next} awaiting={spotlight.awaiting} boarding={show.boarding?.id} />
+                <NextSongCard song={show.next} awaiting={spotlight.awaiting} boarding={show.boarding?.id}>
+                  <JoinSpotlight moment={spotlight.next} paused={stageBusy} gentle={prefersReducedMotion} onDone={spotlight.finish} />
+                </NextSongCard>
               )}
 
               {/* After the cards: it measures the up-next card before they change. */}
               <StageFlight boarding={show.boarding} onLand={show.land} />
-
-              <JoinSpotlight moment={spotlight.moment} paused={stageBusy} gentle={prefersReducedMotion} onDone={spotlight.finish} />
 
             </div>
             <Suspense fallback={null}>
@@ -266,7 +270,9 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                 slug={dashboardData?.slug}
                 shortCode={dashboardData?.shortCode}
                 finished={show.finished}
-              />
+              >
+                <JoinSpotlight moment={spotlight.queue} paused={stageBusy} gentle={prefersReducedMotion} onDone={spotlight.finish} />
+              </QRCodePanel>
             </Suspense>
         </main>
       )}
