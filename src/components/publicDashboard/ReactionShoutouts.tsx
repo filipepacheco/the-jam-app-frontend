@@ -28,6 +28,8 @@ interface Shoutout {
   hits: number
 }
 
+const stalest = (lines: Shoutout[]) => lines.reduce((oldest, line) => line.until < oldest.until ? line : oldest)
+
 interface ReactionShoutoutsProps {
   feed: ReactionFeed | null | undefined
   gentle: boolean
@@ -47,9 +49,14 @@ export function ReactionShoutouts({feed, gentle}: ReactionShoutoutsProps) {
     return feed.subscribe(({kind, name = null}) => {
       const key = `${kind}${NAME}${name ?? ''}`
       const until = Date.now() + SHOUTOUT_MS
-      setLines(current => current.some(line => line.key === key)
-        ? current.map(line => line.key === key ? {...line, until, hits: line.hits + 1} : line)
-        : [...current, {key, kind, name, until, hits: 0}].slice(-MAX_SHOUTOUTS))
+      setLines(current => {
+        if (current.some(line => line.key === key)) {
+          return current.map(line => line.key === key ? {...line, until, hits: line.hits + 1} : line)
+        }
+        // Full: the line with the oldest last reaction leaves, not the first one shown.
+        const leaving = current.length < MAX_SHOUTOUTS ? null : stalest(current)
+        return [...current.filter(line => line !== leaving), {key, kind, name, until, hits: 0}]
+      })
     })
   }, [feed])
 
