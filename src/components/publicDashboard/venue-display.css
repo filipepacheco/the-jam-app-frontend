@@ -21,6 +21,24 @@
   isolation: isolate;
 }
 
+/* Stage lights take each song's color: a hue shift from the brand primary,
+   so lightness and chroma follow the theme. The registered shift lets the
+   lights blend to the next scene (2.1s mirrors SHOW.light). Text never tints. */
+@property --venue-scene-shift { syntax: '<number>'; inherits: true; initial-value: 0; }
+.venue-current {
+  --venue-scene: var(--color-primary);
+  --venue-scene-2: var(--color-secondary);
+  --venue-scene-3: var(--color-accent);
+  transition: --venue-scene-shift 2.1s ease-in-out;
+}
+@supports (color: oklch(from red l c h)) {
+  .venue-current {
+    --venue-scene: oklch(from var(--color-primary) l c calc(h + var(--venue-scene-shift)));
+    --venue-scene-2: oklch(from var(--color-primary) l c calc(h + var(--venue-scene-shift) + 50));
+    --venue-scene-3: oklch(from var(--color-primary) l c calc(h + var(--venue-scene-shift) - 40));
+  }
+}
+
 .venue-current, .venue-next, .venue-instrument { position: relative; }
 .venue-change-wash, .venue-musician-wash {
   position: absolute;
@@ -33,9 +51,10 @@
 .venue-next > .venue-change-wash { background: color-mix(in oklch, var(--color-secondary) 16%, transparent); }
 /* On stage the change reads as a spotlight landing on the title, not a tint. */
 .venue-current > .venue-change-wash {
-  background: radial-gradient(ellipse 75% 65% at 20% 35%, color-mix(in oklch, var(--color-primary) 34%, transparent), transparent 72%);
+  background: radial-gradient(ellipse 75% 65% at 20% 35%, color-mix(in oklch, var(--venue-scene) 34%, transparent), transparent 72%);
 }
 .venue-musician-wash { inset: -0.5rem; border-radius: 0.5rem; }
+.venue-current .venue-musician-wash { background: color-mix(in oklch, var(--venue-scene) 24%, transparent); }
 
 /* Song lines roll through their own masks. Clipping applies only while a cue
    runs; the padding keeps descenders and accents inside the mask. */
@@ -57,14 +76,14 @@
 .venue-stage-halo {
   position: absolute;
   inset: -25%;
-  background: radial-gradient(ellipse 55% 50% at 30% 58%, color-mix(in oklch, var(--color-primary) 34%, transparent), transparent 70%);
+  background: radial-gradient(ellipse 55% 50% at 30% 58%, color-mix(in oklch, var(--venue-scene) 34%, transparent), transparent 70%);
   animation: venue-light-in 2.4s var(--venue-ease-out) both, venue-stage-drift 11s ease-in-out infinite alternate;
 }
 .venue-stage-halo::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 40% 45% at 72% 30%, color-mix(in oklch, var(--color-secondary) 22%, transparent), transparent 70%);
+  background: radial-gradient(ellipse 40% 45% at 72% 30%, color-mix(in oklch, var(--venue-scene-2) 22%, transparent), transparent 70%);
   animation: venue-stage-drift 14s ease-in-out -7s infinite alternate-reverse;
 }
 /* Two moving-head beams sweep slowly from the top edge, like a lighting rig. */
@@ -76,12 +95,12 @@
   height: 140%;
   transform-origin: 50% 0;
   clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
-  background: linear-gradient(180deg, color-mix(in oklch, var(--color-primary) 34%, transparent), transparent 80%);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--venue-scene) 34%, transparent), transparent 80%);
   animation: venue-light-in 2.4s var(--venue-ease-out) both, venue-beam-sweep 7s ease-in-out infinite alternate;
 }
 .venue-stage-beam + .venue-stage-beam {
   left: 58%;
-  background: linear-gradient(180deg, color-mix(in oklch, var(--color-secondary) 28%, transparent), transparent 80%);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--venue-scene-2) 28%, transparent), transparent 80%);
   animation: venue-light-in 2.4s var(--venue-ease-out) both, venue-beam-sweep 9s ease-in-out -3s infinite alternate-reverse;
 }
 .venue-stage-sweep {
@@ -91,9 +110,9 @@
   width: 32%;
   height: 180%;
   opacity: 0;
-  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--color-primary) 26%, transparent) 30%, color-mix(in oklch, var(--color-accent) 30%, transparent) 50%, color-mix(in oklch, var(--color-primary) 26%, transparent) 70%, transparent);
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--venue-scene) 26%, transparent) 30%, color-mix(in oklch, var(--venue-scene-3) 30%, transparent) 50%, color-mix(in oklch, var(--venue-scene) 26%, transparent) 70%, transparent);
 }
-.venue-live-beat { display: inline-flex; align-items: center; gap: 4px; height: 1.25em; color: var(--color-primary); transition: scale 300ms var(--venue-ease-out), opacity 300ms ease; }
+.venue-live-beat { display: inline-flex; align-items: center; gap: 4px; height: 1.25em; color: var(--venue-scene); transition: scale 300ms var(--venue-ease-out), opacity 300ms ease; }
 /* Paused or stopped: transitions, not unmounts, so a quick pause and resume
    retargets smoothly. The lights fade and the meter freezes into a flat line. */
 .venue-current[data-playback='still'] .venue-stage-fx { opacity: 0; }

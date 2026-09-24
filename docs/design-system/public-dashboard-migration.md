@@ -269,6 +269,7 @@ A later motion pass replaced the ring and particle burst with the cues below.
 - Tempo: one constant, `TEMPO` in `venueMotion.ts`, sets the pace of all audience cues. It is 1.5 now. The timings below are at tempo 1, so multiply them by `TEMPO`.
 - Song change: each title and artist line has its own mask. A strong ease-out clears the old lines in about 150 ms. The new title starts at 190 ms and rises word by word, 80 ms apart, and each word has its own mask. Each line rises over 950 ms, so two titles never share a mask.
 - Stage light: a spotlight bloom and one light sweep cross the current-song card with the new title.
+- Scene color: each song gets its own stage-light color. The color is a hue shift from the theme primary, so lightness and chroma follow the theme. A hash of the song id selects the shift from a fixed list, so all screens show the same color. The lights blend to the new color over 2.1 seconds and take the short way round the color wheel. Text, the next card and the invitation card keep the brand color. Browsers without relative colors keep the brand colors.
 - Lineup: the instrument groups land one after another. Each group rises with a spring (about 12% overshoot) and fades in from a light blur.
 - Next card: it uses the same roll, 160 ms after the stage, so the audience reads the stage first.
 - Lineup edit: only the new or renamed musician moves, and a highlight marks the group.

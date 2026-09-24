@@ -1,9 +1,11 @@
+import type {CSSProperties} from 'react'
 import {useTranslation} from 'react-i18next'
 import {InstrumentGroup} from './InstrumentGroup'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto, PlaybackState} from '../../types/api.types'
 import {useVenueChangeMotion} from './useVenueChangeMotion'
 import {splitWords} from './venueWords'
+import {sceneShift, useSceneShift} from './venueScene'
 import './venue-display.css'
 
 interface CurrentSongCardProps {
@@ -21,9 +23,10 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
   // Level bars and stage lights mean music is sounding. A paused song keeps
   // its title and lineup; the lights fade and the meter settles flat.
   const sounding = Boolean(song) && playbackState === 'PLAYING'
+  const shift = useSceneShift(sceneShift(song?.id ?? null))
 
   return (
-    <section ref={cardRef} className="venue-current" data-live={Boolean(song)} data-playback={sounding ? 'sounding' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} aria-label={t('publicDashboard.onStage')}>
+    <section ref={cardRef} className="venue-current" data-live={Boolean(song)} data-playback={sounding ? 'sounding' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} style={{'--venue-scene-shift': shift} as CSSProperties} aria-label={t('publicDashboard.onStage')}>
       {song && (
         <div className="venue-stage-fx" aria-hidden="true">
           <span className="venue-stage-beam" />
