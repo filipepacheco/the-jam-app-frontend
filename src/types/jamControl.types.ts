@@ -44,6 +44,7 @@ export interface LiveStateSongDto {
   status: ScheduleStatus
   startedAt?: string | null
   completedAt?: string | null
+  pausedAt?: string | null
   music: LiveStateMusic
   musicians: LiveStateMusicianDto[]
 }
@@ -53,6 +54,9 @@ export interface LiveStateSongDto {
  * Lean payload optimized for polling (5-10s intervals)
  */
 export interface LiveStateResponseDto {
+  queueRevision?: string
+  resumeFromQueue?: boolean
+  allSongs?: LiveStateSongDto[]
   currentSong: LiveStateSongDto | null
   nextSongs: LiveStateSongDto[]
   previousSongs: LiveStateSongDto[]
@@ -113,6 +117,7 @@ export interface ScheduleOrderUpdate {
  * Uses explicit order values instead of array index derivation
  */
 export interface ReorderQueueRequest {
+  expectedRevision?: string
   updates: ScheduleOrderUpdate[]
 }
 

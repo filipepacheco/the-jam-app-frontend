@@ -1125,10 +1125,16 @@
         },
         "responses": {
           "201": {
-            "description": "Registration created successfully"
+            "description": "Registration created or withdrawn registration restored successfully"
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Only authorized jam hosts can register other musicians"
+          },
+          "409": {
+            "description": "Musician already applied for this instrument on this scheduled song"
           }
         },
         "security": [
@@ -1136,7 +1142,7 @@
             "bearer": []
           }
         ],
-        "summary": "Create a new registration",
+        "summary": "Create or restore a registration for yourself, or for another musician as an authorized jam host",
         "tags": [
           "Registrations"
         ]
@@ -2490,7 +2496,7 @@
           },
           "musicianId": {
             "type": "string",
-            "description": "Musician ID (optional, only usable by hosts)"
+            "description": "Defaults to the authenticated musician. Authorized jam hosts may register another musician."
           },
           "instrument": {
             "type": "string",
@@ -2498,7 +2504,8 @@
           }
         },
         "required": [
-          "scheduleId"
+          "scheduleId",
+          "instrument"
         ]
       },
       "UpdateRegistrationDto": {

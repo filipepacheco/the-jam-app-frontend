@@ -59,7 +59,7 @@ export function createAuthFixture(
     updateUser: noOperation,
     updateProfile: successfulResult,
     completeOnboarding: successfulResult,
-    clearNewUserFlag: noOperation,
+    clearNewUserFlag: successfulResult,
     isUser: () => selectedRole === 'user',
     isViewer: () => selectedRole === 'viewer',
     ...overrides,

@@ -18,10 +18,9 @@ These items are deliberately outside the behavior-preserving frontend architectu
 
 ## `backend.live-queue-revisions` — Atomic Live Queue updates
 
-- Current constraint: queue fingerprints detect a changed poll but cannot close the race between the last comparison and a reorder request.
-- Needed contract: return a revision token with Live Queue state and require the expected revision on reorder mutations using compare-and-swap semantics.
-- Frontend boundary: keep current fingerprint conflict detection as best-effort and never describe it as atomic.
-- Complete when: reorder accepts an expected revision, rejects stale writes deterministically, returns the new revision, and concurrent-client contract tests pass.
+- Implemented contract: `live/state` returns the complete `allSongs` Schedule and an opaque `queueRevision`. The updated frontend sends `expectedRevision` when reordering. The backend compares it while holding the same Jam row lock used by playback, appends, and status changes, returning HTTP 409 for stale writes.
+- Compatibility: the frontend retains fingerprint checks for old servers, where saves remain best-effort. Old clients may omit the token; their writes are serialized but have no stale-snapshot protection. Deploy the matching backend before relying on atomic conflict detection.
+- Regression evidence: backend `queue-playback-order.e2e-spec.ts` exercises simultaneous reorders and simultaneous resume/reorder against PostgreSQL; frontend controller and service tests verify the token and conflict response.
 
 ## `backend.music-server-filtering` — Server-wide Music filtering and sorting
 

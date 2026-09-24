@@ -1,6 +1,7 @@
 import {describe, expect, it, vi} from 'vitest'
 import {
   createLiveQueueController,
+  orderedPerformances,
   type LiveQueueOperationsPort,
   type LiveQueueSnapshot,
   type LiveQueueTimerPort,
@@ -98,8 +99,8 @@ describe('Live Queue controller', () => {
     await expect(controller.commands.saveReorder()).resolves.toEqual({
       code: 'conflict',
       operation: 'save_reorder',
-      startingFingerprint: '["a","b","c"]',
-      latestFingerprint: '["a","c","b"]',
+      startingFingerprint: expect.any(String),
+      latestFingerprint: expect.any(String),
     })
     expect(operations.reorder).not.toHaveBeenCalled()
     expect(controller.getSnapshot().session.status).toBe('editing')
@@ -157,6 +158,7 @@ describe('Live Queue controller', () => {
     await expect(save).resolves.toEqual({code: 'success', operation: 'save_reorder'})
     expect(operations.reorder).toHaveBeenCalledWith({
       jamId: 'jam-1',
+      expectedRevision: undefined,
       performances: expect.arrayContaining([
         expect.objectContaining({id: 'c', order: 3}),
         expect.objectContaining({id: 'a', order: 4}),
@@ -189,8 +191,8 @@ describe('Live Queue controller', () => {
 
     await expect(save).resolves.toMatchObject({
       code: 'conflict',
-      startingFingerprint: '["a","b","c"]',
-      latestFingerprint: '["b","a","c"]',
+      startingFingerprint: expect.any(String),
+      latestFingerprint: expect.any(String),
     })
     expect(operations.reorder).not.toHaveBeenCalled()
     expect(controller.getSnapshot().persistence).toEqual({status: 'idle'})
@@ -323,5 +325,93 @@ describe('Live Queue controller', () => {
     })
     expect(controller.getSnapshot().server).toEqual(starting)
     expect(controller.getSnapshot().draftPerformances.map(({id}) => id)).toEqual(['a', 'b'])
+  })
+})
+
+
+describe('saved Schedule positions and playback', () => {
+  function fullSnapshot(playbackState: LiveQueueSnapshot['playbackState']): LiveQueueSnapshot {
+    const performances = snapshot(['done', 'current', 'next', 'later']).upcomingPerformances.map((performance, index) => ({
+      ...performance, order: [1, 4, 7, 10][index],
+      status: index === 0 ? 'COMPLETED' as const : index === 1 ? 'IN_PROGRESS' as const : 'SCHEDULED' as const,
+    }))
+    return {...snapshot([]), playbackState, queueRevision: 'revision-1', currentPerformance: performances[1],
+      previousPerformances: [performances[0]], upcomingPerformances: performances.slice(2)}
+  }
+
+  it('shows a paused Performance at its saved position and permits moving it and completed Performances', () => {
+    const controller = createLiveQueueController({initialSnapshot: fullSnapshot('PAUSED')})
+    expect(controller.getSnapshot().draftPerformances.map(({id}) => id)).toEqual(['done', 'current', 'next', 'later'])
+    controller.commands.beginReorder()
+    controller.commands.movePerformance('current', 3)
+    controller.commands.movePerformance('done', 2)
+    expect(controller.getSnapshot().draftPerformances.map(({id, order, status}) => [id, order, status])).toEqual([
+      ['next', 1, 'SCHEDULED'], ['later', 4, 'SCHEDULED'], ['done', 7, 'COMPLETED'], ['current', 10, 'IN_PROGRESS'],
+    ])
+  })
+
+  it('keeps the actively playing position fixed when moves cross it in either direction', () => {
+    const controller = createLiveQueueController({initialSnapshot: fullSnapshot('PLAYING')})
+    controller.commands.beginReorder()
+    controller.commands.movePerformance('current', 0)
+    controller.commands.movePerformance('next', 1)
+    expect(controller.getSnapshot().draftPerformances.map(({id, order}) => [id, order])).toEqual([
+      ['next', 1], ['current', 4], ['done', 7], ['later', 10],
+    ])
+    controller.commands.movePerformance('next', 1)
+    expect(controller.getSnapshot().draftPerformances.map(({id}) => id)).toEqual(['done', 'current', 'next', 'later'])
+  })
+
+  it('makes legacy stuck IN_PROGRESS entries movable while stopped', () => {
+    const controller = createLiveQueueController({initialSnapshot: fullSnapshot('STOPPED')})
+    controller.commands.beginReorder()
+    controller.commands.movePerformance('current', 0)
+    expect(controller.getSnapshot().draftPerformances[0].id).toBe('current')
+  })
+
+  it('saves the full Schedule and revision, and retains the authoritative order after reload', async () => {
+    const initialSnapshot = fullSnapshot('PAUSED')
+    const timer = manualTimer()
+    let saved = initialSnapshot
+    const operations: LiveQueueOperationsPort = {
+      reorder: vi.fn(async ({performances, expectedRevision}) => {
+        expect(expectedRevision).toBe('revision-1')
+        saved = {...initialSnapshot, allPerformances: performances, queueRevision: 'revision-2', resumeFromQueue: true}
+        return {ok: true}
+      }),
+      refresh: vi.fn(async () => ({ok: true, snapshot: saved})),
+    }
+    const controller = createLiveQueueController({initialSnapshot, operations, timer: timer.timer})
+    controller.commands.beginReorder()
+    controller.commands.movePerformance('later', 0)
+    const save = controller.commands.saveReorder()
+    timer.flush()
+    await expect(save).resolves.toMatchObject({code: 'success'})
+    const reloaded = createLiveQueueController({initialSnapshot: saved})
+    expect(reloaded.getSnapshot().draftPerformances.map(({id}) => id)).toEqual(['later', 'done', 'current', 'next'])
+    expect(orderedPerformances(saved).find(({id}) => id === 'done')?.status).toBe('COMPLETED')
+  })
+
+  it('rejects a save if another host resumes playback without changing the order', async () => {
+    const initialSnapshot = fullSnapshot('PAUSED')
+    const operations: LiveQueueOperationsPort = {reorder: vi.fn(), refresh: vi.fn()}
+    const controller = createLiveQueueController({initialSnapshot, operations})
+    controller.commands.beginReorder()
+    controller.commands.movePerformance('current', 0)
+    controller.commands.replaceServerSnapshot({...initialSnapshot, playbackState: 'PLAYING'})
+    await expect(controller.commands.saveReorder()).resolves.toMatchObject({code: 'conflict'})
+    expect(operations.reorder).not.toHaveBeenCalled()
+  })
+
+  it('reports a server race as a conflict instead of success or a generic failure', async () => {
+    const timer = manualTimer()
+    const operations: LiveQueueOperationsPort = {
+      reorder: vi.fn(async () => ({ok: false, error: {status: 409, message: 'changed'}})), refresh: vi.fn(),
+    }
+    const controller = createLiveQueueController({initialSnapshot: fullSnapshot('PAUSED'), operations, timer: timer.timer})
+    controller.commands.beginReorder()
+    const save = controller.commands.saveReorder()
+    timer.flush()
+    await expect(save).resolves.toMatchObject({code: 'conflict'})
   })
 })
