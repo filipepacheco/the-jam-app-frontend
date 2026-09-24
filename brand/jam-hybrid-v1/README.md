@@ -16,6 +16,11 @@ The sources remain the approval authorities:
 `wordmark.trace.svg` passed the human SVG and Storybook fidelity gates on
 2026-09-20. The master’s fixed light-surface fills
 are deliberately stable: `#7138C9` top performer and `#261733` wordmark.
+The default social card uses this light treatment on white (`#FFFFFF`), as
+selected in the WhatsApp preview review. Its embedded paths retain the
+master’s `evenodd` fill rule so the letter counters stay open. The versioned
+`social-hybrid-1200x630-v2.png` URL is shared by crawler and application metadata.
+
 Consumers can derive the approved dark treatment by transforming those two
 fixed fills to `#AF83ED`; coral and amber stay unchanged.
 
@@ -32,3 +37,15 @@ The generator records SHA-256 provenance for every generated output in
 `provenance.json`. It uses only checked-in raster/vector inputs and the
 repository-pinned Playwright Chromium renderer; it does not use external
 fonts, networks, or a runtime application dependency.
+
+### Search branding
+
+Browser and crawler HTML advertise the approved 96px favicon and Apple touch icon.
+Organization structured data retains the approved light-compatible SVG logo.
+`src/config/brandMetadata.ts` shares brand URLs across Edge and browser metadata,
+adapting the shared-source approach proposed in PR #20 without its unrelated migrations.
+The static `index.html` icon links are checked against the crawler response by tests.
+
+After production deployment, verify the homepage and assets are publicly crawlable,
+then request homepage indexing in Google Search Console. Google controls recrawl timing
+and whether the logo/favicon appears; opening or merging a PR does not update search results.

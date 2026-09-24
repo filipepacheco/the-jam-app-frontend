@@ -86,9 +86,10 @@ export async function reorderQueue(
   jamId: string,
   updates: ScheduleOrderUpdate[],
   signal?: AbortSignal,
+  expectedRevision?: string,
 ): Promise<ReorderQueueResponse> {
   try {
-    const payload: ReorderQueueRequest = { updates }
+    const payload: ReorderQueueRequest = { updates, expectedRevision }
 
     const response = await apiClient.post<JamResponseDto>(
       `/jams/${jamId}/control/reorder`,
@@ -115,9 +116,9 @@ export async function reorderQueue(
     return {
       success: false,
       error: {
-        message: error instanceof Error ? error.message : 'Network error',
+        message: typeof error === 'object' && error !== null && 'message' in error && typeof error.message === 'string' ? error.message : 'Network error',
         code: 'NETWORK_ERROR',
-        status: 0
+        status: typeof error === 'object' && error !== null && 'statusCode' in error && typeof error.statusCode === 'number' ? error.statusCode : 0
       }
     }
   }

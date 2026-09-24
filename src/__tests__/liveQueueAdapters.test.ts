@@ -39,7 +39,7 @@ describe('Live Queue adapters', () => {
     expect(transport.reorderQueue).toHaveBeenCalledWith('jam-1', [
       {scheduleId: 'a', order: 4},
       {scheduleId: 'b', order: 5},
-    ], undefined)
+    ], undefined, undefined)
     await expect(operations.refresh('jam-1')).resolves.toEqual({ok: true, snapshot})
   })
 
@@ -54,7 +54,7 @@ describe('Live Queue adapters', () => {
     const operations = createLiveQueueOperationsAdapter(transport)
 
     await expect(operations.reorder({jamId: 'jam-1', performances: []})).resolves.toEqual({
-      ok: false, error: {message: 'reorder rejected'},
+      ok: false, error: {message: 'reorder rejected', status: 409},
     })
     await expect(operations.refresh('jam-1')).resolves.toEqual({
       ok: false, error: {message: 'offline'},

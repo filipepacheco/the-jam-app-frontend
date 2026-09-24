@@ -63,6 +63,8 @@ function liveHostHandlers(
 
 const readyLiveState: LiveStateResponseDto = {
   ...liveStateFixture,
+  previousSongs: [{...liveStateFixture.previousSongs[0], music: {...liveStateFixture.previousSongs[0].music, title: 'Completed Performance'}}],
+  suggestedSongs: [],
   nextSongs: [
     liveStateFixture.nextSongs[0],
     {
@@ -88,7 +90,7 @@ export const ReadyPlaybackAndQueueModes: Story = {
     msw: {handlers: liveHostHandlers('jam-live-host-ready', readyLiveState)},
   },
   play: async ({canvas, userEvent}) => {
-    const djTab = await canvas.findByRole('tab', {name: /DJ Control/i})
+    const djTab = await canvas.findByRole('tab', {name: 'Control'})
     await expect(djTab).toHaveAttribute('aria-selected', 'true')
     await expect((await canvas.findAllByText('Psycho Killer')).length).toBeGreaterThan(0)
     await expect((await canvas.findAllByText(/Próxima|Next/)).length).toBeGreaterThan(0)
@@ -96,16 +98,17 @@ export const ReadyPlaybackAndQueueModes: Story = {
     await userEvent.click(canvas.getByRole('tab', {name: /Ordem|Order/i}))
     const panel = within(canvas.getByRole('tabpanel'))
     await expect(await panel.findByText('Now Playing')).toBeVisible()
-    await expect(panel.getByRole('heading', {name: 'Up Next'})).toBeVisible()
+    await expect(panel.getByRole('heading', {name: 'Song order'})).toBeVisible()
 
     await userEvent.click(panel.getByRole('button', {name: /Reorder/i}))
-    await expect(panel.getByRole('heading', {name: 'Up Next (Reorderable)'})).toBeVisible()
-    await expect(panel.getByText('The first Performance in this list will be Next.')).toBeVisible()
+    await expect(panel.getByRole('heading', {name: 'Song order'})).toBeVisible()
+    await expect(panel.getByText('The first unfinished Performance will be Next. Only the playing song has a fixed position.')).toBeVisible()
     const items = panel.getAllByRole('listitem')
-    items[0].focus()
+    await expect(items[1]).toHaveAttribute('draggable', 'false')
+    items[2].focus()
     await userEvent.keyboard('{ArrowDown}')
     await expect(panel.getByRole('button', {name: /Save order/i})).toBeVisible()
-    await expect(panel.getAllByRole('listitem')[0]).toHaveAccessibleName(/Satisfaction/i)
+    await expect(panel.getAllByRole('listitem')[2]).toHaveAccessibleName(/Satisfaction/i)
   },
 }
 
@@ -161,16 +164,16 @@ export const SaveFailureRollsBack: Story = {
     const panel = within(canvas.getByRole('tabpanel'))
     await userEvent.click(await panel.findByRole('button', {name: /Reorder/i}))
 
-    const firstItem = panel.getAllByRole('listitem')[0]
+    const firstItem = panel.getAllByRole('listitem')[2]
     await expect(firstItem).toHaveAccessibleName(/Psycho Killer/i)
     firstItem.focus()
     await userEvent.keyboard('{ArrowDown}')
-    await expect(panel.getAllByRole('listitem')[0]).toHaveAccessibleName(/Satisfaction/i)
+    await expect(panel.getAllByRole('listitem')[2]).toHaveAccessibleName(/Satisfaction/i)
 
     await userEvent.click(panel.getByRole('button', {name: /Save order/i}))
     await expect(await panel.findByText('Saving order…')).toBeVisible()
     await expect(await canvas.findByText(reorderFailure)).toBeVisible()
-    await expect(panel.getAllByRole('listitem')[0]).toHaveAccessibleName(/Psycho Killer/i)
+    await expect(panel.getAllByRole('listitem')[2]).toHaveAccessibleName(/Psycho Killer/i)
   },
 }
 
@@ -196,11 +199,38 @@ export const RefreshFailureKeepsQueueContext: Story = {
     await userEvent.click(await canvas.findByRole('tab', {name: /Ordem|Order/i}))
     const panel = within(canvas.getByRole('tabpanel'))
     await userEvent.click(await panel.findByRole('button', {name: /Reorder/i}))
-    const firstItem = panel.getAllByRole('listitem')[0]
+    const firstItem = panel.getAllByRole('listitem')[2]
     firstItem.focus()
     await userEvent.keyboard('{ArrowDown}')
     await userEvent.click(panel.getByRole('button', {name: /Save order/i}))
     await expect(await canvas.findByText('The refreshed Jam could not be loaded.')).toBeVisible()
     await expect(panel.getAllByRole('listitem')[0]).toBeVisible()
+  },
+}
+
+
+export const PausedScheduleIsMovable: Story = {
+  render: renderManagementPage,
+  globals: {
+    authRole: 'host', locale: 'pt-BR', theme: 'jam-light', reducedMotion: true,
+    route: '/host/jams/jam-paused-reorder/manage', reviewDefaultViewport: 'phone',
+  },
+  parameters: {
+    a11y: {test: 'error'},
+    msw: {handlers: liveHostHandlers('jam-paused-reorder', {...readyLiveState, playbackState: 'PAUSED'})},
+  },
+  play: async ({canvas, userEvent}) => {
+    await userEvent.click(await canvas.findByRole('tab', {name: /Ordem/i}))
+    const panel = within(canvas.getByRole('tabpanel'))
+    await userEvent.click(await panel.findByRole('button', {name: 'Reordenar'}))
+    const before = panel.getAllByRole('listitem')
+    await expect(before[0]).toHaveTextContent('Concluída')
+    await expect(before[1]).toHaveTextContent('Pausada')
+    await expect(before[1]).toHaveAttribute('draggable', 'true')
+    before[1].focus()
+    await userEvent.keyboard('{ArrowDown}')
+    await expect(panel.getAllByRole('listitem')[2]).toHaveTextContent('Pausada')
+    await expect(panel.getAllByRole('listitem')[0]).toHaveTextContent('Concluída')
+    await expect(panel.getAllByRole('listitem')[1]).toHaveTextContent('Próxima')
   },
 }

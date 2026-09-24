@@ -24,6 +24,7 @@ export const architectureCloseoutHandlers = [
     success: true,
     data: {
       ...liveStateFixture,
+      suggestedSongs: liveStateFixture.suggestedSongs.map((song) => ({...song, order: 5})),
       nextSongs: [
         liveStateFixture.nextSongs[0],
         {

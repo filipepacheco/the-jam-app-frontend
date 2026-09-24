@@ -1,3 +1,4 @@
+import {BRAND_METADATA} from './config/brandMetadata'
 import {lazy, Suspense, useEffect, useMemo, useState} from 'react'
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
 import {SpeedInsights} from '@vercel/speed-insights/react'
@@ -108,7 +109,7 @@ function HomePage() {
       operatingSystem: 'Any',
       browserRequirements: 'Requires JavaScript',
       inLanguage: ['pt-BR', 'en', 'es'],
-      image: `${siteUrl}/brand/v1/social-1200x630.png`,
+      image: `${siteUrl}${BRAND_METADATA.socialImage}`,
       offers: {
         '@type': 'Offer',
         price: '0',
@@ -134,7 +135,7 @@ function HomePage() {
       url: siteUrl,
       logo: {
         '@type': 'ImageObject',
-        url: `${siteUrl}/brand/v1/logo.svg`,
+        url: `${siteUrl}${BRAND_METADATA.logo}`,
       },
     },
   ], [t, siteUrl, currentLang])
@@ -145,7 +146,7 @@ function HomePage() {
         title={t('seo.homepage.title')}
         description={t('seo.homepage.description_enhanced')}
         keywords={t('seo.homepage.keywords')}
-        ogImage="/brand/v1/social-1200x630.png"
+        ogImage={BRAND_METADATA.socialImage}
         jsonLd={homeJsonLd}
       />
       <div className="min-h-screen">

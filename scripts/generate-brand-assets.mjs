@@ -165,7 +165,9 @@ const pngFromSvg = async (browser, svg, width, height, background = 'transparent
   return png
 }
 const iconSvg = (size, padding, maskable = false) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}"><rect width="${size}" height="${size}" fill="${warm.plum}"/>${maskable ? '' : `<rect x="${padding}" y="${padding}" width="${size - padding * 2}" height="${size - padding * 2}" rx="${Math.round(size * 0.17)}" fill="#fff"/>`}<svg x="${padding + (maskable ? 0 : 8)}" y="${padding + (maskable ? 0 : 8)}" width="${size - (padding + (maskable ? 0 : 8)) * 2}" height="${size - (padding + (maskable ? 0 : 8)) * 2}" viewBox="480 397 228 238">${symbolGroups}</svg></svg>`
-const socialSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="${warm.plum}"/><g transform="translate(190 165) scale(1.17)">${masterSvg.replace(/^<svg[^>]*>|<\/svg>$/g, '').replaceAll(warm.violet, warm.violetLight).replaceAll(warm.plum, warm.violetLight)}</g></svg>`
+// Preserve compound-path counters when removing the master SVG wrapper.
+const socialBackground = '#FFFFFF'
+const socialSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630"><rect width="1200" height="630" fill="${socialBackground}"/><g fill-rule="evenodd" transform="translate(190 165) scale(1.17)">${masterSvg.replace(/^<svg[^>]*>|<\/svg>$/g, '')}</g></svg>`
 
 const browser = await chromium.launch({ headless: true })
 try {
@@ -182,9 +184,10 @@ try {
   for (const [name, size, padding, maskable] of [['apple-touch-icon.png', 180, 18, false], ['icon-192.png', 192, 20, false], ['icon-512.png', 512, 52, false], ['icon-maskable-512.png', 512, 74, true]]) {
     write(`${outputDirectory}/${name}`, await pngFromSvg(browser, iconSvg(size, padding, maskable), size, size, warm.plum))
   }
-  const socialPng = await pngFromSvg(browser, socialSvg, 1200, 630, warm.plum)
+  const socialPng = await pngFromSvg(browser, socialSvg, 1200, 630, socialBackground)
   write(`${outputDirectory}/social-1200x630.png`, socialPng)
   write(`${outputDirectory}/social-hybrid-1200x630.png`, socialPng)
+  write(`${outputDirectory}/social-hybrid-1200x630-v2.png`, socialPng)
   const icoImages = [16, 32].map(size => ({ size, data: pngs.get(size) }))
   const header = Buffer.alloc(6 + icoImages.length * 16)
   header.writeUInt16LE(0, 0); header.writeUInt16LE(1, 2); header.writeUInt16LE(icoImages.length, 4)
@@ -206,7 +209,7 @@ const outputs = [
   '../public/brand/v1/logo-email-light.png',
   '../public/brand/v1/favicon-16.png', '../public/brand/v1/favicon-32.png', '../public/brand/v1/favicon-96.png', '../public/brand/v1/apple-touch-icon.png',
   '../public/brand/v1/icon-192.png', '../public/brand/v1/icon-512.png', '../public/brand/v1/icon-maskable-512.png',
-  '../public/brand/v1/social-1200x630.png', '../public/brand/v1/social-hybrid-1200x630.png', '../public/favicon.ico',
+  '../public/brand/v1/social-1200x630.png', '../public/brand/v1/social-hybrid-1200x630.png', '../public/brand/v1/social-hybrid-1200x630-v2.png', '../public/favicon.ico',
 ]
 const digest = path => sha256(readFileSync(path.startsWith('../') ? `${root}${path.slice(2)}` : `${sourceDirectory}/${path}`))
 const provenance = {

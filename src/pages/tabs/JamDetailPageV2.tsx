@@ -1,3 +1,4 @@
+import {BRAND_METADATA} from '../../config/brandMetadata'
 /**
  * JamDetailPageV2
  * Waveform Pulse Timeline Design - Modern minimal with music-themed elements
@@ -272,7 +273,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 ? { '@type': 'Place', name: jam.location }
                 : { '@type': 'VirtualLocation', url: canonicalUrl },
             url: canonicalUrl,
-            image: `${siteUrl}/brand/v1/social-1200x630.png`,
+            image: `${siteUrl}${BRAND_METADATA.socialImage}`,
             eventStatus: eventStatusMap[jam.status] || 'https://schema.org/EventScheduled',
             eventAttendanceMode: jam.location
                 ? 'https://schema.org/OfflineEventAttendanceMode'
