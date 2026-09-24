@@ -53,9 +53,16 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
   // Level bars and stage lights mean music is sounding. A paused song keeps
   // its title and lineup; the lights fade and the meter settles flat.
   const sounding = Boolean(song) && playbackState === 'PLAYING'
-  // Before a song starts, the rig is dark: a follow spot searches the stage and
-  // the meter runs a soundcheck. The beams and halo come up when the song arrives.
+  // Before a song starts, the rig is dark: a heartbeat glows behind the title and
+  // the meter beats with it. The beams and halo come up when the song arrives.
   const waiting = !lineupSong && !finished
+  // Each wait mounts a fresh heartbeat, so it starts in step with the meter.
+  const [waits, setWaits] = useState(0)
+  const [wasWaiting, setWasWaiting] = useState(waiting)
+  if (waiting !== wasWaiting) {
+    setWasWaiting(waiting)
+    if (waiting) setWaits(count => count + 1)
+  }
   // Gold comes with the applause at once; a song's color waits for its roll or flight.
   const shift = useStageLights(applause ? APPLAUSE_SHIFT : sceneShift(song?.id ?? null), settledOn === arrival && boarding === null, Boolean(applause))
   const claps = useClapCount(reactions, applause?.id ?? null)
@@ -71,7 +78,11 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
     <section ref={cardRef} className="venue-current" data-venue-song-id={lineupSong?.id} data-live={Boolean(song)} data-playback={applause ? 'applause' : sounding ? 'sounding' : waiting ? 'waiting' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} data-venue-boarding={typeof boarding === 'number' ? '' : undefined} style={{'--venue-scene-shift': shift} as CSSProperties} aria-label={t('publicDashboard.onStage')}>
       {!finished && (
         <div className="venue-stage-fx" aria-hidden="true">
-          <span className="venue-stage-spot" />
+          <span key={waits} className="venue-stage-waiting">
+            <span className="venue-stage-wash" />
+            <span className="venue-stage-heart" />
+            <span className="venue-stage-ring" />
+          </span>
           <span className="venue-stage-beam" />
           <span className="venue-stage-beam" />
           <span className="venue-stage-halo" />
