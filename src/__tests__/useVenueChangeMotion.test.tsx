@@ -124,7 +124,7 @@ describe('useVenueChangeMotion', () => {
     expect(container.querySelector('[data-venue-lineup]')).not.toBeInTheDocument()
   })
 
-  it('applauds the band that just played under a strobe, keeping its lineup in place', () => {
+  it('applauds the band that just played under a strobe, with its lineup out of the way', () => {
     const {container, rerender} = render(<CurrentSongCard song={psychoKiller} />)
     targets = []
     timings = []
