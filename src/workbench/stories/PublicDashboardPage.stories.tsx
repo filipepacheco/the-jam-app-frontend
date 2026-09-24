@@ -160,10 +160,10 @@ function LiveChangesReview() {
           jamStatus: current.jamStatus === 'FINISHED' ? 'LIVE' : 'FINISHED',
         }))}>Encerrar jam</button>
         <button type="button" className={buttonClass} onClick={() => {
-          reactions.emit({kind: 'clap', count: 10})
-          reactions.emit({kind: 'fire', count: 4})
-          reactions.emit({kind: 'heart', count: 5})
-          reactions.emit({kind: 'rock', count: 3})
+          reactions.emit({kind: 'heart', count: 5, name: 'Lipe'})
+          reactions.emit({kind: 'fire', count: 4, name: 'Marina'})
+          reactions.emit({kind: 'clap', count: 10, name: 'Yuri'})
+          reactions.emit({kind: 'rock', count: 3, name: null})
         }}>Reações da plateia</button>
       </div>
       <PublicDashboardPage viewState={{status: 'loaded', data}} layoutOverride="classic" reactionFeed={reactions} />
