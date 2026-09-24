@@ -99,3 +99,50 @@ describe('PublicDashboardPage', () => {
     expect(screen.getByRole('heading', {level: 2, name: 'Psycho Killer'})).toBeVisible()
   })
 })
+
+it('keeps the stage, next lineup, and registration link together', async () => {
+  render(<PublicDashboardPage layoutOverride="classic" viewState={{status: 'loaded', data: {
+    ...liveDashboard,
+    currentSong: {...liveDashboard.currentSong!, musicians: [{id: 'current', name: 'Yuri', instrument: 'vocals'}]},
+    nextSongs: [{id: 'next', title: 'Valerie', artist: 'Amy Winehouse', duration: null,
+      musicians: [{id: 'next-person', name: 'Camila', instrument: 'drums'}]}],
+  }}} />)
+  expect(screen.getByText('Yuri')).toBeInTheDocument()
+  expect(screen.getByText('Camila')).toBeInTheDocument()
+  expect(screen.getByRole('heading', {name: 'Valerie'})).toBeInTheDocument()
+  expect(await screen.findByRole('link', {name: /friday-night-jam/})).toHaveAttribute('href', expect.stringContaining('/friday-night-jam'))
+  expect(screen.getByRole('img', {name: 'publicDashboard.qrCodeAlt'})).toBeInTheDocument()
+})
+
+it('shows a waiting state without promoting the next song to the stage', () => {
+  render(<PublicDashboardPage layoutOverride="classic" viewState={{status: 'loaded', data: {
+    ...liveDashboard, currentSong: null,
+    nextSongs: [{id: 'next', title: 'Valerie', artist: 'Amy Winehouse', duration: null, musicians: []}],
+  }}} />)
+  expect(screen.getByRole('heading', {name: 'publicDashboard.waitingForPerformance'})).toBeInTheDocument()
+  expect(screen.getByRole('heading', {level: 3, name: 'Valerie'})).toBeInTheDocument()
+})
+
+it('removes next-performance announcements and signup instructions when finished', async () => {
+  render(<PublicDashboardPage layoutOverride="classic" viewState={{status: 'loaded', data: {
+    ...liveDashboard, jamStatus: 'FINISHED',
+    nextSongs: [{id: 'stale-next', title: 'Valerie', artist: 'Amy Winehouse', duration: null, musicians: []}],
+  }}} />)
+  expect(await screen.findByRole('heading', {name: 'publicDashboard.viewThisJam'})).toBeInTheDocument()
+  expect(screen.queryByText('Valerie')).not.toBeInTheDocument()
+  expect(screen.queryByText('publicDashboard.registerToPlay')).not.toBeInTheDocument()
+})
+
+it('uses the short code when the Jam has no slug', async () => {
+  render(<PublicDashboardPage layoutOverride="classic" viewState={{status: 'loaded', data: {
+    ...liveDashboard, slug: null,
+  }}} />)
+  expect(await screen.findByRole('link', {name: /j\/FNJ26/})).toHaveAttribute('href', expect.stringContaining('/j/FNJ26'))
+})
+
+it('falls back to the response Jam id for a QR link when no slug or code exists', async () => {
+  render(<PublicDashboardPage layoutOverride="classic" viewState={{status: 'loaded', data: {
+    ...liveDashboard, slug: null, shortCode: null,
+  }}} />)
+  expect(await screen.findByRole('link', {name: /jams\/jam-public/})).toHaveAttribute('href', expect.stringContaining('/jams/jam-public'))
+})

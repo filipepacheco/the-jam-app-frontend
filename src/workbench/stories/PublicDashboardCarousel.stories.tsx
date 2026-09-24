@@ -84,5 +84,6 @@ export const ExpandableQr: Story = {
     await waitFor(() => expect(body.getByRole('dialog')).toBeVisible())
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(body.queryByRole('dialog')).toBeNull())
+    await waitFor(() => expect(getComputedStyle(trigger).opacity).toBe('1'))
   },
 }

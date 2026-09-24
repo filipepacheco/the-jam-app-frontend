@@ -1,11 +1,12 @@
-import {useEffect, useMemo} from 'react'
-import {motion} from 'framer-motion'
+import {useEffect} from 'react'
+import {AnimatePresence, motion} from 'framer-motion'
 import {useReducedMotion} from '../../hooks'
 import {LanguageSelector} from './LanguageSelector'
 import {useTranslation} from 'react-i18next'
 import {Action, IconAction} from '../Action'
 import {Field} from '../Field'
 import {NavigationLink} from '../Navigation'
+import {DURATION, EASE_OUT} from './venueMotion'
 import type {DashboardLayout} from '../../hooks'
 import type {AppLocale} from '../../lib/i18n/applicationLocale'
 
@@ -30,12 +31,12 @@ interface DashboardControlsPanelProps {
 // distance-legible screen behind it.
 export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClose, currentLang, onChangeLanguage, pollingMs = 5000, onPollingChange, layout, onLayoutChange, carouselIntervalMs, onCarouselIntervalChange }: DashboardControlsPanelProps) {
   const { t } = useTranslation()
-  const { transition } = useReducedMotion()
-
-  const panelTransition = useMemo(() => ({
-    opacity: transition.duration === 0 ? 0.1 : 0,
-    y: -20
-  }), [transition])
+  const { prefersReducedMotion } = useReducedMotion()
+  // Design-system timings: enter settles, exit is shorter and never blocks.
+  // Reduced motion keeps the fade and drops the travel.
+  const enter = {duration: prefersReducedMotion ? DURATION.fade : DURATION.enter, ease: EASE_OUT}
+  const exit = {duration: DURATION.exit, ease: EASE_OUT}
+  const [panelIn, panelOut] = prefersReducedMotion ? ['none', 'none'] : ['translateY(-16px)', 'translateY(-8px)']
 
   useEffect(() => {
     if (!visible) return
@@ -46,8 +47,6 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
     return () => document.removeEventListener('keydown', closeOnEscape)
   }, [onClose, visible])
 
-  if (!visible) return null
-
   const handleBackdropClick = () => {
     onClose()
   }
@@ -56,24 +55,28 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
   const layoutLabel = t('publicDashboard.layoutLabel')
 
   return (
-    <>
+    <AnimatePresence>
       {/* Backdrop */}
+      {visible && (
       <motion.div
+        key="controls-backdrop"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: {...enter, duration: DURATION.fade} }}
+        exit={{ opacity: 0, transition: exit }}
         className="fixed inset-0 z-30"
         style={{ background: 'var(--ds-surface-overlay)' }}
         onClick={handleBackdropClick}
         aria-hidden="true"
       />
+      )}
 
+      {visible && (
       <motion.div
+        key="controls-panel"
         id="public-dashboard-controls-panel"
-        initial={panelTransition}
-        animate={{ opacity: 1, y: 0 }}
-        exit={panelTransition}
-        transition={transition}
+        initial={{opacity: 0, transform: panelIn}}
+        animate={{ opacity: 1, transform: 'translateY(0px)', transition: enter }}
+        exit={{ opacity: 0, transform: panelOut, transition: exit }}
         className="fixed top-16 left-0 right-0 z-40 max-h-[calc(100vh-4rem)] overflow-y-auto bg-base-200 border-b border-base-300 p-4"
         role="region"
         aria-label={t('publicDashboard.dashboardControls')}
@@ -101,7 +104,7 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
                     aria-pressed={layout === 'classic'}
                     onClick={() => onLayoutChange('classic')}
                   >
-                    <Action.Label>{t('publicDashboard.layoutClassic')}</Action.Label>
+                    <Action.Label>{t('publicDashboard.layoutStage')}</Action.Label>
                   </Action>
                   <Action
                     variant={layout === 'carousel' ? 'primary' : 'secondary'}
@@ -163,6 +166,7 @@ export default function DashboardControlsPanel({ visible, jamId, jamSlug, onClos
           </IconAction>
         </div>
       </motion.div>
-    </>
+      )}
+    </AnimatePresence>
   )
 }

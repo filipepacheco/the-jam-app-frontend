@@ -7,6 +7,7 @@ import { QRCodePanel } from './QRCodePanel'
 import { StartingSoonPanel } from './StartingSoonPanel'
 import { FinishedPanel } from './FinishedPanel'
 import { CarouselIndicator } from './CarouselIndicator'
+import { DURATION, EASE_OUT, TEMPO } from '../venueMotion'
 import type { DashboardSongDto, JamStatus, PlaybackState } from '../../../types/api.types'
 import type { ReactNode } from 'react'
 
@@ -80,13 +81,20 @@ export function CarouselDashboard({
   return (
     <div className="relative pt-20 pb-8 px-4 md:px-8 z-10 flex flex-col min-h-[calc(100vh-5rem)] ds-shared-display">
       <div className="flex-1 flex items-center justify-center">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
+          {/* The outgoing slide clears quickly (mode="wait" holds the next one
+              back), then the new slide rises and settles. Full transform
+              strings stay on the compositor while the new panel mounts;
+              reduced motion keeps a short crossfade. */}
           <motion.div
             key={activePanel.key}
-            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={prefersReducedMotion ? undefined : { opacity: 0, scale: 0.96 }}
-            transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.4 }}
+            initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, transform: 'translateY(24px) scale(0.98)' }}
+            animate={prefersReducedMotion
+              ? { opacity: 1, transition: { duration: DURATION.fade, ease: 'easeOut' } }
+              : { opacity: 1, transform: 'translateY(0px) scale(1)', transition: { duration: 0.6 * TEMPO, ease: EASE_OUT } }}
+            exit={prefersReducedMotion
+              ? { opacity: 0, transition: { duration: DURATION.exit, ease: 'easeOut' } }
+              : { opacity: 0, transform: 'translateY(-12px) scale(1)', transition: { duration: 0.2 * TEMPO, ease: EASE_OUT } }}
             className="w-full max-w-6xl mx-auto"
           >
             {activePanel.content}

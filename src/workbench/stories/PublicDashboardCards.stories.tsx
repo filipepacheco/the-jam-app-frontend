@@ -9,14 +9,22 @@ import OfflineBanner from '../../components/publicDashboard/OfflineBanner'
 import { StartingSoonCard } from '../../components/publicDashboard/StartingSoonCard'
 import { WaveformVisualizer } from '../../components/publicDashboard/WaveformVisualizer'
 import { dashboardSongs } from '../publicDashboardFixtures'
+import { waitForMotionToSettle } from '../reducedMotion'
 
-const meta = { title: 'Domain/Public Dashboard/Cards and display', parameters: { a11y: { test: 'todo' } } } satisfies Meta
+const meta = {
+  title: 'Domain/Public Dashboard/Cards and display',
+  parameters: {
+    a11y: {test: 'error'},
+    designSystem: {interaction: {status: 'not-applicable', rationale: 'Passive venue content presents the stage and upcoming musicians without audience-operated controls; HeaderControls tests the host controls separately.'}},
+  },
+} satisfies Meta
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const CurrentAndNext: Story = {
-  render: () => <div><CurrentSongCard song={dashboardSongs.current} /><NextSongCard song={dashboardSongs.next} /></div>,
+  render: () => <div className="space-y-6"><CurrentSongCard song={dashboardSongs.current} /><NextSongCard song={dashboardSongs.next} /></div>,
   globals: { theme: 'jam-dark', locale: 'pt', viewport: { value: 'desktop', isRotated: false } },
+  play: async () => { await waitForMotionToSettle() },
 }
 
 export const StartingSoon: Story = {

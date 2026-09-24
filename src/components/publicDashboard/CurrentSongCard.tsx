@@ -1,124 +1,131 @@
-/**
- * Current Song Card Component
- * Displays currently playing song with musicians grouped by instrument
- *
- * Display-specific wrapper, documented in
- * docs/design-system/public-dashboard-migration.md: `DataCard` was
- * evaluated and not applied here. `DataCard` fixes its own background,
- * border radius, and padding scale, which would remove the semi-transparent
- * surface, the accent `border-primary/20` that visually distinguishes
- * "now playing" from the other cards, and the padding tuned for this
- * card's distance-legible type scale (`text-5xl` to `text-8xl`).
- */
-
-import {AnimatePresence, motion} from 'framer-motion'
-import {useMemo} from 'react'
+import {lazy, Suspense, useLayoutEffect, useState, type CSSProperties, type RefObject} from 'react'
 import {useTranslation} from 'react-i18next'
-import {useReducedMotion} from '../../hooks'
 import {InstrumentGroup} from './InstrumentGroup'
-import {WaveformVisualizer} from './WaveformVisualizer'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
-import {formatDuration} from '../../lib/formatters'
 import type {DashboardSongDto, PlaybackState} from '../../types/api.types'
+import {useVenueChangeMotion} from './useVenueChangeMotion'
+import {splitWords} from './venueWords'
+import {APPLAUSE_SHIFT, sceneShift, useSceneShift} from './venueScene'
+import {ReactionLayer} from './ReactionLayer'
+import {useClapCount} from './useAudienceReactions'
+import type {ReactionFeed} from '../../lib/realtime/jamReactions'
+import './venue-display.css'
+
+const ConfettiWrapper = lazy(() => import('./ConfettiWrapper'))
 
 interface CurrentSongCardProps {
   song: DashboardSongDto | null
   playbackState?: PlaybackState
+  /** The Jam is over: the stage rolls its last song out and the finale in. */
+  finished?: boolean
+  /** The band that just finished: the stage applauds it before the next song. */
+  applause?: DashboardSongDto | null
+  /** Sign-ups the join spotlight will fly into this lineup. */
+  awaiting?: ReadonlySet<string>
+  /** The up-next flight carrying this song here; its text waits until it lands. */
+  boarding?: number | null
+  /** The room's reactions: they float up behind the stage text. */
+  reactions?: ReactionFeed | null
 }
 
-// Animation configurations for optimal performance
-const CARD_ENTRY_ANIMATION = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
-} as const
-
-const CARD_PULSE_ANIMATION = {
-  scale: [1, 1.015, 1],
+/** "Yuri, Alexandra and Marina"; a big band ends in "and 3 more". */
+function performerNames(song: DashboardSongDto, language: string | undefined, more: (count: number) => string) {
+  const names = [...new Map(song.musicians.filter(({name}) => name).map(({id, name}) => [id, name])).values()]
+  const shown = names.length > 4 ? [...names.slice(0, 3), more(names.length - 3)] : names
+  return new Intl.ListFormat(language, {type: 'conjunction'}).format(shown)
 }
 
-const CARD_PULSE_TRANSITION = {
-  duration: 3,
-  repeat: Infinity,
-  ease: 'easeInOut',
-} as const
-
-export function CurrentSongCard({ song, playbackState = 'PLAYING' }: CurrentSongCardProps) {
-  const { t } = useTranslation()
-  const { transition, prefersReducedMotion } = useReducedMotion()
-
-  // Memoize pulse transition to prevent object recreation on re-renders
-  const pulseTransition = useMemo(
-    () => (prefersReducedMotion ? { duration: 0 } : CARD_PULSE_TRANSITION),
-    [prefersReducedMotion]
+// A short burst behind the text, sized to the stage and colored by the theme.
+function StageConfetti({stage}: {stage: RefObject<HTMLElement | null>}) {
+  const [burst, setBurst] = useState<{width: number; height: number; colors: string[]} | null>(null)
+  useLayoutEffect(() => {
+    const element = stage.current
+    if (!element) return
+    const {width, height} = element.getBoundingClientRect()
+    const style = getComputedStyle(element)
+    const colors = ['--color-primary', '--color-secondary', '--color-accent', '--color-warning']
+      .map(token => style.getPropertyValue(token).trim())
+      .filter(Boolean)
+    setBurst({width, height, colors})
+  }, [stage])
+  if (!burst) return null
+  return (
+    <Suspense fallback={null}>
+      <ConfettiWrapper show width={burst.width} height={burst.height} numberOfPieces={160} tweenDuration={1200} {...(burst.colors.length > 0 ? {colors: burst.colors} : {})} />
+    </Suspense>
   )
+}
+
+// Distance-readable domain wrapper; see public-dashboard-migration.md.
+export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', finished = false, applause = null, awaiting, boarding = null, reactions = null}: CurrentSongCardProps) {
+  const {t, i18n} = useTranslation()
+  const song = finished || applause ? null : liveSong
+  // The applauded band stays in the lineup while the title thanks it.
+  const lineupSong = applause ?? song
+  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(lineupSong, applause ? `applause:${applause.id}` : finished ? 'finale' : undefined, boarding)
+  // Level bars and stage lights mean music is sounding. A paused song keeps
+  // its title and lineup; the lights fade and the meter settles flat.
+  const sounding = Boolean(song) && playbackState === 'PLAYING'
+  const shift = useSceneShift(applause ? APPLAUSE_SHIFT : sceneShift(song?.id ?? null))
+  const claps = useClapCount(reactions, applause?.id ?? null)
+
+  const title = applause
+    ? t('publicDashboard.applauseFor', {names: performerNames(applause, i18n?.resolvedLanguage, count => t('publicDashboard.andMore', {count}))})
+    : finished ? t('publicDashboard.jamFinished') : song?.title ?? t('publicDashboard.waitingForPerformance')
+  const artist = applause
+    ? `${applause.title} · ${applause.artist}`
+    : finished ? t('publicDashboard.thankYou') : song?.artist ?? t('publicDashboard.waitingForPerformanceHelp')
 
   return (
-    <motion.div
-      key={`current-${song?.id ?? 'waiting'}`}
-      initial={prefersReducedMotion ? false : CARD_ENTRY_ANIMATION.initial}
-      animate={CARD_ENTRY_ANIMATION.animate}
-      transition={transition}
-      className="mb-12"
-    >
-      <motion.div
-        className="bg-primary/15 border-2 border-primary/40 rounded-2xl p-8 md:p-12"
-        animate={prefersReducedMotion || playbackState !== 'PLAYING' ? {} : CARD_PULSE_ANIMATION}
-        transition={pulseTransition}
-      >
-        <p className="text-primary text-sm md:text-lg font-semibold mb-4">
-          {t(playbackState === 'PAUSED' ? 'schedule.statuses.paused' : 'publicDashboard.nowPlaying')}
+    <section ref={cardRef} className="venue-current" data-venue-song-id={lineupSong?.id} data-live={Boolean(song)} data-playback={applause ? 'applause' : sounding ? 'sounding' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} data-venue-boarding={typeof boarding === 'number' ? '' : undefined} style={{'--venue-scene-shift': shift} as CSSProperties} aria-label={t('publicDashboard.onStage')}>
+      {lineupSong && (
+        <div className="venue-stage-fx" aria-hidden="true">
+          <span className="venue-stage-beam" />
+          <span className="venue-stage-beam" />
+          <span className="venue-stage-halo" />
+          <span className="venue-stage-sweep" />
+          {applause && motionEnabled && <StageConfetti key={applause.id} stage={cardRef} />}
+        </div>
+      )}
+      <ReactionLayer feed={reactions} gentle={!motionEnabled} />
+      <span className="venue-change-wash" aria-hidden="true" />
+      {!finished && (
+        <p className="venue-label">
+          {lineupSong && <span className="venue-live-beat" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>}
+          {applause
+            ? <>
+                {t('publicDashboard.applauseLabel')}
+                {claps > 0 && <span key={claps} className="venue-claps"><span aria-hidden="true">👏</span> {t('publicDashboard.applauseClaps', {count: claps})}</span>}
+              </>
+            : song
+              ? t(playbackState === 'PAUSED' ? 'schedule.statuses.paused' : 'publicDashboard.nowPlaying')
+              : t('publicDashboard.startingSoon')}
         </p>
-        {song ? (
-          <>
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 ds-wrap-user-content">{song.title}</h2>
-            {playbackState === 'PLAYING' && <WaveformVisualizer className="my-4" />}
-            <p className="md:text-3xl text-base-content/80 mb-2 ds-wrap-user-content">
-              {t('publicDashboard.by')} {song.artist}
-            </p>
-            {song.duration && (
-              <p className="text-lg md:text-xl text-base-content/70 mb-8">
-                <span aria-hidden="true">⏱️</span> {formatDuration(song.duration)}
-              </p>
-            )}
-
-            {song.musicians && song.musicians.length > 0 ? (
-              <div className="mt-8">
-                <p className="text-lg md:text-2xl font-bold text-base-content mb-6">
-                  {t('publicDashboard.currentMusicians')}
-                </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  <AnimatePresence initial={false} mode="popLayout">
-                    {Object.entries(groupMusiciansByInstrument(song.musicians)).map(([instrument, musicians]) => (
-                      <motion.div
-                        key={`${instrument}:${musicians.map(({id}) => id).join(',')}`}
-                        layout={!prefersReducedMotion}
-                        initial={prefersReducedMotion ? false : {opacity: 0, y: 8}}
-                        animate={{opacity: 1, y: 0}}
-                        exit={prefersReducedMotion ? undefined : {opacity: 0, y: -8}}
-                        transition={transition}
-                      >
-                        <InstrumentGroup instrument={instrument} musicians={musicians} size="lg" />
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </div>
-              </div>
-            ) : (
-              <p className="text-base-content/70 text-lg">{t('publicDashboard.noMusicians')}</p>
-            )}
-          </>
-        ) : (
-          <div className="py-6 md:py-10">
-            <h2 className="text-4xl font-black text-base-content md:text-6xl">
-              {t('publicDashboard.waitingForPerformance')}
-            </h2>
-            <p className="mt-4 text-lg text-base-content/70 md:text-2xl">
-              {t('publicDashboard.waitingForPerformanceHelp')}
-            </p>
-          </div>
-        )}
-      </motion.div>
-    </motion.div>
+      )}
+      {/* Each line is its own mask; the ghost holds the outgoing song during a roll. */}
+      <div className="venue-song-stage">
+        <div data-venue-song>
+          <h2 className="venue-current-title venue-roll ds-wrap-user-content">
+            <span className="venue-roll-line">{splitWords(title)}</span>
+          </h2>
+          <p className="venue-artist venue-roll ds-wrap-user-content">
+            <span className="venue-roll-line">{artist}</span>
+          </p>
+        </div>
+        <div className="venue-song-ghost" data-venue-ghost aria-hidden="true" />
+      </div>
+      {lineupSong && (
+        <div className="venue-lineup" data-venue-lineup>
+          <p className="venue-label">{t('publicDashboard.onStage')}</p>
+          {lineupSong.musicians.length > 0 ? (
+            <div className="venue-musicians">
+              {Object.entries(groupMusiciansByInstrument(lineupSong.musicians)).map(([instrument, musicians]) => (
+                <InstrumentGroup key={instrument} instrument={instrument} musicians={musicians} size="lg" songId={lineupSong.id} awaiting={awaiting} />
+              ))}
+            </div>
+          ) : <p className="venue-support">{t('publicDashboard.lineupPending')}</p>}
+        </div>
+      )}
+    </section>
   )
 }

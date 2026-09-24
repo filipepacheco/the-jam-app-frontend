@@ -186,3 +186,116 @@ compact language selector remain the documented display-specific exceptions.
 Marketing CTAs use `NavigationLink`'s `primary` and `secondary` destination
 variants, which preserve native anchor semantics while providing the intended
 emphasis.
+
+## Venue display redesign (September 2026)
+
+The audience brief is a landscape TV/projector that announces the current
+Performance and Musicians, prepares the next lineup, and invites people to
+register for upcoming Music. The default `classic` preference now means the
+persistent stage-and-next layout; explicit saved carousel preferences remain
+supported. The carousel remains an optional sequential display.
+
+The page reuses `CurrentSongCard`, `NextSongCard`, `InstrumentGroup`, `Header`,
+and `QRCodePanel`. The current Performance occupies the dominant left region;
+the next Performance and its lineup sit below it. `QRCodePanel`'s invitation
+variant stays in a dedicated right column, with a quiet zone, a readable link,
+and localized scan/choose/register instructions. It uses the canonical
+`NavigationLink`; header controls still use `IconAction`. The previous two
+corner QR overlays are no longer used by the page, but `QRCodeCorner` remains
+in its existing workbench story and is not deleted without the separate
+zero-consumer/approval gate.
+
+`DataCard` was reconsidered: its ordinary content scale and padding do not own
+the distance-readable Performance hierarchy. These existing domain wrappers
+therefore retain their display-specific CSS, shared in `venue-display.css`.
+Revisit this exception if a canonical shared-display primitive gains this
+contract. `InstrumentGroup` shows written localized instrument names and large
+musician names rather than depending on an emoji alone. Song titles and names
+wrap; the page reflows on phones and permits vertical growth for unusually
+large lineups instead of clipping performers. Routine 16:9 content is intended
+to show all three regions together.
+
+Waiting keeps the upcoming Performance separate from the stage. An empty next
+queue explains how to participate. Finished Jams hide stale next entries and
+replace the signup invitation with a link to the Jam. The dashboard DTO has no
+instrument capacity/availability data, so it does not invent vacant slots.
+Polling, stale-data retention, fullscreen, and the existing registration routes
+remain in place. Ambient card pulsing and the classic waveform were removed;
+stage text updates immediately without an entrance that hides time-critical content.
+
+Review evidence: Public Dashboard transitions / Live Classic, Long Lineups,
+Phone, Empty Queue, Starting Soon, Finished, Stale Data, Musician Change
+Transition, and Live Carousel; Cards and display / Current And Next and Header
+Controls. Human approval is pending; automated evidence does not approve the
+new visual references.
+
+### Verification and review status
+
+- Browser review covered a normal lineup at 1920×1080 and 1280×720, a crowded
+  lineup with long content at 1920×1080, and Spanish phone layout at 390×844.
+- The complete unit run passed 333 tests using two workers. After the shared
+  reduced-motion correction, the affected dashboard/hook tests passed (15
+  tests, including two new first-render preference cases).
+- Focused Storybook MCP interaction/a11y checks pass for live, long-content,
+  phone, starting, empty, finished, musician changes, carousel, header,
+  controls, legacy QR, and stale-data states. The full suite's last run was
+  212/216; its controls-panel first-frame failure was then fixed and checked
+  through MCP. Three failures are outside this surface: Create Jam/Musicians
+  delete/error heading order and Jam Detail's expected title class.
+- Locale verification, workbench TypeScript, catalogue baseline, progressive
+  governance, scoped lint (no errors), deterministic private build, production
+  compilation/isolation, and visual privacy passed. Full lint encounters six
+  parsing errors in existing nested `.claude/worktrees` copies.
+- `npm run build` could not own the occupied prerender port 45678. A temporary
+  copy using port 45679 rendered all five routes; local Chrome cleanup hung
+  after completion and was interrupted. The temporary file was removed.
+- Host-native visual comparison found 7 passing and 25 changed cells, with no
+  missing/unexpected references. This includes intentional dashboard changes
+  and differences outside the dashboard. Per the visual-regression policy,
+  macOS results are diagnostic; final references require the canonical Linux
+  renderer and human review. Existing PNG references and checked-in progress
+  counts were preserved, so visual comparison/progress are not green.
+
+### Selected appearance and live change cues
+
+The user retained the original stage/next/invitation appearance after comparing
+the three private art-direction proposals. The current-song card loses its
+lavender top cap and decorative status dot. Its content and placement remain.
+
+The user then requested live-show energy beyond the initial conservative cues.
+A later motion pass replaced the ring and particle burst with the cues below.
+
+- Ambient: live songs show animated level bars. Two soft stage lights drift on slow cycles of 11 and 14 seconds, and two light beams sweep from the top edge on cycles of 7 and 9 seconds. They do not pulse.
+- Tempo: one constant, `TEMPO` in `venueMotion.ts`, sets the pace of all audience cues. It is 1.5 now. The timings below are at tempo 1, so multiply them by `TEMPO`.
+- Song change: each title and artist line has its own mask. A strong ease-out clears the old lines in about 150 ms. The new title starts at 190 ms and rises word by word, 80 ms apart, and each word has its own mask. Each line rises over 950 ms, so two titles never share a mask.
+- Stage light: a spotlight bloom and one light sweep cross the current-song card with the new title.
+- Scene color: each song gets its own stage-light color. The color is a hue shift from the theme primary, so lightness and chroma follow the theme. A hash of the song id selects the shift from a fixed list, so all screens show the same color. The lights blend to the new color over 2.1 seconds and take the short way round the color wheel. Text, the next card and the invitation card keep the brand color. Browsers without relative colors keep the brand colors.
+- Lineup: the instrument groups land one after another. Each group rises with a spring (about 12% overshoot) and fades in from a light blur.
+- Next card: it uses the same roll, 160 ms after the stage, so the audience reads the stage first.
+- Lineup edit: only the new or renamed musician moves, and a highlight marks the group.
+- Join spotlight: a new sign-up on any queued song gets an announcement over the programme column ("Diego entrou na jam!"). The invitation column and its QR code stay clear. A join is a named musician who is new to the whole queue. A move between songs, a second sign-up, and a song that only slides into the list when the queue moves on do not count. One poll of joins makes one announcement with a maximum of three names, and the rest show as a count. The announcement holds for 3.3 seconds. Then each name flies to its lineup slot if its song is on screen, and the group highlight flashes when it lands. The slot stays hidden until then, but keeps its space. For a song that is not on screen, the name fades out. The spotlight waits during the applause, and an applause that starts clears it at once. Every announcement ends after a maximum of 10 seconds, so a name never stays hidden.
+- First paint: the cards rise once, then their lines roll in.
+- Pause: the stage lights fade out over 600 ms and the level meter settles into a flat line. Resume reverses the change. Both use CSS transitions, so a quick pause and resume do not jump.
+- Applause: when a song that the room heard leaves the stage, the stage thanks its band for 4.5 seconds ("Palmas para Yuri, Alexandra e Marina!"). A song was heard if it was playing or paused while on stage. The band stays in the lineup, the lights turn gold and open wide, the change flash pulses three times, and a short confetti burst falls behind the text. The next card keeps the incoming song during the hold. Then both cards move to the latest data together. If the host goes back to the same song, the applause stops. `useStageHandover` makes these decisions during render, so the stage never shows the next song first. The carousel layout does not use it.
+- Up-next flight: when the stage takes the song that the next card shows, that song flies to the stage. Each title word, the artist line and each name fly from the next card to their places on the stage. The words reflow into the bigger title during the flight. Each clone lands on the glyphs of the real text, and the real text then takes over in the same frame. The flight occurs after the applause and also on a direct handover. It does not occur for a song out of order, on the first load, or into the finale. The stage text stays hidden until the flight lands, and a timer shows it after a maximum of 3.6 seconds. Then the stage lights flash and each group highlight flashes. The new next song rises into the next card after the old text lifts off. The join spotlight waits during the flight. `StageFlight` measures the next card with `getSnapshotBeforeUpdate`, before React removes the old text.
+- Audience reactions: while the Jam is `LIVE`, the public Jam page shows a reaction bar with four buttons: clap, fire, heart and rock. A tap is anonymous. The phone merges the taps of 400 ms into one message for each kind, with a maximum count of 10. The message goes on a Supabase Realtime broadcast channel for the Jam, and nothing is stored. The venue display drops any message that is not a known kind with a whole count from 1 to 10. Each reaction rises as an emoji behind the stage text, and a batch spreads over 600 ms. A maximum of 30 emoji show at one time, so a flood cannot hide the stage. During the applause, the label shows a live clap count ("30 palmas"). The channel is public, so anyone with the anon key can send to it. The upgrade path is a private channel with a backend relay, and the display code does not change.
+- Finale: when the Jam finishes, the last song rolls out and the closing message rolls in on the same stage card. The applause for the last band comes first.
+- Invitation: the signup card glows on a 4-second cycle, and a light crosses it every 8 seconds. Both layers sit behind the content, and the QR code does not move.
+
+These audience announcements intentionally exceed routine control durations.
+Hidden copies of the old lines (`aria-hidden`) give the exit animation. The copies stay only while the cue runs.
+The masks clip only while a cue runs, so text at rest never loses a descender.
+A spring is sampled once from the existing Motion library into a CSS `linear()` easing. Browsers without `linear()` use an expo-out curve.
+All cues use WAAPI or CSS on `transform`, `opacity` and `filter` only. The one exception is the flying text: it also changes color and letter spacing. Each flying copy has an absolute position, so no other text reflows. No audio or microphone is involved.
+All curves come from `venueMotion.ts`. Entrances and exits use the strong ease-out `cubic-bezier(0.23, 1, 0.32, 1)`, and no element uses ease-in.
+The banner, the controls panel and the carousel give Motion full `transform` strings, so the compositor runs them.
+Visible-value comparisons stop unchanged polling responses from replaying cues.
+Reduced-motion mode stops all movement and ambient motion. Song and lineup changes then use a short opacity fade: 120 ms out and 200 ms in. The banner, the controls panel and the carousel also fade without movement. The applause still shows, but without confetti. The join spotlight crossfades in and out, and names do not fly. The up-next song does not fly; the cards use the opacity fade. Reactions glow in place with no travel, and a maximum of 8 show at one time.
+Hidden documents stop all cues.
+Rapid updates cancel the previous cue, and QR content never moves.
+Classic mode uses these local cues in place of routine full-screen confetti.
+The controls panel and the offline banner now also animate out, and exits are shorter than entrances.
+
+The `Live Changes` preview provides manual song, musician, next-song and unchanged
+refresh controls. TypeScript passed; broad workbench tests were not rerun, following
+the user's explicit request to prioritize direct visual review.

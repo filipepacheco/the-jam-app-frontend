@@ -1,8 +1,9 @@
 import React from 'react'
-import Confetti from 'react-confetti'
+import Confetti, {type IConfettiOptions} from 'react-confetti'
 
-export default function ConfettiWrapper({ show, width, height }: { show: boolean; width: number; height: number }) {
+type ConfettiWrapperProps = {show: boolean; width: number; height: number} & Partial<Pick<IConfettiOptions, 'numberOfPieces' | 'colors' | 'tweenDuration'>>
+
+export default function ConfettiWrapper({show, width, height, numberOfPieces = 200, ...options}: ConfettiWrapperProps) {
   if (!show) return null
-  return <Confetti width={width} height={height} numberOfPieces={200} recycle={false} />
+  return <Confetti width={width} height={height} numberOfPieces={numberOfPieces} recycle={false} {...options} />
 }
-

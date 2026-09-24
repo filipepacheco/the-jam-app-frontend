@@ -9,9 +9,9 @@ const DEFAULT_INTERVAL = 8000
 function readLayout(): DashboardLayout {
   try {
     const stored = localStorage.getItem(LAYOUT_KEY)
-    if (stored === 'carousel') return 'carousel'
+    if (stored === 'classic' || stored === 'carousel') return stored
   } catch { /* ignore */ }
-  return 'carousel'
+  return 'classic'
 }
 
 function readInterval(): number {

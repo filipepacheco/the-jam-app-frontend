@@ -220,6 +220,27 @@ export const GuestParticipationRedirect: Story = {
   },
 }
 
+export const LiveReactions: Story = {
+  render: () => page(
+    <JamDetailPageV2
+      viewState={{status: 'loaded', jam: {...jamFixtures.active, status: 'LIVE'}}}
+      onNavigate={navigate}
+    />,
+  ),
+  globals: {
+    authRole: 'user',
+    locale: 'pt',
+    theme: 'jam-dark',
+    reviewDefaultViewport: 'phone',
+    reducedMotion: false,
+  },
+  play: async ({canvas, userEvent}) => {
+    const reactions = canvas.getByRole('group', {name: /mande energia/i})
+    await expect(reactions).toBeVisible()
+    await userEvent.click(within(reactions).getByRole('button', {name: /aplaudir/i}))
+  },
+}
+
 export const NoPerformances: Story = {
   render: () => page(
     <JamDetailPageV2

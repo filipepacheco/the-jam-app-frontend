@@ -11,10 +11,7 @@ interface HeaderProps {
   tickerText?: string | null
 }
 
-// The Public Dashboard header is projected on a venue screen: its icon
-// controls stay on a transparent overlay so they never cover the ticker or
-// title. IconAction's `quiet` variant already renders transparent, so only
-// layout and stacking classes are added here; no visual redesign.
+// Keep host controls compact and separate from the audience's stage content.
 export default function Header({
   title,
   showControlsPanel,
@@ -31,11 +28,20 @@ export default function Header({
     : t('publicDashboard.enterFullscreen')
 
   return (
-    <div className="absolute top-0 left-0 right-0 z-50 flex items-center justify-between p-4 pointer-events-none">
+    <header className={`${tickerText ? 'absolute top-0 inset-x-0' : 'relative'} z-30 flex min-h-24 items-center gap-4 px-4 py-3 md:px-10`}>
+      {!tickerText && <h1 className="min-w-0 flex-1 text-lg font-bold md:text-2xl ds-wrap-user-content">{title}</h1>}
+      {tickerText && (
+        <div className="min-w-0 flex-1 overflow-hidden">
+          <h1 className="sr-only">{title}</h1>
+          <div aria-hidden="true" className="whitespace-nowrap text-lg sm:text-2xl md:text-3xl font-bold animate-ticker">
+            {`${tickerText}     ·     `.repeat(6)}
+          </div>
+        </div>
+      )}
       <IconAction
         variant="quiet"
         onClick={() => setShowControlsPanel(!showControlsPanel)}
-        className="pointer-events-auto text-base-content shrink-0 z-10"
+        className="text-base-content shrink-0 ds-control--shared-display"
         title={toggleControlsLabel}
         aria-expanded={showControlsPanel}
         aria-controls="public-dashboard-controls-panel"
@@ -44,23 +50,11 @@ export default function Header({
         ☰
       </IconAction>
 
-      {tickerText ? (
-        <div className="absolute inset-x-14 top-0 bottom-0 overflow-hidden flex items-center pointer-events-none">
-          <div className="whitespace-nowrap text-lg sm:text-2xl md:text-3xl font-bold animate-ticker">
-            {`${tickerText}     ·     `.repeat(6)}
-          </div>
-        </div>
-      ) : (
-        <h1 className="absolute left-1/2 transform -translate-x-1/2 text-lg sm:text-2xl md:text-3xl font-bold pointer-events-none max-w-[60%] text-center ds-wrap-user-content">
-          <span aria-hidden="true">🎤</span> <span className="pointer-events-none">{title}</span>
-        </h1>
-      )}
-
       <div className="flex items-center gap-2 pointer-events-auto shrink-0 z-10">
         <IconAction
           variant="quiet"
           onClick={onToggleFullscreen}
-          className="text-base-content"
+          className="text-base-content ds-control--shared-display"
           title={fullscreenLabel}
           aria-pressed={isFullscreen}
           label={fullscreenLabel}
@@ -68,6 +62,6 @@ export default function Header({
           {isFullscreen ? '✕' : '⛶'}
         </IconAction>
       </div>
-    </div>
+    </header>
   )
 }

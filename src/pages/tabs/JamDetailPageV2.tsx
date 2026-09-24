@@ -29,6 +29,8 @@ import {
     CollapsibleSection,
     DualActionFAB,
     JamDetailLoadingSkeleton,
+    REACTION_BAR_SPACE,
+    ReactionBar,
     PerformanceSelectionModal,
     SuggestSongModal,
     SuggestNewSongModal,
@@ -64,7 +66,9 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
     const {isAuthenticated, user} = useAuth()
 
     const {data: routeJam, error: routeError, isLoading: routeLoading, mutate: mutateJam} = useSWR<JamResponseDto | null>(
-        jamId && !viewState ? `/jams/${jamId}` : null
+        jamId && !viewState ? `/jams/${jamId}` : null,
+        // A Jam about to start or on stage refreshes, so the reaction bar comes and goes by itself.
+        {refreshInterval: (latest?: JamResponseDto | null) => latest?.status === 'ACTIVE' || latest?.status === 'LIVE' ? 60000 : 0},
     )
     const jam = viewState?.status === 'loaded' ? viewState.jam : routeJam
     const {data: hostProfileResponse} = useSWR(
@@ -296,6 +300,9 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
         },
     ]
 
+    // The audience reacts from here while the Jam is on stage.
+    const showReactions = jam.status === 'LIVE'
+
     return (
         <div className="min-h-screen bg-linear-to-br from-base-100 to-base-200">
             <SEO
@@ -440,7 +447,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             )}
 
             {/* Main Content */}
-            <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-6 pb-24 sm:py-8`} data-jam-detail-container>
+            <div className={`${JAM_DETAIL_CONTAINER_CLASS} py-6 sm:py-8 ${showReactions ? 'pb-52 sm:pb-40' : 'pb-24'}`} data-jam-detail-container>
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
                     {/* Timeline Column - full width, schedule is the hero */}
@@ -507,7 +514,10 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 onRegisterClick={handleFABRegisterClick}
                 onSuggestClick={handleSuggestClick}
                 primaryAction="register"
+                offset={showReactions ? REACTION_BAR_SPACE : 0}
             />
+
+            {showReactions && <ReactionBar jamId={jam.id} live={!viewState} />}
 
             {/* Modals */}
             {selectedScheduleForEnroll && (

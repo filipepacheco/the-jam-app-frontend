@@ -16,15 +16,23 @@ import {
     OfflineBanner,
     CarouselDashboard
 } from '../components/publicDashboard'
+import {useStageHandover} from '../components/publicDashboard/useStageHandover'
+import {useJoinSpotlight} from '../components/publicDashboard/useJoinSpotlight'
+import {JoinSpotlight} from '../components/publicDashboard/JoinSpotlight'
+import {StageFlight} from '../components/publicDashboard/StageFlight'
+import {useAudienceReactions} from '../components/publicDashboard/useAudienceReactions'
+import type {ReactionFeed} from '../lib/realtime/jamReactions'
+import {usePageVisible} from '../components/publicDashboard/useVenueChangeMotion'
 
 // Lazy load heavy components to reduce main bundle size
 const ConfettiWrapper = lazy(() => import('../components/publicDashboard/ConfettiWrapper'))
-const QRCodeCorner = lazy(() => import('../components/publicDashboard/QRCodeCorner'))
+const QRCodePanel = lazy(() => import('../components/publicDashboard/carousel/QRCodePanel').then(module => ({default: module.QRCodePanel})))
 import {useAppLanguage} from '../hooks'
 import {useConfettiOnSongChange} from '../hooks'
 import {useFullscreen} from '../hooks'
 import {useOfflineQueue} from '../hooks'
 import {useDashboardLayout} from '../hooks'
+import {useReducedMotion} from '../hooks/useReducedMotion'
 import {Action, Alert} from '../components'
 import {useTranslation} from 'react-i18next'
 import type {LiveDashboardResponseDto} from '../types/api.types'
@@ -40,13 +48,16 @@ interface PublicDashboardPageProps {
   viewState?: PublicDashboardViewState
   onRetry?: () => void | Promise<void>
   layoutOverride?: DashboardLayout
+  /** Review stories feed reactions here instead of the live channel. */
+  reactionFeed?: ReactionFeed
 }
 
-export function PublicDashboardPage({viewState, onRetry, layoutOverride}: PublicDashboardPageProps = {}) {
+export function PublicDashboardPage({viewState, onRetry, layoutOverride, reactionFeed}: PublicDashboardPageProps = {}) {
   const { t } = useTranslation()
   const { jamId } = useParams<{ jamId: string }>()
   const { currentLang, changeLanguage } = useAppLanguage()
   const { isOfflineMode } = useOfflineQueue()
+  const {prefersReducedMotion} = useReducedMotion()
 
   // Layout toggle
   const dashboardLayout = useDashboardLayout()
@@ -87,11 +98,31 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
 
   // Custom hooks for UI behaviors
   const { confettiVisible, confettiDimensions, containerRef } = useConfettiOnSongChange(
-    currentSong?.id
+    layout === 'carousel' && !prefersReducedMotion ? currentSong?.id : null
   )
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef)
 
-  const nextSongToShow = nextSongs[0]
+  // The venue board applauds each band, then the up-next song flies to the stage.
+  const pageVisible = usePageVisible()
+  const show = useStageHandover({
+    currentSong,
+    nextSong: nextSongs[0] ?? null,
+    playbackState,
+    finished: jamStatus === 'FINISHED',
+  }, {enabled: layout !== 'carousel', flight: !prefersReducedMotion && pageVisible})
+  // New sign-ups get the spotlight, then fly into their lineup slot.
+  const stageBusy = Boolean(show.applause || show.boarding)
+  const spotlight = useJoinSpotlight(currentSong, nextSongs, {
+    enabled: layout !== 'carousel' && jamStatus !== 'FINISHED' && pageVisible,
+    flight: !prefersReducedMotion && pageVisible,
+    paused: stageBusy,
+  })
+  // The room's reactions float up on the stage while the classic board is on screen.
+  const liveReactions = useAudienceReactions(
+    dashboardData?.jamId ?? jamId,
+    !viewState && !reactionFeed && layout !== 'carousel' && pageVisible && jamStatus !== 'FINISHED',
+  )
+  const reactions = reactionFeed ?? liveReactions
 
   // Build ticker text for carousel header
   const tickerText = (() => {
@@ -171,7 +202,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
     >
       {/* Confetti */}
       <Suspense fallback={null}>
-        <ConfettiWrapper show={confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
+        <ConfettiWrapper show={layout === 'carousel' && !prefersReducedMotion && confettiVisible} width={confettiDimensions.width} height={confettiDimensions.height} />
       </Suspense>
 
       {/* Offline Indicator */}
@@ -215,42 +246,39 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
           playbackState={playbackState}
           currentSong={currentSong}
           nextSongs={nextSongs}
-          jamId={jamId}
+          jamId={dashboardData?.jamId ?? jamId}
           slug={dashboardData?.slug}
           intervalMs={carouselIntervalMs}
         />
       ) : (
-        <>
-          <div className="relative pt-20 pb-8 px-4 md:px-8 z-10">
-            <div className="max-w-6xl mx-auto">
+        <main className="venue-board">
+            <div className="venue-programme">
               {/* Now Playing stays visible while the Jam waits for a current
                   Performance. The next Performance remains a separate region. */}
-              {jamStatus === 'FINISHED' ? (
-                <div className="mb-12 text-center">
-                  <div className="bg-base-200/80 border border-base-300 rounded-2xl p-8 md:p-12">
-                    <p className="text-5xl md:text-7xl mb-6" aria-hidden="true">👏</p>
-                    <h2 className="text-4xl md:text-6xl font-black mb-4 ds-wrap-user-content">{t('publicDashboard.jamFinished')}</h2>
-                    <p className="text-lg md:text-2xl text-base-content/70">{t('publicDashboard.thankYou')}</p>
-                  </div>
-                </div>
-              ) : (
-                <CurrentSongCard song={currentSong} playbackState={playbackState} />
+              {/* The finale stays on the stage card, so the last song rolls
+                  out and the closing message rolls in. */}
+              <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} awaiting={spotlight.awaiting} boarding={show.boarding?.id} reactions={reactions} />
+
+              {!show.finished && (
+                <NextSongCard song={show.next} awaiting={spotlight.awaiting} boarding={show.boarding?.id} />
               )}
 
-              {/* Next Song Section - only if there's a different song to show */}
-              {nextSongToShow && (
-                <NextSongCard song={nextSongToShow} />
-              )}
+              {/* After the cards: it measures the up-next card before they change. */}
+              <StageFlight boarding={show.boarding} onLand={show.land} />
+
+              <JoinSpotlight moment={spotlight.moment} paused={stageBusy} gentle={prefersReducedMotion} onDone={spotlight.finish} />
 
             </div>
-          </div>
-
-          {/* QR Code Corners */}
-          <Suspense fallback={null}>
-            <QRCodeCorner jamId={jamId} shortCode={dashboardData?.shortCode} position="top-left" />
-            <QRCodeCorner jamId={jamId} shortCode={dashboardData?.shortCode} position="top-right" />
-          </Suspense>
-        </>
+            <Suspense fallback={null}>
+              <QRCodePanel
+                variant="invitation"
+                jamId={dashboardData?.jamId ?? jamId}
+                slug={dashboardData?.slug}
+                shortCode={dashboardData?.shortCode}
+                finished={show.finished}
+              />
+            </Suspense>
+        </main>
       )}
      </div>
    )

@@ -30,6 +30,13 @@ export const jams = {
     inactive: message({"pt-BR": "Em Breve", "en": "Coming Soon", "es": "Próximamente"}),
     finished: message({"pt-BR": "Concluído", "en": "Completed", "es": "Finalizado"})
   },
+  reactions: {
+    title: message({"pt-BR": "Mande energia pro palco", "en": "Send the stage some love", "es": "Manda energía al escenario"}),
+    clap: message({"pt-BR": "Aplaudir", "en": "Clap", "es": "Aplaudir"}),
+    fire: message({"pt-BR": "Fogo", "en": "Fire", "es": "Fuego"}),
+    heart: message({"pt-BR": "Coração", "en": "Heart", "es": "Corazón"}),
+    rock: message({"pt-BR": "Rock", "en": "Rock on", "es": "Rock"})
+  },
   banner: {
     finished: message({"pt-BR": "Esta jam já terminou", "en": "This jam has ended", "es": "Esta jam ya terminó"}),
     inactive: message({"pt-BR": "Esta jam ainda não começou", "en": "This jam hasn't started yet", "es": "Esta jam aún no ha comenzado"})
