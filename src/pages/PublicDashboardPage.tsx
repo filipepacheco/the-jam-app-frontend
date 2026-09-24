@@ -112,10 +112,11 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride, reactio
     playbackState,
     finished: jamStatus === 'FINISHED',
   }, {enabled: layout !== 'carousel', flight: !prefersReducedMotion && pageVisible})
-  // New sign-ups get the spotlight, then fly into their lineup slot.
+  // New sign-ups get the spotlight, then fly into their lineup slot. The first
+  // poll only sets the lineup the room already knows, so it waits for data.
   const stageBusy = Boolean(show.applause || show.boarding)
   const spotlight = useJoinSpotlight(currentSong, nextSongs, {
-    enabled: layout !== 'carousel' && jamStatus !== 'FINISHED' && pageVisible,
+    enabled: dashboardData !== undefined && layout !== 'carousel' && jamStatus !== 'FINISHED' && pageVisible,
     flight: !prefersReducedMotion && pageVisible,
     paused: stageBusy,
   })

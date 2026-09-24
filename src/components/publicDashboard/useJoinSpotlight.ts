@@ -10,7 +10,7 @@ export interface Join {
 
 /**
  * Where an announcement plays: `next` in the up-next card, where the names
- * fly into its lineup; `queue` under the QR code, for songs not on screen.
+ * fly into its lineup; `queue` under the QR code, for every other song.
  */
 export type JoinLane = 'next' | 'queue'
 
@@ -34,8 +34,9 @@ export const joinKey = (songId: string, musicianId: string) => `${songId}:${musi
 interface Tracker {
   signature: string
   currentId: string | null
+  /** Whether the lineup was on screen, and loaded, when it was read. */
+  watching: boolean
   songs: ReadonlySet<string>
-  musicians: ReadonlySet<string>
   pairs: ReadonlySet<string>
   lanes: Record<JoinLane, JoinMoment[]>
   nextId: number
@@ -43,29 +44,26 @@ interface Tracker {
 
 function readQueue(songs: DashboardSongDto[]) {
   const pairs = new Set<string>()
-  const musicians = new Set<string>()
   for (const song of songs) {
-    for (const {id} of song.musicians) {
-      pairs.add(joinKey(song.id, id))
-      musicians.add(id)
-    }
+    for (const {id} of song.musicians) pairs.add(joinKey(song.id, id))
   }
   const ids = songs.map(({id}) => id)
-  return {pairs, musicians, songs: new Set(ids), signature: `${ids.join('|')}#${[...pairs].sort().join('|')}`}
+  return {pairs, songs: new Set(ids), signature: `${ids.join('|')}#${[...pairs].sort().join('|')}`}
 }
 
 /**
- * A join is a named musician new to the whole queue. A move between songs, or
- * a second sign-up by someone already queued, is not. When the queue moves on,
- * a song new to the list may only have slid into view, so it does not count.
- * The song on stage is live: its lineup changes quietly, never announced.
+ * A join is a named musician new to a song's lineup, on stage or in the queue:
+ * a second song for someone already queued counts, and so does a move. When
+ * the queue moves on, a song new to the list may only have slid into view, so
+ * its lineup does not count.
  */
-function findJoins(songs: DashboardSongDto[], before: Tracker, advanced: boolean, stageId: string | null) {
+function findJoins(songs: DashboardSongDto[], before: Tracker, advanced: boolean) {
   const seen = new Set<string>()
-  return songs.flatMap(song => (advanced && !before.songs.has(song.id)) || song.id === stageId ? [] : song.musicians
+  return songs.flatMap(song => advanced && !before.songs.has(song.id) ? [] : song.musicians
     .filter(({id, name}) => {
-      if (!name || before.musicians.has(id) || seen.has(id)) return false
-      seen.add(id)
+      const key = joinKey(song.id, id)
+      if (!name || before.pairs.has(key) || seen.has(key)) return false
+      seen.add(key)
       return true
     })
     .map(musician => ({key: joinKey(song.id, musician.id), songId: song.id, title: song.title, musician})))
@@ -83,7 +81,7 @@ function enqueue(queue: JoinMoment[], lane: JoinLane, joins: Join[], id: number)
 
 /**
  * Turns new sign-ups into spotlight moments, one at a time in each lane: the
- * up-next song in its own card, later songs under the QR code. Decided during
+ * up-next song in its own card, the rest under the QR code. Decided during
  * render, so an up-next name is hidden (`awaiting`) on the very frame its
  * lineup slot appears, until the spotlight flies it in.
  */
@@ -95,22 +93,30 @@ export function useJoinSpotlight(
   const songs = currentSong ? [currentSong, ...nextSongs] : nextSongs
   const snapshot = readQueue(songs)
   const currentId = currentSong?.id ?? null
-  const [tracker, setTracker] = useState<Tracker>(() => ({...snapshot, currentId, lanes: {next: [], queue: []}, nextId: 1}))
+  const [tracker, setTracker] = useState<Tracker>(() => ({...snapshot, currentId, watching: enabled, lanes: {next: [], queue: []}, nextId: 1}))
   const upNextId = nextSongs[0]?.id ?? null
 
   let next = tracker
-  if (snapshot.signature !== tracker.signature || currentId !== tracker.currentId) {
-    const joins = enabled ? findJoins(songs, tracker, currentId !== tracker.currentId, currentId) : []
+  if (snapshot.signature !== tracker.signature || currentId !== tracker.currentId || enabled !== tracker.watching) {
+    // A lineup nobody watched (hidden, another layout, still loading) is not
+    // news: the first one on screen only sets what the room already knows.
+    const joins = enabled && tracker.watching ? findJoins(songs, tracker, currentId !== tracker.currentId) : []
     const upNext = joins.filter(({songId}) => songId === upNextId)
     const later = joins.filter(({songId}) => songId !== upNextId)
-    // An up-next song that moved on (to the stage) has nothing left to announce.
+    // An up-next song that moved on (to the stage) announces under the QR code
+    // instead; one that left the board has nothing left to announce.
     const stillNext = tracker.lanes.next.filter(({joins: waiting}) => waiting.every(({songId}) => songId === upNextId))
+    const movedOn = tracker.lanes.next
+      .filter(moment => !stillNext.includes(moment))
+      .map(moment => ({...moment, lane: 'queue' as const, joins: moment.joins.filter(({songId}) => snapshot.songs.has(songId))}))
+      .filter(({joins: waiting}) => waiting.length > 0)
     next = {
       ...snapshot,
       currentId,
+      watching: enabled,
       lanes: {
         next: enqueue(stillNext, 'next', upNext, tracker.nextId),
-        queue: enqueue(tracker.lanes.queue, 'queue', later, tracker.nextId + 1),
+        queue: enqueue([...tracker.lanes.queue, ...movedOn], 'queue', later, tracker.nextId + 1),
       },
       nextId: tracker.nextId + 2,
     }

@@ -108,7 +108,6 @@ it('keeps the stage, next lineup, and registration link together', async () => {
       musicians: [{id: 'next-person', name: 'Camila', instrument: 'drums'}]}],
   }}} />)
   expect(screen.getByText('Yuri')).toBeInTheDocument()
-  expect(screen.getByText('Camila')).toBeInTheDocument()
   expect(screen.getByRole('heading', {name: 'Valerie'})).toBeInTheDocument()
   expect(await screen.findByRole('link', {name: /friday-night-jam/})).toHaveAttribute('href', expect.stringContaining('/friday-night-jam'))
   expect(screen.getByRole('img', {name: 'publicDashboard.qrCodeAlt'})).toBeInTheDocument()
@@ -145,4 +144,14 @@ it('falls back to the response Jam id for a QR link when no slug or code exists'
     ...liveDashboard, slug: null, shortCode: null,
   }}} />)
   expect(await screen.findByRole('link', {name: /jams\/jam-public/})).toHaveAttribute('href', expect.stringContaining('/jams/jam-public'))
+})
+
+it('does not announce the lineup that is already there when the first poll lands before the show', () => {
+  const {rerender} = render(<PublicDashboardPage layoutOverride="classic" viewState={{status: 'loading'}} />)
+  rerender(<PublicDashboardPage layoutOverride="classic" viewState={{status: 'loaded', data: {
+    ...liveDashboard, currentSong: null,
+    nextSongs: [{id: 'next', title: 'Valerie', artist: 'Amy Winehouse', duration: null,
+      musicians: [{id: 'next-person', name: 'Camila', instrument: 'drums'}]}],
+  }}} />)
+  expect(screen.queryByText('publicDashboard.joinLabel')).not.toBeInTheDocument()
 })
