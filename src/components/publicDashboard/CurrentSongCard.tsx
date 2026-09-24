@@ -19,6 +19,8 @@ interface CurrentSongCardProps {
   applause?: DashboardSongDto | null
   /** Sign-ups the join spotlight will fly into this lineup. */
   awaiting?: ReadonlySet<string>
+  /** The up-next flight carrying this song here; its text waits until it lands. */
+  boarding?: number | null
 }
 
 /** "Yuri, Alexandra and Marina"; a big band ends in "and 3 more". */
@@ -50,12 +52,12 @@ function StageConfetti({stage}: {stage: RefObject<HTMLElement | null>}) {
 }
 
 // Distance-readable domain wrapper; see public-dashboard-migration.md.
-export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', finished = false, applause = null, awaiting}: CurrentSongCardProps) {
+export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', finished = false, applause = null, awaiting, boarding = null}: CurrentSongCardProps) {
   const {t, i18n} = useTranslation()
   const song = finished || applause ? null : liveSong
   // The applauded band stays in the lineup while the title thanks it.
   const lineupSong = applause ?? song
-  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(lineupSong, applause ? `applause:${applause.id}` : finished ? 'finale' : undefined)
+  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(lineupSong, applause ? `applause:${applause.id}` : finished ? 'finale' : undefined, boarding)
   // Level bars and stage lights mean music is sounding. A paused song keeps
   // its title and lineup; the lights fade and the meter settles flat.
   const sounding = Boolean(song) && playbackState === 'PLAYING'
@@ -69,7 +71,7 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
     : finished ? t('publicDashboard.thankYou') : song?.artist ?? t('publicDashboard.waitingForPerformanceHelp')
 
   return (
-    <section ref={cardRef} className="venue-current" data-venue-song-id={lineupSong?.id} data-live={Boolean(song)} data-playback={applause ? 'applause' : sounding ? 'sounding' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} style={{'--venue-scene-shift': shift} as CSSProperties} aria-label={t('publicDashboard.onStage')}>
+    <section ref={cardRef} className="venue-current" data-venue-song-id={lineupSong?.id} data-live={Boolean(song)} data-playback={applause ? 'applause' : sounding ? 'sounding' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} data-venue-boarding={typeof boarding === 'number' ? '' : undefined} style={{'--venue-scene-shift': shift} as CSSProperties} aria-label={t('publicDashboard.onStage')}>
       {lineupSong && (
         <div className="venue-stage-fx" aria-hidden="true">
           <span className="venue-stage-beam" />

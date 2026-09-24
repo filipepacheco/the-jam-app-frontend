@@ -1,6 +1,9 @@
 import {act, render} from '@testing-library/react'
 import {afterEach, beforeEach, describe, expect, it, vi} from 'vitest'
 import {CurrentSongCard} from '../components/publicDashboard/CurrentSongCard'
+import {NextSongCard} from '../components/publicDashboard/NextSongCard'
+import {StageFlight} from '../components/publicDashboard/StageFlight'
+import type {Boarding} from '../components/publicDashboard/useStageHandover'
 import type {DashboardSongDto} from '../types/api.types'
 
 vi.mock('react-i18next', () => ({
@@ -24,6 +27,7 @@ const valerie: DashboardSongDto = {...psychoKiller, id: 'song-2', title: 'Valeri
 let targets: Element[] = []
 let frames: Keyframe[][] = []
 let timings: (KeyframeAnimationOptions | undefined)[] = []
+let played: {cancel: ReturnType<typeof vi.fn>}[] = []
 const originalAnimate = Element.prototype.animate
 
 function stubMotionPreference(reduce: boolean) {
@@ -39,12 +43,15 @@ beforeEach(() => {
   targets = []
   frames = []
   timings = []
+  played = []
   stubMotionPreference(false)
   Element.prototype.animate = vi.fn(function (this: Element, keyframes: Keyframe[], options?: KeyframeAnimationOptions) {
     targets.push(this)
     frames.push(keyframes)
     timings.push(options)
-    return {cancel: vi.fn(), finished: Promise.resolve()} as unknown as Animation
+    const animation = {cancel: vi.fn(), finished: Promise.resolve()}
+    played.push(animation)
+    return animation as unknown as Animation
   })
 })
 
@@ -161,5 +168,55 @@ describe('useVenueChangeMotion', () => {
     expect(stage.querySelector('.venue-stage-fx')).toBeInTheDocument()
     expect(stage.querySelector('.venue-live-beat')).toBeInTheDocument()
     expect(stage).toHaveTextContent('schedule.statuses.paused')
+  })
+
+  describe('up-next flight', () => {
+    const encore: DashboardSongDto = {...psychoKiller, id: 'song-3', title: 'Encore', artist: 'Band', musicians: []}
+
+    function Board({stage, next, boarding = null, onLand = vi.fn()}: {stage: DashboardSongDto | null; next: DashboardSongDto | null; boarding?: Boarding | null; onLand?: (id: number) => void}) {
+      return (
+        <div className="venue-programme">
+          <CurrentSongCard song={stage} boarding={boarding?.id} />
+          <NextSongCard song={next} boarding={boarding?.id} />
+          <StageFlight boarding={boarding} onLand={onLand} />
+        </div>
+      )
+    }
+
+    it('flies the up-next title, artist and band to the stage, then shows the stage text', async () => {
+      const onLand = vi.fn()
+      const {container, rerender} = render(<Board stage={psychoKiller} next={valerie} onLand={onLand} />)
+      targets = []
+      const boarding = {song: valerie, id: 1}
+      rerender(<Board stage={valerie} next={encore} boarding={boarding} onLand={onLand} />)
+
+      const stage = container.querySelector('.venue-current')!
+      const clones = [...container.querySelectorAll<HTMLElement>('.venue-flight-clone')]
+      expect(clones.map(clone => [clone.dataset.part, clone.textContent])).toEqual([
+        ['word', 'Valerie'], ['artist', 'Amy Winehouse'], ['name', 'Yuri'], ['name', 'Marina'],
+      ])
+      expect(stage).toHaveAttribute('data-venue-boarding')
+      // Nothing rises on the stage, and the up-next card lets the old song go.
+      expect(targets.filter(target => stage.contains(target) && target.classList.contains('venue-word-inner'))).toHaveLength(0)
+      expect(container.querySelector('.venue-next [data-venue-ghost]')).toBeEmptyDOMElement()
+
+      await act(async () => {})
+      expect(onLand).toHaveBeenCalledWith(1)
+
+      targets = []
+      rerender(<Board stage={valerie} next={encore} onLand={onLand} />)
+      expect(container.querySelector('.venue-flight-clone')).not.toBeInTheDocument()
+      expect(stage).not.toHaveAttribute('data-venue-boarding')
+      expect(targets.some(target => target.classList.contains('venue-change-wash'))).toBe(true)
+    })
+
+    it('cancels the flight when the display goes away', () => {
+      const {rerender, unmount} = render(<Board stage={psychoKiller} next={valerie} />)
+      rerender(<Board stage={valerie} next={encore} boarding={{song: valerie, id: 1}} />)
+      const flights = played.filter((_, index) => (targets[index] as HTMLElement).classList.contains('venue-flight-clone'))
+      expect(flights.length).toBeGreaterThan(0)
+      unmount()
+      flights.forEach(animation => expect(animation.cancel).toHaveBeenCalled())
+    })
   })
 })

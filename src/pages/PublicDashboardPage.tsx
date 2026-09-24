@@ -19,6 +19,7 @@ import {
 import {useStageHandover} from '../components/publicDashboard/useStageHandover'
 import {useJoinSpotlight} from '../components/publicDashboard/useJoinSpotlight'
 import {JoinSpotlight} from '../components/publicDashboard/JoinSpotlight'
+import {StageFlight} from '../components/publicDashboard/StageFlight'
 import {usePageVisible} from '../components/publicDashboard/useVenueChangeMotion'
 
 // Lazy load heavy components to reduce main bundle size
@@ -97,19 +98,20 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
   )
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef)
 
-  // The venue board applauds each band before the next song takes the stage.
+  // The venue board applauds each band, then the up-next song flies to the stage.
+  const pageVisible = usePageVisible()
   const show = useStageHandover({
     currentSong,
     nextSong: nextSongs[0] ?? null,
     playbackState,
     finished: jamStatus === 'FINISHED',
-  }, layout !== 'carousel')
+  }, {enabled: layout !== 'carousel', flight: !prefersReducedMotion && pageVisible})
   // New sign-ups get the spotlight, then fly into their lineup slot.
-  const pageVisible = usePageVisible()
+  const stageBusy = Boolean(show.applause || show.boarding)
   const spotlight = useJoinSpotlight(currentSong, nextSongs, {
     enabled: layout !== 'carousel' && jamStatus !== 'FINISHED' && pageVisible,
     flight: !prefersReducedMotion && pageVisible,
-    paused: Boolean(show.applause),
+    paused: stageBusy,
   })
 
   // Build ticker text for carousel header
@@ -245,13 +247,16 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                   Performance. The next Performance remains a separate region. */}
               {/* The finale stays on the stage card, so the last song rolls
                   out and the closing message rolls in. */}
-              <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} awaiting={spotlight.awaiting} />
+              <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} awaiting={spotlight.awaiting} boarding={show.boarding?.id} />
 
               {!show.finished && (
-                <NextSongCard song={show.next} awaiting={spotlight.awaiting} />
+                <NextSongCard song={show.next} awaiting={spotlight.awaiting} boarding={show.boarding?.id} />
               )}
 
-              <JoinSpotlight moment={spotlight.moment} paused={Boolean(show.applause)} gentle={prefersReducedMotion} onDone={spotlight.finish} />
+              {/* After the cards: it measures the up-next card before they change. */}
+              <StageFlight boarding={show.boarding} onLand={show.land} />
+
+              <JoinSpotlight moment={spotlight.moment} paused={stageBusy} gentle={prefersReducedMotion} onDone={spotlight.finish} />
 
             </div>
             <Suspense fallback={null}>

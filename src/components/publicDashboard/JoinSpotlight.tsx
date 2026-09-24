@@ -4,6 +4,7 @@ import {getInstrumentEmoji} from '../../utils/instrumentEmojis'
 import {useInstrumentLabel} from './instrumentLabel'
 import type {JoinMoment} from './useJoinSpotlight'
 import {FLASH, LIFT_EASE, SHOW} from './useVenueChangeMotion'
+import {flightTransform, measureText} from './venueFlight'
 import {EASE_IN_OUT, EASE_OUT, TEMPO, cssEase} from './venueMotion'
 import './venue-display.css'
 
@@ -104,19 +105,11 @@ function JoinAnnouncement({moment, paused, gentle, onDone}: JoinSpotlightProps &
             return
           }
           // FLIP: match the slot's text box, so the real name takes over in place.
-          const from = name.getBoundingClientRect()
-          const to = slot.getBoundingClientRect()
-          const fromStyle = getComputedStyle(name)
-          const toStyle = getComputedStyle(slot)
-          const fromSize = parseFloat(fromStyle.fontSize)
-          const toSize = parseFloat(toStyle.fontSize)
-          const scale = toSize / fromSize
-          const leading = (style: CSSStyleDeclaration, size: number) => ((parseFloat(style.lineHeight) || size * 1.2) - size) / 2
-          const x = to.left - from.left
-          const y = to.top + leading(toStyle, toSize) - from.top - scale * leading(fromStyle, fromSize)
+          const from = measureText(name)
+          const to = measureText(slot)
           const flight = play(name, [
-            {transform: 'none', color: fromStyle.color},
-            {transform: `translate3d(${x}px, ${y}px, 0) scale(${scale})`, color: toStyle.color},
+            {transform: 'none', color: from.color},
+            {transform: flightTransform(from, to).transform, color: to.color},
           ], {duration: JOIN.flight, easing: cssEase(EASE_IN_OUT)})
           if (flight) {
             exits.push(flight)

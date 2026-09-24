@@ -4,6 +4,7 @@ import {useReducedMotion} from '../../hooks/useReducedMotion'
 import {groupMusiciansByInstrument, normalizeInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
 import {EASE_IN_OUT, EASE_OUT, TEMPO, cssEase} from './venueMotion'
+import {FLIGHT} from './venueFlight'
 
 type Lineup = Map<string, Map<string, string>>
 
@@ -51,6 +52,11 @@ const LINE_IN: Keyframe[] = [{transform: 'translate3d(0, 130%, 0)'}, {transform:
 const LINE_OUT: Keyframe[] = [{transform: 'none', opacity: 1}, {transform: 'translate3d(0, -130%, 0)', opacity: 0}]
 const FADE_IN: Keyframe[] = [{opacity: 0}, {opacity: 1}]
 const FADE_OUT: Keyframe[] = [{opacity: 1}, {opacity: 0}]
+export const SWEEP: Keyframe[] = [
+  {opacity: 0, transform: 'translate3d(-160%, 0, 0) rotate(-16deg)'},
+  {opacity: 1, offset: 0.4},
+  {opacity: 0, transform: 'translate3d(420%, 0, 0) rotate(-16deg)'},
+]
 export const FLASH: Keyframe[] = [
   {opacity: 0, easing: EASE.out},
   {opacity: 1, offset: 0.22, easing: 'ease'},
@@ -74,10 +80,13 @@ export function usePageVisible() {
  * Compares visible values, so a fresh polling object isn't a new event.
  * `variant` marks a different stage message for the same song, such as the
  * finale or the applause, which keeps the band's lineup in place.
+ * `boarding` marks the song change that the up-next flight carries: the stage
+ * waits for the flight to land its text, and the up-next card lets it leave.
  */
-export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: string) {
+export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: string, boarding?: number | null) {
   const ref = useRef<HTMLElement>(null)
   const previous = useRef<ReturnType<typeof describeSong> | null>(null)
+  const boarded = useRef<number | null>(null)
   const snapshot = useRef<HTMLElement | null>(null)
   const animations = useRef<Animation[]>([])
   const cue = useRef(0)
@@ -120,6 +129,11 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
     const id = cue.current
     const isStage = root.classList.contains('venue-current')
     const applause = variant?.startsWith('applause:') ?? false
+    // Only the change that starts a boarding belongs to the flight.
+    const flight = songChanged && !gentle && typeof boarding === 'number' && boarding !== boarded.current
+    if (flight) boarded.current = boarding
+    const arrival = flight && isStage
+    const departure = flight && !isStage
     const profile = isStage ? PROFILE.stage : PROFILE.next
     const {lead, line, word, lineup} = profile
     const exit = gentle ? GENTLE.exit : profile.exit
@@ -144,6 +158,9 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
         // First paint of the display: the card rises before its lines roll in.
         animate(root, [{opacity: 0, transform: 'translate3d(0, 24px, 0)'}, {opacity: 1, transform: 'none'}], {duration: SHOW.rise, delay: lead})
         enterAt += SHOW.intro
+      } else if (departure) {
+        // The flight carries the old text away; the new song follows once it lifts off.
+        enterAt += FLIGHT.travel * 0.45
       } else if (outgoing && ghost) {
         outgoing.removeAttribute('data-venue-song')
         ghost.replaceChildren(outgoing)
@@ -156,7 +173,8 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
         enterAt += gentle ? exit : exit + (lines.length - 1) * profile.leave - profile.overlap
       }
       let wordsAt = 0
-      root.querySelectorAll('[data-venue-song] .venue-roll-line').forEach((element, index) => {
+      // An arriving song's text waits hidden for the flight; nothing rises.
+      if (!arrival) root.querySelectorAll('[data-venue-song] .venue-roll-line').forEach((element, index) => {
         if (gentle) {
           animate(element, FADE_IN, {duration: GENTLE.enter, delay: enterAt, easing: 'ease'})
           return
@@ -171,23 +189,25 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
         wordsAt = Math.min(words.length - 1, 8) * word
       })
       // The applauded band is already on stage; only a new lineup lands.
-      if (!applause) {
+      if (arrival) {
+        // Fade only: a rise would move the slots the names are flying to.
+        root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
+          animate(element, FADE_IN, {duration: SHOW.fade, delay: enterAt + Math.min(index, 6) * SHOW.stagger})
+        })
+      } else if (!applause) {
         root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
           land(element, gentle ? enterAt : enterAt + wordsAt + lineup + Math.min(index, 6) * SHOW.stagger)
         })
       }
 
-      if (!intro) {
+      // The flight's landing brings the stage lights (StageFlight).
+      if (!intro && !arrival) {
         // Applause flashes like stage strobes: three quick pulses, not one bloom.
         animate(root.querySelector('.venue-change-wash'), FLASH, applause
           ? {duration: SHOW.light * 0.5, iterations: 3, delay: lead, easing: 'linear'}
           : {duration: SHOW.light, delay: lead, easing: 'linear'})
         if (isStage && song && !gentle) {
-          animate(root.querySelector('.venue-stage-sweep'), [
-            {opacity: 0, transform: 'translate3d(-160%, 0, 0) rotate(-16deg)'},
-            {opacity: 1, offset: 0.4},
-            {opacity: 0, transform: 'translate3d(420%, 0, 0) rotate(-16deg)'},
-          ], {duration: SHOW.light, delay: lead + 80, easing: EASE.travel})
+          animate(root.querySelector('.venue-stage-sweep'), SWEEP, {duration: SHOW.light, delay: lead + 80, easing: EASE.travel})
         }
       }
     } else {
@@ -229,7 +249,7 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
       delete root.dataset.venueCue
       animations.current = []
     })
-  }, [song, variant, prefersReducedMotion, pageVisible])
+  }, [song, variant, boarding, prefersReducedMotion, pageVisible])
 
   // Keep a copy of the resting song lines for the next roll. This runs after
   // every commit, so a language switch never leaves a stale outgoing copy.

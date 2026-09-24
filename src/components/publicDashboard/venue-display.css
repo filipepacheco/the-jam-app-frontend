@@ -202,6 +202,13 @@
 .venue-join-name { display: inline-block; transform-origin: 0 0; font-weight: 800; letter-spacing: normal; color: var(--color-primary); }
 .venue-join-detail { margin-top: 1rem; }
 
+/* Up-next flight: the stage text waits hidden (keeping its layout) while
+   clones fly from the up-next card; the landing swaps them in one commit. */
+[data-venue-boarding] [data-venue-song], [data-venue-boarding] .venue-musician-name { visibility: hidden; }
+.venue-flight { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+.venue-flight-clone { position: absolute; margin: 0; transform-origin: 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.venue-flight-clone[data-part="word"] { white-space: pre; }
+
 .venue-label {
   display: flex;
   align-items: center;

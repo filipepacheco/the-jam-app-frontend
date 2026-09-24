@@ -10,12 +10,14 @@ interface NextSongCardProps {
   song: DashboardSongDto | null
   /** Sign-ups the join spotlight will fly into this lineup. */
   awaiting?: ReadonlySet<string>
+  /** The flight taking the shown song to the stage; the new one waits for lift-off. */
+  boarding?: number | null
 }
 
 // This domain wrapper keeps the next lineup visible alongside the stage.
-export function NextSongCard({song, awaiting}: NextSongCardProps) {
+export function NextSongCard({song, awaiting, boarding = null}: NextSongCardProps) {
   const {t} = useTranslation()
-  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(song)
+  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(song, undefined, boarding)
 
   return (
     <section ref={cardRef} className="venue-next" data-venue-song-id={song?.id} data-venue-motion={motionEnabled ? 'running' : 'paused'} aria-label={t('publicDashboard.upNextLabel')}>

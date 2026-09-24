@@ -277,6 +277,7 @@ A later motion pass replaced the ring and particle burst with the cues below.
 - First paint: the cards rise once, then their lines roll in.
 - Pause: the stage lights fade out over 600 ms and the level meter settles into a flat line. Resume reverses the change. Both use CSS transitions, so a quick pause and resume do not jump.
 - Applause: when a song that the room heard leaves the stage, the stage thanks its band for 4.5 seconds ("Palmas para Yuri, Alexandra e Marina!"). A song was heard if it was playing or paused while on stage. The band stays in the lineup, the lights turn gold and open wide, the change flash pulses three times, and a short confetti burst falls behind the text. The next card keeps the incoming song during the hold. Then both cards move to the latest data together. If the host goes back to the same song, the applause stops. `useStageHandover` makes these decisions during render, so the stage never shows the next song first. The carousel layout does not use it.
+- Up-next flight: when the stage takes the song that the next card shows, that song flies to the stage. Each title word, the artist line and each name fly from the next card to their places on the stage. The words reflow into the bigger title during the flight. Each clone lands on the glyphs of the real text, and the real text then takes over in the same frame. The flight occurs after the applause and also on a direct handover. It does not occur for a song out of order, on the first load, or into the finale. The stage text stays hidden until the flight lands, and a timer shows it after a maximum of 3.6 seconds. Then the stage lights flash and each group highlight flashes. The new next song rises into the next card after the old text lifts off. The join spotlight waits during the flight. `StageFlight` measures the next card with `getSnapshotBeforeUpdate`, before React removes the old text.
 - Finale: when the Jam finishes, the last song rolls out and the closing message rolls in on the same stage card. The applause for the last band comes first.
 - Invitation: the signup card glows on a 4-second cycle, and a light crosses it every 8 seconds. Both layers sit behind the content, and the QR code does not move.
 
@@ -284,11 +285,11 @@ These audience announcements intentionally exceed routine control durations.
 Hidden copies of the old lines (`aria-hidden`) give the exit animation. The copies stay only while the cue runs.
 The masks clip only while a cue runs, so text at rest never loses a descender.
 A spring is sampled once from the existing Motion library into a CSS `linear()` easing. Browsers without `linear()` use an expo-out curve.
-All cues use WAAPI or CSS on `transform`, `opacity` and `filter` only. No audio or microphone is involved.
+All cues use WAAPI or CSS on `transform`, `opacity` and `filter` only. The one exception is the flying text: it also changes color and letter spacing. Each flying copy has an absolute position, so no other text reflows. No audio or microphone is involved.
 All curves come from `venueMotion.ts`. Entrances and exits use the strong ease-out `cubic-bezier(0.23, 1, 0.32, 1)`, and no element uses ease-in.
 The banner, the controls panel and the carousel give Motion full `transform` strings, so the compositor runs them.
 Visible-value comparisons stop unchanged polling responses from replaying cues.
-Reduced-motion mode stops all movement and ambient motion. Song and lineup changes then use a short opacity fade: 120 ms out and 200 ms in. The banner, the controls panel and the carousel also fade without movement. The applause still shows, but without confetti. The join spotlight crossfades in and out, and names do not fly.
+Reduced-motion mode stops all movement and ambient motion. Song and lineup changes then use a short opacity fade: 120 ms out and 200 ms in. The banner, the controls panel and the carousel also fade without movement. The applause still shows, but without confetti. The join spotlight crossfades in and out, and names do not fly. The up-next song does not fly; the cards use the opacity fade.
 Hidden documents stop all cues.
 Rapid updates cancel the previous cue, and QR content never moves.
 Classic mode uses these local cues in place of routine full-screen confetti.
