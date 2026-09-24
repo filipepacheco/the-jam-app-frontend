@@ -240,12 +240,12 @@ describe('ReactionShoutouts', () => {
     expect(lines()).toEqual(['Lipe publicDashboard.shoutoutHeart❤️', 'Lipe publicDashboard.shoutoutFire🔥'])
   })
 
-  it('names a guest as someone in the crowd, in one line for each kind', async () => {
+  it('names a guest as the crowd, in one line for each kind', async () => {
     const {emit, lines} = renderFeed()
     await emit({kind: 'clap', count: 1})
     await emit({kind: 'clap', count: 4, name: null})
 
-    expect(lines()).toEqual(['publicDashboard.shoutoutSomeone publicDashboard.shoutoutClap👏'])
+    expect(lines()).toEqual(['publicDashboard.shoutoutCrowd publicDashboard.shoutoutClap👏'])
   })
 
   it('shows at most MAX_SHOUTOUTS lines and sends away the one with the oldest reaction', async () => {

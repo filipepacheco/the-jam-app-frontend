@@ -14,9 +14,9 @@ import {
 import {DYNAMIC_TRANSLATION_FAMILIES} from '../../src/lib/i18n/translationKeys.ts'
 
 const MIGRATION_BASELINE_HASHES = {
-  'pt-BR': '80d3ff50e614f195c1ac653b25244b681edb7e2a262fdc79f71a0a5f035cb40c',
-  en: '6df409d383dfeea2647a2de193f65a6be23e18741a6ce32a9bec8535d3bce057',
-  es: '22a9e6f830773c0d81010c57c6fff075fd7113238167df67c83c51bb22e63693',
+  'pt-BR': '0926130339e2d148180e2d865d9e2b7b7a53536a3f7166ab94a09c9d3bcdfc34',
+  en: '59410e5ad43686a2617a9acb9f169ef6891835eb2298b26f2951b0b511c39777',
+  es: '6864b1bab9798223d58551cd0137b5d0e1411346d7eb1e0260c495c1e4c46f38',
 } as const
 
 function flatten(

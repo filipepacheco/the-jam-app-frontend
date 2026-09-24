@@ -38,7 +38,7 @@ interface ReactionShoutoutsProps {
 /**
  * Names the room's reactions on the stage: "Lipe amou isso! ❤️". A person
  * who reacts again keeps one line, which stays longer; guests share one
- * "someone in the crowd" line for each kind.
+ * "A Plateia" line for each kind.
  */
 export function ReactionShoutouts({feed, gentle}: ReactionShoutoutsProps) {
   const {t} = useTranslation()
@@ -92,7 +92,7 @@ export function ReactionShoutouts({feed, gentle}: ReactionShoutoutsProps) {
             <motion.li key={key} layout={!gentle} className="venue-shoutout ds-wrap-user-content" {...motionProps}>
               <span>
                 {before}
-                <strong className="venue-shoutout-name">{name ?? t('publicDashboard.shoutoutSomeone')}</strong>
+                <strong className="venue-shoutout-name">{name ?? t('publicDashboard.shoutoutCrowd')}</strong>
                 {after}
               </span>
               <span key={hits} className="venue-shoutout-emoji" aria-hidden="true">{REACTION_EMOJI[kind]}</span>

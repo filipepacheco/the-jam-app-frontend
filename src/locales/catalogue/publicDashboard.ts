@@ -60,7 +60,7 @@ export const publicDashboard = {
   shoutoutFire: message({"pt-BR": "{{name}} diz que está pegando fogo!", "en": "{{name}} thinks this is fire!", "es": "¡{{name}} dice que esto está que arde!"}),
   shoutoutHeart: message({"pt-BR": "{{name}} amou isso!", "en": "{{name}} loves this!", "es": "¡{{name}} ama esto!"}),
   shoutoutRock: message({"pt-BR": "{{name}} está curtindo!", "en": "{{name}} is enjoying it!", "es": "¡{{name}} lo está disfrutando!"}),
-  shoutoutSomeone: message({"pt-BR": "Alguém da plateia", "en": "Someone in the crowd", "es": "Alguien del público"}),
+  shoutoutCrowd: message({"pt-BR": "A Plateia", "en": "The Crowd", "es": "El Público"}),
   joinLabel: message({"pt-BR": "Nova inscrição", "en": "New sign-up", "es": "Nueva inscripción"}),
   joinHeadline: plural({"pt-BR": {one: "{{names}} entrou na jam!", many: "{{names}} entraram na jam!", other: "{{names}} entraram na jam!"}, "en": {one: "{{names}} joined the jam!", other: "{{names}} joined the jam!"}, "es": {one: "¡{{names}} se unió a la jam!", many: "¡{{names}} se unieron a la jam!", other: "¡{{names}} se unieron a la jam!"}}),
   joinDetail: message({"pt-BR": "{{instrument}} em {{title}}", "en": "{{instrument}} on {{title}}", "es": "{{instrument}} en {{title}}"}),
