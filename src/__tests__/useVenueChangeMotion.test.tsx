@@ -160,6 +160,17 @@ describe('useVenueChangeMotion', () => {
     expect(targets.some(target => target.classList.contains('venue-musician-wash'))).toBe(false)
   })
 
+  it('changes the stage light color only once the new song has fully arrived', async () => {
+    const {container, rerender} = render(<CurrentSongCard song={psychoKiller} />)
+    const stage = container.querySelector<HTMLElement>('.venue-current')!
+    const before = stage.style.getPropertyValue('--venue-scene-shift')
+    rerender(<CurrentSongCard song={{...valerie, id: 'song-9'}} />)
+    expect(stage.style.getPropertyValue('--venue-scene-shift')).toBe(before)
+
+    await act(async () => {})
+    expect(stage.style.getPropertyValue('--venue-scene-shift')).not.toBe(before)
+  })
+
   it('keeps the stage lights and meter mounted but still while a song is paused', () => {
     const {container} = render(<CurrentSongCard song={psychoKiller} playbackState="PAUSED" />)
     const stage = container.querySelector('.venue-current')!

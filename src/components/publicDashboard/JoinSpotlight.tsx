@@ -22,7 +22,11 @@ interface JoinSpotlightProps {
   onDone: (id: number) => void
 }
 
-/** Announces new sign-ups over the programme column, never over the QR code. */
+/**
+ * Announces new sign-ups where they belong: an up-next sign-up inside the
+ * up-next card (then the name flies into its lineup), a later one under the
+ * QR code, over the steps. The QR code itself never moves.
+ */
 export function JoinSpotlight({moment, paused, gentle, onDone}: JoinSpotlightProps) {
   const [showing, setShowing] = useState<number | null>(null)
   if (moment && !paused && showing !== moment.id) setShowing(moment.id)
@@ -74,11 +78,11 @@ function JoinAnnouncement({moment, paused, gentle, onDone}: JoinSpotlightProps &
     if (gentle) {
       play(root, [{opacity: 0}, {opacity: 1}], {duration: GENTLE.enter, easing: 'ease'})
     } else {
-      // Lift and fade separately: the spring may overshoot, opacity and blur must not.
-      const card = find('.venue-join-card')
-      play(find('.venue-join-scrim'), [{opacity: 0}, {opacity: 1}], {duration: SHOW.fade})
-      play(card, [{transform: 'translate3d(0, 32px, 0) scale(0.9)'}, {transform: 'none'}], {duration: SHOW.rise, easing: LIFT_EASE})
-      play(card, [{opacity: 0, filter: 'blur(8px)'}, {opacity: 1, filter: 'none'}], {duration: SHOW.fade})
+      // The surface rises into its card, then the lines follow. Lift and fade
+      // separately: the spring may overshoot, opacity and blur must not.
+      const surface = find('.venue-join-surface')
+      play(surface, [{transform: 'translate3d(0, 24px, 0)'}, {transform: 'none'}], {duration: SHOW.rise, easing: LIFT_EASE})
+      play(surface, [{opacity: 0}, {opacity: 1}], {duration: SHOW.fade})
       ;[find('.venue-join-label'), find('.venue-join-headline'), find('.venue-join-detail')].forEach((line, index) => {
         play(line, [{opacity: 0, transform: 'translate3d(0, 16px, 0)'}, {opacity: 1, transform: 'none'}], {duration: SHOW.rise, delay: (index + 1) * SHOW.stagger})
       })
@@ -95,6 +99,10 @@ function JoinAnnouncement({moment, paused, gentle, onDone}: JoinSpotlightProps &
       }
       if (gentle || quick) {
         fadeOut(root, gentle ? GENTLE.exit : JOIN.cut)
+      } else if (moment.lane === 'queue') {
+        // Its songs are not on screen: the announcement sinks back and the steps return.
+        const exit = play(root, [{opacity: 1, transform: 'none'}, {opacity: 0, transform: 'translate3d(0, 12px, 0)'}], {duration: JOIN.fade})
+        if (exit) exits.push(exit)
       } else {
         const programme = root.closest('.venue-programme') ?? document
         findAll('.venue-join-name').forEach(name => {
@@ -118,7 +126,6 @@ function JoinAnnouncement({moment, paused, gentle, onDone}: JoinSpotlightProps &
         })
         ;[find('.venue-join-surface'), find('.venue-join-label'), find('.venue-join-detail'), ...findAll('.venue-join-rest')]
           .forEach(element => fadeOut(element, JOIN.fade))
-        fadeOut(find('.venue-join-scrim'), JOIN.flight)
       }
       void Promise.allSettled(exits.map(animation => animation.finished)).then(() => {
         if (!alive) return
@@ -140,10 +147,9 @@ function JoinAnnouncement({moment, paused, gentle, onDone}: JoinSpotlightProps &
   }, [paused])
 
   return (
-    <div ref={ref} className="venue-join" role="status">
-      <div className="venue-join-scrim" aria-hidden="true" />
+    <div ref={ref} className={`venue-join venue-join--${moment.lane}`} role="status">
+      <span className="venue-join-surface" aria-hidden="true" />
       <div className="venue-join-card">
-        <span className="venue-join-surface" aria-hidden="true" />
         <p className="venue-label venue-join-label">{t('publicDashboard.joinLabel')}</p>
         <p className="venue-join-headline ds-wrap-user-content">
           {before && <span className="venue-join-rest">{before}</span>}
