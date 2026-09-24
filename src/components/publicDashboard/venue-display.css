@@ -121,6 +121,10 @@
 .venue-current[data-playback='still'] .venue-stage-halo,
 .venue-current[data-playback='still'] .venue-stage-halo::after,
 .venue-current[data-playback='still'] .venue-live-beat i { animation-play-state: paused; }
+/* Applause: the lights turn gold (APPLAUSE_SHIFT) and open wide over the band. */
+.venue-stage-halo, .venue-stage-beam { transition: scale 1.2s var(--venue-ease-out); }
+.venue-current[data-playback='applause'] .venue-stage-halo { scale: 1.2; }
+.venue-current[data-playback='applause'] .venue-stage-beam { scale: 1.3 1.05; }
 .venue-live-beat i { display: block; width: 5px; height: 100%; border-radius: 2px; background: currentColor; animation: venue-beat 900ms ease-in-out infinite alternate; }
 .venue-live-beat i:nth-child(2n) { animation-duration: 650ms; animation-delay: -300ms; }
 .venue-live-beat i:nth-child(3n) { animation-duration: 1100ms; animation-delay: -550ms; }

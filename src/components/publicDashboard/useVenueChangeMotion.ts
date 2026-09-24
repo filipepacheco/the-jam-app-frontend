@@ -61,7 +61,8 @@ const FLASH: Keyframe[] = [
  * Announces audience-visible changes: the outgoing song rolls up out of its
  * line masks, then the new one rises in and the lineup lands name by name.
  * Compares visible values, so a fresh polling object isn't a new event.
- * `variant` marks a different stage message for the same song, such as the finale.
+ * `variant` marks a different stage message for the same song, such as the
+ * finale or the applause, which keeps the band's lineup in place.
  */
 export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: string) {
   const ref = useRef<HTMLElement>(null)
@@ -113,6 +114,7 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
     stop()
     const id = cue.current
     const isStage = root.classList.contains('venue-current')
+    const applause = variant?.startsWith('applause:') ?? false
     const profile = isStage ? PROFILE.stage : PROFILE.next
     const {lead, line, word, lineup} = profile
     const exit = gentle ? GENTLE.exit : profile.exit
@@ -163,12 +165,18 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
         words.forEach((part, order) => animate(part, LINE_IN, {duration: profile.enter, delay: enterAt + index * line + Math.min(order, 8) * word}))
         wordsAt = Math.min(words.length - 1, 8) * word
       })
-      root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
-        land(element, gentle ? enterAt : enterAt + wordsAt + lineup + Math.min(index, 6) * SHOW.stagger)
-      })
+      // The applauded band is already on stage; only a new lineup lands.
+      if (!applause) {
+        root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
+          land(element, gentle ? enterAt : enterAt + wordsAt + lineup + Math.min(index, 6) * SHOW.stagger)
+        })
+      }
 
       if (!intro) {
-        animate(root.querySelector('.venue-change-wash'), FLASH, {duration: SHOW.light, delay: lead, easing: 'linear'})
+        // Applause flashes like stage strobes: three quick pulses, not one bloom.
+        animate(root.querySelector('.venue-change-wash'), FLASH, applause
+          ? {duration: SHOW.light * 0.5, iterations: 3, delay: lead, easing: 'linear'}
+          : {duration: SHOW.light, delay: lead, easing: 'linear'})
         if (isStage && song && !gentle) {
           animate(root.querySelector('.venue-stage-sweep'), [
             {opacity: 0, transform: 'translate3d(-160%, 0, 0) rotate(-16deg)'},

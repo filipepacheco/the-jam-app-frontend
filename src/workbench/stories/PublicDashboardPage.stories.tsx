@@ -3,6 +3,7 @@ import {useState} from 'react'
 import {expect, fn, waitFor} from 'storybook/test'
 import {PublicDashboardPage} from '../../pages/PublicDashboardPage'
 import {dashboardSongs, venueDashboard as liveDashboard} from '../publicDashboardFixtures'
+import type {DashboardSongDto, LiveDashboardResponseDto} from '../../types/api.types'
 import {waitForMotionToSettle} from '../reducedMotion'
 
 const retry = fn(async () => undefined)
@@ -87,6 +88,32 @@ export const MusicianChangeTransition: Story = {
   },
 }
 
+// A setlist to cycle through, so the review can walk the show song by song.
+const reviewSetlist: DashboardSongDto[] = [
+  dashboardSongs.current,
+  ...liveDashboard.nextSongs,
+  {id: 'review-stand-by-me', title: 'Stand by Me', artist: 'Ben E. King', duration: 180, musicians: [
+    {id: 'review-tiago', name: 'Tiago', instrument: 'vocals'},
+    {id: 'review-helena', name: 'Helena', instrument: 'keys'},
+  ]},
+  {id: 'review-superstition', title: 'Superstition', artist: 'Stevie Wonder', duration: 245, musicians: [
+    {id: 'review-luana', name: 'Luana', instrument: 'vocals'},
+    {id: 'review-pedro', name: 'Pedro', instrument: 'bass'},
+    {id: 'review-joana', name: 'Joana', instrument: 'drums'},
+  ]},
+]
+
+/** The host moves to the next song; the queue refills from the review setlist. */
+function advanceQueue(data: LiveDashboardResponseDto): LiveDashboardResponseDto {
+  const [upNext = null, ...rest] = data.nextSongs
+  const queue = [...rest]
+  for (const song of reviewSetlist) {
+    if (queue.length >= 2) break
+    if (song.id !== upNext?.id && song.id !== data.currentSong?.id && !queue.some(({id}) => id === song.id)) queue.push(song)
+  }
+  return {...data, jamStatus: 'LIVE', playbackState: 'PLAYING', currentSong: upNext, nextSongs: queue}
+}
+
 function LiveChangesReview() {
   const [data, setData] = useState(liveDashboard)
   const buttonClass = 'ds-control ds-focusable rounded-field bg-base-100 border border-base-content/20 px-3 text-sm font-semibold'
@@ -113,6 +140,11 @@ function LiveChangesReview() {
             : [{...liveDashboard.nextSongs[0], id: 'demo-next', title: 'Stand by Me', artist: 'Ben E. King'}],
         }))}>Trocar próxima</button>
         <button type="button" className={buttonClass} onClick={() => setData(current => structuredClone(current))}>Atualizar sem mudanças</button>
+        <button type="button" className={buttonClass} onClick={() => setData(advanceQueue)}>Avançar fila</button>
+        <button type="button" className={buttonClass} onClick={() => setData(current => ({
+          ...current,
+          jamStatus: current.jamStatus === 'FINISHED' ? 'LIVE' : 'FINISHED',
+        }))}>Encerrar jam</button>
       </div>
       <PublicDashboardPage viewState={{status: 'loaded', data}} layoutOverride="classic" />
     </>

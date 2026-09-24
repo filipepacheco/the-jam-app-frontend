@@ -275,7 +275,8 @@ A later motion pass replaced the ring and particle burst with the cues below.
 - Lineup edit: only the new or renamed musician moves, and a highlight marks the group.
 - First paint: the cards rise once, then their lines roll in.
 - Pause: the stage lights fade out over 600 ms and the level meter settles into a flat line. Resume reverses the change. Both use CSS transitions, so a quick pause and resume do not jump.
-- Finale: when the Jam finishes, the last song rolls out and the closing message rolls in on the same stage card.
+- Applause: when a song that the room heard leaves the stage, the stage thanks its band for 4.5 seconds ("Palmas para Yuri, Alexandra e Marina!"). A song was heard if it was playing or paused while on stage. The band stays in the lineup, the lights turn gold and open wide, the change flash pulses three times, and a short confetti burst falls behind the text. The next card keeps the incoming song during the hold. Then both cards move to the latest data together. If the host goes back to the same song, the applause stops. `useStageHandover` makes these decisions during render, so the stage never shows the next song first. The carousel layout does not use it.
+- Finale: when the Jam finishes, the last song rolls out and the closing message rolls in on the same stage card. The applause for the last band comes first.
 - Invitation: the signup card glows on a 4-second cycle, and a light crosses it every 8 seconds. Both layers sit behind the content, and the QR code does not move.
 
 These audience announcements intentionally exceed routine control durations.
@@ -286,7 +287,7 @@ All cues use WAAPI or CSS on `transform`, `opacity` and `filter` only. No audio 
 All curves come from `venueMotion.ts`. Entrances and exits use the strong ease-out `cubic-bezier(0.23, 1, 0.32, 1)`, and no element uses ease-in.
 The banner, the controls panel and the carousel give Motion full `transform` strings, so the compositor runs them.
 Visible-value comparisons stop unchanged polling responses from replaying cues.
-Reduced-motion mode stops all movement and ambient motion. Song and lineup changes then use a short opacity fade: 120 ms out and 200 ms in. The banner, the controls panel and the carousel also fade without movement.
+Reduced-motion mode stops all movement and ambient motion. Song and lineup changes then use a short opacity fade: 120 ms out and 200 ms in. The banner, the controls panel and the carousel also fade without movement. The applause still shows, but without confetti.
 Hidden documents stop all cues.
 Rapid updates cancel the previous cue, and QR content never moves.
 Classic mode uses these local cues in place of routine full-screen confetti.

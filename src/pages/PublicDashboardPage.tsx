@@ -16,6 +16,7 @@ import {
     OfflineBanner,
     CarouselDashboard
 } from '../components/publicDashboard'
+import {useStageHandover} from '../components/publicDashboard/useStageHandover'
 
 // Lazy load heavy components to reduce main bundle size
 const ConfettiWrapper = lazy(() => import('../components/publicDashboard/ConfettiWrapper'))
@@ -93,7 +94,13 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
   )
   const { isFullscreen, toggleFullscreen } = useFullscreen(containerRef)
 
-  const nextSongToShow = nextSongs[0]
+  // The venue board applauds each band before the next song takes the stage.
+  const show = useStageHandover({
+    currentSong,
+    nextSong: nextSongs[0] ?? null,
+    playbackState,
+    finished: jamStatus === 'FINISHED',
+  }, layout !== 'carousel')
 
   // Build ticker text for carousel header
   const tickerText = (() => {
@@ -228,10 +235,10 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                   Performance. The next Performance remains a separate region. */}
               {/* The finale stays on the stage card, so the last song rolls
                   out and the closing message rolls in. */}
-              <CurrentSongCard song={currentSong} playbackState={playbackState} finished={jamStatus === 'FINISHED'} />
+              <CurrentSongCard song={show.stage} playbackState={playbackState} finished={show.finished} applause={show.applause} />
 
-              {jamStatus !== 'FINISHED' && (
-                <NextSongCard song={nextSongToShow ?? null} />
+              {!show.finished && (
+                <NextSongCard song={show.next} />
               )}
 
             </div>
@@ -241,7 +248,7 @@ export function PublicDashboardPage({viewState, onRetry, layoutOverride}: Public
                 jamId={dashboardData?.jamId ?? jamId}
                 slug={dashboardData?.slug}
                 shortCode={dashboardData?.shortCode}
-                finished={jamStatus === 'FINISHED'}
+                finished={show.finished}
               />
             </Suspense>
         </main>

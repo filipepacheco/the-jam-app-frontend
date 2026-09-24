@@ -4,8 +4,10 @@ import {CurrentSongCard} from '../components/publicDashboard/CurrentSongCard'
 import type {DashboardSongDto} from '../types/api.types'
 
 vi.mock('react-i18next', () => ({
-  useTranslation: () => ({t: (key: string) => key}),
+  useTranslation: () => ({t: (key: string, options?: {names?: string}) => options?.names ? `${key} ${options.names}` : key}),
 }))
+// The confetti canvas needs a real browser; the applause test checks the stage around it.
+vi.mock('../components/publicDashboard/ConfettiWrapper', () => ({default: () => null}))
 
 const psychoKiller: DashboardSongDto = {
   id: 'song-1',
@@ -21,6 +23,7 @@ const valerie: DashboardSongDto = {...psychoKiller, id: 'song-2', title: 'Valeri
 
 let targets: Element[] = []
 let frames: Keyframe[][] = []
+let timings: (KeyframeAnimationOptions | undefined)[] = []
 const originalAnimate = Element.prototype.animate
 
 function stubMotionPreference(reduce: boolean) {
@@ -35,10 +38,12 @@ function stubMotionPreference(reduce: boolean) {
 beforeEach(() => {
   targets = []
   frames = []
+  timings = []
   stubMotionPreference(false)
-  Element.prototype.animate = vi.fn(function (this: Element, keyframes: Keyframe[]) {
+  Element.prototype.animate = vi.fn(function (this: Element, keyframes: Keyframe[], options?: KeyframeAnimationOptions) {
     targets.push(this)
     frames.push(keyframes)
+    timings.push(options)
     return {cancel: vi.fn(), finished: Promise.resolve()} as unknown as Animation
   })
 })
@@ -110,6 +115,29 @@ describe('useVenueChangeMotion', () => {
     expect(rolled).toEqual(['Psycho Killer', 'Talking Heads', 'publicDashboard.thankYou'])
     expect(words).toEqual(['publicDashboard.jamFinished'])
     expect(container.querySelector('[data-venue-lineup]')).not.toBeInTheDocument()
+  })
+
+  it('applauds the band that just played under a strobe, keeping its lineup in place', () => {
+    const {container, rerender} = render(<CurrentSongCard song={psychoKiller} />)
+    targets = []
+    timings = []
+    rerender(<CurrentSongCard song={valerie} applause={psychoKiller} />)
+    const stage = container.querySelector('.venue-current')!
+
+    expect(stage).toHaveAttribute('data-playback', 'applause')
+    expect(stage).toHaveTextContent('publicDashboard.applauseLabel')
+    expect(stage.querySelector('.venue-artist')).toHaveTextContent('Psycho Killer · Talking Heads')
+    const words = targets.filter(target => target.classList.contains('venue-word-inner')).map(target => target.textContent)
+    expect(words).toEqual(['publicDashboard.applauseFor', 'Yuri', 'and', 'Marina'])
+    expect(stage.querySelector('[data-venue-musician="yuri"]')).toBeInTheDocument()
+    expect(targets.some(target => target.hasAttribute('data-venue-instrument'))).toBe(false)
+    const strobe = targets.findIndex(target => target.classList.contains('venue-change-wash'))
+    expect(timings[strobe]).toMatchObject({iterations: 3})
+
+    targets = []
+    rerender(<CurrentSongCard song={valerie} />)
+    expect(stage).toHaveAttribute('data-playback', 'sounding')
+    expect(targets.some(target => target.hasAttribute('data-venue-instrument'))).toBe(true)
   })
 
   it('keeps the stage lights and meter mounted but still while a song is paused', () => {
