@@ -135,17 +135,32 @@
    keeps its space, so nothing jumps, and shows again with the next song. */
 .venue-current [data-venue-lineup] { transition: opacity 400ms var(--venue-ease-out), visibility 0s linear 0s; }
 .venue-current[data-playback='applause'] [data-venue-lineup] { opacity: 0; visibility: hidden; transition: opacity 400ms var(--venue-ease-out), visibility 0s linear 400ms; }
-/* Waiting for a song: the rig idles dimmed, its beams drawn in, and the meter
-   runs a soundcheck, one bar after another. When a song starts, the lights come
-   up from here instead of switching on. */
-.venue-current[data-playback='waiting'] .venue-stage-fx { opacity: 0.45; }
-.venue-current[data-playback='waiting'] .venue-stage-beam { scale: 0.75 0.9; }
+/* Waiting for a song: the rig is dark, its beams drawn up into the truss and
+   its halo closed. A follow spot searches the stage, and the meter runs a
+   soundcheck, one bar after another. When a song starts, the spot freezes and
+   goes out while the beams drop and the halo opens. */
+.venue-current[data-playback='waiting'] .venue-stage-beam { scale: 1 0; }
+.venue-current[data-playback='waiting'] .venue-stage-halo { scale: 0; }
+.venue-stage-spot {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  width: min(44%, 36rem);
+  aspect-ratio: 1.6;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in oklch, var(--venue-scene) 30%, transparent), color-mix(in oklch, var(--venue-scene) 24%, transparent) 74%, transparent);
+  opacity: 0;
+  transition: opacity 900ms ease;
+  animation: venue-spot-search 16s ease-in-out infinite paused;
+}
 .venue-live-beat i { display: block; width: 5px; height: 100%; border-radius: 2px; background: currentColor; animation: venue-beat 900ms ease-in-out infinite alternate; }
 .venue-live-beat i:nth-child(2n) { animation-duration: 650ms; animation-delay: -300ms; }
 .venue-live-beat i:nth-child(3n) { animation-duration: 1100ms; animation-delay: -550ms; }
 .venue-live-beat i:nth-child(4n) { animation-delay: -800ms; }
 
 @media (prefers-reduced-motion: no-preference) {
+  .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-stage-spot { opacity: 1; animation-play-state: running; }
   .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i { animation: venue-soundcheck 2.8s ease-in-out infinite; }
   .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i:nth-child(2) { animation-delay: 120ms; }
   .venue-current[data-venue-motion='running'][data-playback='waiting'] .venue-live-beat i:nth-child(3) { animation-delay: 240ms; }
@@ -159,6 +174,14 @@
   0% { transform: scaleY(0.25); opacity: 0.6; }
   60% { transform: scaleY(1); opacity: 1; }
   100% { transform: scaleY(0.5); opacity: 0.8; }
+}
+/* Offsets are in spot widths: the spot drifts across most of the stage,
+   easing to a stop at each mark as if looking for the performer. */
+@keyframes venue-spot-search {
+  0%, 100% { transform: translate(-55%, 12%); }
+  25% { transform: translate(35%, -18%); }
+  50% { transform: translate(68%, 16%); }
+  75% { transform: translate(-15%, -12%); }
 }
 @keyframes venue-soundcheck {
   0%, 40%, 100% { transform: scaleY(0.2); opacity: 0.5; }

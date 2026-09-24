@@ -182,13 +182,13 @@ describe('useVenueChangeMotion', () => {
     expect(stage).toHaveTextContent('schedule.statuses.paused')
   })
 
-  it('idles the stage lights and runs a soundcheck while waiting, then brings the same lights up', () => {
+  it('searches the stage with a follow spot and runs a soundcheck while waiting, then brings the rig up', () => {
     const {container, rerender} = render(<CurrentSongCard song={null} />)
     const stage = container.querySelector('.venue-current')!
     const rig = stage.querySelector('.venue-stage-fx')
 
     expect(stage).toHaveAttribute('data-playback', 'waiting')
-    expect(rig).toBeInTheDocument()
+    expect(rig?.querySelector('.venue-stage-spot')).toBeInTheDocument()
     expect(stage.querySelector('.venue-live-beat')).toBeInTheDocument()
     expect(stage).toHaveTextContent('publicDashboard.startingSoon')
 
