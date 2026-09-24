@@ -125,6 +125,10 @@
 .venue-stage-halo, .venue-stage-beam { transition: scale 1.2s var(--venue-ease-out); }
 .venue-current[data-playback='applause'] .venue-stage-halo { scale: 1.2; }
 .venue-current[data-playback='applause'] .venue-stage-beam { scale: 1.3 1.05; }
+/* The title names the band, so the lineup fades out for the applause. It
+   keeps its space, so nothing jumps, and shows again with the next song. */
+.venue-current [data-venue-lineup] { transition: opacity 400ms var(--venue-ease-out), visibility 0s linear 0s; }
+.venue-current[data-playback='applause'] [data-venue-lineup] { opacity: 0; visibility: hidden; transition: opacity 400ms var(--venue-ease-out), visibility 0s linear 400ms; }
 .venue-live-beat i { display: block; width: 5px; height: 100%; border-radius: 2px; background: currentColor; animation: venue-beat 900ms ease-in-out infinite alternate; }
 .venue-live-beat i:nth-child(2n) { animation-duration: 650ms; animation-delay: -300ms; }
 .venue-live-beat i:nth-child(3n) { animation-duration: 1100ms; animation-delay: -550ms; }
