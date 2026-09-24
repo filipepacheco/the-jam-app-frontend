@@ -201,13 +201,9 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, {variant, bo
         words.forEach((part, order) => animate(part, LINE_IN, {duration: profile.enter, delay: enterAt + index * line + Math.min(order, 8) * word}))
         wordsAt = Math.min(words.length - 1, 8) * word
       })
-      // The applauded band is already on stage; only a new lineup lands.
-      if (arrival) {
-        // Fade only: a rise would move the slots the names are flying to.
-        root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
-          animate(element, FADE_IN, {duration: SHOW.fade, delay: enterAt + Math.min(index, 6) * SHOW.stagger})
-        })
-      } else if (!applause) {
+      // The applauded band is already on stage; only a new lineup lands. An
+      // arriving lineup waits hidden with the text and shows when the flight lands.
+      if (!arrival && !applause) {
         root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
           land(element, gentle ? enterAt : enterAt + wordsAt + lineup + Math.min(index, 6) * SHOW.stagger)
         })
