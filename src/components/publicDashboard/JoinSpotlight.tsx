@@ -42,13 +42,15 @@ function JoinAnnouncement({moment, paused, gentle, onDone}: JoinSpotlightProps &
   const leave = useRef<(quick: boolean) => void>(() => {})
 
   const list = new Intl.ListFormat(i18n?.resolvedLanguage, {type: 'conjunction'})
-  const names = moment.joins.map(({musician}) => musician.name)
+  // Someone on two songs is named once; the detail line lists both songs.
+  const people = moment.joins.filter((join, index, joins) => joins.findIndex(({musician}) => musician.id === join.musician.id) === index)
+  const names = people.map(({musician}) => musician.name)
   const listed = moment.extra > 0 ? [...names, t('publicDashboard.andMore', {count: moment.extra})] : names
   const [before, after = ''] = t('publicDashboard.joinHeadline', {count: names.length + moment.extra, names: NAMES}).split(NAMES)
   // Each flying name is its own box; the words around it fade in place.
   let flying = 0
-  const headline = list.formatToParts(listed).map((part, index) => part.type === 'element' && flying < moment.joins.length
-    ? <span key={index} className="venue-join-name" data-join-key={moment.joins[flying++].key}>{part.value}</span>
+  const headline = list.formatToParts(listed).map((part, index) => part.type === 'element' && flying < people.length
+    ? <span key={index} className="venue-join-name" data-join-key={people[flying++].key}>{part.value}</span>
     : <span key={index} className="venue-join-rest">{part.value}</span>)
 
   const [first] = moment.joins
