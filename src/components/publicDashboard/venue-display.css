@@ -5,7 +5,7 @@
 }
 
 .venue-programme { display: grid; gap: 1.5rem; min-width: 0; }
-.venue-current, .venue-next {
+.venue-current, .venue-next, .venue-invitation {
   /* Mirrors EASE_OUT in venueMotion.ts. */
   --venue-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 }
@@ -45,6 +45,11 @@
 .venue-current-title.venue-roll, .venue-next-title.venue-roll { padding-top: 0.08em; margin-top: -0.08em; }
 .venue-roll-line { display: block; }
 [data-venue-cue] .venue-roll { overflow: hidden; }
+/* Titles rise word by word, each word in its own mask. Top alignment keeps
+   the baseline still when the mask switches on for a cue. */
+.venue-word { display: inline-block; vertical-align: top; padding: 0.08em 0.06em 0.2em; margin: -0.08em -0.06em -0.2em; }
+.venue-word-inner { display: inline-block; }
+[data-venue-cue] .venue-word { overflow: hidden; }
 
 /* A live-show layer, confined to the stage. Two stage lights drift on slow,
    unrelated cycles, so the loop never reads as a pulse. Text and QR never move. */
@@ -53,7 +58,7 @@
   position: absolute;
   inset: -25%;
   background: radial-gradient(ellipse 55% 50% at 30% 58%, color-mix(in oklch, var(--color-primary) 34%, transparent), transparent 70%);
-  animation: venue-light-in 1.6s var(--venue-ease-out) both, venue-stage-drift 11s ease-in-out infinite alternate;
+  animation: venue-light-in 2.4s var(--venue-ease-out) both, venue-stage-drift 11s ease-in-out infinite alternate;
 }
 .venue-stage-halo::after {
   content: '';
@@ -61,6 +66,23 @@
   inset: 0;
   background: radial-gradient(ellipse 40% 45% at 72% 30%, color-mix(in oklch, var(--color-secondary) 22%, transparent), transparent 70%);
   animation: venue-stage-drift 14s ease-in-out -7s infinite alternate-reverse;
+}
+/* Two moving-head beams sweep slowly from the top edge, like a lighting rig. */
+.venue-stage-beam {
+  position: absolute;
+  top: -12%;
+  left: 12%;
+  width: 34%;
+  height: 140%;
+  transform-origin: 50% 0;
+  clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--color-primary) 34%, transparent), transparent 80%);
+  animation: venue-light-in 2.4s var(--venue-ease-out) both, venue-beam-sweep 7s ease-in-out infinite alternate;
+}
+.venue-stage-beam + .venue-stage-beam {
+  left: 58%;
+  background: linear-gradient(180deg, color-mix(in oklch, var(--color-secondary) 28%, transparent), transparent 80%);
+  animation: venue-light-in 2.4s var(--venue-ease-out) both, venue-beam-sweep 9s ease-in-out -3s infinite alternate-reverse;
 }
 .venue-stage-sweep {
   position: absolute;
@@ -76,6 +98,7 @@
    retargets smoothly. The lights fade and the meter freezes into a flat line. */
 .venue-current[data-playback='still'] .venue-stage-fx { opacity: 0; }
 .venue-current[data-playback='still'] .venue-live-beat { scale: 1 0.2; opacity: 0.5; }
+.venue-current[data-playback='still'] .venue-stage-beam,
 .venue-current[data-playback='still'] .venue-stage-halo,
 .venue-current[data-playback='still'] .venue-stage-halo::after,
 .venue-current[data-playback='still'] .venue-live-beat i { animation-play-state: paused; }
@@ -92,19 +115,26 @@
 @keyframes venue-light-in {
   from { opacity: 0; }
 }
+@keyframes venue-beam-sweep {
+  from { transform: rotate(-20deg); }
+  to { transform: rotate(16deg); }
+}
 @keyframes venue-stage-drift {
   from { transform: translate3d(-6%, 4%, 0) scale(1); }
   to { transform: translate3d(7%, -3%, 0) scale(1.08); }
 }
+[data-venue-motion='paused'] .venue-stage-beam,
 [data-venue-motion='paused'] .venue-stage-halo,
 [data-venue-motion='paused'] .venue-stage-halo::after,
 [data-venue-motion='paused'] .venue-live-beat i { animation: none; }
-[data-venue-motion='paused'] .venue-stage-halo { opacity: 0; }
+[data-venue-motion='paused'] :is(.venue-stage-halo, .venue-stage-beam) { opacity: 0; }
 [data-venue-motion='paused'] .venue-live-beat i { transform: scaleY(0.5); }
 
 @media (prefers-reduced-motion: reduce) {
-  .venue-stage-halo, .venue-stage-halo::after, .venue-live-beat i { animation: none; }
-  .venue-stage-halo { opacity: 0; }
+  .venue-stage-beam, .venue-stage-halo, .venue-stage-halo::after, .venue-live-beat i { animation: none; }
+  .venue-stage-beam, .venue-stage-halo { opacity: 0; }
+  .venue-invitation::before, .venue-invitation::after { animation: none; }
+  .venue-invitation::before { opacity: 0; }
 }
 
 .venue-label {
@@ -167,6 +197,38 @@
   border-radius: 1rem;
   text-align: center;
 }
+/* The call to action breathes and catches a light every few seconds. Both
+   layers sit behind the content; the QR code's own white plate hides them. */
+.venue-invitation { position: relative; isolation: isolate; overflow: hidden; }
+.venue-invitation::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -30%;
+  bottom: -30%;
+  left: 0;
+  width: 45%;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, color-mix(in oklch, var(--color-primary) 26%, transparent) 50%, transparent);
+  transform: translateX(-160%) rotate(14deg);
+  animation: venue-invite-shine 8s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+.venue-invitation::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 2.5rem color-mix(in oklch, var(--color-primary) 32%, transparent);
+  opacity: 0.25;
+  animation: venue-invite-glow 4s ease-in-out infinite alternate;
+}
+@keyframes venue-invite-shine {
+  0%, 62% { transform: translateX(-160%) rotate(14deg); }
+  92%, 100% { transform: translateX(330%) rotate(14deg); }
+}
+@keyframes venue-invite-glow { to { opacity: 1; } }
 .venue-invitation-title { font-size: clamp(1.75rem, 2.2vw, 2.75rem); line-height: 1.1; font-weight: 900; text-wrap: balance; }
 .venue-qr { width: min(100%, 27svh, 20rem); height: auto; border-radius: var(--radius-field); }
 .venue-join-link { max-width: 100%; font-size: clamp(1.125rem, 1.5vw, 1.875rem); line-height: 1.3; }

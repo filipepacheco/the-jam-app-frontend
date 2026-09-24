@@ -3,6 +3,7 @@ import {InstrumentGroup} from './InstrumentGroup'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
 import {useVenueChangeMotion} from './useVenueChangeMotion'
+import {splitWords} from './venueWords'
 import './venue-display.css'
 
 interface NextSongCardProps {
@@ -25,7 +26,7 @@ export function NextSongCard({song}: NextSongCardProps) {
         <div className="venue-song-stage">
           <div data-venue-song>
             <h3 className="venue-next-title venue-roll ds-wrap-user-content">
-              <span className="venue-roll-line">{song?.title ?? t('publicDashboard.nextToBeAnnounced')}</span>
+              <span className="venue-roll-line">{splitWords(song?.title ?? t('publicDashboard.nextToBeAnnounced'))}</span>
             </h3>
             {song && (
               <p className="venue-support venue-roll ds-wrap-user-content">

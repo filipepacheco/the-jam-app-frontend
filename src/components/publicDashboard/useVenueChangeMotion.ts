@@ -3,7 +3,7 @@ import {spring} from 'framer-motion'
 import {useReducedMotion} from '../../hooks/useReducedMotion'
 import {groupMusiciansByInstrument, normalizeInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto} from '../../types/api.types'
-import {EASE_IN_OUT, EASE_OUT, cssEase} from './venueMotion'
+import {EASE_IN_OUT, EASE_OUT, TEMPO, cssEase} from './venueMotion'
 
 type Lineup = Map<string, Map<string, string>>
 
@@ -21,22 +21,27 @@ function sameMembers(a?: Map<string, string>, b?: Map<string, string>) {
 }
 
 // Show cues deliberately outlast ordinary controls: viewers read them from
-// across a venue. The outgoing song clears fast; the new one lands slowly.
-// The next card follows the stage a beat later, so the eye reads stage first.
+// across a venue. The outgoing song clears fast; the new one lands slowly,
+// word by word. The next card follows the stage a beat later, so the eye
+// reads stage first. Every show timing is in milliseconds at TEMPO 1.
+const paced = <T extends Record<string, number>>(timing: T) =>
+  Object.fromEntries(Object.entries(timing).map(([key, ms]) => [key, ms * TEMPO])) as T
 const PROFILE = {
-  stage: {lead: 0, exit: 260, enter: 950, overlap: 110, line: 90, lineup: 300},
-  next: {lead: 160, exit: 220, enter: 750, overlap: 90, line: 70, lineup: 240},
+  stage: paced({lead: 0, exit: 260, leave: 40, enter: 950, overlap: 110, line: 90, word: 80, lineup: 300}),
+  next: paced({lead: 160, exit: 220, leave: 40, enter: 750, overlap: 90, line: 70, word: 60, lineup: 240}),
 }
+const SHOW = paced({rise: 700, fade: 500, stagger: 70, light: 1400, intro: 160})
 // Reduced motion keeps the change legible with opacity alone: fewer and gentler, not zero.
 const GENTLE = {exit: 120, enter: 200}
-const SHOW = {rise: 700, fade: 500, stagger: 70, light: 1400}
 const EASE = {out: cssEase(EASE_OUT), travel: cssEase(EASE_IN_OUT)}
 
-// Names land with a little life: a real spring (about 5% overshoot) sampled
-// once into CSS linear(), so the compositor plays it. Older engines settle on EASE.out.
+// Names land with a bounce: a real spring (about 12% overshoot, it's a show)
+// sampled once into CSS linear(), so the compositor plays it. Stiffness and
+// damping scale with TEMPO, which stretches the spring in time without
+// changing its bounce. Older engines settle on EASE.out.
 const LIFT_EASE = (() => {
   if (typeof CSS === 'undefined' || !CSS.supports?.('transition-timing-function', 'linear(0, 1)')) return EASE.out
-  const generator = spring({keyframes: [0, 1], stiffness: 240, damping: 21, mass: 1})
+  const generator = spring({keyframes: [0, 1], stiffness: 240 / TEMPO ** 2, damping: 17 / TEMPO, mass: 1})
   const stops = Array.from({length: 40}, (_, index) => generator.next(index * SHOW.rise / 40).value.toFixed(3))
   return `linear(${[...stops, 1].join(', ')})`
 })()
@@ -109,7 +114,7 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
     const id = cue.current
     const isStage = root.classList.contains('venue-current')
     const profile = isStage ? PROFILE.stage : PROFILE.next
-    const {lead, line, lineup} = profile
+    const {lead, line, word, lineup} = profile
     const exit = gentle ? GENTLE.exit : profile.exit
     const animate = (element: Element | null, frames: Keyframe[], timing: KeyframeAnimationOptions) => {
       if (element) animations.current.push(element.animate(frames, {easing: EASE.out, fill: 'backwards', ...timing}))
@@ -131,24 +136,35 @@ export function useVenueChangeMotion(song: DashboardSongDto | null, variant?: st
       if (intro) {
         // First paint of the display: the card rises before its lines roll in.
         animate(root, [{opacity: 0, transform: 'translate3d(0, 24px, 0)'}, {opacity: 1, transform: 'none'}], {duration: SHOW.rise, delay: lead})
-        enterAt += 160
+        enterAt += SHOW.intro
       } else if (outgoing && ghost) {
         outgoing.removeAttribute('data-venue-song')
         ghost.replaceChildren(outgoing)
         const lines = outgoing.querySelectorAll('.venue-roll-line')
         lines.forEach((element, index) => {
-          animate(element, gentle ? FADE_OUT : LINE_OUT, {duration: exit, delay: lead + (gentle ? 0 : index * 40), fill: 'forwards'})
+          animate(element, gentle ? FADE_OUT : LINE_OUT, {duration: exit, delay: lead + (gentle ? 0 : index * profile.leave), fill: 'forwards'})
         })
         // Strong ease-out clears most of the travel early, so the new song can
         // start before the exit ends without two titles sharing a mask.
-        enterAt += gentle ? exit : exit + (lines.length - 1) * 40 - profile.overlap
+        enterAt += gentle ? exit : exit + (lines.length - 1) * profile.leave - profile.overlap
       }
+      let wordsAt = 0
       root.querySelectorAll('[data-venue-song] .venue-roll-line').forEach((element, index) => {
-        if (gentle) animate(element, FADE_IN, {duration: GENTLE.enter, delay: enterAt, easing: 'ease'})
-        else animate(element, LINE_IN, {duration: profile.enter, delay: enterAt + index * line})
+        if (gentle) {
+          animate(element, FADE_IN, {duration: GENTLE.enter, delay: enterAt, easing: 'ease'})
+          return
+        }
+        const words = element.querySelectorAll('.venue-word-inner')
+        if (words.length === 0) {
+          animate(element, LINE_IN, {duration: profile.enter, delay: enterAt + index * line + wordsAt})
+          return
+        }
+        // Titles rise word by word; later lines wait for the last word.
+        words.forEach((part, order) => animate(part, LINE_IN, {duration: profile.enter, delay: enterAt + index * line + Math.min(order, 8) * word}))
+        wordsAt = Math.min(words.length - 1, 8) * word
       })
       root.querySelectorAll('[data-venue-instrument], [data-venue-lineup] > .venue-support').forEach((element, index) => {
-        land(element, gentle ? enterAt : enterAt + lineup + Math.min(index, 6) * SHOW.stagger)
+        land(element, gentle ? enterAt : enterAt + wordsAt + lineup + Math.min(index, 6) * SHOW.stagger)
       })
 
       if (!intro) {

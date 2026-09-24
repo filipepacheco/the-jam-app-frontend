@@ -7,7 +7,7 @@ import { QRCodePanel } from './QRCodePanel'
 import { StartingSoonPanel } from './StartingSoonPanel'
 import { FinishedPanel } from './FinishedPanel'
 import { CarouselIndicator } from './CarouselIndicator'
-import { DURATION, EASE_OUT } from '../venueMotion'
+import { DURATION, EASE_OUT, TEMPO } from '../venueMotion'
 import type { DashboardSongDto, JamStatus, PlaybackState } from '../../../types/api.types'
 import type { ReactNode } from 'react'
 
@@ -91,10 +91,10 @@ export function CarouselDashboard({
             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, transform: 'translateY(24px) scale(0.98)' }}
             animate={prefersReducedMotion
               ? { opacity: 1, transition: { duration: DURATION.fade, ease: 'easeOut' } }
-              : { opacity: 1, transform: 'translateY(0px) scale(1)', transition: { duration: 0.6, ease: EASE_OUT } }}
+              : { opacity: 1, transform: 'translateY(0px) scale(1)', transition: { duration: 0.6 * TEMPO, ease: EASE_OUT } }}
             exit={prefersReducedMotion
               ? { opacity: 0, transition: { duration: DURATION.exit, ease: 'easeOut' } }
-              : { opacity: 0, transform: 'translateY(-12px) scale(1)', transition: { duration: 0.2, ease: EASE_OUT } }}
+              : { opacity: 0, transform: 'translateY(-12px) scale(1)', transition: { duration: 0.2 * TEMPO, ease: EASE_OUT } }}
             className="w-full max-w-6xl mx-auto"
           >
             {activePanel.content}

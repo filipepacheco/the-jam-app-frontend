@@ -3,6 +3,7 @@ import {InstrumentGroup} from './InstrumentGroup'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto, PlaybackState} from '../../types/api.types'
 import {useVenueChangeMotion} from './useVenueChangeMotion'
+import {splitWords} from './venueWords'
 import './venue-display.css'
 
 interface CurrentSongCardProps {
@@ -25,6 +26,8 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
     <section ref={cardRef} className="venue-current" data-live={Boolean(song)} data-playback={sounding ? 'sounding' : 'still'} data-venue-motion={motionEnabled ? 'running' : 'paused'} aria-label={t('publicDashboard.onStage')}>
       {song && (
         <div className="venue-stage-fx" aria-hidden="true">
+          <span className="venue-stage-beam" />
+          <span className="venue-stage-beam" />
           <span className="venue-stage-halo" />
           <span className="venue-stage-sweep" />
         </div>
@@ -42,7 +45,7 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
       <div className="venue-song-stage">
         <div data-venue-song>
           <h2 className="venue-current-title venue-roll ds-wrap-user-content">
-            <span className="venue-roll-line">{finished ? t('publicDashboard.jamFinished') : song?.title ?? t('publicDashboard.waitingForPerformance')}</span>
+            <span className="venue-roll-line">{splitWords(finished ? t('publicDashboard.jamFinished') : song?.title ?? t('publicDashboard.waitingForPerformance'))}</span>
           </h2>
           <p className="venue-artist venue-roll ds-wrap-user-content">
             <span className="venue-roll-line">{finished ? t('publicDashboard.thankYou') : song?.artist ?? t('publicDashboard.waitingForPerformanceHelp')}</span>

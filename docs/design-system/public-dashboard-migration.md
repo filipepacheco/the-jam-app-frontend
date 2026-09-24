@@ -265,15 +265,17 @@ lavender top cap and decorative status dot. Its content and placement remain.
 The user then requested live-show energy beyond the initial conservative cues.
 A later motion pass replaced the ring and particle burst with the cues below.
 
-- Ambient: live songs show animated level bars. Two soft stage lights drift on slow cycles of 11 and 14 seconds. They do not pulse.
-- Song change: each title and artist line has its own mask. A strong ease-out clears the old lines in about 150 ms. The new lines start at 190 ms and rise in over 950 ms, so two titles never share a mask.
+- Ambient: live songs show animated level bars. Two soft stage lights drift on slow cycles of 11 and 14 seconds, and two light beams sweep from the top edge on cycles of 7 and 9 seconds. They do not pulse.
+- Tempo: one constant, `TEMPO` in `venueMotion.ts`, sets the pace of all audience cues. It is 1.5 now. The timings below are at tempo 1, so multiply them by `TEMPO`.
+- Song change: each title and artist line has its own mask. A strong ease-out clears the old lines in about 150 ms. The new title starts at 190 ms and rises word by word, 80 ms apart, and each word has its own mask. Each line rises over 950 ms, so two titles never share a mask.
 - Stage light: a spotlight bloom and one light sweep cross the current-song card with the new title.
-- Lineup: the instrument groups land one after another. Each group rises with a small spring and fades in from a light blur.
+- Lineup: the instrument groups land one after another. Each group rises with a spring (about 12% overshoot) and fades in from a light blur.
 - Next card: it uses the same roll, 160 ms after the stage, so the audience reads the stage first.
 - Lineup edit: only the new or renamed musician moves, and a highlight marks the group.
 - First paint: the cards rise once, then their lines roll in.
 - Pause: the stage lights fade out over 600 ms and the level meter settles into a flat line. Resume reverses the change. Both use CSS transitions, so a quick pause and resume do not jump.
 - Finale: when the Jam finishes, the last song rolls out and the closing message rolls in on the same stage card.
+- Invitation: the signup card glows on a 4-second cycle, and a light crosses it every 8 seconds. Both layers sit behind the content, and the QR code does not move.
 
 These audience announcements intentionally exceed routine control durations.
 Hidden copies of the old lines (`aria-hidden`) give the exit animation. The copies stay only while the cue runs.

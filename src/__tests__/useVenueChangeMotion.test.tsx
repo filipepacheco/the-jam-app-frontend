@@ -80,7 +80,9 @@ describe('useVenueChangeMotion', () => {
     expect(ghost).toHaveAttribute('aria-hidden', 'true')
     expect(ghost).toHaveTextContent('Psycho Killer')
     const rolled = targets.filter(target => target.classList.contains('venue-roll-line')).map(target => target.textContent)
-    expect(rolled).toEqual(['Psycho Killer', 'Talking Heads', 'Valerie', 'Amy Winehouse'])
+    const words = targets.filter(target => target.classList.contains('venue-word-inner')).map(target => target.textContent)
+    expect(rolled).toEqual(['Psycho Killer', 'Talking Heads', 'Amy Winehouse'])
+    expect(words).toEqual(['Valerie'])
 
     await act(async () => {})
     expect(ghost).toBeEmptyDOMElement()
@@ -104,7 +106,9 @@ describe('useVenueChangeMotion', () => {
     rerender(<CurrentSongCard song={psychoKiller} finished />)
 
     const rolled = targets.filter(target => target.classList.contains('venue-roll-line')).map(target => target.textContent)
-    expect(rolled).toEqual(['Psycho Killer', 'Talking Heads', 'publicDashboard.jamFinished', 'publicDashboard.thankYou'])
+    const words = targets.filter(target => target.classList.contains('venue-word-inner')).map(target => target.textContent)
+    expect(rolled).toEqual(['Psycho Killer', 'Talking Heads', 'publicDashboard.thankYou'])
+    expect(words).toEqual(['publicDashboard.jamFinished'])
     expect(container.querySelector('[data-venue-lineup]')).not.toBeInTheDocument()
   })
 

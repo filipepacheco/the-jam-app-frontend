@@ -10,3 +10,9 @@ export const cssEase = (curve: readonly number[]) => `cubic-bezier(${curve.join(
 
 /** Seconds, for Motion. Match --ds-motion-enter/exit; fades serve reduced motion. */
 export const DURATION = {enter: 0.32, exit: 0.16, fade: 0.2} as const
+
+/**
+ * Pace of every audience-facing cue. A live room reads motion from across the
+ * venue, so show cues run slower than host UI. Raise it to slow the whole show.
+ */
+export const TEMPO = 1.5
