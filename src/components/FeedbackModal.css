@@ -1,0 +1,165 @@
+.feedback-form {
+  display: grid;
+  gap: var(--ds-space-section);
+}
+
+/* Rating: five native radios behind 44px star targets, left-aligned with the
+   rest of the form. The word for the rating sits at the end of the row, so
+   it never pushes the comment field down. */
+.feedback-rating {
+  display: grid;
+  gap: var(--ds-space-compact);
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.feedback-rating__legend {
+  padding: 0;
+  margin-block-end: var(--ds-space-compact);
+  color: var(--ds-content-primary);
+  font-weight: var(--ds-weight-label);
+}
+
+.feedback-rating__row {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-space-control);
+  min-block-size: var(--ds-control-touch);
+}
+
+.feedback-rating__stars {
+  display: flex;
+  margin-inline-start: calc((var(--ds-control-touch) - 2rem) / -2);
+}
+
+.feedback-star {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: var(--ds-control-touch);
+  block-size: var(--ds-control-touch);
+  border-radius: var(--radius-field);
+  cursor: pointer;
+}
+
+.feedback-star__input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+}
+
+.feedback-star__icon {
+  inline-size: 2rem;
+  block-size: 2rem;
+  fill: transparent;
+  color: color-mix(in oklch, var(--color-base-content) 32%, transparent);
+  stroke-width: 1.75;
+  transition-property: color, fill, scale;
+  transition-duration: var(--ds-motion-feedback);
+  transition-timing-function: var(--ds-ease-out);
+}
+
+.feedback-star[data-lit] .feedback-star__icon {
+  fill: var(--color-warning);
+  color: var(--color-warning);
+}
+
+.feedback-star:active .feedback-star__icon {
+  scale: 0.96;
+}
+
+.feedback-star:has(.feedback-star__input:focus-visible) {
+  outline: 2px solid var(--ds-border-interactive);
+  outline-offset: -2px;
+}
+
+.feedback-rating:disabled .feedback-star {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.feedback-rating__verdict {
+  color: var(--ds-content-secondary);
+  font-weight: var(--ds-weight-label);
+}
+
+.feedback-rating[data-invalid] .feedback-star__icon {
+  color: color-mix(in oklch, var(--ds-status-danger) 60%, transparent);
+}
+
+.feedback-rating__error {
+  margin: 0;
+  color: var(--ds-status-danger);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The star just picked pops once. */
+  .feedback-star[data-picked] .feedback-star__icon {
+    animation: feedback-star-pop 280ms var(--ds-ease-out);
+  }
+}
+
+@keyframes feedback-star-pop {
+  40% { scale: 1.18; }
+}
+
+/* Comment: it grows with the text where the browser can, instead of a grip. */
+.feedback-comment .ds-field__textarea {
+  resize: none;
+  min-block-size: 6rem;
+  max-block-size: 12rem;
+  field-sizing: content;
+}
+
+.feedback-comment .ds-field__hint {
+  justify-self: end;
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-content-secondary);
+}
+
+.feedback-count[data-near] {
+  color: var(--ds-content-primary);
+  font-weight: var(--ds-weight-label);
+}
+
+.feedback-count[data-full] {
+  color: var(--ds-status-danger);
+}
+
+.feedback-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-space-compact);
+  padding-block: var(--ds-space-region);
+  text-align: center;
+}
+
+.feedback-success__icon {
+  display: grid;
+  margin-block-end: var(--ds-space-compact);
+  color: var(--ds-status-success);
+}
+
+.feedback-success__icon svg {
+  inline-size: 4rem;
+  block-size: 4rem;
+}
+
+.feedback-success__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.feedback-success__message {
+  margin: 0;
+  color: var(--ds-content-secondary);
+  text-wrap: pretty;
+}
