@@ -122,6 +122,7 @@ describe('useVenueChangeMotion', () => {
     expect(rolled).toEqual(['Psycho Killer', 'Talking Heads', 'publicDashboard.thankYou'])
     expect(words).toEqual(['publicDashboard.jamFinished'])
     expect(container.querySelector('[data-venue-lineup]')).not.toBeInTheDocument()
+    expect(container.querySelector('.venue-stage-fx')).not.toBeInTheDocument()
   })
 
   it('applauds the band that just played under a strobe, with its lineup out of the way', () => {
@@ -179,6 +180,27 @@ describe('useVenueChangeMotion', () => {
     expect(stage.querySelector('.venue-stage-fx')).toBeInTheDocument()
     expect(stage.querySelector('.venue-live-beat')).toBeInTheDocument()
     expect(stage).toHaveTextContent('schedule.statuses.paused')
+  })
+
+  it('beats a color-changing heartbeat while waiting, mounting it afresh for each wait', () => {
+    const {container, rerender} = render(<CurrentSongCard song={null} />)
+    const stage = container.querySelector('.venue-current')!
+    const rig = stage.querySelector('.venue-stage-fx')
+    const heartbeat = stage.querySelector('.venue-stage-waiting')
+
+    expect(stage).toHaveAttribute('data-playback', 'waiting')
+    expect(heartbeat?.querySelector('.venue-stage-heart')).toBeInTheDocument()
+    expect(stage.querySelector('.venue-live-beat')).toBeInTheDocument()
+    expect(stage).toHaveTextContent('publicDashboard.startingSoon')
+
+    rerender(<CurrentSongCard song={psychoKiller} />)
+    expect(stage).toHaveAttribute('data-playback', 'sounding')
+    expect(stage.querySelector('.venue-stage-fx')).toBe(rig)
+    expect(stage.querySelector('.venue-stage-waiting')).toBe(heartbeat)
+
+    rerender(<CurrentSongCard song={null} />)
+    expect(stage).toHaveAttribute('data-playback', 'waiting')
+    expect(stage.querySelector('.venue-stage-waiting')).not.toBe(heartbeat)
   })
 
   describe('up-next flight', () => {

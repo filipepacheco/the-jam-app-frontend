@@ -44,8 +44,8 @@ export const StartingSoon: Story = {
   globals: {locale: 'es', theme: 'jam-light', reviewTheme: 'jam-light', reviewDefaultViewport: 'venue', reducedMotion: true},
   play: async ({canvas}) => {
     await waitFor(async () => {
-      await expect(canvas.getByText(/comenzando pronto/i)).toBeVisible()
-      await expect(canvas.getByRole('heading', {level: 2, name: /esperando la próxima actuación/i})).toBeVisible()
+      await expect(canvas.getByText(/ya casi empieza/i)).toBeVisible()
+      await expect(canvas.getByRole('heading', {level: 2, name: /afinando los instrumentos/i})).toBeVisible()
       await expect(canvas.getByText('Valerie')).toBeVisible()
     })
   },
