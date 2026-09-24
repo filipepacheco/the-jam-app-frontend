@@ -4,9 +4,11 @@ import {supabase} from '../supabase/config'
 /**
  * Audience reactions travel on a Supabase Realtime broadcast channel for each
  * Jam: phones send, the venue display listens. Nothing is stored. A payload is
- * only a known kind and a small count, so it can carry no text or personal
- * data, and both sides drop anything else. The channel is public, so anyone
- * with the anon key can send; the display caps what it shows.
+ * a known kind, a small count and, from a signed-in phone, the account name
+ * that the big screen shows. Both sides drop anything else, and the display
+ * cleans the name and caps its length. The channel is public, so anyone with
+ * the anon key can send, under any name; the display caps what it shows. A
+ * private channel behind a backend relay that adds the verified name closes that.
  */
 export const REACTIONS = ['clap', 'fire', 'heart', 'rock'] as const
 export type ReactionKind = typeof REACTIONS[number]
@@ -19,9 +21,14 @@ export const BATCH_MS = 400
 
 const EVENT = 'reaction'
 
+/** The longest name the big screen shows, in characters. */
+export const MAX_NAME = 32
+
 export interface Reaction {
   kind: ReactionKind
   count: number
+  /** Who reacted: an account name, or none for a guest. */
+  name?: string | null
 }
 
 export const reactionChannelName = (jamId: string) => `jam-reactions:${jamId}`
@@ -35,6 +42,17 @@ export function isReaction(value: unknown): value is Reaction {
     && Number.isInteger(count)
     && count >= 1
     && count <= MAX_BATCH
+}
+
+/**
+ * A name as the big screen may show it: one line of printable text, at most
+ * MAX_NAME characters. Control and format characters (bidi overrides
+ * included) are removed; anything else is no name.
+ */
+export function cleanName(value: unknown): string | null {
+  if (typeof value !== 'string') return null
+  const printable = value.replace(/[\p{Cc}\p{Cf}\p{Co}\p{Cn}]/gu, '').replace(/\s+/g, ' ').trim()
+  return [...printable].slice(0, MAX_NAME).join('').trim() || null
 }
 
 export function openReactionChannel(jamId: string): RealtimeChannel {
@@ -54,7 +72,7 @@ export function closeReactionChannel(channel: RealtimeChannel) {
 
 export function onReaction(channel: RealtimeChannel, listener: (reaction: Reaction) => void) {
   return channel.on('broadcast', {event: EVENT}, ({payload}: {payload?: unknown}) => {
-    if (isReaction(payload)) listener({kind: payload.kind, count: payload.count})
+    if (isReaction(payload)) listener({kind: payload.kind, count: payload.count, name: cleanName(payload.name)})
   })
 }
 

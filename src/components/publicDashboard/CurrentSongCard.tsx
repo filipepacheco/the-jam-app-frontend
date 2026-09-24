@@ -1,17 +1,16 @@
-import {lazy, Suspense, useLayoutEffect, useState, type CSSProperties, type RefObject} from 'react'
+import {useCallback, useLayoutEffect, useRef, useState, type CSSProperties} from 'react'
 import {useTranslation} from 'react-i18next'
 import {InstrumentGroup} from './InstrumentGroup'
 import {groupMusiciansByInstrument} from '../../utils/musicianUtils'
 import type {DashboardSongDto, PlaybackState} from '../../types/api.types'
 import {useVenueChangeMotion} from './useVenueChangeMotion'
 import {splitWords} from './venueWords'
-import {APPLAUSE_SHIFT, sceneShift, useSceneShift} from './venueScene'
+import {APPLAUSE_SHIFT, sceneShift, useStageLights} from './venueScene'
 import {ReactionLayer} from './ReactionLayer'
+import {ReactionShoutouts} from './ReactionShoutouts'
 import {useClapCount} from './useAudienceReactions'
 import type {ReactionFeed} from '../../lib/realtime/jamReactions'
 import './venue-display.css'
-
-const ConfettiWrapper = lazy(() => import('./ConfettiWrapper'))
 
 interface CurrentSongCardProps {
   song: DashboardSongDto | null
@@ -24,7 +23,7 @@ interface CurrentSongCardProps {
   awaiting?: ReadonlySet<string>
   /** The up-next flight carrying this song here; its text waits until it lands. */
   boarding?: number | null
-  /** The room's reactions: they float up behind the stage text. */
+  /** The room's reactions: they float up behind the stage text, and named ones show in a corner. */
   reactions?: ReactionFeed | null
 }
 
@@ -35,38 +34,27 @@ function performerNames(song: DashboardSongDto, language: string | undefined, mo
   return new Intl.ListFormat(language, {type: 'conjunction'}).format(shown)
 }
 
-// A short burst behind the text, sized to the stage and colored by the theme.
-function StageConfetti({stage}: {stage: RefObject<HTMLElement | null>}) {
-  const [burst, setBurst] = useState<{width: number; height: number; colors: string[]} | null>(null)
-  useLayoutEffect(() => {
-    const element = stage.current
-    if (!element) return
-    const {width, height} = element.getBoundingClientRect()
-    const style = getComputedStyle(element)
-    const colors = ['--color-primary', '--color-secondary', '--color-accent', '--color-warning']
-      .map(token => style.getPropertyValue(token).trim())
-      .filter(Boolean)
-    setBurst({width, height, colors})
-  }, [stage])
-  if (!burst) return null
-  return (
-    <Suspense fallback={null}>
-      <ConfettiWrapper show width={burst.width} height={burst.height} numberOfPieces={160} tweenDuration={1200} {...(burst.colors.length > 0 ? {colors: burst.colors} : {})} />
-    </Suspense>
-  )
-}
-
 // Distance-readable domain wrapper; see public-dashboard-migration.md.
 export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', finished = false, applause = null, awaiting, boarding = null, reactions = null}: CurrentSongCardProps) {
   const {t, i18n} = useTranslation()
   const song = finished || applause ? null : liveSong
   // The applauded band stays in the lineup while the title thanks it.
   const lineupSong = applause ?? song
-  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(lineupSong, applause ? `applause:${applause.id}` : finished ? 'finale' : undefined, boarding)
+  const variant = applause ? `applause:${applause.id}` : finished ? 'finale' : undefined
+  // The stage lights take a new song's color once it has fully arrived.
+  const arrival = variant ?? song?.id ?? ''
+  const [settledOn, setSettledOn] = useState(arrival)
+  const latestArrival = useRef(arrival)
+  useLayoutEffect(() => {
+    latestArrival.current = arrival
+  })
+  const onSettle = useCallback(() => setSettledOn(latestArrival.current), [])
+  const {ref: cardRef, motionEnabled} = useVenueChangeMotion(lineupSong, {variant, boarding, onSettle})
   // Level bars and stage lights mean music is sounding. A paused song keeps
   // its title and lineup; the lights fade and the meter settles flat.
   const sounding = Boolean(song) && playbackState === 'PLAYING'
-  const shift = useSceneShift(applause ? APPLAUSE_SHIFT : sceneShift(song?.id ?? null))
+  // Gold comes with the applause at once; a song's color waits for its roll or flight.
+  const shift = useStageLights(applause ? APPLAUSE_SHIFT : sceneShift(song?.id ?? null), settledOn === arrival && boarding === null, Boolean(applause))
   const claps = useClapCount(reactions, applause?.id ?? null)
 
   const title = applause
@@ -84,10 +72,10 @@ export function CurrentSongCard({song: liveSong, playbackState = 'PLAYING', fini
           <span className="venue-stage-beam" />
           <span className="venue-stage-halo" />
           <span className="venue-stage-sweep" />
-          {applause && motionEnabled && <StageConfetti key={applause.id} stage={cardRef} />}
         </div>
       )}
       <ReactionLayer feed={reactions} gentle={!motionEnabled} />
+      <ReactionShoutouts feed={reactions} gentle={!motionEnabled} />
       <span className="venue-change-wash" aria-hidden="true" />
       {!finished && (
         <p className="venue-label">

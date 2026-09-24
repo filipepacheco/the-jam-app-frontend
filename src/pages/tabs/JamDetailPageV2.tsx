@@ -517,7 +517,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
                 offset={showReactions ? REACTION_BAR_SPACE : 0}
             />
 
-            {showReactions && <ReactionBar jamId={jam.id} live={!viewState} />}
+            {showReactions && <ReactionBar jamId={jam.id} live={!viewState} name={isAuthenticated ? user?.name : null} guest={!isAuthenticated} />}
 
             {/* Modals */}
             {selectedScheduleForEnroll && (

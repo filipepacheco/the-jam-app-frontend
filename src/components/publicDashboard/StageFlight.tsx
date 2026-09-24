@@ -157,10 +157,16 @@ export class StageFlight extends Component<StageFlightProps> {
     void Promise.allSettled(flight.animations.map(animation => animation.finished)).then(land)
   }
 
-  /** Landing: the stage lights flash and any name that did not fly lands in place. */
+  /**
+   * Landing: the lineup shows (its labels fade in around the names that just
+   * landed), the stage lights flash, and any name that did not fly lands in place.
+   */
   private cue(flight: Flight) {
     const stage = this.layer.current?.parentElement?.querySelector('.venue-current')
     if (!stage || typeof stage.animate !== 'function') return
+    stage.querySelectorAll('[data-venue-lineup] > .venue-label, .venue-instrument-label, [data-venue-lineup] > .venue-support').forEach((label, index) => {
+      label.animate([{opacity: 0}, {opacity: 1}], {duration: SHOW.fade, delay: Math.min(index, 6) * SHOW.stagger, easing: cssEase(EASE_OUT), fill: 'backwards'})
+    })
     stage.querySelector('.venue-change-wash')?.animate(FLASH, {duration: SHOW.light, easing: 'linear'})
     stage.querySelector('.venue-stage-sweep')?.animate(SWEEP, {duration: SHOW.light, easing: cssEase(EASE_IN_OUT)})
     flight.groups.forEach(group => group.querySelector('.venue-musician-wash')?.animate(FLASH, {duration: SHOW.light, easing: 'linear'}))

@@ -31,6 +31,17 @@ export function nearestTurn(previous: number, target: number) {
  * Keeps the stage hue unwrapped across changes, so the registered
  * --venue-scene-shift transitions the short way round the color wheel.
  */
+/**
+ * The stage lights take a new color only once the stage has settled on it
+ * (`ready`): after the song's roll or flight. `immediate` (the applause's
+ * gold) skips the wait.
+ */
+export function useStageLights(target: number, ready: boolean, immediate: boolean) {
+  const [lit, setLit] = useState(target)
+  if ((ready || immediate) && lit !== target) setLit(target)
+  return useSceneShift(lit)
+}
+
 export function useSceneShift(target: number) {
   const [scene, setScene] = useState({target, shift: target})
   if (scene.target !== target) {

@@ -35,7 +35,9 @@ export const jams = {
     clap: message({"pt-BR": "Aplaudir", "en": "Clap", "es": "Aplaudir"}),
     fire: message({"pt-BR": "Fogo", "en": "Fire", "es": "Fuego"}),
     heart: message({"pt-BR": "Coração", "en": "Heart", "es": "Corazón"}),
-    rock: message({"pt-BR": "Rock", "en": "Rock on", "es": "Rock"})
+    rock: message({"pt-BR": "Rock", "en": "Rock on", "es": "Rock"}),
+    named: message({"pt-BR": "Seu nome aparece no telão", "en": "Your name shows on the big screen", "es": "Tu nombre aparece en la pantalla grande"}),
+    anonymous: message({"pt-BR": "Entre para mostrar seu nome no telão", "en": "Sign in to show your name on the big screen", "es": "Inicia sesión para mostrar tu nombre en la pantalla"})
   },
   banner: {
     finished: message({"pt-BR": "Esta jam já terminou", "en": "This jam has ended", "es": "Esta jam ya terminó"}),
