@@ -41,6 +41,69 @@ export function countActiveRegistrationsByInstrument(
 }
 
 /**
+ * Only songs still waiting to be played move when sorting by sign-ups.
+ * Played, playing, canceled and suggested songs keep their slot.
+ * Shared by the public jam page and the host's "Sort by sign-ups" button.
+ */
+export function isSortableBySignups(status: string): boolean {
+  return status === 'SCHEDULED'
+}
+
+/** Sign-ups count people, not registrations: one musician on two instruments counts once. */
+export function countDistinctMusicians(musicianIds: Iterable<string | undefined>): number {
+  const ids = new Set<string>()
+  for (const id of musicianIds) if (id) ids.add(id)
+  return ids.size
+}
+
+/**
+ * Reorder items by sign-up count (most first), keeping the host's order
+ * as the tie-breaker. Fixed items keep their slot; the rest are
+ * redistributed across the remaining slots.
+ * Expects `items` already in the host's order.
+ */
+export function orderByRegistrationCount<T>(
+  items: readonly T[],
+  registrationCount: (item: T) => number,
+  isFixed: (item: T) => boolean,
+): T[] {
+  const entries = items.map((item, index) => ({item, index, fixed: isFixed(item)}))
+  const movable = entries
+    .filter(({fixed}) => !fixed)
+    .map((entry) => ({...entry, count: registrationCount(entry.item)}))
+    .sort((left, right) => right.count - left.count || left.index - right.index)
+  let next = 0
+  return entries.map(({item, fixed}) => (fixed ? item : movable[next++].item))
+}
+
+/** Schedules in the host's real queue order (stable for equal `order` values). */
+export function sortSchedulesByHostOrder(schedules: readonly ScheduleResponseDto[]): ScheduleResponseDto[] {
+  return schedules
+    .map((schedule, index) => ({schedule, index}))
+    .sort((left, right) => left.schedule.order - right.schedule.order || left.index - right.index)
+    .map(({schedule}) => schedule)
+}
+
+/** Distinct musicians with an active registration on the schedule. */
+export function countScheduleSignups(schedule: ScheduleResponseDto): number {
+  return countDistinctMusicians(
+    activeRegistrations(schedule.registrations).map((registration) => registration.musician?.id ?? registration.musicianId),
+  )
+}
+
+/**
+ * Public, "virtual" order for the jam page: songs with more sign-ups first.
+ * The host still decides the real playing order.
+ */
+export function orderSchedulesByRegistrations(schedules: readonly ScheduleResponseDto[]): ScheduleResponseDto[] {
+  return orderByRegistrationCount(
+    sortSchedulesByHostOrder(schedules),
+    countScheduleSignups,
+    (schedule) => !isSortableBySignups(schedule.status),
+  )
+}
+
+/**
  * Check if a schedule has the core band instruments covered (drums, guitar, bass, vocals).
  * Excludes rejected and withdrawn registrations.
  */

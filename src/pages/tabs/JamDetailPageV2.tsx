@@ -39,6 +39,7 @@ import {
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
 import {activeRegistrations} from '../../utils/musicianUtils'
+import {orderSchedulesByRegistrations, sortSchedulesByHostOrder} from '../../utils/scheduleUtils'
 import {formatJamDuration} from '../../lib/formatters'
 import {MapPin, Calendar, Share2, Music, Users, Clock3, ChevronDown} from 'lucide-react'
 import './JamDetailPageV2.css'
@@ -133,7 +134,7 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
     }, [jam?.location])
 
     // Derive all schedule data in a single pass
-    const { allSchedules, nonSuggestedSchedules, suggestedSchedules } = useMemo(() => {
+    const { allSchedules, queueSchedules, suggestedSchedules } = useMemo(() => {
         const all = jam?.schedules || []
         const nonSuggested: ScheduleResponseDto[] = []
         const suggested: ScheduleResponseDto[] = []
@@ -146,8 +147,36 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             }
         }
 
-        return { allSchedules: all, nonSuggestedSchedules: nonSuggested, suggestedSchedules: suggested }
+        return {
+            allSchedules: all,
+            queueSchedules: sortSchedulesByHostOrder(nonSuggested),
+            suggestedSchedules: suggested,
+        }
     }, [jam?.schedules])
+
+    // Before the jam goes live, list songs by sign-ups. While it is live, show
+    // the host's real queue. The sign-up order is only recalculated when songs
+    // are added, removed, reordered or change status, so cards don't jump
+    // under people's fingers on every new sign-up.
+    const sortBySignups = jam?.status !== 'LIVE'
+    const queueStructureKey = useMemo(
+        () => queueSchedules.map(({id, status, order}) => `${id}:${status}:${order}`).join('|'),
+        [queueSchedules],
+    )
+    const [signupOrder, setSignupOrder] = useState<{key: string; ids: string[]} | null>(null)
+    const freshSignupOrder = useMemo(
+        () => sortBySignups && signupOrder?.key !== queueStructureKey
+            ? orderSchedulesByRegistrations(queueSchedules).map(({id}) => id)
+            : null,
+        [sortBySignups, signupOrder?.key, queueStructureKey, queueSchedules],
+    )
+    if (freshSignupOrder) setSignupOrder({key: queueStructureKey, ids: freshSignupOrder})
+    const nonSuggestedSchedules = useMemo(() => {
+        if (!sortBySignups) return queueSchedules
+        const ids = freshSignupOrder ?? signupOrder?.ids ?? []
+        const byId = new Map(queueSchedules.map((schedule) => [schedule.id, schedule]))
+        return ids.flatMap((id) => byId.get(id) ?? [])
+    }, [sortBySignups, freshSignupOrder, signupOrder?.ids, queueSchedules])
 
     // Get user's registrations with schedule data (supports multiple registrations per schedule)
     const userRegistrations = useMemo(() => {
