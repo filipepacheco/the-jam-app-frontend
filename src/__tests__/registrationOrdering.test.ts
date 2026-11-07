@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest'
 import type {ScheduleResponseDto, ScheduleStatus} from '../types/api.types'
-import {createLiveQueueController, type LiveQueueSnapshot} from '../lib/live-queue/liveQueueController'
+import {canSortByRegistrations, createLiveQueueController, type LiveQueueSnapshot} from '../lib/live-queue/liveQueueController'
 import {orderSchedulesByRegistrations} from '../utils/scheduleUtils'
 import {shortMusicianName} from '../utils/musicianUtils'
 
@@ -26,6 +26,11 @@ describe('shortMusicianName', () => {
     ['Thiago Pacheco', 'Thiago P.'],
     ['  tiago da silva ', 'tiago S.'],
     ['Tiago', 'Tiago'],
+    ['Thiago Pacheco Filho', 'Thiago P.'],
+    ['João Silva Neto', 'João S.'],
+    ['John Smith Jr.', 'John S.'],
+    ['Ana Filho', 'Ana F.'],
+    ['Ana 𝓢ilva', 'Ana 𝓢.'],
     ['', ''],
     [null, ''],
   ])('formats %j as %j', (name, expected) => {
@@ -52,6 +57,16 @@ describe('orderSchedulesByRegistrations', () => {
       schedule('many', 4, 3),
     ])
     expect(ordered.map(({id}) => id)).toEqual(['done', 'live', 'many', 'few'])
+  })
+
+  it('counts one musician on two instruments once', () => {
+    const doubled = schedule('doubled', 1, 0)
+    doubled.registrations = [
+      {id: 'r1', musicianId: 'solo', jamId: 'jam-1', instrument: 'vocals', status: 'APPROVED'},
+      {id: 'r2', musicianId: 'solo', jamId: 'jam-1', instrument: 'guitars', status: 'APPROVED'},
+    ]
+    const ordered = orderSchedulesByRegistrations([doubled, schedule('pair', 2, 2)])
+    expect(ordered.map(({id}) => id)).toEqual(['pair', 'doubled'])
   })
 })
 
@@ -83,5 +98,13 @@ describe('Live Queue sortByRegistrations', () => {
     expect(controller.getSnapshot().draftPerformances.map(({id, order}) => [id, order])).toEqual([
       ['done', 1], ['b', 2], ['c', 3], ['a', 4],
     ])
+  })
+
+  it('reports whether sorting would change the draft', () => {
+    const controller = createLiveQueueController({initialSnapshot: snapshot})
+    controller.commands.beginReorder()
+    expect(canSortByRegistrations(controller.getSnapshot().draftPerformances, snapshot)).toBe(true)
+    controller.commands.sortByRegistrations()
+    expect(canSortByRegistrations(controller.getSnapshot().draftPerformances, snapshot)).toBe(false)
   })
 })

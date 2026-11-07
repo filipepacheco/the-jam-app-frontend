@@ -1,4 +1,4 @@
-import {orderByRegistrationCount} from '../../utils/scheduleUtils'
+import {countDistinctMusicians, isSortableBySignups, orderByRegistrationCount} from '../../utils/scheduleUtils'
 
 export interface LiveQueuePerformance {
   id: string
@@ -140,6 +140,32 @@ export function isPerformanceLocked(snapshot: LiveQueueSnapshot, id: string): bo
   return snapshot.playbackState === 'PLAYING' && snapshot.currentPerformance?.id === id
 }
 
+/**
+ * Draft order with unplayed songs ranked by distinct musicians signed up,
+ * using the same rules as the public jam page. Each Performance takes the
+ * order value of the slot it lands in.
+ */
+export function sortPerformancesByRegistrations(
+  performances: readonly LiveQueuePerformance[],
+  server: LiveQueueSnapshot,
+): LiveQueuePerformance[] {
+  const sorted = orderByRegistrationCount(
+    performances,
+    ({musicians}) => countDistinctMusicians(musicians.map(({id}) => id)),
+    ({id, status}) => !isSortableBySignups(status) || isPerformanceLocked(server, id),
+  )
+  return sorted.map((performance, index) => ({...performance, order: performances[index].order}))
+}
+
+/** True when sorting by sign-ups would change the draft (the host button is useless otherwise). */
+export function canSortByRegistrations(
+  performances: readonly LiveQueuePerformance[],
+  server: LiveQueueSnapshot,
+): boolean {
+  const sorted = sortPerformancesByRegistrations(performances, server)
+  return sorted.some(({id}, index) => id !== performances[index].id)
+}
+
 export function fingerprintQueue(performances: readonly LiveQueuePerformance[]): string {
   return JSON.stringify(performances.map(({id, order, status}) => [id, order, status]))
 }
@@ -223,13 +249,7 @@ export function createLiveQueueController({
 
   const sortByRegistrations = () => {
     if (session.status !== 'editing' || persistenceStatus !== 'idle') return
-    const sorted = orderByRegistrationCount(
-      draftPerformances,
-      ({musicians}) => musicians.length,
-      ({id, status}) => status !== 'SCHEDULED' || isPerformanceLocked(server, id),
-    )
-    // Each Performance takes the order value of the slot it lands in.
-    draftPerformances = sorted.map((performance, index) => ({...performance, order: draftPerformances[index].order}))
+    draftPerformances = sortPerformancesByRegistrations(draftPerformances, server)
     input = {mode: 'idle'}
   }
 

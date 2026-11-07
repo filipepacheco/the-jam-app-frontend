@@ -24,10 +24,18 @@ export function activeRegistrations(
  */
 export function shortMusicianName(name: string | null | undefined): string {
   const parts = (name ?? '').trim().split(/\s+/).filter(Boolean)
+  // Generational suffixes ("Filho", "Jr.") would hide the real surname.
+  while (parts.length > 2 && NAME_SUFFIXES.has(parts[parts.length - 1].toLowerCase().replace(/\.$/, ''))) {
+    parts.pop()
+  }
   if (parts.length === 0) return ''
   if (parts.length === 1) return parts[0]
-  return `${parts[0]} ${parts[parts.length - 1].charAt(0).toUpperCase()}.`
+  // Array.from splits by code point, so a surname starting outside the BMP stays whole.
+  const [initial = ''] = Array.from(parts[parts.length - 1])
+  return `${parts[0]} ${initial.toUpperCase()}.`
 }
+
+const NAME_SUFFIXES = new Set(['filho', 'filha', 'neto', 'neta', 'sobrinho', 'sobrinha', 'junior', 'júnior', 'jr', 'sr', 'ii', 'iii', 'iv'])
 
 /**
  * Minimal musician interface for grouping

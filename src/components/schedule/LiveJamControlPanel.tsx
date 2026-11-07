@@ -4,7 +4,7 @@ import {ArrowUpDown, Check, GripVertical, Loader2, Users, X} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {useLiveQueueController} from '../../hooks/useLiveQueueController'
 import {formatDuration} from '../../lib/formatters'
-import {isPerformanceLocked, type LiveQueueOutcome, type LiveQueuePerformance} from '../../lib/live-queue/liveQueueController'
+import {canSortByRegistrations, isPerformanceLocked, type LiveQueueOutcome, type LiveQueuePerformance} from '../../lib/live-queue/liveQueueController'
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {CORE_BAND} from '../../utils/scheduleUtils'
 import {normalizeInstrument, shortMusicianName} from '../../utils/musicianUtils'
@@ -215,6 +215,10 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
   const performances = state.draftPerformances
   const isReorderMode = state.session.status === 'editing'
   const isReordering = state.persistence.status !== 'idle'
+  const canSortBySignups = useMemo(
+    () => isReorderMode && canSortByRegistrations(performances, state.server),
+    [isReorderMode, performances, state.server],
+  )
   const nextPerformance = state.server.playbackState === 'PAUSED' && !state.server.resumeFromQueue && !isReorderMode
     ? currentPerformance ?? performances.find(({status}) => status === 'SCHEDULED' || status === 'IN_PROGRESS')
     : performances.find(({id, status}) => !isPerformanceLocked(state.server, id) && (status === 'SCHEDULED' || status === 'IN_PROGRESS'))
@@ -279,7 +283,7 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
             <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
               <Action
                 variant="quiet"
-                state={isReordering ? 'disabled' : 'idle'}
+                state={isReordering || !canSortBySignups ? 'disabled' : 'idle'}
                 onClick={commands.sortByRegistrations}
                 className="col-span-2 min-w-0"
               >
