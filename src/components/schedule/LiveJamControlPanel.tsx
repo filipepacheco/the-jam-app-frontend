@@ -1,13 +1,13 @@
 /** Host control interface for managing the active Jam's Live Queue. */
 import React, {useEffect, useMemo} from 'react'
-import {ArrowUpDown, Check, GripVertical, Loader2, X} from 'lucide-react'
+import {ArrowUpDown, Check, GripVertical, Loader2, Users, X} from 'lucide-react'
 import {useTranslation} from 'react-i18next'
 import {useLiveQueueController} from '../../hooks/useLiveQueueController'
 import {formatDuration} from '../../lib/formatters'
 import {isPerformanceLocked, type LiveQueueOutcome, type LiveQueuePerformance} from '../../lib/live-queue/liveQueueController'
 import {getInstrumentIcon} from '../../lib/schedule/instrumentHelpers'
 import {CORE_BAND} from '../../utils/scheduleUtils'
-import {normalizeInstrument} from '../../utils/musicianUtils'
+import {normalizeInstrument, shortMusicianName} from '../../utils/musicianUtils'
 import {Action} from '../Action'
 import {useToast} from '../ToastContext'
 import {Badge, DataCard} from '../data-display'
@@ -117,7 +117,7 @@ const QueueItem = React.memo(function QueueItem({
 }: QueueItemProps) {
   const {t} = useTranslation()
   const musicianNames = useMemo(
-    () => performance.musicians.map(({name}) => name?.split(' ')[0] || t('common.unknown')).join(', '),
+    () => performance.musicians.map(({name}) => shortMusicianName(name) || t('common.unknown')).join(', '),
     [performance.musicians, t],
   )
   const readiness = useMemo(() => getPerformanceReadiness(performance), [performance])
@@ -277,6 +277,15 @@ export function LiveJamControlPanel({jamId}: LiveJamControlPanelProps) {
           </h2>
           {isReorderMode ? (
             <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
+              <Action
+                variant="quiet"
+                state={isReordering ? 'disabled' : 'idle'}
+                onClick={commands.sortByRegistrations}
+                className="col-span-2 min-w-0"
+              >
+                <Action.Icon><Users className="size-4" /></Action.Icon>
+                <Action.Label>{t('live_control.sort_by_registrations')}</Action.Label>
+              </Action>
               <Action
                 variant="quiet"
                 state={isReordering ? 'disabled' : 'idle'}

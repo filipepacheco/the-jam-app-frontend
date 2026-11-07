@@ -19,6 +19,17 @@ export function activeRegistrations(
 }
 
 /**
+ * First name plus the surname initial ("Thiago Pacheco" -> "Thiago P."),
+ * so musicians who share a first name stay distinguishable.
+ */
+export function shortMusicianName(name: string | null | undefined): string {
+  const parts = (name ?? '').trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return ''
+  if (parts.length === 1) return parts[0]
+  return `${parts[0]} ${parts[parts.length - 1].charAt(0).toUpperCase()}.`
+}
+
+/**
  * Minimal musician interface for grouping
  * Any type with an instrument property can be grouped
  */

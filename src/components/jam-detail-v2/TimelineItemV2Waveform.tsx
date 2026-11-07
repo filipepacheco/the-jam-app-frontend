@@ -4,7 +4,7 @@ import {useReducedMotion} from '../../hooks'
 import {getInstrumentEmoji} from '../../lib/schedule/instrumentHelpers'
 import {translationKey} from '../../lib/i18n/translationKeys'
 import {hasCoreBand, getInstrumentOptions} from '../../utils/scheduleUtils'
-import {activeRegistrations as getActiveRegistrations, isActiveRegistration} from '../../utils/musicianUtils'
+import {activeRegistrations as getActiveRegistrations, isActiveRegistration, shortMusicianName} from '../../utils/musicianUtils'
 import {SpotifyPlayButton} from '../SpotifyPreview'
 import {FileText, Mic, ChevronDown, Clock3} from 'lucide-react'
 import {Action, IconAction} from '../Action'
@@ -231,7 +231,7 @@ export function TimelineItemV2Waveform({
                 >
                   <span aria-hidden="true" className="shrink-0" title={reg.instrument || undefined}>{getInstrumentEmoji(reg.instrument)}</span>
                   <span className="ds-wrap-user-content font-medium">
-                    {reg.musician?.id === user?.id ? t('common.you') : (reg.musician?.name?.split(' ')[0] ?? reg.musician?.name)}
+                    {reg.musician?.id === user?.id ? t('common.you') : shortMusicianName(reg.musician?.name)}
                   </span>
                 </div>
                 ))}

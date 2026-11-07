@@ -1,3 +1,5 @@
+import {orderByRegistrationCount} from '../../utils/scheduleUtils'
+
 export interface LiveQueuePerformance {
   id: string
   order: number
@@ -101,6 +103,8 @@ export interface LiveQueueController {
     replaceServerSnapshot(snapshot: LiveQueueSnapshot): void
     beginReorder(): void
     movePerformance(performanceId: string, targetIndex: number): void
+    /** Draft-only: unplayed songs with more sign-ups move up. Saved via saveReorder. */
+    sortByRegistrations(): void
     beginMove(input: {mode: 'mouse' | 'touch' | 'keyboard'; performanceId: string}): void
     updateMoveTarget(targetIndex: number): void
     commitMove(): void
@@ -217,6 +221,18 @@ export function createLiveQueueController({
       .sort((left, right) => left.order - right.order)
   }
 
+  const sortByRegistrations = () => {
+    if (session.status !== 'editing' || persistenceStatus !== 'idle') return
+    const sorted = orderByRegistrationCount(
+      draftPerformances,
+      ({musicians}) => musicians.length,
+      ({id, status}) => status !== 'SCHEDULED' || isPerformanceLocked(server, id),
+    )
+    // Each Performance takes the order value of the slot it lands in.
+    draftPerformances = sorted.map((performance, index) => ({...performance, order: draftPerformances[index].order}))
+    input = {mode: 'idle'}
+  }
+
   const commands: LiveQueueController['commands'] = {
     replaceServerSnapshot(snapshot) {
       server = normalizeSnapshot(snapshot)
@@ -250,6 +266,10 @@ export function createLiveQueueController({
     },
     movePerformance(performanceId, targetIndex) {
       movePerformance(performanceId, targetIndex)
+      project()
+    },
+    sortByRegistrations() {
+      sortByRegistrations()
       project()
     },
     beginMove({mode, performanceId}) {

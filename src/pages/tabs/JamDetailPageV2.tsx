@@ -39,6 +39,7 @@ import {
 import type {JamResponseDto, RegistrationResponseDto, ScheduleResponseDto} from '../../types/api.types'
 import {getInstrumentIcon} from "../../lib/schedule/instrumentHelpers.tsx";
 import {activeRegistrations} from '../../utils/musicianUtils'
+import {orderSchedulesByRegistrations} from '../../utils/scheduleUtils'
 import {formatJamDuration} from '../../lib/formatters'
 import {MapPin, Calendar, Share2, Music, Users, Clock3, ChevronDown} from 'lucide-react'
 import './JamDetailPageV2.css'
@@ -146,7 +147,11 @@ export function JamDetailPageV2({viewState, onNavigate, onRetry}: JamDetailPageV
             }
         }
 
-        return { allSchedules: all, nonSuggestedSchedules: nonSuggested, suggestedSchedules: suggested }
+        return {
+            allSchedules: all,
+            nonSuggestedSchedules: orderSchedulesByRegistrations(nonSuggested),
+            suggestedSchedules: suggested,
+        }
     }, [jam?.schedules])
 
     // Get user's registrations with schedule data (supports multiple registrations per schedule)

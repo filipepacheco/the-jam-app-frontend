@@ -16,6 +16,7 @@ export const live_control = {
   saving_order: message({"pt-BR": "Salvando ordem…", "en": "Saving order…", "es": "Guardando orden…"}),
   reorder_drag: message({"pt-BR": "Reordenar", "en": "Reorder", "es": "Reordenar"}),
   reorder_cancel: message({"pt-BR": "Cancelar", "en": "Cancel", "es": "Cancelar"}),
+  sort_by_registrations: message({"pt-BR": "Ordenar por inscrições", "en": "Sort by sign-ups", "es": "Ordenar por inscripciones"}),
   reorder_save: message({"pt-BR": "Salvar ordem", "en": "Save order", "es": "Guardar orden"}),
   reorder_next_hint: message({"pt-BR": "A primeira apresentação não concluída será a próxima. Apenas a música tocando mantém sua posição fixa.", "en": "The first unfinished Performance will be Next. Only the playing song has a fixed position.", "es": "La primera actuación sin completar será la siguiente. Solo la canción que está sonando mantiene su posición fija."}),
   reorderable_item: message({"pt-BR": "Item reordenável", "en": "Reorderable item", "es": "Elemento reordenable"}),

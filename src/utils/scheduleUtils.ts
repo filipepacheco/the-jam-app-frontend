@@ -41,6 +41,43 @@ export function countActiveRegistrationsByInstrument(
 }
 
 /**
+ * Reorder items by registration count (most first), keeping the host's order
+ * as the tie-breaker. Fixed items (played, playing, canceled) keep their slot;
+ * the rest are redistributed across the remaining slots.
+ * Expects `items` already in the host's order.
+ */
+export function orderByRegistrationCount<T>(
+  items: readonly T[],
+  registrationCount: (item: T) => number,
+  isFixed: (item: T) => boolean,
+): T[] {
+  const movable = items
+    .map((item, index) => ({item, index, count: registrationCount(item)}))
+    .filter(({item}) => !isFixed(item))
+    .sort((left, right) => right.count - left.count || left.index - right.index)
+  let next = 0
+  return items.map((item) => (isFixed(item) ? item : movable[next++].item))
+}
+
+const FIXED_SCHEDULE_STATUSES = new Set(['COMPLETED', 'IN_PROGRESS', 'CANCELED'])
+
+/**
+ * Public, "virtual" order for the jam page: songs with more sign-ups first.
+ * The host still decides the real playing order.
+ */
+export function orderSchedulesByRegistrations(schedules: readonly ScheduleResponseDto[]): ScheduleResponseDto[] {
+  const hostOrder = schedules
+    .map((schedule, index) => ({schedule, index}))
+    .sort((left, right) => left.schedule.order - right.schedule.order || left.index - right.index)
+    .map(({schedule}) => schedule)
+  return orderByRegistrationCount(
+    hostOrder,
+    (schedule) => activeRegistrations(schedule.registrations).length,
+    (schedule) => FIXED_SCHEDULE_STATUSES.has(schedule.status),
+  )
+}
+
+/**
  * Check if a schedule has the core band instruments covered (drums, guitar, bass, vocals).
  * Excludes rejected and withdrawn registrations.
  */
